@@ -1,0 +1,9 @@
+spring:
+  liquibase:
+    enabled: false
+    drop-first: false
+  datasource:
+    url: jdbc:sqlite:${jelu.database.path}/exposed.db
+    driver-class-name: org.sqlite.JDBC
+  exposed:
+    generate-ddl: true

@@ -1,0 +1,22 @@
+server:
+  port: 11111
+
+spring:
+  liquibase:
+    enabled: true
+    drop-first: false
+    change-log: classpath:liquibase.xml
+  datasource:
+    url: jdbc:sqlite:${jelu.database.path}/jelu.db
+    username: jelu_user
+    password: mypass1234
+    driver-class-name: org.sqlite.JDBC
+  exposed:
+    generate-ddl: false
+logging:
+  logback.rollingpolicy.max-history: 10
+  file:
+    name: ${jelu.database.path}/jelu.log
+    #    name: \${user.home}/.jelu/jelu.log
+  level:
+    io.github.bayang.jelu: DEBUG
