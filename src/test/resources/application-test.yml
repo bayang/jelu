@@ -1,0 +1,13 @@
+jelu:
+  database:
+    path: ${java.io.tmpdir}
+spring:
+  liquibase:
+    enabled: true
+    drop-first: false
+    change-log: classpath:liquibase.xml
+  datasource:
+    url: jdbc:sqlite:memory:myDb
+    username: test
+    password: test
+    driver-class-name: org.sqlite.JDBC

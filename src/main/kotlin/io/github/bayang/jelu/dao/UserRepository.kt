@@ -23,16 +23,14 @@ class UserRepository {
         }
     }
 
+    fun countUsers(): Long = User.count()
+
     fun findByEmailIgnoreCase(email: String): SizedIterable<User> =
         User.find { UserTable.email.lowerCase() eq email.lowercase() }
 
     fun findUserById(id: UUID): User = User[id]
 
     fun save(user: CreateUserDto): User {
-        if (! findByEmailIgnoreCase(user.email).empty()) {
-            logger.debug { "user already exists ${user.email}" }
-            throw JeluException("User already exists ${user.email}")
-        }
         val created = User.new{
             email = user.email
             val instant: Instant = nowInstant()

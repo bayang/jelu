@@ -43,6 +43,5 @@ class ReadingEvent(id: EntityID<UUID>): UUIDEntity(id) {
 enum class ReadingEventType {
     FINISHED,
     DROPPED,
-    CURRENTLY_READING,
-    TO_READ
+    CURRENTLY_READING
 }

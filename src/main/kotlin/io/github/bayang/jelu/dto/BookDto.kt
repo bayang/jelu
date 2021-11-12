@@ -35,6 +35,12 @@ data class AuthorDto(
     val modificationDate: Instant?,
     val name: String,
 )
+data class AuthorUpdateDto(
+    val id: UUID?,
+    val creationDate: Instant?,
+    val modificationDate: Instant?,
+    val name: String?,
+)
 data class AuthorWithBooksDto(
     val id: UUID?,
     val creationDate: Instant?,

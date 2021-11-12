@@ -1,6 +1,7 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.AuthorDto
+import io.github.bayang.jelu.dto.AuthorUpdateDto
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.utils.nowInstant
@@ -21,6 +22,13 @@ class BookRepository {
         }
     }
 
+    fun findAllBooksByUser(user: User): List<Book> {
+        return ReadingEvent
+            .find { ReadingEventTable.user eq user.id }
+            .distinctBy { it.book.id  }
+            .map { it.book }
+    }
+
     fun findAllAuthors(): SizedIterable<Author> = Author.all()
 
     fun findAuthorsByName(name: String): Author? {
@@ -38,19 +46,19 @@ class BookRepository {
         if (!book.title.isNullOrBlank()) {
             found.title = book.title
         }
-        book.isbn10.let { found.isbn10 = it };
-        book.isbn13.let { found.isbn13 = it };
-        book.pageCount.let { found.pageCount = it };
-        book.publisher.let { found.publisher = it };
-        book.summary.let { found.summary = it };
-        book.publishedDate.let { found.publishedDate = it };
+        book.isbn10.let { found.isbn10 = it }
+        book.isbn13.let { found.isbn13 = it }
+        book.pageCount.let { found.pageCount = it }
+        book.publisher.let { found.publisher = it }
+        book.summary.let { found.summary = it }
+        book.publishedDate.let { found.publishedDate = it }
         found.modificationDate = nowInstant()
         return found
     }
 
-    private fun updateAuthor(authorId: UUID, author: AuthorDto): Author {
+    fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): Author {
         val found: Author = Author[authorId]
-        author.name.let { found.name = it }
+        author.name?.run { found.name = author.name }
         found.modificationDate = nowInstant()
         return found
     }

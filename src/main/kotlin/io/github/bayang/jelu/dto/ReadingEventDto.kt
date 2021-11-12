@@ -19,11 +19,14 @@ data class ReadingEventWithoutUserDto(
     val eventType: ReadingEventType,
     val book: BookDto,
 )
-data class CreateReadingEventDto(
+data class CreateReadingEventWithUserInfoDto(
     val eventType: ReadingEventType,
     val bookId:UUID,
-    //FIXME backend should get current logged user
-    val userId: UUID
+    val userId: UUID?
+)
+data class CreateReadingEventDto(
+    val eventType: ReadingEventType,
+    val bookId:UUID
 )
 data class UpdateReadingEventDto(
     val eventType: ReadingEventType,

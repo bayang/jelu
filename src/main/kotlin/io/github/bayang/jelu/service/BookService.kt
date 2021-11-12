@@ -1,10 +1,8 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.dao.BookRepository
-import io.github.bayang.jelu.dto.AuthorDto
-import io.github.bayang.jelu.dto.AuthorWithBooksDto
-import io.github.bayang.jelu.dto.BookDto
-import io.github.bayang.jelu.dto.BookUpdateDto
+import io.github.bayang.jelu.dao.User
+import io.github.bayang.jelu.dto.*
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -39,4 +37,9 @@ class BookService(private val bookRepository: BookRepository) {
     @Transactional
     fun save(author: AuthorDto): AuthorDto = bookRepository.save(author).toAuthorDto()
 
+    @Transactional
+    fun findAllBooksByUser(user: User): List<BookDto> = bookRepository.findAllBooksByUser(user).map { it.toBookDto() }
+
+    @Transactional
+    fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto = bookRepository.updateAuthor(authorId, author).toAuthorDto()
 }
