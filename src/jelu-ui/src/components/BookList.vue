@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref } from 'vue'
-import DataService from '../services/DataService'
+import { computed, onMounted, Ref, ref } from 'vue'
+import dataService from '../services/DataService'
 import Book from "../model/Book";
 console.log("script setup")
 const count = ref(0)
 const books: Ref<Array<Book>> = ref([])
 const getBooks = async () => {
-    try {
-      books.value = await DataService.findAll()
+  try {
+      books.value = await dataService.findAll()
     } catch (error) {
       console.log("failed get def books : " +error)
     }
@@ -20,6 +20,7 @@ const getBooks = async () => {
               console.log("failed get books : " +error)
             }
         })
+
 </script>
 <script lang="ts">
 

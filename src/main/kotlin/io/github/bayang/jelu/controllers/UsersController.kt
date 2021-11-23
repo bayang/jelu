@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
 import java.util.*
+import javax.servlet.http.HttpSession
 import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
@@ -23,54 +24,73 @@ class UsersController(
     private val properties: JeluProperties
     ) {
 
+    @GetMapping(path = ["/token"])
+    fun getToken(session: HttpSession) = mapOf<String, String>("token" to session.id)
+
+    @GetMapping(path = ["/setup/status"])
+    fun setupStatus(session: HttpSession) = mapOf<String, Boolean>("isInitialSetup" to repository.isInitialSetup())
+
     @GetMapping(path = ["/users/me"])
-    fun authenticatedUser(principal: Authentication): UserDto {
+    fun authenticatedUser(principal: Authentication, session: HttpSession): AuthenticationDto {
         if (principal != null) {
             when (principal.principal) {
                 is DummyUser -> {
                     logger.debug { "dummy user $principal" }
-                    return UserDto(
+                    return AuthenticationDto(
+                        UserDto(
                         email = principal.name,
                         isAdmin = true,
                         id = null,
                         password = "****",
                         modificationDate = null,
                         creationDate = null
+                        ),
+                        token = session.id
                     )
                 }
                 is JeluUser -> {
                     logger.debug { "jelu user $principal" }
-                    return UserDto(
+                    logger.info { "session ${session.id}" }
+                    return AuthenticationDto(
+                        UserDto(
                         email = principal.name,
                         isAdmin = (principal.principal as JeluUser).user.isAdmin,
-                        id = null,
+                        id = (principal.principal as JeluUser).user.id.value,
                         password = "****",
                         modificationDate = null,
                         creationDate = null
+                        ),
+                        token = session.id
                     )
                 }
                 else -> {
                     logger.debug { "other principal $principal" }
-                    return UserDto(
+                    return AuthenticationDto(
+                        UserDto(
                         email = principal.name,
                         isAdmin = principal.authorities.contains(SimpleGrantedAuthority(ROLE_ADMIN)),
                         id = null,
                         password = "****",
                         modificationDate = null,
                         creationDate = null
+                        ),
+                        token = session.id
                     )
                 }
             }
         }
         else {
             logger.debug { "no principal" }
-            return UserDto(
+            return AuthenticationDto(
+                UserDto(
                 email = principal.name,
                 isAdmin = (principal.principal as JeluUser).user.isAdmin,
                 id= null,
                 password = "****",
                 modificationDate = null,
-                creationDate = null)
+                creationDate = null),
+                token = session.id
+            )
         }
     }
 

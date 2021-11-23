@@ -1,36 +1,57 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-import BookList from './components/BookList.vue'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+
+const store = useStore()
+store.dispatch('setupStatus')
+store.dispatch('getUser')
+
+const isInitialSetup = computed(() => {
+    return store.state.isInitialSetup
+  })
+const username = computed(() => {
+    return store.getters.getUsername
+  })
+const isLogged = computed(() => {
+    return store.state.isLogged
+  })
+
 </script>
 
 <template>
-<router-link to="/">Go to Home</router-link>
-    <router-link to="/books">Go to books</router-link>
 <section class="section has-background-light">
-    <div class="container toto">
+  <nav class="level">
+  <p class="level-item has-text-centered">
+    <router-link :to="{ name: 'home'}">Home</router-link>
+  </p>
+  <p class="level-item has-text-centered">
+    <router-link :to="{ name: 'my-books'}">My books</router-link>
+  </p>
+  <p class="level-item has-text-centered">
+    <router-link :to="{ name: 'login'}">Login</router-link>
+  </p>
+  <p class="level-item has-text-centered">
+    {{username}}
+  </p>
+</nav>
       
-  <!-- <HelloWorld msg="Hello Vue 3 + Test + Vite" />
-  <BookList/> -->
   <router-view></router-view>
-    </div>
+  <p>setup : {{isInitialSetup}}, logged : {{isLogged}}</p>
   </section>
 </template>
 
 <style lang="scss">
-// @import '@oruga-ui/theme-bulma/dist/bulma.css';
-// @import 'bulma/bulma.sass';
 @import "./assets/style.scss";
 
 #app {
+  // height: 100vh;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-  background-color: $my-color;
+  // margin-top: 60px;
+  // background-color:$link;
 }
 .toto {
   background-color: $my-color;

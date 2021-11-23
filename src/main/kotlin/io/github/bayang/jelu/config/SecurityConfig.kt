@@ -4,6 +4,8 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.session.web.http.HeaderHttpSessionIdResolver
 
 @EnableWebSecurity
 class SecurityConfig: WebSecurityConfigurerAdapter() {
@@ -11,7 +13,11 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http
             .csrf{ it.disable() }
+            .cors().disable()
             .authorizeRequests {
+                it.antMatchers(
+                    "/api/token","/api/setup/status"
+                ).permitAll()
                 it.mvcMatchers(HttpMethod.POST, "/api/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
                 it.antMatchers(
                     "/api/users**",
@@ -21,5 +27,9 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 ).hasRole("USER")
             }
             .httpBasic()
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+
     }
 }

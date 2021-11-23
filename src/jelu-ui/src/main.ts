@@ -8,7 +8,13 @@ import { bulmaConfig } from '@oruga-ui/theme-bulma'
 import '@oruga-ui/theme-bulma/dist/bulma.css'
 import '@mdi/font/css/materialdesignicons.min.css'
 import 'bulma/bulma.sass'
+import './assets/style.scss'
 import router from './router'
+import store from './store'
 
 
-createApp(App).use(router).use(Oruga, bulmaConfig).mount('#app')
+createApp(App)
+    .use(router)
+    .use(store)
+    .use(Oruga, bulmaConfig)
+    .mount('#app')

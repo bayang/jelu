@@ -39,6 +39,9 @@ class UserService(
     }
 
     @Transactional
+    fun isInitialSetup(): Boolean = userRepository.countUsers() < 1L
+
+    @Transactional
     override fun loadUserByUsername(username: String): UserDetails {
         if (userRepository.countUsers() == 0L) {
             return DummyUser(passwordEncoder.encode("initial"))

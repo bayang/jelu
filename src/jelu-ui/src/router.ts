@@ -1,12 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from './store'
 
 const router = createRouter({
-    // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
     history: createWebHistory(),
     routes: [
-        { path: '/', component: () => import(/* webpackChunkName: "recommend" */ './components/HelloWorld.vue') },
-        { path: '/books', component: () => import(/* webpackChunkName: "recommend" */ './components/BookList.vue') },
+        {
+            path: '/',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/HelloWorld.vue'),
+            name: 'home'
+        },
+        {
+            path: '/books',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/BookList.vue'),
+            name: 'my-books'
+        },
+        {
+            path: '/login',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/Login.vue'),
+            name: 'login'
+        },
     ],
 })
+
+router.beforeEach(async (to, from, next) => {
+    // console.log(`to : ${to.name?.toString()}`)
+    // console.log('router store')
+    // console.log(store.state.isLogged)
+    if (to.name !== 'login' && !store.state.isLogged) {
+        next({ name: 'login' })
+    }
+    else next()
+}
+)
 
 export default router

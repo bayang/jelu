@@ -1,6 +1,7 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.ReadingEventDto
+import io.github.bayang.jelu.dto.ReadingEventWithoutUserAndBookDto
 import io.github.bayang.jelu.dto.ReadingEventWithoutUserDto
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -37,6 +38,12 @@ class ReadingEvent(id: EntityID<UUID>): UUIDEntity(id) {
         creationDate = this.creationDate,
         modificationDate = this.modificationDate,
         book = this.book.toBookDto(),
+        eventType = this.eventType
+    )
+    fun toReadingEventWithoutUserAndBookDto(): ReadingEventWithoutUserAndBookDto = ReadingEventWithoutUserAndBookDto(
+        id = this.id.value,
+        creationDate = this.creationDate,
+        modificationDate = this.modificationDate,
         eventType = this.eventType
     )
 }

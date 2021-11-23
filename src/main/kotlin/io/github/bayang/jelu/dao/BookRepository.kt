@@ -7,6 +7,8 @@ import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.utils.nowInstant
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SizedIterable
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
@@ -22,12 +24,23 @@ class BookRepository {
         }
     }
 
-    fun findAllBooksByUser(user: User): List<Book> {
+    fun findAllBooksByUser(user: User): List<ReadingEvent> {
         return ReadingEvent
             .find { ReadingEventTable.user eq user.id }
-            .distinctBy { it.book.id  }
-            .map { it.book }
+            .distinctBy { it.book.id }
+//            .map { it.book }
     }
+
+//    fun findAllBooksByUser(user: User): List<Book> {
+//        val query = BookTable.innerJoin(ReadingEventTable).innerJoin(UserTable)
+//            .slice(BookTable.columns)
+//            .select {
+//                ReadingEventTable.book as reb,
+//                ReadingEventTable.user eq user.id
+//            }
+//            .withDistinct(true)
+//        return Book.wrapRows(query).toList()
+//    }
 
     fun findAllAuthors(): SizedIterable<Author> = Author.all()
 
@@ -53,6 +66,26 @@ class BookRepository {
         book.summary.let { found.summary = it }
         book.publishedDate.let { found.publishedDate = it }
         found.modificationDate = nowInstant()
+        val authorsList = mutableListOf<Author>()
+        book.authors?.forEach {
+            val authorEntity: Author? = findAuthorsByName(it.name)
+            if (authorEntity != null) {
+                authorsList.add(authorEntity)
+            } else {
+                authorsList.add(save(it))
+            }
+        }
+        if (authorsList.isNotEmpty()) {
+            if (found.authors.empty()) {
+                found.authors = SizedCollection(authorsList)
+            }
+            else {
+                val existing = found.authors.toMutableList()
+                existing.addAll(authorsList)
+                val merged: SizedCollection<Author> = SizedCollection(existing)
+                found.authors = merged
+            }
+        }
         return found
     }
 
@@ -73,7 +106,6 @@ class BookRepository {
                 authorsList.add(save(it))
             }
         }
-
         val created = Book.new{
             title = book.title
             val instant: Instant = nowInstant()

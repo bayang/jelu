@@ -16,6 +16,20 @@ data class BookDto(
     val modificationDate: Instant?,
     val authors: List<AuthorDto>?
 )
+data class BookDtoWithEvents(
+    val id: UUID?,
+    val creationDate: Instant?,
+    val title: String,
+    val isbn10:String?,
+    val isbn13: String?,
+    val summary: String?,
+    val publisher: String?,
+    val pageCount: Int?,
+    val publishedDate: String?,
+    val modificationDate: Instant?,
+    val authors: List<AuthorDto>?,
+    val readingEvents: List<ReadingEventWithoutUserAndBookDto>?
+)
 data class BookUpdateDto(
     val id: UUID?,
     val creationDate: Instant?,

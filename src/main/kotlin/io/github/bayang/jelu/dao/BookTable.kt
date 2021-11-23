@@ -1,6 +1,8 @@
 package io.github.bayang.jelu.dao
 
+import io.github.bayang.jelu.dao.User.Companion.referrersOn
 import io.github.bayang.jelu.dto.BookDto
+import io.github.bayang.jelu.dto.BookDtoWithEvents
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -32,6 +34,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
     var publishedDate by BookTable.publishedDate
     var publisher by BookTable.publisher
     var authors by Author via BookAuthors
+    val readingEvents by ReadingEvent referrersOn ReadingEventTable.book // make sure to use val and referrersOn
     fun toBookDto(): BookDto =
         BookDto(
             id = this.id.value,
@@ -45,5 +48,35 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             pageCount = this.pageCount,
             modificationDate = this.modificationDate,
             authors = this.authors.map { it.toAuthorDto() }
+        )
+    fun toBookWithReadingEventsDto(): BookDtoWithEvents =
+        BookDtoWithEvents(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            title = this.title,
+            isbn10 = this.isbn10,
+            isbn13 = this.isbn13,
+            summary = this.summary,
+            publisher = this.publisher,
+            publishedDate = this.publishedDate,
+            pageCount = this.pageCount,
+            modificationDate = this.modificationDate,
+            authors = this.authors.map { it.toAuthorDto() },
+            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserAndBookDto() }
+        )
+    fun toBookWithReadingEventsDto(user: User): BookDtoWithEvents =
+        BookDtoWithEvents(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            title = this.title,
+            isbn10 = this.isbn10,
+            isbn13 = this.isbn13,
+            summary = this.summary,
+            publisher = this.publisher,
+            publishedDate = this.publishedDate,
+            pageCount = this.pageCount,
+            modificationDate = this.modificationDate,
+            authors = this.authors.map { it.toAuthorDto() },
+            readingEvents = this.readingEvents.filter { it.user.id.value == user.id.value }.map { it.toReadingEventWithoutUserAndBookDto() }
         )
 }
