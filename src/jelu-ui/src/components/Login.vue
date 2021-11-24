@@ -38,7 +38,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Login</h1>
+  <h1 class="title">Login</h1>
   <section>
     <div class="field">
     <o-field label="Email" class="control">

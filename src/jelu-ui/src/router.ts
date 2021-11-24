@@ -19,6 +19,11 @@ const router = createRouter({
             component: () => import(/* webpackChunkName: "recommend" */ './components/Login.vue'),
             name: 'login'
         },
+        {
+            path: '/add-book',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/AddBook.vue'),
+            name: 'add-book'
+        },
     ],
 })
 

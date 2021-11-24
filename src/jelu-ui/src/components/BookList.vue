@@ -5,6 +5,7 @@ import Book from "../model/Book";
 console.log("script setup")
 const count = ref(0)
 const books: Ref<Array<Book>> = ref([])
+
 const getBooks = async () => {
   try {
       books.value = await dataService.findAll()
@@ -22,55 +23,26 @@ const getBooks = async () => {
         })
 
 </script>
-<script lang="ts">
-
-import { defineComponent, onBeforeMount } from 'vue'
-// export default {
-//     setup() {
-//     // mounted
-//     onMounted(() => {
-//       console.log('Component is mounted!')
-//     }),
-//     onBeforeMount(() => {
-//       console.log('Component before mount!')
-//     })
-//   }
-// }
-
-console.log("setup")
-// const Component = defineComponent({
-//   setup() {
-//       console.log("setup")
-//     const year = ref(2020)
-//     onMounted(() => {
-//       console.log('Component is mounted!')
-//       getBooks()
-//     })
-//   }
-// })
-
-export default {
-    setup() {
-      const readersNumber = ref(0)
-        console.log("in setup")
-        onMounted(() => {
-            console.log('Component is mounted!')
-            getBooks()
-        })
-        // getBooks()
-      // expose to template
-      return {
-        readersNumber,
-      }
-    }
-  }
-
-</script>
 
 <template>
-  <h1 class="title is-1"><span class="icon">
+<div class="level">
+  <div class="level-item">
+  <h1 class="title is-1">
+    <span class="icon">
   <i class="mdi mdi-bookshelf"></i>
 </span>&nbsp; Books :</h1>
+
+  </div>
+<div class="level-right">
+  <p class="level-item">
+    <router-link :to="{ name: 'add-book'}" class="button is-success">
+      Add book
+      </router-link>
+    </p>
+    
+  </div>
+
+</div>
     <div class="columns is-variable is-2 is-multiline is-centered">
     <div class="column is-2" v-for="book in books" v-bind:key="book.id">
       <div class="card">
@@ -94,12 +66,13 @@ export default {
   </header>
   <div class="card-content">
     <div class="content">
+    <span v-for="author in book.authors" v-bind:key="author.id">{{author.name}},&nbsp;</span>
       {{book.id}}
     </div>
     <footer class="card-footer">
     <div class="tags has-addons">
   <span class="tag">Status</span>
-  <span class="tag is-primary">FINISHED</span>
+  <span class="tag is-primary">{{book.readingEvents[0].eventType}}</span>
 </div>
   </footer>
   </div>

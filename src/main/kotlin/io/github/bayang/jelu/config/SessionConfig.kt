@@ -9,39 +9,9 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver
 import org.springframework.session.web.http.HttpSessionIdResolver
 
-
-
-
 @EnableCaffeineHttpSession
 @Configuration
 class SessionConfig {
-
-//  @Bean
-//  fun sessionCookieName() = "SESSION"
-//
-//  @Bean
-//  fun sessionHeaderName() = "X-Auth-Token"
-
-//  @Bean
-//  fun cookieSerializer(sessionCookieName: String): CookieSerializer =
-//    DefaultCookieSerializer().apply {
-//      setCookieName(sessionCookieName)
-//    }
-
-//  @Bean
-//  fun httpSessionIdResolver(sessionHeaderName: String, cookieSerializer: CookieSerializer): HttpSessionIdResolver =
-//    SmartHttpSessionIdResolver(sessionHeaderName, cookieSerializer)
-
-//  @Bean
-//  fun customizeSessionRepository(komgaProperties: KomgaProperties) =
-//    SessionRepositoryCustomizer<CaffeineIndexedSessionRepository>() {
-//      it.setDefaultMaxInactiveInterval(komgaProperties.sessionTimeout.seconds.toInt())
-//    }
-
-//  @Bean
-//  fun sessionStrategy(): HeaderHttpSessionStrategy {
-//    return HeaderHttpSessionIdResolver()
-//  }
 
   @Bean
   fun httpSessionIdResolver(): HttpSessionIdResolver {

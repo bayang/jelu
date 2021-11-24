@@ -16,5 +16,8 @@ import store from './store'
 createApp(App)
     .use(router)
     .use(store)
-    .use(Oruga, bulmaConfig)
+    .use(Oruga, {
+        iconPack: 'mdi',
+        ...bulmaConfig
+    })
     .mount('#app')
