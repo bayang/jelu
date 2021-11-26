@@ -9,6 +9,7 @@ export default interface Book {
     isbn13?: string,
     summary?: string,
     publisher?: string,
+    image?: string,
     pageCount?: number,
     publishedDate?: string,
     modificationDate?: string,

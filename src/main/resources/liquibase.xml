@@ -35,6 +35,9 @@
             <column name="publisher" type="varchar(500)"
                     remarks="The book's publisher ">
             </column>
+            <column name="image" type="varchar(1000)"
+                    remarks="The book's image ">
+            </column>
             <column name="published_date" type="varchar(50)"
                     remarks="The book's publication date ">
             </column>

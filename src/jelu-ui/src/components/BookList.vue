@@ -48,7 +48,9 @@ const getBooks = async () => {
       <div class="card">
   <div class="card-image">
     <figure class="image is-3by4">
-      <img src="http://lorempixel.com/g/400/200" alt="Placeholder image">
+      <img v-if="book.image" :src="'/files/' + book.image" alt="cover image">
+      <img v-else src="../assets/placeholder_asset.png" alt="cover placeholder">
+      <!-- <img src="http://lorempixel.com/g/400/200" alt="Placeholder image"> -->
     </figure>
   </div>
   <header class="card-header">
@@ -72,12 +74,11 @@ const getBooks = async () => {
     <footer class="card-footer">
     <div class="tags has-addons">
   <span class="tag">Status</span>
-  <span class="tag is-primary">{{book.readingEvents[0].eventType}}</span>
+  <span v-if="book.readingEvents" class="tag is-primary">{{book.readingEvents[0].eventType}}</span>
 </div>
   </footer>
   </div>
 </div>
-      <!-- {{ book.title }} - {{ book.id }} -->
     </div>
     </div>
 </template>

@@ -21,6 +21,7 @@ object BookTable: UUIDTable("book") {
     val publishedDate: Column<String?> = varchar("published_date", 50).nullable()
     val summary: Column<String?> = varchar("summary", 50000).nullable()
     val pageCount: Column<Int?> = integer(name = "page_count").nullable()
+    val image: Column<String?> = varchar("image", 1000).nullable()
 }
 class Book(id: EntityID<UUID>): UUIDEntity(id) {
     companion object : UUIDEntityClass<Book>(BookTable)
@@ -34,6 +35,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
     var publishedDate by BookTable.publishedDate
     var publisher by BookTable.publisher
     var authors by Author via BookAuthors
+    var image by BookTable.image
     val readingEvents by ReadingEvent referrersOn ReadingEventTable.book // make sure to use val and referrersOn
     fun toBookDto(): BookDto =
         BookDto(
@@ -43,6 +45,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             isbn10 = this.isbn10,
             isbn13 = this.isbn13,
             summary = this.summary,
+            image = this.image,
             publisher = this.publisher,
             publishedDate = this.publishedDate,
             pageCount = this.pageCount,
@@ -57,6 +60,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             isbn10 = this.isbn10,
             isbn13 = this.isbn13,
             summary = this.summary,
+            image = this.image,
             publisher = this.publisher,
             publishedDate = this.publishedDate,
             pageCount = this.pageCount,
@@ -72,6 +76,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             isbn10 = this.isbn10,
             isbn13 = this.isbn13,
             summary = this.summary,
+            image = this.image,
             publisher = this.publisher,
             publishedDate = this.publishedDate,
             pageCount = this.pageCount,

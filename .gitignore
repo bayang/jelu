@@ -37,3 +37,5 @@ out/
 .vscode/
 
 memory:myDb
+
+src/main/resources/public/**

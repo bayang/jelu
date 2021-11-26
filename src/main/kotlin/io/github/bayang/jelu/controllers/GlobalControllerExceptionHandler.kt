@@ -9,10 +9,18 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.servlet.NoHandlerFoundException
 import javax.validation.ConstraintViolationException
 
 @ControllerAdvice
 class GlobalControllerExceptionHandler {
+
+  @ExceptionHandler(NoHandlerFoundException::class)
+  fun notFound(): String {
+    println("not found")
+    return "forward:/"
+  }
+
   @ExceptionHandler(ConstraintViolationException::class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody

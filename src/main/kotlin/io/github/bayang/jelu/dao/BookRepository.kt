@@ -64,6 +64,7 @@ class BookRepository {
         book.pageCount.let { found.pageCount = it }
         book.publisher.let { found.publisher = it }
         book.summary.let { found.summary = it }
+        book.image.let { found.image = it }
         book.publishedDate.let { found.publishedDate = it }
         found.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()

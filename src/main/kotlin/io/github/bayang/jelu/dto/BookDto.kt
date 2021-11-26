@@ -13,6 +13,7 @@ data class BookDto(
     val publisher: String?,
     val pageCount: Int?,
     val publishedDate: String?,
+    val image: String?,
     val modificationDate: Instant?,
     val authors: List<AuthorDto>?
 )
@@ -25,6 +26,7 @@ data class BookDtoWithEvents(
     val summary: String?,
     val publisher: String?,
     val pageCount: Int?,
+    val image: String?,
     val publishedDate: String?,
     val modificationDate: Instant?,
     val authors: List<AuthorDto>?,
@@ -37,6 +39,7 @@ data class BookUpdateDto(
     val isbn10:String?,
     val isbn13: String?,
     val summary: String?,
+    val image: String?,
     val publisher: String?,
     val pageCount: Int?,
     val publishedDate: String?,

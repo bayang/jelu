@@ -10,12 +10,12 @@ import '@mdi/font/css/materialdesignicons.min.css'
 import 'bulma/bulma.sass'
 import './assets/style.scss'
 import router from './router'
-import store from './store'
+import store, { key } from './store'
 
 
 createApp(App)
     .use(router)
-    .use(store)
+    .use(store, key)
     .use(Oruga, {
         iconPack: 'mdi',
         ...bulmaConfig

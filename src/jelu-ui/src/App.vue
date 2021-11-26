@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { key } from './store'
 
-const store = useStore()
+const store = useStore(key)
 store.dispatch('setupStatus')
 store.dispatch('getUser')
 

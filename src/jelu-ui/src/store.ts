@@ -1,10 +1,20 @@
-import { createLogger, createStore } from 'vuex'
+import { createLogger, createStore, Store } from 'vuex'
 import { UserAuthentication, User } from './model/User'
 import dataService from './services/DataService'
 import router from './router'
+import { InjectionKey } from 'vue'
+
+export interface State {
+  count: number,
+  isLogged: boolean,
+  isInitialSetup : boolean,
+  user : User | null
+}
+
+export const key: InjectionKey<Store<State>> = Symbol()
 
 // Create a new store instance.
-const store = createStore({
+const store = createStore<State>({
   state () {
     return {
       count: 0,

@@ -2,9 +2,10 @@
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
 import { useStore } from 'vuex'
 import dataService from '../services/DataService'
+import { key } from '../store'
 
 // defineProps<{ msg: string }>()
-const store = useStore()
+const store = useStore(key)
 const form = reactive({
   'title' : '', 
   'summary' : '', 
@@ -19,7 +20,9 @@ const errorMessage = ref('')
 const data: Ref<Array<string>>  = ref(["jacques"])
 let filteredAuthors: Ref<Array<string>> = ref(data)
 let authors: Ref<Array<string>> = ref([])
-
+const importBook = async () => {
+  console.log('import book')
+}
 
 onMounted(() => {
             console.log(`form data `)
@@ -56,7 +59,7 @@ function getFilteredAuthors(text: string) {
         :data="filteredAuthors"
         autocomplete
         :allow-new="true"
-        :open-on-focus="openOnFocus"
+        :open-on-focus="true"
         iconPack="mdi"
         icon="account-plus"
         placeholder="Add an author"
@@ -75,14 +78,14 @@ function getFilteredAuthors(text: string) {
     
     <div class="field">
   <p class="control">
-    <button @click="logUser" class="button is-success">
+    <button @click="importBook" class="button is-success">
       Import book
     </button>
   </p>
   <p v-if="errorMessage" class="has-text-danger">{{errorMessage}}</p>
 </div>
 
-  <p>login {{form.login}},  pw  {{form.summary}}</p>
+  <p>login {{form.title}},  pw  {{form.summary}}</p>
 
   </section>
   

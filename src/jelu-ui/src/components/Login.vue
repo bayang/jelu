@@ -2,9 +2,10 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import dataService from '../services/DataService'
+import { key } from '../store'
 
 // defineProps<{ msg: string }>()
-const store = useStore()
+const store = useStore(key)
 const form = reactive({'login' : '', 'password' : ''})
 const errorMessage = ref('')
 const isInitialSetup = computed(() => {
@@ -14,7 +15,7 @@ const logUser = async () => {
   try {
     // await dataService.authenticateUser(form.login, form.password)
     await store.dispatch('authenticate', {"user" : form.login, "password" : form.password})
-  } catch (error) {
+  } catch (error: any) {
     console.log('failed to auth user ' + error)
     console.log(`failed to auth user ${error.message}`)
 
@@ -24,7 +25,7 @@ const logUser = async () => {
 const createInitialUser = async () => {
   try {
     await store.dispatch('createInitialUser', {"user" : form.login, "password" : form.password})
-  } catch (error) {
+  } catch (error: any) {
     console.log('failed to create user ' + error)
     console.log(`failed to create user ${error.message}`)
 
@@ -67,8 +68,6 @@ onMounted(() => {
   <p>login {{form.login}},  pw  {{form.password}}</p>
 
   </section>
-  <!-- <button type="button" @click="count++">count is: {{ count }}</button> -->
-  
 </template>
 
 <style scoped>
