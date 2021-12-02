@@ -6,9 +6,12 @@ import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.service.BookService
 import mu.KotlinLogging
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import javax.servlet.annotation.MultipartConfig
 import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
@@ -40,10 +43,17 @@ class BooksController(
     @GetMapping(path = ["/authors/{id}"])
     fun authorById(@PathVariable("id") authorId: UUID) = repository.findAuthorsById(authorId)
 
-    @PostMapping(path = ["/books"])
-    fun saveBook(@RequestBody @Valid book: BookDto): BookDto {
-        return repository.save(book)
+    @PostMapping(path = ["/books"], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun saveBook(@RequestBody @Valid book: CreateBookDto, principal: Authentication): BookDto {
+        return repository.save(book, (principal.principal as JeluUser).user)
     }
+
+    @PostMapping(path = ["/books"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun saveBook(@RequestPart("book") @Valid book: CreateBookDto, principal: Authentication,
+                 @RequestPart("file", required = false) file: MultipartFile?): BookDto {
+        return repository.save(book, (principal.principal as JeluUser).user, file)
+    }
+
     @PostMapping(path = ["/authors"])
     fun saveAuthor(@RequestBody @Valid author: AuthorDto): AuthorDto {
         return repository.save(author)

@@ -15,12 +15,6 @@ import javax.validation.ConstraintViolationException
 @ControllerAdvice
 class GlobalControllerExceptionHandler {
 
-  @ExceptionHandler(NoHandlerFoundException::class)
-  fun notFound(): String {
-    println("not found")
-    return "forward:/"
-  }
-
   @ExceptionHandler(ConstraintViolationException::class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody

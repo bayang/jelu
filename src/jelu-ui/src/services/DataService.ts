@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import Book from "../model/Book";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
+import { JeluError } from "../model/JeluError";
 
 
 class DataService {
@@ -11,6 +12,8 @@ class DataService {
   private token?: string = ''
 
   private TOKEN_KEY: string = 'jelu-token'
+
+  private API_BOOK = '/books';
   
   constructor() {
     this.apiClient = axios.create({
@@ -194,6 +197,49 @@ class DataService {
       console.log("error create user " + (error as AxiosError).toJSON())
       console.log("error create user " + (error as AxiosError).code)
       throw new Error("error create user " + error)
+    }
+  }
+
+  saveBook = async (book: Book) => {
+    try {
+      let resp = await this.apiClient.post<Book>(this.API_BOOK, book)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error saving book " + error.response.status + " " + error.response.data.error)
+        throw new Error("error saving book " + error.response.status + " " + error)
+      }
+      console.log("error saving book " + (error as AxiosError).toJSON())
+      console.log("error saving book " + (error as AxiosError).code)
+      throw new Error("error saving book " + error)
+    }
+  }
+
+  saveBookImage = async (book: Book, file: File|null, onUploadProgress:any) => {
+    try {
+      let formData = new FormData()
+      if (file != null) {
+        formData.append('file', file);
+      }
+      formData.append('book', new Blob([JSON.stringify(book)], {
+        type: "application/json"
+    }));
+      let resp = await this.apiClient.post<Book>(this.API_BOOK, formData,
+       { 
+        headers:{
+          'Content-Type':'multipart/form-data',
+          'Accept':'application/json'
+        }, 
+        onUploadProgress: onUploadProgress})
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error saving book " + error.response.status + " " + error.response.data.error)
+        throw new Error("error saving book " + error.response.status + " " + error)
+      }
+      console.log("error saving book " + (error as AxiosError).toJSON())
+      console.log("error saving book " + (error as AxiosError).code)
+      throw new Error("error saving book " + error)
     }
   }
 

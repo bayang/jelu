@@ -13,6 +13,12 @@ spring:
     driver-class-name: org.sqlite.JDBC
   exposed:
     generate-ddl: false
+  servlet:
+    multipart:
+      enabled: true
+      location: ${java.io.tmpdir}
+      max-request-size: 10MB
+      max-file-size: 10MB
 logging:
   logback.rollingpolicy.max-history: 10
   file:

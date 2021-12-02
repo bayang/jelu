@@ -1,9 +1,6 @@
 package io.github.bayang.jelu.dao
 
-import io.github.bayang.jelu.dto.AuthorDto
-import io.github.bayang.jelu.dto.AuthorUpdateDto
-import io.github.bayang.jelu.dto.BookDto
-import io.github.bayang.jelu.dto.BookUpdateDto
+import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.nowInstant
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SizedIterable
@@ -97,7 +94,7 @@ class BookRepository {
         return found
     }
 
-    fun save(book: BookDto): Book {
+    fun save(book: CreateBookDto): Book {
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
             val authorEntity: Author? = findAuthorsByName(it.name)
@@ -112,6 +109,13 @@ class BookRepository {
             val instant: Instant = nowInstant()
             creationDate = instant
             modificationDate = instant
+            summary = book.summary
+            isbn10 = book.isbn10
+            isbn13 = book.isbn13
+            pageCount = book.pageCount
+            publishedDate = book.publishedDate
+            publisher = book.publisher
+            image = book.image
         }
         created.authors = SizedCollection(authorsList)
         return created

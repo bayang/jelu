@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.dto
 
+import io.github.bayang.jelu.dao.ReadingEventType
 import java.time.Instant
 import java.util.*
 
@@ -16,6 +17,21 @@ data class BookDto(
     val image: String?,
     val modificationDate: Instant?,
     val authors: List<AuthorDto>?
+)
+data class CreateBookDto(
+    val id: UUID?,
+    val creationDate: Instant?,
+    val title: String,
+    val isbn10:String?,
+    val isbn13: String?,
+    val summary: String?,
+    val publisher: String?,
+    val pageCount: Int?,
+    val publishedDate: String?,
+    val image: String?,
+    val modificationDate: Instant?,
+    val authors: List<AuthorDto>?,
+    val readingEvent: ReadingEventType?
 )
 data class BookDtoWithEvents(
     val id: UUID?,

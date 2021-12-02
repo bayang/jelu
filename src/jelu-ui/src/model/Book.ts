@@ -1,5 +1,5 @@
 import Author from "./Author";
-import ReadingEvent from "./ReadingEvent";
+import ReadingEvent, { ReadingEventType } from "./ReadingEvent";
 
 export default interface Book {
     id?: string,
@@ -9,11 +9,12 @@ export default interface Book {
     isbn13?: string,
     summary?: string,
     publisher?: string,
-    image?: string,
-    pageCount?: number,
-    publishedDate?: string,
+    image?: string|null,
+    pageCount?: number|null,
+    publishedDate?: string|null,
     modificationDate?: string,
     authors?: Array<Author>,
-    readingEvents?: Array<ReadingEvent>
+    readingEvents?: Array<ReadingEvent>,
+    readingEvent?: ReadingEventType|null,
   }
   
