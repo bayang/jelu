@@ -10,6 +10,12 @@ const router = createRouter({
             name: 'home'
         },
         {
+            path: '/books/:bookId',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/BookDetail.vue'),
+            name: 'book-detail',
+            props: true
+        },
+        {
             path: '/books',
             component: () => import(/* webpackChunkName: "recommend" */ './components/BookList.vue'),
             name: 'my-books'
@@ -27,14 +33,26 @@ const router = createRouter({
     ],
 })
 
-router.beforeEach(async (to, from, next) => {
-    // console.log(`to : ${to.name?.toString()}`)
-    // console.log('router store')
-    // console.log(store.state.isLogged)
-    if (to.name !== 'login' && !store.state.isLogged) {
-        next({ name: 'login' })
+router.beforeEach((to, from, next) => {
+    console.log(`to : ${to.name?.toString()}`)
+    console.log(to)
+    console.log(`from : ${from.name?.toString()}`)
+    console.log(from)
+    console.log('router store')
+    console.log(store.state.isLogged)
+    if (from.name == undefined 
+        && from.matched.length < 1 
+        && !store.state.isLogged) {
+        console.log('undefined and not logged wanting to go to ' + to.name?.toString())
+        if (to.name !== 'login') {
+            store.commit('entryPoint', to.name)
+        }
     }
-    else next()
+    // if (to.name !== 'login' && !store.state.isLogged) {
+    //     next({ name: 'login' })
+    // }
+    // else next()
+    next()
 }
 )
 

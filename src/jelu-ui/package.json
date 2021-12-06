@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@mdi/font": "^6.4.95",
-    "@oruga-ui/oruga-next": "^0.4.7",
-    "@oruga-ui/theme-bulma": "^0.1.4",
+    "@oruga-ui/oruga-next": "^0.4.8",
+    "@oruga-ui/theme-bulma": "^0.1.5",
     "axios": "^0.24.0",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",

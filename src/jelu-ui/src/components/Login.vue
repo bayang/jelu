@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import dataService from '../services/DataService'
 import { key } from '../store'
@@ -32,10 +32,14 @@ const createInitialUser = async () => {
     errorMessage.value = error.message
   }
 }
+console.log('Component is created!')
 onMounted(() => {
-            console.log('Component is mounted!')
+            console.log('Component login is mounted in script setup!')
             console.log(`form data ${form}`)
         })
+onBeforeMount(() => {
+  console.log("onbeforemount script setup login")
+})
 </script>
 
 <template>

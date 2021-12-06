@@ -57,7 +57,10 @@ const getBooks = async () => {
     <p class="card-header-title has-text-primary is-capitalized">
       <span class="icon has-text-success">
   <i class="mdi mdi-book-open-blank-variant mdi-18px"></i>
-</span>{{book.title}}
+</span>
+<router-link :to="{ name: 'book-detail', params: { bookId: book.id }}">
+  {{book.title}}
+</router-link>
     </p>
     
     <button class="card-header-icon" aria-label="more options">

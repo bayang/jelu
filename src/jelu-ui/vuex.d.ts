@@ -7,7 +7,8 @@ interface State {
     count: number,
     isLogged: boolean,
     isInitialSetup : boolean,
-    user : User| null
+    user : User| null,
+    entryPoint: string
   }
 
   // provide typings for `this.$store`

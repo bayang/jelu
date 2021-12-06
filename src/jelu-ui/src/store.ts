@@ -8,7 +8,8 @@ export interface State {
   count: number,
   isLogged: boolean,
   isInitialSetup : boolean,
-  user : User | null
+  user : User | null,
+  entryPoint: string
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -20,7 +21,8 @@ const store = createStore<State>({
       count: 0,
       isLogged: false,
       isInitialSetup : false,
-      user: null
+      user: null,
+      entryPoint: 'home'
     }
   },
   mutations: {
@@ -35,6 +37,9 @@ const store = createStore<State>({
     },
     user(state, user: User) {
       state.user = user
+    },
+    entryPoint(state, entryPoint: string) {
+      state.entryPoint = entryPoint
     }
   },
   actions: {
@@ -48,9 +53,10 @@ const store = createStore<State>({
           console.log(auth)
           commit('login', true)
           commit('user', auth.user)
-          await router.push({name: 'home'})
+          // await router.push({name: 'home'})
         } catch (error) {
           commit('login', false)
+          throw error
         }
       },
       async authenticate({commit, state}, payload) {
@@ -60,13 +66,13 @@ const store = createStore<State>({
           console.log(user)
           commit('login', true)
           commit('user', user)
-          await router.push({name: 'home'})
+          await router.push({name: state.entryPoint})
         } catch (error) {
           commit('login', false)
           throw error
         }
 
-        commit('user', await dataService.authenticateUser(payload.user, payload.password))
+        // commit('user', await dataService.authenticateUser(payload.user, payload.password))
       }, 
       async createInitialUser({dispatch, commit, state}, payload) {
         try {

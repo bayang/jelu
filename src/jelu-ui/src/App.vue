@@ -1,11 +1,25 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, onBeforeMount, onMounted } from 'vue'
 import { key } from './store'
-
+import { useLink, useRoute, useRouter } from 'vue-router'
+// const props = defineProps()
 const store = useStore(key)
+const router = useRouter()
+const route = useRoute()
+// const { href, isActive, isExactActive, navigate } = useLink(props)
+
+console.log("route " + route.fullPath + " " + route.path + " " + route.redirectedFrom)
+console.log(route)
+console.log(router.currentRoute.value)
+
 store.dispatch('setupStatus')
 store.dispatch('getUser')
+  .then(() => {console.log("then")})
+  .catch(() => {
+    console.log("catch")
+    router.push({name: 'login'}).then(() => {console.log("ok nav")}).catch(() => {console.log("error nav")})
+    })
 
 const isInitialSetup = computed(() => {
     return store.state.isInitialSetup
@@ -17,6 +31,12 @@ const isLogged = computed(() => {
     return store.state.isLogged
   })
 
+onBeforeMount(() => {
+  console.log("onbeforemount script setup")
+})
+onMounted(() => {
+            console.log('Component is mounted!')
+        })
 </script>
 
 <template>
