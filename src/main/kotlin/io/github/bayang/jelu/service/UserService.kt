@@ -27,7 +27,7 @@ class UserService(
     fun findByEmailIgnoreCase(email: String): List<UserDto> = userRepository.findByEmailIgnoreCase(email).map { it.toUserDto() }
 
     @Transactional
-    fun findUserById(id: UUID): UserDtoWithEvents = User[id].toUserDtoWithEvents()
+    fun findUserById(id: UUID): UserDto = User[id].toUserDto()
 
     @Transactional
     fun save(user: CreateUserDto): UserDto {

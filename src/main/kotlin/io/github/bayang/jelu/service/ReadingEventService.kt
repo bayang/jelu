@@ -25,7 +25,7 @@ class ReadingEventService(private val readingEventRepository: ReadingEventReposi
     fun findAllByUser(userID: UUID): List<ReadingEventDto> = readingEventRepository.findAllByUser(userID).map { it.toReadingEventDto() }
 
     @Transactional
-    fun findAllByUser(user: User, searchTerm: ReadingEventType?): List<ReadingEventDto> = readingEventRepository.findAllByUser(user, searchTerm).map { it.toReadingEventDto() }
+    fun findAllByUser(user: User, searchTerm: ReadingEventType?): List<ReadingEventDto> = readingEventRepository.findAllByUser(user.id.value, searchTerm).map { it.toReadingEventDto() }
 
     @Transactional
     fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEventDto

@@ -2,10 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.nowInstant
-import org.jetbrains.exposed.sql.SizedCollection
-import org.jetbrains.exposed.sql.SizedIterable
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
@@ -21,12 +18,12 @@ class BookRepository {
         }
     }
 
-    fun findAllBooksByUser(user: User): List<ReadingEvent> {
-        return ReadingEvent
-            .find { ReadingEventTable.user eq user.id }
-            .distinctBy { it.book.id }
+    fun findAllBooksByUser(user: User): List<UserBook> {
+//        return ReadingEvent
+//            .find { ReadingEventTable.user eq user.id }
+//            .distinctBy { it.book.id }
 //            .map { it.book }
-    }
+//    }
 
 //    fun findAllBooksByUser(user: User): List<Book> {
 //        val query = BookTable.innerJoin(ReadingEventTable).innerJoin(UserTable)
@@ -37,7 +34,11 @@ class BookRepository {
 //            }
 //            .withDistinct(true)
 //        return Book.wrapRows(query).toList()
-//    }
+        return UserBook.find { UserBookTable.user eq user.id }
+                        .orderBy(Pair(UserBookTable.modificationDate, SortOrder.DESC_NULLS_LAST))
+                        .toList()
+
+    }
 
     fun findAllAuthors(): SizedIterable<Author> = Author.all()
 

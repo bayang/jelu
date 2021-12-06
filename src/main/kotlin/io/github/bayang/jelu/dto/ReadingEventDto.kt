@@ -9,8 +9,9 @@ data class ReadingEventDto(
     val creationDate: Instant?,
     val modificationDate: Instant?,
     val eventType: ReadingEventType,
-    val book: BookDto,
-    val user: UserDto
+    val userBook: UserBookWithoutEventsDto
+//    val book: BookDto,
+//    val user: UserDto
 )
 data class ReadingEventWithoutUserDto(
     val id: UUID?,

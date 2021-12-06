@@ -36,7 +36,8 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
     var publisher by BookTable.publisher
     var authors by Author via BookAuthors
     var image by BookTable.image
-    val readingEvents by ReadingEvent referrersOn ReadingEventTable.book // make sure to use val and referrersOn
+    val userBooks by UserBook referrersOn UserBookTable.book
+//    val readingEvents by ReadingEvent referrersOn ReadingEventTable.book // make sure to use val and referrersOn
     fun toBookDto(): BookDto =
         BookDto(
             id = this.id.value,
@@ -52,36 +53,36 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             modificationDate = this.modificationDate,
             authors = this.authors.map { it.toAuthorDto() }
         )
-    fun toBookWithReadingEventsDto(): BookDtoWithEvents =
-        BookDtoWithEvents(
-            id = this.id.value,
-            creationDate = this.creationDate,
-            title = this.title,
-            isbn10 = this.isbn10,
-            isbn13 = this.isbn13,
-            summary = this.summary,
-            image = this.image,
-            publisher = this.publisher,
-            publishedDate = this.publishedDate,
-            pageCount = this.pageCount,
-            modificationDate = this.modificationDate,
-            authors = this.authors.map { it.toAuthorDto() },
-            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserAndBookDto() }
-        )
-    fun toBookWithReadingEventsDto(user: User): BookDtoWithEvents =
-        BookDtoWithEvents(
-            id = this.id.value,
-            creationDate = this.creationDate,
-            title = this.title,
-            isbn10 = this.isbn10,
-            isbn13 = this.isbn13,
-            summary = this.summary,
-            image = this.image,
-            publisher = this.publisher,
-            publishedDate = this.publishedDate,
-            pageCount = this.pageCount,
-            modificationDate = this.modificationDate,
-            authors = this.authors.map { it.toAuthorDto() },
-            readingEvents = this.readingEvents.filter { it.user.id.value == user.id.value }.map { it.toReadingEventWithoutUserAndBookDto() }
-        )
+//    fun toBookWithReadingEventsDto(): BookDtoWithEvents =
+//        BookDtoWithEvents(
+//            id = this.id.value,
+//            creationDate = this.creationDate,
+//            title = this.title,
+//            isbn10 = this.isbn10,
+//            isbn13 = this.isbn13,
+//            summary = this.summary,
+//            image = this.image,
+//            publisher = this.publisher,
+//            publishedDate = this.publishedDate,
+//            pageCount = this.pageCount,
+//            modificationDate = this.modificationDate,
+//            authors = this.authors.map { it.toAuthorDto() },
+//            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserAndBookDto() }
+//        )
+//    fun toBookWithReadingEventsDto(user: User): BookDtoWithEvents =
+//        BookDtoWithEvents(
+//            id = this.id.value,
+//            creationDate = this.creationDate,
+//            title = this.title,
+//            isbn10 = this.isbn10,
+//            isbn13 = this.isbn13,
+//            summary = this.summary,
+//            image = this.image,
+//            publisher = this.publisher,
+//            publishedDate = this.publishedDate,
+//            pageCount = this.pageCount,
+//            modificationDate = this.modificationDate,
+//            authors = this.authors.map { it.toAuthorDto() },
+//            readingEvents = this.readingEvents.filter { it.user.id.value == user.id.value }.map { it.toReadingEventWithoutUserAndBookDto() }
+//        )
 }

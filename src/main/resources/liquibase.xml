@@ -74,7 +74,7 @@
         </createTable>
     </changeSet>
     <changeSet id="user_and_events" author="byng">
-        <createTable tableName="reading_event">
+        <createTable tableName="user_book">
             <column name="id" type="binary(16)" remarks="Technical ID">
                 <constraints primaryKey="true" nullable="false" />
             </column>
@@ -87,10 +87,26 @@
                 <constraints nullable="false" />
             </column>
             <column name="user" type="binary(16)" remarks="Technical ID">
-                <constraints foreignKeyName="fk_reading_event_user_id" references="user(id)" nullable="false" />
+                <constraints foreignKeyName="fk_user_book_user_id" references="user(id)" nullable="false" />
             </column>
             <column name="book" type="binary(16)" remarks="Technical ID">
-                <constraints foreignKeyName="fk_reading_event_book_id" references="book(id)" nullable="false" />
+                <constraints foreignKeyName="fk_user_book_book_id" references="book(id)" nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="reading_event">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_book" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_reading_event_user_book_id" references="user_book(id)" nullable="false" />
             </column>
             <column name="event_type" type="varchar(200)"
                     remarks="Event type : CURRENTLY_READING,DROPPED,FINISHED ">

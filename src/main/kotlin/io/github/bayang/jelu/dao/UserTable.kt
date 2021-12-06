@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.dao
 
+import io.github.bayang.jelu.dao.Book.Companion.referrersOn
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.dto.UserDtoWithEvents
 import org.jetbrains.exposed.dao.UUIDEntity
@@ -27,15 +28,15 @@ class User(id: EntityID<UUID>): UUIDEntity(id) {
         password = "****",
         isAdmin = this.isAdmin,
     )
-    fun toUserDtoWithEvents(): UserDtoWithEvents = UserDtoWithEvents(
-        id = this.id.value,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        email = this.email,
-        password = "****",
-        isAdmin = this.isAdmin,
-        readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserDto() }
-    )
+//    fun toUserDtoWithEvents(): UserDtoWithEvents = UserDtoWithEvents(
+//        id = this.id.value,
+//        creationDate = this.creationDate,
+//        modificationDate = this.modificationDate,
+//        email = this.email,
+//        password = "****",
+//        isAdmin = this.isAdmin,
+//        readingEvents = this.userBooks.fla
+//    )
 
     companion object : UUIDEntityClass<User>(UserTable)
     var creationDate by UserTable.creationDate
@@ -43,5 +44,6 @@ class User(id: EntityID<UUID>): UUIDEntity(id) {
     var email by UserTable.email
     var password by UserTable.password
     var isAdmin by UserTable.isAdmin
-    val readingEvents by ReadingEvent referrersOn ReadingEventTable.user // make sure to use val and referrersOn
+    val userBooks by UserBook referrersOn UserBookTable.book
+//    val readingEvents by ReadingEvent referrersOn ReadingEventTable.user // make sure to use val and referrersOn
 }

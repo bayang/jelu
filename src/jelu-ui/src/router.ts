@@ -1,6 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from './store'
 
+const isLogged = () => {
+    if (!store.state.isLogged) {
+        console.log("is not logged")
+        return false
+    }
+}
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -13,12 +20,14 @@ const router = createRouter({
             path: '/books/:bookId',
             component: () => import(/* webpackChunkName: "recommend" */ './components/BookDetail.vue'),
             name: 'book-detail',
-            props: true
+            props: true,
+            beforeEnter: [isLogged],
         },
         {
             path: '/books',
             component: () => import(/* webpackChunkName: "recommend" */ './components/BookList.vue'),
-            name: 'my-books'
+            name: 'my-books',
+            beforeEnter: [isLogged],
         },
         {
             path: '/login',
@@ -28,7 +37,8 @@ const router = createRouter({
         {
             path: '/add-book',
             component: () => import(/* webpackChunkName: "recommend" */ './components/AddBook.vue'),
-            name: 'add-book'
+            name: 'add-book',
+            beforeEnter: [isLogged],
         },
     ],
 })
@@ -41,11 +51,10 @@ router.beforeEach((to, from, next) => {
     console.log('router store')
     console.log(store.state.isLogged)
     if (from.name == undefined 
-        && from.matched.length < 1 
-        && !store.state.isLogged) {
-        console.log('undefined and not logged wanting to go to ' + to.name?.toString())
+        && from.matched.length < 1) {
+        console.log('undefined wanting to go to ' + to.name?.toString())
         if (to.name !== 'login') {
-            store.commit('entryPoint', to.name)
+            store.commit('entryPoint', to.path)
         }
     }
     // if (to.name !== 'login' && !store.state.isLogged) {

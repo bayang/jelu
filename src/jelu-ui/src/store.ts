@@ -66,7 +66,7 @@ const store = createStore<State>({
           console.log(user)
           commit('login', true)
           commit('user', user)
-          await router.push({name: state.entryPoint})
+          await router.push({path: state.entryPoint})
         } catch (error) {
           commit('login', false)
           throw error

@@ -104,14 +104,16 @@ class BookService(
     fun save(author: AuthorDto): AuthorDto = bookRepository.save(author).toAuthorDto()
 
     @Transactional
-    fun findAllBooksByUser(user: User): List<BookDtoWithEvents> {
-        var events: List<ReadingEvent> = bookRepository.findAllBooksByUser(user)
+    fun findAllBooksByUser(user: User): List<UserBookLightDto> {
+//        var events: List<ReadingEvent> = bookRepository.findAllBooksByUser(user)
         // filtering by users here is shitty
         // the sql request gives events with unique books but
         // back reference from book to events gives all events for all users
         //FIXME try to achieve everything in sql
         // anyway impact on perf should be low as we will always keep 1 user only
-        return events.map { it.book }.map { it.toBookWithReadingEventsDto(user) }
+//        return events.map { it.book }.map { it.toBookWithReadingEventsDto(user) }
+       return bookRepository.findAllBooksByUser(user).map { it.toUserBookLightDto() }
+
     }
 
     @Transactional

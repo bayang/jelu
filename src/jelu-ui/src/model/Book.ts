@@ -14,7 +14,12 @@ export default interface Book {
     publishedDate?: string|null,
     modificationDate?: string,
     authors?: Array<Author>,
-    readingEvents?: Array<ReadingEvent>,
     readingEvent?: ReadingEventType|null,
   }
-  
+export interface UserBook {
+    id?: string,
+    creationDate?: string,
+    modificationDate?: string,
+    book: Book,
+    readingEvents?: Array<ReadingEvent>|null,
+  }

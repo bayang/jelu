@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import Book from "../model/Book";
+import Book, { UserBook } from "../model/Book";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
 import { JeluError } from "../model/JeluError";
@@ -57,9 +57,9 @@ class DataService {
     }
   }
 
-  findAll = async () => {
+  findUserBooks = async () => {
     try {
-      const response = await this.apiClient.get<Array<Book>>("/books/me");
+      const response = await this.apiClient.get<Array<UserBook>>("/books/me");
       console.log("called backend")
       console.log(response)
       return response.data;

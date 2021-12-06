@@ -1,0 +1,53 @@
+package io.github.bayang.jelu.dao
+
+import io.github.bayang.jelu.dto.UserBookDto
+import io.github.bayang.jelu.dto.UserBookLightDto
+import io.github.bayang.jelu.dto.UserBookWithoutEventsDto
+import org.jetbrains.exposed.dao.UUIDEntity
+import org.jetbrains.exposed.dao.UUIDEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.javatime.timestamp
+import java.util.*
+
+object UserBookTable: UUIDTable("user_book") {
+    val creationDate = timestamp("creation_date")
+    val modificationDate = timestamp("modification_date")
+    val user = reference("user", UserTable)
+    val book = reference("book", BookTable)
+}
+
+class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
+    companion object : UUIDEntityClass<UserBook>(UserBookTable)
+    var creationDate by UserBookTable.creationDate
+    var modificationDate by UserBookTable.modificationDate
+    var user by User referencedOn UserBookTable.user
+    var book by Book referencedOn UserBookTable.book
+    val readingEvents by ReadingEvent referrersOn ReadingEventTable.userBook // make sure to use val and referrersOn
+
+    fun toUserBookDto(): UserBookDto =
+        UserBookDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            user = this.user.toUserDto(),
+            book = this.book.toBookDto(),
+            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserAndBookDto() }
+        )
+    fun toUserBookLightDto(): UserBookLightDto =
+        UserBookLightDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            book = this.book.toBookDto(),
+            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserAndBookDto() }
+        )
+    fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto=
+        UserBookWithoutEventsDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            book = this.book.toBookDto(),
+            user = this.user.toUserDto(),
+        )
+}

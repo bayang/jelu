@@ -15,7 +15,17 @@ console.log(router.currentRoute.value)
 
 store.dispatch('setupStatus')
 store.dispatch('getUser')
-  .then(() => {console.log("then")})
+  .then(async () => {
+    console.log("then")
+    try {
+      console.log("entrypoint " + store.state.entryPoint)
+      await router.push({ path: store.state.entryPoint })
+      console.log("ok nav")
+    } catch(e) {
+      console.log("error nav")
+      console.log(e)
+    }
+  })
   .catch(() => {
     console.log("catch")
     router.push({name: 'login'}).then(() => {console.log("ok nav")}).catch(() => {console.log("error nav")})

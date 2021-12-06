@@ -1,7 +1,7 @@
 export default interface ReadingEvent {
     id?: string,
     creationDate?: string,
-    name: string,
+    // name: string,
     eventType: ReadingEventType,
   }
 

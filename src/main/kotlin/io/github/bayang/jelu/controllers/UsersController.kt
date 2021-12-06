@@ -98,7 +98,7 @@ class UsersController(
     fun users(@RequestParam(name = "q", required = false) searchTerm: String?): List<UserDto> = repository.findAll(searchTerm)
 
     @GetMapping(path = ["/users/{id}"])
-    fun userById(@PathVariable("id") userId: UUID): UserDtoWithEvents = repository.findUserById(userId)
+    fun userById(@PathVariable("id") userId: UUID): UserDto = repository.findUserById(userId)
 
     @PostMapping(path = ["/users"])
     fun saveUser(@RequestBody @Valid user: CreateUserDto): UserDto {

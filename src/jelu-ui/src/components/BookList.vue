@@ -1,18 +1,24 @@
 <script setup lang="ts">
 import { computed, onMounted, Ref, ref } from 'vue'
 import dataService from '../services/DataService'
-import Book from "../model/Book";
+import Book, { UserBook } from "../model/Book";
+import ReadingEvent from '../model/ReadingEvent';
 console.log("script setup")
 const count = ref(0)
-const books: Ref<Array<Book>> = ref([])
+const books: Ref<Array<UserBook>> = ref([])
 
 const getBooks = async () => {
   try {
-      books.value = await dataService.findAll()
+      books.value = await dataService.findUserBooks()
     } catch (error) {
       console.log("failed get def books : " +error)
     }
   }
+const displayEvent = (readingEvents?: Array<ReadingEvent>|null) => {
+    if (readingEvents != null && readingEvents.length > 0) {
+      return readingEvents[readingEvents.length - 1].eventType
+    }
+}
   onMounted(() => {
             console.log('Component is mounted!')
             try {
@@ -48,7 +54,7 @@ const getBooks = async () => {
       <div class="card">
   <div class="card-image">
     <figure class="image is-3by4">
-      <img v-if="book.image" :src="'/files/' + book.image" alt="cover image">
+      <img v-if="book.book.image" :src="'/files/' + book.book.image" alt="cover image">
       <img v-else src="../assets/placeholder_asset.png" alt="cover placeholder">
       <!-- <img src="http://lorempixel.com/g/400/200" alt="Placeholder image"> -->
     </figure>
@@ -59,7 +65,7 @@ const getBooks = async () => {
   <i class="mdi mdi-book-open-blank-variant mdi-18px"></i>
 </span>
 <router-link :to="{ name: 'book-detail', params: { bookId: book.id }}">
-  {{book.title}}
+  {{book.book.title}}
 </router-link>
     </p>
     
@@ -71,13 +77,13 @@ const getBooks = async () => {
   </header>
   <div class="card-content">
     <div class="content">
-    <span v-for="author in book.authors" v-bind:key="author.id">{{author.name}},&nbsp;</span>
+    <span v-for="author in book.book.authors" v-bind:key="author.id">{{author.name}},&nbsp;</span>
       {{book.id}}
     </div>
     <footer class="card-footer">
     <div class="tags has-addons">
   <span class="tag">Status</span>
-  <span v-if="book.readingEvents" class="tag is-primary">{{book.readingEvents[0].eventType}}</span>
+  <span v-if="book.readingEvents" class="tag is-primary">{{displayEvent(book.readingEvents)}}</span>
 </div>
   </footer>
   </div>
