@@ -29,10 +29,13 @@ class BooksController(
     @GetMapping(path = ["/books/{id}"])
     fun bookById(@PathVariable("id") bookId: UUID) = repository.findBookById(bookId)
 
+    @GetMapping(path = ["/userbooks/{id}"])
+    fun userbookById(@PathVariable("id") userbookId: UUID) = repository.findUserBookById(userbookId)
+
     @GetMapping(path = ["/books/me"])
     fun myBooks(principal: Authentication): List<UserBookLightDto> {
         if (principal.principal !is JeluUser) {
-            throw JeluException("Logged in user/provided credentials cannot get his ReadingEvents")
+            throw JeluException("Logged in user/provided credentials cannot get his books")
         }
         return repository.findAllBooksByUser((principal.principal as JeluUser).user)
     }

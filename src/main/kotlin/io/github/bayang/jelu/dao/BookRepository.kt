@@ -131,4 +131,6 @@ class BookRepository {
         }
         return created
     }
+
+    fun findUserBookById(userbookId: UUID): UserBook = UserBook[userbookId]
 }

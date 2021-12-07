@@ -4,7 +4,6 @@ import com.github.slugify.Slugify
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.Book
 import io.github.bayang.jelu.dao.BookRepository
-import io.github.bayang.jelu.dao.ReadingEvent
 import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.imageName
@@ -104,18 +103,12 @@ class BookService(
     fun save(author: AuthorDto): AuthorDto = bookRepository.save(author).toAuthorDto()
 
     @Transactional
-    fun findAllBooksByUser(user: User): List<UserBookLightDto> {
-//        var events: List<ReadingEvent> = bookRepository.findAllBooksByUser(user)
-        // filtering by users here is shitty
-        // the sql request gives events with unique books but
-        // back reference from book to events gives all events for all users
-        //FIXME try to achieve everything in sql
-        // anyway impact on perf should be low as we will always keep 1 user only
-//        return events.map { it.book }.map { it.toBookWithReadingEventsDto(user) }
-       return bookRepository.findAllBooksByUser(user).map { it.toUserBookLightDto() }
-
-    }
+    fun findAllBooksByUser(user: User): List<UserBookLightDto> = bookRepository.findAllBooksByUser(user).map { it.toUserBookLightDto() }
 
     @Transactional
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto = bookRepository.updateAuthor(authorId, author).toAuthorDto()
+
+    @Transactional
+    fun findUserBookById(userbookId: UUID): UserBookLightDto = bookRepository.findUserBookById(userbookId).toUserBookLightDto()
+
 }

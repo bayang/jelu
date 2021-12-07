@@ -4,10 +4,7 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
-import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.innerJoin
-import org.jetbrains.exposed.sql.select
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
@@ -16,7 +13,6 @@ private val logger = KotlinLogging.logger {}
 
 @Repository
 class ReadingEventRepository(
-    private val userRepository: UserRepository,
     private val bookRepository: BookRepository
 ) {
 
@@ -30,12 +26,6 @@ class ReadingEventRepository(
     }
 
     fun findAllByUser(userID: UUID, searchTerm: ReadingEventType? = null): List<ReadingEvent> {
-//        val user: User = userRepository.findUserById(userID)
-//        ReadingEvent.find { ReadingEventTable.eventType eq searchTerm and(ReadingEventTable.userBook.) }
-//        UserBook.find { UserBookTable.user eq userID }.map { it.readingEvents }
-////        return findAllByUser(user, searchTerm)
-//        ReadingEventTable.innerJoin(UserBookTable, onColumn = ReadingEventTable.)
-//        }
         return UserBook.find { UserBookTable.user eq userID }
             .flatMap { it.readingEvents }
             .filter {
@@ -66,29 +56,11 @@ class ReadingEventRepository(
     }
 
     fun save(createReadingEventDto: CreateReadingEventDto, book: Book, targetUser: User): ReadingEvent {
-//        val foundBook: Book = bookRepository.findBookById(createReadingEventDto.bookId)
-//        val events = findByBookUserAndType(targetUser, foundBook, ReadingEventType.CURRENTLY_READING)
-//        return if (!events.empty()) {
-//            logger.debug { "found ${events.count()} older events in CURRENTLY_PROCESSING state for book ${foundBook.id}" }
-//            val oldEvent: ReadingEvent = events.first()
-//            updateReadingEvent(oldEvent.id.value, UpdateReadingEventDto(createReadingEventDto.eventType))
-//        } else {
-//            val created = ReadingEvent.new {
-//                user = targetUser
-//                val instant: Instant = nowInstant()
-//                creationDate = instant
-//                modificationDate = instant
-//                book = foundBook
-//                eventType = createReadingEventDto.eventType
-//            }
-//            created
-//        }
         var found: UserBook? = UserBook.find { UserBookTable.user eq targetUser.id and (UserBookTable.book.eq(book.id)) }.firstOrNull()
         val instant: Instant = nowInstant()
         if (found == null) {
             found = UserBook.new {
                 this.creationDate = instant
-//                this.modificationDate = instant
                 this.user = targetUser
                 this.book = book
             }
