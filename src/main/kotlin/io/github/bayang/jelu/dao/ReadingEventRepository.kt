@@ -2,6 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
+import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.and
@@ -51,6 +52,9 @@ class ReadingEventRepository(
 //    }
 
     fun save(createReadingEventDto: CreateReadingEventDto, targetUser: User): ReadingEvent {
+        if (createReadingEventDto.bookId == null) {
+            throw JeluException("Missing bookId to create reading event")
+        }
         val foundBook: Book = bookRepository.findBookById(createReadingEventDto.bookId)
         return this.save(createReadingEventDto, foundBook, targetUser)
     }
@@ -66,19 +70,24 @@ class ReadingEventRepository(
             }
         }
         found.modificationDate = instant
-        val alreadyReadingEvent: ReadingEvent? = found.readingEvents.find { it.eventType == ReadingEventType.CURRENTLY_READING }
+        return save(found, createReadingEventDto)
+    }
+
+    fun save(userBook: UserBook, createReadingEventDto: CreateReadingEventDto): ReadingEvent {
+        val alreadyReadingEvent: ReadingEvent? = userBook.readingEvents.find { it.eventType == ReadingEventType.CURRENTLY_READING }
+        userBook.lastReadingEvent = createReadingEventDto.eventType
+        val instant: Instant = nowInstant()
         if (alreadyReadingEvent != null) {
-            logger.debug { "found ${found.readingEvents.count()} older events in CURRENTLY_PROCESSING state for book ${book.id}" }
+            logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_PROCESSING state for book ${userBook.book.id}" }
             alreadyReadingEvent.eventType = createReadingEventDto.eventType
             alreadyReadingEvent.modificationDate = instant
             return alreadyReadingEvent
         }
         return ReadingEvent.new {
-            val instant: Instant = nowInstant()
             this.creationDate = instant
             this.modificationDate = instant
             this.eventType = createReadingEventDto.eventType
-            this.userBook = found
+            this.userBook = userBook
         }
     }
 
@@ -86,6 +95,7 @@ class ReadingEventRepository(
         return ReadingEvent[readingEventId].apply {
             this.modificationDate = nowInstant()
             this.eventType = updateReadingEventDto.eventType
+            this.userBook.lastReadingEvent = updateReadingEventDto.eventType
         }
     }
 

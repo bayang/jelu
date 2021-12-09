@@ -38,7 +38,7 @@ class UsersController(
                     logger.debug { "dummy user $principal" }
                     return AuthenticationDto(
                         UserDto(
-                        email = principal.name,
+                        login = principal.name,
                         isAdmin = true,
                         id = null,
                         password = "****",
@@ -53,7 +53,7 @@ class UsersController(
                     logger.info { "session ${session.id}" }
                     return AuthenticationDto(
                         UserDto(
-                        email = principal.name,
+                        login = principal.name,
                         isAdmin = (principal.principal as JeluUser).user.isAdmin,
                         id = (principal.principal as JeluUser).user.id.value,
                         password = "****",
@@ -67,7 +67,7 @@ class UsersController(
                     logger.debug { "other principal $principal" }
                     return AuthenticationDto(
                         UserDto(
-                        email = principal.name,
+                        login = principal.name,
                         isAdmin = principal.authorities.contains(SimpleGrantedAuthority(ROLE_ADMIN)),
                         id = null,
                         password = "****",
@@ -83,7 +83,7 @@ class UsersController(
             logger.debug { "no principal" }
             return AuthenticationDto(
                 UserDto(
-                email = principal.name,
+                login = principal.name,
                 isAdmin = (principal.principal as JeluUser).user.isAdmin,
                 id= null,
                 password = "****",

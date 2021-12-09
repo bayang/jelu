@@ -24,16 +24,16 @@ class UserService(
     fun findAll(searchTerm: String?): List<UserDto> = userRepository.findAll(searchTerm).map { it.toUserDto() }
 
     @Transactional
-    fun findByEmailIgnoreCase(email: String): List<UserDto> = userRepository.findByEmailIgnoreCase(email).map { it.toUserDto() }
+    fun findByLogin(login: String): List<UserDto> = userRepository.findByLogin(login).map { it.toUserDto() }
 
     @Transactional
     fun findUserById(id: UUID): UserDto = User[id].toUserDto()
 
     @Transactional
     fun save(user: CreateUserDto): UserDto {
-        if (! userRepository.findByEmailIgnoreCase(user.email).empty()) {
-            logger.error { "user already exists ${user.email}" }
-            throw JeluException("User already exists ${user.email}")
+        if (! userRepository.findByLogin(user.login).empty()) {
+            logger.error { "user already exists ${user.login}" }
+            throw JeluException("User already exists ${user.login}")
         }
         return userRepository.save(user.copy(password = passwordEncoder.encode(user.password))).toUserDto()
     }
@@ -46,7 +46,7 @@ class UserService(
         if (userRepository.countUsers() == 0L) {
             return DummyUser(passwordEncoder.encode("initial"))
         }
-        userRepository.findByEmailIgnoreCase(username).let {
+        userRepository.findByLogin(username).let {
             return JeluUser(it.first())
         }
     }

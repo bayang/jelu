@@ -17,7 +17,7 @@ class UserRepository {
 
     fun findAll(searchTerm: String?): SizedIterable<User> {
         return if (! searchTerm.isNullOrBlank()) {
-            User.find { UserTable.email like searchTerm }
+            User.find { UserTable.login like searchTerm }
         } else {
             User.all()
         }
@@ -25,14 +25,14 @@ class UserRepository {
 
     fun countUsers(): Long = User.count()
 
-    fun findByEmailIgnoreCase(email: String): SizedIterable<User> =
-        User.find { UserTable.email.lowerCase() eq email.lowercase() }
+    fun findByLogin(login: String): SizedIterable<User> =
+        User.find { UserTable.login eq login }
 
     fun findUserById(id: UUID): User = User[id]
 
     fun save(user: CreateUserDto): User {
         val created = User.new{
-            email = user.email
+            login = user.login
             val instant: Instant = nowInstant()
             creationDate = instant
             modificationDate = instant

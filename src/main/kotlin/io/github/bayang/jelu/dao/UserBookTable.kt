@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.util.*
 
@@ -15,6 +16,9 @@ object UserBookTable: UUIDTable("user_book") {
     val modificationDate = timestamp("modification_date")
     val user = reference("user", UserTable)
     val book = reference("book", BookTable)
+    val lastReadingEvent = enumerationByName("last_reading_event", 200, ReadingEventType::class)
+    val personalNotes: Column<String?> = varchar("notes", 5000).nullable()
+    val owned: Column<Boolean?> = bool("is_owned").nullable()
 }
 
 class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
@@ -23,7 +27,10 @@ class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
     var modificationDate by UserBookTable.modificationDate
     var user by User referencedOn UserBookTable.user
     var book by Book referencedOn UserBookTable.book
+    var personalNotes by UserBookTable.personalNotes
+    var owned by UserBookTable.owned
     val readingEvents by ReadingEvent referrersOn ReadingEventTable.userBook // make sure to use val and referrersOn
+    var lastReadingEvent by UserBookTable.lastReadingEvent
 
     fun toUserBookDto(): UserBookDto =
         UserBookDto(
@@ -32,7 +39,10 @@ class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
             modificationDate = this.modificationDate,
             user = this.user.toUserDto(),
             book = this.book.toBookDto(),
-            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserAndBookDto() }
+            lastReadingEvent = this.lastReadingEvent,
+            owned = this.owned,
+            personalNotes = this.personalNotes,
+            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
         )
     fun toUserBookLightDto(): UserBookLightDto =
         UserBookLightDto(
@@ -40,13 +50,18 @@ class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
             creationDate = this.creationDate,
             modificationDate = this.modificationDate,
             book = this.book.toBookDto(),
-            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserAndBookDto() }
+            owned = this.owned,
+            personalNotes = this.personalNotes,
+            lastReadingEvent = this.lastReadingEvent,
+            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
         )
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto=
         UserBookWithoutEventsDto(
             id = this.id.value,
             creationDate = this.creationDate,
             modificationDate = this.modificationDate,
+            owned = this.owned,
+            personalNotes = this.personalNotes,
             book = this.book.toBookDto(),
             user = this.user.toUserDto(),
         )

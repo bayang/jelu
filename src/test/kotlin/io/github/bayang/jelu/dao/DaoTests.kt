@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.dao
 
+import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.utils.nowInstant
@@ -15,8 +16,22 @@ class DaoTests(@Autowired private val bookService: BookService) {
 
     @Test
     fun testInsertBooks() {
-        val res: BookDto = bookService.save(BookDto(
-            null, nowInstant(), "title1", "", "", "", "", 50, "", nowInstant(), emptyList())
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+            id = null,
+            title = "title1",
+            isbn10 = "",
+            isbn13 = "",
+            summary = "",
+            image = "",
+            publisher = "",
+            pageCount = 50,
+            publishedDate = "",
+            series = "",
+            authors = emptyList(),
+            numberInSeries = null
+            ),
+            null
         )
         Assertions.assertNotNull(res.id)
         val found = bookService.findBookById(res.id!!)

@@ -1,8 +1,6 @@
 package io.github.bayang.jelu.dao
 
-import io.github.bayang.jelu.dao.User.Companion.referrersOn
 import io.github.bayang.jelu.dto.BookDto
-import io.github.bayang.jelu.dto.BookDtoWithEvents
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -22,6 +20,8 @@ object BookTable: UUIDTable("book") {
     val summary: Column<String?> = varchar("summary", 50000).nullable()
     val pageCount: Column<Int?> = integer(name = "page_count").nullable()
     val image: Column<String?> = varchar("image", 1000).nullable()
+    val series: Column<String?> = varchar("series", 500).nullable()
+    val numberInSeries: Column<Double?> = double(name = "number_in_series").nullable()
 }
 class Book(id: EntityID<UUID>): UUIDEntity(id) {
     companion object : UUIDEntityClass<Book>(BookTable)
@@ -36,8 +36,10 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
     var publisher by BookTable.publisher
     var authors by Author via BookAuthors
     var image by BookTable.image
+    var series by BookTable.series
+    var numberInSeries by BookTable.numberInSeries
     val userBooks by UserBook referrersOn UserBookTable.book
-//    val readingEvents by ReadingEvent referrersOn ReadingEventTable.book // make sure to use val and referrersOn
+
     fun toBookDto(): BookDto =
         BookDto(
             id = this.id.value,
@@ -51,38 +53,8 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             publishedDate = this.publishedDate,
             pageCount = this.pageCount,
             modificationDate = this.modificationDate,
+            series = this.series,
+            numberInSeries = this.numberInSeries,
             authors = this.authors.map { it.toAuthorDto() }
         )
-//    fun toBookWithReadingEventsDto(): BookDtoWithEvents =
-//        BookDtoWithEvents(
-//            id = this.id.value,
-//            creationDate = this.creationDate,
-//            title = this.title,
-//            isbn10 = this.isbn10,
-//            isbn13 = this.isbn13,
-//            summary = this.summary,
-//            image = this.image,
-//            publisher = this.publisher,
-//            publishedDate = this.publishedDate,
-//            pageCount = this.pageCount,
-//            modificationDate = this.modificationDate,
-//            authors = this.authors.map { it.toAuthorDto() },
-//            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserAndBookDto() }
-//        )
-//    fun toBookWithReadingEventsDto(user: User): BookDtoWithEvents =
-//        BookDtoWithEvents(
-//            id = this.id.value,
-//            creationDate = this.creationDate,
-//            title = this.title,
-//            isbn10 = this.isbn10,
-//            isbn13 = this.isbn13,
-//            summary = this.summary,
-//            image = this.image,
-//            publisher = this.publisher,
-//            publishedDate = this.publishedDate,
-//            pageCount = this.pageCount,
-//            modificationDate = this.modificationDate,
-//            authors = this.authors.map { it.toAuthorDto() },
-//            readingEvents = this.readingEvents.filter { it.user.id.value == user.id.value }.map { it.toReadingEventWithoutUserAndBookDto() }
-//        )
 }

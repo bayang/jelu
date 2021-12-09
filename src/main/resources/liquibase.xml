@@ -35,6 +35,12 @@
             <column name="publisher" type="varchar(500)"
                     remarks="The book's publisher ">
             </column>
+            <column name="series" type="varchar(500)"
+                    remarks="The book's series ">
+            </column>
+            <column name="number_in_series" type="double"
+                    remarks="The book's number in series ">
+            </column>
             <column name="image" type="varchar(1000)"
                     remarks="The book's image ">
             </column>
@@ -92,6 +98,15 @@
             <column name="book" type="binary(16)" remarks="Technical ID">
                 <constraints foreignKeyName="fk_user_book_book_id" references="book(id)" nullable="false" />
             </column>
+            <column name="last_reading_event" type="varchar(200)"
+                    remarks="Event type : CURRENTLY_READING,DROPPED,FINISHED ">
+            </column>
+            <column name="notes" type="varchar(5000)"
+                    remarks="The user's personal notes ">
+            </column>
+            <column name="is_owned" type="boolean"
+                    remarks="If the user owns the book ">
+            </column>
         </createTable>
         <createTable tableName="reading_event">
             <column name="id" type="binary(16)" remarks="Technical ID">
@@ -125,8 +140,8 @@
                     remarks="date of modification">
                 <constraints nullable="false" />
             </column>
-            <column name="email" type="varchar(200)"
-                    remarks="The user's email ">
+            <column name="login" type="varchar(50)"
+                    remarks="The user's login ">
                 <constraints nullable="false" />
             </column>
             <column name="password" type="varchar(1000)"

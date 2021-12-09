@@ -2,7 +2,10 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.nowInstant
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SizedCollection
+import org.jetbrains.exposed.sql.SizedIterable
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.and
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
@@ -19,25 +22,9 @@ class BookRepository {
     }
 
     fun findAllBooksByUser(user: User): List<UserBook> {
-//        return ReadingEvent
-//            .find { ReadingEventTable.user eq user.id }
-//            .distinctBy { it.book.id }
-//            .map { it.book }
-//    }
-
-//    fun findAllBooksByUser(user: User): List<Book> {
-//        val query = BookTable.innerJoin(ReadingEventTable).innerJoin(UserTable)
-//            .slice(BookTable.columns)
-//            .select {
-//                ReadingEventTable.book as reb,
-//                ReadingEventTable.user eq user.id
-//            }
-//            .withDistinct(true)
-//        return Book.wrapRows(query).toList()
         return UserBook.find { UserBookTable.user eq user.id }
                         .orderBy(Pair(UserBookTable.modificationDate, SortOrder.DESC_NULLS_LAST))
                         .toList()
-
     }
 
     fun findAllAuthors(): SizedIterable<Author> = Author.all()
@@ -52,19 +39,20 @@ class BookRepository {
 
     fun findAuthorsById(authorId: UUID): Author = Author[authorId]
 
-    fun update(bookId: UUID, book: BookUpdateDto): Book {
-        var found: Book = Book[bookId]
+    fun update(updated: Book, book: BookCreateDto): Book {
         if (!book.title.isNullOrBlank()) {
-            found.title = book.title
+            updated.title = book.title
         }
-        book.isbn10.let { found.isbn10 = it }
-        book.isbn13.let { found.isbn13 = it }
-        book.pageCount.let { found.pageCount = it }
-        book.publisher.let { found.publisher = it }
-        book.summary.let { found.summary = it }
-        book.image.let { found.image = it }
-        book.publishedDate.let { found.publishedDate = it }
-        found.modificationDate = nowInstant()
+        book.isbn10.let { updated.isbn10 = it }
+        book.isbn13.let { updated.isbn13 = it }
+        book.pageCount.let { updated.pageCount = it }
+        book.publisher.let { updated.publisher = it }
+        book.summary.let { updated.summary = it }
+        book.image.let { updated.image = it }
+        book.publishedDate.let { updated.publishedDate = it }
+        book.series.let { updated.series = it }
+        book.numberInSeries.let { updated.numberInSeries = it }
+        updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
             val authorEntity: Author? = findAuthorsByName(it.name)
@@ -75,16 +63,36 @@ class BookRepository {
             }
         }
         if (authorsList.isNotEmpty()) {
-            if (found.authors.empty()) {
-                found.authors = SizedCollection(authorsList)
+            if (updated.authors.empty()) {
+                updated.authors = SizedCollection(authorsList)
             }
             else {
-                val existing = found.authors.toMutableList()
+                val existing = updated.authors.toMutableList()
                 existing.addAll(authorsList)
                 val merged: SizedCollection<Author> = SizedCollection(existing)
-                found.authors = merged
+                updated.authors = merged
             }
         }
+        return updated
+    }
+
+    fun update(bookId: UUID, book: BookCreateDto): Book {
+        var found: Book = Book[bookId]
+        return update(found, book)
+    }
+
+    fun update(userBookId: UUID, book: UserBookUpdateDto): UserBook {
+        var found: UserBook = UserBook[userBookId]
+        if (book.owned != null) {
+            found.owned = book.owned
+        }
+        if (!book.personalNotes.isNullOrBlank()) {
+            found.personalNotes = book.personalNotes
+        }
+        if (book.book != null) {
+            update(found.book, book.book)
+        }
+        // creer reading event
         return found
     }
 
@@ -95,7 +103,7 @@ class BookRepository {
         return found
     }
 
-    fun save(book: CreateBookDto): Book {
+    fun save(book: BookCreateDto): Book {
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
             val authorEntity: Author? = findAuthorsByName(it.name)
@@ -106,17 +114,19 @@ class BookRepository {
             }
         }
         val created = Book.new{
-            title = book.title
+            this.title = book.title
             val instant: Instant = nowInstant()
-            creationDate = instant
-            modificationDate = instant
-            summary = book.summary
-            isbn10 = book.isbn10
-            isbn13 = book.isbn13
-            pageCount = book.pageCount
-            publishedDate = book.publishedDate
-            publisher = book.publisher
-            image = book.image
+            this.creationDate = instant
+            this.modificationDate = instant
+            this.summary = book.summary
+            this.isbn10 = book.isbn10
+            this.isbn13 = book.isbn13
+            this.pageCount = book.pageCount
+            this.publishedDate = book.publishedDate
+            this.publisher = book.publisher
+            this.image = book.image
+            this.series = book.series
+            this.numberInSeries = book.numberInSeries
         }
         created.authors = SizedCollection(authorsList)
         return created
@@ -132,5 +142,27 @@ class BookRepository {
         return created
     }
 
+    fun save(book: Book, user: User, createUserBookDto: CreateUserBookDto): UserBook {
+        val instant: Instant = nowInstant()
+        return UserBook.new {
+            this.creationDate = instant
+            this.modificationDate = instant
+            this.user = user
+            this.book = book
+            this.owned = createUserBookDto.owned
+            this.personalNotes = createUserBookDto.personalNotes
+        }
+    }
+
     fun findUserBookById(userbookId: UUID): UserBook = UserBook[userbookId]
+
+    fun findUserBookByLastEvent(userID: UUID, searchTerm: ReadingEventType): SizedIterable<UserBook> {
+        return UserBook.find {
+            UserBookTable.user eq userID and(UserBookTable.lastReadingEvent eq searchTerm)
+        }
+    }
+
+    fun findUserBookByUserAndBook(user: User, book: Book): UserBook? {
+        return UserBook.find { UserBookTable.user eq user.id and (UserBookTable.book.eq(book.id)) }.firstOrNull()
+    }
 }
