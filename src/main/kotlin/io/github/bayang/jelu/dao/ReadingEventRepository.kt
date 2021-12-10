@@ -75,8 +75,9 @@ class ReadingEventRepository(
 
     fun save(userBook: UserBook, createReadingEventDto: CreateReadingEventDto): ReadingEvent {
         val alreadyReadingEvent: ReadingEvent? = userBook.readingEvents.find { it.eventType == ReadingEventType.CURRENTLY_READING }
-        userBook.lastReadingEvent = createReadingEventDto.eventType
         val instant: Instant = nowInstant()
+        userBook.lastReadingEvent = createReadingEventDto.eventType
+        userBook.lastReadingEventDate = instant
         if (alreadyReadingEvent != null) {
             logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_PROCESSING state for book ${userBook.book.id}" }
             alreadyReadingEvent.eventType = createReadingEventDto.eventType
@@ -96,6 +97,7 @@ class ReadingEventRepository(
             this.modificationDate = nowInstant()
             this.eventType = updateReadingEventDto.eventType
             this.userBook.lastReadingEvent = updateReadingEventDto.eventType
+            this.userBook.lastReadingEventDate = this.modificationDate
         }
     }
 

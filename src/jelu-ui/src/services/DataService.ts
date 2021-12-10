@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import Book, { UserBook } from "../model/Book";
+import { UserBook, Book } from "../model/Book";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
 import { JeluError } from "../model/JeluError";
@@ -14,6 +14,8 @@ class DataService {
   private TOKEN_KEY: string = 'jelu-token'
 
   private API_BOOK = '/books';
+
+  private API_USERBOOK = '/userbooks';
   
   constructor() {
     this.apiClient = axios.create({
@@ -59,7 +61,7 @@ class DataService {
 
   findUserBooks = async () => {
     try {
-      const response = await this.apiClient.get<Array<UserBook>>("/books/me");
+      const response = await this.apiClient.get<Array<UserBook>>(`${this.API_USERBOOK}/me`);
       console.log("called backend")
       console.log(response)
       return response.data;
@@ -176,7 +178,7 @@ class DataService {
   createUser = async (login: string, password: string) => {
     try {
       let resp = await this.apiClient.post<User>('/users', {
-          'email' : login,
+          'login' : login,
           'password' : password, 
           'isAdmin' : true
       },
@@ -225,6 +227,34 @@ class DataService {
         type: "application/json"
     }));
       let resp = await this.apiClient.post<Book>(this.API_BOOK, formData,
+       { 
+        headers:{
+          'Content-Type':'multipart/form-data',
+          'Accept':'application/json'
+        }, 
+        onUploadProgress: onUploadProgress})
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error saving book " + error.response.status + " " + error.response.data.error)
+        throw new Error("error saving book " + error.response.status + " " + error)
+      }
+      console.log("error saving book " + (error as AxiosError).toJSON())
+      console.log("error saving book " + (error as AxiosError).code)
+      throw new Error("error saving book " + error)
+    }
+  }
+
+  saveUserBookImage = async (userBook: UserBook, file: File|null, onUploadProgress:any) => {
+    try {
+      let formData = new FormData()
+      if (file != null) {
+        formData.append('file', file);
+      }
+      formData.append('book', new Blob([JSON.stringify(userBook)], {
+        type: "application/json"
+    }));
+      let resp = await this.apiClient.post<UserBook>(this.API_USERBOOK, formData,
        { 
         headers:{
           'Content-Type':'multipart/form-data',

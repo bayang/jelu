@@ -1,7 +1,7 @@
 import Author from "./Author";
 import ReadingEvent, { ReadingEventType } from "./ReadingEvent";
 
-export default interface Book {
+export interface Book {
     id?: string,
     creationDate?: string,
     title: string,
@@ -14,12 +14,18 @@ export default interface Book {
     publishedDate?: string|null,
     modificationDate?: string,
     authors?: Array<Author>,
-    readingEvent?: ReadingEventType|null,
+    series?: string, 
+    numberInSeries? : number|null
   }
 export interface UserBook {
     id?: string,
+    lastReadingEvent?: ReadingEventType|null,
+    lastReadingEventDate?: string,
     creationDate?: string,
     modificationDate?: string,
+    personalNotes?: string,
+    owned?: boolean|null,
+    toRead?: boolean|null,
     book: Book,
     readingEvents?: Array<ReadingEvent>|null,
   }

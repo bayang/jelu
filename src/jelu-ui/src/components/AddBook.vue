@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, reactive, Ref, ref } from "vue";
+import { computed, onMounted, reactive, Ref, ref } from "vue";
 import { useStore } from "vuex";
-import Book from "../model/Book";
+import { Book, UserBook } from "../model/Book";
 import dataService from "../services/DataService";
 import { key } from "../store";
 import { StringUtils } from "../utils/StringUtils";
@@ -19,13 +19,34 @@ const form = reactive({
   publisher: "",
   pageCount: null,
   publishedDate: null,
+  series: "",
+  numberInSeries: null,
+  personalNotes: "",
+  owned: null,
+  toRead: null
 });
+// const userData = reactive({
+//   personalNotes: "",
+//   owned: null
+// });
 const eventType = ref(null);
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
 const isSwitchedCustom = ref("Upload from the web");
 const uploadPercentage = ref(0);
 const errorMessage = ref("");
+const ownedDisplay = computed(() => {
+    if (form.owned) {
+      return "Owned"
+    }
+    return ""
+  })
+const toReadDisplay = computed(() => {
+    if (form.toRead) {
+      return "Book will be added to to-read list"
+    }
+    return ""
+  })
 // load existing authors from db here
 const data: Ref<Array<string>> = ref(["jacques"]);
 let filteredAuthors: Ref<Array<string>> = ref(data);
@@ -34,22 +55,29 @@ let authors: Ref<Array<string>> = ref([]);
 const importBook = async () => {
   console.log("import book");
   if (StringUtils.isNotBlank(form.title)) {
-    let book: Book = form;
-    authors.value.forEach((s) => book.authors?.push({ name: s }));
+    // let book: Book = form;
+    // let userBook: UserBook = { 
+    //   "book" : book, 
+    //   "owned" : form.owned,
+    //   "personalNotes" : form.personalNotes
+    //   };
+      let userBook = fillBook(form)
+      authors.value.forEach((s) => userBook.book.authors?.push({ name: s }));
     if (StringUtils.isNotBlank(imageUrl.value)) {
-      book.image = imageUrl.value;
+      userBook.book.image = imageUrl.value;
     }
     if (eventType.value !== null && eventType.value !== "NONE") {
       console.log(
         "type " + StringUtils.readingEventTypeForValue(eventType.value)
       );
-      book.readingEvent = StringUtils.readingEventTypeForValue(eventType.value);
+      userBook.lastReadingEvent = StringUtils.readingEventTypeForValue(eventType.value);
     }
     try {
-      console.log(`push book ` + book);
+      console.log(`push book ` + userBook);
+      console.log(userBook);
       // let res: Book = await dataService.saveBook(book)
-      let res: Book = await dataService.saveBookImage(
-        book,
+      let res: UserBook = await dataService.saveUserBookImage(
+        userBook,
         file.value,
         (event: { loaded: number; total: number }) => {
           let percent = Math.round((100 * event.loaded) / event.total);
@@ -57,10 +85,10 @@ const importBook = async () => {
           uploadPercentage.value = percent;
         }
       );
-      console.log(`saved book ${res.title}`);
+      console.log(`saved book ${res.book.title}`);
       // popup which indicate success
       // empty form
-      toast("success", `Book ${res.title} imported !`, 4000);
+      toast("success", `Book ${res.book.title} imported !`, 4000);
       clearForm();
     } catch (error: any) {
       // errorMessage.value = error.message
@@ -70,6 +98,28 @@ const importBook = async () => {
     errorMessage.value = "provide at least a title";
   }
 };
+
+const fillBook = (formdata: any): UserBook => {
+  let userBook: UserBook = {
+    book : {
+      title : formdata.title,
+      isbn10: formdata.isbn10,
+      isbn13: formdata.isbn13,
+      summary: formdata.summary,
+      publisher: formdata.publisher,
+      image : formdata.image,
+      pageCount : formdata.pageCount,
+      publishedDate : formdata.publishedDate,
+      series : formdata.series,
+      numberInSeries : formdata.numberInSeries,
+      authors: []
+    },
+    owned : formdata.owned,
+    personalNotes: formdata.personalNotes,
+    toRead: formdata.toRead
+  }
+  return userBook
+}
 
 const clearForm = () => {
   clearIconClick();
@@ -85,6 +135,10 @@ const clearForm = () => {
   form.publisher = "";
   form.pageCount = null;
   form.publishedDate = null;
+  form.series = ""
+  form.numberInSeries = null
+  form.owned = null
+  form.personalNotes = ""
 };
 
 const toast = (variant: string, message: string, duration: number = 2000) => {
@@ -119,6 +173,8 @@ function getFilteredAuthors(text: string) {
 <template>
   <h1 class="title">Add book</h1>
   <section>
+    
+
     <div class="field">
       <o-field horizontal label="Title">
         <o-input v-model="form.title"></o-input>
@@ -192,6 +248,12 @@ function getFilteredAuthors(text: string) {
         <o-input v-model="form.pageCount" type="number" min="0"></o-input>
       </o-field>
     </div>
+    <div class="field">
+      <o-field horizontal label="Series">
+        <o-input v-model="form.series"></o-input>
+        <o-input v-model="form.numberInSeries" type="number" min="0" step="0.1"></o-input>
+      </o-field>
+    </div>
     <div class="block">
       <o-field horizontal label="Status : ">
         <o-radio v-model="eventType" name="type" native-value="FINISHED">
@@ -210,6 +272,29 @@ function getFilteredAuthors(text: string) {
         <o-radio v-model="eventType" name="type" native-value="NONE">
           None
         </o-radio>
+      </o-field>
+    </div>
+    <div class="field">
+      <o-field horizontal label="Personal notes">
+        <o-input
+          maxlength="200"
+          type="textarea"
+          v-model="form.personalNotes"
+        ></o-input>
+      </o-field>
+    </div>
+    <div class="field">
+      <o-field horizontal label="Owned">
+      <o-checkbox v-model="form.owned">
+        {{ ownedDisplay }}
+      </o-checkbox>
+      </o-field>
+    </div>
+    <div class="field">
+      <o-field horizontal label="To read ?">
+      <o-checkbox v-model="form.toRead">
+        {{ toReadDisplay }}
+      </o-checkbox>
       </o-field>
     </div>
     <o-field horizontal label="Upload book cover">

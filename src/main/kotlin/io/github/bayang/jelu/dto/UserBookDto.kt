@@ -11,9 +11,11 @@ data class UserBookDto(
     val user: UserDto,
     val book: BookDto,
     val readingEvents: List<ReadingEventWithoutUserBookDto>?,
-    val lastReadingEvent: ReadingEventType,
+    val lastReadingEventDate: Instant?,
+    val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
-    val owned: Boolean?
+    val owned: Boolean?,
+    val toRead: Boolean?
 )
 data class UserBookLightDto(
     val id: UUID?,
@@ -21,9 +23,11 @@ data class UserBookLightDto(
     val modificationDate: Instant?,
     val book: BookDto,
     val readingEvents: List<ReadingEventWithoutUserBookDto>?,
-    val lastReadingEvent: ReadingEventType,
+    val lastReadingEventDate: Instant?,
+    val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
-    val owned: Boolean?
+    val owned: Boolean?,
+    val toRead: Boolean?
 )
 data class UserBookWithoutEventsDto(
     val id: UUID?,
@@ -32,17 +36,20 @@ data class UserBookWithoutEventsDto(
     val user: UserDto,
     val book: BookDto,
     val personalNotes: String?,
-    val owned: Boolean?
+    val owned: Boolean?,
+    val toRead: Boolean?
 )
 data class CreateUserBookDto(
     val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
     val owned: Boolean?,
-    val book: BookCreateDto
+    val book: BookCreateDto,
+    val toRead: Boolean?
 )
 data class UserBookUpdateDto(
     val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
     val owned: Boolean?,
-    val book: BookCreateDto?
+    val book: BookCreateDto?,
+    val toRead: Boolean?
 )

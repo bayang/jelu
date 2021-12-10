@@ -89,7 +89,7 @@ const store = createStore<State>({
   },
   getters : {
     getUsername(state) {
-      return state.user != null ? state.user.email : 'anonymous'
+      return state.user != null ? state.user.login : 'anonymous'
     }
   }, 
   plugins : [createLogger()],

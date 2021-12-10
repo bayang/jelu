@@ -92,20 +92,26 @@
                     remarks="date of modification">
                 <constraints nullable="false" />
             </column>
+            <column name="last_reading_event" type="varchar(200)"
+                    remarks="Event type : CURRENTLY_READING,DROPPED,FINISHED ">
+            </column>
+            <column name="last_reading_event_date" type="timestamp"
+                    remarks="date of last reading event">
+            </column>
             <column name="user" type="binary(16)" remarks="Technical ID">
                 <constraints foreignKeyName="fk_user_book_user_id" references="user(id)" nullable="false" />
             </column>
             <column name="book" type="binary(16)" remarks="Technical ID">
                 <constraints foreignKeyName="fk_user_book_book_id" references="book(id)" nullable="false" />
             </column>
-            <column name="last_reading_event" type="varchar(200)"
-                    remarks="Event type : CURRENTLY_READING,DROPPED,FINISHED ">
-            </column>
             <column name="notes" type="varchar(5000)"
                     remarks="The user's personal notes ">
             </column>
             <column name="is_owned" type="boolean"
                     remarks="If the user owns the book ">
+            </column>
+            <column name="to_read" type="boolean"
+                    remarks="If the book is in the to read list">
             </column>
         </createTable>
         <createTable tableName="reading_event">

@@ -39,7 +39,7 @@ class BooksController(
         }
     }
 
-    @GetMapping(path = ["/books/me"])
+    @GetMapping(path = ["/userbooks/me"])
     fun myBooks(principal: Authentication): List<UserBookLightDto> {
         assertIsJeluUser(principal.principal)
         return repository.findAllBooksByUser((principal.principal as JeluUser).user)

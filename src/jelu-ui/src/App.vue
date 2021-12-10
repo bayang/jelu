@@ -17,14 +17,14 @@ store.dispatch('setupStatus')
 store.dispatch('getUser')
   .then(async () => {
     console.log("then")
-    try {
+    // try {
       console.log("entrypoint " + store.state.entryPoint)
       await router.push({ path: store.state.entryPoint })
       console.log("ok nav")
-    } catch(e) {
-      console.log("error nav")
-      console.log(e)
-    }
+    // } catch(e) {
+      // console.log("error nav")
+      // console.log(e)
+    // }
   })
   .catch(() => {
     console.log("catch")
@@ -67,7 +67,6 @@ onMounted(() => {
 </nav>
       
   <router-view></router-view>
-  <p>setup : {{isInitialSetup}}, logged : {{isLogged}}</p>
   </section>
 </template>
 

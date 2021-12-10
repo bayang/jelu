@@ -23,8 +23,8 @@ class BookRepository {
 
     fun findAllBooksByUser(user: User): List<UserBook> {
         return UserBook.find { UserBookTable.user eq user.id }
-                        .orderBy(Pair(UserBookTable.modificationDate, SortOrder.DESC_NULLS_LAST))
-                        .toList()
+                .orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
+                .toList()
     }
 
     fun findAllAuthors(): SizedIterable<Author> = Author.all()
@@ -89,6 +89,9 @@ class BookRepository {
         if (!book.personalNotes.isNullOrBlank()) {
             found.personalNotes = book.personalNotes
         }
+        if (book.toRead != null) {
+            found.toRead = book.toRead
+        }
         if (book.book != null) {
             update(found.book, book.book)
         }
@@ -150,6 +153,7 @@ class BookRepository {
             this.user = user
             this.book = book
             this.owned = createUserBookDto.owned
+            this.toRead = createUserBookDto.toRead
             this.personalNotes = createUserBookDto.personalNotes
         }
     }

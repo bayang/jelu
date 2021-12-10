@@ -56,7 +56,7 @@ class BookService(
 //        return saved.toBookDto()
 //    }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     fun save(userBook: CreateUserBookDto, user: User, file: MultipartFile?): UserBookLightDto {
         val book: Book = if (userBook.book.id != null) {
             bookRepository.update(userBook.book.id, userBook.book)

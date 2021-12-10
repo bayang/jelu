@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, Ref, ref } from 'vue'
 import dataService from '../services/DataService'
-import Book, { UserBook } from "../model/Book";
+import { UserBook } from "../model/Book";
 import ReadingEvent from '../model/ReadingEvent';
 console.log("script setup")
 const count = ref(0)
@@ -14,11 +14,7 @@ const getBooks = async () => {
       console.log("failed get def books : " +error)
     }
   }
-const displayEvent = (readingEvents?: Array<ReadingEvent>|null) => {
-    if (readingEvents != null && readingEvents.length > 0) {
-      return readingEvents[readingEvents.length - 1].eventType
-    }
-}
+
   onMounted(() => {
             console.log('Component is mounted!')
             try {
@@ -56,7 +52,6 @@ const displayEvent = (readingEvents?: Array<ReadingEvent>|null) => {
     <figure class="image is-3by4">
       <img v-if="book.book.image" :src="'/files/' + book.book.image" alt="cover image">
       <img v-else src="../assets/placeholder_asset.png" alt="cover placeholder">
-      <!-- <img src="http://lorempixel.com/g/400/200" alt="Placeholder image"> -->
     </figure>
   </div>
   <header class="card-header">
@@ -82,8 +77,8 @@ const displayEvent = (readingEvents?: Array<ReadingEvent>|null) => {
     </div>
     <footer class="card-footer">
     <div class="tags has-addons">
-  <span class="tag">Status</span>
-  <span v-if="book.readingEvents" class="tag is-primary">{{displayEvent(book.readingEvents)}}</span>
+  <span v-if="book.lastReadingEvent" class="tag">Status</span>
+  <span v-if="book.lastReadingEvent" class="tag is-primary">{{book.lastReadingEvent}}</span>
 </div>
   </footer>
   </div>

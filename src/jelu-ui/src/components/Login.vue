@@ -46,8 +46,8 @@ onBeforeMount(() => {
   <h1 class="title">Login</h1>
   <section>
     <div class="field">
-    <o-field label="Email" class="control">
-      <o-input type="email" value="john@" maxlength="30" v-model="form.login"> </o-input>
+    <o-field label="Login" class="control">
+      <o-input type="text" value="john@" maxlength="50" v-model="form.login"> </o-input>
     </o-field>
     </div>
     <div class="field">
