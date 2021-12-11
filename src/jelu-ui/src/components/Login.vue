@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
-import dataService from '../services/DataService'
 import { key } from '../store'
 
 // defineProps<{ msg: string }>()
@@ -32,18 +31,22 @@ const createInitialUser = async () => {
     errorMessage.value = error.message
   }
 }
-console.log('Component is created!')
 onMounted(() => {
             console.log('Component login is mounted in script setup!')
             console.log(`form data ${form}`)
         })
-onBeforeMount(() => {
-  console.log("onbeforemount script setup login")
-})
+
+const submit = () => {
+  if (isInitialSetup.value) {
+    createInitialUser()
+  }
+  else {
+    logUser()
+  }
+}
 </script>
 
 <template>
-  <h1 class="title">Login</h1>
   <section>
     <div class="field">
     <o-field label="Login" class="control">
@@ -52,7 +55,7 @@ onBeforeMount(() => {
     </div>
     <div class="field">
     <o-field label="Password"  class="control">
-      <o-input value="123" type="password" maxlength="30" v-model="form.password"></o-input>
+      <o-input @keyup.enter="submit" value="123" type="password" maxlength="30" v-model="form.password"></o-input>
     </o-field>
     </div>
     <div class="field">
@@ -62,7 +65,7 @@ onBeforeMount(() => {
     </button>
   </p>
   <p class="control" v-else>
-    <button @click="logUser" class="button is-success">
+    <button @click="logUser" class="button is-primary">
       Login
     </button>
   </p>

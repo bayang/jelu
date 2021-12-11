@@ -1,6 +1,121 @@
-@import '@oruga-ui/theme-bulma/dist/bulma.css';
-@import 'bulma/bulma.sass';
+// @import '@oruga-ui/theme-bulma/dist/bulma.css';
+// @import 'bulma/bulma.sass';
 
 
-$my-color: $primary;
+// $my-color: $primary;
 
+@import "bulma/sass/utilities/_all";
+
+$jelu_background: #262429;
+$jelu_background_accent: #404040;
+$jelu_background_contrast: #f7f5d1;
+
+$jelu_text_primary : #ffffff;
+$jelu_text_secondary : #aaaaaa;
+$jelu_text_accent : #69ea7d;
+
+// Set your colors
+$primary: $jelu_text_accent;
+$primary-light: findLightColor($primary);
+$primary-dark: findDarkColor($primary);
+$primary-invert: findColorInvert($primary);
+
+// Lists and maps
+$custom-colors: null !default;
+$custom-shades: null !default;
+
+$colors: mergeColorMaps(
+    (
+        "white": (
+            $white,
+            $black,
+        ),
+        "black": (
+            $black,
+            $white,
+        ),
+        "light": (
+            $light,
+            $light-invert,
+        ),
+        "dark": (
+            $dark,
+            $dark-invert,
+        ),
+        "primary": (
+            $primary,
+            $primary-invert,
+            $primary-light,
+            $primary-dark,
+        ),
+        "link": (
+            $link,
+            $link-invert,
+            $link-light,
+            $link-dark,
+        ),
+        "info": (
+            $info,
+            $info-invert,
+            $info-light,
+            $info-dark,
+        ),
+        "success": (
+            $success,
+            $success-invert,
+            $success-light,
+            $success-dark,
+        ),
+        "warning": (
+            $warning,
+            $warning-invert,
+            $warning-light,
+            $warning-dark,
+        ),
+        "danger": (
+            $danger,
+            $danger-invert,
+            $danger-light,
+            $danger-dark,
+        ),
+    ),
+    $custom-colors
+);
+
+// Links
+$link: $jelu_background_contrast;
+$link-invert: $primary;
+$link-hover: $primary;
+$link-focus-border: $primary;
+
+$body-background-color: $jelu_background;
+
+$navbar-background-color: $jelu_background;
+$navbar-item-hover-color: $primary;
+$navbar-item-hover-background-color: $jelu_background;
+// $navbar-item-active-color: ;
+$navbar-item-active-background-color: $jelu_background_contrast;
+
+$text : $jelu_text_primary;
+$text-strong : $jelu_text_secondary;
+$text-invert: findColorInvert($text);
+
+$field-label-color: $text;
+
+$input-color: $text-invert;
+
+label.label {
+    color: $text;
+}
+
+
+.bar {
+    background-color: $jelu_background_accent;
+    height: 5px;
+    width: 100%;
+    margin-top: 3px;
+    margin-bottom: 10px;
+  }
+
+@import "bulma/bulma";
+@import '@oruga-ui/theme-bulma/dist/scss/bulma';

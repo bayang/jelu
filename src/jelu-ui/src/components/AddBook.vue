@@ -25,10 +25,6 @@ const form = reactive({
   owned: null,
   toRead: null
 });
-// const userData = reactive({
-//   personalNotes: "",
-//   owned: null
-// });
 const eventType = ref(null);
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
@@ -55,12 +51,6 @@ let authors: Ref<Array<string>> = ref([]);
 const importBook = async () => {
   console.log("import book");
   if (StringUtils.isNotBlank(form.title)) {
-    // let book: Book = form;
-    // let userBook: UserBook = { 
-    //   "book" : book, 
-    //   "owned" : form.owned,
-    //   "personalNotes" : form.personalNotes
-    //   };
       let userBook = fillBook(form)
       authors.value.forEach((s) => userBook.book.authors?.push({ name: s }));
     if (StringUtils.isNotBlank(imageUrl.value)) {
@@ -75,7 +65,6 @@ const importBook = async () => {
     try {
       console.log(`push book ` + userBook);
       console.log(userBook);
-      // let res: Book = await dataService.saveBook(book)
       let res: UserBook = await dataService.saveUserBookImage(
         userBook,
         file.value,
@@ -86,8 +75,6 @@ const importBook = async () => {
         }
       );
       console.log(`saved book ${res.book.title}`);
-      // popup which indicate success
-      // empty form
       toast("success", `Book ${res.book.title} imported !`, 4000);
       clearForm();
     } catch (error: any) {
@@ -173,9 +160,9 @@ function getFilteredAuthors(text: string) {
 <template>
   <h1 class="title">Add book</h1>
   <section>
-    
-
-    <div class="field">
+    <div class="columns is-multiline is-centered">
+    <div class="column is-two-thirds">
+<div class="field">
       <o-field horizontal label="Title">
         <o-input v-model="form.title"></o-input>
       </o-field>
@@ -186,7 +173,7 @@ function getFilteredAuthors(text: string) {
         <o-inputitems
           v-model="authors"
           :data="filteredAuthors"
-          autocomplete
+          :autocomplete="true"
           :allow-new="true"
           :open-on-focus="true"
           iconPack="mdi"
@@ -344,6 +331,9 @@ function getFilteredAuthors(text: string) {
       </p>
       <p v-if="errorMessage" class="has-text-danger">{{ errorMessage }}</p>
     </div>
+    </div>
+    </div>
+
   </section>
 </template>
 

@@ -10,6 +10,8 @@ const isLogged = () => {
 
 const router = createRouter({
     history: createWebHistory(),
+    linkActiveClass: 'is-active',
+    linkExactActiveClass: 'is-active',
     routes: [
         {
             path: '/',

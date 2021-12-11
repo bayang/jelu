@@ -22,7 +22,7 @@ const store = createStore<State>({
       isLogged: false,
       isInitialSetup : false,
       user: null,
-      entryPoint: 'home'
+      entryPoint: '/'
     }
   },
   mutations: {

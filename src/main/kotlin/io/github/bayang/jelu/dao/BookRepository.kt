@@ -11,7 +11,9 @@ import java.time.Instant
 import java.util.*
 
 @Repository
-class BookRepository {
+class BookRepository(
+    val readingEventRepository: ReadingEventRepository
+) {
 
     fun findAll(searchTerm: String?): SizedIterable<Book> {
         return if (! searchTerm.isNullOrBlank()) {
@@ -95,7 +97,12 @@ class BookRepository {
         if (book.book != null) {
             update(found.book, book.book)
         }
-        // creer reading event
+        if (book.lastReadingEvent != null) {
+            readingEventRepository.save(found, CreateReadingEventDto(
+                eventType = book.lastReadingEvent,
+                bookId = null
+            ))
+        }
         return found
     }
 

@@ -70,7 +70,7 @@ const getBooks = async () => {
       </span>
     </button>
   </header>
-  <div class="card-content">
+  <div class="card-content has-text-dark">
     <div class="content">
     <span v-for="author in book.book.authors" v-bind:key="author.id">{{author.name}},&nbsp;</span>
       {{book.id}}

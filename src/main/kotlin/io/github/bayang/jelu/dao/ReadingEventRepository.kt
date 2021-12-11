@@ -14,7 +14,6 @@ private val logger = KotlinLogging.logger {}
 
 @Repository
 class ReadingEventRepository(
-    private val bookRepository: BookRepository
 ) {
 
     fun findAll(searchTerm: String?): List<ReadingEvent> {
@@ -55,7 +54,7 @@ class ReadingEventRepository(
         if (createReadingEventDto.bookId == null) {
             throw JeluException("Missing bookId to create reading event")
         }
-        val foundBook: Book = bookRepository.findBookById(createReadingEventDto.bookId)
+        val foundBook: Book = Book[createReadingEventDto.bookId]
         return this.save(createReadingEventDto, foundBook, targetUser)
     }
 

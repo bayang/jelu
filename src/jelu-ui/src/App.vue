@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { computed, onBeforeMount, onMounted } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { key } from './store'
 import { useLink, useRoute, useRouter } from 'vue-router'
 // const props = defineProps()
 const store = useStore(key)
 const router = useRouter()
 const route = useRoute()
-// const { href, isActive, isExactActive, navigate } = useLink(props)
+
+const active = ref(false)
 
 console.log("route " + route.fullPath + " " + route.path + " " + route.redirectedFrom)
 console.log(route)
@@ -41,31 +42,47 @@ const isLogged = computed(() => {
     return store.state.isLogged
   })
 
-onBeforeMount(() => {
-  console.log("onbeforemount script setup")
-})
 onMounted(() => {
             console.log('Component is mounted!')
         })
+const toggleMenu = () => {
+  active.value = !active.value;
+}
 </script>
 
 <template>
-<section class="section has-background-light">
-  <nav class="level">
-  <p class="level-item has-text-centered">
-    <router-link :to="{ name: 'home'}">Home</router-link>
-  </p>
-  <p class="level-item has-text-centered">
-    <router-link :to="{ name: 'my-books'}">My books</router-link>
-  </p>
-  <p class="level-item has-text-centered">
-    <router-link :to="{ name: 'login'}">Login</router-link>
-  </p>
-  <p class="level-item has-text-centered">
-    {{username}}
-  </p>
+<section>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <router-link class="navbar-item" :to="{ name: 'home'}"><img src="./assets/jelu_logo.svg" alt="home"></router-link>
+
+    <a @click="toggleMenu" role="button" :class="active ? 'is-active' : ''" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" :class="active ? 'is-active' : ''" class="navbar-menu">
+    <div class="navbar-start">
+
+      <!-- <a class="navbar-item"> -->
+        <router-link class="navbar-item  is-family-sans-serif is-uppercase" :to="{ name: 'my-books'}">My books</router-link>
+      <!-- </a> -->
+      <!-- <a class="navbar-item"> -->
+        <router-link class="navbar-item is-family-sans-serif  is-uppercase" :to="{ name: 'login'}">Login</router-link>
+      <!-- </a> -->
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        {{username}}
+      </div>
+    </div>
+  </div>
 </nav>
-      
+<div class="bar"></div>
+
   <router-view></router-view>
   </section>
 </template>
@@ -79,11 +96,9 @@ onMounted(() => {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  // color: #2c3e50;
   // margin-top: 60px;
   // background-color:$link;
 }
-.toto {
-  background-color: $my-color;
-}
+
 </style>
