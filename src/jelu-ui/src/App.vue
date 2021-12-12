@@ -67,10 +67,10 @@ const toggleMenu = () => {
     <div class="navbar-start">
 
       <!-- <a class="navbar-item"> -->
-        <router-link class="navbar-item  is-family-sans-serif is-uppercase" :to="{ name: 'my-books'}">My books</router-link>
+        <router-link class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'my-books'}">My books</router-link>
       <!-- </a> -->
       <!-- <a class="navbar-item"> -->
-        <router-link class="navbar-item is-family-sans-serif  is-uppercase" :to="{ name: 'login'}">Login</router-link>
+        <router-link class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'login'}">Login</router-link>
       <!-- </a> -->
     </div>
 

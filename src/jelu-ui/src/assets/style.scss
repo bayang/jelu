@@ -104,6 +104,12 @@ $field-label-color: $text;
 
 $input-color: $text-invert;
 
+$card-background-color:  $white-ter ;
+// $card-header-color: findColorInvert($card-background-color);
+$card-header-color: $jelu_text_accent;
+
+$tag-background-color:$grey-lighter;
+
 label.label {
     color: $text;
 }
