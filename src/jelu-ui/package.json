@@ -12,6 +12,7 @@
     "@oruga-ui/oruga-next": "^0.4.8",
     "@oruga-ui/theme-bulma": "^0.1.5",
     "axios": "^0.24.0",
+    "dayjs": "^1.10.7",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"

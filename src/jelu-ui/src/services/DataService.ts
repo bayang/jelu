@@ -78,6 +78,25 @@ class DataService {
     }
   }
 
+  getUserBookById = async (userBookId: string) => {
+    try {
+      const response = await this.apiClient.get<UserBook>(`${this.API_USERBOOK}/${userBookId}`);
+      console.log("called userBook " + userBookId)
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+        // await router.push({ name: 'home', params: {msg: 'msg'}})
+
+      }
+      console.log("error findall " + (error as AxiosError).toJSON())
+      console.log("error findall " + (error as AxiosError).code)
+      throw new Error("error finding userBook " + userBookId + " " + error)
+    }
+  }
+
   getUser = async () => {
     try {
       const response = await this.apiClient.get<UserAuthentication>('/users/me')
