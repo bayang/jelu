@@ -7,6 +7,7 @@ import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.imageName
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
+import org.jetbrains.exposed.dao.id.EntityID
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -130,6 +131,6 @@ class BookService(
     fun findUserBookById(userbookId: UUID): UserBookLightDto = bookRepository.findUserBookById(userbookId).toUserBookLightDto()
 
     @Transactional
-    fun findUserBookByLastEvent(userId: UUID, eventType: ReadingEventType)
-    = bookRepository.findUserBookByLastEvent(userId, eventType)
+    fun findUserBookByLastEvent(userId: EntityID<UUID>, eventType: ReadingEventType): List<UserBookLightDto>
+    = bookRepository.findUserBookByLastEvent(userId, eventType).map { it.toUserBookLightDto() }
 }

@@ -32,11 +32,12 @@ class BooksController(
 
     @GetMapping(path = ["/userbooks"])
     fun userbooks(principal: Authentication,
-                  @RequestParam(name = "lastEventType", required = false) searchTerm: ReadingEventType?) {
+                  @RequestParam(name = "lastEventType", required = false) searchTerm: ReadingEventType?): List<UserBookLightDto> {
         assertIsJeluUser(principal.principal)
         if (searchTerm != null) {
-            repository.findUserBookByLastEvent((principal.principal as JeluUser).user.id.value, searchTerm)
+            return repository.findUserBookByLastEvent((principal.principal as JeluUser).user.id, searchTerm)
         }
+        return listOf()
     }
 
     @GetMapping(path = ["/userbooks/me"])

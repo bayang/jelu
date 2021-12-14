@@ -2,6 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.nowInstant
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SortOrder
@@ -167,10 +168,11 @@ class BookRepository(
 
     fun findUserBookById(userbookId: UUID): UserBook = UserBook[userbookId]
 
-    fun findUserBookByLastEvent(userID: UUID, searchTerm: ReadingEventType): SizedIterable<UserBook> {
+    fun findUserBookByLastEvent(userID: EntityID<UUID>, searchTerm: ReadingEventType): List<UserBook> {
         return UserBook.find {
-            UserBookTable.user eq userID and(UserBookTable.lastReadingEvent eq searchTerm)
-        }
+            UserBookTable.user eq userID and (UserBookTable.lastReadingEvent eq searchTerm)
+        }.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
+            .toList()
     }
 
     fun findUserBookByUserAndBook(user: User, book: Book): UserBook? {
