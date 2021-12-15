@@ -27,11 +27,11 @@ onMounted(() => {
 <template>
   <div class="level">
     <div class="level-item">
-      <h1 class="title is-1">
+      <h2 class="title">
         <span class="icon">
           <i class="mdi mdi-bookshelf"></i> </span
-        >&nbsp; Books :
-      </h1>
+        >&nbsp; My books :
+      </h2>
     </div>
     <div class="level-right">
       <p class="level-item">

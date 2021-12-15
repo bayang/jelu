@@ -131,6 +131,6 @@ class BookService(
     fun findUserBookById(userbookId: UUID): UserBookLightDto = bookRepository.findUserBookById(userbookId).toUserBookLightDto()
 
     @Transactional
-    fun findUserBookByLastEvent(userId: EntityID<UUID>, eventType: ReadingEventType): List<UserBookLightDto>
-    = bookRepository.findUserBookByLastEvent(userId, eventType).map { it.toUserBookLightDto() }
+    fun findUserBookByCriteria(userId: EntityID<UUID>, eventType: ReadingEventType?, toRead: Boolean?): List<UserBookLightDto>
+    = bookRepository.findUserBookByCriteria(userId, eventType, toRead).map { it.toUserBookLightDto() }
 }

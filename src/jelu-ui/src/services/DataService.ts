@@ -3,6 +3,7 @@ import { UserBook, Book } from "../model/Book";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
 import { JeluError } from "../model/JeluError";
+import { ReadingEventType } from "../model/ReadingEvent";
 
 
 class DataService {
@@ -292,6 +293,28 @@ class DataService {
     }
   }
 
+  findUserBooksByEventType = async (eventType: ReadingEventType) => {
+    try {
+      const response = await this.apiClient.get<Array<UserBook>>(`${this.API_USERBOOK}`, {
+        params: {
+          lastEventType: eventType
+        }
+      });
+      console.log("called userbook by eventtype")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+        // await router.push({ name: 'home', params: {msg: 'msg'}})
+
+      }
+      console.log("error userbook by eventtype " + (error as AxiosError).toJSON())
+      console.log("error userbook by eventtype " + (error as AxiosError).code)
+      throw new Error("error get userBook by eventType " + error)
+    }
+  }
 
 
 }

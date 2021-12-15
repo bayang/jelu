@@ -3,7 +3,6 @@ import { useStore } from 'vuex'
 import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { key } from './store'
 import { useLink, useRoute, useRouter } from 'vue-router'
-// const props = defineProps()
 const store = useStore(key)
 const router = useRouter()
 const route = useRoute()
@@ -65,13 +64,9 @@ const toggleMenu = () => {
 
   <div id="navbarBasicExample" :class="active ? 'is-active' : ''" class="navbar-menu">
     <div class="navbar-start">
-
-      <!-- <a class="navbar-item"> -->
         <router-link class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'my-books'}">My books</router-link>
-      <!-- </a> -->
-      <!-- <a class="navbar-item"> -->
-        <router-link class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'login'}">Login</router-link>
-      <!-- </a> -->
+        <router-link class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'to-read'}">To Read List</router-link>
+        <router-link v-if="!isLogged" class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'login'}">Login</router-link>
     </div>
 
     <div class="navbar-end">

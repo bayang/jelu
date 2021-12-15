@@ -32,11 +32,14 @@ class BooksController(
 
     @GetMapping(path = ["/userbooks"])
     fun userbooks(principal: Authentication,
-                  @RequestParam(name = "lastEventType", required = false) searchTerm: ReadingEventType?): List<UserBookLightDto> {
+                  @RequestParam(name = "lastEventType", required = false) searchTerm: ReadingEventType?,
+                  @RequestParam(name = "toRead", required = false) toRead: Boolean?
+    ): List<UserBookLightDto> {
         assertIsJeluUser(principal.principal)
-        if (searchTerm != null) {
-            return repository.findUserBookByLastEvent((principal.principal as JeluUser).user.id, searchTerm)
+        if (searchTerm != null || toRead != null) {
+            return repository.findUserBookByCriteria((principal.principal as JeluUser).user.id, searchTerm, toRead)
         }
+        //FIXME send userbooks sorted and paginated
         return listOf()
     }
 

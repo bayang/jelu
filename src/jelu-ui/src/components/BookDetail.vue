@@ -22,9 +22,9 @@ watch(() => props.bookId, (newValue, oldValue) => {
   console.log('The new bookId is: ' + props.bookId)
 })
 
-const formattedDate = computed(() => {
-    return DateUtils.formatDate(book.value?.book.publishedDate)
-  })
+const format = (dateString: string) => {
+  return DateUtils.formatDate(dateString)
+}
 
 // onMounted(() => {
 //   console.log("Component book detail is mounted!");
@@ -57,7 +57,7 @@ getBook()
           />
         </figure>
     </div>
-    <div class="column is-half">
+    <div class="column is-half content">
       <h3 class="subtitle is-3 is-capitalized">{{book?.book?.title}}</h3>
       <p v-if="book?.book?.authors.length > 0" class="has-text-left"><span class="has-text-weight-semibold">Authors : </span></p>
       <ul v-if="book?.book?.authors.length > 0" class="has-text-left block">
@@ -67,7 +67,7 @@ getBook()
       <p v-if="book?.book?.isbn10" class="has-text-left block"><span class="has-text-weight-semibold">ISBN10 : </span>{{book.book.isbn10}}</p>
       <p v-if="book?.book?.isbn13" class="has-text-left block"><span class="has-text-weight-semibold">ISBN13 : </span>{{book.book.isbn13}}</p>
       <p v-if="book?.book?.pageCount" class="has-text-left block"><span class="has-text-weight-semibold">Pages : </span>{{book.book.pageCount}}</p>
-      <p v-if="book?.book?.publishedDate" class="has-text-left block"><span class="has-text-weight-semibold">Published date : </span>{{formattedDate}}</p>
+      <p v-if="book?.book?.publishedDate" class="has-text-left block"><span class="has-text-weight-semibold">Published date : </span>{{format(book.book.publishedDate)}}</p>
       <p v-if="book?.book?.series" class="has-text-left block"><span class="has-text-weight-semibold">Series : </span>{{book.book.series}}</p>
       <p v-if="book?.book?.numberInSeries" class="has-text-left block"><span class="has-text-weight-semibold">Number in series : </span>{{book.book.numberInSeries}}</p>
       <div v-if="book?.owned || book?.toRead" class="field has-text-left">
@@ -76,16 +76,23 @@ getBook()
     </div>
 
     </div>
-    <div v-if="book?.book?.summary" class="column is-full is-offset-one-quarter">
+    <div v-if="book?.book?.summary" class="column is-full is-offset-one-quarter content">
       <p v-if="book?.book?.summary" class="has-text-left has-text-weight-semibold">Summary :</p>
       <p v-if="book?.book?.summary" class="has-text-left">{{book.book.summary}}</p>
 
     </div>
-    <div v-if="book?.personalNotes" class="column is-full is-offset-one-quarter">
+    <div v-if="book?.personalNotes" class="column is-full is-offset-one-quarter content">
       <p v-if="book?.personalNotes" class="has-text-left  has-text-weight-semibold">Personal Notes :</p>
       <p v-if="book?.personalNotes" class="has-text-left">{{book.personalNotes}}</p>
     </div>
+    <div v-if="book?.readingEvents.length > 0" class="column is-full is-offset-one-quarter content">
+      <p v-if="book?.readingEvents.length > 0" class="has-text-left  has-text-weight-semibold">Reading events :</p>
+      <ul class="has-text-left" v-if="book?.readingEvents.length > 0">
+        <li v-for="event in book.readingEvents" v-bind:key="event.id">{{event.eventType}} - {{format(event.creationDate)}}</li>
+      </ul>
+    </div>
   </div>
+
 </template>
 
 <style scoped>

@@ -3,10 +3,7 @@ package io.github.bayang.jelu.dao
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.nowInstant
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.SizedCollection
-import org.jetbrains.exposed.sql.SizedIterable
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.*
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
@@ -168,9 +165,22 @@ class BookRepository(
 
     fun findUserBookById(userbookId: UUID): UserBook = UserBook[userbookId]
 
-    fun findUserBookByLastEvent(userID: EntityID<UUID>, searchTerm: ReadingEventType): List<UserBook> {
+    fun findUserBookByCriteria(userID: EntityID<UUID>, searchTerm: ReadingEventType?, toRead: Boolean?): List<UserBook> {
         return UserBook.find {
-            UserBookTable.user eq userID and (UserBookTable.lastReadingEvent eq searchTerm)
+            val userFilter: Op<Boolean> = UserBookTable.user eq userID
+            val eventFilter: Op<Boolean> = if (searchTerm != null) {
+                UserBookTable.lastReadingEvent eq searchTerm
+            }
+            else {
+                Op.TRUE
+            }
+            val toReadFilter: Op<Boolean> = if (toRead != null) {
+                UserBookTable.toRead eq toRead
+            }
+            else {
+                Op.TRUE
+            }
+            userFilter and eventFilter and toReadFilter
         }.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
             .toList()
     }
