@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { UserBook, Book } from "../model/Book";
+import { Author } from "../model/Author";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
 import { JeluError } from "../model/JeluError";
@@ -17,6 +18,8 @@ class DataService {
   private API_BOOK = '/books';
 
   private API_USERBOOK = '/userbooks';
+
+  private API_AUTHOR = '/authors';
   
   constructor() {
     this.apiClient = axios.create({
@@ -42,6 +45,19 @@ class DataService {
     }, function (error) {
       // Do something with request error
       return Promise.reject(error);
+    });
+    this.apiClient.interceptors.response.use(originalResponse => {
+      console.log(`response interceptor ${originalResponse.status}`)
+      
+      // if (originalResponse.data != null) {
+      //   for (const [k, v] of Object.entries(originalResponse.data)) {
+      //     console.log("k v" + k + " " + v)
+      //     if (k == "publishedDate") {
+      //       console.log('received date')
+      //     }
+      //   };
+      // }
+      return originalResponse;
     });
   }
   
@@ -293,11 +309,40 @@ class DataService {
     }
   }
 
-  findUserBooksByEventType = async (eventType: ReadingEventType) => {
+  updateUserBookImage = async (userBook: UserBook, file: File|null, onUploadProgress:any) => {
+    try {
+      let formData = new FormData()
+      if (file != null) {
+        formData.append('file', file);
+      }
+      formData.append('book', new Blob([JSON.stringify(userBook)], {
+        type: "application/json"
+    }));
+      let resp = await this.apiClient.put<UserBook>(`${this.API_USERBOOK}/${userBook.id}`, formData,
+       { 
+        headers:{
+          'Content-Type':'multipart/form-data',
+          'Accept':'application/json'
+        }, 
+        onUploadProgress: onUploadProgress})
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error updating book " + error.response.status + " " + error.response.data.error)
+        throw new Error("error updating book " + error.response.status + " " + error)
+      }
+      console.log("error updating book " + (error as AxiosError).toJSON())
+      console.log("error updating book " + (error as AxiosError).code)
+      throw new Error("error updating book " + error)
+    }
+  }
+
+  findUserBookByCriteria = async (eventType?: ReadingEventType|null, toRead?: boolean|null) => {
     try {
       const response = await this.apiClient.get<Array<UserBook>>(`${this.API_USERBOOK}`, {
         params: {
-          lastEventType: eventType
+          lastEventType: eventType,
+          toRead: toRead
         }
       });
       console.log("called userbook by eventtype")
@@ -315,6 +360,30 @@ class DataService {
       throw new Error("error get userBook by eventType " + error)
     }
   }
+
+  findAuthorByCriteria = async (query?: string|null) => {
+    try {
+      const response = await this.apiClient.get<Array<Author>>(`${this.API_AUTHOR}`, {
+        params: {
+          name: query
+        }
+      });
+      console.log("called author by criteria")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+        // await router.push({ name: 'home', params: {msg: 'msg'}})
+
+      }
+      console.log("error authors by criteria " + (error as AxiosError).toJSON())
+      console.log("error authors by criteria " + (error as AxiosError).code)
+      throw new Error("error get authors by criteria " + error)
+    }
+  }
+
 
 
 }

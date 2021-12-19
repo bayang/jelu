@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, Ref, ref } from "vue";
+import { computed, reactive, Ref, ref } from "vue";
 import { useStore } from "vuex";
-import { Book, UserBook } from "../model/Book";
+import { UserBook } from "../model/Book";
 import dataService from "../services/DataService";
 import { key } from "../store";
 import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { Author } from "../model/Author";
 
-const store = useStore(key);
 const oruga = useProgrammatic();
 
 const datepicker = ref(null);
@@ -44,15 +44,17 @@ const toReadDisplay = computed(() => {
     return ""
   })
 // load existing authors from db here
-const data: Ref<Array<string>> = ref(["jacques"]);
-let filteredAuthors: Ref<Array<string>> = ref(data);
-let authors: Ref<Array<string>> = ref([]);
+// const data: Ref<Array<string>> = ref([]);
+// let filteredAuthors: Ref<Array<string>> = ref(data);
+let filteredAuthors: Ref<Array<Author>> = ref([]);
+let authors: Ref<Array<Author>> = ref([]);
 
 const importBook = async () => {
   console.log("import book");
   if (StringUtils.isNotBlank(form.title)) {
-      let userBook = fillBook(form)
-      authors.value.forEach((s) => userBook.book.authors?.push({ name: s }));
+      let userBook: UserBook = fillBook(form)
+      // authors.value.forEach((a) => userBook.book.authors?.push({ name: a }));
+      authors.value.forEach((a) => userBook.book.authors?.push(a));
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
     }
@@ -109,7 +111,7 @@ const fillBook = (formdata: any): UserBook => {
 }
 
 const clearForm = () => {
-  clearIconClick();
+  clearImageField();
   errorMessage.value = "";
   eventType.value = null;
   file.value = null;
@@ -146,14 +148,45 @@ const handleFileUpload = (event: any) => {
   file.value = event.target.files[0];
 };
 
-const clearIconClick = () => {
+const clearImageField = () => {
   imageUrl.value = "";
 };
 
 function getFilteredAuthors(text: string) {
-  filteredAuthors.value = data.value.filter((option) => {
-    return option.toString().toLowerCase().indexOf(text.toLowerCase()) >= 0;
-  });
+  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data)
+}
+
+function beforeAdd(item: Author|string) {
+  let shouldAdd = true
+  console.log(`item ${item?.name}`)
+  if (item instanceof Object) {
+    authors.value.forEach(author => {
+      console.log(`author ${author.name}`)
+      if(author.name === item.name) {
+        console.log(`author ${author.name} item ${item.name}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  else {
+    authors.value.forEach(author => {
+      console.log(`author ${author.name}`)
+      if(author.name === item) {
+        console.log(`author ${author.name} item ${item}`)
+        shouldAdd = false;
+      }
+    });
+  }
+    return shouldAdd
+}
+
+function createAuthor(item: Author|string) {
+  if (item instanceof Object) {
+    return item
+  }
+  return {
+    "name" : item
+  }
 }
 </script>
 
@@ -175,15 +208,19 @@ function getFilteredAuthors(text: string) {
           :data="filteredAuthors"
           :autocomplete="true"
           :allow-new="true"
+          :allow-duplicates="false"
           :open-on-focus="true"
+          :beforeAdding="beforeAdd"
+          :createItem="createAuthor"
           iconPack="mdi"
           icon="account-plus"
+          field="name"
           placeholder="Add an author"
           @typing="getFilteredAuthors"
         >
         </o-inputitems>
       </o-field>
-      <p class="content"><b>Items:</b> {{ authors }}</p>
+      <p>auth <span v-for="author in authors" v-bind:key="author.id">{{author.name}}</span></p>
     </div>
     <div class="field">
       <o-field horizontal label="Summary">
@@ -305,7 +342,7 @@ function getFilteredAuthors(text: string) {
         pattern="https?://.*"
         clearable="true"
         icon-right-clickable
-        @icon-right-click="clearIconClick"
+        @icon-right-click="clearImageField"
         title="Url must start with http or https"
         placeholder="Url must start with http or https"
       >
@@ -337,20 +374,16 @@ function getFilteredAuthors(text: string) {
   </section>
 </template>
 
-<style scoped>
-a {
-  color: #42b983;
-}
+<style lang="scss">
+@import "../assets/style.scss";
 
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
-}
+// .dropdown-item {
+//   color: #363636;
+// }
 
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
-}
+// $inputitems-color: #363636;
+// $inputitems-item-color: #363636;
+// $inputitems-item-background-color: #363636;
+// $inputitems-background-color: #363636;
+
 </style>

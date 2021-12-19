@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
@@ -33,7 +35,7 @@ class BookService(
     fun findAllAuthors(): List<AuthorDto> = bookRepository.findAllAuthors().map { it.toAuthorDto() }
 
     @Transactional
-    fun findAuthorsByName(name: String): AuthorDto? = bookRepository.findAuthorsByName(name)?.toAuthorDto()
+    fun findAuthorsByName(name: String): List<AuthorDto> = bookRepository.findAuthorsByName(name).map { it.toAuthorDto() }
 
     @Transactional
     fun findBookById(bookId: UUID): BookDto = bookRepository.findBookById(bookId).toBookDto()
@@ -50,12 +52,24 @@ class BookService(
     @Transactional
     fun update(userBookId: UUID, book: UserBookUpdateDto): UserBookLightDto = bookRepository.update(userBookId, book).toUserBookLightDto()
 
-//    @Transactional
-//    fun save(book: BookCreateDto): BookDto {
-//        val saved: Book = bookRepository.save(book)
-//        saveImages(null, saved, book, properties.files.dir)
-//        return saved.toBookDto()
-//    }
+    @Transactional
+    fun update(userBookId: UUID, book: UserBookUpdateDto, file: MultipartFile?): UserBookLightDto {
+        val updated:UserBook = bookRepository.update(userBookId, book)
+        val previousImage: String? = updated.book.image
+        var backup: File? = null
+        // if we need to update image and there is already one, backup it
+        if ((file != null || !book.book?.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
+            val currentImage = File(properties.files.dir, previousImage)
+            backup = File(properties.files.dir, "$previousImage.bak")
+            Files.move(currentImage.toPath(), backup.toPath())
+        }
+        val savedImage: String = saveImages(file, updated.book, book.book, properties.files.dir)
+        // we had a previous image and we saved a new one : delete the old one
+        if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
+            Files.deleteIfExists(backup.toPath())
+        }
+        return updated.toUserBookLightDto()
+    }
 
     @Transactional(rollbackFor = [Exception::class])
     fun save(userBook: CreateUserBookDto, user: User, file: MultipartFile?): UserBookLightDto {
@@ -84,8 +98,9 @@ class BookService(
         return saved.toBookDto()
     }
 
-    fun saveImages(file: MultipartFile?, book: Book, bookDto: BookCreateDto, targetDir: String) {
+    fun saveImages(file: MultipartFile?, book: Book, bookDto: BookCreateDto?, targetDir: String): String {
         var importedFile = false
+        var savedImage: String = ""
         //FIXME resize image when saving (protect with a flag)
         if (file != null) {
             try {
@@ -95,13 +110,14 @@ class BookService(
                 file.transferTo(destFile)
                 book.image = destFile.name
                 importedFile = true
+                savedImage = destFile.name
             }
             catch (e: Exception) {
                 logger.error { "failed to save uploaded file ${file.originalFilename}" }
             }
         }
 
-        if (! importedFile && ! bookDto.image.isNullOrBlank()) {
+        if (! importedFile && bookDto != null && ! bookDto.image.isNullOrBlank()) {
             try {
                 val destFileName: String = downloadService.download(
                     bookDto.image,
@@ -110,12 +126,14 @@ class BookService(
                     targetDir
                 )
                 book.image = destFileName
+                savedImage = destFileName
             }
             catch (e: Exception) {
                 logger.error { "failed to save remote file ${book.image}" }
                 book.image = null
             }
         }
+        return savedImage
     }
 
     @Transactional

@@ -17,7 +17,7 @@ const books: Ref<Array<UserBook>> = ref([]);
 
 const getCurrentlyReading = async () => {
   try {
-    books.value = await dataService.findUserBooksByEventType(ReadingEventType.CURRENTLY_READING)
+    books.value = await dataService.findUserBookByCriteria(ReadingEventType.CURRENTLY_READING, null)
   } catch (error) {
     console.log("failed get books : " + error);
   }
@@ -36,7 +36,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <h2 class="title is-family-sans-serif">Your are currently reading : </h2>
+  <h2 class="title is-family-sans-serif">Currently reading : </h2>
   <div v-if="isLogged" class="columns is-multiline is-centered">
       <div class="column is-2" v-for="book in books" v-bind:key="book.id">
       <book-card :book="book"></book-card>

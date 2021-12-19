@@ -50,7 +50,13 @@ class BooksController(
     }
 
     @GetMapping(path = ["/authors"])
-    fun authors() = repository.findAllAuthors()
+    fun authors(@RequestParam(name = "name", required = false) name: String?): List<AuthorDto> {
+        return if (name.isNullOrBlank()) {
+            repository.findAllAuthors()
+        } else {
+            repository.findAuthorsByName(name)
+        }
+    }
 
     @GetMapping(path = ["/authors/{id}"])
     fun authorById(@PathVariable("id") authorId: UUID) = repository.findAuthorsById(authorId)
@@ -92,9 +98,15 @@ class BooksController(
         return repository.updateAuthor(authorId, author);
     }
 
-    @PutMapping(path = ["/userbooks/{id}"])
+    @PutMapping(path = ["/userbooks/{id}"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun updateUserBook(@PathVariable("id") userBookId: UUID, @RequestBody @Valid book: UserBookUpdateDto): UserBookLightDto {
         return repository.update(userBookId, book);
+    }
+
+    @PutMapping(path = ["/userbooks/{id}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun updateUserBook(@PathVariable("id") userBookId: UUID, @RequestPart("book")  @Valid book: UserBookUpdateDto,
+                       @RequestPart("file", required = false) file: MultipartFile?): UserBookLightDto {
+        return repository.update(userBookId, book, file);
     }
 }
 

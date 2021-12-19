@@ -112,10 +112,16 @@ $tag-background-color:$grey-lighter;
 
 $box-background-color: $jelu_background_accent;
 
+$dropdown-content-background-color: $white-ter; 
+
+// $modal-content-fullscreen-background-color: $jelu_background_accent;
+// $modal-content-background-color: $jelu_background_accent;
+// $modal-overlay-background-color: #404040;
+
+
 label.label {
     color: $text;
 }
-
 
 .bar {
     background-color: $jelu_background_accent;
@@ -123,7 +129,13 @@ label.label {
     width: 100%;
     margin-top: 3px;
     margin-bottom: 10px;
-  }
+}
+
 
 @import "bulma/bulma";
 @import '@oruga-ui/theme-bulma/dist/scss/bulma';
+  
+.dropdown-item {
+  color: #363636;
+}
+

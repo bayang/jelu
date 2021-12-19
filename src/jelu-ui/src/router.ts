@@ -56,7 +56,6 @@ router.beforeEach((to, from, next) => {
     console.log(to)
     console.log(`from : ${from.name?.toString()}`)
     console.log(from)
-    console.log('router store')
     console.log(store.state.isLogged)
     if (from.name == undefined 
         && from.matched.length < 1) {

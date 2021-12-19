@@ -29,8 +29,8 @@ class BookRepository(
 
     fun findAllAuthors(): SizedIterable<Author> = Author.all()
 
-    fun findAuthorsByName(name: String): Author? {
-        return Author.find{AuthorTable.name like name}.firstOrNull()
+    fun findAuthorsByName(name: String): List<Author> {
+        return Author.find{AuthorTable.name like "%$name%" }.toList()
     }
 
     fun findBookById(bookId: UUID): Book = Book[bookId]
@@ -48,14 +48,15 @@ class BookRepository(
         book.pageCount.let { updated.pageCount = it }
         book.publisher.let { updated.publisher = it }
         book.summary.let { updated.summary = it }
-        book.image.let { updated.image = it }
+        // image must be set when saving file succeeds
+//        book.image.let { updated.image = it }
         book.publishedDate.let { updated.publishedDate = it }
         book.series.let { updated.series = it }
         book.numberInSeries.let { updated.numberInSeries = it }
         updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
-            val authorEntity: Author? = findAuthorsByName(it.name)
+            val authorEntity: Author? = findAuthorsByName(it.name).firstOrNull()
             if (authorEntity != null) {
                 authorsList.add(authorEntity)
             } else {
@@ -112,9 +113,10 @@ class BookRepository(
     }
 
     fun save(book: BookCreateDto): Book {
+        //FIXME check if book with same isbn exists
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
-            val authorEntity: Author? = findAuthorsByName(it.name)
+            val authorEntity: Author? = findAuthorsByName(it.name).firstOrNull()
             if (authorEntity != null) {
                 authorsList.add(authorEntity)
             } else {
