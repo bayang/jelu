@@ -93,6 +93,9 @@ class BookRepository(
         if (book.toRead != null) {
             found.toRead = book.toRead
         }
+        if (book.percentRead != null) {
+            found.percentRead = book.percentRead
+        }
         if (book.book != null) {
             update(found.book, book.book)
         }
@@ -162,6 +165,7 @@ class BookRepository(
             this.owned = createUserBookDto.owned
             this.toRead = createUserBookDto.toRead
             this.personalNotes = createUserBookDto.personalNotes
+            this.percentRead = createUserBookDto.percentRead
         }
     }
 

@@ -1,6 +1,10 @@
+jelu:
+  database:
+    path: ${user.home}/.jelu/database/
+  files:
+    dir: '${user.home}/.jelu/files/'
 server:
   port: 11111
-
 spring:
   liquibase:
     enabled: true

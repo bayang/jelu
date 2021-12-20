@@ -73,7 +73,7 @@ const authorsText = computed(() => {
       </header>
       <div class="card-content has-text-dark">
         <div class="content has-text-left">
-          <span v-if="book.book.authors.length > 0" class="is-inline-block"
+          <span v-if="book.book.authors != null && book.book.authors.length > 0" class="is-inline-block"
             >Authors : {{ authorsText }}</span
           >
           <span v-if="book.book.publisher" class="is-inline-block"

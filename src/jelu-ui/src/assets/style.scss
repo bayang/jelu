@@ -96,6 +96,9 @@ $navbar-item-hover-background-color: $jelu_background;
 // $navbar-item-active-color: ;
 $navbar-item-active-background-color: $jelu_background_contrast;
 
+$navbar-dropdown-background-color:$jelu_background_accent;
+// $navbar-dropdown-arrow: $jelu_background;
+
 $text : $jelu_text_primary;
 $text-strong : $jelu_text_secondary;
 $text-invert: findColorInvert($text);

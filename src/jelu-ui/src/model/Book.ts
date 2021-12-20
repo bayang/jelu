@@ -11,7 +11,7 @@ export interface Book {
     publisher?: string,
     image?: string|null,
     pageCount?: number|null,
-    publishedDate?: Date|null,
+    publishedDate?: string|null,
     modificationDate?: string,
     authors?: Array<Author>,
     series?: string, 

@@ -36,6 +36,10 @@ const handleFileUpload = (event: any) => {
   file.value = event.target.files[0];
 };
 
+const clearImageField = () => {
+  imageUrl.value = "";
+};
+
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
 const isSwitchedCustom = ref("Upload from the web");
@@ -345,7 +349,7 @@ function toggleRemoveImage() {
     </o-field>
 </div>
         <button @click="importBook" class="button is-primary centered-button">
-          Import book
+          Save changes
         </button>
       <p v-if="errorMessage" class="has-text-danger">{{ errorMessage }}</p>
     </div>

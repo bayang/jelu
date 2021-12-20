@@ -29,37 +29,10 @@ onMounted(() => {
     <div class="level-item">
       <h2 class="title">
         <span class="icon">
-          <i class="mdi mdi-bookshelf"></i> </span>
+          <i class="mdi mdi-bookshelf"></i>
+        </span>
           &nbsp; My books :
       </h2>
-    </div>
-    <div class="level-right">
-      <!-- <p class="level-item"> -->
-        <!-- <router-link :to="{ name: 'add-book' }" class="button is-primary">
-          Add book
-        </router-link> -->
-    <!-- <div class="level-item"> -->
-      <div class="dropdown is-hoverable level-item">
-  <div class="dropdown-trigger">
-    <button class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu4">
-      <span>Add book</span>
-      <span class="icon is-small">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-    </button>
-  </div>
-  <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-    <div class="dropdown-content">
-      <div class="dropdown-item">
-        <router-link :to="{ name: 'add-book' }" class="button is-primary is-light">
-          Manual import
-        </router-link>
-      </div>
-    </div>
-  </div>
-</div>
-    <!-- </div> -->
-      <!-- </p> -->
     </div>
   </div>
   <div class="columns is-variable is-2 is-multiline is-centered">
@@ -70,19 +43,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* a {
-  color: #42b983;
-} */
 
 label {
   margin: 0 0.5em;
   font-weight: bold;
 }
 
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
-}
 </style>

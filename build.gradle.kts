@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.gradle.node.npm.task.NpmTask
 
 plugins {
 	id("org.springframework.boot") version "2.5.6"
@@ -8,6 +9,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.5.31"
 	kotlin("plugin.allopen") version "1.5.31"
 	kotlin("kapt") version "1.5.31"
+	id("com.github.node-gradle.node") version "3.1.1"
 }
 
 allOpen {
@@ -50,6 +52,11 @@ dependencies {
 	testImplementation("io.projectreactor:reactor-test")
 }
 
+tasks.withType<Test> {
+	useJUnitPlatform()
+	systemProperty("spring.profiles.active", "test")
+}
+
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
@@ -57,7 +64,37 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
-	systemProperty("spring.profiles.active", "test")
+tasks.getByName<Jar>("jar") {
+	enabled = false
+}
+
+// unpack Spring Boot's fat jar for better Docker image layering
+tasks.register<JavaExec>("unpack") {
+	dependsOn(tasks.bootJar)
+	classpath = files(tasks.bootJar)
+	jvmArgs = listOf("-Djarmode=layertools")
+	args = "extract --destination ${buildDir}/dependency".split(" ")
+	doFirst {
+		delete("${buildDir}/dependency")
+	}
+}
+
+node {
+	nodeProjectDir.set(file("${project.projectDir}/src/jelu-ui"))
+	version.set("12.18.3")
+	download.set(true)
+}
+
+val buildTaskUsingNpm = tasks.register<NpmTask>("npmBuild") {
+	dependsOn(tasks.npmInstall)
+	npmCommand.set(listOf("run", "build"))
+	args.set(listOf("--", "--out-dir", "${buildDir}/npm-output"))
+	inputs.dir("src")
+	outputs.dir("${buildDir}/npm-output")
+}
+
+tasks.register<Sync>("copyWebDist") {
+	dependsOn("npmBuild")
+	from("${buildDir}/npm-output")
+	into("$projectDir/src/main/resources/public/")
 }

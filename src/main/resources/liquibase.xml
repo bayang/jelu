@@ -50,6 +50,18 @@
             <column name="page_count" type="int"
                     remarks="The book's page count ">
             </column>
+            <column name="google_id" type="varchar(30)"
+                    remarks="The book's google id ">
+            </column>
+            <column name="goodreads_id" type="varchar(30)"
+                    remarks="The book's goodreads id ">
+            </column>
+            <column name="amazon_id" type="varchar(30)"
+                    remarks="The book's amazon id ">
+            </column>
+            <column name="librarything_id" type="varchar(30)"
+                    remarks="The book's librarything id ">
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="create_author" author="byng">
@@ -112,6 +124,9 @@
             </column>
             <column name="to_read" type="boolean"
                     remarks="If the book is in the to read list">
+            </column>
+            <column name="percent_read" type="int"
+                    remarks="The book's current read percentage">
             </column>
         </createTable>
         <createTable tableName="reading_event">

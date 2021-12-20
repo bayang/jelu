@@ -67,7 +67,20 @@ const toggleMenu = () => {
         <router-link class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'my-books'}">My books</router-link>
         <router-link class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'to-read'}">To Read List</router-link>
         <router-link v-if="!isLogged" class="navbar-item is-family-sans-serif is-uppercase" :to="{ name: 'login'}">Login</router-link>
-    </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <router-link :to="{ name: 'add-book' }" class="navbar-link is-family-sans-serif is-uppercase">
+          Import
+        </router-link>
+           <div class="navbar-dropdown is-boxed">
+            <div class="navbar-item">
+        <router-link :to="{ name: 'add-book' }" class="is-family-sans-serif is-uppercase">
+          Manual import
+        </router-link>
+      </div>       
+           </div>
+        </div>
+</div>
+    <!-- </div> -->
 
     <div class="navbar-end">
       <div class="navbar-item">

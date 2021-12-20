@@ -36,30 +36,32 @@ onMounted(() => {
 </script>
 
 <template>
+<div v-if="isLogged">
+  <div v-if="books.length > 0">
   <h2 class="title is-family-sans-serif">Currently reading : </h2>
-  <div v-if="isLogged" class="columns is-multiline is-centered">
+  <div class="columns is-multiline is-centered">
       <div class="column is-2" v-for="book in books" v-bind:key="book.id">
       <book-card :book="book"></book-card>
     </div>
-
   </div>
+  </div>
+  <!-- logged, no books -->
+  <div v-else>
+    <h2 class="title is-family-sans-serif">Not currently reading anything </h2>
+    <span class="icon is-large">
+      <i class="mdi mdi-book-open-page-variant-outline mdi-48px"></i>
+    </span>
+  </div>
+</div>
+<!-- not logged -->
+<div v-else>
+  <p class="is-capitalized">Please log in first</p>
+</div>
+
   
 </template>
 
-<style scoped>
-a {
-  color: #42b983;
-}
+<style lang="scss" scoped>
 
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
-}
 
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
-}
 </style>

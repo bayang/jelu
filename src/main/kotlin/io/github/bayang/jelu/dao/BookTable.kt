@@ -22,6 +22,10 @@ object BookTable: UUIDTable("book") {
     val image: Column<String?> = varchar("image", 1000).nullable()
     val series: Column<String?> = varchar("series", 500).nullable()
     val numberInSeries: Column<Double?> = double(name = "number_in_series").nullable()
+    val googleId: Column<String?> = varchar("google_id", 30).nullable()
+    val goodreadsId: Column<String?> = varchar("goodreads_id", 30).nullable()
+    val amazonId: Column<String?> = varchar("amazon_id", 30).nullable()
+    val librarythingId: Column<String?> = varchar("librarything_id", 30).nullable()
 }
 class Book(id: EntityID<UUID>): UUIDEntity(id) {
     companion object : UUIDEntityClass<Book>(BookTable)

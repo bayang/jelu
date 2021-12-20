@@ -27,8 +27,11 @@ watch(() => props.bookId, (newValue, oldValue) => {
   console.log('The new bookId is: ' + props.bookId)
 })
 
-const format = (dateString: string) => {
-  return DateUtils.formatDate(dateString)
+const format = (dateString: string|null|undefined) => {
+  if (dateString != null) {
+    return DateUtils.formatDate(dateString)
+  }
+  return ''
 }
 
 function modalClosed(args: any) {
@@ -74,7 +77,7 @@ getBook()
     <div class="column is-centered is-four-fifths">
 <h3 class="subtitle is-3 is-capitalized">{{book?.book?.title}}</h3>
     </div>
-    <div class="column is-one-fifth">
+    <div v-if="book != null" class="column is-one-fifth">
 <button @click="toggleEdit" class="button is-primary is-light">
   <span class="icon">
       <i class="mdi mdi-pencil"></i>
@@ -98,9 +101,9 @@ getBook()
     </div>
     <div class="column is-three-fifths content">
       <!-- <h3 class="subtitle is-3 is-capitalized">{{book?.book?.title}}</h3> -->
-      <p v-if="book?.book?.authors.length > 0" class="has-text-left"><span class="has-text-weight-semibold">Authors : </span></p>
-      <ul v-if="book?.book?.authors.length > 0" class="has-text-left block">
-        <li v-for="author in book.book.authors" v-bind:key="author.id">{{author.name}}</li>
+      <p v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0" class="has-text-left"><span class="has-text-weight-semibold">Authors : </span></p>
+      <ul v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0" class="has-text-left block">
+        <li v-for="author in book?.book?.authors" v-bind:key="author.id">{{author.name}}</li>
       </ul>
       <p v-if="book?.book?.publisher" class="has-text-left block"><span class="has-text-weight-semibold">Publisher : </span>{{book.book.publisher}}</p>
       <p v-if="book?.book?.isbn10" class="has-text-left block"><span class="has-text-weight-semibold">ISBN10 : </span>{{book.book.isbn10}}</p>
@@ -124,9 +127,9 @@ getBook()
       <p v-if="book?.personalNotes" class="has-text-left  has-text-weight-semibold">Personal Notes :</p>
       <p v-if="book?.personalNotes" class="has-text-left">{{book.personalNotes}}</p>
     </div>
-    <div v-if="book?.readingEvents.length > 0" class="column is-full is-offset-one-quarter content">
-      <p v-if="book?.readingEvents.length > 0" class="has-text-left has-text-weight-semibold">Reading events :</p>
-      <ul class="has-text-left" v-if="book?.readingEvents.length > 0">
+    <div v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="column is-full is-offset-one-quarter content">
+      <p v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="has-text-left has-text-weight-semibold">Reading events :</p>
+      <ul class="has-text-left" v-if="book?.readingEvents != null && book?.readingEvents?.length > 0">
         <li v-for="event in book.readingEvents" v-bind:key="event.id">{{event.eventType}} - {{format(event.creationDate)}}</li>
       </ul>
     </div>

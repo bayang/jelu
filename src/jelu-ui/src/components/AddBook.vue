@@ -158,7 +158,6 @@ function getFilteredAuthors(text: string) {
 
 function beforeAdd(item: Author|string) {
   let shouldAdd = true
-  console.log(`item ${item?.name}`)
   if (item instanceof Object) {
     authors.value.forEach(author => {
       console.log(`author ${author.name}`)

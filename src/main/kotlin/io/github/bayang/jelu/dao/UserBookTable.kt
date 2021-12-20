@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.dao
 
+import io.github.bayang.jelu.dao.BookTable.nullable
 import io.github.bayang.jelu.dto.UserBookDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsDto
@@ -22,6 +23,7 @@ object UserBookTable: UUIDTable("user_book") {
     val personalNotes: Column<String?> = varchar("notes", 5000).nullable()
     val owned: Column<Boolean?> = bool("is_owned").nullable()
     val toRead: Column<Boolean?> = bool("to_read").nullable()
+    val percentRead: Column<Int?> = integer(name = "percent_read").nullable()
 }
 
 class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
@@ -36,6 +38,7 @@ class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
     val readingEvents by ReadingEvent referrersOn ReadingEventTable.userBook // make sure to use val and referrersOn
     var lastReadingEventDate by UserBookTable.lastReadingEventDate
     var lastReadingEvent by UserBookTable.lastReadingEvent
+    var percentRead by UserBookTable.percentRead
 
     fun toUserBookDto(): UserBookDto =
         UserBookDto(
@@ -49,6 +52,7 @@ class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
             owned = this.owned,
             toRead = this.toRead,
             personalNotes = this.personalNotes,
+            percentRead = this.percentRead,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
         )
     fun toUserBookLightDto(): UserBookLightDto =
@@ -62,6 +66,7 @@ class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
             personalNotes = this.personalNotes,
             lastReadingEvent = this.lastReadingEvent,
             lastReadingEventDate = this.lastReadingEventDate,
+            percentRead = this.percentRead,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
         )
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto=
@@ -74,5 +79,6 @@ class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
             personalNotes = this.personalNotes,
             book = this.book.toBookDto(),
             user = this.user.toUserDto(),
+            percentRead = this.percentRead,
         )
 }

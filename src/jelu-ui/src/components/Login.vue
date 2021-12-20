@@ -11,7 +11,12 @@ const passwordValidation = ref('')
 const errorMessage = ref('')
 
 watch(form, (oldVal, newVal) => {
-  validateInput()
+  if (isInitialSetup.value) {
+    validateInput()
+  }
+  else {
+    validateInputLight()
+  }
 })
 
 watch(passwordValidation, (oldVal, newVal) => {
@@ -26,7 +31,7 @@ const isInitialSetup = computed(() => {
     return store.state.isInitialSetup
   })
 const logUser = async () => {
-  if (validateInput()) {
+  if (validateInputLight()) {
     try {
       await store.dispatch('authenticate', {"user" : form.login, "password" : form.password})
     } catch (error: any) {
@@ -38,8 +43,22 @@ const logUser = async () => {
   }
 }
 
-const validateInput = (): boolean => {
+const validateInputLight = (): boolean => {
   let isValid: boolean = true;
+  errorMessage.value = ''
+  if (!StringUtils.isNotBlank(form.login)) {
+    errorMessage.value = errorMessage.value + ' login cannot be empty'
+    isValid = false
+  }
+  if (!StringUtils.isNotBlank(form.password)) {
+    errorMessage.value = errorMessage.value + ' password cannot be empty'
+    isValid = false
+  }
+  return isValid
+} 
+
+const validateInput = (): boolean => {
+  let isValid: boolean = validateInputLight()
   errorMessage.value = ''
   if (form.login !== loginValidation.value) {
     errorMessage.value = 'login fields do not match'
@@ -48,14 +67,6 @@ const validateInput = (): boolean => {
   if (form.password !== passwordValidation.value) {
     errorMessage.value = errorMessage.value + ' password fields do not match'
     isValid = false;
-  }
-  if (!StringUtils.isNotBlank(form.login)) {
-    errorMessage.value = errorMessage.value + ' login cannot be empty'
-    isValid = false
-  }
-  if (!StringUtils.isNotBlank(form.password)) {
-    errorMessage.value = errorMessage.value + ' password cannot be empty'
-    isValid = false
   }
   if (StringUtils.isNotBlank(form.login) && form.login.length < 3) {
     errorMessage.value = errorMessage.value + ' login must be 3 chars long minimum'
@@ -103,7 +114,7 @@ const submit = () => {
       <o-input type="text" value="john" maxlength="50" v-model="form.login"> </o-input>
     </o-field>
     </div>
-    <div class="field">
+    <div v-if="isInitialSetup" class="field">
     <o-field label="Confirm Login" class="control">
       <o-input type="text" value="john" maxlength="50" v-model="loginValidation"> </o-input>
     </o-field>
@@ -113,7 +124,7 @@ const submit = () => {
       <o-input @keyup.enter="submit" value="123" type="password" maxlength="30" v-model="form.password" passwordReveal></o-input>
     </o-field>
     </div>
-    <div class="field">
+    <div v-if="isInitialSetup" class="field">
     <o-field label="Confirm Password"  class="control">
       <o-input @keyup.enter="submit" value="123" type="password" maxlength="30" v-model="passwordValidation" passwordReveal></o-input>
     </o-field>
