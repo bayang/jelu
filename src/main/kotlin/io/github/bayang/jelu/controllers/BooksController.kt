@@ -58,6 +58,15 @@ class BooksController(
         }
     }
 
+    @GetMapping(path = ["/tags"])
+    fun tags(@RequestParam(name = "name", required = false) name: String?): List<TagDto> {
+        return if (name.isNullOrBlank()) {
+            repository.findAllTags()
+        } else {
+            repository.findTagsByName(name)
+        }
+    }
+
     @GetMapping(path = ["/authors/{id}"])
     fun authorById(@PathVariable("id") authorId: UUID) = repository.findAuthorsById(authorId)
 

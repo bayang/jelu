@@ -39,9 +39,14 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
     var publishedDate by BookTable.publishedDate
     var publisher by BookTable.publisher
     var authors by Author via BookAuthors
+    var tags by Tag via BookTags
     var image by BookTable.image
     var series by BookTable.series
     var numberInSeries by BookTable.numberInSeries
+    var googleId by BookTable.googleId
+    var amazonId by BookTable.amazonId
+    var goodreadsId by BookTable.goodreadsId
+    var librarythingId by BookTable.librarythingId
     val userBooks by UserBook referrersOn UserBookTable.book
 
     fun toBookDto(): BookDto =
@@ -59,6 +64,11 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             modificationDate = this.modificationDate,
             series = this.series,
             numberInSeries = this.numberInSeries,
-            authors = this.authors.map { it.toAuthorDto() }
+            goodreadsId = this.goodreadsId,
+            googleId = this.googleId,
+            amazonId = this.amazonId,
+            librarythingId = this.librarythingId,
+            authors = this.authors.map { it.toAuthorDto() },
+            tags = this.tags.map { it.toTagDto() }
         )
 }

@@ -7,6 +7,7 @@ import { key } from "../store";
 import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { Author } from "../model/Author";
+import { Tag } from "../model/Tag";
 
 const oruga = useProgrammatic();
 
@@ -23,7 +24,11 @@ const form = reactive({
   numberInSeries: null,
   personalNotes: "",
   owned: null,
-  toRead: null
+  toRead: null,
+  googleId: "",
+  amazonId : "",
+  goodreadsId: "",
+  librarythingId : ""
 });
 const eventType = ref(null);
 const imageUrl = ref<string | null>(null);
@@ -49,12 +54,15 @@ const toReadDisplay = computed(() => {
 let filteredAuthors: Ref<Array<Author>> = ref([]);
 let authors: Ref<Array<Author>> = ref([]);
 
+let filteredTags: Ref<Array<Tag>> = ref([]);
+let tags: Ref<Array<Tag>> = ref([]);
+
 const importBook = async () => {
   console.log("import book");
   if (StringUtils.isNotBlank(form.title)) {
       let userBook: UserBook = fillBook(form)
-      // authors.value.forEach((a) => userBook.book.authors?.push({ name: a }));
       authors.value.forEach((a) => userBook.book.authors?.push(a));
+      tags.value.forEach((t) => userBook.book.tags?.push(t));
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
     }
@@ -101,7 +109,12 @@ const fillBook = (formdata: any): UserBook => {
       publishedDate : formdata.publishedDate,
       series : formdata.series,
       numberInSeries : formdata.numberInSeries,
-      authors: []
+      googleId: formdata.googleId,
+      amazonId: formdata.amazonId,
+      goodreadsId: formdata.goodreadsId,
+      librarythingId: formdata.librarythingId,
+      authors: [],
+      tags: []
     },
     owned : formdata.owned,
     personalNotes: formdata.personalNotes,
@@ -116,6 +129,7 @@ const clearForm = () => {
   eventType.value = null;
   file.value = null;
   authors.value = [];
+  tags.value = [];
   uploadPercentage.value = 0;
   form.title = "";
   form.summary = "";
@@ -128,6 +142,11 @@ const clearForm = () => {
   form.numberInSeries = null
   form.owned = null
   form.personalNotes = ""
+  form.amazonId = ""
+  form.googleId = ""
+  form.goodreadsId = ""
+  form.librarythingId = ""
+
 };
 
 const toast = (variant: string, message: string, duration: number = 2000) => {
@@ -156,6 +175,10 @@ function getFilteredAuthors(text: string) {
   dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data)
 }
 
+function getFilteredTags(text: string) {
+  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data)
+}
+
 function beforeAdd(item: Author|string) {
   let shouldAdd = true
   if (item instanceof Object) {
@@ -179,6 +202,29 @@ function beforeAdd(item: Author|string) {
     return shouldAdd
 }
 
+function beforeAddTag(item: Tag|string) {
+  let shouldAdd = true
+  if (item instanceof Object) {
+    tags.value.forEach(tag => {
+      console.log(`tag ${tag.name}`)
+      if(tag.name === item.name) {
+        console.log(`tag ${tag.name} item ${item.name}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  else {
+    tags.value.forEach(tag => {
+      console.log(`tag ${tag.name}`)
+      if(tag.name === item) {
+        console.log(`tag ${tag.name} item ${item}`)
+        shouldAdd = false;
+      }
+    });
+  }
+    return shouldAdd
+}
+
 function createAuthor(item: Author|string) {
   if (item instanceof Object) {
     return item
@@ -187,6 +233,16 @@ function createAuthor(item: Author|string) {
     "name" : item
   }
 }
+
+function createTag(item: Tag|string) {
+  if (item instanceof Object) {
+    return item
+  }
+  return {
+    "name" : item
+  }
+}
+
 </script>
 
 <template>
@@ -222,6 +278,27 @@ function createAuthor(item: Author|string) {
       <p>auth <span v-for="author in authors" v-bind:key="author.id">{{author.name}}</span></p>
     </div>
     <div class="field">
+      <o-field horizontal label="Tags">
+        <o-inputitems
+          v-model="tags"
+          :data="filteredTags"
+          :autocomplete="true"
+          :allow-new="true"
+          :allow-duplicates="false"
+          :open-on-focus="true"
+          :beforeAdding="beforeAddTag"
+          :createItem="createTag"
+          iconPack="mdi"
+          icon="account-plus"
+          field="name"
+          placeholder="Add a tag"
+          @typing="getFilteredTags"
+        >
+        </o-inputitems>
+      </o-field>
+      <p>tags <span v-for="tag in tags" v-bind:key="tag.id">{{tag.name}}</span></p>
+    </div>
+    <div class="field">
       <o-field horizontal label="Summary">
         <o-input
           maxlength="200"
@@ -241,6 +318,30 @@ function createAuthor(item: Author|string) {
           name="isbn13"
           v-model="form.isbn13"
           placeholder="isbn13"
+        ></o-input>
+      </o-field>
+    </div>
+    <div class="field">
+      <o-field horizontal label="Identifiers">
+        <o-input
+          name="googleId"
+          v-model="form.googleId"
+          placeholder="googleId"
+        ></o-input>
+        <o-input
+          name="goodreadsId"
+          v-model="form.goodreadsId"
+          placeholder="goodreadsId"
+        ></o-input>
+        <o-input
+          name="amazonId"
+          v-model="form.amazonId"
+          placeholder="amazonId"
+        ></o-input>
+        <o-input
+          name="librarythingId"
+          v-model="form.librarythingId"
+          placeholder="librarythingId"
         ></o-input>
       </o-field>
     </div>
@@ -375,14 +476,5 @@ function createAuthor(item: Author|string) {
 
 <style lang="scss">
 @import "../assets/style.scss";
-
-// .dropdown-item {
-//   color: #363636;
-// }
-
-// $inputitems-color: #363636;
-// $inputitems-item-color: #363636;
-// $inputitems-item-background-color: #363636;
-// $inputitems-background-color: #363636;
 
 </style>

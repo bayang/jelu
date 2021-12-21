@@ -29,8 +29,14 @@ class BookRepository(
 
     fun findAllAuthors(): SizedIterable<Author> = Author.all()
 
+    fun findAllTags(): SizedIterable<Tag> = Tag.all()
+
     fun findAuthorsByName(name: String): List<Author> {
         return Author.find{AuthorTable.name like "%$name%" }.toList()
+    }
+
+    fun findTagsByName(name: String): List<Tag> {
+        return Tag.find{TagTable.name like "%$name%" }.toList()
     }
 
     fun findBookById(bookId: UUID): Book = Book[bookId]
@@ -53,6 +59,10 @@ class BookRepository(
         book.publishedDate.let { updated.publishedDate = it }
         book.series.let { updated.series = it }
         book.numberInSeries.let { updated.numberInSeries = it }
+        book.amazonId.let { updated.amazonId = it }
+        book.goodreadsId.let { updated.goodreadsId = it }
+        book.googleId.let { updated.googleId = it }
+        book.librarythingId.let { updated.librarythingId = it }
         updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
@@ -72,6 +82,26 @@ class BookRepository(
                 existing.addAll(authorsList)
                 val merged: SizedCollection<Author> = SizedCollection(existing)
                 updated.authors = merged
+            }
+        }
+        val tagsList = mutableListOf<Tag>()
+        book.tags?.forEach {
+            val tagEntity: Tag? = findTagsByName(it.name).firstOrNull()
+            if (tagEntity != null) {
+                tagsList.add(tagEntity)
+            } else {
+                tagsList.add(save(it))
+            }
+        }
+        if (tagsList.isNotEmpty()) {
+            if (updated.tags.empty()) {
+                updated.tags = SizedCollection(tagsList)
+            }
+            else {
+                val existing = updated.tags.toMutableList()
+                existing.addAll(tagsList)
+                val merged: SizedCollection<Tag> = SizedCollection(existing)
+                updated.tags = merged
             }
         }
         return updated
@@ -126,6 +156,15 @@ class BookRepository(
                 authorsList.add(save(it))
             }
         }
+        val tagsList = mutableListOf<Tag>()
+        book.tags?.forEach {
+            val tagEntity: Tag? = findTagsByName(it.name).firstOrNull()
+            if (tagEntity != null) {
+                tagsList.add(tagEntity)
+            } else {
+                tagsList.add(save(it))
+            }
+        }
         val created = Book.new{
             this.title = book.title
             val instant: Instant = nowInstant()
@@ -140,14 +179,29 @@ class BookRepository(
             this.image = book.image
             this.series = book.series
             this.numberInSeries = book.numberInSeries
+            this.amazonId = book.amazonId
+            this.goodreadsId = book.goodreadsId
+            this.googleId = book.googleId
+            this.librarythingId = book.librarythingId
         }
         created.authors = SizedCollection(authorsList)
+        created.tags = SizedCollection(tagsList)
         return created
     }
 
     fun save(author: AuthorDto): Author {
         val created = Author.new{
             name = author.name
+            val instant: Instant = nowInstant()
+            creationDate = instant
+            modificationDate = instant
+        }
+        return created
+    }
+
+    fun save(tag: TagDto): Tag {
+        val created = Tag.new{
+            name = tag.name
             val instant: Instant = nowInstant()
             creationDate = instant
             modificationDate = instant

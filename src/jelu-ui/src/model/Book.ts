@@ -1,5 +1,6 @@
 import {Author} from "./Author";
 import ReadingEvent, { ReadingEventType } from "./ReadingEvent";
+import { Tag } from "./Tag";
 
 export interface Book {
     id?: string,
@@ -14,8 +15,13 @@ export interface Book {
     publishedDate?: string|null,
     modificationDate?: string,
     authors?: Array<Author>,
+    tags?: Array<Tag>,
     series?: string, 
-    numberInSeries? : number|null
+    numberInSeries? : number|null,
+    googleId?: string,
+    amazonId?: string,
+    goodreadsId?: string,
+    librarythingId?: string,
   }
 export interface UserBook {
     id?: string,
@@ -28,4 +34,5 @@ export interface UserBook {
     toRead?: boolean|null,
     book: Book,
     readingEvents?: Array<ReadingEvent>|null,
+    percentRead? : number|null,
   }

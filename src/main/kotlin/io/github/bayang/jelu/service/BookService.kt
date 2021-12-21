@@ -35,7 +35,13 @@ class BookService(
     fun findAllAuthors(): List<AuthorDto> = bookRepository.findAllAuthors().map { it.toAuthorDto() }
 
     @Transactional
+    fun findAllTags(): List<TagDto> = bookRepository.findAllTags().map { it.toTagDto() }
+
+    @Transactional
     fun findAuthorsByName(name: String): List<AuthorDto> = bookRepository.findAuthorsByName(name).map { it.toAuthorDto() }
+
+    @Transactional
+    fun findTagsByName(name: String): List<TagDto> = bookRepository.findTagsByName(name).map { it.toTagDto() }
 
     @Transactional
     fun findBookById(bookId: UUID): BookDto = bookRepository.findBookById(bookId).toBookDto()

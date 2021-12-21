@@ -5,6 +5,7 @@ import router from '../router'
 import { User, UserAuthentication } from "../model/User";
 import { JeluError } from "../model/JeluError";
 import { ReadingEventType } from "../model/ReadingEvent";
+import { Tag } from "../model/Tag";
 
 
 class DataService {
@@ -20,6 +21,8 @@ class DataService {
   private API_USERBOOK = '/userbooks';
 
   private API_AUTHOR = '/authors';
+
+  private API_TAG = '/tags';
   
   constructor() {
     this.apiClient = axios.create({
@@ -381,6 +384,29 @@ class DataService {
       console.log("error authors by criteria " + (error as AxiosError).toJSON())
       console.log("error authors by criteria " + (error as AxiosError).code)
       throw new Error("error get authors by criteria " + error)
+    }
+  }
+
+  findTagsByCriteria = async (query?: string|null) => {
+    try {
+      const response = await this.apiClient.get<Array<Tag>>(`${this.API_TAG}`, {
+        params: {
+          name: query
+        }
+      });
+      console.log("called tags by criteria")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+        // await router.push({ name: 'home', params: {msg: 'msg'}})
+
+      }
+      console.log("error tags by criteria " + (error as AxiosError).toJSON())
+      console.log("error tags by criteria " + (error as AxiosError).code)
+      throw new Error("error get tags by criteria " + error)
     }
   }
 

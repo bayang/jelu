@@ -20,8 +20,13 @@ data class BookDto(
     val image: String?,
     val modificationDate: Instant?,
     val authors: List<AuthorDto>?,
+    val tags: List<TagDto>?,
     val series: String?,
-    val numberInSeries: Double?
+    val numberInSeries: Double?,
+    val googleId: String?,
+    val amazonId: String?,
+    val goodreadsId: String?,
+    val librarythingId: String?
 )
 data class BookCreateDto(
     val id: UUID?,
@@ -35,8 +40,13 @@ data class BookCreateDto(
     val pageCount: Int?,
     val publishedDate: String?,
     val authors: List<AuthorDto>?,
+    val tags: List<TagDto>?,
     val series: String?,
     val numberInSeries: Double?,
+    val googleId: String?,
+    val amazonId: String?,
+    val goodreadsId: String?,
+    val librarythingId: String?
 )
 //data class BookUpdateDto(
 //    val title: String?,
@@ -64,6 +74,19 @@ data class AuthorUpdateDto(
     val name: String?,
 )
 data class AuthorWithBooksDto(
+    val id: UUID?,
+    val creationDate: Instant?,
+    val modificationDate: Instant?,
+    val name: String,
+    val books: List<BookDto>?
+)
+data class TagDto(
+    val id: UUID?,
+    val creationDate: Instant?,
+    val modificationDate: Instant?,
+    val name: String,
+)
+data class TagWithBooksDto(
     val id: UUID?,
     val creationDate: Instant?,
     val modificationDate: Instant?,

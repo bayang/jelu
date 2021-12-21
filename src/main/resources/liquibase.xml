@@ -174,7 +174,33 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
-
+    </changeSet>
+    <changeSet id="create_tags" author="byng">
+        <createTable tableName="tag">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(1000)"
+                    remarks="The tag's name ">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="book_tags">
+            <column name="tag" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" primaryKeyName="pk_booktag_act" foreignKeyName="fk_booktags_book_id" references="book(id)" nullable="false" />
+            </column>
+            <column name="book" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" primaryKeyName="pk_booktag_act" foreignKeyName="fk_booktags_tag_id" references="tag(id)" nullable="false" />
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

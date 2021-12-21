@@ -9,6 +9,7 @@ import { DateUtils } from "../utils/DateUtils";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { Tag } from "../model/Tag";
 
 const props = defineProps<{ bookId: string, book: UserBook|null }>()
 const oruga = useProgrammatic();
@@ -16,6 +17,8 @@ const emit = defineEmits(['close']);
 
 let authors: Ref<Array<Author>|undefined> = ref(props.book?.book.authors);
 let filteredAuthors: Ref<Array<Author>> = ref([]);
+let tags: Ref<Array<Tag>|undefined> = ref(props.book?.book.tags);
+let filteredTags: Ref<Array<Tag>> = ref([]);
 let userbook: Ref<UserBook> = ref(copyInput(props.book))
 let hasImage: Ref<boolean> = ref(userbook.value.book.image != null)
 let deleteImage: Ref<boolean> = ref(false)
@@ -97,6 +100,10 @@ function getFilteredAuthors(text: string) {
   dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data)
 }
 
+function getFilteredTags(text: string) {
+  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data)
+}
+
 const clearDatePicker = () => {
   // close datepicker on reset
     userbook.value.book.publishedDate = null;
@@ -134,7 +141,39 @@ function beforeAdd(item: Author|string) {
     return shouldAdd
 }
 
+function beforeAddTag(item: Tag|string) {
+  let shouldAdd = true
+  if (item instanceof Object) {
+    userbook.value.book?.tags?.forEach(tag => {
+      console.log(`tag ${tag.name}`)
+      if(tag.name === item.name) {
+        console.log(`tag ${tag.name} item ${item.name}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  else {
+    userbook.value.book?.tags?.forEach(tag => {
+      console.log(`tag ${tag.name}`)
+      if(tag.name === item) {
+        console.log(`tag ${tag.name} item ${item}`)
+        shouldAdd = false;
+      }
+    });
+  }
+    return shouldAdd
+}
+
 function createAuthor(item: Author|string) {
+  if (item instanceof Object) {
+    return item
+  }
+  return {
+    "name" : item
+  }
+}
+
+function createTag(item: Tag|string) {
   if (item instanceof Object) {
     return item
   }
@@ -181,6 +220,26 @@ function toggleRemoveImage() {
       </o-field>
     </div>
     <div class="field">
+      <o-field horizontal label="Tags">
+        <o-inputitems
+          v-model="userbook.book.tags"
+          :data="filteredTags"
+          :autocomplete="true"
+          :allow-new="true"
+          :allow-duplicates="false"
+          :open-on-focus="true"
+          :beforeAdding="beforeAddTag"
+          :createItem="createTag"
+          iconPack="mdi"
+          icon="account-plus"
+          field="name"
+          placeholder="Add a tag"
+          @typing="getFilteredTags"
+        >
+        </o-inputitems>
+      </o-field>
+    </div>
+    <div class="field">
       <o-field horizontal label="Summary">
         <o-input
           maxlength="200"
@@ -200,6 +259,30 @@ function toggleRemoveImage() {
           name="isbn13"
           v-model="userbook.book.isbn13"
           placeholder="isbn13"
+        ></o-input>
+      </o-field>
+    </div>
+    <div class="field">
+      <o-field horizontal label="Identifiers">
+        <o-input
+          name="goodreadsId"
+          v-model="userbook.book.goodreadsId"
+          placeholder="goodreadsId"
+        ></o-input>
+        <o-input
+          name="googleId"
+          v-model="userbook.book.googleId"
+          placeholder="googleId"
+        ></o-input>
+        <o-input
+          name="amazonId"
+          v-model="userbook.book.amazonId"
+          placeholder="amazonId"
+        ></o-input>
+        <o-input
+          name="librarythingId"
+          v-model="userbook.book.librarythingId"
+          placeholder="librarythingId"
         ></o-input>
       </o-field>
     </div>

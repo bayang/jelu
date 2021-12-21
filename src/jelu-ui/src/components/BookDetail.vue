@@ -123,6 +123,9 @@ getBook()
       <p v-if="book?.book?.summary" class="has-text-left">{{book.book.summary}}</p>
 
     </div>
+    <div class="column is-full is-offset-one-quarter content tags has-text-left  has-text-weight-semibold">
+      <span class="tag is-primary is-light" v-for="tag in book?.book?.tags" v-bind:key="tag.id">{{tag.name}}&nbsp;</span>
+    </div>
     <div v-if="book?.personalNotes" class="column is-full is-offset-one-quarter content">
       <p v-if="book?.personalNotes" class="has-text-left  has-text-weight-semibold">Personal Notes :</p>
       <p v-if="book?.personalNotes" class="has-text-left">{{book.personalNotes}}</p>
