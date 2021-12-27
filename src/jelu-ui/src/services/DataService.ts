@@ -5,7 +5,7 @@ import router from '../router'
 import { User, UserAuthentication } from "../model/User";
 import { JeluError } from "../model/JeluError";
 import { ReadingEventType } from "../model/ReadingEvent";
-import { Tag } from "../model/Tag";
+import { Tag, TagWithBooks } from "../model/Tag";
 
 
 class DataService {
@@ -51,7 +51,9 @@ class DataService {
     });
     this.apiClient.interceptors.response.use(originalResponse => {
       console.log(`response interceptor ${originalResponse.status}`)
-      
+      if (originalResponse.status === 401) {
+        console.log(`401 in interceptor`)
+      }
       // if (originalResponse.data != null) {
       //   for (const [k, v] of Object.entries(originalResponse.data)) {
       //     console.log("k v" + k + " " + v)
@@ -407,6 +409,25 @@ class DataService {
       console.log("error tags by criteria " + (error as AxiosError).toJSON())
       console.log("error tags by criteria " + (error as AxiosError).code)
       throw new Error("error get tags by criteria " + error)
+    }
+  }
+
+  getTagById = async (tagId: string) => {
+    try {
+      const response = await this.apiClient.get<TagWithBooks>(`${this.API_TAG}/${tagId}`);
+      console.log("called tags by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+        // await router.push({ name: 'home', params: {msg: 'msg'}})
+
+      }
+      console.log("error tags by id " + (error as AxiosError).toJSON())
+      console.log("error tags by id " + (error as AxiosError).code)
+      throw new Error("error get tags by id " + error)
     }
   }
 

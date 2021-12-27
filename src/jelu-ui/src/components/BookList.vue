@@ -37,7 +37,9 @@ onMounted(() => {
   </div>
   <div class="columns is-variable is-2 is-multiline is-centered">
     <div class="column is-2" v-for="book in books" v-bind:key="book.id">
+    <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
       <book-card :book="book"></book-card>
+      </router-link>
     </div>
   </div>
 </template>

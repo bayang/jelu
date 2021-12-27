@@ -44,10 +44,11 @@ const authorsText = computed(() => {
   }
   return txt;
 });
+
 </script>
 
 <template>
-  <router-link :to="{ name: 'book-detail', params: { bookId: book.id } }">
+  <!-- <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }"> -->
     <div class="card">
       <div class="card-image">
         <figure class="image is-3by4">
@@ -93,7 +94,52 @@ const authorsText = computed(() => {
         </footer>
       </div>
     </div>
-  </router-link>
+  <!-- </router-link>
+    <div v-else class="card">
+      <div class="card-image">
+        <figure class="image is-3by4">
+          <img
+            v-if="book.book.image"
+            :src="'/files/' + book.book.image"
+            alt="cover image"
+          />
+          <img
+            v-else
+            src="../assets/placeholder_asset.png"
+            alt="cover placeholder"
+          />
+        </figure>
+      </div>
+      <header class="card-header">
+        <p class="card-header-title is-capitalized is-family-sans-serif">
+          <span class="icon has-text-primary">
+            <i class="mdi mdi-book-open-blank-variant mdi-18px"></i>
+          </span>
+          {{ book.book.title }}
+        </p>
+      </header>
+      <div class="card-content has-text-dark">
+        <div class="content has-text-left">
+          <span v-if="book.book.authors != null && book.book.authors.length > 0" class="is-inline-block"
+            >Authors : {{ authorsText }}</span
+          >
+          <span v-if="book.book.publisher" class="is-inline-block"
+            >Publisher : {{ book.book.publisher }}</span
+          >
+        </div>
+        <footer class="card-footer">
+          <div class="tags has-addons ">
+            <span v-if="book.lastReadingEvent" class="tag is-family-sans-serif">Status</span>
+            <span
+              v-if="book.lastReadingEvent"
+              :class="eventClass"
+              class="tag is-capitalized is-family-sans-serif"
+              >{{ eventText }}</span
+            >
+          </div>
+        </footer>
+      </div> -->
+    <!-- </div> -->
 </template>
 
 <style lang="scss" scoped>

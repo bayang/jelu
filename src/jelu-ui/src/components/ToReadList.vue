@@ -33,7 +33,9 @@ getToRead()
   <h2 class="title is-family-sans-serif">To Read List : </h2>
   <div class="columns is-multiline is-centered">
       <div class="column is-2" v-for="book in books" v-bind:key="book.id">
+      <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
       <book-card :book="book"></book-card>
+      </router-link>
     </div>
 
   </div>

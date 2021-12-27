@@ -6,6 +6,7 @@ import dataService from "../services/DataService"
 import { DateUtils } from "../utils/DateUtils"
 import EditBookModal from "./EditBookModal.vue"
 import { useProgrammatic } from "@oruga-ui/oruga-next";
+import dayjs from 'dayjs'
 
 const props = defineProps<{ bookId: string }>()
 
@@ -26,6 +27,8 @@ const getBook = async () => {
 watch(() => props.bookId, (newValue, oldValue) => {
   console.log('The new bookId is: ' + props.bookId)
 })
+
+const sortedEvents = computed(() => book.value?.readingEvents?.sort((a, b) => dayjs(a.creationDate).isAfter(dayjs(b.creationDate)) ? -1 : 1))
 
 const format = (dateString: string|null|undefined) => {
   if (dateString != null) {
@@ -56,15 +59,6 @@ const toggleEdit = () => {
           onClose: modalClosed
         });
 }
-
-// onMounted(() => {
-//   console.log("Component book detail is mounted!");
-//   try {
-//     getBook()
-//   } catch (error) {
-//     console.log("failed get book : " + error);
-//   }
-// });
 
 console.log('The id value is: ' + props.bookId)
 
@@ -118,13 +112,12 @@ getBook()
     </div>
 
     </div>
-    <div v-if="book?.book?.summary" class="column is-full is-offset-one-quarter content">
+    <div v-if="book?.book?.summary" class="column is-three-fifths is-offset-one-quarter content jelu-bordered">
       <p v-if="book?.book?.summary" class="has-text-left has-text-weight-semibold">Summary :</p>
       <p v-if="book?.book?.summary" class="has-text-left">{{book.book.summary}}</p>
-
     </div>
     <div class="column is-full is-offset-one-quarter content tags has-text-left  has-text-weight-semibold">
-      <span class="tag is-primary is-light" v-for="tag in book?.book?.tags" v-bind:key="tag.id">{{tag.name}}&nbsp;</span>
+      <span class="tag is-primary is-light" v-for="tag in book?.book?.tags" v-bind:key="tag.id"><router-link :to="{ name: 'tag-detail', params: { tagId: tag.id } }">{{tag.name}}&nbsp;</router-link></span>
     </div>
     <div v-if="book?.personalNotes" class="column is-full is-offset-one-quarter content">
       <p v-if="book?.personalNotes" class="has-text-left  has-text-weight-semibold">Personal Notes :</p>
@@ -133,7 +126,7 @@ getBook()
     <div v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="column is-full is-offset-one-quarter content">
       <p v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="has-text-left has-text-weight-semibold">Reading events :</p>
       <ul class="has-text-left" v-if="book?.readingEvents != null && book?.readingEvents?.length > 0">
-        <li v-for="event in book.readingEvents" v-bind:key="event.id">{{event.eventType}} - {{format(event.creationDate)}}</li>
+        <li v-for="event in sortedEvents" v-bind:key="event.id">{{event.eventType}} - {{format(event.creationDate)}}</li>
       </ul>
     </div>
   </div>
@@ -143,28 +136,23 @@ getBook()
 <style lang="scss">
 @import "../assets/style.scss";
 
-// label.label {
-//   text-align: left;
-//   margin: 0px;
-// }
-
-a {
-  color: #42b983;
-}
-
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
-}
-
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
-}
-
 .columns {
   margin-top: 10px;
 }
+
+.jelu-bordered {
+  border-width: 2px;
+  border-color: $jelu_background_contrast;
+  border-style: solid;
+  border-radius: 3px;
+  -webkit-box-shadow: 10px 10px 10px 0px $jelu_background; 
+  box-shadow: 10px 10px 10px 0px $jelu_background;
+}
+
+$tag-color: findColorInvert($tag-background-color);
+
+span.tag a {
+  color: $tag-color;
+}
+
 </style>

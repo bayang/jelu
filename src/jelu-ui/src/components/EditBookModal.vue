@@ -75,7 +75,10 @@ const importBook = () => {
   
       console.log(`push book ` + userbook.value);
       console.log(userbook.value);
-      dataService.updateUserBookImage(
+      let promise: Promise<UserBook>
+      // no id on userbook -> we have a book and save the userbook
+      if (StringUtils.isBlank(userbook.value.id)) {
+        promise = dataService.saveUserBookImage(
         userbook.value,
         file.value,
         (event: { loaded: number; total: number }) => {
@@ -83,7 +86,31 @@ const importBook = () => {
           console.log("percent " + percent);
           uploadPercentage.value = percent;
         }
-      ).then(res => 
+      )
+      }
+      // just update the existing userbook
+      else {
+        promise = dataService.updateUserBookImage(
+        userbook.value,
+        file.value,
+        (event: { loaded: number; total: number }) => {
+          let percent = Math.round((100 * event.loaded) / event.total);
+          console.log("percent " + percent);
+          uploadPercentage.value = percent;
+        }
+      )
+      }
+      // dataService.updateUserBookImage(
+      //   userbook.value,
+      //   file.value,
+      //   (event: { loaded: number; total: number }) => {
+      //     let percent = Math.round((100 * event.loaded) / event.total);
+      //     console.log("percent " + percent);
+      //     uploadPercentage.value = percent;
+      //   }
+      // )
+      promise
+      .then(res => 
         {
           console.log(`update book ${res.book.title}`);
           ObjectUtils.toast(oruga.oruga, "success", `Book ${res.book.title} updated !`, 4000);
