@@ -67,6 +67,12 @@ class BooksController(
         }
     }
 
+    @GetMapping(path = ["/tags/{id}"])
+    fun tagById(@PathVariable("id") tagId: UUID, principal: Authentication): TagWithBooksDto {
+        assertIsJeluUser(principal.principal)
+        return repository.findTagById(tagId, (principal.principal as JeluUser).user)
+    }
+
     @GetMapping(path = ["/authors/{id}"])
     fun authorById(@PathVariable("id") authorId: UUID) = repository.findAuthorsById(authorId)
 

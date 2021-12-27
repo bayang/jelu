@@ -45,6 +45,8 @@ class BookRepository(
 
     fun findAuthorsById(authorId: UUID): Author = Author[authorId]
 
+    fun findTagById(tagId: UUID): Tag = Tag[tagId]
+
     fun update(updated: Book, book: BookCreateDto): Book {
         if (!book.title.isNullOrBlank()) {
             updated.title = book.title

@@ -28,6 +28,28 @@ data class BookDto(
     val goodreadsId: String?,
     val librarythingId: String?
 )
+data class BookWithUserBookDto(
+    val id: UUID?,
+    val creationDate: Instant?,
+    val title: String,
+    val isbn10:String?,
+    val isbn13: String?,
+    val summary: String?,
+    val publisher: String?,
+    val pageCount: Int?,
+    val publishedDate: String?,
+    val image: String?,
+    val modificationDate: Instant?,
+    val authors: List<AuthorDto>?,
+    val tags: List<TagDto>?,
+    val series: String?,
+    val numberInSeries: Double?,
+    val googleId: String?,
+    val amazonId: String?,
+    val goodreadsId: String?,
+    val librarythingId: String?,
+    val userBooks: List<UserBookWithoutBookDto>?
+)
 data class BookCreateDto(
     val id: UUID?,
 //    val creationDate: Instant?,
@@ -91,5 +113,5 @@ data class TagWithBooksDto(
     val creationDate: Instant?,
     val modificationDate: Instant?,
     val name: String,
-    val books: List<BookDto>?
+    val books: List<BookWithUserBookDto>?
 )

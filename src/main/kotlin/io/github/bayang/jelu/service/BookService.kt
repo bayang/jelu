@@ -157,4 +157,9 @@ class BookService(
     @Transactional
     fun findUserBookByCriteria(userId: EntityID<UUID>, eventType: ReadingEventType?, toRead: Boolean?): List<UserBookLightDto>
     = bookRepository.findUserBookByCriteria(userId, eventType, toRead).map { it.toUserBookLightDto() }
+
+    @Transactional
+    fun findTagById(tagId: UUID, user: User): TagWithBooksDto {
+        return bookRepository.findTagById(tagId).toTagWithBooksDto(user.id.value)
+    }
 }

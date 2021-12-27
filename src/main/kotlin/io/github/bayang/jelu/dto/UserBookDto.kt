@@ -42,6 +42,18 @@ data class UserBookWithoutEventsDto(
     val toRead: Boolean?,
     val percentRead: Int?
 )
+data class UserBookWithoutBookDto(
+    val id: UUID?,
+    val creationDate: Instant?,
+    val modificationDate: Instant?,
+    val readingEvents: List<ReadingEventWithoutUserBookDto>?,
+    val lastReadingEventDate: Instant?,
+    val lastReadingEvent: ReadingEventType?,
+    val personalNotes: String?,
+    val owned: Boolean?,
+    val toRead: Boolean?,
+    val percentRead: Int?
+)
 data class CreateUserBookDto(
     val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,

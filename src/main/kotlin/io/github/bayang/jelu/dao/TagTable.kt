@@ -29,13 +29,13 @@ class Tag(id: EntityID<UUID>): UUIDEntity(id) {
             modificationDate = this.modificationDate,
             name = this.name
         )
-    fun toTagWithBooksDto(): TagWithBooksDto =
+    fun toTagWithBooksDto(userId: UUID): TagWithBooksDto =
         TagWithBooksDto(
             id = this.id.value,
             creationDate = this.creationDate,
             modificationDate = this.modificationDate,
             name = this.name,
-            books = this.books.map { it.toBookDto() }
+            books = this.books.map { it.toBookWithUserBookDto(userId) }
         )
 }
 object BookTags : Table(name = "book_tags") {
