@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 @RequestMapping("/api")
 class BooksController(
     private val repository: BookService,
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) {
 
     @GetMapping(path = ["/books"])

@@ -11,6 +11,9 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http
+            .logout { it -> it.logoutUrl("/api/logout")
+                                .invalidateHttpSession(true)
+            }
             .csrf{ it.disable() }
             .cors().disable()
             .authorizeRequests {

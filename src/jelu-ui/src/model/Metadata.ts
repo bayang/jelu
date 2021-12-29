@@ -1,0 +1,17 @@
+export interface Metadata {
+    title?: string,
+    isbn10?:string,
+    isbn13?: string,
+    summary?: string,
+    image?: string,
+    publisher?: string,
+    pageCount?: number,
+    publishedDate?: string,
+    authors: Array<string>,
+    tags: Array<string>,
+    series?: string,
+    numberInSeries?: number,
+    googleId?: string,
+    amazonId?: string,
+    goodreadsId?: string,
+}

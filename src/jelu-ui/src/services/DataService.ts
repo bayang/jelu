@@ -6,6 +6,7 @@ import { User, UserAuthentication } from "../model/User";
 import { JeluError } from "../model/JeluError";
 import { ReadingEventType } from "../model/ReadingEvent";
 import { Tag, TagWithBooks } from "../model/Tag";
+import { Metadata } from "../model/Metadata";
 
 
 class DataService {
@@ -23,6 +24,10 @@ class DataService {
   private API_AUTHOR = '/authors';
 
   private API_TAG = '/tags';
+
+  private API_LOGOUT = '/logout';
+
+  private API_METADATA = '/metadata';
   
   constructor() {
     this.apiClient = axios.create({
@@ -49,20 +54,13 @@ class DataService {
       // Do something with request error
       return Promise.reject(error);
     });
-    this.apiClient.interceptors.response.use(originalResponse => {
-      console.log(`response interceptor ${originalResponse.status}`)
-      if (originalResponse.status === 401) {
-        console.log(`401 in interceptor`)
-      }
-      // if (originalResponse.data != null) {
-      //   for (const [k, v] of Object.entries(originalResponse.data)) {
-      //     console.log("k v" + k + " " + v)
-      //     if (k == "publishedDate") {
-      //       console.log('received date')
-      //     }
-      //   };
-      // }
-      return originalResponse;
+    this.apiClient.interceptors.response.use(
+      originalResponse => {
+        return originalResponse;
+    },
+    error => {
+      console.log(`response error interceptor ${error.response.status}`)
+      router.push({name: 'login'}).then(() => {console.log("ok nav in interceptor")}).catch(() => {console.log("error nav in interceptor")})
     });
   }
   
@@ -91,8 +89,6 @@ class DataService {
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
-        // await router.push({ name: 'home', params: {msg: 'msg'}})
-
       }
       console.log("error findall " + (error as AxiosError).toJSON())
       console.log("error findall " + (error as AxiosError).code)
@@ -110,8 +106,6 @@ class DataService {
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
-        // await router.push({ name: 'home', params: {msg: 'msg'}})
-
       }
       console.log("error findall " + (error as AxiosError).toJSON())
       console.log("error findall " + (error as AxiosError).code)
@@ -129,7 +123,6 @@ class DataService {
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios user " + error.response.status + " " + error.response.data.error)
-
       }
       console.log("error user " + (error as AxiosError).toJSON())
       console.log("error user " + (error as AxiosError).code)
@@ -154,8 +147,6 @@ class DataService {
       }
       return response.data.user
 
-      // return response.data;
-      
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios auth user " + error.response.status + " " + error.response.data.error)
@@ -191,7 +182,6 @@ class DataService {
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios auth token " + error.response.status + " " + error.response.data.error)
-
       }
       console.log("error auth token " + (error as AxiosError).toJSON())
       console.log("error auth token " + (error as AxiosError).code)
@@ -208,7 +198,6 @@ class DataService {
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios setup " + error.response.status + " " + error.response.data.error)
-
       }
       console.log("error setup " + (error as AxiosError).toJSON())
       console.log("error setup " + (error as AxiosError).code)
@@ -357,8 +346,6 @@ class DataService {
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
-        // await router.push({ name: 'home', params: {msg: 'msg'}})
-
       }
       console.log("error userbook by eventtype " + (error as AxiosError).toJSON())
       console.log("error userbook by eventtype " + (error as AxiosError).code)
@@ -380,8 +367,6 @@ class DataService {
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
-        // await router.push({ name: 'home', params: {msg: 'msg'}})
-
       }
       console.log("error authors by criteria " + (error as AxiosError).toJSON())
       console.log("error authors by criteria " + (error as AxiosError).code)
@@ -403,8 +388,6 @@ class DataService {
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
-        // await router.push({ name: 'home', params: {msg: 'msg'}})
-
       }
       console.log("error tags by criteria " + (error as AxiosError).toJSON())
       console.log("error tags by criteria " + (error as AxiosError).code)
@@ -422,12 +405,50 @@ class DataService {
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
-        // await router.push({ name: 'home', params: {msg: 'msg'}})
-
       }
       console.log("error tags by id " + (error as AxiosError).toJSON())
       console.log("error tags by id " + (error as AxiosError).code)
       throw new Error("error get tags by id " + error)
+    }
+  }
+
+  logout = async () => {
+    try {
+      const response = await this.apiClient.post(`${this.API_LOGOUT}`);
+      console.log("called logout")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error logout " + (error as AxiosError).toJSON())
+      console.log("error logout " + (error as AxiosError).code)
+      throw new Error("error logout " + error)
+    }
+  }
+
+  fetchMetadata = async (isbn?: string, title?:string, authors?: string) => {
+    try {
+      const response = await this.apiClient.get<Metadata>(`${this.API_METADATA}`, {
+        params: {
+          isbn: isbn,
+          title: title,
+          authors: authors
+        }
+      });
+      console.log("called metadata")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error metadata " + (error as AxiosError).toJSON())
+      console.log("error metadata " + (error as AxiosError).code)
+      throw new Error("error metadata " + error)
     }
   }
 

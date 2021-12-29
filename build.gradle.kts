@@ -33,6 +33,10 @@ dependencies {
 	implementation("org.springframework.session:spring-session-core")
 	implementation("com.github.gotson:spring-session-caffeine:1.0.3")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+	implementation("com.fasterxml.staxmate:staxmate:2.3.0")
+	implementation("com.fasterxml.woodstox:woodstox-core:6.2.7")
+
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -47,6 +51,7 @@ dependencies {
 	implementation("io.github.microutils:kotlin-logging-jvm:2.0.10")
 	implementation("com.github.slugify:slugify:2.4")
 	implementation("commons-io:commons-io:2.11.0")
+	implementation("commons-validator:commons-validator:1.7")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")

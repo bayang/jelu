@@ -23,10 +23,11 @@ class BookService(
     private val bookRepository: BookRepository,
     private val eventRepository: ReadingEventRepository,
     private val properties: JeluProperties,
-    private val downloadService: DownloadService
+    private val downloadService: DownloadService,
+    private val slugify: Slugify
     ) {
 
-    private val slugify: Slugify = Slugify()
+//    private val slugify: Slugify = Slugify()
 
     @Transactional
     fun findAll(searchTerm: String?): List<BookDto> = bookRepository.findAll(searchTerm).map { it.toBookDto() }

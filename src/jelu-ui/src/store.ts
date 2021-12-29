@@ -40,7 +40,7 @@ const store = createStore<State>({
     },
     entryPoint(state, entryPoint: string) {
       state.entryPoint = entryPoint
-    }
+    },
   },
   actions: {
       async setupStatus({commit, state}) {
@@ -71,8 +71,6 @@ const store = createStore<State>({
           commit('login', false)
           throw error
         }
-
-        // commit('user', await dataService.authenticateUser(payload.user, payload.password))
       }, 
       async createInitialUser({dispatch, commit, state}, payload) {
         try {
@@ -84,6 +82,11 @@ const store = createStore<State>({
         } catch (error) {
           throw error
         }
+      },
+      logout({dispatch, commit, state}) {
+        commit('login', false)
+        commit('user', null)
+        router.push({name: 'login'})
       }
 
   },

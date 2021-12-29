@@ -3,6 +3,8 @@ jelu:
     path: ${user.home}/.jelu/database/
   files:
     dir: '${user.home}/.jelu/files/'
+  session:
+    duration: 604800 #7 days
 server:
   port: 11111
 spring:

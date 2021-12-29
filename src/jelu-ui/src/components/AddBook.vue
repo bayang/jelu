@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { computed, reactive, Ref, ref } from "vue";
+import { key } from "../store";
 import { useStore } from "vuex";
 import { UserBook } from "../model/Book";
 import dataService from "../services/DataService";
-import { key } from "../store";
 import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { Author } from "../model/Author";
 import { Tag } from "../model/Tag";
+import AutoImportFormModalVue from "./AutoImportFormModal.vue";
+import { Metadata } from "../model/Metadata";
 
-const oruga = useProgrammatic();
+const {oruga} = useProgrammatic();
 
 const datepicker = ref(null);
 const form = reactive({
@@ -48,14 +50,20 @@ const toReadDisplay = computed(() => {
     }
     return ""
   })
-// load existing authors from db here
-// const data: Ref<Array<string>> = ref([]);
-// let filteredAuthors: Ref<Array<string>> = ref(data);
 let filteredAuthors: Ref<Array<Author>> = ref([]);
 let authors: Ref<Array<Author>> = ref([]);
 
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let tags: Ref<Array<Tag>> = ref([]);
+
+const showModal: Ref<Boolean> = ref(false)
+const metadata: Ref<Metadata|null> = ref(null)
+let hasImage: Ref<boolean> = ref(metadata?.value?.image != null)
+let deleteImage: Ref<boolean> = ref(false)
+
+function toggleRemoveImage() {
+  deleteImage.value = !deleteImage.value
+}
 
 const importBook = async () => {
   console.log("import book");
@@ -243,12 +251,48 @@ function createTag(item: Tag|string) {
   }
 }
 
+const toggleModal = () => {
+  showModal.value = ! showModal.value
+  oruga.modal.open({
+    parent: this,
+          component: AutoImportFormModalVue,
+          trapFocus: true,
+          active: true,
+          // fullScreen: false,
+          canCancel: ['x', 'button', 'outside'],
+          scroll: 'keep',
+          events: {
+            metadataReceived : (modalMetadata: Metadata) => {
+              console.log("received metadata")
+              console.log(modalMetadata)
+              metadata.value = modalMetadata
+            }
+          },
+          // props: {
+          //   "book" : book.value
+          // },
+          onClose: modalClosed
+        });
+}
+
+function modalClosed(args: any) {
+  console.log("modal closed")
+  // getBook()
+}
+
 </script>
 
 <template>
-  <h1 class="title">Add book</h1>
   <section>
     <div class="columns is-multiline is-centered">
+      <div class="column is-centered is-offset-one-fifth is-three-fifths">
+        <h1 class="title">Add book</h1>
+      </div>
+      <div class="column is-one-fifth">
+        <o-tooltip label="Try to auto fill some fields from the web, given a isbn or a title" multiline>
+        <button @click="toggleModal" class="button is-primary is-light">Auto fill</button>
+        </o-tooltip>
+      </div>
     <div class="column is-two-thirds">
 <div class="field">
       <o-field horizontal label="Title">
@@ -421,6 +465,35 @@ function createTag(item: Tag|string) {
       </o-checkbox>
       </o-field>
     </div>
+    <div v-if="hasImage">
+  <o-field horizontal>
+    <template v-slot:label>
+        Actual cover :
+        <o-tooltip v-if="!deleteImage" label="Click bin to remove current cover" position="right">
+          <span class="icon">
+          <i class="mdi mdi-information-outline"></i> </span>
+        </o-tooltip>
+          <o-tooltip v-if="deleteImage" label="Press refresh to restore cover" position="right">
+            <span class="icon">
+          <i class="mdi mdi-information-outline"></i> </span>
+        </o-tooltip>
+      </template>
+  <figure class="small-cover">
+          <img
+            :src="'/files/' + metadata?.image"
+            :class="deleteImage ? 'altered' : ''"
+            alt="cover image"
+            
+          />
+          <!-- <button v-if="!deleteImage" @click="toggleRemoveImage" class="delete is-large overlay-button"></button> -->
+          <span v-if="!deleteImage" @click="toggleRemoveImage" class="icon overlay-button">
+          <i class="mdi mdi-delete"></i> </span>  
+          <span v-if="deleteImage" @click="toggleRemoveImage" class="icon overlay-button">
+          <i class="mdi mdi-autorenew"></i> </span>
+        </figure>
+  </o-field>
+</div>
+    <div v-if="!hasImage || deleteImage">
     <o-field horizontal label="Upload book cover">
       <o-switch
         v-model="isSwitchedCustom"
@@ -459,6 +532,7 @@ function createTag(item: Tag|string) {
       <progress max="100" :value.prop="uploadPercentage"></progress>
       <br />
     </o-field>
+    </div>
 
     <div class="field">
       <p class="control">
