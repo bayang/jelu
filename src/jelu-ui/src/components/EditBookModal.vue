@@ -15,9 +15,9 @@ const props = defineProps<{ bookId: string, book: UserBook|null }>()
 const oruga = useProgrammatic();
 const emit = defineEmits(['close']);
 
-let authors: Ref<Array<Author>|undefined> = ref(props.book?.book.authors);
+// let authors: Ref<Array<Author>|undefined> = ref(props.book?.book.authors);
 let filteredAuthors: Ref<Array<Author>> = ref([]);
-let tags: Ref<Array<Tag>|undefined> = ref(props.book?.book.tags);
+// let tags: Ref<Array<Tag>|undefined> = ref(props.book?.book.tags);
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let userbook: Ref<UserBook> = ref(copyInput(props.book))
 let hasImage: Ref<boolean> = ref(userbook.value.book.image != null)

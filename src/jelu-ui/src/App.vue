@@ -93,7 +93,12 @@ const logout = () => {
             class="navbar-item is-family-sans-serif is-uppercase"
             :to="{ name: 'to-read' }"
           >To Read List</router-link>
-          <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
+          <router-link
+            v-if="isLogged"
+                  :to="{ name: 'add-book' }"
+                  class="navbar-item is-family-sans-serif is-uppercase"
+                >Import book</router-link>
+          <!-- <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
             <router-link
               :to="{ name: 'import-book' }"
               class="navbar-link is-family-sans-serif is-uppercase"
@@ -112,7 +117,7 @@ const logout = () => {
                 >Automated import</router-link>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable">

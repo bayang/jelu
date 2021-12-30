@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream
 import java.io.File
 
 private val logger = KotlinLogging.logger {}
+const val FILE_PREFIX= "meta-import-"
 
 @Service
 class FetchMetadataService(
@@ -31,7 +32,7 @@ class FetchMetadataService(
         if (isbn.isNullOrBlank() && title.isNullOrBlank() && authors.isNullOrBlank()) {
             throw JeluException("At least one of isbn, authors or title is required to fetch metadata")
         }
-        var bookFileName: String = "meta-import-"
+        var bookFileName: String = FILE_PREFIX
         var commandArray: MutableList<String> = mutableListOf("/usr/bin/fetch-ebook-metadata", "-o", "-d 90")
         var fileNameComplete = false;
         if (!isbn.isNullOrBlank()) {

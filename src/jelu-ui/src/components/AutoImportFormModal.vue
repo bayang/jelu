@@ -21,15 +21,17 @@ const errorMessage = ref("");
 
 const displayForm: Ref<Boolean> = ref(true)
 
+const progress: Ref<Boolean> = ref(false)
+
 const fetchMetadata = async () => {
     console.log("fetch metadata")
+    progress.value = true
     dataService.fetchMetadata(form.isbn, form.title, form.authors)
     .then(res => {
         console.log(res)
+        progress.value = false
         metadata.value = res
         displayForm.value = false
-        // emit('metadataReceived', metadata.value)
-        // emit('close')
         }
     )
 }
@@ -37,6 +39,11 @@ const fetchMetadata = async () => {
 const discard = () => {
     displayForm.value = true
     metadata.value = null
+}
+
+const importData = () => {
+    emit('metadataReceived', metadata.value)
+    emit('close')
 }
 
 const format = (dateString: string|null|undefined) => {
@@ -85,6 +92,9 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
       <p v-if="errorMessage" class="has-text-danger">{{ errorMessage }}</p>
     </div>
     </div>
+    <div v-if="displayForm" class="column is-centered is-full">
+      <progress v-if="progress" class="progress is-small is-primary" max="100"></progress>
+    </div>
     </div>
     <div class="columns is-centered is-multiline">
         <div v-if="!displayForm" class="column is-one-fifth">
@@ -112,14 +122,14 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
             <p v-if="metadata?.googleId" class="has-text-left"><span class="has-text-weight-semibold">Google id : </span>{{metadata.googleId}}</p>
             <p v-if="metadata?.amazonId" class="has-text-left"><span class="has-text-weight-semibold">Amazon id : </span>{{metadata.amazonId}}</p>
             <p v-if="metadata?.tags != null && metadata?.tags?.length > 0" class="has-text-left"><span class="has-text-weight-semibold">Tags : </span></p>
-      <ul v-if="metadata?.tags != null && metadata?.tags?.length > 0" class="has-text-left">
-        <li v-for="tag in metadata?.tags" v-bind:key="tag">{{tag}}</li>
-      </ul>
+      <p v-if="metadata?.tags != null && metadata?.tags?.length > 0">
+        <span v-for="tag in metadata?.tags" v-bind:key="tag" class="tag is-primary is-light">{{tag}}&nbsp</span>
+      </p>
             <p v-if="metadata?.summary" class="has-text-left"><span class="has-text-weight-semibold">Summary : </span>{{metadata.summary}}</p>
 
         </div>
         <div v-if="!displayForm" class="column is-one-fifth">
-            <button class="button"><span class="icon">
+            <button @click="importData" class="button"><span class="icon">
       <i class="mdi mdi-check"></i>
     </span><span>Import</span></button>
         </div>

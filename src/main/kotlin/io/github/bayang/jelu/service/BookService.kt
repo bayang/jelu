@@ -27,8 +27,6 @@ class BookService(
     private val slugify: Slugify
     ) {
 
-//    private val slugify: Slugify = Slugify()
-
     @Transactional
     fun findAll(searchTerm: String?): List<BookDto> = bookRepository.findAll(searchTerm).map { it.toBookDto() }
 
@@ -126,14 +124,27 @@ class BookService(
 
         if (! importedFile && bookDto != null && ! bookDto.image.isNullOrBlank()) {
             try {
-                val destFileName: String = downloadService.download(
-                    bookDto.image,
-                    slugify.slugify(book.title),
-                    book.id.toString(),
-                    targetDir
-                )
-                book.image = destFileName
-                savedImage = destFileName
+                // file already exists in the right folder, just rename it
+                if (bookDto.image.startsWith(FILE_PREFIX)) {
+                    val targetFilename: String = imageName(slugify.slugify(book.title),
+                        book.id.toString(), FilenameUtils.getExtension(bookDto.image))
+                    val currentFile = File(targetDir, bookDto.image)
+                    val targetFile = File(currentFile.parent, targetFilename)
+                    val succeeded = currentFile.renameTo(targetFile)
+                    logger.debug { "renaming of metadata imported file ${bookDto.image} was successful: $succeeded" }
+                    book.image = targetFilename
+                    savedImage = targetFilename
+                }
+                else {
+                    val destFileName: String = downloadService.download(
+                        bookDto.image,
+                        slugify.slugify(book.title),
+                        book.id.toString(),
+                        targetDir
+                    )
+                    book.image = destFileName
+                    savedImage = destFileName
+                }
             }
             catch (e: Exception) {
                 logger.error { "failed to save remote file ${book.image}" }

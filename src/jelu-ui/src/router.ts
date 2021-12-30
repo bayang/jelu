@@ -43,12 +43,6 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
-            path: '/import-book',
-            component: () => import(/* webpackChunkName: "recommend" */ './components/ImportBook.vue'),
-            name: 'import-book',
-            beforeEnter: [isLogged],
-        },
-        {
             path: '/to-read',
             component: () => import(/* webpackChunkName: "recommend" */ './components/ToReadList.vue'),
             name: 'to-read',

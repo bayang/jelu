@@ -30,6 +30,11 @@ watch(() => props.bookId, (newValue, oldValue) => {
 
 const sortedEvents = computed(() => book.value?.readingEvents?.sort((a, b) => dayjs(a.creationDate).isAfter(dayjs(b.creationDate)) ? -1 : 1))
 
+const hasExternalLink = computed(() => book.value?.book.amazonId != null 
+                                        || book.value?.book.goodreadsId != null
+                                        || book.value?.book.googleId != null
+                                        || book.value?.book.librarythingId != null)
+
 const format = (dateString: string|null|undefined) => {
   if (dateString != null) {
     return DateUtils.formatDate(dateString)
@@ -41,7 +46,6 @@ function modalClosed(args: any) {
   console.log("modal closed")
   getBook()
 }
-
 
 const toggleEdit = () => {
   edit.value = ! edit.value
@@ -114,10 +118,16 @@ getBook()
     </div>
     <div v-if="book?.book?.summary" class="column is-three-fifths is-offset-one-quarter content jelu-bordered">
       <p v-if="book?.book?.summary" class="has-text-left has-text-weight-semibold">Summary :</p>
-      <p v-if="book?.book?.summary" class="has-text-left">{{book.book.summary}}</p>
+      <p v-if="book?.book?.summary" class="has-text-left" v-html="book.book.summary"></p>
     </div>
     <div class="column is-full is-offset-one-quarter content tags has-text-left  has-text-weight-semibold">
       <span class="tag is-primary is-light" v-for="tag in book?.book?.tags" v-bind:key="tag.id"><router-link :to="{ name: 'tag-detail', params: { tagId: tag.id } }">{{tag.name}}&nbsp;</router-link></span>
+    </div>
+    <div v-if="hasExternalLink" class="column is-full is-offset-one-quarter content tags has-text-left has-text-weight-semibold">
+      <span class="tag is-warning" v-if="book?.book.goodreadsId"><a :href="'https://www.goodreads.com/book/show/' + book.book.goodreadsId" target="_blank">goodreads</a></span>
+      <span class="tag is-warning" v-if="book?.book.googleId"><a :href="'https://books.google.com/books?id=' + book.book.googleId" target="_blank">google</a></span>
+      <span class="tag is-warning" v-if="book?.book.amazonId"><a :href="'https://www.amazon.com/dp/' + book.book.amazonId" target="_blank">amazon</a></span>
+      <span class="tag is-warning" v-if="book?.book.librarythingId"><a :href="'https://www.librarything.com/work/' + book.book.librarythingId" target="_blank">librarything</a></span>
     </div>
     <div v-if="book?.personalNotes" class="column is-full is-offset-one-quarter content">
       <p v-if="book?.personalNotes" class="has-text-left  has-text-weight-semibold">Personal Notes :</p>

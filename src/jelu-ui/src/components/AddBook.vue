@@ -10,10 +10,12 @@ import { Author } from "../model/Author";
 import { Tag } from "../model/Tag";
 import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 import { Metadata } from "../model/Metadata";
+import { ObjectUtils } from "../utils/ObjectUtils";
 
 const {oruga} = useProgrammatic();
 
 const datepicker = ref(null);
+const publishedDate:Ref<Date|null> = ref(null)
 const form = reactive({
   title: "",
   summary: "",
@@ -21,7 +23,7 @@ const form = reactive({
   isbn13: "",
   publisher: "",
   pageCount: null,
-  publishedDate: null,
+  // publishedDate: <Date> null,
   series: "",
   numberInSeries: null,
   personalNotes: "",
@@ -58,7 +60,10 @@ let tags: Ref<Array<Tag>> = ref([]);
 
 const showModal: Ref<Boolean> = ref(false)
 const metadata: Ref<Metadata|null> = ref(null)
-let hasImage: Ref<boolean> = ref(metadata?.value?.image != null)
+// let hasImage: Ref<boolean> = ref(metadata?.value?.image != null)
+let hasImage = computed(() => {
+  return StringUtils.isNotBlank(metadata.value?.image)
+})
 let deleteImage: Ref<boolean> = ref(false)
 
 function toggleRemoveImage() {
@@ -68,11 +73,16 @@ function toggleRemoveImage() {
 const importBook = async () => {
   console.log("import book");
   if (StringUtils.isNotBlank(form.title)) {
-      let userBook: UserBook = fillBook(form)
+      let userBook: UserBook = fillBook(form, publishedDate.value)
       authors.value.forEach((a) => userBook.book.authors?.push(a));
       tags.value.forEach((t) => userBook.book.tags?.push(t));
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
+    }
+    else if (!deleteImage.value 
+      && metadata.value?.image != null 
+      && StringUtils.isNotBlank(metadata.value.image)) {
+      userBook.book.image = metadata.value.image
     }
     if (eventType.value !== null && eventType.value !== "NONE") {
       console.log(
@@ -93,18 +103,18 @@ const importBook = async () => {
         }
       );
       console.log(`saved book ${res.book.title}`);
-      toast("success", `Book ${res.book.title} imported !`, 4000);
+      ObjectUtils.toast(oruga, "success", `Book ${res.book.title} imported !`, 4000)
       clearForm();
     } catch (error: any) {
       // errorMessage.value = error.message
-      toast("danger", `Error ` + error.message, 4000);
+      ObjectUtils.toast(oruga, "danger", `Error ` + error.message, 4000)
     }
   } else {
     errorMessage.value = "provide at least a title";
   }
 };
 
-const fillBook = (formdata: any): UserBook => {
+const fillBook = (formdata: any, publishedDate : Date|null): UserBook => {
   let userBook: UserBook = {
     book : {
       title : formdata.title,
@@ -114,7 +124,7 @@ const fillBook = (formdata: any): UserBook => {
       publisher: formdata.publisher,
       image : formdata.image,
       pageCount : formdata.pageCount,
-      publishedDate : formdata.publishedDate,
+      publishedDate : publishedDate?.toISOString(),
       series : formdata.series,
       numberInSeries : formdata.numberInSeries,
       googleId: formdata.googleId,
@@ -145,7 +155,8 @@ const clearForm = () => {
   form.isbn13 = "";
   form.publisher = "";
   form.pageCount = null;
-  form.publishedDate = null;
+  // form.publishedDate = null;
+  publishedDate.value = null
   form.series = ""
   form.numberInSeries = null
   form.owned = null
@@ -157,18 +168,19 @@ const clearForm = () => {
 
 };
 
-const toast = (variant: string, message: string, duration: number = 2000) => {
-  oruga.oruga.notification.open({
-    message: message,
-    position: "top",
-    variant: variant,
-    duration: duration,
-  });
-};
+// const toast = (variant: string, message: string, duration: number = 2000) => {
+//   oruga.oruga.notification.open({
+//     message: message,
+//     position: "top",
+//     variant: variant,
+//     duration: duration,
+//   });
+// };
 
 const clearDatePicker = () => {
   // close datepicker on reset
-  form.publishedDate = null;
+  // form.publishedDate = null;
+  publishedDate.value = null
 };
 
 const handleFileUpload = (event: any) => {
@@ -258,7 +270,6 @@ const toggleModal = () => {
           component: AutoImportFormModalVue,
           trapFocus: true,
           active: true,
-          // fullScreen: false,
           canCancel: ['x', 'button', 'outside'],
           scroll: 'keep',
           events: {
@@ -266,11 +277,9 @@ const toggleModal = () => {
               console.log("received metadata")
               console.log(modalMetadata)
               metadata.value = modalMetadata
+              mergeMetadata()
             }
           },
-          // props: {
-          //   "book" : book.value
-          // },
           onClose: modalClosed
         });
 }
@@ -278,6 +287,28 @@ const toggleModal = () => {
 function modalClosed(args: any) {
   console.log("modal closed")
   // getBook()
+}
+
+const mergeMetadata = () => {
+  for (let key in metadata.value) {
+    if (key in form) {
+      let castKey = key as (keyof typeof metadata.value & keyof typeof form);
+        (form[castKey] as any) = metadata.value[castKey];
+    }
+  }
+  if (metadata.value?.authors != null && metadata.value.authors.length > 0) {
+    let auths: Array<Author> = []
+    metadata.value.authors.forEach(a => auths.push(createAuthor(a)))
+    authors.value = auths
+  }
+  if (metadata.value?.tags != null && metadata.value.tags.length > 0) {
+    let importedTags: Array<Tag> = []
+    metadata.value.tags.forEach(t => importedTags.push(createTag(t)))
+    tags.value = importedTags
+  }
+  if (metadata.value?.publishedDate && StringUtils.isNotBlank(metadata.value?.publishedDate)) {
+    publishedDate.value = new Date(metadata.value?.publishedDate)
+  }
 }
 
 </script>
@@ -397,7 +428,7 @@ function modalClosed(args: any) {
     <div class="field">
       <o-field horizontal label="Published date">
         <o-datepicker
-          v-model="form.publishedDate"
+          v-model="publishedDate"
           :show-week-number="false"
           :locale="undefined"
           placeholder="Click to select..."
@@ -469,7 +500,7 @@ function modalClosed(args: any) {
   <o-field horizontal>
     <template v-slot:label>
         Actual cover :
-        <o-tooltip v-if="!deleteImage" label="Click bin to remove current cover" position="right">
+        <o-tooltip v-if="!deleteImage" label="Click bin to remove current cover and upload another one" position="right">
           <span class="icon">
           <i class="mdi mdi-information-outline"></i> </span>
         </o-tooltip>
