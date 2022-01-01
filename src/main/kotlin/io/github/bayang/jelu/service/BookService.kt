@@ -1,19 +1,19 @@
 package io.github.bayang.jelu.service
 
-import com.github.slugify.Slugify
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.*
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.imageName
+import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.jetbrains.exposed.dao.id.EntityID
+import org.springframework.data.domain.Page
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
@@ -24,11 +24,11 @@ class BookService(
     private val eventRepository: ReadingEventRepository,
     private val properties: JeluProperties,
     private val downloadService: DownloadService,
-    private val slugify: Slugify
     ) {
 
     @Transactional
-    fun findAll(searchTerm: String?): List<BookDto> = bookRepository.findAll(searchTerm).map { it.toBookDto() }
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, page: Long, pageSize: Long, user: User): Page<BookWithUserBookDto>
+    = bookRepository.findAll(title, isbn10, isbn13, page, pageSize).map { it.toBookWithUserBookDto(user.id.value) }
 
     @Transactional
     fun findAllAuthors(): List<AuthorDto> = bookRepository.findAllAuthors().map { it.toAuthorDto() }
@@ -109,7 +109,7 @@ class BookService(
         //FIXME resize image when saving (protect with a flag)
         if (file != null) {
             try {
-                var destFileName: String = imageName(slugify.slugify(book.title), book.id.toString(), FilenameUtils.getExtension(file.originalFilename))
+                var destFileName: String = imageName(slugify(book.title), book.id.toString(), FilenameUtils.getExtension(file.originalFilename))
                 var destFile = File(targetDir, destFileName)
                 logger.debug { "target import file at ${destFile.absolutePath}" }
                 file.transferTo(destFile)
@@ -126,7 +126,7 @@ class BookService(
             try {
                 // file already exists in the right folder, just rename it
                 if (bookDto.image.startsWith(FILE_PREFIX)) {
-                    val targetFilename: String = imageName(slugify.slugify(book.title),
+                    val targetFilename: String = imageName(slugify(book.title),
                         book.id.toString(), FilenameUtils.getExtension(bookDto.image))
                     val currentFile = File(targetDir, bookDto.image)
                     val targetFile = File(currentFile.parent, targetFilename)
@@ -138,7 +138,7 @@ class BookService(
                 else {
                     val destFileName: String = downloadService.download(
                         bookDto.image,
-                        slugify.slugify(book.title),
+                        slugify(book.title),
                         book.id.toString(),
                         targetDir
                     )

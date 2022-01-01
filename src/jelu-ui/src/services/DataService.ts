@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { UserBook, Book } from "../model/Book";
+import { UserBook, Book, BookWithUserBook } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
@@ -449,6 +449,32 @@ class DataService {
       console.log("error metadata " + (error as AxiosError).toJSON())
       console.log("error metadata " + (error as AxiosError).code)
       throw new Error("error metadata " + error)
+    }
+  }
+
+  findBooks = async (title?:string, isbn10?: string, isbn13?:string, 
+    page?: number, pageSize?: number) => {
+    try {
+      const response = await this.apiClient.get<Page<BookWithUserBook>>(`${this.API_BOOK}`, {
+        params: {
+          isbn10: isbn10,
+          title: title,
+          isbn13: isbn13,
+          page: page,
+          pageSize: pageSize
+        }
+      });
+      console.log("called find books")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error find books " + (error as AxiosError).toJSON())
+      console.log("error find books " + (error as AxiosError).code)
+      throw new Error("error find books " + error)
     }
   }
 

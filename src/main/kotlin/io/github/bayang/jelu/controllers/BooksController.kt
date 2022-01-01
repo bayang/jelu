@@ -5,6 +5,7 @@ import io.github.bayang.jelu.dao.ReadingEventType
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.service.BookService
 import mu.KotlinLogging
+import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -22,7 +23,13 @@ class BooksController(
 ) {
 
     @GetMapping(path = ["/books"])
-    fun books(@RequestParam(name = "q", required = false) searchTerm: String?) = repository.findAll(searchTerm)
+    fun books(@RequestParam(name = "title", required = false) title: String?,
+              @RequestParam(name = "isbn10", required = false) isbn10: String?,
+              @RequestParam(name = "isbn13", required = false) isbn13: String?,
+              @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+              @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+              principal: Authentication): Page<BookWithUserBookDto>
+    = repository.findAll(title, isbn10, isbn13, page, pageSize, (principal.principal as JeluUser).user)
 
     @GetMapping(path = ["/books/{id}"])
     fun bookById(@PathVariable("id") bookId: UUID) = repository.findBookById(bookId)

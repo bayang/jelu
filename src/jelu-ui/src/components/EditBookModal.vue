@@ -15,9 +15,7 @@ const props = defineProps<{ bookId: string, book: UserBook|null }>()
 const oruga = useProgrammatic();
 const emit = defineEmits(['close']);
 
-// let authors: Ref<Array<Author>|undefined> = ref(props.book?.book.authors);
 let filteredAuthors: Ref<Array<Author>> = ref([]);
-// let tags: Ref<Array<Tag>|undefined> = ref(props.book?.book.tags);
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let userbook: Ref<UserBook> = ref(copyInput(props.book))
 let hasImage: Ref<boolean> = ref(userbook.value.book.image != null)
@@ -100,15 +98,6 @@ const importBook = () => {
         }
       )
       }
-      // dataService.updateUserBookImage(
-      //   userbook.value,
-      //   file.value,
-      //   (event: { loaded: number; total: number }) => {
-      //     let percent = Math.round((100 * event.loaded) / event.total);
-      //     console.log("percent " + percent);
-      //     uploadPercentage.value = percent;
-      //   }
-      // )
       promise
       .then(res => 
         {
@@ -470,37 +459,6 @@ function toggleRemoveImage() {
 
 <style lang="scss">
 @import "../assets/style.scss";
-
-// .edit-modal {
-//     position: relative;
-//     overflow-y: scroll;
-//     background-color: $jelu_background_accent;
-//     padding: 20px;
-//     max-height: calc(100vh - 40px);
-// }
-
-// .small-cover {
-//   width: 100px;
-// }
-
-// .small-cover img {
-//   max-height: 100%;
-//   max-width: 100%;
-//   position: relative;
-// }
-
-// .overlay-button {
-//   position: absolute;
-//   // background: white;
-//   bottom: 5%;
-//   left: 2%;
-// }
-
-// .altered {
-//   filter: blur(4px) invert(38%);
-//   -webkit-filter: blur(4px) invert(38%);
-//   -moz-filter: blur(4px) invert(38%);
-// }
 
 // find another way to center the submit button (try like AutoImportFormModal)
 .centered-button {

@@ -11,6 +11,7 @@ import { Tag } from "../model/Tag";
 import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 import { Metadata } from "../model/Metadata";
 import { ObjectUtils } from "../utils/ObjectUtils";
+import IsbnVerify from '@saekitominaga/isbn-verify';
 
 const {oruga} = useProgrammatic();
 
@@ -311,6 +312,48 @@ const mergeMetadata = () => {
   }
 }
 
+const isbn10ValidationMessage = ref("")
+const isbn10LabelVariant = ref("")
+
+const isbn13ValidationMessage = ref("")
+const isbn13LabelVariant = ref("")
+
+const validateIsbn10 = (isbn: string) => {
+  if (StringUtils.isNotBlank(isbn)) {
+    const isbnVerify = new IsbnVerify(isbn);
+    if (! isbnVerify.isIsbn10()) {
+      isbn10ValidationMessage.value = "Invalid isbn10"
+      isbn10LabelVariant.value = "danger"
+    }
+    else {
+      isbn10ValidationMessage.value = ""
+      isbn10LabelVariant.value = ""
+    }
+  }
+  else {
+    isbn10ValidationMessage.value = ""
+    isbn10LabelVariant.value = ""
+  }
+}
+
+const validateIsbn13 = (isbn: string) => {
+  if (StringUtils.isNotBlank(isbn)) {
+    const isbnVerify = new IsbnVerify(isbn);
+    if (! isbnVerify.isIsbn13()) {
+      isbn13ValidationMessage.value = "Invalid isbn13"
+      isbn13LabelVariant.value = "danger"
+    }
+    else {
+      isbn13ValidationMessage.value = ""
+      isbn13LabelVariant.value = ""
+    }
+  }
+  else {
+    isbn13ValidationMessage.value = ""
+    isbn13LabelVariant.value = ""
+  }
+}
+
 </script>
 
 <template>
@@ -350,7 +393,6 @@ const mergeMetadata = () => {
         >
         </o-inputitems>
       </o-field>
-      <p>auth <span v-for="author in authors" v-bind:key="author.id">{{author.name}}</span></p>
     </div>
     <div class="field">
       <o-field horizontal label="Tags">
@@ -371,7 +413,6 @@ const mergeMetadata = () => {
         >
         </o-inputitems>
       </o-field>
-      <p>tags <span v-for="tag in tags" v-bind:key="tag.id">{{tag.name}}</span></p>
     </div>
     <div class="field">
       <o-field horizontal label="Summary">
@@ -383,16 +424,26 @@ const mergeMetadata = () => {
       </o-field>
     </div>
     <div class="field">
-      <o-field horizontal label="ISBN">
+      <o-field horizontal label="ISBN10"
+      :message="isbn10ValidationMessage"
+      :variant="isbn10LabelVariant">
         <o-input
           name="isbn10"
           v-model="form.isbn10"
           placeholder="isbn10"
+          @blur="validateIsbn10($event.target.value)"
         ></o-input>
+      </o-field>
+    </div>
+    <div class="field">
+      <o-field horizontal label="ISBN13"
+      :message="isbn13ValidationMessage"
+      :variant="isbn13LabelVariant">
         <o-input
           name="isbn13"
           v-model="form.isbn13"
           placeholder="isbn13"
+          @blur="validateIsbn13($event.target.value)"
         ></o-input>
       </o-field>
     </div>

@@ -98,7 +98,6 @@ getBook()
         </figure>
     </div>
     <div class="column is-three-fifths content">
-      <!-- <h3 class="subtitle is-3 is-capitalized">{{book?.book?.title}}</h3> -->
       <p v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0" class="has-text-left"><span class="has-text-weight-semibold">Authors : </span></p>
       <ul v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0" class="has-text-left block">
         <li v-for="author in book?.book?.authors" v-bind:key="author.id">{{author.name}}</li>

@@ -29,7 +29,7 @@ store.dispatch('getUser')
   })
   .catch(() => {
     console.log("catch in App")
-    // router.push({name: 'login'}).then(() => {console.log("ok nav")}).catch(() => {console.log("error nav")})
+    router.push({name: 'login'}).then(() => {console.log("ok nav")}).catch(() => {console.log("error nav")})
   })
 
 const isInitialSetup = computed(() => {
@@ -98,26 +98,6 @@ const logout = () => {
                   :to="{ name: 'add-book' }"
                   class="navbar-item is-family-sans-serif is-uppercase"
                 >Import book</router-link>
-          <!-- <div v-if="isLogged" class="navbar-item has-dropdown is-hoverable">
-            <router-link
-              :to="{ name: 'import-book' }"
-              class="navbar-link is-family-sans-serif is-uppercase"
-            >Import</router-link>
-            <div class="navbar-dropdown is-boxed">
-              <div class="navbar-item">
-                <router-link
-                  :to="{ name: 'add-book' }"
-                  class="is-family-sans-serif is-uppercase"
-                >Manual import</router-link>
-              </div>
-              <div class="navbar-item">
-                <router-link
-                  :to="{ name: 'import-book' }"
-                  class="is-family-sans-serif is-uppercase"
-                >Automated import</router-link>
-              </div>
-            </div>
-          </div> -->
         </div>
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable">
@@ -147,13 +127,9 @@ const logout = () => {
 @import "./assets/style.scss";
 
 #app {
-  // height: 100vh;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  // color: #2c3e50;
-  // margin-top: 60px;
-  // background-color:$link;
 }
 </style>

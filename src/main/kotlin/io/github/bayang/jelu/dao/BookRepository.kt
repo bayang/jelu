@@ -2,24 +2,58 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.nowInstant
+import io.github.bayang.jelu.utils.sanitizeHtml
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.*
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
+import java.util.logging.Logger
 
 @Repository
 class BookRepository(
     val readingEventRepository: ReadingEventRepository
 ) {
 
-    fun findAll(searchTerm: String?): SizedIterable<Book> {
-        return if (! searchTerm.isNullOrBlank()) {
-            Book.find { BookTable.title like searchTerm }
-        } else {
-            Book.all()
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, page: Long = 0, pageSize: Long = 20): PageImpl<Book> {
+        val query: Query = BookTable.selectAll()
+        title?.let {
+            query.andWhere { BookTable.title like "%$title%" }
         }
+        isbn10?.let {
+            query.andWhere { BookTable.isbn10 eq isbn10 }
+        }
+        isbn13?.let {
+            query.andWhere { BookTable.isbn13 eq isbn13 }
+        }
+        val total = query.count()
+        query.limit(pageSize.toInt(), page * pageSize)
+        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        return PageImpl(
+            query.map { resultRow -> Book.wrapRow(resultRow) },
+            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
+            else PageRequest.of(0, 20, Sort.unsorted()),
+            total
+        )
+//        return query.map { resultRow -> Book.wrapRow(resultRow) }
     }
+
+//    fun test(user: User): List<Book> {
+//        val user = User[user.id.value]
+//        val res =  BookTable.leftJoin(UserBookTable, { UserBookTable.book }, { BookTable.id }, additionalConstraint = { UserBookTable.user eq user.id })
+//            .selectAll()
+//            .map { resultRow -> Book.wrapRow(resultRow) }
+//        res.forEach { book: Book -> displayBook(book) }
+//        return res
+//    }
+//
+//    private fun displayBook(book: Book) {
+//        println(book.title)
+//        book.userBooks.forEach { userBook: UserBook -> println(userBook.user.id) }
+//    }
 
     fun findAllBooksByUser(user: User): List<UserBook> {
         return UserBook.find { UserBookTable.user eq user.id }
@@ -55,7 +89,7 @@ class BookRepository(
         book.isbn13.let { updated.isbn13 = it }
         book.pageCount.let { updated.pageCount = it }
         book.publisher.let { updated.publisher = it }
-        book.summary.let { updated.summary = it }
+        book.summary.let { updated.summary = sanitizeHtml(it) }
         // image must be set when saving file succeeds
 //        book.image.let { updated.image = it }
         book.publishedDate.let { updated.publishedDate = it }
@@ -172,7 +206,7 @@ class BookRepository(
             val instant: Instant = nowInstant()
             this.creationDate = instant
             this.modificationDate = instant
-            this.summary = book.summary
+            this.summary = sanitizeHtml(book.summary)
             this.isbn10 = book.isbn10
             this.isbn13 = book.isbn13
             this.pageCount = book.pageCount

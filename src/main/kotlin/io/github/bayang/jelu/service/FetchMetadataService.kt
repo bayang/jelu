@@ -1,11 +1,12 @@
 package io.github.bayang.jelu.service
 
 import com.ctc.wstx.stax.WstxInputFactory
-import com.github.slugify.Slugify
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.service.metadata.*
+import io.github.bayang.jelu.utils.sanitizeHtml
+import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
 import org.apache.commons.validator.routines.ISBNValidator
 import org.codehaus.staxmate.SMInputFactory
@@ -22,7 +23,6 @@ const val FILE_PREFIX= "meta-import-"
 @Service
 class FetchMetadataService(
     private val properties: JeluProperties,
-    private val slugify: Slugify
 ) {
 
     val factory: SMInputFactory = SMInputFactory(WstxInputFactory())
@@ -45,7 +45,7 @@ class FetchMetadataService(
             commandArray.add("-t")
             commandArray.add(title)
             if (! fileNameComplete) {
-                bookFileName += slugify.slugify(title)
+                bookFileName += slugify(title)
                 fileNameComplete = true
             }
         }
@@ -53,7 +53,7 @@ class FetchMetadataService(
             commandArray.add("-a")
             commandArray.add(authors)
             if (!fileNameComplete) {
-                bookFileName += slugify.slugify(authors)
+                bookFileName += slugify(authors)
                 fileNameComplete = true
             }
         }
@@ -149,7 +149,7 @@ class FetchMetadataService(
                     }
                 }
                 DATE -> dto.publishedDate = childElementCursor.elemStringValue
-                DESCRIPTION -> dto.summary = childElementCursor.elemStringValue
+                DESCRIPTION -> dto.summary = sanitizeHtml(childElementCursor.elemStringValue)
                 PUBLISHER -> dto.publisher = childElementCursor.elemStringValue
                 SUBJECT -> dto.tags.add(childElementCursor.elemStringValue)
                 META -> {

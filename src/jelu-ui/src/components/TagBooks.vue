@@ -84,7 +84,7 @@ getBooks()
 </script>
 
 <template>
-  <h2 class="title is-family-sans-serif">Books tagged {{tagBooks?.name}} : </h2>
+  <h2 class="title is-family-sans-serif">Books tagged #{{tagBooks?.name}} : </h2>
   <div class="columns is-multiline is-centered">
       <div class="column is-2" v-for="book in convertedBooks" v-bind:key="book.id">
       <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">

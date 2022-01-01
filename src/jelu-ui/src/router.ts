@@ -55,6 +55,13 @@ const router = createRouter({
             props: true,
             beforeEnter: [isLogged],
         },
+        {
+            path: '/search',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/SearchResultsDisplay.vue'),
+            name: 'search',
+            props: route => ({ query: route.query.title }),
+            beforeEnter: [isLogged],
+        },
     ],
 })
 

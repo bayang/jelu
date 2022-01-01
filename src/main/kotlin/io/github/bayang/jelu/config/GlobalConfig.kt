@@ -1,6 +1,5 @@
 package io.github.bayang.jelu.config
 
-import com.github.slugify.Slugify
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -12,6 +11,4 @@ class GlobalConfig {
     @Bean("passwordEncoder")
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
-    @Bean("slugifier")
-    fun slugifier(): Slugify = Slugify()
 }

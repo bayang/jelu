@@ -52,6 +52,7 @@ dependencies {
 	implementation("com.github.slugify:slugify:2.4")
 	implementation("commons-io:commons-io:2.11.0")
 	implementation("commons-validator:commons-validator:1.7")
+	implementation("org.jsoup:jsoup:1.14.3")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
