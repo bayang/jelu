@@ -158,7 +158,8 @@ class BookService(
     fun save(author: AuthorDto): AuthorDto = bookRepository.save(author).toAuthorDto()
 
     @Transactional
-    fun findAllBooksByUser(user: User): List<UserBookLightDto> = bookRepository.findAllBooksByUser(user).map { it.toUserBookLightDto() }
+    fun findAllBooksByUser(user: User, page: Long, pageSize: Long): Page<UserBookLightDto>
+    = bookRepository.findAllBooksByUser(user, page, pageSize).map { it.toUserBookLightDto() }
 
     @Transactional
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto = bookRepository.updateAuthor(authorId, author).toAuthorDto()
@@ -171,7 +172,12 @@ class BookService(
     = bookRepository.findUserBookByCriteria(userId, eventType, toRead).map { it.toUserBookLightDto() }
 
     @Transactional
-    fun findTagById(tagId: UUID, user: User): TagWithBooksDto {
-        return bookRepository.findTagById(tagId).toTagWithBooksDto(user.id.value)
+    fun findTagById(tagId: UUID, user: User): TagDto {
+        return bookRepository.findTagById(tagId).toTagDto()
+    }
+
+    @Transactional
+    fun findTagBooksById(tagId: UUID, user: User, page: Long, pageSize: Long): Page<BookWithUserBookDto> {
+        return bookRepository.findTagBooksById(tagId, page, pageSize).map { book -> book.toBookWithUserBookDto(user.id.value) }
     }
 }

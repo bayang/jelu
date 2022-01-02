@@ -137,6 +137,8 @@ label.label {
 
 @import "bulma/bulma";
 @import '@oruga-ui/theme-bulma/dist/scss/bulma';
+// @import 'sweetalert2/src/sweetalert2.scss';
+@import '@sweetalert2/theme-bulma/bulma.scss';
   
 .dropdown-item {
   color: #363636;
@@ -172,4 +174,3 @@ label.label {
     -webkit-filter: blur(4px) invert(38%);
     -moz-filter: blur(4px) invert(38%);
   }
-  

@@ -51,9 +51,12 @@ class BooksController(
     }
 
     @GetMapping(path = ["/userbooks/me"])
-    fun myBooks(principal: Authentication): List<UserBookLightDto> {
+    fun myBooks(principal: Authentication,
+                @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+                @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
+    ): Page<UserBookLightDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findAllBooksByUser((principal.principal as JeluUser).user)
+        return repository.findAllBooksByUser((principal.principal as JeluUser).user, page, pageSize)
     }
 
     @GetMapping(path = ["/authors"])
@@ -75,9 +78,19 @@ class BooksController(
     }
 
     @GetMapping(path = ["/tags/{id}"])
-    fun tagById(@PathVariable("id") tagId: UUID, principal: Authentication): TagWithBooksDto {
+    fun tagById(@PathVariable("id") tagId: UUID,
+                principal: Authentication): TagDto {
         assertIsJeluUser(principal.principal)
         return repository.findTagById(tagId, (principal.principal as JeluUser).user)
+    }
+
+    @GetMapping(path = ["/tags/{id}/books"])
+    fun tagBooksById(@PathVariable("id") tagId: UUID,
+                @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+                @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+                principal: Authentication): Page<BookWithUserBookDto> {
+        assertIsJeluUser(principal.principal)
+        return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, page, pageSize)
     }
 
     @GetMapping(path = ["/authors/{id}"])

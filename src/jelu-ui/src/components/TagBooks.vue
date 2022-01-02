@@ -1,28 +1,60 @@
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref } from 'vue';
+import { computed, onMounted, Ref, ref, watch } from 'vue';
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { useStore } from 'vuex';
 import { Book, BookWithUserBook, UserBook } from '../model/Book';
-import { TagWithBooks } from '../model/Tag';
+import { Tag, TagWithBooks } from '../model/Tag';
 import dataService from "../services/DataService";
 import { key } from '../store';
 import BookCard from "./BookCard.vue";
 import EditBookModal from "./EditBookModal.vue"
+import { ObjectUtils } from '../utils/ObjectUtils';
 
 const store = useStore(key)
 const {oruga} = useProgrammatic();
 
 const props = defineProps<{ tagId: string }>()
 
-const tagBooks: Ref<TagWithBooks|null> = ref(null);
+const total: Ref<number> = ref(0)
+const currentPageNumber: Ref<number> = ref(1)
+const perPage: Ref<number> = ref(24)
+
+const tag: Ref<Tag> = ref({name: ""})
+const tagBooks: Ref<Array<BookWithUserBook>> = ref([]);
 const edit: Ref<Boolean> = ref(false)
 
-const getBooks = async () => {
-  try {
-    tagBooks.value = await dataService.getTagById(props.tagId)
-  } catch (error) {
-    console.log("failed get books for tag : " + error);
+watch(currentPageNumber, (newVal, oldVal) => {
+  console.log(currentPageNumber.value)
+  console.log(newVal + " " + oldVal)
+  if (newVal !== oldVal) {
+    getBooks()
   }
+})
+
+const getTag = async () => {
+  try {
+    tag.value = await dataService.getTagById(props.tagId)
+  } catch (error) {
+    console.log("failed get tag : " + error);
+  }
+};
+
+const getBooks = () => {
+  dataService.getTagBooksById(props.tagId, 
+    currentPageNumber.value - 1, perPage.value)
+    .then(res => {
+        console.log(res)
+          total.value = res.totalElements
+          tagBooks.value = res.content
+        if (! res.empty) {
+          currentPageNumber.value = res.number + 1
+        }
+        else {
+          currentPageNumber.value = 1
+        }
+    }
+    )
+  
 };
 
 onMounted(() => {
@@ -31,34 +63,12 @@ onMounted(() => {
     }
 );
 
-const toUserBook = (book: BookWithUserBook):UserBook => {
-  let {userBooks, ...rest} = book
-    if (userBooks && userBooks.length > 0) {
-      let converted =  {
-        book: rest,
-        ...userBooks[0]
-      } as UserBook
-      console.log('after full')
-      console.log(converted)
-      return converted
-    }
-    else {
-      let converted =  {
-        book: rest
-      } as UserBook
-      console.log('after')
-      console.log(converted)
-      return converted
-    }
-}
-
-const convertedBooks = computed(() => tagBooks.value?.books.map(b => toUserBook(b)))
+const convertedBooks = computed(() => tagBooks.value?.map(b => ObjectUtils.toUserBook(b)))
 
 function modalClosed(args: any) {
   console.log("modal closed")
   getBooks()
 }
-
 
 const toggleEdit = (book: UserBook) => {
   edit.value = ! edit.value
@@ -79,12 +89,13 @@ const toggleEdit = (book: UserBook) => {
         });
 }
 
+getTag()
 getBooks()
 
 </script>
 
 <template>
-  <h2 class="title is-family-sans-serif">Books tagged #{{tagBooks?.name}} : </h2>
+  <h2 class="title is-family-sans-serif">Books tagged #{{tag.name}} : </h2>
   <div class="columns is-multiline is-centered">
       <div class="column is-2" v-for="book in convertedBooks" v-bind:key="book.id">
       <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
@@ -98,6 +109,17 @@ getBooks()
     </div>
 
   </div>
+  <o-pagination
+      :total="total"
+      v-model:current="currentPageNumber"
+      order='centered'
+      :per-page="perPage"
+      aria-next-label="Next page"
+      aria-previous-label="Previous page"
+      aria-page-label="Page"
+      aria-current-label="Current page"
+    >
+    </o-pagination>
 </template>
 
 <style scoped>

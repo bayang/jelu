@@ -3,15 +3,18 @@ package io.github.bayang.jelu.dao
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.utils.nowInstant
 import io.github.bayang.jelu.utils.sanitizeHtml
+import mu.KotlinLogging
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
-import java.util.logging.Logger
+
+private val logger = KotlinLogging.logger {}
 
 @Repository
 class BookRepository(
@@ -55,10 +58,21 @@ class BookRepository(
 //        book.userBooks.forEach { userBook: UserBook -> println(userBook.user.id) }
 //    }
 
-    fun findAllBooksByUser(user: User): List<UserBook> {
-        return UserBook.find { UserBookTable.user eq user.id }
-                .orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
-                .toList()
+    fun findAllBooksByUser(user: User, page: Long, pageSize: Long): PageImpl<UserBook> {
+        val op: Op<Boolean> = UserBookTable.user eq user.id
+        val total = UserBook.find { op }.count()
+        val res = UserBook.find { op }.limit(pageSize.toInt(), page * pageSize)
+        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        return PageImpl(
+            res.toList(),
+            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
+            else PageRequest.of(0, 20, Sort.unsorted()),
+            total
+        )
+//        return UserBook.find { UserBookTable.user eq user.id }
+//            .limit(pageSize.toInt(), page * pageSize)
+//                .orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
+//                .toList()
     }
 
     fun findAllAuthors(): SizedIterable<Author> = Author.all()
@@ -80,6 +94,27 @@ class BookRepository(
     fun findAuthorsById(authorId: UUID): Author = Author[authorId]
 
     fun findTagById(tagId: UUID): Tag = Tag[tagId]
+
+    fun findTagBooksById(tagId: UUID, page: Long, pageSize: Long): PageImpl<Book> {
+        val t = Tag[tagId]
+        val query = BookTags.join(BookTable, JoinType.LEFT)
+                        .slice(BookTable.columns)
+                        .selectAll()
+                        .andWhere { BookTags.tag eq t.id }
+        val total = query.count()
+        query.limit(pageSize.toInt(), page * pageSize)
+        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        return PageImpl(
+            query.map { resultRow -> Book.wrapRow(resultRow) },
+            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
+            else PageRequest.of(0, 20, Sort.unsorted()),
+            total
+        )
+    }
+
+    private fun displayRow(resultRow: ResultRow) {
+        logger.debug { "row $resultRow" }
+    }
 
     fun update(updated: Book, book: BookCreateDto): Book {
         if (!book.title.isNullOrBlank()) {

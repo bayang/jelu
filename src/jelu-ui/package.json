@@ -14,6 +14,8 @@
     "@saekitominaga/isbn-verify": "^1.4.1",
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
+    "sweetalert2": "^11.3.3",
+    "@sweetalert2/theme-bulma": "^5.0.8",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"

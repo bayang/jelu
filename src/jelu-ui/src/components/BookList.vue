@@ -1,17 +1,38 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref } from "vue";
+import { onMounted, Ref, ref, watch } from "vue";
 import dataService from "../services/DataService";
 import { UserBook } from "../model/Book";
 import BookCard from "./BookCard.vue";
 
 const books: Ref<Array<UserBook>> = ref([]);
 
-const getBooks = async () => {
-  try {
-    books.value = await dataService.findUserBooks();
-  } catch (error) {
-    console.log("failed get def books : " + error);
+const total: Ref<number> = ref(0)
+const currentPageNumber: Ref<number> = ref(1)
+const perPage: Ref<number> = ref(24)
+
+watch(currentPageNumber, (newVal, oldVal) => {
+  console.log(currentPageNumber.value)
+  console.log(newVal + " " + oldVal)
+  if (newVal !== oldVal) {
+    getBooks()
   }
+})
+
+const getBooks = () => {
+  dataService.findUserBooks(currentPageNumber.value - 1, perPage.value)
+  .then(res => {
+        console.log(res)
+          total.value = res.totalElements
+          books.value = res.content
+        if (! res.empty) {
+          currentPageNumber.value = res.number + 1
+        }
+        else {
+          currentPageNumber.value = 1
+        }
+    }
+    )
+  
 };
 
 onMounted(() => {
@@ -42,6 +63,19 @@ onMounted(() => {
       </router-link>
     </div>
   </div>
+
+<o-pagination
+      :total="total"
+      v-model:current="currentPageNumber"
+      order='centered'
+      :per-page="perPage"
+      aria-next-label="Next page"
+      aria-previous-label="Previous page"
+      aria-page-label="Page"
+      aria-current-label="Current page"
+    >
+    </o-pagination>
+
 </template>
 
 <style scoped>

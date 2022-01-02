@@ -60,7 +60,9 @@ class DataService {
     },
     error => {
       console.log(`response error interceptor ${error.response.status}`)
-      router.push({name: 'login'}).then(() => {console.log("ok nav in interceptor")}).catch(() => {console.log("error nav in interceptor")})
+      if (error.response.status === 401) {
+        router.push({name: 'login'}).then(() => {console.log("ok nav in interceptor")}).catch(() => {console.log("error nav in interceptor")})
+      }
     });
   }
   
@@ -79,9 +81,14 @@ class DataService {
     }
   }
 
-  findUserBooks = async () => {
+  findUserBooks = async (page?: number, pageSize?: number) => {
     try {
-      const response = await this.apiClient.get<Array<UserBook>>(`${this.API_USERBOOK}/me`);
+      const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}/me`, {
+        params: {
+          page: page,
+          pageSize: pageSize
+        }
+      });
       console.log("called backend")
       console.log(response)
       return response.data;
@@ -90,7 +97,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error findall " + (error as AxiosError).toJSON())
       console.log("error findall " + (error as AxiosError).code)
       throw new Error("error findall " + error)
     }
@@ -107,7 +113,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error findall " + (error as AxiosError).toJSON())
       console.log("error findall " + (error as AxiosError).code)
       throw new Error("error finding userBook " + userBookId + " " + error)
     }
@@ -124,7 +129,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios user " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error user " + (error as AxiosError).toJSON())
       console.log("error user " + (error as AxiosError).code)
       throw new Error("error user " + error)
     }
@@ -152,7 +156,6 @@ class DataService {
         console.log("error axios auth user " + error.response.status + " " + error.response.data.error)
         throw new Error("login error " + error.response.status + " " + error)
       }
-      console.log("error auth user " + (error as AxiosError).toJSON())
       console.log("error auth user " + (error as AxiosError).code)
       throw new Error("login error " + error)
     }
@@ -183,7 +186,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios auth token " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error auth token " + (error as AxiosError).toJSON())
       console.log("error auth token " + (error as AxiosError).code)
       throw new Error("error auth token " + error)
     }
@@ -199,7 +201,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios setup " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error setup " + (error as AxiosError).toJSON())
       console.log("error setup " + (error as AxiosError).code)
       throw new Error("error setup " + error)
     }
@@ -226,7 +227,6 @@ class DataService {
         console.log("error create user " + error.response.status + " " + error.response.data.error)
         throw new Error("error create user " + error.response.status + " " + error)
       }
-      console.log("error create user " + (error as AxiosError).toJSON())
       console.log("error create user " + (error as AxiosError).code)
       throw new Error("error create user " + error)
     }
@@ -241,7 +241,6 @@ class DataService {
         console.log("error saving book " + error.response.status + " " + error.response.data.error)
         throw new Error("error saving book " + error.response.status + " " + error)
       }
-      console.log("error saving book " + (error as AxiosError).toJSON())
       console.log("error saving book " + (error as AxiosError).code)
       throw new Error("error saving book " + error)
     }
@@ -269,7 +268,6 @@ class DataService {
         console.log("error saving book " + error.response.status + " " + error.response.data.error)
         throw new Error("error saving book " + error.response.status + " " + error)
       }
-      console.log("error saving book " + (error as AxiosError).toJSON())
       console.log("error saving book " + (error as AxiosError).code)
       throw new Error("error saving book " + error)
     }
@@ -297,7 +295,6 @@ class DataService {
         console.log("error saving book " + error.response.status + " " + error.response.data.error)
         throw new Error("error saving book " + error.response.status + " " + error)
       }
-      console.log("error saving book " + (error as AxiosError).toJSON())
       console.log("error saving book " + (error as AxiosError).code)
       throw new Error("error saving book " + error)
     }
@@ -325,7 +322,6 @@ class DataService {
         console.log("error updating book " + error.response.status + " " + error.response.data.error)
         throw new Error("error updating book " + error.response.status + " " + error)
       }
-      console.log("error updating book " + (error as AxiosError).toJSON())
       console.log("error updating book " + (error as AxiosError).code)
       throw new Error("error updating book " + error)
     }
@@ -347,7 +343,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error userbook by eventtype " + (error as AxiosError).toJSON())
       console.log("error userbook by eventtype " + (error as AxiosError).code)
       throw new Error("error get userBook by eventType " + error)
     }
@@ -368,7 +363,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error authors by criteria " + (error as AxiosError).toJSON())
       console.log("error authors by criteria " + (error as AxiosError).code)
       throw new Error("error get authors by criteria " + error)
     }
@@ -389,7 +383,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error tags by criteria " + (error as AxiosError).toJSON())
       console.log("error tags by criteria " + (error as AxiosError).code)
       throw new Error("error get tags by criteria " + error)
     }
@@ -397,8 +390,8 @@ class DataService {
 
   getTagById = async (tagId: string) => {
     try {
-      const response = await this.apiClient.get<TagWithBooks>(`${this.API_TAG}/${tagId}`);
-      console.log("called tags by id")
+      const response = await this.apiClient.get<Tag>(`${this.API_TAG}/${tagId}`);
+      console.log("called tag by id")
       console.log(response)
       return response.data;
     }
@@ -406,9 +399,30 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error tags by id " + (error as AxiosError).toJSON())
-      console.log("error tags by id " + (error as AxiosError).code)
-      throw new Error("error get tags by id " + error)
+      console.log("error tag by id " + (error as AxiosError).code)
+      throw new Error("error get tag by id " + error)
+    }
+  }
+
+  getTagBooksById = async (tagId: string, 
+    page?: number, pageSize?: number) => {
+    try {
+      const response = await this.apiClient.get<Page<BookWithUserBook>>(`${this.API_TAG}/${tagId}${this.API_BOOK}`, {
+        params: {
+          page: page,
+          pageSize: pageSize
+        }
+      });
+      console.log("called tag books by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error tag books by id " + (error as AxiosError).code)
+      throw new Error("error get tag by id " + error)
     }
   }
 
@@ -423,7 +437,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error logout " + (error as AxiosError).toJSON())
       console.log("error logout " + (error as AxiosError).code)
       throw new Error("error logout " + error)
     }
@@ -446,7 +459,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error metadata " + (error as AxiosError).toJSON())
       console.log("error metadata " + (error as AxiosError).code)
       throw new Error("error metadata " + error)
     }
@@ -472,7 +484,6 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error find books " + (error as AxiosError).toJSON())
       console.log("error find books " + (error as AxiosError).code)
       throw new Error("error find books " + error)
     }

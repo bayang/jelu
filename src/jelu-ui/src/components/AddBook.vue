@@ -12,6 +12,7 @@ import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 import { Metadata } from "../model/Metadata";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import IsbnVerify from '@saekitominaga/isbn-verify';
+import Swal from 'sweetalert2';
 
 const {oruga} = useProgrammatic();
 
@@ -71,9 +72,37 @@ function toggleRemoveImage() {
   deleteImage.value = !deleteImage.value
 }
 
+let swalMixin = Swal.mixin({
+  background: '#404040',
+  color: '#ffffff',
+})
+
 const importBook = async () => {
   console.log("import book");
   if (StringUtils.isNotBlank(form.title)) {
+    let alreadyExisting = await checkIsbnExists(form.isbn10, form.isbn13)
+    console.log('already existing')
+    console.log(alreadyExisting)
+    let saveBook = true
+    if (alreadyExisting != null) {
+      saveBook = false
+      await swalMixin.fire({
+        html: `<p>Book with same isbn already exists:<br>${alreadyExisting.title}<br>Do you want to save the save a new one anyway?</p>`,
+        showDenyButton: true,
+        confirmButtonText: 'Save',
+        denyButtonText: `Don't save`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          saveBook = true
+        } else if (result.isDenied) {
+          swalMixin.fire('', 'Changes are not saved', 'info')
+        }
+      })
+    }
+    console.log(`save book ${saveBook}`)
+    if (! saveBook) {
+      return
+    }
       let userBook: UserBook = fillBook(form, publishedDate.value)
       authors.value.forEach((a) => userBook.book.authors?.push(a));
       tags.value.forEach((t) => userBook.book.tags?.push(t));
@@ -168,15 +197,6 @@ const clearForm = () => {
   form.librarythingId = ""
 
 };
-
-// const toast = (variant: string, message: string, duration: number = 2000) => {
-//   oruga.oruga.notification.open({
-//     message: message,
-//     position: "top",
-//     variant: variant,
-//     duration: duration,
-//   });
-// };
 
 const clearDatePicker = () => {
   // close datepicker on reset
@@ -354,6 +374,26 @@ const validateIsbn13 = (isbn: string) => {
   }
 }
 
+
+async function checkIsbnExists(isbn10: string, isbn13: string) {
+  console.log(isbn10 + " " + isbn13)
+  if (StringUtils.isNotBlank(isbn10)) {
+    let res = await dataService.findBooks(undefined, isbn10, undefined)
+    console.log(res.empty)
+    if (!res.empty) {
+      return res.content[0]
+    }
+  }
+  if (StringUtils.isNotBlank(isbn13)) {
+    console.log(isbn13)
+    let res = await dataService.findBooks(undefined, undefined, isbn13)
+    console.log(res.empty)
+    if (!res.empty) {
+      return res.content[0]
+    }
+  }
+  return null
+}
 </script>
 
 <template>
