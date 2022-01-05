@@ -151,6 +151,7 @@ class FetchMetadataService(
                 DATE -> dto.publishedDate = childElementCursor.elemStringValue
                 DESCRIPTION -> dto.summary = sanitizeHtml(childElementCursor.elemStringValue)
                 PUBLISHER -> dto.publisher = childElementCursor.elemStringValue
+                LANGUAGE -> dto.language = childElementCursor.elemStringValue
                 SUBJECT -> dto.tags.add(childElementCursor.elemStringValue)
                 META -> {
                     when (childElementCursor.getAttrValue("name")) {

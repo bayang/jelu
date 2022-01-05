@@ -11,6 +11,7 @@ export interface Metadata {
     tags: Array<string>,
     series?: string,
     numberInSeries?: number,
+    language?: string,
     googleId?: string,
     amazonId?: string,
     goodreadsId?: string,

@@ -34,7 +34,8 @@ const form = reactive({
   googleId: "",
   amazonId : "",
   goodreadsId: "",
-  librarythingId : ""
+  librarythingId : "",
+  language: ""
 });
 const eventType = ref(null);
 const imageUrl = ref<string | null>(null);
@@ -161,6 +162,7 @@ const fillBook = (formdata: any, publishedDate : Date|null): UserBook => {
       amazonId: formdata.amazonId,
       goodreadsId: formdata.goodreadsId,
       librarythingId: formdata.librarythingId,
+      language: formdata.language,
       authors: [],
       tags: []
     },
@@ -188,6 +190,7 @@ const clearForm = () => {
   // form.publishedDate = null;
   publishedDate.value = null
   form.series = ""
+  form.language = ""
   form.numberInSeries = null
   form.owned = null
   form.personalNotes = ""
@@ -536,6 +539,11 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
     <div class="field">
       <o-field horizontal label="Page count">
         <o-input v-model="form.pageCount" type="number" min="0"></o-input>
+      </o-field>
+    </div>
+    <div class="field">
+      <o-field horizontal label="Language">
+        <o-input v-model="form.language" type="text"></o-input>
       </o-field>
     </div>
     <div class="field">

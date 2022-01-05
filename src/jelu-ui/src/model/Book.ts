@@ -22,6 +22,7 @@ export interface Book {
     amazonId?: string,
     goodreadsId?: string,
     librarythingId?: string,
+    language?: string
   }
 export interface UserBook {
     id?: string,
@@ -68,5 +69,6 @@ export interface UserBook {
     amazonId?: string,
     goodreadsId?: string,
     librarythingId?: string,
+    language?: string,
     userBooks?: Array<UserBookWithoutBook>|null
   }

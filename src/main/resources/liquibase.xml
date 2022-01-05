@@ -62,6 +62,9 @@
             <column name="librarything_id" type="varchar(30)"
                     remarks="The book's librarything id ">
             </column>
+            <column name="language" type="varchar(30)"
+                    remarks="The book's language ">
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="create_author" author="byng">
@@ -81,15 +84,28 @@
                     remarks="The author's name ">
                 <constraints nullable="false" />
             </column>
-        </createTable>
-        <createTable tableName="book_authors">
-            <column name="author" type="binary(16)" remarks="Technical ID">
-                <constraints primaryKey="true" primaryKeyName="pk_bookauthor_act" foreignKeyName="fk_bookauthors_book_id" references="book(id)" nullable="false" />
+            <column name="biography" type="varchar(5000)"
+                    remarks="The author's bio ">
             </column>
-            <column name="book" type="binary(16)" remarks="Technical ID">
-                <constraints primaryKey="true" primaryKeyName="pk_bookauthor_act" foreignKeyName="fk_bookauthors_author_id" references="author(id)" nullable="false" />
+            <column name="date_of_birth" type="varchar(100)"
+                    remarks="The author's date of birth ">
+            </column>
+            <column name="date_of_death" type="varchar(100)"
+                    remarks="The author's date of death ">
+            </column>
+            <column name="image" type="varchar(1000)"
+                    remarks="The author's picture path ">
             </column>
         </createTable>
+        <sql>CREATE TABLE book_authors
+            (
+            author BLOB(16) NOT NULL,
+            book BLOB(16) NOT NULL,
+            PRIMARY KEY (author, book),
+            FOREIGN KEY (author) REFERENCES author(id) ON DELETE CASCADE,
+            FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
     </changeSet>
     <changeSet id="user_and_events" author="byng">
         <createTable tableName="user_book">
@@ -114,7 +130,7 @@
                 <constraints foreignKeyName="fk_user_book_user_id" references="user(id)" nullable="false" />
             </column>
             <column name="book" type="binary(16)" remarks="Technical ID">
-                <constraints foreignKeyName="fk_user_book_book_id" references="book(id)" nullable="false" />
+                <constraints deleteCascade="true" foreignKeyName="fk_user_book_book_id" references="book(id)" nullable="false" />
             </column>
             <column name="notes" type="varchar(5000)"
                     remarks="The user's personal notes ">
@@ -142,7 +158,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="user_book" type="binary(16)" remarks="Technical ID">
-                <constraints foreignKeyName="fk_reading_event_user_book_id" references="user_book(id)" nullable="false" />
+                <constraints foreignKeyName="fk_reading_event_user_book_id" references="user_book(id)" nullable="false" deleteCascade="true" />
             </column>
             <column name="event_type" type="varchar(200)"
                     remarks="Event type : CURRENTLY_READING,DROPPED,FINISHED ">
@@ -193,14 +209,15 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
-        <createTable tableName="book_tags">
-            <column name="tag" type="binary(16)" remarks="Technical ID">
-                <constraints primaryKey="true" primaryKeyName="pk_booktag_act" foreignKeyName="fk_booktags_book_id" references="book(id)" nullable="false" />
-            </column>
-            <column name="book" type="binary(16)" remarks="Technical ID">
-                <constraints primaryKey="true" primaryKeyName="pk_booktag_act" foreignKeyName="fk_booktags_tag_id" references="tag(id)" nullable="false" />
-            </column>
-        </createTable>
+        <sql>CREATE TABLE book_tags
+            (
+            tag BLOB(16) NOT NULL,
+            book BLOB(16) NOT NULL,
+            PRIMARY KEY (tag, book),
+            FOREIGN KEY (tag) REFERENCES tag(id) ON DELETE CASCADE,
+            FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

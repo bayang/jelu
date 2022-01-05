@@ -109,6 +109,7 @@ getBook()
       <p v-if="book?.book?.publishedDate" class="has-text-left block"><span class="has-text-weight-semibold">Published date : </span>{{format(book.book.publishedDate)}}</p>
       <p v-if="book?.book?.series" class="has-text-left block"><span class="has-text-weight-semibold">Series : </span>{{book.book.series}}</p>
       <p v-if="book?.book?.numberInSeries" class="has-text-left block"><span class="has-text-weight-semibold">Number in series : </span>{{book.book.numberInSeries}}</p>
+      <p v-if="book?.book?.language" class="has-text-left block"><span class="has-text-weight-semibold">Language : </span>{{book.book.language}}</p>
       <div v-if="book?.owned || book?.toRead" class="field has-text-left">
       <o-checkbox v-if="book?.owned" v-model="book.owned" disabled>Owned</o-checkbox>
       <o-checkbox v-if="book?.toRead" v-model="book.toRead" disabled>To Read</o-checkbox>

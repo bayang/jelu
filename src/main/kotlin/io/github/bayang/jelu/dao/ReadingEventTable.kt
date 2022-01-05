@@ -6,13 +6,14 @@ import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.util.*
 
 object ReadingEventTable: UUIDTable("reading_event") {
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
-    val userBook = reference("user_book", UserBookTable)
+    val userBook = reference("user_book", UserBookTable, onDelete = ReferenceOption.CASCADE)
     val eventType = enumerationByName("event_type", 200, ReadingEventType::class)
 }
 class ReadingEvent(id: EntityID<UUID>): UUIDEntity(id) {

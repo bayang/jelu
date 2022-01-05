@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.dao
 
+import io.github.bayang.jelu.dao.Author.Companion.backReferencedOn
 import io.github.bayang.jelu.dao.BookTable.nullable
 import io.github.bayang.jelu.dto.UserBookDto
 import io.github.bayang.jelu.dto.UserBookLightDto
@@ -10,6 +11,7 @@ import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.time.Instant
 import java.util.*
@@ -17,8 +19,8 @@ import java.util.*
 object UserBookTable: UUIDTable("user_book") {
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
-    val user = reference("user", UserTable)
-    val book = reference("book", BookTable)
+    val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
+    val book = reference("book", BookTable, onDelete = ReferenceOption.CASCADE)
     val lastReadingEvent: Column<ReadingEventType?> = enumerationByName("last_reading_event", 200, ReadingEventType::class).nullable()
     val lastReadingEventDate: Column<Instant?> = timestamp("last_reading_event_date").nullable()
     val personalNotes: Column<String?> = varchar("notes", 5000).nullable()

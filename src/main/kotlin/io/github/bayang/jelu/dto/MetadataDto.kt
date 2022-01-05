@@ -1,8 +1,9 @@
 package io.github.bayang.jelu.dto
 
 data class MetadataDto
-    (var title: String? = null,
-    var isbn10:String? = null,
+    (
+    var title: String? = null,
+    var isbn10: String? = null,
     var isbn13: String? = null,
     var summary: String? = null,
     var image: String? = null,
@@ -13,6 +14,7 @@ data class MetadataDto
     var tags: MutableList<String> = mutableListOf(),
     var series: String? = null,
     var numberInSeries: Double? = null,
+    var language: String? = null,
     var googleId: String? = null,
     var amazonId: String? = null,
     var goodreadsId: String? = null,

@@ -31,4 +31,9 @@ class ReadingEventService(private val readingEventRepository: ReadingEventReposi
     fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEventDto
     = readingEventRepository.updateReadingEvent(readingEventId, updateReadingEventDto).toReadingEventDto()
 
+    @Transactional
+    fun deleteReadingEventById(eventId: UUID) {
+        readingEventRepository.deleteReadingEventById(eventId)
+    }
+
 }

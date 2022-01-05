@@ -5,8 +5,10 @@ import io.github.bayang.jelu.utils.nowInstant
 import io.github.bayang.jelu.utils.sanitizeHtml
 import mu.KotlinLogging
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -21,7 +23,7 @@ class BookRepository(
     val readingEventRepository: ReadingEventRepository
 ) {
 
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, page: Long = 0, pageSize: Long = 20): PageImpl<Book> {
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, page: Long = 0, pageSize: Long = 20): Page<Book> {
         val query: Query = BookTable.selectAll()
         title?.let {
             query.andWhere { BookTable.title like "%$title%" }
@@ -31,6 +33,9 @@ class BookRepository(
         }
         isbn13?.let {
             query.andWhere { BookTable.isbn13 eq isbn13 }
+        }
+        series?.let {
+            query.andWhere { BookTable.series eq series }
         }
         val total = query.count()
         query.limit(pageSize.toInt(), page * pageSize)
@@ -58,7 +63,7 @@ class BookRepository(
 //        book.userBooks.forEach { userBook: UserBook -> println(userBook.user.id) }
 //    }
 
-    fun findAllBooksByUser(user: User, page: Long, pageSize: Long): PageImpl<UserBook> {
+    fun findAllBooksByUser(user: User, page: Long, pageSize: Long): Page<UserBook> {
         val op: Op<Boolean> = UserBookTable.user eq user.id
         val total = UserBook.find { op }.count()
         val res = UserBook.find { op }.limit(pageSize.toInt(), page * pageSize)
@@ -95,7 +100,7 @@ class BookRepository(
 
     fun findTagById(tagId: UUID): Tag = Tag[tagId]
 
-    fun findTagBooksById(tagId: UUID, page: Long, pageSize: Long): PageImpl<Book> {
+    fun findTagBooksById(tagId: UUID, page: Long, pageSize: Long): Page<Book> {
         val t = Tag[tagId]
         val query = BookTags.join(BookTable, JoinType.LEFT)
                         .slice(BookTable.columns)
@@ -116,7 +121,7 @@ class BookRepository(
         logger.debug { "row $resultRow" }
     }
 
-    fun update(updated: Book, book: BookCreateDto): Book {
+    fun update(updated: Book, book: BookUpdateDto): Book {
         if (!book.title.isNullOrBlank()) {
             updated.title = book.title
         }
@@ -134,6 +139,7 @@ class BookRepository(
         book.goodreadsId.let { updated.goodreadsId = it }
         book.googleId.let { updated.googleId = it }
         book.librarythingId.let { updated.librarythingId = it }
+        book.language.let { updated.language = it }
         updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
@@ -178,7 +184,7 @@ class BookRepository(
         return updated
     }
 
-    fun update(bookId: UUID, book: BookCreateDto): Book {
+    fun update(bookId: UUID, book: BookUpdateDto): Book {
         var found: Book = Book[bookId]
         return update(found, book)
     }
@@ -198,7 +204,7 @@ class BookRepository(
             found.percentRead = book.percentRead
         }
         if (book.book != null) {
-            update(found.book, book.book)
+            update(found.book, fromBookCreateDto(book.book))
         }
         if (book.lastReadingEvent != null) {
             readingEventRepository.save(found, CreateReadingEventDto(
@@ -212,19 +218,22 @@ class BookRepository(
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): Author {
         val found: Author = Author[authorId]
         author.name?.run { found.name = author.name }
+        author.biography?.run { found.biography = author.biography }
+        author.dateOfDeath?.run { found.dateOfDeath = author.dateOfDeath }
+        author.dateOfBirth?.run { found.dateOfBirth = author.dateOfBirth }
+        author.image?.run { found.image = author.image }
         found.modificationDate = nowInstant()
         return found
     }
 
     fun save(book: BookCreateDto): Book {
-        //FIXME check if book with same isbn exists
         val authorsList = mutableListOf<Author>()
-        book.authors?.forEach {
-            val authorEntity: Author? = findAuthorsByName(it.name).firstOrNull()
+        book.authors?.forEach { authorDto ->
+            val authorEntity: Author? = findAuthorsByName(authorDto.name).firstOrNull()
             if (authorEntity != null) {
                 authorsList.add(authorEntity)
             } else {
-                authorsList.add(save(it))
+                authorsList.add(save(authorDto))
             }
         }
         val tagsList = mutableListOf<Tag>()
@@ -236,33 +245,41 @@ class BookRepository(
                 tagsList.add(save(it))
             }
         }
-        val created = Book.new{
-            this.title = book.title
-            val instant: Instant = nowInstant()
-            this.creationDate = instant
-            this.modificationDate = instant
-            this.summary = sanitizeHtml(book.summary)
-            this.isbn10 = book.isbn10
-            this.isbn13 = book.isbn13
-            this.pageCount = book.pageCount
-            this.publishedDate = book.publishedDate
-            this.publisher = book.publisher
-            this.image = book.image
-            this.series = book.series
-            this.numberInSeries = book.numberInSeries
-            this.amazonId = book.amazonId
-            this.goodreadsId = book.goodreadsId
-            this.googleId = book.googleId
-            this.librarythingId = book.librarythingId
-        }
+            val created = Book.new(UUID.randomUUID()){
+                this.title = book.title
+                val instant: Instant = nowInstant()
+                this.creationDate = instant
+                this.modificationDate = instant
+                this.summary = sanitizeHtml(book.summary)
+                this.isbn10 = book.isbn10
+                this.isbn13 = book.isbn13
+                this.pageCount = book.pageCount
+                this.publishedDate = book.publishedDate
+                this.publisher = book.publisher
+                this.image = book.image
+                this.series = book.series
+                this.numberInSeries = book.numberInSeries
+                this.amazonId = book.amazonId
+                this.goodreadsId = book.goodreadsId
+                this.googleId = book.googleId
+                this.librarythingId = book.librarythingId
+                this.language = book.language
+            }
+
         created.authors = SizedCollection(authorsList)
         created.tags = SizedCollection(tagsList)
+        created.load(Book::authors)
+        created.load(Book::tags)
         return created
     }
 
     fun save(author: AuthorDto): Author {
         val created = Author.new{
             name = author.name
+            image = author.image
+            dateOfBirth = author.dateOfBirth
+            dateOfDeath = author.dateOfDeath
+            biography = author.biography
             val instant: Instant = nowInstant()
             creationDate = instant
             modificationDate = instant
@@ -271,7 +288,7 @@ class BookRepository(
     }
 
     fun save(tag: TagDto): Tag {
-        val created = Tag.new{
+        val created = Tag.new(UUID.randomUUID()){
             name = tag.name
             val instant: Instant = nowInstant()
             creationDate = instant
@@ -282,7 +299,7 @@ class BookRepository(
 
     fun save(book: Book, user: User, createUserBookDto: CreateUserBookDto): UserBook {
         val instant: Instant = nowInstant()
-        return UserBook.new {
+        return UserBook.new(UUID.randomUUID()){
             this.creationDate = instant
             this.modificationDate = instant
             this.user = user
@@ -318,5 +335,51 @@ class BookRepository(
 
     fun findUserBookByUserAndBook(user: User, book: Book): UserBook? {
         return UserBook.find { UserBookTable.user eq user.id and (UserBookTable.book.eq(book.id)) }.firstOrNull()
+    }
+
+    fun deleteUserBookById(userbookId: UUID) {
+        val entity: UserBook = UserBook[userbookId]
+        entity.delete()
+    }
+
+    fun deleteBookById(bookId: UUID) {
+        Book[bookId].delete()
+    }
+
+    fun deleteTagFromBook(bookId: UUID, tagId: UUID) {
+        BookTags.deleteWhere {
+            BookTags.tag eq tagId and(BookTags.book eq bookId)
+        }
+    }
+
+    fun deleteTagById(tagId: UUID) {
+        Tag[tagId].delete()
+    }
+
+    fun deleteAuthorFromBook(bookId: UUID, authorId: UUID) {
+        BookAuthors.deleteWhere {
+            BookAuthors.book eq bookId and(BookAuthors.author eq authorId)
+        }
+    }
+
+    fun deleteAuthorById(authorId: UUID) {
+        Author[authorId].delete()
+    }
+
+    fun findAuthorBooksById(authorId: UUID, page: Long, pageSize: Long): Page<Book> {
+        val a = Author[authorId]
+        val query = BookAuthors.join(BookTable, JoinType.LEFT)
+            .slice(BookTable.columns)
+            .selectAll()
+            .andWhere { BookAuthors.author eq a.id }
+        val total = query.count()
+        query.limit(pageSize.toInt(), page * pageSize)
+        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        return PageImpl(
+            query.map { resultRow -> Book.wrapRow(resultRow) },
+            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
+            else PageRequest.of(0, 20, Sort.unsorted()),
+            total
+        )
     }
 }

@@ -78,7 +78,7 @@ class ReadingEventRepository(
         userBook.lastReadingEvent = createReadingEventDto.eventType
         userBook.lastReadingEventDate = instant
         if (alreadyReadingEvent != null) {
-            logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_PROCESSING state for book ${userBook.book.id}" }
+            logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_READING state for book ${userBook.book.id}" }
             alreadyReadingEvent.eventType = createReadingEventDto.eventType
             alreadyReadingEvent.modificationDate = instant
             return alreadyReadingEvent
@@ -97,6 +97,22 @@ class ReadingEventRepository(
             this.eventType = updateReadingEventDto.eventType
             this.userBook.lastReadingEvent = updateReadingEventDto.eventType
             this.userBook.lastReadingEventDate = this.modificationDate
+        }
+    }
+
+    fun deleteReadingEventById(eventId: UUID) {
+        val entity: ReadingEvent = ReadingEvent[eventId]
+        val userbook = entity.userBook
+        entity.delete()
+        val lastEvent = userbook.readingEvents
+            .maxByOrNull { e -> e.modificationDate }
+        if (lastEvent == null) {
+            userbook.lastReadingEvent = null
+            userbook.lastReadingEventDate = null
+        }
+        else {
+            userbook.lastReadingEventDate = lastEvent.modificationDate
+            userbook.lastReadingEvent = lastEvent.eventType
         }
     }
 

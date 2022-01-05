@@ -7,6 +7,7 @@ import io.github.bayang.jelu.service.BookService
 import mu.KotlinLogging
 import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -26,10 +27,11 @@ class BooksController(
     fun books(@RequestParam(name = "title", required = false) title: String?,
               @RequestParam(name = "isbn10", required = false) isbn10: String?,
               @RequestParam(name = "isbn13", required = false) isbn13: String?,
+              @RequestParam(name = "series", required = false) series: String?,
               @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
               @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
               principal: Authentication): Page<BookWithUserBookDto>
-    = repository.findAll(title, isbn10, isbn13, page, pageSize, (principal.principal as JeluUser).user)
+    = repository.findAll(title, isbn10, isbn13, series, page, pageSize, (principal.principal as JeluUser).user)
 
     @GetMapping(path = ["/books/{id}"])
     fun bookById(@PathVariable("id") bookId: UUID) = repository.findBookById(bookId)
@@ -37,17 +39,51 @@ class BooksController(
     @GetMapping(path = ["/userbooks/{id}"])
     fun userbookById(@PathVariable("id") userbookId: UUID) = repository.findUserBookById(userbookId)
 
+    @DeleteMapping(path = ["/userbooks/{id}"])
+    fun deleteUserbookById(@PathVariable("id") userbookId: UUID): ResponseEntity<Unit> {
+        repository.deleteUserBookById(userbookId)
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping(path = ["/books/{id}"])
+    fun deletebookById(@PathVariable("id") bookId: UUID): ResponseEntity<Unit> {
+        repository.deleteBookById(bookId)
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping(path = ["/books/{bookId}/tags/{tagId}"])
+    fun deleteTagFromBook(@PathVariable("bookId") bookId: UUID,
+                          @PathVariable("tagId") tagId: UUID): ResponseEntity<Unit> {
+        repository.deleteTagFromBook(bookId, tagId)
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping(path = ["/tags/{tagId}"])
+    fun deleteTagById(@PathVariable("tagId") tagId: UUID): ResponseEntity<Unit> {
+        repository.deleteTagById(tagId)
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping(path = ["/books/{bookId}/authors/{authorId}"])
+    fun deleteAuthorFromBook(@PathVariable("bookId") bookId: UUID,
+                          @PathVariable("authorId") authorId: UUID): ResponseEntity<Unit> {
+        repository.deleteAuthorFromBook(bookId, authorId)
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping(path = ["/authors/{authorId}"])
+    fun deleteAuthorById(@PathVariable("authorId") authorId: UUID): ResponseEntity<Unit> {
+        repository.deleteAuthorById(authorId)
+        return ResponseEntity.noContent().build()
+    }
+
     @GetMapping(path = ["/userbooks"])
     fun userbooks(principal: Authentication,
                   @RequestParam(name = "lastEventType", required = false) searchTerm: ReadingEventType?,
                   @RequestParam(name = "toRead", required = false) toRead: Boolean?
     ): List<UserBookLightDto> {
         assertIsJeluUser(principal.principal)
-        if (searchTerm != null || toRead != null) {
-            return repository.findUserBookByCriteria((principal.principal as JeluUser).user.id, searchTerm, toRead)
-        }
-        //FIXME send userbooks sorted and paginated
-        return listOf()
+        return repository.findUserBookByCriteria((principal.principal as JeluUser).user.id, searchTerm, toRead)
     }
 
     @GetMapping(path = ["/userbooks/me"])
@@ -96,6 +132,13 @@ class BooksController(
     @GetMapping(path = ["/authors/{id}"])
     fun authorById(@PathVariable("id") authorId: UUID) = repository.findAuthorsById(authorId)
 
+    @GetMapping(path = ["/authors/{id}/books"])
+    fun authorBooksById(@PathVariable("id") authorId: UUID,
+                        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+                        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+                        principal: Authentication): Page<BookWithUserBookDto>
+    = repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, page, pageSize)
+
     @PostMapping(path = ["/books"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun saveBook(@RequestBody @Valid book: BookCreateDto): BookDto {
         return repository.save(book, null)
@@ -125,7 +168,7 @@ class BooksController(
     }
 
     @PutMapping(path = ["/books/{id}"])
-    fun updateBook(@PathVariable("id") bookId: UUID, @RequestBody @Valid book: BookCreateDto): BookDto {
+    fun updateBook(@PathVariable("id") bookId: UUID, @RequestBody @Valid book: BookUpdateDto): BookDto {
         return repository.update(bookId, book);
     }
     @PutMapping(path = ["/authors/{id}"])

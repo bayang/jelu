@@ -5,6 +5,7 @@ import io.github.bayang.jelu.dao.ReadingEventType
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.service.ReadingEventService
 import mu.KotlinLogging
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -38,5 +39,11 @@ class ReadingEventsController(
     @PutMapping(path = ["/reading-events/{id}"])
     fun updateReadingEvent(@PathVariable("id") readingEventId: UUID, @RequestBody @Valid readingEvent: UpdateReadingEventDto): ReadingEventDto {
         return repository.updateReadingEvent(readingEventId, readingEvent)
+    }
+
+    @DeleteMapping(path = ["/reading-events/{id}"])
+    fun deleteEventById(@PathVariable("id") eventId: UUID): ResponseEntity<Unit> {
+        repository.deleteReadingEventById(eventId)
+        return ResponseEntity.noContent().build()
     }
 }

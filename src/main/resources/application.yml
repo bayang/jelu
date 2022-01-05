@@ -13,12 +13,13 @@ spring:
     drop-first: false
     change-log: classpath:liquibase.xml
   datasource:
-    url: jdbc:sqlite:${jelu.database.path}/jelu.db
+    url: jdbc:sqlite:${jelu.database.path}/jelu.db?foreign_keys=on;
     username: jelu_user
     password: mypass1234
     driver-class-name: org.sqlite.JDBC
   exposed:
     generate-ddl: false
+    show-sql: true
   servlet:
     multipart:
       enabled: true

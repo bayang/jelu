@@ -331,6 +331,11 @@ function toggleRemoveImage() {
       </o-field>
     </div>
     <div class="field">
+      <o-field horizontal label="Language">
+        <o-input v-model="userbook.book.language" ></o-input>
+      </o-field>
+    </div>
+    <div class="field">
       <o-field horizontal label="Series">
         <o-input v-model="userbook.book.series"></o-input>
         <o-input v-model="userbook.book.numberInSeries" type="number" min="0" step="0.1"></o-input>

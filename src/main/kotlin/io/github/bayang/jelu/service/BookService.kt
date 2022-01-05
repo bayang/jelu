@@ -27,8 +27,8 @@ class BookService(
     ) {
 
     @Transactional
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, page: Long, pageSize: Long, user: User): Page<BookWithUserBookDto>
-    = bookRepository.findAll(title, isbn10, isbn13, page, pageSize).map { it.toBookWithUserBookDto(user.id.value) }
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, page: Long, pageSize: Long, user: User): Page<BookWithUserBookDto>
+    = bookRepository.findAll(title, isbn10, isbn13, series, page, pageSize).map { it.toBookWithUserBookDto(user.id.value) }
 
     @Transactional
     fun findAllAuthors(): List<AuthorDto> = bookRepository.findAllAuthors().map { it.toAuthorDto() }
@@ -52,7 +52,7 @@ class BookService(
     fun findAuthorsById(authorId: UUID): AuthorWithBooksDto = bookRepository.findAuthorsById(authorId).toAuthorWithBooksDto()
 
     @Transactional
-    fun update(bookId: UUID, book: BookCreateDto): BookDto = bookRepository.update(bookId, book).toBookDto()
+    fun update(bookId: UUID, book: BookUpdateDto): BookDto = bookRepository.update(bookId, book).toBookDto()
 
     @Transactional
     fun update(userBookId: UUID, book: UserBookUpdateDto): UserBookLightDto = bookRepository.update(userBookId, book).toUserBookLightDto()
@@ -76,10 +76,10 @@ class BookService(
         return updated.toUserBookLightDto()
     }
 
-    @Transactional(rollbackFor = [Exception::class])
+    @Transactional()
     fun save(userBook: CreateUserBookDto, user: User, file: MultipartFile?): UserBookLightDto {
         val book: Book = if (userBook.book.id != null) {
-            bookRepository.update(userBook.book.id, userBook.book)
+            bookRepository.update(userBook.book.id, fromBookCreateDto(userBook.book))
         }
         else {
             bookRepository.save(userBook.book)
@@ -179,5 +179,40 @@ class BookService(
     @Transactional
     fun findTagBooksById(tagId: UUID, user: User, page: Long, pageSize: Long): Page<BookWithUserBookDto> {
         return bookRepository.findTagBooksById(tagId, page, pageSize).map { book -> book.toBookWithUserBookDto(user.id.value) }
+    }
+
+    @Transactional
+    fun deleteUserBookById(userbookId: UUID) {
+        bookRepository.deleteUserBookById(userbookId)
+    }
+
+    @Transactional
+    fun deleteBookById(bookId: UUID) {
+        bookRepository.deleteBookById(bookId)
+    }
+
+    @Transactional
+    fun deleteTagFromBook(bookId: UUID, tagId: UUID) {
+        bookRepository.deleteTagFromBook(bookId, tagId)
+    }
+
+    @Transactional
+    fun deleteTagById(tagId: UUID) {
+        bookRepository.deleteTagById(tagId)
+    }
+
+    @Transactional
+    fun deleteAuthorFromBook(bookId: UUID, authorId: UUID) {
+        bookRepository.deleteAuthorFromBook(bookId, authorId)
+    }
+
+    @Transactional
+    fun deleteAuthorById(authorId: UUID) {
+        bookRepository.deleteAuthorById(authorId)
+    }
+
+    @Transactional
+    fun findAuthorBooksById(authorId: UUID, user: User, page: Long, pageSize: Long): Page<BookWithUserBookDto> {
+        return bookRepository.findAuthorBooksById(authorId, page, pageSize).map { book -> book.toBookWithUserBookDto(user.id.value) }
     }
 }

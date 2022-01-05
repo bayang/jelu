@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.util.*
@@ -39,7 +40,7 @@ class Tag(id: EntityID<UUID>): UUIDEntity(id) {
 //        )
 }
 object BookTags : Table(name = "book_tags") {
-    val book = reference("book", BookTable, fkName = "fk_booktags_book_id")
-    val tag = reference("tag", TagTable, fkName = "fk_booktags_tag_id")
+    val book = reference("book", BookTable, fkName = "fk_booktags_book_id", onDelete = ReferenceOption.CASCADE)
+    val tag = reference("tag", TagTable, fkName = "fk_booktags_tag_id", onDelete = ReferenceOption.CASCADE)
     override val primaryKey = PrimaryKey(book, tag, name = "pk_booktag_act")
 }

@@ -27,6 +27,7 @@ object BookTable: UUIDTable("book") {
     val goodreadsId: Column<String?> = varchar("goodreads_id", 30).nullable()
     val amazonId: Column<String?> = varchar("amazon_id", 30).nullable()
     val librarythingId: Column<String?> = varchar("librarything_id", 30).nullable()
+    val language: Column<String?> = varchar("language", 30).nullable()
 }
 class Book(id: EntityID<UUID>): UUIDEntity(id) {
     companion object : UUIDEntityClass<Book>(BookTable)
@@ -43,6 +44,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
     var tags by Tag via BookTags
     var image by BookTable.image
     var series by BookTable.series
+    var language by BookTable.language
     var numberInSeries by BookTable.numberInSeries
     var googleId by BookTable.googleId
     var amazonId by BookTable.amazonId
@@ -69,6 +71,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             googleId = this.googleId,
             amazonId = this.amazonId,
             librarythingId = this.librarythingId,
+            language = this.language,
             authors = this.authors.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() }
         )
@@ -92,6 +95,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
             googleId = this.googleId,
             amazonId = this.amazonId,
             librarythingId = this.librarythingId,
+            language = this.language,
             authors = this.authors.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() },
             userBooks = this.userBooks.filter { it.user.id.value == userId }.map { it.toUserBookWithoutBookDto() }

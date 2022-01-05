@@ -93,7 +93,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
     </div>
     </div>
     <div v-if="displayForm" class="column is-centered is-full">
-      <progress v-if="progress" class="progress is-small is-primary" max="100"></progress>
+      <progress v-if="progress" class="progress is-small is-success" max="100"></progress>
     </div>
     </div>
     <div class="columns is-centered is-multiline">
@@ -118,6 +118,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
             <p v-if="metadata?.publishedDate" class="has-text-left"><span class="has-text-weight-semibold">Published date : </span>{{format(metadata.publishedDate)}}</p>
             <p v-if="metadata?.series" class="has-text-left"><span class="has-text-weight-semibold">Series : </span>{{metadata.series}}</p>
             <p v-if="metadata?.numberInSeries" class="has-text-left"><span class="has-text-weight-semibold"># in series : </span>{{metadata.numberInSeries}}</p>
+            <p v-if="metadata?.language" class="has-text-left"><span class="has-text-weight-semibold">Language : </span>{{metadata.language}}</p>
             <p v-if="metadata?.goodreadsId" class="has-text-left"><span class="has-text-weight-semibold">Goodreads id : </span>{{metadata.goodreadsId}}</p>
             <p v-if="metadata?.googleId" class="has-text-left"><span class="has-text-weight-semibold">Google id : </span>{{metadata.googleId}}</p>
             <p v-if="metadata?.amazonId" class="has-text-left"><span class="has-text-weight-semibold">Amazon id : </span>{{metadata.amazonId}}</p>

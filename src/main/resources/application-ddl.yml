@@ -3,7 +3,7 @@ spring:
     enabled: false
     drop-first: false
   datasource:
-    url: jdbc:sqlite:${jelu.database.path}/exposed.db
+    url: jdbc:sqlite:${jelu.database.path}/exposed.db?foreign_keys=on;
     driver-class-name: org.sqlite.JDBC
   exposed:
     generate-ddl: true
