@@ -93,6 +93,9 @@ const store = createStore<State>({
   getters : {
     getUsername(state) {
       return state.user != null ? state.user.login : 'anonymous'
+    },
+    isAdmin(state) {
+      return state.user != null && state.user.isAdmin
     }
   }, 
   plugins : [createLogger()],

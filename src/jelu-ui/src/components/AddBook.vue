@@ -403,11 +403,11 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
   <section>
     <div class="columns is-multiline is-centered">
       <div class="column is-centered is-offset-one-fifth is-three-fifths">
-        <h1 class="title">Add book</h1>
+        <h1 class="title has-text-weight-normal typewriter">Add book</h1>
       </div>
       <div class="column is-one-fifth">
         <o-tooltip label="Try to auto fill some fields from the web, given a isbn or a title" multiline>
-        <button @click="toggleModal" class="button is-primary is-light">Auto fill</button>
+        <button @click="toggleModal" class="button is-success is-light">Auto fill</button>
         </o-tooltip>
       </div>
     <div class="column is-two-thirds">
@@ -679,6 +679,6 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
 </template>
 
 <style lang="scss">
-@import "../assets/style.scss";
+// @import "../assets/style.scss";
 
 </style>

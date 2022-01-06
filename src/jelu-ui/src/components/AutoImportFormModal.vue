@@ -63,8 +63,8 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
   <section class="edit-modal">
     <div class="columns is-centered is-multiline">
     <div class="column is-centered is-two-fifths">
-<h1 class="title">Import book</h1>
-    </div>    
+<h1 class="title has-text-weight-normal typewriter">Import book</h1>
+    </div>
     <div v-if="displayForm" class="column is-centered is-full">
 <div class="field">
       <o-field horizontal label="Isbn">
@@ -145,6 +145,6 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
 </template>
 
 <style lang="scss">
-@import "../assets/style.scss";
+// @import "../assets/style.scss";
 
 </style>

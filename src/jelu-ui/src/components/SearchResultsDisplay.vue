@@ -36,6 +36,7 @@ const search = () => {
     }
       dataService.findBooks(query.value.get('title'), 
       query.value.get('isbn10'), query.value.get('isbn13'), 
+      query.value.get('series'), 
       currentPageNumber.value - 1, perPage.value)
     .then(res => {
         console.log(res)
@@ -150,6 +151,7 @@ if (StringUtils.isNotBlank(queryTitle)) {
         <option value="title">Title</option>
         <option value="isbn10">Isbn10</option>
         <option value="isbn13">Isbn13</option>
+        <option value="series">Series</option>
       </o-select>
       <o-input type="text" v-model="queryTerm"></o-input>
       <o-button @click="addToQuery" variant="success">Add to query</o-button>
@@ -166,16 +168,14 @@ if (StringUtils.isNotBlank(queryTitle)) {
       </p>
     </div>
     </div>
-    <p>{{query}}</p>
-    <div class="columns is-multiline is-centered">
+    <div class="columns is-multiline is-variable is-4 is-centered">
       <div class="column is-2" v-for="book in convertedBooks" v-bind:key="book.id">
       <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
         <book-card :book="book"></book-card>
       </router-link>
       <div v-else>
-        <o-tooltip label="This book is not yet in your books, double click to add it" multiline>
-        <book-card @dblclick="toggleEdit(book)" :book="book"></book-card>
-        </o-tooltip>
+        <book-card @dblclick="toggleEdit(book)" :book="book"
+        v-tooltip="'This book is not yet in your books, double click to add it'"></book-card>
       </div>
     </div>
 

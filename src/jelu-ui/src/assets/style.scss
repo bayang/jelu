@@ -107,7 +107,7 @@ $field-label-color: $text;
 
 $input-color: $text-invert;
 
-$card-background-color:  $white-ter ;
+$card-background-color: $white-ter ;
 // $card-header-color: findColorInvert($card-background-color);
 $card-header-color: $jelu_text_accent;
 
@@ -136,10 +136,24 @@ label.label {
 
 
 @import "bulma/bulma";
+@import "bulma-timeline";
 @import '@oruga-ui/theme-bulma/dist/scss/bulma';
-// @import 'sweetalert2/src/sweetalert2.scss';
 @import '@sweetalert2/theme-bulma/bulma.scss';
-  
+
+@font-face {
+    font-family: 'AnotherTypewriter';
+    font-style: normal;
+    font-display: swap;
+    src: url('./atwriter.ttf') format('truetype');
+    
+  }
+
+$typewriter-font: 'AnotherTypewriter', sans-serif;
+
+.typewriter {
+    font-family: $typewriter-font;
+}
+
 .dropdown-item {
   color: #363636;
 }

@@ -206,7 +206,7 @@ function toggleRemoveImage() {
 
 <template>
 <section class="edit-modal">
-    <div class="columns">
+    <div class="columns is-centered is-multiline">
     <div class="column is-centered is-full">
 <div class="field">
       <o-field horizontal label="Title">
@@ -402,9 +402,7 @@ function toggleRemoveImage() {
             :src="'/files/' + userbook.book.image"
             :class="deleteImage ? 'altered' : ''"
             alt="cover image"
-            
           />
-          <!-- <button v-if="!deleteImage" @click="toggleRemoveImage" class="delete is-large overlay-button"></button> -->
           <span v-if="!deleteImage" @click="toggleRemoveImage" class="icon overlay-button">
           <i class="mdi mdi-delete"></i> </span>  
           <span v-if="deleteImage" @click="toggleRemoveImage" class="icon overlay-button">
@@ -452,7 +450,9 @@ function toggleRemoveImage() {
       <br />
     </o-field>
 </div>
-        <button @click="importBook" class="button is-primary centered-button">
+    </div>
+    <div class="column is-centered is-one-fifth">
+        <button @click="importBook" class="button is-primary">
           Save changes
         </button>
       <p v-if="errorMessage" class="has-text-danger">{{ errorMessage }}</p>
@@ -463,12 +463,6 @@ function toggleRemoveImage() {
 </template>
 
 <style lang="scss">
-@import "../assets/style.scss";
 
-// find another way to center the submit button (try like AutoImportFormModal)
-.centered-button {
-  position: relative;
-  left: 40%;
-}
 
 </style>

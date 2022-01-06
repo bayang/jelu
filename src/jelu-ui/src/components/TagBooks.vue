@@ -95,16 +95,15 @@ getBooks()
 </script>
 
 <template>
-  <h2 class="title is-family-sans-serif">Books tagged #{{tag.name}} : </h2>
-  <div class="columns is-multiline is-centered">
+  <h2 class="title has-text-weight-normal typewriter">Books tagged #{{tag.name}} : </h2>
+  <div class="columns is-multiline is-variable is-4 is-centered">
       <div class="column is-2" v-for="book in convertedBooks" v-bind:key="book.id">
       <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
         <book-card :book="book"></book-card>
       </router-link>
       <div v-else>
-        <o-tooltip label="This book is not yet in your books, double click to add it" multiline>
-        <book-card @dblclick="toggleEdit(book)" :book="book"></book-card>
-        </o-tooltip>
+        <book-card @dblclick="toggleEdit(book)" :book="book"
+        v-tooltip="'This book is not yet in your books, double click to add it'"></book-card>
       </div>
     </div>
 

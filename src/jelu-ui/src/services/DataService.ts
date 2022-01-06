@@ -464,14 +464,15 @@ class DataService {
     }
   }
 
-  findBooks = async (title?:string, isbn10?: string, isbn13?:string, 
-    page?: number, pageSize?: number) => {
+  findBooks = async (title?:string, isbn10?: string, isbn13?: string, 
+    series?: string, page?: number, pageSize?: number) => {
     try {
       const response = await this.apiClient.get<Page<BookWithUserBook>>(`${this.API_BOOK}`, {
         params: {
           isbn10: isbn10,
           title: title,
           isbn13: isbn13,
+          series: series,
           page: page,
           pageSize: pageSize
         }
@@ -486,6 +487,38 @@ class DataService {
       }
       console.log("error find books " + (error as AxiosError).code)
       throw new Error("error find books " + error)
+    }
+  }
+
+  deleteUserBook = async (userbookId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_USERBOOK}/${userbookId}`);
+      console.log("delete userbook")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete userbook " + (error as AxiosError).code)
+      throw new Error("error delete userbook " + error)
+    }
+  }
+
+  deleteBook = async (bookId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_BOOK}/${bookId}`);
+      console.log("delete book")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete book " + (error as AxiosError).code)
+      throw new Error("error delete book " + error)
     }
   }
 

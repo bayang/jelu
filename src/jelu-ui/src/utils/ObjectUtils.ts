@@ -1,4 +1,5 @@
 import { BookWithUserBook, UserBook } from "../model/Book";
+import Swal from 'sweetalert2';
 
 export class ObjectUtils {
 
@@ -46,4 +47,10 @@ export class ObjectUtils {
         return converted
       }
   }
+
+  public static swalMixin = Swal.mixin({
+    background: '#404040',
+    color: '#ffffff',
+  })
+  
 }

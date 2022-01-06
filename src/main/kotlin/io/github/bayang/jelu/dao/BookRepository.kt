@@ -35,7 +35,7 @@ class BookRepository(
             query.andWhere { BookTable.isbn13 eq isbn13 }
         }
         series?.let {
-            query.andWhere { BookTable.series eq series }
+            query.andWhere { BookTable.series like "%$series%" }
         }
         val total = query.count()
         query.limit(pageSize.toInt(), page * pageSize)

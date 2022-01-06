@@ -48,7 +48,7 @@ onMounted(() => {
 <template>
   <div class="level">
     <div class="level-item">
-      <h2 class="title">
+      <h2 class="title has-text-weight-normal typewriter">
         <span class="icon">
           <i class="mdi mdi-bookshelf"></i>
         </span>
@@ -56,7 +56,7 @@ onMounted(() => {
       </h2>
     </div>
   </div>
-  <div v-if="books.length > 0" class="columns is-variable is-2 is-multiline is-centered">
+  <div v-if="books.length > 0" class="columns is-variable is-4 is-multiline is-centered">
     <div class="column is-2" v-for="book in books" v-bind:key="book.id">
     <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
       <book-card :book="book"></book-card>
@@ -64,7 +64,7 @@ onMounted(() => {
     </div>
   </div>
   <div v-else>
-<h2 class="title is-family-sans-serif">Library is empty </h2>
+<h2 class="title has-text-weight-normal typewriter">Library is empty </h2>
     <span class="icon is-large">
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px"></i>
     </span>
