@@ -31,13 +31,18 @@ getToRead()
 
 <template>
   <h2 class="title has-text-weight-normal typewriter">To Read List : </h2>
-  <div class="columns is-multiline is-variable is-4 is-centered">
-      <div class="column is-2" v-for="book in books" v-bind:key="book.id">
-      <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
+  <div v-if="books.length > 0" class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
+    <div class="books-grid-item my-2" v-for="book in books" v-bind:key="book.id">
+    <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
       <book-card :book="book"></book-card>
       </router-link>
     </div>
-
+  </div>
+  <div v-else>
+<h2 class="title has-text-weight-normal typewriter">Nothing to read </h2>
+    <span class="icon is-large">
+      <i class="mdi mdi-book-open-page-variant-outline mdi-48px"></i>
+    </span>
   </div>
   
 </template>

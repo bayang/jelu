@@ -56,8 +56,8 @@ onMounted(() => {
       </h2>
     </div>
   </div>
-  <div v-if="books.length > 0" class="columns is-variable is-4 is-multiline is-centered">
-    <div class="column is-2" v-for="book in books" v-bind:key="book.id">
+  <div v-if="books.length > 0" class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
+    <div class="books-grid-item my-2" v-for="book in books" v-bind:key="book.id">
     <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
       <book-card :book="book"></book-card>
       </router-link>

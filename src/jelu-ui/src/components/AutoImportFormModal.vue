@@ -145,6 +145,5 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
 </template>
 
 <style lang="scss">
-// @import "../assets/style.scss";
 
 </style>

@@ -111,6 +111,8 @@ $card-background-color: $white-ter ;
 // $card-header-color: findColorInvert($card-background-color);
 $card-header-color: $jelu_text_accent;
 
+$card-footer-padding: 0.5rem;
+
 $tag-background-color:$grey-lighter;
 
 $box-background-color: $jelu_background_accent;
@@ -154,6 +156,10 @@ $typewriter-font: 'AnotherTypewriter', sans-serif;
     font-family: $typewriter-font;
 }
 
+.books-grid-item {
+    width: 160px;
+}
+
 .dropdown-item {
   color: #363636;
 }
@@ -188,3 +194,51 @@ $typewriter-font: 'AnotherTypewriter', sans-serif;
     -webkit-filter: blur(4px) invert(38%);
     -moz-filter: blur(4px) invert(38%);
   }
+
+.jelu-progress {
+    position: absolute;
+    height: 5px;
+    background-color: $jelu_text_accent;
+}
+
+.is-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    width: 100%;
+}
+
+// book detail
+
+.jelu-bordered {
+    border-width: 2px;
+    border-color: $jelu_background_contrast;
+    border-style: solid;
+    border-radius: 3px;
+    -webkit-box-shadow: 10px 10px 10px 0px $jelu_background; 
+    box-shadow: 10px 10px 10px 0px $jelu_background;
+  }
+
+$tag-color: findColorInvert($tag-background-color);
+
+span.tag a {
+  color: $tag-color;
+}
+
+// book list
+header a {
+    color: findColorInvert($card-background-color);
+  }
+
+.card-content .content {
+  font-size: $small-font-size;
+}
+
+$card-tag-color: findColorInvert($card-background-color);
+
+footer.card-footer span.tag {
+    color: $card-tag-color;
+    font-size: 0.7em;
+  }
+

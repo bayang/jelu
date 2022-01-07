@@ -31,6 +31,7 @@ const form = reactive({
   personalNotes: "",
   owned: null,
   toRead: null,
+  percentRead: null,
   googleId: "",
   amazonId : "",
   goodreadsId: "",
@@ -168,7 +169,8 @@ const fillBook = (formdata: any, publishedDate : Date|null): UserBook => {
     },
     owned : formdata.owned,
     personalNotes: formdata.personalNotes,
-    toRead: formdata.toRead
+    toRead: formdata.toRead,
+    percentRead: formdata.percentRead
   }
   return userBook
 }
@@ -595,6 +597,11 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
       </o-checkbox>
       </o-field>
     </div>
+    <div class="field">
+      <o-field horizontal label="Percent read">
+      <o-slider v-model="form.percentRead" :min="0" :max="100"></o-slider>
+    </o-field>
+    </div>
     <div v-if="hasImage">
   <o-field horizontal>
     <template v-slot:label>
@@ -679,6 +686,5 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
 </template>
 
 <style lang="scss">
-// @import "../assets/style.scss";
 
 </style>

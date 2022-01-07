@@ -232,7 +232,7 @@ getBook()
       <p v-if="book?.personalNotes" class="has-text-left">{{book.personalNotes}}</p>
     </div>
     <div v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="column is-full is-offset-one-quarter content">
-      <p v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="has-text-left has-text-weight-semibold">Reading events :</p>
+      <p v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="has-text-left has-text-weight-semibold typewriter">Reading events :</p>
       <div class="timeline">
   <header class="timeline-header">
     <span class="tag is-medium is-success">Now</span>
@@ -258,25 +258,9 @@ getBook()
 </template>
 
 <style lang="scss" scoped>
-@import "../assets/style.scss";
 
 .columns {
   margin-top: 10px;
-}
-
-.jelu-bordered {
-  border-width: 2px;
-  border-color: $jelu_background_contrast;
-  border-style: solid;
-  border-radius: 3px;
-  -webkit-box-shadow: 10px 10px 10px 0px $jelu_background; 
-  box-shadow: 10px 10px 10px 0px $jelu_background;
-}
-
-$tag-color: findColorInvert($tag-background-color);
-
-span.tag a {
-  color: $tag-color;
 }
 
 </style>

@@ -96,17 +96,24 @@ getBooks()
 
 <template>
   <h2 class="title has-text-weight-normal typewriter">Books tagged #{{tag.name}} : </h2>
-  <div class="columns is-multiline is-variable is-4 is-centered">
-      <div class="column is-2" v-for="book in convertedBooks" v-bind:key="book.id">
-      <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
+  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
+    <div class="books-grid-item my-2" v-for="book in convertedBooks" v-bind:key="book.id">
+    <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
         <book-card :book="book"></book-card>
       </router-link>
       <div v-else>
         <book-card @dblclick="toggleEdit(book)" :book="book"
-        v-tooltip="'This book is not yet in your books, double click to add it'"></book-card>
+        v-tooltip="'This book is not yet in your books, double click to add it'">
+          <template #icon>
+          <o-tooltip label="not in your books" variant="danger">
+          <span class="icon has-text-danger">
+            <i class="mdi mdi-plus-circle mdi-18px"></i>
+          </span>
+          </o-tooltip>
+        </template>
+        </book-card>
       </div>
     </div>
-
   </div>
   <o-pagination
       :total="total"

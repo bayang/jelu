@@ -45,6 +45,13 @@ const authorsText = computed(() => {
   return txt;
 });
 
+const showProgressBar = (book: UserBook) => {
+  return book.percentRead 
+      && book.percentRead > 0 
+      && book.lastReadingEvent != null 
+      && book.lastReadingEvent === ReadingEventType.CURRENTLY_READING
+}
+
 </script>
 
 <template>
@@ -62,33 +69,29 @@ const authorsText = computed(() => {
             alt="cover placeholder"
           />
         </figure>
+          <div v-if="showProgressBar(book)" class="jelu-progress" :style="{ width: book.percentRead + '%' }"></div>
       </div>
       <header class="card-header">
-        <p class="card-header-title is-capitalized is-family-sans-serif">
-          <span class="icon has-text-primary">
-            <i class="mdi mdi-book-open-blank-variant mdi-18px"></i>
-          </span>
+        <p class="p-3 card-header-title is-capitalized is-family-sans-serif is-ellipsis">
           {{ book.book.title }}
         </p>
       </header>
-      <div class="card-content has-text-dark">
-        <div class="content has-text-left">
+      <div class="card-content has-text-dark py-2">
+        <div class="content has-text-left m-0">
           <span v-if="book.book.authors != null && book.book.authors.length > 0" class="is-inline-block"
             >{{ authorsText }}</span
           >
-          <br>
-          <span v-if="book.book.publisher" class="is-inline-block"
-            >{{ book.book.publisher }}</span
-          >
         </div>
         <footer class="card-footer">
-          <div class="tags has-addons ">
-            <span v-if="book.lastReadingEvent" class="tag is-family-sans-serif">Status</span>
+          <div>
+          <div v-if="book.lastReadingEvent" class="m-0 tags has-addons ">
+            <span class="tag is-family-sans-serif">Status</span>
             <span
-              v-if="book.lastReadingEvent"
               :class="eventClass"
               class="tag is-capitalized is-family-sans-serif"
               >{{ eventText }}</span>
+          </div>
+          <div>
               <o-tooltip v-if="book.owned" label="owned" variant="info">
               <span v-if="book.owned" class="icon has-text-info">
             <i class="mdi mdi-bookshelf mdi-18px"></i>
@@ -99,6 +102,8 @@ const authorsText = computed(() => {
             <i class="mdi mdi-eye mdi-18px"></i>
           </span>
           </o-tooltip>
+          <slot name="icon"></slot>
+          </div>
           </div>
         </footer>
       </div>
@@ -107,19 +112,5 @@ const authorsText = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-@import "../assets/style.scss";
 
-$tag-color: findColorInvert($card-background-color);
-
-header a {
-  color: findColorInvert($card-background-color);
-}
-
-footer.card-footer span.tag {
-  color: $tag-color;
-}
-
-.card-content .content {
-  font-size: $small-font-size;
-}
 </style>

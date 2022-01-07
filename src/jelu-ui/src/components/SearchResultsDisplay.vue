@@ -132,8 +132,8 @@ if (StringUtils.isNotBlank(queryTitle)) {
     <o-checkbox v-model="advancedMode">Advanced search</o-checkbox>
   </div>
 </div>
-<div class="columns is-centered">
-  <div v-if="!advancedMode" class="column is-4">
+<div v-if="!advancedMode" class="columns is-centered is-multiline">
+  <div class="column is-4">
   <o-field>
       <o-input placeholder="Search..." type="search" 
       icon="magnify" icon-clickable 
@@ -142,9 +142,10 @@ if (StringUtils.isNotBlank(queryTitle)) {
       @keyup.enter="search"></o-input>
     </o-field>
     </div>
-    <div v-else class="column is-8 is-offset-4">
-  <o-field grouped>
-    <o-field>
+</div>
+  <div v-else class="columns is-centered is-multiline">
+      <div class="column is-8 is-offset-4-desktop">
+  <o-field group-multiline class="tablet-up">
       <o-select
       placeholder="Fields"
       v-model="selectedField">
@@ -154,10 +155,13 @@ if (StringUtils.isNotBlank(queryTitle)) {
         <option value="series">Series</option>
       </o-select>
       <o-input type="text" v-model="queryTerm"></o-input>
-      <o-button @click="addToQuery" variant="success">Add to query</o-button>
+      <o-button @click="addToQuery" variant="warning" iconPack="mdi" iconRight="magnify-plus-outline"
+      v-tooltip="'Add to query params'"></o-button>
+        <o-button @click="search" variant="success" iconPack="mdi" iconRight="magnify"
+        v-tooltip="'Search selected query params'"></o-button>
       </o-field>
-      <o-button @click="search" variant="success" iconPack="mdi" iconRight="magnify"></o-button>
-    </o-field>
+      </div>
+      <div class="column is-full is-offset-8-desktop">
     <p class="tags has-addons">
       <div v-for="[field, term] in query">
       <span class="tag is-success">{{field}}</span>
@@ -168,17 +172,24 @@ if (StringUtils.isNotBlank(queryTitle)) {
       </p>
     </div>
     </div>
-    <div class="columns is-multiline is-variable is-4 is-centered">
-      <div class="column is-2" v-for="book in convertedBooks" v-bind:key="book.id">
-      <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
+  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
+    <div class="books-grid-item my-2" v-for="book in convertedBooks" v-bind:key="book.id">
+    <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
         <book-card :book="book"></book-card>
       </router-link>
       <div v-else>
         <book-card @dblclick="toggleEdit(book)" :book="book"
-        v-tooltip="'This book is not yet in your books, double click to add it'"></book-card>
+        v-tooltip="'This book is not yet in your books, double click to add it'">
+        <template #icon>
+          <o-tooltip label="not in your books" variant="danger">
+          <span class="icon has-text-danger">
+            <i class="mdi mdi-plus-circle mdi-18px"></i>
+          </span>
+          </o-tooltip>
+        </template>
+        </book-card>
       </div>
     </div>
-
   </div>
     <o-pagination
       :total="total"

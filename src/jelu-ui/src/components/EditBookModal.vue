@@ -384,6 +384,11 @@ function toggleRemoveImage() {
       </o-checkbox>
       </o-field>
     </div>
+    <div class="field">
+      <o-field horizontal label="Percent read">
+      <o-slider v-model="userbook.percentRead" :min="0" :max="100"></o-slider>
+    </o-field>
+    </div>
 <div v-if="hasImage">
   <o-field horizontal>
     <template v-slot:label>

@@ -74,7 +74,7 @@ const search = (searchterm: string) => {
   <div v-if="books.length > 0">
   <h2 class="title has-text-weight-normal typewriter">Currently reading : </h2>
   <div class="columns is-multiline is-variable is-4 is-centered">
-      <div class="column is-2" v-for="book in books" v-bind:key="book.id">
+      <div class="column is-2 is-8-mobile is-offset-2-mobile" v-for="book in books" v-bind:key="book.id">
       <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
       <book-card :book="book"></book-card>
       </router-link>
