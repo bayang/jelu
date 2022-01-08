@@ -96,12 +96,10 @@ class BooksController(
     }
 
     @GetMapping(path = ["/authors"])
-    fun authors(@RequestParam(name = "name", required = false) name: String?): List<AuthorDto> {
-        return if (name.isNullOrBlank()) {
-            repository.findAllAuthors()
-        } else {
-            repository.findAuthorsByName(name)
-        }
+    fun authors(@RequestParam(name = "name", required = false) name: String?,
+                @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+                @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long): Page<AuthorDto> {
+        return repository.findAllAuthors(name, page, pageSize)
     }
 
     @GetMapping(path = ["/tags"])

@@ -80,7 +80,21 @@ class BookRepository(
 //                .toList()
     }
 
-    fun findAllAuthors(): SizedIterable<Author> = Author.all()
+    fun findAllAuthors(name: String?, page: Long = 0, pageSize: Long = 20): Page<Author> {
+        val query: Query = AuthorTable.selectAll()
+        name?.let {
+            query.andWhere { AuthorTable.name like "%$name%" }
+        }
+        val total = query.count()
+        query.limit(pageSize.toInt(), page * pageSize)
+        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        return PageImpl(
+            query.map { resultRow -> Author.wrapRow(resultRow) },
+            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
+            else PageRequest.of(0, 20, Sort.unsorted()),
+            total
+        )
+    }
 
     fun findAllTags(): SizedIterable<Tag> = Tag.all()
 

@@ -31,7 +31,7 @@ class BookService(
     = bookRepository.findAll(title, isbn10, isbn13, series, page, pageSize).map { it.toBookWithUserBookDto(user.id.value) }
 
     @Transactional
-    fun findAllAuthors(): List<AuthorDto> = bookRepository.findAllAuthors().map { it.toAuthorDto() }
+    fun findAllAuthors(name: String?, page: Long = 0, pageSize: Long = 20): Page<AuthorDto> = bookRepository.findAllAuthors(name, page, pageSize).map { it.toAuthorDto() }
 
     @Transactional
     fun findAllTags(): List<TagDto> = bookRepository.findAllTags().map { it.toTagDto() }

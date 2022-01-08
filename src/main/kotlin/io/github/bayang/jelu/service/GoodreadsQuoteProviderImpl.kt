@@ -1,21 +1,138 @@
 package io.github.bayang.jelu.service
 
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
+import io.github.bayang.jelu.dto.QuoteDto
+import mu.KotlinLogging
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
+import org.springframework.boot.autoconfigure.cache.CacheProperties
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.ExchangeStrategies
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.createExceptionAndAwait
+import org.springframework.web.util.UriBuilder
 import org.springframework.web.util.UriComponentsBuilder
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
+import java.lang.Exception
+import java.util.concurrent.TimeUnit
+import kotlin.random.Random
+
+private val logger = KotlinLogging.logger {}
+
+// eg https://www.goodreads.com/quotes/search?utf8=%E2%9C%93&q=pratchett&commit=Search
+const val BASE_URL: String = "https://www.goodreads.com"
+
+const val KEY: String = "quotes"
 
 @Service
-class GoodreadsQuoteProviderImpl : IQuoteProvider {
+class GoodreadsQuoteProviderImpl(
+    val bookService: BookService
+) : IQuoteProvider {
 
-    // eg https://www.goodreads.com/quotes/search?utf8=%E2%9C%93&q=pratchett&commit=Search
-    val url: String = "https://www.goodreads.com/quotes/search?utf8=%E2%9C%93&commit=Search"
+    val exchange = ExchangeStrategies.builder().codecs { c: ClientCodecConfigurer ->
+        c.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
+        }.build()
 
-    override fun quotes(query: String): List<String> {
-        var builder: UriComponentsBuilder = UriComponentsBuilder.fromUriString(url)
-        builder.queryParam("q", query)
-        builder.encode(Charsets.UTF_8)
+    val client = WebClient.builder().exchangeStrategies(exchange).build()
 
-        val uriString = builder.build().toUriString()
+    var cache: Cache<String, List<QuoteDto>> = Caffeine.newBuilder()
+        .expireAfterWrite(60, TimeUnit.MINUTES)
+        .maximumSize(100)
+        .build()
 
-        return listOf(uriString)
+    override fun quotes(query: String?): Mono<List<QuoteDto>> {
+        return if (!query.isNullOrBlank()) {
+            fetch(query)
+        } else {
+            val res: List<QuoteDto>? = cache.getIfPresent(KEY)
+            res?.toMono() ?: fetch(randomAuthor())
+        }
+    }
+
+    override fun random(): Mono<List<QuoteDto>> {
+        val mono: Mono<List<QuoteDto>> = client.get()
+            .uri { uriBuilder: UriBuilder ->
+                uriBuilder
+                    .scheme("https")
+                    .host("www.goodreads.com")
+                    .path("/quotes")
+                    .build()
+            }
+            .exchangeToMono {
+                if (it.statusCode() == HttpStatus.OK) {
+                    it.bodyToMono(String::class.java).map {
+                            body -> parse(body)
+                    }
+                } else {
+                    it.createException().flatMap { Mono.error { it } }
+                }
+            }
+        return mono
+    }
+
+    private fun randomAuthor(): String {
+        val page = bookService.findAllAuthors(null)
+        return if (page.isEmpty) {
+            ""
+        } else {
+            page.content[Random.nextInt(0, page.numberOfElements)].name
+        }
+    }
+
+    fun fetch(query: String): Mono<List<QuoteDto>> {
+        val mono: Mono<List<QuoteDto>> = client.get()
+            .uri { uriBuilder: UriBuilder ->
+                uriBuilder
+                    .scheme("https")
+                    .host("www.goodreads.com")
+                    .path("/quotes/search")
+                    .queryParam("utf8", "✓")
+                    .queryParam("commit", "Search")
+                    .queryParam("q", query)
+                    .build()
+            }
+            .exchangeToMono {
+                if (it.statusCode() == HttpStatus.OK) {
+                    it.bodyToMono(String::class.java).map {
+                            it -> parse(it).also { quoteDtos -> cache.put(KEY, quoteDtos) }
+                    }
+                } else {
+                    it.createException().flatMap { Mono.error { it } }
+                }
+            }
+        return mono
+    }
+
+    private fun parse(body: String): List<QuoteDto> {
+        logger.debug { "body : $body" }
+        val doc = Jsoup.parse(body)
+        val quotesElements: Elements = doc.select(".quoteText")
+        val quotes = mutableListOf<QuoteDto>()
+        for (elem in quotesElements) {
+            quotes.add(quote(elem))
+        }
+//        val el: Element? = quotesElements[0]
+//        val c = el?.child(0)
+//        logger.debug { "el ${el?.ownText()}" }
+//        logger.debug { "el ${el?.select("span.authorOrTitle")?.text()}" }
+//        logger.debug { "el ${el?.select("a.authorOrTitle")?.text()}" }
+//        logger.debug { "el ${el?.select("a.authorOrTitle")?.attr("href")}" }
+        return quotes
+    }
+
+    fun quote(element: Element): QuoteDto {
+        val url = element?.select("a.authorOrTitle")?.attr("href")
+        return QuoteDto(
+            content = element.ownText(),
+            author = element?.select("span.authorOrTitle")?.text(),
+            origin = element?.select("a.authorOrTitle")?.text(),
+            link = if (url.isNullOrBlank()) "" else BASE_URL + url
+        )
     }
 }

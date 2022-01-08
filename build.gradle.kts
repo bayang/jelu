@@ -29,10 +29,13 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.session:spring-session-core")
 	implementation("com.github.gotson:spring-session-caffeine:1.0.3")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+	implementation("com.github.ben-manes.caffeine:caffeine")
 
 	implementation("com.fasterxml.staxmate:staxmate:2.3.0")
 	implementation("com.fasterxml.woodstox:woodstox-core:6.2.7")
