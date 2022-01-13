@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping
 public class ForwardController {
     @GetMapping(value = ["/**/{path:[^\\.]*}"])
     fun forward(): String {
-        return "forward:/";
+        return "forward:/"
     }
 }

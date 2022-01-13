@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, Ref, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { useLink, useRoute, useRouter } from 'vue-router'
 import { UserBook } from '../model/Book'
+import { ReadingEventType, ReadingEventWithUserBook } from '../model/ReadingEvent'
+import dataService from "../services/DataService"
 import { key } from '../store'
-import dataService from "../services/DataService";
-import { ReadingEventType } from '../model/ReadingEvent';
-import BookCard from "./BookCard.vue";
 import { StringUtils } from '../utils/StringUtils'
+import BookCard from "./BookCard.vue"
+import QuotesDisplay from './QuotesDisplay.vue'
 
 const store = useStore(key)
 const router = useRouter()
@@ -18,23 +19,43 @@ const isLogged = computed(() => {
 
 const books: Ref<Array<UserBook>> = ref([]);
 
+const events: Ref<Array<ReadingEventWithUserBook>> = ref([]);
+
+const hasBooks = computed(() => books.value.length > 0)
+
 const getCurrentlyReading = async () => {
   try {
-    books.value = await dataService.findUserBookByCriteria(ReadingEventType.CURRENTLY_READING, null)
+    const res = await dataService.findUserBookByCriteria(ReadingEventType.CURRENTLY_READING, null)
+    if (res.numberOfElements <= 6) {
+      books.value = res.content
+    }
+    else {
+      books.value = res.content.slice(0,6)
+    }
   } catch (error) {
-    console.log("failed get books : " + error);
+    console.log("failed get books : " + error)
   }
+
+};
+
+const getMyEvents = async () => {
+  try {
+    const res = await dataService.myReadingEvents()
+    const notCurrentlyReading = res.content.filter(e => e.eventType !== ReadingEventType.CURRENTLY_READING)
+    if (notCurrentlyReading.length <= 8) {
+      events.value = notCurrentlyReading
+    }
+    else {
+      events.value = notCurrentlyReading.slice(0,8)
+    }
+  } catch (error) {
+    console.log("failed get events : " + error)
+  }
+
 };
 
 onMounted(() => {
   console.log("Component is mounted!");
-    if (isLogged) {
-  try {
-      getCurrentlyReading()
-  } catch (error) {
-    console.log("failed get books : " + error);
-  }
-    }
 });
 
 const visibleAdvanced: Ref<boolean> = ref(false);
@@ -50,51 +71,121 @@ const search = (searchterm: string) => {
   }
 }
 
+const eventClass = (type: ReadingEventType) => {
+    if (type === ReadingEventType.FINISHED) {
+      return "is-info";
+    } else if (type === ReadingEventType.DROPPED) {
+      return "is-danger";
+    } else if (
+      type === ReadingEventType.CURRENTLY_READING
+    ) {
+      return "is-primary";
+    } else return "";
+};
+
+if (isLogged.value) {
+  try {
+      getCurrentlyReading()
+      getMyEvents()
+  } catch (error) {
+    console.log("failed get books : " + error);
+  }
+}
+
 </script>
 
 <template>
-<div v-if="isLogged">
-<div class="columns is-centered">
-  <div class="column is-4">
-  <o-field>
-      <o-input placeholder="Search..." type="search" 
-      icon="magnify" icon-clickable 
-      iconPack="mdi"
-      @focus="visibleAdvanced = true"
-      @blur="hideAdvanced"
-      @keyup.enter="search($event.target.value)"></o-input>
-    </o-field>
-    <router-link
+  <div v-if="isLogged">
+    <div class="columns is-centered">
+      <div class="column is-4">
+        <o-field>
+          <o-input
+            placeholder="Search..."
+            type="search" 
+            icon="magnify"
+            icon-clickable 
+            icon-pack="mdi"
+            @focus="visibleAdvanced = true"
+            @blur="hideAdvanced"
+            @keyup.enter="search($event.target.value)"
+          />
+        </o-field>
+        <router-link
           v-if="visibleAdvanced"
-            class="is-family-sans-serif is-size-7"
-            :to="{ name: 'search' }"
-          >Advanced search</router-link>
+          class="is-family-sans-serif is-size-7"
+          :to="{ name: 'search' }"
+        >
+          Advanced search
+        </router-link>
+      </div>
     </div>
+    <div v-if="hasBooks">
+      <h2 class="title has-text-weight-normal typewriter">
+        Currently reading :
+      </h2>
+      <div class="columns is-multiline is-variable is-4 is-centered">
+        <div
+          v-for="book in books"
+          :key="book.id"
+          class="column is-2 is-8-mobile is-offset-2-mobile"
+        >
+          <router-link
+            v-if="book.id != undefined"
+            :to="{ name: 'book-detail', params: { bookId: book.id } }"
+          >
+            <book-card :book="book" />
+          </router-link>
+        </div>
+      </div>
     </div>
-  <div v-if="books.length > 0">
-  <h2 class="title has-text-weight-normal typewriter">Currently reading : </h2>
-  <div class="columns is-multiline is-variable is-4 is-centered">
-      <div class="column is-2 is-8-mobile is-offset-2-mobile" v-for="book in books" v-bind:key="book.id">
-      <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
-      <book-card :book="book"></book-card>
-      </router-link>
+    <!-- logged, no books -->
+    <div v-else>
+      <h2 class="title has-text-weight-normal typewriter">
+        Not currently reading anything
+      </h2>
+      <span class="icon is-large">
+        <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
+      </span>
     </div>
+    <h2
+      v-if="events.length > 0"
+      class="title has-text-weight-normal typewriter pt-4"
+    >
+      recent reading events :
+    </h2>
+    <div
+      v-if="events.length > 0"
+      class="is-flex is-flex-wrap-wrap is-justify-content-center"
+    >
+      <div
+        v-for="event in events"
+        :key="event.id"
+        class="books-grid-item m-1"
+      >
+        <div>
+          <p>
+            <span
+              class="tag mb-1"
+              :class="eventClass(event.eventType)"
+            >{{ event.eventType }}</span>
+          </p>
+          <router-link
+            v-if="event.userBook.id != undefined"
+            :to="{ name: 'book-detail', params: { bookId: event.userBook.id } }"
+          >
+            <book-card :book="event.userBook" />
+          </router-link>
+        </div>
+      </div>
+    </div>
+    <quotes-display />
   </div>
-  </div>
-  <!-- logged, no books -->
+  <!-- not logged -->
   <div v-else>
-    <h2 class="title has-text-weight-normal typewriter">Not currently reading anything </h2>
-    <span class="icon is-large">
-      <i class="mdi mdi-book-open-page-variant-outline mdi-48px"></i>
-    </span>
+    <p class="is-capitalized">
+      Please log in first
+    </p>
   </div>
-</div>
-<!-- not logged -->
-<div v-else>
-  <p class="is-capitalized">Please log in first</p>
-</div>
-
-  
 </template>
 
 <style lang="scss" scoped>

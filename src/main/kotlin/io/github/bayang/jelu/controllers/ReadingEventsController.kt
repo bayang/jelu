@@ -5,6 +5,7 @@ import io.github.bayang.jelu.dao.ReadingEventType
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.service.ReadingEventService
 import mu.KotlinLogging
+import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -18,15 +19,25 @@ private val logger = KotlinLogging.logger {}
 class ReadingEventsController(
     private val repository: ReadingEventService,
     private val properties: JeluProperties
-    ) {
+) {
 
     @GetMapping(path = ["/reading-events"])
-    fun readingEvents(@RequestParam(name = "q", required = false) searchTerm: String?): List<ReadingEventDto> = repository.findAll(searchTerm)
+    fun readingEvents(
+        @RequestParam(name = "type", required = false) searchTerm: ReadingEventType?,
+        @RequestParam(name = "userId", required = false) userId: UUID?,
+        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
+    ): Page<ReadingEventDto> = repository.findAll(searchTerm, userId, page, pageSize)
 
     @GetMapping(path = ["/reading-events/me"])
-    fun myReadingEvents(@RequestParam(name = "type", required = false) searchTerm: ReadingEventType?, principal: Authentication): List<ReadingEventDto> {
+    fun myReadingEvents(
+        @RequestParam(name = "type", required = false) searchTerm: ReadingEventType?,
+        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+        principal: Authentication
+    ): Page<ReadingEventDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findAllByUser((principal.principal as JeluUser).user, searchTerm)
+        return repository.findAllByUser((principal.principal as JeluUser).user, searchTerm, page, pageSize)
     }
 
     @PostMapping(path = ["/reading-events"])

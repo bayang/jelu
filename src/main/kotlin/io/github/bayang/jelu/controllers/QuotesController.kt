@@ -15,11 +15,9 @@ class QuotesController(
 ) {
 
     @GetMapping(path = ["/quotes"])
-    fun quotes(@RequestParam(name = "query", required = false) query: String?): Mono<List<QuoteDto>>
-        = quotesProvider.quotes(query)
-
+    fun quotes(@RequestParam(name = "query", required = false) query: String?): Mono<List<QuoteDto>> =
+        quotesProvider.quotes(query)
 
     @GetMapping(path = ["/quotes/random"])
     fun quotes(): Mono<List<QuoteDto>> = quotesProvider.random()
-
 }

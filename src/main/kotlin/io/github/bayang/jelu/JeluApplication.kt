@@ -10,5 +10,5 @@ import org.springframework.boot.runApplication
 class JeluApplication
 
 fun main(args: Array<String>) {
-	runApplication<JeluApplication>(*args)
+    runApplication<JeluApplication>(*args)
 }

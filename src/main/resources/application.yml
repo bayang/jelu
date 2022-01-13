@@ -19,7 +19,7 @@ spring:
     driver-class-name: org.sqlite.JDBC
   exposed:
     generate-ddl: false
-    show-sql: false
+    show-sql: true
   servlet:
     multipart:
       enabled: true

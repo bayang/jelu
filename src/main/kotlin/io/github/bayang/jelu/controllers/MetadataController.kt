@@ -1,8 +1,8 @@
 package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.config.JeluProperties
-import io.github.bayang.jelu.service.FetchMetadataService
 import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.service.FetchMetadataService
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,9 +19,10 @@ class MetadataController(
 ) {
 
     @GetMapping(path = ["/metadata"])
-    fun fetchMetadata(@RequestParam(name = "isbn", required = false) isbn: String?,
-                      @RequestParam(name = "title", required = false) title: String?,
-                      @RequestParam(name = "authors", required = false) authors: String?): MetadataDto
-    = metadataService.fetchMetadata(isbn, title, authors)
-
+    fun fetchMetadata(
+        @RequestParam(name = "isbn", required = false) isbn: String?,
+        @RequestParam(name = "title", required = false) title: String?,
+        @RequestParam(name = "authors", required = false) authors: String?
+    ): MetadataDto =
+        metadataService.fetchMetadata(isbn, title, authors)
 }

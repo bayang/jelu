@@ -18,7 +18,7 @@ import java.io.ByteArrayInputStream
 import java.io.File
 
 private val logger = KotlinLogging.logger {}
-const val FILE_PREFIX= "meta-import-"
+const val FILE_PREFIX = "meta-import-"
 
 @Service
 class FetchMetadataService(
@@ -34,7 +34,7 @@ class FetchMetadataService(
         }
         var bookFileName: String = FILE_PREFIX
         var commandArray: MutableList<String> = mutableListOf("/usr/bin/fetch-ebook-metadata", "-o", "-d 90")
-        var fileNameComplete = false;
+        var fileNameComplete = false
         if (!isbn.isNullOrBlank()) {
             bookFileName += isbn
             fileNameComplete = true
@@ -76,8 +76,7 @@ class FetchMetadataService(
                 if (!isbn.isNullOrBlank()) {
                     if (validator.isValidISBN13(isbn) && parseOpf.isbn13.isNullOrBlank()) {
                         parseOpf.isbn13 = isbn
-                    }
-                    else if (validator.isValidISBN10(isbn) && parseOpf.isbn10.isNullOrBlank()) {
+                    } else if (validator.isValidISBN10(isbn) && parseOpf.isbn10.isNullOrBlank()) {
                         parseOpf.isbn10 = isbn
                     }
                 }
@@ -112,11 +111,9 @@ class FetchMetadataService(
                 }
             }
             logger.debug { "parsed dto $dto" }
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             logger.error(e) { "failure while parsing opf metadata from calibre" }
-        }
-        finally {
+        } finally {
             root.streamReader.closeCompletely()
         }
         return dto
@@ -170,5 +167,4 @@ class FetchMetadataService(
             logger.debug { "child cursor ${childElementCursor.localName}" }
         }
     }
-
 }

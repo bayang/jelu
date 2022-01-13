@@ -139,8 +139,10 @@ label.label {
 
 @import "bulma/bulma";
 @import "bulma-timeline";
+@import "@creativebulma/bulma-divider";
 @import '@oruga-ui/theme-bulma/dist/scss/bulma';
 @import '@sweetalert2/theme-bulma/bulma.scss';
+@import 'vue3-carousel/dist/carousel.css';
 
 @font-face {
     font-family: 'AnotherTypewriter';
@@ -242,3 +244,50 @@ footer.card-footer span.tag {
     font-size: 0.7em;
   }
 
+  .carousel__slide {
+    padding: 10px;
+    // min-height: 20px;
+    width: 80%;
+    background-color: $jelu_background_accent;
+    color:  $jelu_background_contrast;
+    // font-size: $small-font-size;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .carousel__slide a {
+      color: $link-invert;
+  }
+
+  .carousel__slide a:visited {
+    color: $link;
+}
+
+.carousel__slide a:hover {
+    color: $link-hover;
+}
+
+.carousel__slide p {
+    font-size: $small-font-size;
+} 
+
+  .carousel__prev,
+  .carousel__next {
+    box-sizing: content-box;
+    border: 2px solid $jelu_background_contrast;
+    background-color: $jelu_background_accent;
+  }
+
+  .carousel__icon {
+    color: $jelu_background_contrast;
+  }
+
+  .carousel__pagination-button {
+    background-color: $jelu_background_contrast;
+  }
+
+  .carousel__pagination-button--active {
+    background-color: $jelu_background_accent;
+  }

@@ -41,23 +41,13 @@ class BookRepository(
         query.limit(pageSize.toInt(), page * pageSize)
         val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
         return PageImpl(
-            query.map { resultRow -> Book.wrapRow(resultRow) },
+            Book.wrapRows(query).toList(),
             if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
             else PageRequest.of(0, 20, Sort.unsorted()),
             total
         )
-//        return query.map { resultRow -> Book.wrapRow(resultRow) }
     }
 
-//    fun test(user: User): List<Book> {
-//        val user = User[user.id.value]
-//        val res =  BookTable.leftJoin(UserBookTable, { UserBookTable.book }, { BookTable.id }, additionalConstraint = { UserBookTable.user eq user.id })
-//            .selectAll()
-//            .map { resultRow -> Book.wrapRow(resultRow) }
-//        res.forEach { book: Book -> displayBook(book) }
-//        return res
-//    }
-//
 //    private fun displayBook(book: Book) {
 //        println(book.title)
 //        book.userBooks.forEach { userBook: UserBook -> println(userBook.user.id) }
@@ -99,11 +89,11 @@ class BookRepository(
     fun findAllTags(): SizedIterable<Tag> = Tag.all()
 
     fun findAuthorsByName(name: String): List<Author> {
-        return Author.find{AuthorTable.name like "%$name%" }.toList()
+        return Author.find { AuthorTable.name like "%$name%" }.toList()
     }
 
     fun findTagsByName(name: String): List<Tag> {
-        return Tag.find{TagTable.name like "%$name%" }.toList()
+        return Tag.find { TagTable.name like "%$name%" }.toList()
     }
 
     fun findBookById(bookId: UUID): Book = Book[bookId]
@@ -117,9 +107,9 @@ class BookRepository(
     fun findTagBooksById(tagId: UUID, page: Long, pageSize: Long): Page<Book> {
         val t = Tag[tagId]
         val query = BookTags.join(BookTable, JoinType.LEFT)
-                        .slice(BookTable.columns)
-                        .selectAll()
-                        .andWhere { BookTags.tag eq t.id }
+            .slice(BookTable.columns)
+            .selectAll()
+            .andWhere { BookTags.tag eq t.id }
         val total = query.count()
         query.limit(pageSize.toInt(), page * pageSize)
         val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
@@ -131,7 +121,7 @@ class BookRepository(
         )
     }
 
-    private fun displayRow(resultRow: ResultRow) {
+    public fun displayRow(resultRow: ResultRow) {
         logger.debug { "row $resultRow" }
     }
 
@@ -167,8 +157,7 @@ class BookRepository(
         if (authorsList.isNotEmpty()) {
             if (updated.authors.empty()) {
                 updated.authors = SizedCollection(authorsList)
-            }
-            else {
+            } else {
                 val existing = updated.authors.toMutableList()
                 existing.addAll(authorsList)
                 val merged: SizedCollection<Author> = SizedCollection(existing)
@@ -187,8 +176,7 @@ class BookRepository(
         if (tagsList.isNotEmpty()) {
             if (updated.tags.empty()) {
                 updated.tags = SizedCollection(tagsList)
-            }
-            else {
+            } else {
                 val existing = updated.tags.toMutableList()
                 existing.addAll(tagsList)
                 val merged: SizedCollection<Tag> = SizedCollection(existing)
@@ -221,10 +209,13 @@ class BookRepository(
             update(found.book, fromBookCreateDto(book.book))
         }
         if (book.lastReadingEvent != null) {
-            readingEventRepository.save(found, CreateReadingEventDto(
-                eventType = book.lastReadingEvent,
-                bookId = null
-            ))
+            readingEventRepository.save(
+                found,
+                CreateReadingEventDto(
+                    eventType = book.lastReadingEvent,
+                    bookId = null
+                )
+            )
         }
         return found
     }
@@ -259,26 +250,26 @@ class BookRepository(
                 tagsList.add(save(it))
             }
         }
-            val created = Book.new(UUID.randomUUID()){
-                this.title = book.title
-                val instant: Instant = nowInstant()
-                this.creationDate = instant
-                this.modificationDate = instant
-                this.summary = sanitizeHtml(book.summary)
-                this.isbn10 = book.isbn10
-                this.isbn13 = book.isbn13
-                this.pageCount = book.pageCount
-                this.publishedDate = book.publishedDate
-                this.publisher = book.publisher
-                this.image = book.image
-                this.series = book.series
-                this.numberInSeries = book.numberInSeries
-                this.amazonId = book.amazonId
-                this.goodreadsId = book.goodreadsId
-                this.googleId = book.googleId
-                this.librarythingId = book.librarythingId
-                this.language = book.language
-            }
+        val created = Book.new(UUID.randomUUID()) {
+            this.title = book.title
+            val instant: Instant = nowInstant()
+            this.creationDate = instant
+            this.modificationDate = instant
+            this.summary = sanitizeHtml(book.summary)
+            this.isbn10 = book.isbn10
+            this.isbn13 = book.isbn13
+            this.pageCount = book.pageCount
+            this.publishedDate = book.publishedDate
+            this.publisher = book.publisher
+            this.image = book.image
+            this.series = book.series
+            this.numberInSeries = book.numberInSeries
+            this.amazonId = book.amazonId
+            this.goodreadsId = book.goodreadsId
+            this.googleId = book.googleId
+            this.librarythingId = book.librarythingId
+            this.language = book.language
+        }
 
         created.authors = SizedCollection(authorsList)
         created.tags = SizedCollection(tagsList)
@@ -288,7 +279,7 @@ class BookRepository(
     }
 
     fun save(author: AuthorDto): Author {
-        val created = Author.new{
+        val created = Author.new {
             name = author.name
             image = author.image
             dateOfBirth = author.dateOfBirth
@@ -302,7 +293,7 @@ class BookRepository(
     }
 
     fun save(tag: TagDto): Tag {
-        val created = Tag.new(UUID.randomUUID()){
+        val created = Tag.new(UUID.randomUUID()) {
             name = tag.name
             val instant: Instant = nowInstant()
             creationDate = instant
@@ -313,7 +304,7 @@ class BookRepository(
 
     fun save(book: Book, user: User, createUserBookDto: CreateUserBookDto): UserBook {
         val instant: Instant = nowInstant()
-        return UserBook.new(UUID.randomUUID()){
+        return UserBook.new(UUID.randomUUID()) {
             this.creationDate = instant
             this.modificationDate = instant
             this.user = user
@@ -327,24 +318,59 @@ class BookRepository(
 
     fun findUserBookById(userbookId: UUID): UserBook = UserBook[userbookId]
 
-    fun findUserBookByCriteria(userID: EntityID<UUID>, searchTerm: ReadingEventType?, toRead: Boolean?): List<UserBook> {
-        return UserBook.find {
-            val userFilter: Op<Boolean> = UserBookTable.user eq userID
-            val eventFilter: Op<Boolean> = if (searchTerm != null) {
-                UserBookTable.lastReadingEvent eq searchTerm
-            }
-            else {
-                Op.TRUE
-            }
-            val toReadFilter: Op<Boolean> = if (toRead != null) {
-                UserBookTable.toRead eq toRead
-            }
-            else {
-                Op.TRUE
-            }
-            userFilter and eventFilter and toReadFilter
-        }.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
-            .toList()
+    fun findUserBookByCriteria(userID: EntityID<UUID>,
+                               searchTerm: ReadingEventType?, toRead: Boolean?,
+                               page: Long, pageSize: Long): PageImpl<UserBook> {
+        val query: Query = UserBookTable.selectAll()
+            .andWhere { UserBookTable.user eq userID }
+        searchTerm?.let {
+            query.andWhere { UserBookTable.lastReadingEvent eq searchTerm }
+        }
+        toRead?.let {
+            query.andWhere { UserBookTable.toRead eq toRead }
+        }
+
+//        val query = UserBook.find {
+//            val userFilter: Op<Boolean> = UserBookTable.user eq userID
+//            val eventFilter: Op<Boolean> = if (searchTerm != null) {
+//                UserBookTable.lastReadingEvent eq searchTerm
+//            } else {
+//                Op.TRUE
+//            }
+//            val toReadFilter: Op<Boolean> = if (toRead != null) {
+//                UserBookTable.toRead eq toRead
+//            } else {
+//                Op.TRUE
+//            }
+//            userFilter and eventFilter and toReadFilter
+//        }.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
+        val total = query.count()
+        query.limit(pageSize.toInt(), page * pageSize)
+        query.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
+        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        return PageImpl(
+            UserBook.wrapRows(query).toList(),
+            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
+            else PageRequest.of(0, 20, Sort.unsorted()),
+            total
+        )
+
+
+//        return UserBook.find {
+//            val userFilter: Op<Boolean> = UserBookTable.user eq userID
+//            val eventFilter: Op<Boolean> = if (searchTerm != null) {
+//                UserBookTable.lastReadingEvent eq searchTerm
+//            } else {
+//                Op.TRUE
+//            }
+//            val toReadFilter: Op<Boolean> = if (toRead != null) {
+//                UserBookTable.toRead eq toRead
+//            } else {
+//                Op.TRUE
+//            }
+//            userFilter and eventFilter and toReadFilter
+//        }.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
+//            .toList()
     }
 
     fun findUserBookByUserAndBook(user: User, book: Book): UserBook? {

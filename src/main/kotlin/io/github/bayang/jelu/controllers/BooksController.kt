@@ -24,14 +24,16 @@ class BooksController(
 ) {
 
     @GetMapping(path = ["/books"])
-    fun books(@RequestParam(name = "title", required = false) title: String?,
-              @RequestParam(name = "isbn10", required = false) isbn10: String?,
-              @RequestParam(name = "isbn13", required = false) isbn13: String?,
-              @RequestParam(name = "series", required = false) series: String?,
-              @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-              @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
-              principal: Authentication): Page<BookWithUserBookDto>
-    = repository.findAll(title, isbn10, isbn13, series, page, pageSize, (principal.principal as JeluUser).user)
+    fun books(
+        @RequestParam(name = "title", required = false) title: String?,
+        @RequestParam(name = "isbn10", required = false) isbn10: String?,
+        @RequestParam(name = "isbn13", required = false) isbn13: String?,
+        @RequestParam(name = "series", required = false) series: String?,
+        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+        principal: Authentication
+    ): Page<BookWithUserBookDto> =
+        repository.findAll(title, isbn10, isbn13, series, page, pageSize, (principal.principal as JeluUser).user)
 
     @GetMapping(path = ["/books/{id}"])
     fun bookById(@PathVariable("id") bookId: UUID) = repository.findBookById(bookId)
@@ -52,8 +54,10 @@ class BooksController(
     }
 
     @DeleteMapping(path = ["/books/{bookId}/tags/{tagId}"])
-    fun deleteTagFromBook(@PathVariable("bookId") bookId: UUID,
-                          @PathVariable("tagId") tagId: UUID): ResponseEntity<Unit> {
+    fun deleteTagFromBook(
+        @PathVariable("bookId") bookId: UUID,
+        @PathVariable("tagId") tagId: UUID
+    ): ResponseEntity<Unit> {
         repository.deleteTagFromBook(bookId, tagId)
         return ResponseEntity.noContent().build()
     }
@@ -65,8 +69,10 @@ class BooksController(
     }
 
     @DeleteMapping(path = ["/books/{bookId}/authors/{authorId}"])
-    fun deleteAuthorFromBook(@PathVariable("bookId") bookId: UUID,
-                          @PathVariable("authorId") authorId: UUID): ResponseEntity<Unit> {
+    fun deleteAuthorFromBook(
+        @PathVariable("bookId") bookId: UUID,
+        @PathVariable("authorId") authorId: UUID
+    ): ResponseEntity<Unit> {
         repository.deleteAuthorFromBook(bookId, authorId)
         return ResponseEntity.noContent().build()
     }
@@ -78,27 +84,33 @@ class BooksController(
     }
 
     @GetMapping(path = ["/userbooks"])
-    fun userbooks(principal: Authentication,
-                  @RequestParam(name = "lastEventType", required = false) searchTerm: ReadingEventType?,
-                  @RequestParam(name = "toRead", required = false) toRead: Boolean?
-    ): List<UserBookLightDto> {
+    fun userbooks(
+        principal: Authentication,
+        @RequestParam(name = "lastEventType", required = false) searchTerm: ReadingEventType?,
+        @RequestParam(name = "toRead", required = false) toRead: Boolean?,
+        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
+    ): Page<UserBookLightDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findUserBookByCriteria((principal.principal as JeluUser).user.id, searchTerm, toRead)
+        return repository.findUserBookByCriteria((principal.principal as JeluUser).user.id, searchTerm, toRead, page, pageSize)
     }
 
     @GetMapping(path = ["/userbooks/me"])
-    fun myBooks(principal: Authentication,
-                @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-                @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
+    fun myBooks(
+        principal: Authentication,
+        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
     ): Page<UserBookLightDto> {
         assertIsJeluUser(principal.principal)
         return repository.findAllBooksByUser((principal.principal as JeluUser).user, page, pageSize)
     }
 
     @GetMapping(path = ["/authors"])
-    fun authors(@RequestParam(name = "name", required = false) name: String?,
-                @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-                @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long): Page<AuthorDto> {
+    fun authors(
+        @RequestParam(name = "name", required = false) name: String?,
+        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
+    ): Page<AuthorDto> {
         return repository.findAllAuthors(name, page, pageSize)
     }
 
@@ -112,17 +124,21 @@ class BooksController(
     }
 
     @GetMapping(path = ["/tags/{id}"])
-    fun tagById(@PathVariable("id") tagId: UUID,
-                principal: Authentication): TagDto {
+    fun tagById(
+        @PathVariable("id") tagId: UUID,
+        principal: Authentication
+    ): TagDto {
         assertIsJeluUser(principal.principal)
         return repository.findTagById(tagId, (principal.principal as JeluUser).user)
     }
 
     @GetMapping(path = ["/tags/{id}/books"])
-    fun tagBooksById(@PathVariable("id") tagId: UUID,
-                @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-                @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
-                principal: Authentication): Page<BookWithUserBookDto> {
+    fun tagBooksById(
+        @PathVariable("id") tagId: UUID,
+        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+        principal: Authentication
+    ): Page<BookWithUserBookDto> {
         assertIsJeluUser(principal.principal)
         return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, page, pageSize)
     }
@@ -131,11 +147,13 @@ class BooksController(
     fun authorById(@PathVariable("id") authorId: UUID) = repository.findAuthorsById(authorId)
 
     @GetMapping(path = ["/authors/{id}/books"])
-    fun authorBooksById(@PathVariable("id") authorId: UUID,
-                        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-                        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
-                        principal: Authentication): Page<BookWithUserBookDto>
-    = repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, page, pageSize)
+    fun authorBooksById(
+        @PathVariable("id") authorId: UUID,
+        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
+        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+        principal: Authentication
+    ): Page<BookWithUserBookDto> =
+        repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, page, pageSize)
 
     @PostMapping(path = ["/books"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun saveBook(@RequestBody @Valid book: BookCreateDto): BookDto {
@@ -143,20 +161,27 @@ class BooksController(
     }
 
     @PostMapping(path = ["/books"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun saveBook(@RequestPart("book") @Valid book: BookCreateDto,
-                 @RequestPart("file", required = false) file: MultipartFile?): BookDto {
+    fun saveBook(
+        @RequestPart("book") @Valid book: BookCreateDto,
+        @RequestPart("file", required = false) file: MultipartFile?
+    ): BookDto {
         return repository.save(book, file)
     }
 
     @PostMapping(path = ["/userbooks"], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun saveUserBook(@RequestBody @Valid book: CreateUserBookDto,
-                     principal: Authentication): UserBookLightDto {
+    fun saveUserBook(
+        @RequestBody @Valid book: CreateUserBookDto,
+        principal: Authentication
+    ): UserBookLightDto {
         return repository.save(book, (principal.principal as JeluUser).user, null)
     }
 
     @PostMapping(path = ["/userbooks"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun saveUserBook(@RequestPart("book") @Valid book: CreateUserBookDto, principal: Authentication,
-                 @RequestPart("file", required = false) file: MultipartFile?): UserBookLightDto {
+    fun saveUserBook(
+        @RequestPart("book") @Valid book: CreateUserBookDto,
+        principal: Authentication,
+        @RequestPart("file", required = false) file: MultipartFile?
+    ): UserBookLightDto {
         return repository.save(book, (principal.principal as JeluUser).user, file)
     }
 
@@ -167,22 +192,24 @@ class BooksController(
 
     @PutMapping(path = ["/books/{id}"])
     fun updateBook(@PathVariable("id") bookId: UUID, @RequestBody @Valid book: BookUpdateDto): BookDto {
-        return repository.update(bookId, book);
+        return repository.update(bookId, book)
     }
     @PutMapping(path = ["/authors/{id}"])
     fun updateAuthor(@PathVariable("id") authorId: UUID, @RequestBody @Valid author: AuthorUpdateDto): AuthorDto {
-        return repository.updateAuthor(authorId, author);
+        return repository.updateAuthor(authorId, author)
     }
 
     @PutMapping(path = ["/userbooks/{id}"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun updateUserBook(@PathVariable("id") userBookId: UUID, @RequestBody @Valid book: UserBookUpdateDto): UserBookLightDto {
-        return repository.update(userBookId, book);
+        return repository.update(userBookId, book)
     }
 
     @PutMapping(path = ["/userbooks/{id}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateUserBook(@PathVariable("id") userBookId: UUID, @RequestPart("book")  @Valid book: UserBookUpdateDto,
-                       @RequestPart("file", required = false) file: MultipartFile?): UserBookLightDto {
-        return repository.update(userBookId, book, file);
+    fun updateUserBook(
+        @PathVariable("id") userBookId: UUID,
+        @RequestPart("book") @Valid book: UserBookUpdateDto,
+        @RequestPart("file", required = false) file: MultipartFile?
+    ): UserBookLightDto {
+        return repository.update(userBookId, book, file)
     }
 }
-

@@ -1,4 +1,4 @@
-interface Page<T> {
+export interface Page<T> {
     content: T[],
     pageable: Pageable,
     last: boolean,
@@ -12,7 +12,7 @@ interface Page<T> {
     empty: boolean
 }
 
-interface Pageable {
+export interface Pageable {
     sort: Sort,
     pageNumber: number,
     pageSize: number,
@@ -21,7 +21,7 @@ interface Pageable {
     unpaged: boolean,
 }
 
-interface Sort {
+export interface Sort {
     sorted: boolean,
     empty: boolean,
     unsorted: boolean,

@@ -1,6 +1,5 @@
 package io.github.bayang.jelu.dao
 
-import io.github.bayang.jelu.dao.Author.Companion.backReferencedOn
 import io.github.bayang.jelu.dao.BookTable.nullable
 import io.github.bayang.jelu.dto.UserBookDto
 import io.github.bayang.jelu.dto.UserBookLightDto
@@ -16,7 +15,7 @@ import org.jetbrains.exposed.sql.javatime.timestamp
 import java.time.Instant
 import java.util.*
 
-object UserBookTable: UUIDTable("user_book") {
+object UserBookTable : UUIDTable("user_book") {
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
     val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
@@ -29,7 +28,7 @@ object UserBookTable: UUIDTable("user_book") {
     val percentRead: Column<Int?> = integer(name = "percent_read").nullable()
 }
 
-class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
+class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<UserBook>(UserBookTable)
     var creationDate by UserBookTable.creationDate
     var modificationDate by UserBookTable.modificationDate
@@ -72,7 +71,7 @@ class UserBook(id: EntityID<UUID>): UUIDEntity(id) {
             percentRead = this.percentRead,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
         )
-    fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto=
+    fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto =
         UserBookWithoutEventsDto(
             id = this.id.value,
             creationDate = this.creationDate,

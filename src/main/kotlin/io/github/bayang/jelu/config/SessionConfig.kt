@@ -15,18 +15,18 @@ import org.springframework.session.web.http.HttpSessionIdResolver
 @Configuration
 class SessionConfig {
 
-  @Bean
-  fun httpSessionIdResolver(): HttpSessionIdResolver {
-    return HeaderHttpSessionIdResolver.xAuthToken()
-  }
-
-  @Bean
-  fun sessionRegistry(sessionRepository: FindByIndexNameSessionRepository<*>): SessionRegistry =
-    SpringSessionBackedSessionRegistry(sessionRepository)
-
-  @Bean
-  fun customizeSessionRepository(properties: JeluProperties) =
-    SessionRepositoryCustomizer<CaffeineIndexedSessionRepository>() {
-      it.setDefaultMaxInactiveInterval(properties.session.duration)
+    @Bean
+    fun httpSessionIdResolver(): HttpSessionIdResolver {
+        return HeaderHttpSessionIdResolver.xAuthToken()
     }
+
+    @Bean
+    fun sessionRegistry(sessionRepository: FindByIndexNameSessionRepository<*>): SessionRegistry =
+        SpringSessionBackedSessionRegistry(sessionRepository)
+
+    @Bean
+    fun customizeSessionRepository(properties: JeluProperties) =
+        SessionRepositoryCustomizer<CaffeineIndexedSessionRepository>() {
+            it.setDefaultMaxInactiveInterval(properties.session.duration)
+        }
 }

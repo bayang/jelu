@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.util.*
 
-object AuthorTable: UUIDTable("author") {
+object AuthorTable : UUIDTable("author") {
     val name: Column<String> = varchar("name", 1000)
     val biography: Column<String?> = varchar("biography", 5000).nullable()
     val dateOfBirth: Column<String?> = varchar("date_of_birth", 100).nullable()
@@ -21,7 +21,7 @@ object AuthorTable: UUIDTable("author") {
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
 }
-class Author(id: EntityID<UUID>): UUIDEntity(id) {
+class Author(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Author>(AuthorTable)
     var name by AuthorTable.name
     var creationDate by AuthorTable.creationDate

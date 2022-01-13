@@ -13,7 +13,7 @@ data class JeluProperties(val database: Database, val files: Files, val session:
 
     data class Database(
         @get:NotBlank var path: String
-        )
+    )
 
     data class Files(
         @get:NotBlank var dir: String

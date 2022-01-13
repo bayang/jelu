@@ -48,7 +48,7 @@ const store = createStore<State>({
       },
       async getUser({commit}) {
         try {
-          let auth: UserAuthentication = await dataService.getUser()
+          const auth: UserAuthentication = await dataService.getUser()
           console.log('store auth')
           console.log(auth)
           commit('login', true)
@@ -61,7 +61,7 @@ const store = createStore<State>({
       },
       async authenticate({commit, state}, payload) {
         try {
-          let user: User = await dataService.authenticateUser(payload.user, payload.password)
+          const user: User = await dataService.authenticateUser(payload.user, payload.password)
           console.log('store authenticate')
           console.log(user)
           commit('login', true)
@@ -73,15 +73,11 @@ const store = createStore<State>({
         }
       }, 
       async createInitialUser({dispatch, commit, state}, payload) {
-        try {
-          let user: User = await dataService.createUser(payload.user, payload.password)
-          console.log('created')
-          console.log(user)
-          await dispatch('authenticate', {"user" : payload.user, "password" : payload.password})
-          await dispatch('setupStatus')
-        } catch (error) {
-          throw error
-        }
+        const user: User = await dataService.createUser(payload.user, payload.password)
+        console.log('created')
+        console.log(user)
+        await dispatch('authenticate', {"user" : payload.user, "password" : payload.password})
+        await dispatch('setupStatus')
       },
       logout({dispatch, commit, state}) {
         commit('login', false)

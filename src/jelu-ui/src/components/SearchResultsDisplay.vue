@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref, watch } from 'vue'
+import { computed, Ref, ref, watch } from 'vue'
 import { useProgrammatic } from "@oruga-ui/oruga-next";
-import { useStore } from 'vuex'
 import { BookWithUserBook, UserBook } from '../model/Book'
-import { key } from '../store'
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
 import { StringUtils } from '../utils/StringUtils'
 import { ObjectUtils } from '../utils/ObjectUtils';
 import EditBookModal from "./EditBookModal.vue"
 
-const store = useStore(key)
 const {oruga} = useProgrammatic();
 const props = defineProps<{ query: string|null }>()
 
@@ -19,8 +16,8 @@ const total: Ref<number> = ref(0)
 const currentPageNumber: Ref<number> = ref(1)
 const perPage: Ref<number> = ref(24)
 
-const edit: Ref<Boolean> = ref(false)
-const advancedMode: Ref<Boolean> = ref(false)
+const edit: Ref<boolean> = ref(false)
+const advancedMode: Ref<boolean> = ref(false)
 const selectedField: Ref<string|null> = ref(null)
 const queryTerm: Ref<string> = ref("")
 const query: Ref<Map<string, string>> = ref(new Map())
@@ -73,8 +70,8 @@ watch(advancedMode, (newVal, oldVal) => {
     if (query.value.has('title')) {
       let title = query.value.get('title')
       query.value.clear()
-      if (StringUtils.isNotBlank(title)) {
-        queryTerm.value = title!
+      if (title != null && StringUtils.isNotBlank(title)) {
+        queryTerm.value = title
       }
     }
   }
@@ -101,14 +98,14 @@ const toggleEdit = (book: UserBook) => {
         });
 }
 
-function modalClosed(args: any) {
+function modalClosed() {
   console.log("modal closed")
   search()
 }
 
 const addToQuery = () => {
-  if (StringUtils.isNotBlank(selectedField.value) && StringUtils.isNotBlank(queryTerm.value)) {
-    query.value.set(selectedField.value!, queryTerm.value)
+  if (selectedField.value != null && StringUtils.isNotBlank(selectedField.value) && StringUtils.isNotBlank(queryTerm.value)) {
+    query.value.set(selectedField.value, queryTerm.value)
   }
 }
 
@@ -117,92 +114,145 @@ const removeFromQuery = (field: string) => {
 }
 
 console.log('props query ' + props.query)
-let queryTitle = props.query
-if (StringUtils.isNotBlank(queryTitle)) {
-  queryTerm.value = queryTitle!
+
+if (props.query != null && StringUtils.isNotBlank(props.query)) {
+  queryTerm.value = props.query?.slice()
   search()
 }
 
 </script>
 
 <template>
-
-<div class="columns is-centered">
-  <div class="column is-4 field">
-    <o-checkbox v-model="advancedMode">Advanced search</o-checkbox>
+  <div class="columns is-centered">
+    <div class="column is-4 field">
+      <o-checkbox v-model="advancedMode">
+        Advanced search
+      </o-checkbox>
+    </div>
   </div>
-</div>
-<div v-if="!advancedMode" class="columns is-centered is-multiline">
-  <div class="column is-4">
-  <o-field>
-      <o-input placeholder="Search..." type="search" 
-      icon="magnify" icon-clickable 
-      iconPack="mdi"
-      v-model="queryTerm"
-      @keyup.enter="search"></o-input>
-    </o-field>
-    </div>
-</div>
-  <div v-else class="columns is-centered is-multiline">
-      <div class="column is-8 is-offset-4-desktop">
-  <o-field group-multiline class="tablet-up">
-      <o-select
-      placeholder="Fields"
-      v-model="selectedField">
-        <option value="title">Title</option>
-        <option value="isbn10">Isbn10</option>
-        <option value="isbn13">Isbn13</option>
-        <option value="series">Series</option>
-      </o-select>
-      <o-input type="text" v-model="queryTerm"></o-input>
-      <o-button @click="addToQuery" variant="warning" iconPack="mdi" iconRight="magnify-plus-outline"
-      v-tooltip="'Add to query params'"></o-button>
-        <o-button @click="search" variant="success" iconPack="mdi" iconRight="magnify"
-        v-tooltip="'Search selected query params'"></o-button>
+  <div
+    v-if="!advancedMode"
+    class="columns is-centered is-multiline"
+  >
+    <div class="column is-4">
+      <o-field>
+        <o-input
+          v-model="queryTerm"
+          placeholder="Search..." 
+          type="search"
+          icon="magnify" 
+          icon-clickable
+          icon-pack="mdi"
+          @keyup.enter="search"
+        />
       </o-field>
-      </div>
-      <div class="column is-full is-offset-8-desktop">
-    <p class="tags has-addons">
-      <div v-for="[field, term] in query">
-      <span class="tag is-success">{{field}}</span>
-      <span class="tag is-white">{{term}}
-        <button @click="removeFromQuery(field)" class="delete is-small"></button>
-      </span>
-      </div>
-      </p>
     </div>
+  </div>
+  <div
+    v-else
+    class="columns is-centered is-multiline"
+  >
+    <div class="column is-8 is-offset-4-desktop">
+      <o-field
+        group-multiline
+        class="tablet-up"
+      >
+        <o-select
+          v-model="selectedField"
+          placeholder="Fields"
+        >
+          <option value="title">
+            Title
+          </option>
+          <option value="isbn10">
+            Isbn10
+          </option>
+          <option value="isbn13">
+            Isbn13
+          </option>
+          <option value="series">
+            Series
+          </option>
+        </o-select>
+        <o-input
+          v-model="queryTerm"
+          type="text"
+        />
+        <o-button
+          v-tooltip="'Add to query params'"
+          variant="warning"
+          icon-pack="mdi"
+          icon-right="magnify-plus-outline"
+          @click="addToQuery"
+        />
+        <o-button
+          v-tooltip="'Search selected query params'"
+          variant="success"
+          icon-pack="mdi"
+          icon-right="magnify"
+          @click="search"
+        />
+      </o-field>
     </div>
+    <div class="column is-full is-offset-8-desktop">
+      <div class="tags has-addons">
+        <div
+          v-for="[field, term] in query"
+          :key="field"
+        >
+          <span class="tag is-success">{{ field }}</span>
+          <span class="tag is-white">{{ term }}
+            <button
+              class="delete is-small"
+              @click="removeFromQuery(field)"
+            />
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
-    <div class="books-grid-item my-2" v-for="book in convertedBooks" v-bind:key="book.id">
-    <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
-        <book-card :book="book"></book-card>
+    <div
+      v-for="book in convertedBooks"
+      :key="book.id"
+      class="books-grid-item my-2"
+    >
+      <router-link
+        v-if="book.id != undefined"
+        :to="{ name: 'book-detail', params: { bookId: book.id } }"
+      >
+        <book-card :book="book" />
       </router-link>
       <div v-else>
-        <book-card @dblclick="toggleEdit(book)" :book="book"
-        v-tooltip="'This book is not yet in your books, double click to add it'">
-        <template #icon>
-          <o-tooltip label="not in your books" variant="danger">
-          <span class="icon has-text-danger">
-            <i class="mdi mdi-plus-circle mdi-18px"></i>
-          </span>
-          </o-tooltip>
-        </template>
+        <book-card
+          v-tooltip="'This book is not yet in your books, double click to add it'"
+          :book="book"
+          @dblclick="toggleEdit(book)"
+        >
+          <template #icon>
+            <o-tooltip
+              label="not in your books"
+              variant="danger"
+            >
+              <span class="icon has-text-danger">
+                <i class="mdi mdi-plus-circle mdi-18px" />
+              </span>
+            </o-tooltip>
+          </template>
         </book-card>
       </div>
     </div>
   </div>
-    <o-pagination
-      :total="total"
-      v-model:current="currentPageNumber"
-      order='centered'
-      :per-page="perPage"
-      aria-next-label="Next page"
-      aria-previous-label="Previous page"
-      aria-page-label="Page"
-      aria-current-label="Current page"
-    >
-    </o-pagination>
-  
+  <o-pagination
+    v-model:current="currentPageNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    aria-next-label="Next page"
+    aria-previous-label="Previous page"
+    aria-page-label="Page"
+    aria-current-label="Current page"
+  />
 </template>
 
 <style lang="scss" scoped>

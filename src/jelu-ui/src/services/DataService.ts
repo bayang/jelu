@@ -3,10 +3,11 @@ import { UserBook, Book, BookWithUserBook } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
-import { JeluError } from "../model/JeluError";
-import { ReadingEventType } from "../model/ReadingEvent";
-import { Tag, TagWithBooks } from "../model/Tag";
+import ReadingEvent, { ReadingEventType, ReadingEventWithUserBook } from "../model/ReadingEvent";
+import { Tag } from "../model/Tag";
 import { Metadata } from "../model/Metadata";
+import { Page } from "../model/Page";
+import { Quote } from "../model/Quote";
 
 
 class DataService {
@@ -15,7 +16,7 @@ class DataService {
   
   private token?: string = ''
 
-  private TOKEN_KEY: string = 'jelu-token'
+  private TOKEN_KEY = 'jelu-token'
 
   private API_BOOK = '/books';
 
@@ -28,6 +29,10 @@ class DataService {
   private API_LOGOUT = '/logout';
 
   private API_METADATA = '/metadata';
+
+  private API_QUOTES = '/quotes';
+
+  private API_READING_EVENTS = '/reading-events';
   
   constructor() {
     this.apiClient = axios.create({
@@ -40,7 +45,7 @@ class DataService {
     });
     
     this.apiClient.interceptors.request.use((config) => {
-      let tok = this.getToken()
+      const tok = this.getToken()
       if (tok != null) {
         console.log('interceptor token ' + tok)
         if (!config.headers) {
@@ -70,7 +75,7 @@ class DataService {
     if (this.token != null && this.token.trim().length > 0) {
       console.log('get tok from property')
       localStorage.setItem(this.TOKEN_KEY, this.token)
-      return this.token!
+      return this.token
     }
     else if (localStorage.getItem(this.TOKEN_KEY) != null) {
       console.log('get tok from storage')
@@ -147,7 +152,7 @@ class DataService {
       console.log(response.data.token)
       if (response.data.token != null && response.data.token.length > 0) {
         this.token = response.data.token
-        localStorage.setItem("jelu-token", this.token!)
+        localStorage.setItem("jelu-token", this.token)
       }
       return response.data.user
 
@@ -162,7 +167,6 @@ class DataService {
   }
 
   fetchToken = async (login?: string, password?: string) => {
-    let config = {}
     try {
       let response;
       if (login != null && password != null 
@@ -193,7 +197,7 @@ class DataService {
 
   setupStatus = async () => {
     try {
-      let response = await this.apiClient.get('/setup/status')
+      const response = await this.apiClient.get('/setup/status')
       console.log(`setup resp `)
       console.log(response.data)
       return response.data.isInitialSetup
@@ -208,7 +212,7 @@ class DataService {
 
   createUser = async (login: string, password: string) => {
     try {
-      let resp = await this.apiClient.post<User>('/users', {
+      const resp = await this.apiClient.post<User>('/users', {
           'login' : login,
           'password' : password, 
           'isAdmin' : true
@@ -234,7 +238,7 @@ class DataService {
 
   saveBook = async (book: Book) => {
     try {
-      let resp = await this.apiClient.post<Book>(this.API_BOOK, book)
+      const resp = await this.apiClient.post<Book>(this.API_BOOK, book)
       return resp.data
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -248,14 +252,14 @@ class DataService {
 
   saveBookImage = async (book: Book, file: File|null, onUploadProgress:any) => {
     try {
-      let formData = new FormData()
+      const formData = new FormData()
       if (file != null) {
         formData.append('file', file);
       }
       formData.append('book', new Blob([JSON.stringify(book)], {
         type: "application/json"
     }));
-      let resp = await this.apiClient.post<Book>(this.API_BOOK, formData,
+      const resp = await this.apiClient.post<Book>(this.API_BOOK, formData,
        { 
         headers:{
           'Content-Type':'multipart/form-data',
@@ -275,14 +279,14 @@ class DataService {
 
   saveUserBookImage = async (userBook: UserBook, file: File|null, onUploadProgress:any) => {
     try {
-      let formData = new FormData()
+      const formData = new FormData()
       if (file != null) {
         formData.append('file', file);
       }
       formData.append('book', new Blob([JSON.stringify(userBook)], {
         type: "application/json"
     }));
-      let resp = await this.apiClient.post<UserBook>(this.API_USERBOOK, formData,
+      const resp = await this.apiClient.post<UserBook>(this.API_USERBOOK, formData,
        { 
         headers:{
           'Content-Type':'multipart/form-data',
@@ -302,14 +306,14 @@ class DataService {
 
   updateUserBookImage = async (userBook: UserBook, file: File|null, onUploadProgress:any) => {
     try {
-      let formData = new FormData()
+      const formData = new FormData()
       if (file != null) {
         formData.append('file', file);
       }
       formData.append('book', new Blob([JSON.stringify(userBook)], {
         type: "application/json"
     }));
-      let resp = await this.apiClient.put<UserBook>(`${this.API_USERBOOK}/${userBook.id}`, formData,
+      const resp = await this.apiClient.put<UserBook>(`${this.API_USERBOOK}/${userBook.id}`, formData,
        { 
         headers:{
           'Content-Type':'multipart/form-data',
@@ -327,12 +331,15 @@ class DataService {
     }
   }
 
-  findUserBookByCriteria = async (eventType?: ReadingEventType|null, toRead?: boolean|null) => {
+  findUserBookByCriteria = async (eventType?: ReadingEventType|null, 
+    toRead?: boolean|null, page?: number, pageSize?: number) => {
     try {
-      const response = await this.apiClient.get<Array<UserBook>>(`${this.API_USERBOOK}`, {
+      const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}`, {
         params: {
           lastEventType: eventType,
-          toRead: toRead
+          toRead: toRead,
+          page: page,
+          pageSize: pageSize
         }
       });
       console.log("called userbook by eventtype")
@@ -522,7 +529,57 @@ class DataService {
     }
   }
 
+  quotes = async (query?:string) => {
+    try {
+      const response = await this.apiClient.get<Array<Quote>>(`${this.API_QUOTES}`, {
+        params: {
+          query: query,
+        }
+      });
+      console.log("called quotes")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error quotes " + (error as AxiosError).code)
+      throw new Error("error quotes " + error)
+    }
+  }
 
+  randomQuotes = async () => {
+    try {
+      const response = await this.apiClient.get<Array<Quote>>(`${this.API_QUOTES}/random`);
+      console.log("called random quotes")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error random quotes " + (error as AxiosError).code)
+      throw new Error("error random quotes " + error)
+    }
+  }
+
+  myReadingEvents = async () => {
+    try {
+      const response = await this.apiClient.get<Page<ReadingEventWithUserBook>>(`${this.API_READING_EVENTS}/me`);
+      console.log("called my events")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error my events " + (error as AxiosError).code)
+      throw new Error("error my events " + error)
+    }
+  }
 
 }
 

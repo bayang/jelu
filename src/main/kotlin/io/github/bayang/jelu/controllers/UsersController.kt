@@ -4,13 +4,9 @@ import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.service.UserService
 import mu.KotlinLogging
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
-import java.security.Principal
 import java.util.*
 import javax.servlet.http.HttpSession
 import javax.validation.Valid
@@ -22,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 class UsersController(
     private val repository: UserService,
     private val properties: JeluProperties
-    ) {
+) {
 
     @GetMapping(path = ["/token"])
     fun getToken(session: HttpSession) = mapOf<String, String>("token" to session.id)
@@ -38,12 +34,12 @@ class UsersController(
                     logger.debug { "dummy user $principal" }
                     return AuthenticationDto(
                         UserDto(
-                        login = principal.name,
-                        isAdmin = true,
-                        id = null,
-                        password = "****",
-                        modificationDate = null,
-                        creationDate = null
+                            login = principal.name,
+                            isAdmin = true,
+                            id = null,
+                            password = "****",
+                            modificationDate = null,
+                            creationDate = null
                         ),
                         token = session.id
                     )
@@ -53,12 +49,12 @@ class UsersController(
                     logger.info { "session ${session.id}" }
                     return AuthenticationDto(
                         UserDto(
-                        login = principal.name,
-                        isAdmin = (principal.principal as JeluUser).user.isAdmin,
-                        id = (principal.principal as JeluUser).user.id.value,
-                        password = "****",
-                        modificationDate = null,
-                        creationDate = null
+                            login = principal.name,
+                            isAdmin = (principal.principal as JeluUser).user.isAdmin,
+                            id = (principal.principal as JeluUser).user.id.value,
+                            password = "****",
+                            modificationDate = null,
+                            creationDate = null
                         ),
                         token = session.id
                     )
@@ -67,28 +63,28 @@ class UsersController(
                     logger.debug { "other principal $principal" }
                     return AuthenticationDto(
                         UserDto(
-                        login = principal.name,
-                        isAdmin = principal.authorities.contains(SimpleGrantedAuthority(ROLE_ADMIN)),
-                        id = null,
-                        password = "****",
-                        modificationDate = null,
-                        creationDate = null
+                            login = principal.name,
+                            isAdmin = principal.authorities.contains(SimpleGrantedAuthority(ROLE_ADMIN)),
+                            id = null,
+                            password = "****",
+                            modificationDate = null,
+                            creationDate = null
                         ),
                         token = session.id
                     )
                 }
             }
-        }
-        else {
+        } else {
             logger.debug { "no principal" }
             return AuthenticationDto(
                 UserDto(
-                login = principal.name,
-                isAdmin = (principal.principal as JeluUser).user.isAdmin,
-                id= null,
-                password = "****",
-                modificationDate = null,
-                creationDate = null),
+                    login = principal.name,
+                    isAdmin = (principal.principal as JeluUser).user.isAdmin,
+                    id = null,
+                    password = "****",
+                    modificationDate = null,
+                    creationDate = null
+                ),
                 token = session.id
             )
         }
@@ -104,5 +100,4 @@ class UsersController(
     fun saveUser(@RequestBody @Valid user: CreateUserDto): UserDto {
         return repository.save(user)
     }
-
 }

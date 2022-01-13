@@ -1,11 +1,9 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.CreateUserDto
-import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.SizedIterable
-import org.jetbrains.exposed.sql.lowerCase
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
@@ -31,7 +29,7 @@ class UserRepository {
     fun findUserById(id: UUID): User = User[id]
 
     fun save(user: CreateUserDto): User {
-        val created = User.new{
+        val created = User.new {
             login = user.login
             val instant: Instant = nowInstant()
             creationDate = instant

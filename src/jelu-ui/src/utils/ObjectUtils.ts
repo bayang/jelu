@@ -18,7 +18,7 @@ export class ObjectUtils {
           : source as T;
   }
 
-  public static toast = (oruga: any, variant: string, message: string, duration: number = 2000) => {
+  public static toast = (oruga: any, variant: string, message: string, duration = 2000) => {
     oruga.notification.open({
       message: message,
       position: "top",
@@ -28,9 +28,9 @@ export class ObjectUtils {
   };
 
   public static toUserBook = (book: BookWithUserBook):UserBook => {
-    let {userBooks, ...rest} = book
+    const {userBooks, ...rest} = book
       if (userBooks && userBooks.length > 0) {
-        let converted =  {
+        const converted =  {
           book: rest,
           ...userBooks[0]
         } as UserBook
@@ -39,7 +39,7 @@ export class ObjectUtils {
         return converted
       }
       else {
-        let converted =  {
+        const converted =  {
           book: rest
         } as UserBook
         console.log('after')

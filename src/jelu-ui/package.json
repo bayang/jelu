@@ -8,6 +8,7 @@
     "tsc": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@creativebulma/bulma-divider": "^1.1.0",
     "@mdi/font": "^6.4.95",
     "@oruga-ui/oruga-next": "^0.4.8",
     "@oruga-ui/theme-bulma": "^0.1.5",
@@ -20,10 +21,15 @@
     "v-tooltip": "^4.0.0-beta.8",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",
+    "vue3-carousel": "^0.1.35",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "^5.9.0",
     "@vitejs/plugin-vue": "^1.9.3",
+    "eslint": "^8.6.0",
+    "eslint-plugin-vue": "^8.2.0",
     "sass": "^1.43.4",
     "typescript": "^4.4.3",
     "vite": "^2.6.4",

@@ -19,12 +19,12 @@ data class ReadingEventWithoutUserBookDto(
 )
 data class CreateReadingEventWithUserInfoDto(
     val eventType: ReadingEventType,
-    val bookId:UUID,
+    val bookId: UUID,
     val userId: UUID?
 )
 data class CreateReadingEventDto(
     val eventType: ReadingEventType,
-    val bookId:UUID?
+    val bookId: UUID?
 )
 data class UpdateReadingEventDto(
     val eventType: ReadingEventType,

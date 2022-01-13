@@ -3,10 +3,6 @@ import { ReadingEventType } from "../model/ReadingEvent";
 export class StringUtils {
 
     public static isNotBlank(param: string|null|undefined): boolean {
-        // if (param !== undefined && param !== null && param.trim().length > 0) {
-        //     return true;
-        // }
-        // return false;
         return !this.isBlank(param)
     }
 

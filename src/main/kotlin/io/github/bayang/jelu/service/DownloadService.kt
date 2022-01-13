@@ -19,7 +19,7 @@ class DownloadService {
     fun download(sourceUrl: String, title: String, bookId: String, targetFolder: String): String {
         try {
             val url: URL = URL(sourceUrl)
-            logger.debug{ "path ${url.path} file ${url.file}" }
+            logger.debug { "path ${url.path} file ${url.file}" }
             var readableByteChannel: ReadableByteChannel = Channels.newChannel(url.openStream())
             val filename: String = imageName(title, bookId, FilenameUtils.getExtension(url.path))
             val targetFile: File = File(targetFolder, filename)
@@ -27,9 +27,8 @@ class DownloadService {
             val channel: FileChannel = fileOutputStream.channel
             channel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE)
             return filename
-        }
-        catch (e:Exception) {
-            logger.error ("failed to download file from $sourceUrl", e)
+        } catch (e: Exception) {
+            logger.error("failed to download file from $sourceUrl", e)
             throw e
         }
     }

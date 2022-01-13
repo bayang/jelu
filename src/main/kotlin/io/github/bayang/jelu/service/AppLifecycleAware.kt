@@ -22,5 +22,4 @@ class AppLifecycleAware(
             logger.debug { "Attempt to create non existing assets dir succeeded : $created" }
         }
     }
-
 }

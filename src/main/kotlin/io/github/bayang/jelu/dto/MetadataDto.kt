@@ -1,7 +1,6 @@
 package io.github.bayang.jelu.dto
 
-data class MetadataDto
-    (
+data class MetadataDto(
     var title: String? = null,
     var isbn10: String? = null,
     var isbn13: String? = null,

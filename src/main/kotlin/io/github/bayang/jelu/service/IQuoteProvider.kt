@@ -8,5 +8,4 @@ interface IQuoteProvider {
     fun quotes(query: String?): Mono<List<QuoteDto>>
 
     fun random(): Mono<List<QuoteDto>>
-
 }

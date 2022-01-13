@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, reactive, Ref, ref } from "vue";
-import { key } from "../store";
-import { useStore } from "vuex";
 import { UserBook } from "../model/Book";
 import dataService from "../services/DataService";
 import { StringUtils } from "../utils/StringUtils";
@@ -14,10 +12,10 @@ import { ObjectUtils } from "../utils/ObjectUtils";
 import IsbnVerify from '@saekitominaga/isbn-verify';
 import Swal from 'sweetalert2';
 
-const {oruga} = useProgrammatic();
+const { oruga } = useProgrammatic();
 
 const datepicker = ref(null);
-const publishedDate:Ref<Date|null> = ref(null)
+const publishedDate: Ref<Date | null> = ref(null)
 const form = reactive({
   title: "",
   summary: "",
@@ -33,9 +31,9 @@ const form = reactive({
   toRead: null,
   percentRead: null,
   googleId: "",
-  amazonId : "",
+  amazonId: "",
   goodreadsId: "",
-  librarythingId : "",
+  librarythingId: "",
   language: ""
 });
 const eventType = ref(null);
@@ -45,25 +43,25 @@ const isSwitchedCustom = ref("Upload from the web");
 const uploadPercentage = ref(0);
 const errorMessage = ref("");
 const ownedDisplay = computed(() => {
-    if (form.owned) {
-      return "Owned"
-    }
-    return ""
-  })
+  if (form.owned) {
+    return "Owned"
+  }
+  return ""
+})
 const toReadDisplay = computed(() => {
-    if (form.toRead) {
-      return "Book will be added to to-read list"
-    }
-    return ""
-  })
+  if (form.toRead) {
+    return "Book will be added to to-read list"
+  }
+  return ""
+})
 let filteredAuthors: Ref<Array<Author>> = ref([]);
 let authors: Ref<Array<Author>> = ref([]);
 
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let tags: Ref<Array<Tag>> = ref([]);
 
-const showModal: Ref<Boolean> = ref(false)
-const metadata: Ref<Metadata|null> = ref(null)
+const showModal: Ref<boolean> = ref(false)
+const metadata: Ref<Metadata | null> = ref(null)
 // let hasImage: Ref<boolean> = ref(metadata?.value?.image != null)
 let hasImage = computed(() => {
   return StringUtils.isNotBlank(metadata.value?.image)
@@ -102,17 +100,17 @@ const importBook = async () => {
       })
     }
     console.log(`save book ${saveBook}`)
-    if (! saveBook) {
+    if (!saveBook) {
       return
     }
-      let userBook: UserBook = fillBook(form, publishedDate.value)
-      authors.value.forEach((a) => userBook.book.authors?.push(a));
-      tags.value.forEach((t) => userBook.book.tags?.push(t));
+    let userBook: UserBook = fillBook(form, publishedDate.value)
+    authors.value.forEach((a) => userBook.book.authors?.push(a));
+    tags.value.forEach((t) => userBook.book.tags?.push(t));
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
     }
-    else if (!deleteImage.value 
-      && metadata.value?.image != null 
+    else if (!deleteImage.value
+      && metadata.value?.image != null
       && StringUtils.isNotBlank(metadata.value.image)) {
       userBook.book.image = metadata.value.image
     }
@@ -146,19 +144,19 @@ const importBook = async () => {
   }
 };
 
-const fillBook = (formdata: any, publishedDate : Date|null): UserBook => {
+const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
   let userBook: UserBook = {
-    book : {
-      title : formdata.title,
+    book: {
+      title: formdata.title,
       isbn10: formdata.isbn10,
       isbn13: formdata.isbn13,
       summary: formdata.summary,
       publisher: formdata.publisher,
-      image : formdata.image,
-      pageCount : formdata.pageCount,
-      publishedDate : publishedDate?.toISOString(),
-      series : formdata.series,
-      numberInSeries : formdata.numberInSeries,
+      image: formdata.image,
+      pageCount: formdata.pageCount,
+      publishedDate: publishedDate?.toISOString(),
+      series: formdata.series,
+      numberInSeries: formdata.numberInSeries,
       googleId: formdata.googleId,
       amazonId: formdata.amazonId,
       goodreadsId: formdata.goodreadsId,
@@ -167,7 +165,7 @@ const fillBook = (formdata: any, publishedDate : Date|null): UserBook => {
       authors: [],
       tags: []
     },
-    owned : formdata.owned,
+    owned: formdata.owned,
     personalNotes: formdata.personalNotes,
     toRead: formdata.toRead,
     percentRead: formdata.percentRead
@@ -225,12 +223,12 @@ function getFilteredTags(text: string) {
   dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data)
 }
 
-function beforeAdd(item: Author|string) {
+function beforeAdd(item: Author | string) {
   let shouldAdd = true
   if (item instanceof Object) {
     authors.value.forEach(author => {
       console.log(`author ${author.name}`)
-      if(author.name === item.name) {
+      if (author.name === item.name) {
         console.log(`author ${author.name} item ${item.name}`)
         shouldAdd = false;
       }
@@ -239,21 +237,21 @@ function beforeAdd(item: Author|string) {
   else {
     authors.value.forEach(author => {
       console.log(`author ${author.name}`)
-      if(author.name === item) {
+      if (author.name === item) {
         console.log(`author ${author.name} item ${item}`)
         shouldAdd = false;
       }
     });
   }
-    return shouldAdd
+  return shouldAdd
 }
 
-function beforeAddTag(item: Tag|string) {
+function beforeAddTag(item: Tag | string) {
   let shouldAdd = true
   if (item instanceof Object) {
     tags.value.forEach(tag => {
       console.log(`tag ${tag.name}`)
-      if(tag.name === item.name) {
+      if (tag.name === item.name) {
         console.log(`tag ${tag.name} item ${item.name}`)
         shouldAdd = false;
       }
@@ -262,64 +260,63 @@ function beforeAddTag(item: Tag|string) {
   else {
     tags.value.forEach(tag => {
       console.log(`tag ${tag.name}`)
-      if(tag.name === item) {
+      if (tag.name === item) {
         console.log(`tag ${tag.name} item ${item}`)
         shouldAdd = false;
       }
     });
   }
-    return shouldAdd
+  return shouldAdd
 }
 
-function createAuthor(item: Author|string) {
+function createAuthor(item: Author | string) {
   if (item instanceof Object) {
     return item
   }
   return {
-    "name" : item
+    "name": item
   }
 }
 
-function createTag(item: Tag|string) {
+function createTag(item: Tag | string) {
   if (item instanceof Object) {
     return item
   }
   return {
-    "name" : item
+    "name": item
   }
 }
 
 const toggleModal = () => {
-  showModal.value = ! showModal.value
+  showModal.value = !showModal.value
   oruga.modal.open({
     parent: this,
-          component: AutoImportFormModalVue,
-          trapFocus: true,
-          active: true,
-          canCancel: ['x', 'button', 'outside'],
-          scroll: 'keep',
-          events: {
-            metadataReceived : (modalMetadata: Metadata) => {
-              console.log("received metadata")
-              console.log(modalMetadata)
-              metadata.value = modalMetadata
-              mergeMetadata()
-            }
-          },
-          onClose: modalClosed
-        });
+    component: AutoImportFormModalVue,
+    trapFocus: true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    events: {
+      metadataReceived: (modalMetadata: Metadata) => {
+        console.log("received metadata")
+        console.log(modalMetadata)
+        metadata.value = modalMetadata
+        mergeMetadata()
+      }
+    },
+    onClose: modalClosed
+  });
 }
 
-function modalClosed(args: any) {
+function modalClosed() {
   console.log("modal closed")
-  // getBook()
 }
 
 const mergeMetadata = () => {
   for (let key in metadata.value) {
     if (key in form) {
       let castKey = key as (keyof typeof metadata.value & keyof typeof form);
-        (form[castKey] as any) = metadata.value[castKey];
+      (form[castKey] as any) = metadata.value[castKey];
     }
   }
   if (metadata.value?.authors != null && metadata.value.authors.length > 0) {
@@ -346,7 +343,7 @@ const isbn13LabelVariant = ref("")
 const validateIsbn10 = (isbn: string) => {
   if (StringUtils.isNotBlank(isbn)) {
     const isbnVerify = new IsbnVerify(isbn);
-    if (! isbnVerify.isIsbn10()) {
+    if (!isbnVerify.isIsbn10()) {
       isbn10ValidationMessage.value = "Invalid isbn10"
       isbn10LabelVariant.value = "danger"
     }
@@ -364,7 +361,7 @@ const validateIsbn10 = (isbn: string) => {
 const validateIsbn13 = (isbn: string) => {
   if (StringUtils.isNotBlank(isbn)) {
     const isbnVerify = new IsbnVerify(isbn);
-    if (! isbnVerify.isIsbn13()) {
+    if (!isbnVerify.isIsbn13()) {
       isbn13ValidationMessage.value = "Invalid isbn13"
       isbn13LabelVariant.value = "danger"
     }
@@ -405,286 +402,406 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
   <section>
     <div class="columns is-multiline is-centered">
       <div class="column is-centered is-offset-one-fifth is-three-fifths">
-        <h1 class="title has-text-weight-normal typewriter">Add book</h1>
+        <h1 class="title has-text-weight-normal typewriter">
+          Add book
+        </h1>
       </div>
       <div class="column is-one-fifth">
-        <o-tooltip label="Try to auto fill some fields from the web, given a isbn or a title" multiline>
-        <button @click="toggleModal" class="button is-success is-light">Auto fill</button>
+        <o-tooltip
+          label="Try to auto fill some fields from the web, given a isbn or a title"
+          multiline
+        >
+          <button
+            class="button is-success is-light"
+            @click="toggleModal"
+          >
+            Auto fill
+          </button>
         </o-tooltip>
       </div>
-    <div class="column is-two-thirds">
-<div class="field">
-      <o-field horizontal label="Title">
-        <o-input v-model="form.title"></o-input>
-      </o-field>
-    </div>
+      <div class="column is-two-thirds">
+        <div class="field">
+          <o-field
+            horizontal
+            label="Title"
+          >
+            <o-input v-model="form.title" />
+          </o-field>
+        </div>
 
-    <div class="field">
-      <o-field horizontal label="Authors">
-        <o-inputitems
-          v-model="authors"
-          :data="filteredAuthors"
-          :autocomplete="true"
-          :allow-new="true"
-          :allow-duplicates="false"
-          :open-on-focus="true"
-          :beforeAdding="beforeAdd"
-          :createItem="createAuthor"
-          iconPack="mdi"
-          icon="account-plus"
-          field="name"
-          placeholder="Add an author"
-          @typing="getFilteredAuthors"
-        >
-        </o-inputitems>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Tags">
-        <o-inputitems
-          v-model="tags"
-          :data="filteredTags"
-          :autocomplete="true"
-          :allow-new="true"
-          :allow-duplicates="false"
-          :open-on-focus="true"
-          :beforeAdding="beforeAddTag"
-          :createItem="createTag"
-          iconPack="mdi"
-          icon="account-plus"
-          field="name"
-          placeholder="Add a tag"
-          @typing="getFilteredTags"
-        >
-        </o-inputitems>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Summary">
-        <o-input
-          maxlength="200"
-          type="textarea"
-          v-model="form.summary"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="ISBN10"
-      :message="isbn10ValidationMessage"
-      :variant="isbn10LabelVariant">
-        <o-input
-          name="isbn10"
-          v-model="form.isbn10"
-          placeholder="isbn10"
-          @blur="validateIsbn10($event.target.value)"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="ISBN13"
-      :message="isbn13ValidationMessage"
-      :variant="isbn13LabelVariant">
-        <o-input
-          name="isbn13"
-          v-model="form.isbn13"
-          placeholder="isbn13"
-          @blur="validateIsbn13($event.target.value)"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Identifiers">
-        <o-input
-          name="googleId"
-          v-model="form.googleId"
-          placeholder="googleId"
-        ></o-input>
-        <o-input
-          name="goodreadsId"
-          v-model="form.goodreadsId"
-          placeholder="goodreadsId"
-        ></o-input>
-        <o-input
-          name="amazonId"
-          v-model="form.amazonId"
-          placeholder="amazonId"
-        ></o-input>
-        <o-input
-          name="librarythingId"
-          v-model="form.librarythingId"
-          placeholder="librarythingId"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Publisher">
-        <o-input v-model="form.publisher"></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Published date">
-        <o-datepicker
-          v-model="publishedDate"
-          :show-week-number="false"
-          :locale="undefined"
-          placeholder="Click to select..."
-          icon="calendar"
-          ref="datepicker"
-          iconRight="close"
-          iconRightClickable="true"
-          @icon-right-click="clearDatePicker"
-          trap-focus
-        >
-        </o-datepicker>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Page count">
-        <o-input v-model="form.pageCount" type="number" min="0"></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Language">
-        <o-input v-model="form.language" type="text"></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Series">
-        <o-input v-model="form.series"></o-input>
-        <o-input v-model="form.numberInSeries" type="number" min="0" step="0.1"></o-input>
-      </o-field>
-    </div>
-    <div class="block">
-      <o-field horizontal label="Status : ">
-        <o-radio v-model="eventType" name="type" native-value="FINISHED">
-          Finished
-        </o-radio>
-        <o-radio
-          v-model="eventType"
-          name="type"
-          native-value="CURRENTLY_READING"
-        >
-          Currently reading
-        </o-radio>
-        <o-radio v-model="eventType" name="type" native-value="DROPPED">
-          Dropped
-        </o-radio>
-        <o-radio v-model="eventType" name="type" native-value="NONE">
-          None
-        </o-radio>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Personal notes">
-        <o-input
-          maxlength="200"
-          type="textarea"
-          v-model="form.personalNotes"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Owned">
-      <o-checkbox v-model="form.owned">
-        {{ ownedDisplay }}
-      </o-checkbox>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="To read ?">
-      <o-checkbox v-model="form.toRead">
-        {{ toReadDisplay }}
-      </o-checkbox>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Percent read">
-      <o-slider v-model="form.percentRead" :min="0" :max="100"></o-slider>
-    </o-field>
-    </div>
-    <div v-if="hasImage">
-  <o-field horizontal>
-    <template v-slot:label>
-        Actual cover :
-        <o-tooltip v-if="!deleteImage" label="Click bin to remove current cover and upload another one" position="right">
-          <span class="icon">
-          <i class="mdi mdi-information-outline"></i> </span>
-        </o-tooltip>
-          <o-tooltip v-if="deleteImage" label="Press refresh to restore cover" position="right">
-            <span class="icon">
-          <i class="mdi mdi-information-outline"></i> </span>
-        </o-tooltip>
-      </template>
-  <figure class="small-cover">
-          <img
-            :src="'/files/' + metadata?.image"
-            :class="deleteImage ? 'altered' : ''"
-            alt="cover image"
-            
-          />
-          <!-- <button v-if="!deleteImage" @click="toggleRemoveImage" class="delete is-large overlay-button"></button> -->
-          <span v-if="!deleteImage" @click="toggleRemoveImage" class="icon overlay-button">
-          <i class="mdi mdi-delete"></i> </span>  
-          <span v-if="deleteImage" @click="toggleRemoveImage" class="icon overlay-button">
-          <i class="mdi mdi-autorenew"></i> </span>
-        </figure>
-  </o-field>
-</div>
-    <div v-if="!hasImage || deleteImage">
-    <o-field horizontal label="Upload book cover">
-      <o-switch
-        v-model="isSwitchedCustom"
-        true-value="Upload from file"
-        false-value="Upload from the web"
-        :leftLabel="true"
-      >
-        {{ isSwitchedCustom }}
-      </o-switch>
-    </o-field>
-    <o-field
-      v-if="isSwitchedCustom == 'Upload from the web'"
-      horizontal
-      label="Enter image adress"
-    >
-      <o-input
-        v-model="imageUrl"
-        type="url"
-        pattern="https?://.*"
-        clearable="true"
-        icon-right-clickable
-        @icon-right-click="clearImageField"
-        title="Url must start with http or https"
-        placeholder="Url must start with http or https"
-      >
-      </o-input>
-    </o-field>
-    <o-field
-      v-else
-      horizontal
-      label="Choose file"
-      class="file is-primary has-name"
-    >
-      <input type="file" accept="image/*" @change="handleFileUpload($event)" />
-      <br />
-      <progress max="100" :value.prop="uploadPercentage"></progress>
-      <br />
-    </o-field>
-    </div>
+        <div class="field">
+          <o-field 
+            horizontal 
+            label="Authors"
+          >
+            <o-inputitems
+              v-model="authors"
+              :data="filteredAuthors"
+              :autocomplete="true"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="beforeAdd"
+              :create-item="createAuthor"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              placeholder="Add an author"
+              @typing="getFilteredAuthors"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Tags"
+          >
+            <o-inputitems
+              v-model="tags"
+              :data="filteredTags"
+              :autocomplete="true"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="beforeAddTag"
+              :create-item="createTag"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              placeholder="Add a tag"
+              @typing="getFilteredTags"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Summary"
+          >
+            <o-input
+              v-model="form.summary"
+              maxlength="200"
+              type="textarea"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="ISBN10"
+            :message="isbn10ValidationMessage"
+            :variant="isbn10LabelVariant"
+          >
+            <o-input
+              v-model="form.isbn10"
+              name="isbn10"
+              placeholder="isbn10"
+              @blur="validateIsbn10($event.target.value)"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="ISBN13"
+            :message="isbn13ValidationMessage"
+            :variant="isbn13LabelVariant"
+          >
+            <o-input
+              v-model="form.isbn13"
+              name="isbn13"
+              placeholder="isbn13"
+              @blur="validateIsbn13($event.target.value)"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Identifiers"
+          >
+            <o-input
+              v-model="form.googleId"
+              name="googleId"
+              placeholder="googleId"
+            />
+            <o-input
+              v-model="form.goodreadsId"
+              name="goodreadsId"
+              placeholder="goodreadsId"
+            />
+            <o-input
+              v-model="form.amazonId"
+              name="amazonId"
+              placeholder="amazonId"
+            />
+            <o-input
+              v-model="form.librarythingId"
+              name="librarythingId"
+              placeholder="librarythingId"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Publisher"
+          >
+            <o-input v-model="form.publisher" />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Published date"
+          >
+            <o-datepicker
+              ref="datepicker"
+              v-model="publishedDate"
+              :show-week-number="false"
+              :locale="undefined"
+              placeholder="Click to select..."
+              icon="calendar"
+              icon-right="close"
+              icon-right-clickable="true"
+              trap-focus
+              @icon-right-click="clearDatePicker"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Page count"
+          >
+            <o-input
+              v-model="form.pageCount"
+              type="number"
+              min="0"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Language"
+          >
+            <o-input
+              v-model="form.language"
+              type="text"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Series"
+          >
+            <o-input v-model="form.series" />
+            <o-input
+              v-model="form.numberInSeries"
+              type="number"
+              min="0"
+              step="0.1"
+            />
+          </o-field>
+        </div>
+        <div class="block">
+          <o-field
+            horizontal
+            label="Status : "
+          >
+            <o-radio
+              v-model="eventType"
+              name="type"
+              native-value="FINISHED"
+            >
+              Finished
+            </o-radio>
+            <o-radio
+              v-model="eventType"
+              name="type"
+              native-value="CURRENTLY_READING"
+            >
+              Currently reading
+            </o-radio>
+            <o-radio
+              v-model="eventType"
+              name="type"
+              native-value="DROPPED"
+            >
+              Dropped
+            </o-radio>
+            <o-radio
+              v-model="eventType"
+              name="type"
+              native-value="NONE"
+            >
+              None
+            </o-radio>
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Personal notes"
+          >
+            <o-input
+              v-model="form.personalNotes"
+              maxlength="200"
+              type="textarea"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Owned"
+          >
+            <o-checkbox v-model="form.owned">
+              {{ ownedDisplay }}
+            </o-checkbox>
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="To read ?"
+          >
+            <o-checkbox v-model="form.toRead">
+              {{ toReadDisplay }}
+            </o-checkbox>
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Percent read"
+          >
+            <o-slider
+              v-model="form.percentRead"
+              :min="0"
+              :max="100"
+            />
+          </o-field>
+        </div>
+        <div v-if="hasImage">
+          <o-field horizontal>
+            <template #label>
+              Actual cover :
+              <o-tooltip
+                v-if="!deleteImage"
+                label="Click bin to remove current cover and upload another one"
+                position="right"
+              >
+                <span class="icon">
+                  <i class="mdi mdi-information-outline" />
+                </span>
+              </o-tooltip>
+              <o-tooltip
+                v-if="deleteImage"
+                label="Press refresh to restore cover"
+                position="right"
+              >
+                <span class="icon">
+                  <i class="mdi mdi-information-outline" />
+                </span>
+              </o-tooltip>
+            </template>
+            <figure class="small-cover">
+              <img
+                :src="'/files/' + metadata?.image"
+                :class="deleteImage ? 'altered' : ''"
+                alt="cover image"
+              >
+              <!-- <button v-if="!deleteImage" @click="toggleRemoveImage" class="delete is-large overlay-button"></button> -->
+              <span
+                v-if="!deleteImage"
+                class="icon overlay-button"
+                @click="toggleRemoveImage"
+              >
+                <i class="mdi mdi-delete" />
+              </span>
+              <span
+                v-if="deleteImage"
+                class="icon overlay-button"
+                @click="toggleRemoveImage"
+              >
+                <i class="mdi mdi-autorenew" />
+              </span>
+            </figure>
+          </o-field>
+        </div>
+        <div v-if="!hasImage || deleteImage">
+          <o-field
+            horizontal
+            label="Upload book cover"
+          >
+            <o-switch
+              v-model="isSwitchedCustom"
+              true-value="Upload from file"
+              false-value="Upload from the web"
+              :left-label="true"
+            >
+              {{ isSwitchedCustom }}
+            </o-switch>
+          </o-field>
+          <o-field
+            v-if="isSwitchedCustom == 'Upload from the web'"
+            horizontal
+            label="Enter image adress"
+          >
+            <o-input
+              v-model="imageUrl"
+              type="url"
+              pattern="https?://.*"
+              clearable="true"
+              icon-right-clickable
+              title="Url must start with http or https"
+              placeholder="Url must start with http or https"
+              @icon-right-click="clearImageField"
+            />
+          </o-field>
+          <o-field
+            v-else
+            horizontal
+            label="Choose file"
+            class="file is-primary has-name"
+          >
+            <input
+              type="file"
+              accept="image/*"
+              @change="handleFileUpload($event)"
+            >
+            <br>
+            <progress
+              max="100"
+              :value.prop="uploadPercentage"
+            />
+            <br>
+          </o-field>
+        </div>
 
-    <div class="field">
-      <p class="control">
-        <button @click="importBook" class="button is-success">
-          Import book
-        </button>
-      </p>
-      <p v-if="errorMessage" class="has-text-danger">{{ errorMessage }}</p>
+        <div class="field">
+          <p class="control">
+            <button
+              class="button is-success"
+              @click="importBook"
+            >
+              Import book
+            </button>
+          </p>
+          <p
+            v-if="errorMessage"
+            class="has-text-danger"
+          >
+            {{ errorMessage }}
+          </p>
+        </div>
+      </div>
     </div>
-    </div>
-    </div>
-
   </section>
 </template>
 
 <style lang="scss">
-
 </style>

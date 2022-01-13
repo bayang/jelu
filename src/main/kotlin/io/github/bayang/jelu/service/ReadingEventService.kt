@@ -6,6 +6,7 @@ import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.ReadingEventDto
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
+import org.springframework.data.domain.Page
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -14,7 +15,8 @@ import java.util.*
 class ReadingEventService(private val readingEventRepository: ReadingEventRepository) {
 
     @Transactional
-    fun findAll(searchTerm: String?) = readingEventRepository.findAll(searchTerm).map { it.toReadingEventDto() }
+    fun findAll(searchTerm: ReadingEventType?, userId: UUID?, page: Long = 0, pageSize: Long = 20) =
+        readingEventRepository.findAll(searchTerm, userId, page, pageSize).map { it.toReadingEventDto() }
 
     @Transactional
     fun save(createReadingEventDto: CreateReadingEventDto, user: User): ReadingEventDto {
@@ -22,18 +24,15 @@ class ReadingEventService(private val readingEventRepository: ReadingEventReposi
     }
 
     @Transactional
-    fun findAllByUser(userID: UUID): List<ReadingEventDto> = readingEventRepository.findAllByUser(userID).map { it.toReadingEventDto() }
+    fun findAllByUser(user: User, searchTerm: ReadingEventType?, page: Long, pageSize: Long): Page<ReadingEventDto>
+    = readingEventRepository.findAllByUser(user.id.value, searchTerm, page, pageSize).map { it.toReadingEventDto() }
 
     @Transactional
-    fun findAllByUser(user: User, searchTerm: ReadingEventType?): List<ReadingEventDto> = readingEventRepository.findAllByUser(user.id.value, searchTerm).map { it.toReadingEventDto() }
-
-    @Transactional
-    fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEventDto
-    = readingEventRepository.updateReadingEvent(readingEventId, updateReadingEventDto).toReadingEventDto()
+    fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEventDto =
+        readingEventRepository.updateReadingEvent(readingEventId, updateReadingEventDto).toReadingEventDto()
 
     @Transactional
     fun deleteReadingEventById(eventId: UUID) {
         readingEventRepository.deleteReadingEventById(eventId)
     }
-
 }

@@ -7,18 +7,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 
 @EnableWebSecurity
-class SecurityConfig: WebSecurityConfigurerAdapter() {
+class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http
-            .logout { it -> it.logoutUrl("/api/logout")
-                                .invalidateHttpSession(true)
+            .logout { it ->
+                it.logoutUrl("/api/logout")
+                    .invalidateHttpSession(true)
             }
-            .csrf{ it.disable() }
+            .csrf { it.disable() }
             .cors().disable()
             .authorizeRequests {
                 it.antMatchers(
-                    "/api/token","/api/setup/status"
+                    "/api/token", "/api/setup/status"
                 ).permitAll()
                 it.mvcMatchers(HttpMethod.POST, "/api/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
                 it.antMatchers(
@@ -32,7 +33,5 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-
     }
-
 }

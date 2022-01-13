@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.util.*
 
-object UserTable: UUIDTable("user") {
+object UserTable : UUIDTable("user") {
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
     val login: Column<String> = varchar("login", 50)
@@ -17,7 +17,7 @@ object UserTable: UUIDTable("user") {
     val isAdmin: Column<Boolean> = bool("is_admin")
 }
 
-class User(id: EntityID<UUID>): UUIDEntity(id) {
+class User(id: EntityID<UUID>) : UUIDEntity(id) {
     fun toUserDto(): UserDto = UserDto(
         id = this.id.value,
         creationDate = this.creationDate,

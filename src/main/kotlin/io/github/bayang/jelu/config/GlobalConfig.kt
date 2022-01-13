@@ -10,5 +10,4 @@ class GlobalConfig {
 
     @Bean("passwordEncoder")
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
-
 }

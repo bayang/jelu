@@ -1,5 +1,5 @@
 import {Author} from "./Author";
-import ReadingEvent, { ReadingEventType } from "./ReadingEvent";
+import { ReadingEvent, ReadingEventType } from "./ReadingEvent";
 import { Tag } from "./Tag";
 
 export interface Book {

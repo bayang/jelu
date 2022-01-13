@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref, watch } from 'vue'
+import { computed, Ref, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { UserBook } from '../model/Book'
 import { useStore } from 'vuex'
@@ -10,7 +10,7 @@ import { ObjectUtils } from '../utils/ObjectUtils'
 import EditBookModal from "./EditBookModal.vue"
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import dayjs from 'dayjs'
-import ReadingEvent, { ReadingEventType } from '../model/ReadingEvent'
+import { ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
 
 const props = defineProps<{ bookId: string }>()
 
@@ -24,7 +24,7 @@ const isAdmin = computed(() => {
 })
 
 const book : Ref<UserBook|null> = ref(null)
-const edit: Ref<Boolean> = ref(false)
+const edit: Ref<boolean> = ref(false)
 
 const getBook = async () => {
   try {
@@ -38,7 +38,15 @@ watch(() => props.bookId, (newValue, oldValue) => {
   console.log('The new bookId is: ' + props.bookId)
 })
 
-const sortedEvents = computed(() => book.value?.readingEvents?.sort((a, b) => dayjs(a.creationDate).isAfter(dayjs(b.creationDate)) ? -1 : 1))
+const sortedEvents = computed(() => {
+  if (book.value && book.value.readingEvents) {
+    return [...book.value.readingEvents].sort((a, b) => dayjs(a.creationDate).isAfter(dayjs(b.creationDate)) ? -1 : 1)
+  }
+  else {
+    return []
+  }
+  }
+  )
 
 const hasExternalLink = computed(() => book.value?.book.amazonId != null 
                                         || book.value?.book.goodreadsId != null
@@ -52,7 +60,7 @@ const format = (dateString: string|null|undefined) => {
   return ''
 }
 
-function modalClosed(args: any) {
+function modalClosed() {
   console.log("modal closed")
   getBook()
 }
@@ -116,12 +124,16 @@ const deleteBook = async () => {
   console.log(`delete for user only ${deleteForUserOnly}`)
   let promise
   if (deleteForUserOnly) {
-    promise = dataService.deleteUserBook(book.value?.id!)
+    if (book.value?.id) {
+      promise = dataService.deleteUserBook(book.value?.id)
+    }
   }
   else {
-    promise = dataService.deleteBook(book.value?.book!.id!)
+    if (book.value?.book?.id) {
+      promise = dataService.deleteBook(book.value?.book?.id)
+    }
   }
-  promise.then(res => {
+  promise?.then(res => {
     ObjectUtils.toast(oruga, "success", `Book was deleted`, 4000);
     router.push({name: 'home'})
   })
@@ -141,8 +153,8 @@ const eventClass = (event: ReadingEvent) => {
     event.eventType === ReadingEventType.CURRENTLY_READING
   ) {
     return "is-success";
-  } else return "";
-  return "";
+  } 
+  else return "";
 };
 
 const iconClass = (event: ReadingEvent) => {
@@ -154,8 +166,8 @@ const iconClass = (event: ReadingEvent) => {
     event.eventType === ReadingEventType.CURRENTLY_READING
   ) {
     return "mdi-book-open-page-variant";
-  } else return "";
-  return "";
+  } 
+  else return "";
 };
 
 getBook()
@@ -165,96 +177,248 @@ getBook()
 <template>
   <div class="columns is-multiline box">
     <div class="column is-centered is-four-fifths">
-<h3 class="subtitle is-3 is-capitalized has-text-weight-normal typewriter">{{book?.book?.title}}</h3>
+      <h3 class="subtitle is-3 is-capitalized has-text-weight-normal typewriter">
+        {{ book?.book?.title }}
+      </h3>
     </div>
-    <div v-if="book != null" class="column is-one-fifth">
-<button @click="toggleEdit" class="button is-primary is-light mr-2">
-  <span class="icon">
-      <i class="mdi mdi-pencil"></i>
-    </span>
-  <span>Edit</span>
-  </button>
-  <button @click="deleteBook" class="button is-danger is-light">
-  <span class="icon">
-      <i class="mdi mdi-delete"></i>
-    </span>
-  <span>Delete</span>
-  </button>
+    <div
+      v-if="book != null"
+      class="column is-one-fifth"
+    >
+      <button
+        class="button is-primary is-light mr-2"
+        @click="toggleEdit"
+      >
+        <span class="icon">
+          <i class="mdi mdi-pencil" />
+        </span>
+        <span>Edit</span>
+      </button>
+      <button
+        class="button is-danger is-light"
+        @click="deleteBook"
+      >
+        <span class="icon">
+          <i class="mdi mdi-delete" />
+        </span>
+        <span>Delete</span>
+      </button>
     </div>
     <div class="column is-one-fifth is-offset-one-fifth">
       <figure class="image is-3by4">
-          <img
-            v-if="book?.book?.image"
-            :src="'/files/' + book.book.image"
-            alt="cover image"
-          />
-          <img
-            v-else
-            src="../assets/placeholder_asset.png"
-            alt="cover placeholder"
-          />
-        </figure>
+        <img
+          v-if="book?.book?.image"
+          :src="'/files/' + book.book.image"
+          alt="cover image"
+        >
+        <img
+          v-else
+          src="../assets/placeholder_asset.png"
+          alt="cover placeholder"
+        >
+      </figure>
     </div>
     <div class="column is-three-fifths content">
-      <p v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0" class="has-text-left"><span class="has-text-weight-semibold">Authors : </span></p>
-      <ul v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0" class="has-text-left block">
-        <li v-for="author in book?.book?.authors" v-bind:key="author.id">{{author.name}}</li>
+      <p
+        v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
+        class="has-text-left"
+      >
+        <span class="has-text-weight-semibold">Authors : </span>
+      </p>
+      <ul
+        v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
+        class="has-text-left block"
+      >
+        <li
+          v-for="author in book?.book?.authors"
+          :key="author.id"
+        >
+          {{ author.name }}
+        </li>
       </ul>
-      <p v-if="book?.book?.publisher" class="has-text-left block"><span class="has-text-weight-semibold">Publisher : </span>{{book.book.publisher}}</p>
-      <p v-if="book?.book?.isbn10" class="has-text-left block"><span class="has-text-weight-semibold">ISBN10 : </span>{{book.book.isbn10}}</p>
-      <p v-if="book?.book?.isbn13" class="has-text-left block"><span class="has-text-weight-semibold">ISBN13 : </span>{{book.book.isbn13}}</p>
-      <p v-if="book?.book?.pageCount" class="has-text-left block"><span class="has-text-weight-semibold">Pages : </span>{{book.book.pageCount}}</p>
-      <p v-if="book?.book?.publishedDate" class="has-text-left block"><span class="has-text-weight-semibold">Published date : </span>{{format(book.book.publishedDate)}}</p>
-      <p v-if="book?.book?.series" class="has-text-left block"><span class="has-text-weight-semibold">Series : </span>{{book.book.series}}</p>
-      <p v-if="book?.book?.numberInSeries" class="has-text-left block"><span class="has-text-weight-semibold">Number in series : </span>{{book.book.numberInSeries}}</p>
-      <p v-if="book?.book?.language" class="has-text-left block"><span class="has-text-weight-semibold">Language : </span>{{book.book.language}}</p>
-      <div v-if="book?.owned || book?.toRead" class="field has-text-left">
-      <o-checkbox v-if="book?.owned" v-model="book.owned" disabled>Owned</o-checkbox>
-      <o-checkbox v-if="book?.toRead" v-model="book.toRead" disabled>To Read</o-checkbox>
+      <p
+        v-if="book?.book?.publisher"
+        class="has-text-left block"
+      >
+        <span class="has-text-weight-semibold">Publisher : </span>{{ book.book.publisher }}
+      </p>
+      <p
+        v-if="book?.book?.isbn10"
+        class="has-text-left block"
+      >
+        <span class="has-text-weight-semibold">ISBN10 : </span>{{ book.book.isbn10 }}
+      </p>
+      <p
+        v-if="book?.book?.isbn13"
+        class="has-text-left block"
+      >
+        <span class="has-text-weight-semibold">ISBN13 : </span>{{ book.book.isbn13 }}
+      </p>
+      <p
+        v-if="book?.book?.pageCount"
+        class="has-text-left block"
+      >
+        <span class="has-text-weight-semibold">Pages : </span>{{ book.book.pageCount }}
+      </p>
+      <p
+        v-if="book?.book?.publishedDate"
+        class="has-text-left block"
+      >
+        <span class="has-text-weight-semibold">Published date : </span>{{ format(book.book.publishedDate) }}
+      </p>
+      <p
+        v-if="book?.book?.series"
+        class="has-text-left block"
+      >
+        <span class="has-text-weight-semibold">Series : </span>{{ book.book.series }}
+      </p>
+      <p
+        v-if="book?.book?.numberInSeries"
+        class="has-text-left block"
+      >
+        <span class="has-text-weight-semibold">Number in series : </span>{{ book.book.numberInSeries }}
+      </p>
+      <p
+        v-if="book?.book?.language"
+        class="has-text-left block"
+      >
+        <span class="has-text-weight-semibold">Language : </span>{{ book.book.language }}
+      </p>
+      <div
+        v-if="book?.owned || book?.toRead"
+        class="field has-text-left"
+      >
+        <o-checkbox
+          v-if="book?.owned"
+          v-model="book.owned"
+          disabled
+        >
+          Owned
+        </o-checkbox>
+        <o-checkbox
+          v-if="book?.toRead"
+          v-model="book.toRead"
+          disabled
+        >
+          To Read
+        </o-checkbox>
+      </div>
     </div>
-
-    </div>
-    <div v-if="book?.book?.summary" class="column is-three-fifths is-offset-one-quarter content jelu-bordered">
-      <p v-if="book?.book?.summary" class="has-text-left has-text-weight-semibold">Summary :</p>
-      <p v-if="book?.book?.summary" class="has-text-left" v-html="book.book.summary"></p>
+    <div
+      v-if="book?.book?.summary"
+      class="column is-three-fifths is-offset-one-quarter content jelu-bordered"
+    >
+      <p
+        v-if="book?.book?.summary"
+        class="has-text-left has-text-weight-semibold"
+      >
+        Summary :
+      </p>
+      <p
+        v-if="book?.book?.summary"
+        class="has-text-left"
+        v-html="book.book.summary"
+      />
     </div>
     <div class="column is-full is-offset-one-quarter content tags has-text-left  has-text-weight-semibold">
-      <span class="tag is-primary is-light" v-for="tag in book?.book?.tags" v-bind:key="tag.id"><router-link :to="{ name: 'tag-detail', params: { tagId: tag.id } }">{{tag.name}}&nbsp;</router-link></span>
+      <span
+        v-for="tag in book?.book?.tags"
+        :key="tag.id"
+        class="tag is-primary is-light"
+      ><router-link :to="{ name: 'tag-detail', params: { tagId: tag.id } }">{{ tag.name }}&nbsp;</router-link></span>
     </div>
-    <div v-if="hasExternalLink" class="column is-full is-offset-one-quarter content tags has-text-left has-text-weight-semibold">
-      <span class="tag is-warning" v-if="book?.book.goodreadsId"><a :href="'https://www.goodreads.com/book/show/' + book.book.goodreadsId" target="_blank">goodreads</a></span>
-      <span class="tag is-warning" v-if="book?.book.googleId"><a :href="'https://books.google.com/books?id=' + book.book.googleId" target="_blank">google</a></span>
-      <span class="tag is-warning" v-if="book?.book.amazonId"><a :href="'https://www.amazon.com/dp/' + book.book.amazonId" target="_blank">amazon</a></span>
-      <span class="tag is-warning" v-if="book?.book.librarythingId"><a :href="'https://www.librarything.com/work/' + book.book.librarythingId" target="_blank">librarything</a></span>
+    <div
+      v-if="hasExternalLink"
+      class="column is-full is-offset-one-quarter content tags has-text-left has-text-weight-semibold"
+    >
+      <span
+        v-if="book?.book.goodreadsId"
+        class="tag is-warning"
+      ><a
+        :href="'https://www.goodreads.com/book/show/' + book.book.goodreadsId"
+        target="_blank"
+      >goodreads</a></span>
+      <span
+        v-if="book?.book.googleId"
+        class="tag is-warning"
+      ><a
+        :href="'https://books.google.com/books?id=' + book.book.googleId"
+        target="_blank"
+      >google</a></span>
+      <span
+        v-if="book?.book.amazonId"
+        class="tag is-warning"
+      ><a
+        :href="'https://www.amazon.com/dp/' + book.book.amazonId"
+        target="_blank"
+      >amazon</a></span>
+      <span
+        v-if="book?.book.librarythingId"
+        class="tag is-warning"
+      ><a
+        :href="'https://www.librarything.com/work/' + book.book.librarythingId"
+        target="_blank"
+      >librarything</a></span>
     </div>
-    <div v-if="book?.personalNotes" class="column is-full is-offset-one-quarter content">
-      <p v-if="book?.personalNotes" class="has-text-left  has-text-weight-semibold">Personal Notes :</p>
-      <p v-if="book?.personalNotes" class="has-text-left">{{book.personalNotes}}</p>
+    <div
+      v-if="book?.personalNotes"
+      class="column is-full is-offset-one-quarter content"
+    >
+      <p
+        v-if="book?.personalNotes"
+        class="has-text-left  has-text-weight-semibold"
+      >
+        Personal Notes :
+      </p>
+      <p
+        v-if="book?.personalNotes"
+        class="has-text-left"
+      >
+        {{ book.personalNotes }}
+      </p>
     </div>
-    <div v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="column is-full is-offset-one-quarter content">
-      <p v-if="book?.readingEvents != null && book?.readingEvents?.length > 0" class="has-text-left has-text-weight-semibold typewriter">Reading events :</p>
+    <div
+      v-if="book?.readingEvents != null && book?.readingEvents?.length > 0"
+      class="column is-full is-offset-one-quarter content"
+    >
+      <p
+        v-if="book?.readingEvents != null && book?.readingEvents?.length > 0"
+        class="has-text-left has-text-weight-semibold typewriter"
+      >
+        Reading events :
+      </p>
       <div class="timeline">
-  <header class="timeline-header">
-    <span class="tag is-medium is-success">Now</span>
-  </header>
-    <div v-for="event in sortedEvents" v-bind:key="event.id">
-  <div class="timeline-item">
-    <div class="timeline-marker is-icon" :class="eventClass(event)">
-      <i class="mdi" :class="iconClass(event)"></i>
-    </div>
-    <div class="timeline-content">
-      <p class="heading">{{format(event.creationDate)}}</p>
-      <p>{{event.eventType}}</p>
-    </div>
+        <header class="timeline-header">
+          <span class="tag is-medium is-success">Now</span>
+        </header>
+        <div
+          v-for="event in sortedEvents"
+          :key="event.id"
+        >
+          <div class="timeline-item">
+            <div
+              class="timeline-marker is-icon"
+              :class="eventClass(event)"
+            >
+              <i
+                class="mdi"
+                :class="iconClass(event)"
+              />
+            </div>
+            <div class="timeline-content">
+              <p class="heading">
+                {{ format(event.creationDate) }}
+              </p>
+              <p>{{ event.eventType }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-header">
+          <span class="tag is-medium is-success">Before</span>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="timeline-header">
-    <span class="tag is-medium is-success">Before</span>
-  </div>
-</div>
-    </div>
-  </div>
-
 </template>
 
 <style lang="scss" scoped>

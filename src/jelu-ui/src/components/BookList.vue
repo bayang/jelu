@@ -50,40 +50,49 @@ onMounted(() => {
     <div class="level-item">
       <h2 class="title has-text-weight-normal typewriter">
         <span class="icon">
-          <i class="mdi mdi-bookshelf"></i>
+          <i class="mdi mdi-bookshelf" />
         </span>
-          &nbsp; My books :
+        &nbsp; My books :
       </h2>
     </div>
   </div>
-  <div v-if="books.length > 0" class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
-    <div class="books-grid-item my-2" v-for="book in books" v-bind:key="book.id">
-    <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
-      <book-card :book="book"></book-card>
+  <div
+    v-if="books.length > 0"
+    class="is-flex is-flex-wrap-wrap is-justify-content-center"
+  >
+    <div
+      v-for="book in books"
+      :key="book.id"
+      class="books-grid-item m-1"
+    >
+      <router-link
+        v-if="book.id != undefined"
+        :to="{ name: 'book-detail', params: { bookId: book.id } }"
+      >
+        <book-card :book="book" />
       </router-link>
     </div>
   </div>
   <div v-else>
-<h2 class="title has-text-weight-normal typewriter">Library is empty </h2>
+    <h2 class="title has-text-weight-normal typewriter">
+      Library is empty
+    </h2>
     <span class="icon is-large">
-      <i class="mdi mdi-book-open-page-variant-outline mdi-48px"></i>
+      <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
     </span>
-
   </div>
 
-<o-pagination
-      v-if="books.length > 0"
-      :total="total"
-      v-model:current="currentPageNumber"
-      order='centered'
-      :per-page="perPage"
-      aria-next-label="Next page"
-      aria-previous-label="Previous page"
-      aria-page-label="Page"
-      aria-current-label="Current page"
-    >
-    </o-pagination>
-
+  <o-pagination
+    v-if="books.length > 0"
+    v-model:current="currentPageNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    aria-next-label="Next page"
+    aria-previous-label="Previous page"
+    aria-page-label="Page"
+    aria-current-label="Current page"
+  />
 </template>
 
 <style scoped>

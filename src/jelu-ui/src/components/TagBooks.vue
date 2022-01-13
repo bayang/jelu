@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, Ref, ref, watch } from 'vue';
 import { useProgrammatic } from "@oruga-ui/oruga-next";
-import { useStore } from 'vuex';
-import { Book, BookWithUserBook, UserBook } from '../model/Book';
-import { Tag, TagWithBooks } from '../model/Tag';
+import { BookWithUserBook, UserBook } from '../model/Book';
+import { Tag } from '../model/Tag';
 import dataService from "../services/DataService";
-import { key } from '../store';
 import BookCard from "./BookCard.vue";
 import EditBookModal from "./EditBookModal.vue"
 import { ObjectUtils } from '../utils/ObjectUtils';
 
-const store = useStore(key)
 const {oruga} = useProgrammatic();
 
 const props = defineProps<{ tagId: string }>()
@@ -21,7 +18,7 @@ const perPage: Ref<number> = ref(24)
 
 const tag: Ref<Tag> = ref({name: ""})
 const tagBooks: Ref<Array<BookWithUserBook>> = ref([]);
-const edit: Ref<Boolean> = ref(false)
+const edit: Ref<boolean> = ref(false)
 
 watch(currentPageNumber, (newVal, oldVal) => {
   console.log(currentPageNumber.value)
@@ -65,7 +62,7 @@ onMounted(() => {
 
 const convertedBooks = computed(() => tagBooks.value?.map(b => ObjectUtils.toUserBook(b)))
 
-function modalClosed(args: any) {
+function modalClosed() {
   console.log("modal closed")
   getBooks()
 }
@@ -95,37 +92,51 @@ getBooks()
 </script>
 
 <template>
-  <h2 class="title has-text-weight-normal typewriter">Books tagged #{{tag.name}} : </h2>
+  <h2 class="title has-text-weight-normal typewriter">
+    Books tagged #{{ tag.name }} :
+  </h2>
   <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
-    <div class="books-grid-item my-2" v-for="book in convertedBooks" v-bind:key="book.id">
-    <router-link v-if="book.id != undefined" :to="{ name: 'book-detail', params: { bookId: book.id } }">
-        <book-card :book="book"></book-card>
+    <div
+      v-for="book in convertedBooks"
+      :key="book.id"
+      class="books-grid-item my-2"
+    >
+      <router-link
+        v-if="book.id != undefined"
+        :to="{ name: 'book-detail', params: { bookId: book.id } }"
+      >
+        <book-card :book="book" />
       </router-link>
       <div v-else>
-        <book-card @dblclick="toggleEdit(book)" :book="book"
-        v-tooltip="'This book is not yet in your books, double click to add it'">
+        <book-card
+          v-tooltip="'This book is not yet in your books, double click to add it'"
+          :book="book"
+          @dblclick="toggleEdit(book)"
+        >
           <template #icon>
-          <o-tooltip label="not in your books" variant="danger">
-          <span class="icon has-text-danger">
-            <i class="mdi mdi-plus-circle mdi-18px"></i>
-          </span>
-          </o-tooltip>
-        </template>
+            <o-tooltip
+              label="not in your books"
+              variant="danger"
+            >
+              <span class="icon has-text-danger">
+                <i class="mdi mdi-plus-circle mdi-18px" />
+              </span>
+            </o-tooltip>
+          </template>
         </book-card>
       </div>
     </div>
   </div>
   <o-pagination
-      :total="total"
-      v-model:current="currentPageNumber"
-      order='centered'
-      :per-page="perPage"
-      aria-next-label="Next page"
-      aria-previous-label="Previous page"
-      aria-page-label="Page"
-      aria-current-label="Current page"
-    >
-    </o-pagination>
+    v-model:current="currentPageNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    aria-next-label="Next page"
+    aria-previous-label="Previous page"
+    aria-page-label="Page"
+    aria-current-label="Current page"
+  />
 </template>
 
 <style scoped>

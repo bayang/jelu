@@ -1,9 +1,5 @@
 package io.github.bayang.jelu.dto
 
-import io.github.bayang.jelu.dao.BookTable
-import io.github.bayang.jelu.dao.BookTable.nullable
-import io.github.bayang.jelu.dao.ReadingEventType
-import org.jetbrains.exposed.sql.Column
 import java.time.Instant
 import java.util.*
 
@@ -11,7 +7,7 @@ data class BookDto(
     val id: UUID?,
     val creationDate: Instant?,
     val title: String,
-    val isbn10:String?,
+    val isbn10: String?,
     val isbn13: String?,
     val summary: String?,
     val publisher: String?,
@@ -33,7 +29,7 @@ data class BookWithUserBookDto(
     val id: UUID?,
     val creationDate: Instant?,
     val title: String,
-    val isbn10:String?,
+    val isbn10: String?,
     val isbn13: String?,
     val summary: String?,
     val publisher: String?,
@@ -56,7 +52,7 @@ data class BookCreateDto(
     val id: UUID?,
 //    val creationDate: Instant?,
     val title: String,
-    val isbn10:String?,
+    val isbn10: String?,
     val isbn13: String?,
     val summary: String?,
     val image: String?,
@@ -75,7 +71,7 @@ data class BookCreateDto(
 )
 data class BookUpdateDto(
     val title: String?,
-    val isbn10:String?,
+    val isbn10: String?,
     val isbn13: String?,
     val summary: String?,
     val image: String?,
@@ -139,21 +135,21 @@ data class TagWithBooksDto(
 fun fromBookCreateDto(dto: BookCreateDto): BookUpdateDto {
     return BookUpdateDto(
         title = dto.title,
-    isbn10= dto.isbn10,
-    isbn13=dto.isbn13,
-    summary=dto.summary,
-    image= dto.image,
-    publisher=dto.publisher,
-    pageCount=dto.pageCount,
-    publishedDate=dto.publishedDate,
-    authors=dto.authors,
-    tags=dto.tags,
-    series=dto.series,
-    numberInSeries=dto.numberInSeries,
-    googleId=dto.googleId,
-    amazonId=dto.amazonId,
-    goodreadsId=dto.goodreadsId,
-    librarythingId=dto.librarythingId,
-    language=dto.language,
+        isbn10 = dto.isbn10,
+        isbn13 = dto.isbn13,
+        summary = dto.summary,
+        image = dto.image,
+        publisher = dto.publisher,
+        pageCount = dto.pageCount,
+        publishedDate = dto.publishedDate,
+        authors = dto.authors,
+        tags = dto.tags,
+        series = dto.series,
+        numberInSeries = dto.numberInSeries,
+        googleId = dto.googleId,
+        amazonId = dto.amazonId,
+        goodreadsId = dto.goodreadsId,
+        librarythingId = dto.librarythingId,
+        language = dto.language,
     )
 }

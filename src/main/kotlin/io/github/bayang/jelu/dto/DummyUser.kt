@@ -4,7 +4,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-class DummyUser(private val startupPassword: String): UserDetails {
+class DummyUser(private val startupPassword: String) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> = mutableSetOf(
         SimpleGrantedAuthority(ROLE_INITIAL_SETUP)
     )

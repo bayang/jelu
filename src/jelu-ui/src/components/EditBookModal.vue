@@ -1,11 +1,10 @@
 <script setup lang="ts">
 
-import { computed, Ref, ref, watch } from "vue";
+import { computed, Ref, ref } from "vue";
 import { Author } from "../model/Author";
 import { UserBook } from "../model/Book";
 import { ReadingEventType } from "../model/ReadingEvent";
 import dataService from "../services/DataService";
-import { DateUtils } from "../utils/DateUtils";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
@@ -125,10 +124,6 @@ const clearDatePicker = () => {
     userbook.value.book.publishedDate = null;
 };
 
-const format = (dateString: string) => {
-  return DateUtils.formatDate(dateString)
-}
-
 function itemAdded() {
   console.log("added")
   console.log(userbook.value.book.authors)
@@ -205,266 +200,368 @@ function toggleRemoveImage() {
 </script>
 
 <template>
-<section class="edit-modal">
+  <section class="edit-modal">
     <div class="columns is-centered is-multiline">
-    <div class="column is-centered is-full">
-<div class="field">
-      <o-field horizontal label="Title">
-        <o-input v-model="userbook.book.title"></o-input>
-      </o-field>
-    </div>
+      <div class="column is-centered is-full">
+        <div class="field">
+          <o-field
+            horizontal
+            label="Title"
+          >
+            <o-input v-model="userbook.book.title" />
+          </o-field>
+        </div>
 
-    <div class="field">
-      <o-field horizontal label="Authors">
-        <o-inputitems
-          v-model="userbook.book.authors"
-          :data="filteredAuthors"
-          :autocomplete="true"
-          :allow-new="true"
-          :allow-duplicates="false"
-          :open-on-focus="true"
-          :beforeAdding="beforeAdd"
-          :createItem="createAuthor"
-          iconPack="mdi"
-          icon="account-plus"
-          field="name"
-          placeholder="Add an author"
-          @typing="getFilteredAuthors"
-          @add="itemAdded"
+        <div class="field">
+          <o-field
+            horizontal
+            label="Authors"
+          >
+            <o-inputitems
+              v-model="userbook.book.authors"
+              :data="filteredAuthors"
+              :autocomplete="true"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="beforeAdd"
+              :create-item="createAuthor"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              placeholder="Add an author"
+              @typing="getFilteredAuthors"
+              @add="itemAdded"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Tags"
+          >
+            <o-inputitems
+              v-model="userbook.book.tags"
+              :data="filteredTags"
+              :autocomplete="true"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="beforeAddTag"
+              :create-item="createTag"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              placeholder="Add a tag"
+              @typing="getFilteredTags"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Summary"
+          >
+            <o-input
+              v-model="userbook.book.summary"
+              maxlength="200"
+              type="textarea"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="ISBN"
+          >
+            <o-input
+              v-model="userbook.book.isbn10"
+              name="isbn10"
+              placeholder="isbn10"
+            />
+            <o-input
+              v-model="userbook.book.isbn13"
+              name="isbn13"
+              placeholder="isbn13"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Identifiers"
+          >
+            <o-input
+              v-model="userbook.book.goodreadsId"
+              name="goodreadsId"
+              placeholder="goodreadsId"
+            />
+            <o-input
+              v-model="userbook.book.googleId"
+              name="googleId"
+              placeholder="googleId"
+            />
+            <o-input
+              v-model="userbook.book.amazonId"
+              name="amazonId"
+              placeholder="amazonId"
+            />
+            <o-input
+              v-model="userbook.book.librarythingId"
+              name="librarythingId"
+              placeholder="librarythingId"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Publisher"
+          >
+            <o-input v-model="userbook.book.publisher" />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Published date"
+          >
+            <o-datepicker
+              v-show="true"
+              ref="datepicker"
+              v-model="publishedDate"
+              :show-week-number="false"
+              :locale="undefined"
+              placeholder="Click to select..."
+              icon="calendar"
+              icon-right="close"
+              icon-right-clickable="true"
+              trap-focus
+              @icon-right-click="clearDatePicker"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Page count"
+          >
+            <o-input
+              v-model="userbook.book.pageCount"
+              type="number"
+              min="0"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Language"
+          >
+            <o-input v-model="userbook.book.language" />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Series"
+          >
+            <o-input v-model="userbook.book.series" />
+            <o-input
+              v-model="userbook.book.numberInSeries"
+              type="number"
+              min="0"
+              step="0.1"
+            />
+          </o-field>
+        </div>
+        <div class="block">
+          <o-field
+            horizontal
+            label="Status : "
+          >
+            <o-radio
+              v-model="userbook.lastReadingEvent"
+              name="type"
+              native-value="FINISHED"
+            >
+              Finished
+            </o-radio>
+            <o-radio
+              v-model="userbook.lastReadingEvent"
+              name="type"
+              native-value="CURRENTLY_READING"
+            >
+              Currently reading
+            </o-radio>
+            <o-radio
+              v-model="userbook.lastReadingEvent"
+              name="type"
+              native-value="DROPPED"
+            >
+              Dropped
+            </o-radio>
+            <o-radio
+              v-model="userbook.lastReadingEvent"
+              name="type"
+              native-value="NONE"
+            >
+              None
+            </o-radio>
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Personal notes"
+          >
+            <o-input
+              v-model="userbook.personalNotes"
+              maxlength="200"
+              type="textarea"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Owned"
+          >
+            <o-checkbox v-model="userbook.owned">
+              {{ ownedDisplay }}
+            </o-checkbox>
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="To read ?"
+          >
+            <o-checkbox v-model="userbook.toRead">
+              {{ toReadDisplay }}
+            </o-checkbox>
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            horizontal
+            label="Percent read"
+          >
+            <o-slider
+              v-model="userbook.percentRead"
+              :min="0"
+              :max="100"
+            />
+          </o-field>
+        </div>
+        <div v-if="hasImage">
+          <o-field horizontal>
+            <template #label>
+              Actual cover :
+              <o-tooltip
+                v-if="!deleteImage"
+                label="Click bin to remove current cover"
+                position="right"
+              >
+                <span class="icon">
+                  <i class="mdi mdi-information-outline" /> </span>
+              </o-tooltip>
+              <o-tooltip
+                v-if="deleteImage"
+                label="Press refresh to restore cover"
+                position="right"
+              >
+                <span class="icon">
+                  <i class="mdi mdi-information-outline" /> </span>
+              </o-tooltip>
+            </template>
+            <figure class="small-cover">
+              <img
+                :src="'/files/' + userbook.book.image"
+                :class="deleteImage ? 'altered' : ''"
+                alt="cover image"
+              >
+              <span
+                v-if="!deleteImage"
+                class="icon overlay-button"
+                @click="toggleRemoveImage"
+              >
+                <i class="mdi mdi-delete" /> </span>  
+              <span
+                v-if="deleteImage"
+                class="icon overlay-button"
+                @click="toggleRemoveImage"
+              >
+                <i class="mdi mdi-autorenew" /> </span>
+            </figure>
+          </o-field>
+        </div>
+        <div v-if="!hasImage || deleteImage">
+          <o-field
+            horizontal
+            label="Upload book cover"
+          >
+            <o-switch
+              v-model="isSwitchedCustom"
+              true-value="Upload from file"
+              false-value="Upload from the web"
+              :left-label="true"
+            >
+              {{ isSwitchedCustom }}
+            </o-switch>
+          </o-field>
+          <o-field
+            v-if="isSwitchedCustom == 'Upload from the web'"
+            horizontal
+            label="Enter image adress"
+          >
+            <o-input
+              v-model="imageUrl"
+              type="url"
+              pattern="https?://.*"
+              clearable="true"
+              icon-right-clickable
+              title="Url must start with http or https"
+              placeholder="Url must start with http or https"
+              @icon-right-click="clearImageField"
+            />
+          </o-field>
+          <o-field
+            v-else
+            horizontal
+            label="Choose file"
+            class="file is-primary has-name"
+          >
+            <input
+              type="file"
+              accept="image/*"
+              @change="handleFileUpload($event)"
+            >
+            <br>
+            <progress
+              max="100"
+              :value.prop="uploadPercentage"
+            />
+            <br>
+          </o-field>
+        </div>
+      </div>
+      <div class="column is-centered is-one-fifth">
+        <button
+          class="button is-primary"
+          @click="importBook"
         >
-        </o-inputitems>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Tags">
-        <o-inputitems
-          v-model="userbook.book.tags"
-          :data="filteredTags"
-          :autocomplete="true"
-          :allow-new="true"
-          :allow-duplicates="false"
-          :open-on-focus="true"
-          :beforeAdding="beforeAddTag"
-          :createItem="createTag"
-          iconPack="mdi"
-          icon="account-plus"
-          field="name"
-          placeholder="Add a tag"
-          @typing="getFilteredTags"
-        >
-        </o-inputitems>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Summary">
-        <o-input
-          maxlength="200"
-          type="textarea"
-          v-model="userbook.book.summary"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="ISBN">
-        <o-input
-          name="isbn10"
-          v-model="userbook.book.isbn10"
-          placeholder="isbn10"
-        ></o-input>
-        <o-input
-          name="isbn13"
-          v-model="userbook.book.isbn13"
-          placeholder="isbn13"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Identifiers">
-        <o-input
-          name="goodreadsId"
-          v-model="userbook.book.goodreadsId"
-          placeholder="goodreadsId"
-        ></o-input>
-        <o-input
-          name="googleId"
-          v-model="userbook.book.googleId"
-          placeholder="googleId"
-        ></o-input>
-        <o-input
-          name="amazonId"
-          v-model="userbook.book.amazonId"
-          placeholder="amazonId"
-        ></o-input>
-        <o-input
-          name="librarythingId"
-          v-model="userbook.book.librarythingId"
-          placeholder="librarythingId"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Publisher">
-        <o-input v-model="userbook.book.publisher"></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Published date">
-        <o-datepicker
-          v-model="publishedDate"
-          v-show="true"
-          :show-week-number="false"
-          :locale="undefined"
-          placeholder="Click to select..."
-          icon="calendar"
-          ref="datepicker"
-          iconRight="close"
-          iconRightClickable="true"
-          @icon-right-click="clearDatePicker"
-          trap-focus
-        >
-        </o-datepicker>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Page count">
-        <o-input v-model="userbook.book.pageCount" type="number" min="0"></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Language">
-        <o-input v-model="userbook.book.language" ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Series">
-        <o-input v-model="userbook.book.series"></o-input>
-        <o-input v-model="userbook.book.numberInSeries" type="number" min="0" step="0.1"></o-input>
-      </o-field>
-    </div>
-    <div class="block">
-      <o-field horizontal label="Status : ">
-        <o-radio v-model="userbook.lastReadingEvent" name="type" native-value="FINISHED">
-          Finished
-        </o-radio>
-        <o-radio
-          v-model="userbook.lastReadingEvent"
-          name="type"
-          native-value="CURRENTLY_READING"
-        >
-          Currently reading
-        </o-radio>
-        <o-radio v-model="userbook.lastReadingEvent" name="type" native-value="DROPPED">
-          Dropped
-        </o-radio>
-        <o-radio v-model="userbook.lastReadingEvent" name="type" native-value="NONE">
-          None
-        </o-radio>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Personal notes">
-        <o-input
-          maxlength="200"
-          type="textarea"
-          v-model="userbook.personalNotes"
-        ></o-input>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Owned">
-      <o-checkbox v-model="userbook.owned">
-        {{ ownedDisplay }}
-      </o-checkbox>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="To read ?">
-      <o-checkbox v-model="userbook.toRead">
-        {{ toReadDisplay }}
-      </o-checkbox>
-      </o-field>
-    </div>
-    <div class="field">
-      <o-field horizontal label="Percent read">
-      <o-slider v-model="userbook.percentRead" :min="0" :max="100"></o-slider>
-    </o-field>
-    </div>
-<div v-if="hasImage">
-  <o-field horizontal>
-    <template v-slot:label>
-        Actual cover :
-        <o-tooltip v-if="!deleteImage" label="Click bin to remove current cover" position="right">
-          <span class="icon">
-          <i class="mdi mdi-information-outline"></i> </span>
-        </o-tooltip>
-          <o-tooltip v-if="deleteImage" label="Press refresh to restore cover" position="right">
-            <span class="icon">
-          <i class="mdi mdi-information-outline"></i> </span>
-        </o-tooltip>
-      </template>
-  <figure class="small-cover">
-          <img
-            :src="'/files/' + userbook.book.image"
-            :class="deleteImage ? 'altered' : ''"
-            alt="cover image"
-          />
-          <span v-if="!deleteImage" @click="toggleRemoveImage" class="icon overlay-button">
-          <i class="mdi mdi-delete"></i> </span>  
-          <span v-if="deleteImage" @click="toggleRemoveImage" class="icon overlay-button">
-          <i class="mdi mdi-autorenew"></i> </span>
-        </figure>
-  </o-field>
-</div>
-<div v-if="!hasImage || deleteImage">
-    <o-field horizontal label="Upload book cover">
-      <o-switch
-        v-model="isSwitchedCustom"
-        true-value="Upload from file"
-        false-value="Upload from the web"
-        :leftLabel="true"
-      >
-        {{ isSwitchedCustom }}
-      </o-switch>
-    </o-field>
-    <o-field
-      v-if="isSwitchedCustom == 'Upload from the web'"
-      horizontal
-      label="Enter image adress"
-    >
-      <o-input
-        v-model="imageUrl"
-        type="url"
-        pattern="https?://.*"
-        clearable="true"
-        icon-right-clickable
-        @icon-right-click="clearImageField"
-        title="Url must start with http or https"
-        placeholder="Url must start with http or https"
-      >
-      </o-input>
-    </o-field>
-    <o-field
-      v-else
-      horizontal
-      label="Choose file"
-      class="file is-primary has-name"
-    >
-      <input type="file" accept="image/*" @change="handleFileUpload($event)" />
-      <br />
-      <progress max="100" :value.prop="uploadPercentage"></progress>
-      <br />
-    </o-field>
-</div>
-    </div>
-    <div class="column is-centered is-one-fifth">
-        <button @click="importBook" class="button is-primary">
           Save changes
         </button>
-      <p v-if="errorMessage" class="has-text-danger">{{ errorMessage }}</p>
-    </div>
+        <p
+          v-if="errorMessage"
+          class="has-text-danger"
+        >
+          {{ errorMessage }}
+        </p>
+      </div>
     </div>
   </section>
-
 </template>
 
 <style lang="scss">

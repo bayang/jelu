@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { key } from './store'
-import { useLink, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import dataService from "./services/DataService";
 const store = useStore(key)
 const router = useRouter()
@@ -32,9 +32,6 @@ store.dispatch('getUser')
     router.push({name: 'login'}).then(() => {console.log("ok nav")}).catch(() => {console.log("error nav")})
   })
 
-const isInitialSetup = computed(() => {
-  return store.state.isInitialSetup
-})
 const username = computed(() => {
   return store.getters.getUsername
 })
@@ -60,66 +57,94 @@ const logout = () => {
 
 <template>
   <section>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav
+      class="navbar"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div class="navbar-brand">
-        <router-link class="navbar-item" :to="{ name: 'home' }">
-          <img src="./assets/jelu_logo.svg" alt="home" />
+        <router-link
+          class="navbar-item"
+          :to="{ name: 'home' }"
+        >
+          <img
+            src="./assets/jelu_logo.svg"
+            alt="home"
+          >
         </router-link>
 
         <a
-          @click="toggleMenu"
           role="button"
           :class="active ? 'is-active' : ''"
           class="navbar-burger"
           aria-label="menu"
           aria-expanded="false"
           data-target="navbarBasicExample"
+          @click="toggleMenu"
         >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
         </a>
       </div>
 
-      <div id="navbarBasicExample" :class="active ? 'is-active' : ''" class="navbar-menu">
+      <div
+        id="navbarBasicExample"
+        :class="active ? 'is-active' : ''"
+        class="navbar-menu"
+      >
         <div class="navbar-start">
           <router-link
             v-if="isLogged"
             class="navbar-item is-family-sans-serif is-uppercase"
             :to="{ name: 'my-books' }"
-          >My books</router-link>
+          >
+            My books
+          </router-link>
           <router-link
             v-if="isLogged"
             class="navbar-item is-family-sans-serif is-uppercase"
             :to="{ name: 'to-read' }"
-          >To Read List</router-link>
+          >
+            To Read List
+          </router-link>
           <router-link
             v-if="isLogged"
-                  :to="{ name: 'add-book' }"
-                  class="navbar-item is-family-sans-serif is-uppercase"
-                >Import book</router-link>
+            :to="{ name: 'add-book' }"
+            class="navbar-item is-family-sans-serif is-uppercase"
+          >
+            Import book
+          </router-link>
         </div>
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">{{ username }}</a>
             <div class="navbar-dropdown is-boxed">
-              <div v-if="isLogged" class="navbar-item">
+              <div
+                v-if="isLogged"
+                class="navbar-item"
+              >
                 <a @click="logout()">logout</a>
               </div>
-              <div v-if="!isLogged" class="navbar-item">
+              <div
+                v-if="!isLogged"
+                class="navbar-item"
+              >
                 <router-link
-            class="is-family-sans-serif is-uppercase"
-            :to="{ name: 'login' }"
-          >Login</router-link>
+                  class="is-family-sans-serif is-uppercase"
+                  :to="{ name: 'login' }"
+                >
+                  Login
+                </router-link>
               </div>
             </div>
           </div>
         </div>
       </div>
     </nav>
-    <div class="bar"></div>
+    <div class="bar" />
 
-    <router-view></router-view>
+    <router-view />
   </section>
 </template>
 

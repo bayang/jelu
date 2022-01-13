@@ -24,11 +24,11 @@ class BookService(
     private val eventRepository: ReadingEventRepository,
     private val properties: JeluProperties,
     private val downloadService: DownloadService,
-    ) {
+) {
 
     @Transactional
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, page: Long, pageSize: Long, user: User): Page<BookWithUserBookDto>
-    = bookRepository.findAll(title, isbn10, isbn13, series, page, pageSize).map { it.toBookWithUserBookDto(user.id.value) }
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, page: Long, pageSize: Long, user: User): Page<BookWithUserBookDto> =
+        bookRepository.findAll(title, isbn10, isbn13, series, page, pageSize).map { it.toBookWithUserBookDto(user.id.value) }
 
     @Transactional
     fun findAllAuthors(name: String?, page: Long = 0, pageSize: Long = 20): Page<AuthorDto> = bookRepository.findAllAuthors(name, page, pageSize).map { it.toAuthorDto() }
@@ -59,7 +59,7 @@ class BookService(
 
     @Transactional
     fun update(userBookId: UUID, book: UserBookUpdateDto, file: MultipartFile?): UserBookLightDto {
-        val updated:UserBook = bookRepository.update(userBookId, book)
+        val updated: UserBook = bookRepository.update(userBookId, book)
         val previousImage: String? = updated.book.image
         var backup: File? = null
         // if we need to update image and there is already one, backup it
@@ -80,16 +80,18 @@ class BookService(
     fun save(userBook: CreateUserBookDto, user: User, file: MultipartFile?): UserBookLightDto {
         val book: Book = if (userBook.book.id != null) {
             bookRepository.update(userBook.book.id, fromBookCreateDto(userBook.book))
-        }
-        else {
+        } else {
             bookRepository.save(userBook.book)
         }
         val created: UserBook = bookRepository.save(book, user, userBook)
         if (userBook.lastReadingEvent != null) {
-            eventRepository.save(created, CreateReadingEventDto(
-                eventType = userBook.lastReadingEvent,
-                bookId = null
-            ))
+            eventRepository.save(
+                created,
+                CreateReadingEventDto(
+                    eventType = userBook.lastReadingEvent,
+                    bookId = null
+                )
+            )
         }
 
         saveImages(file, book, userBook.book, properties.files.dir)
@@ -106,7 +108,7 @@ class BookService(
     fun saveImages(file: MultipartFile?, book: Book, bookDto: BookCreateDto?, targetDir: String): String {
         var importedFile = false
         var savedImage: String = ""
-        //FIXME resize image when saving (protect with a flag)
+        // FIXME resize image when saving (protect with a flag)
         if (file != null) {
             try {
                 var destFileName: String = imageName(slugify(book.title), book.id.toString(), FilenameUtils.getExtension(file.originalFilename))
@@ -116,8 +118,7 @@ class BookService(
                 book.image = destFile.name
                 importedFile = true
                 savedImage = destFile.name
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 logger.error { "failed to save uploaded file ${file.originalFilename}" }
             }
         }
@@ -126,16 +127,17 @@ class BookService(
             try {
                 // file already exists in the right folder, just rename it
                 if (bookDto.image.startsWith(FILE_PREFIX)) {
-                    val targetFilename: String = imageName(slugify(book.title),
-                        book.id.toString(), FilenameUtils.getExtension(bookDto.image))
+                    val targetFilename: String = imageName(
+                        slugify(book.title),
+                        book.id.toString(), FilenameUtils.getExtension(bookDto.image)
+                    )
                     val currentFile = File(targetDir, bookDto.image)
                     val targetFile = File(currentFile.parent, targetFilename)
                     val succeeded = currentFile.renameTo(targetFile)
                     logger.debug { "renaming of metadata imported file ${bookDto.image} was successful: $succeeded" }
                     book.image = targetFilename
                     savedImage = targetFilename
-                }
-                else {
+                } else {
                     val destFileName: String = downloadService.download(
                         bookDto.image,
                         slugify(book.title),
@@ -145,8 +147,7 @@ class BookService(
                     book.image = destFileName
                     savedImage = destFileName
                 }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 logger.error { "failed to save remote file ${book.image}" }
                 book.image = null
             }
@@ -158,8 +159,8 @@ class BookService(
     fun save(author: AuthorDto): AuthorDto = bookRepository.save(author).toAuthorDto()
 
     @Transactional
-    fun findAllBooksByUser(user: User, page: Long, pageSize: Long): Page<UserBookLightDto>
-    = bookRepository.findAllBooksByUser(user, page, pageSize).map { it.toUserBookLightDto() }
+    fun findAllBooksByUser(user: User, page: Long, pageSize: Long): Page<UserBookLightDto> =
+        bookRepository.findAllBooksByUser(user, page, pageSize).map { it.toUserBookLightDto() }
 
     @Transactional
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto = bookRepository.updateAuthor(authorId, author).toAuthorDto()
@@ -168,8 +169,14 @@ class BookService(
     fun findUserBookById(userbookId: UUID): UserBookLightDto = bookRepository.findUserBookById(userbookId).toUserBookLightDto()
 
     @Transactional
-    fun findUserBookByCriteria(userId: EntityID<UUID>, eventType: ReadingEventType?, toRead: Boolean?): List<UserBookLightDto>
-    = bookRepository.findUserBookByCriteria(userId, eventType, toRead).map { it.toUserBookLightDto() }
+    fun findUserBookByCriteria(
+        userId: EntityID<UUID>,
+        eventType: ReadingEventType?,
+        toRead: Boolean?,
+        page: Long,
+        pageSize: Long
+    ): Page<UserBookLightDto> =
+        bookRepository.findUserBookByCriteria(userId, eventType, toRead, page, pageSize).map { it.toUserBookLightDto() }
 
     @Transactional
     fun findTagById(tagId: UUID, user: User): TagDto {

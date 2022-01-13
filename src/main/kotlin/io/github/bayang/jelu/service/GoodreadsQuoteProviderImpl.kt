@@ -7,19 +7,14 @@ import mu.KotlinLogging
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import org.springframework.boot.autoconfigure.cache.CacheProperties
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.createExceptionAndAwait
 import org.springframework.web.util.UriBuilder
-import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
@@ -37,7 +32,7 @@ class GoodreadsQuoteProviderImpl(
 
     val exchange = ExchangeStrategies.builder().codecs { c: ClientCodecConfigurer ->
         c.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-        }.build()
+    }.build()
 
     val client = WebClient.builder().exchangeStrategies(exchange).build()
 
@@ -67,7 +62,8 @@ class GoodreadsQuoteProviderImpl(
             .exchangeToMono {
                 if (it.statusCode() == HttpStatus.OK) {
                     it.bodyToMono(String::class.java).map {
-                            body -> parse(body)
+                        body ->
+                        parse(body)
                     }
                 } else {
                     it.createException().flatMap { Mono.error { it } }
@@ -100,7 +96,8 @@ class GoodreadsQuoteProviderImpl(
             .exchangeToMono {
                 if (it.statusCode() == HttpStatus.OK) {
                     it.bodyToMono(String::class.java).map {
-                            it -> parse(it).also { quoteDtos -> cache.put(KEY, quoteDtos) }
+                        it ->
+                        parse(it).also { quoteDtos -> cache.put(KEY, quoteDtos) }
                     }
                 } else {
                     it.createException().flatMap { Mono.error { it } }

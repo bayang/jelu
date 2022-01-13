@@ -7,13 +7,13 @@ data class UserDto(
     val id: UUID?,
     val creationDate: Instant?,
     val login: String,
-    val password:String?,
+    val password: String?,
     val modificationDate: Instant?,
     val isAdmin: Boolean,
 )
 data class CreateUserDto(
     val login: String,
-    val password:String,
+    val password: String,
     val isAdmin: Boolean,
 )
 data class AuthenticationDto(

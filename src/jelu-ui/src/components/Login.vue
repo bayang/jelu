@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import { StringUtils } from '../utils/StringUtils'
@@ -44,7 +44,7 @@ const logUser = async () => {
 }
 
 const validateInputLight = (): boolean => {
-  let isValid: boolean = true;
+  let isValid = true;
   errorMessage.value = ''
   if (!StringUtils.isNotBlank(form.login)) {
     errorMessage.value = errorMessage.value + ' login cannot be empty'
@@ -107,46 +107,104 @@ const submit = () => {
 </script>
 
 <template>
-    <div class="columns  is-centered">
+  <div class="columns  is-centered">
     <div class="column is-centered is-half">
-    <div class="field">
-    <o-field label="Login" class="control">
-      <o-input type="text" value="john" maxlength="50" v-model="form.login"> </o-input>
-    </o-field>
-    </div>
-    <div v-if="isInitialSetup" class="field">
-    <o-field label="Confirm Login" class="control">
-      <o-input type="text" value="john" maxlength="50" v-model="loginValidation"> </o-input>
-    </o-field>
-    </div>
-    <div class="field">
-    <o-field label="Password"  class="control">
-      <o-input @keyup.enter="submit" value="123" type="password" maxlength="30" v-model="form.password" passwordReveal></o-input>
-    </o-field>
-    </div>
-    <div v-if="isInitialSetup" class="field">
-    <o-field label="Confirm Password"  class="control">
-      <o-input @keyup.enter="submit" value="123" type="password" maxlength="30" v-model="passwordValidation" passwordReveal></o-input>
-    </o-field>
-    </div>
-    <div class="field">
-  <p class="control" v-if="isInitialSetup">
-    <button @click="createInitialUser" class="button is-warning">
-      Create First User
-    </button>
-  </p>
-  <p class="control" v-else>
-    <button @click="logUser" class="button is-primary">
-      Login
-    </button>
-  </p>
-  <p v-if="errorMessage" class="has-text-danger">{{errorMessage}}</p>
-</div>
+      <div class="field">
+        <o-field
+          label="Login"
+          class="control"
+        >
+          <o-input
+            v-model="form.login"
+            type="text"
+            value="john"
+            maxlength="50"
+          />
+        </o-field>
+      </div>
+      <div
+        v-if="isInitialSetup"
+        class="field"
+      >
+        <o-field
+          label="Confirm Login"
+          class="control"
+        >
+          <o-input
+            v-model="loginValidation"
+            type="text"
+            value="john"
+            maxlength="50"
+          />
+        </o-field>
+      </div>
+      <div class="field">
+        <o-field
+          label="Password"
+          class="control"
+        >
+          <o-input
+            v-model="form.password"
+            value="123"
+            type="password"
+            maxlength="30"
+            password-reveal
+            @keyup.enter="submit"
+          />
+        </o-field>
+      </div>
+      <div
+        v-if="isInitialSetup"
+        class="field"
+      >
+        <o-field
+          label="Confirm Password"
+          class="control"
+        >
+          <o-input
+            v-model="passwordValidation"
+            value="123"
+            type="password"
+            maxlength="30"
+            password-reveal
+            @keyup.enter="submit"
+          />
+        </o-field>
+      </div>
+      <div class="field">
+        <p
+          v-if="isInitialSetup"
+          class="control"
+        >
+          <button
+            class="button is-warning"
+            @click="createInitialUser"
+          >
+            Create First User
+          </button>
+        </p>
+        <p
+          v-else
+          class="control"
+        >
+          <button
+            class="button is-primary"
+            @click="logUser"
+          >
+            Login
+          </button>
+        </p>
+        <p
+          v-if="errorMessage"
+          class="has-text-danger"
+        >
+          {{ errorMessage }}
+        </p>
+      </div>
 
-  <p>login {{form.login}},  pw  {{form.password}}</p>
-
+      <p>login {{ form.login }},  pw  {{ form.password }}</p>
     </div>
-    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>

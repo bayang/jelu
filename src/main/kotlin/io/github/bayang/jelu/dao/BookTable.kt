@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.util.*
 
-object BookTable: UUIDTable("book") {
+object BookTable : UUIDTable("book") {
     val title: Column<String> = varchar("title", 1000)
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
@@ -29,7 +29,7 @@ object BookTable: UUIDTable("book") {
     val librarythingId: Column<String?> = varchar("librarything_id", 30).nullable()
     val language: Column<String?> = varchar("language", 30).nullable()
 }
-class Book(id: EntityID<UUID>): UUIDEntity(id) {
+class Book(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Book>(BookTable)
     var title by BookTable.title
     var creationDate by BookTable.creationDate
@@ -78,7 +78,7 @@ class Book(id: EntityID<UUID>): UUIDEntity(id) {
 
     fun toBookWithUserBookDto(userId: UUID): BookWithUserBookDto =
         BookWithUserBookDto(
-            id= this.id.value,
+            id = this.id.value,
             creationDate = this.creationDate,
             title = this.title,
             isbn10 = this.isbn10,

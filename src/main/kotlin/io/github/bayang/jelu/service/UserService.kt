@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder
-    ): UserDetailsService {
+) : UserDetailsService {
 
     @Transactional
     fun findAll(searchTerm: String?): List<UserDto> = userRepository.findAll(searchTerm).map { it.toUserDto() }
@@ -50,5 +50,4 @@ class UserService(
             return JeluUser(it.first())
         }
     }
-
 }

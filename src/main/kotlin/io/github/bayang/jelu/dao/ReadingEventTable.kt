@@ -10,13 +10,13 @@ import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.util.*
 
-object ReadingEventTable: UUIDTable("reading_event") {
+object ReadingEventTable : UUIDTable("reading_event") {
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
     val userBook = reference("user_book", UserBookTable, onDelete = ReferenceOption.CASCADE)
     val eventType = enumerationByName("event_type", 200, ReadingEventType::class)
 }
-class ReadingEvent(id: EntityID<UUID>): UUIDEntity(id) {
+class ReadingEvent(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<ReadingEvent>(ReadingEventTable)
     var creationDate by ReadingEventTable.creationDate
     var modificationDate by ReadingEventTable.modificationDate
