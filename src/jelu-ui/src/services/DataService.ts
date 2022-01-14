@@ -3,7 +3,7 @@ import { UserBook, Book, BookWithUserBook } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
-import ReadingEvent, { ReadingEventType, ReadingEventWithUserBook } from "../model/ReadingEvent";
+import { ReadingEventType, ReadingEventWithUserBook } from "../model/ReadingEvent";
 import { Tag } from "../model/Tag";
 import { Metadata } from "../model/Metadata";
 import { Page } from "../model/Page";
