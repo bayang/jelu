@@ -318,9 +318,13 @@ class BookRepository(
 
     fun findUserBookById(userbookId: UUID): UserBook = UserBook[userbookId]
 
-    fun findUserBookByCriteria(userID: EntityID<UUID>,
-                               searchTerm: ReadingEventType?, toRead: Boolean?,
-                               page: Long, pageSize: Long): PageImpl<UserBook> {
+    fun findUserBookByCriteria(
+        userID: EntityID<UUID>,
+        searchTerm: ReadingEventType?,
+        toRead: Boolean?,
+        page: Long,
+        pageSize: Long
+    ): PageImpl<UserBook> {
         val query: Query = UserBookTable.selectAll()
             .andWhere { UserBookTable.user eq userID }
         searchTerm?.let {
@@ -354,7 +358,6 @@ class BookRepository(
             else PageRequest.of(0, 20, Sort.unsorted()),
             total
         )
-
 
 //        return UserBook.find {
 //            val userFilter: Op<Boolean> = UserBookTable.user eq userID

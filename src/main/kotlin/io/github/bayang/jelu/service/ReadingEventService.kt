@@ -24,8 +24,8 @@ class ReadingEventService(private val readingEventRepository: ReadingEventReposi
     }
 
     @Transactional
-    fun findAllByUser(user: User, searchTerm: ReadingEventType?, page: Long, pageSize: Long): Page<ReadingEventDto>
-    = readingEventRepository.findAllByUser(user.id.value, searchTerm, page, pageSize).map { it.toReadingEventDto() }
+    fun findAllByUser(user: User, searchTerm: ReadingEventType?, page: Long, pageSize: Long): Page<ReadingEventDto> =
+        readingEventRepository.findAllByUser(user.id.value, searchTerm, page, pageSize).map { it.toReadingEventDto() }
 
     @Transactional
     fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEventDto =
