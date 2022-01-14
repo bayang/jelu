@@ -24,13 +24,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-results-jdk-${{ matrix.java }}
-          path: jelu/build/test-results/
+          path: build/test-results/
       - name: Upload Unit Test Reports
         if: always()
         uses: actions/upload-artifact@v2
         with:
           name: test-reports-jdk-${{ matrix.java }}
-          path: jelu/build/reports/tests/
+          path: build/reports/tests/
 
   publish-test-results:
     name: "Publish Unit Tests Results"
