@@ -96,8 +96,8 @@ class GoodreadsQuoteProviderImpl(
             .exchangeToMono {
                 if (it.statusCode() == HttpStatus.OK) {
                     it.bodyToMono(String::class.java).map {
-                        it ->
-                        parse(it).also { quoteDtos -> cache.put(KEY, quoteDtos) }
+                        bodyString ->
+                        parse(bodyString).also { quoteDtos -> cache.put(KEY, quoteDtos) }
                     }
                 } else {
                     it.createException().flatMap { Mono.error { it } }
@@ -124,12 +124,12 @@ class GoodreadsQuoteProviderImpl(
     }
 
     fun quote(element: Element): QuoteDto {
-        val url = element?.select("a.authorOrTitle")?.attr("href")
+        val url = element.select("a.authorOrTitle").attr("href")
         return QuoteDto(
             content = element.ownText(),
-            author = element?.select("span.authorOrTitle")?.text(),
-            origin = element?.select("a.authorOrTitle")?.text(),
-            link = if (url.isNullOrBlank()) "" else BASE_URL + url
+            author = element.select("span.authorOrTitle").text(),
+            origin = element.select("a.authorOrTitle").text(),
+            link = if (url.isBlank()) "" else BASE_URL + url
         )
     }
 }

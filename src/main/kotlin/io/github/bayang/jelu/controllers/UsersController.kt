@@ -28,65 +28,50 @@ class UsersController(
 
     @GetMapping(path = ["/users/me"])
     fun authenticatedUser(principal: Authentication, session: HttpSession): AuthenticationDto {
-        if (principal != null) {
-            when (principal.principal) {
-                is DummyUser -> {
-                    logger.debug { "dummy user $principal" }
-                    return AuthenticationDto(
-                        UserDto(
-                            login = principal.name,
-                            isAdmin = true,
-                            id = null,
-                            password = "****",
-                            modificationDate = null,
-                            creationDate = null
-                        ),
-                        token = session.id
-                    )
-                }
-                is JeluUser -> {
-                    logger.debug { "jelu user $principal" }
-                    logger.info { "session ${session.id}" }
-                    return AuthenticationDto(
-                        UserDto(
-                            login = principal.name,
-                            isAdmin = (principal.principal as JeluUser).user.isAdmin,
-                            id = (principal.principal as JeluUser).user.id.value,
-                            password = "****",
-                            modificationDate = null,
-                            creationDate = null
-                        ),
-                        token = session.id
-                    )
-                }
-                else -> {
-                    logger.debug { "other principal $principal" }
-                    return AuthenticationDto(
-                        UserDto(
-                            login = principal.name,
-                            isAdmin = principal.authorities.contains(SimpleGrantedAuthority(ROLE_ADMIN)),
-                            id = null,
-                            password = "****",
-                            modificationDate = null,
-                            creationDate = null
-                        ),
-                        token = session.id
-                    )
-                }
+        when (principal.principal) {
+            is DummyUser -> {
+                logger.debug { "dummy user $principal" }
+                return AuthenticationDto(
+                    UserDto(
+                        login = principal.name,
+                        isAdmin = true,
+                        id = null,
+                        password = "****",
+                        modificationDate = null,
+                        creationDate = null
+                    ),
+                    token = session.id
+                )
             }
-        } else {
-            logger.debug { "no principal" }
-            return AuthenticationDto(
-                UserDto(
-                    login = principal.name,
-                    isAdmin = (principal.principal as JeluUser).user.isAdmin,
-                    id = null,
-                    password = "****",
-                    modificationDate = null,
-                    creationDate = null
-                ),
-                token = session.id
-            )
+            is JeluUser -> {
+                logger.debug { "jelu user $principal" }
+                logger.info { "session ${session.id}" }
+                return AuthenticationDto(
+                    UserDto(
+                        login = principal.name,
+                        isAdmin = (principal.principal as JeluUser).user.isAdmin,
+                        id = (principal.principal as JeluUser).user.id.value,
+                        password = "****",
+                        modificationDate = null,
+                        creationDate = null
+                    ),
+                    token = session.id
+                )
+            }
+            else -> {
+                logger.debug { "other principal $principal" }
+                return AuthenticationDto(
+                    UserDto(
+                        login = principal.name,
+                        isAdmin = principal.authorities.contains(SimpleGrantedAuthority(ROLE_ADMIN)),
+                        id = null,
+                        password = "****",
+                        modificationDate = null,
+                        creationDate = null
+                    ),
+                    token = session.id
+                )
+            }
         }
     }
 
