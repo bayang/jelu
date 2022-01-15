@@ -70,6 +70,22 @@
                 }
               ],
               "countMatches": true
+            },
+            {
+              "files": [
+                "src/jelu-ui/package.json"
+              ],
+              "from": "\"version\": .*",
+              "to": "\"version\": \"${nextRelease.version}\"",
+              "results": [
+                {
+                  "file": "src/jelu-ui/package.json",
+                  "hasChanged": true,
+                  "numMatches": 1,
+                  "numReplacements": 1
+                }
+              ],
+              "countMatches": true
             }
           ]
         }
@@ -86,7 +102,8 @@
         {
           "assets": [
             "gradle.properties",
-            "CHANGELOG.md"
+            "CHANGELOG.md",
+            "src/jelu-ui/package.json"
           ]
         }
       ],
