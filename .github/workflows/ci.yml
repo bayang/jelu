@@ -63,12 +63,21 @@ jobs:
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            src/jelu-ui/package-lock.json
       - uses: actions/setup-java@v2
         with:
           java-version: '11'
           java-package: 'jdk'
           distribution: 'temurin'
           cache: 'gradle'
+      - name: Install dependencies
+        run: npm install --only=production
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
