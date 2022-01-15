@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+memory:myDb
+
+src/main/resources/public/**

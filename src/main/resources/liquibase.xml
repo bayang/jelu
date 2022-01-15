@@ -35,11 +35,35 @@
             <column name="publisher" type="varchar(500)"
                     remarks="The book's publisher ">
             </column>
+            <column name="series" type="varchar(500)"
+                    remarks="The book's series ">
+            </column>
+            <column name="number_in_series" type="double"
+                    remarks="The book's number in series ">
+            </column>
+            <column name="image" type="varchar(1000)"
+                    remarks="The book's image ">
+            </column>
             <column name="published_date" type="varchar(50)"
                     remarks="The book's publication date ">
             </column>
             <column name="page_count" type="int"
                     remarks="The book's page count ">
+            </column>
+            <column name="google_id" type="varchar(30)"
+                    remarks="The book's google id ">
+            </column>
+            <column name="goodreads_id" type="varchar(30)"
+                    remarks="The book's goodreads id ">
+            </column>
+            <column name="amazon_id" type="varchar(30)"
+                    remarks="The book's amazon id ">
+            </column>
+            <column name="librarything_id" type="varchar(30)"
+                    remarks="The book's librarything id ">
+            </column>
+            <column name="language" type="varchar(30)"
+                    remarks="The book's language ">
             </column>
         </createTable>
     </changeSet>
@@ -60,17 +84,67 @@
                     remarks="The author's name ">
                 <constraints nullable="false" />
             </column>
-        </createTable>
-        <createTable tableName="book_authors">
-            <column name="author" type="binary(16)" remarks="Technical ID">
-                <constraints primaryKey="true" primaryKeyName="pk_bookauthor_act" foreignKeyName="fk_bookauthors_book_id" references="book(id)" nullable="false" />
+            <column name="biography" type="varchar(5000)"
+                    remarks="The author's bio ">
             </column>
-            <column name="book" type="binary(16)" remarks="Technical ID">
-                <constraints primaryKey="true" primaryKeyName="pk_bookauthor_act" foreignKeyName="fk_bookauthors_author_id" references="author(id)" nullable="false" />
+            <column name="date_of_birth" type="varchar(100)"
+                    remarks="The author's date of birth ">
+            </column>
+            <column name="date_of_death" type="varchar(100)"
+                    remarks="The author's date of death ">
+            </column>
+            <column name="image" type="varchar(1000)"
+                    remarks="The author's picture path ">
             </column>
         </createTable>
+        <sql>CREATE TABLE book_authors
+            (
+            author BLOB(16) NOT NULL,
+            book BLOB(16) NOT NULL,
+            PRIMARY KEY (author, book),
+            FOREIGN KEY (author) REFERENCES author(id) ON DELETE CASCADE,
+            FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
     </changeSet>
     <changeSet id="user_and_events" author="byng">
+        <createTable tableName="user_book">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_reading_event" type="varchar(200)"
+                    remarks="Event type : CURRENTLY_READING,DROPPED,FINISHED ">
+            </column>
+            <column name="last_reading_event_date" type="timestamp"
+                    remarks="date of last reading event">
+            </column>
+            <column name="user" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_user_book_user_id" references="user(id)" nullable="false" />
+            </column>
+            <column name="book" type="binary(16)" remarks="Technical ID">
+                <constraints deleteCascade="true" foreignKeyName="fk_user_book_book_id" references="book(id)" nullable="false" />
+            </column>
+            <column name="notes" type="varchar(5000)"
+                    remarks="The user's personal notes ">
+            </column>
+            <column name="is_owned" type="boolean"
+                    remarks="If the user owns the book ">
+            </column>
+            <column name="to_read" type="boolean"
+                    remarks="If the book is in the to read list">
+            </column>
+            <column name="percent_read" type="int"
+                    remarks="The book's current read percentage">
+            </column>
+        </createTable>
         <createTable tableName="reading_event">
             <column name="id" type="binary(16)" remarks="Technical ID">
                 <constraints primaryKey="true" nullable="false" />
@@ -83,11 +157,8 @@
                     remarks="date of modification">
                 <constraints nullable="false" />
             </column>
-            <column name="user" type="binary(16)" remarks="Technical ID">
-                <constraints foreignKeyName="fk_reading_event_user_id" references="user(id)" nullable="false" />
-            </column>
-            <column name="book" type="binary(16)" remarks="Technical ID">
-                <constraints foreignKeyName="fk_reading_event_book_id" references="book(id)" nullable="false" />
+            <column name="user_book" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_reading_event_user_book_id" references="user_book(id)" nullable="false" deleteCascade="true" />
             </column>
             <column name="event_type" type="varchar(200)"
                     remarks="Event type : CURRENTLY_READING,DROPPED,FINISHED ">
@@ -106,8 +177,8 @@
                     remarks="date of modification">
                 <constraints nullable="false" />
             </column>
-            <column name="email" type="varchar(200)"
-                    remarks="The user's email ">
+            <column name="login" type="varchar(50)"
+                    remarks="The user's login ">
                 <constraints nullable="false" />
             </column>
             <column name="password" type="varchar(1000)"
@@ -119,7 +190,34 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
-
+    </changeSet>
+    <changeSet id="create_tags" author="byng">
+        <createTable tableName="tag">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(1000)"
+                    remarks="The tag's name ">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <sql>CREATE TABLE book_tags
+            (
+            tag BLOB(16) NOT NULL,
+            book BLOB(16) NOT NULL,
+            PRIMARY KEY (tag, book),
+            FOREIGN KEY (tag) REFERENCES tag(id) ON DELETE CASCADE,
+            FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

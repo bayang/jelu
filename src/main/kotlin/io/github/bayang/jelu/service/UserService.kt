@@ -2,26 +2,52 @@ package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.UserRepository
-import io.github.bayang.jelu.dto.CreateUserDto
-import io.github.bayang.jelu.dto.UserDto
-import io.github.bayang.jelu.dto.UserDtoWithEvents
+import io.github.bayang.jelu.dto.*
+import io.github.bayang.jelu.errors.JeluException
+import mu.KotlinLogging
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
+private val logger = KotlinLogging.logger {}
+
 @Component
-class UserService(private val userRepository: UserRepository) {
+class UserService(
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder
+) : UserDetailsService {
 
     @Transactional
     fun findAll(searchTerm: String?): List<UserDto> = userRepository.findAll(searchTerm).map { it.toUserDto() }
 
     @Transactional
-    fun findByEmailIgnoreCase(email: String): List<UserDto> = userRepository.findByEmailIgnoreCase(email).map { it.toUserDto() }
+    fun findByLogin(login: String): List<UserDto> = userRepository.findByLogin(login).map { it.toUserDto() }
 
     @Transactional
-    fun findUserById(id: UUID): UserDtoWithEvents = User[id].toUserDtoWithEvents()
+    fun findUserById(id: UUID): UserDto = User[id].toUserDto()
 
     @Transactional
-    fun save(user: CreateUserDto): UserDto = userRepository.save(user).toUserDto()
+    fun save(user: CreateUserDto): UserDto {
+        if (! userRepository.findByLogin(user.login).empty()) {
+            logger.error { "user already exists ${user.login}" }
+            throw JeluException("User already exists ${user.login}")
+        }
+        return userRepository.save(user.copy(password = passwordEncoder.encode(user.password))).toUserDto()
+    }
 
+    @Transactional
+    fun isInitialSetup(): Boolean = userRepository.countUsers() < 1L
+
+    @Transactional
+    override fun loadUserByUsername(username: String): UserDetails {
+        if (userRepository.countUsers() == 0L) {
+            return DummyUser(passwordEncoder.encode("initial"))
+        }
+        userRepository.findByLogin(username).let {
+            return JeluUser(it.first())
+        }
+    }
 }

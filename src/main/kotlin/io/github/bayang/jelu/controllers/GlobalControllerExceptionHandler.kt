@@ -13,59 +13,60 @@ import javax.validation.ConstraintViolationException
 
 @ControllerAdvice
 class GlobalControllerExceptionHandler {
-  @ExceptionHandler(ConstraintViolationException::class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ResponseBody
-  fun handleConstraintValidationException(
-    e: ConstraintViolationException
-  ): ApiError =
-    ApiError(
-      "Constraint violation",
-      e.constraintViolations.map { ApiValidationErrorItem(it.propertyPath.toString(), it.message) }
-    )
 
-  @ExceptionHandler(MethodArgumentNotValidException::class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ResponseBody
-  fun handleMethodArgumentNotValidException(
-    e: MethodArgumentNotValidException
-  ): ApiError =
-    ApiError(
-      "Validation error(s)",
-      e.bindingResult.fieldErrors.map { ApiValidationErrorItem(it.field, it.defaultMessage) }
-    )
+    @ExceptionHandler(ConstraintViolationException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleConstraintValidationException(
+        e: ConstraintViolationException
+    ): ApiError =
+        ApiError(
+            "Constraint violation",
+            e.constraintViolations.map { ApiValidationErrorItem(it.propertyPath.toString(), it.message) }
+        )
 
-  @ExceptionHandler(EntityNotFoundException::class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ResponseBody
-  fun handleNonExistingEntityException(
-    e: EntityNotFoundException
-  ): ApiError =
-    ApiError(e.message)
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleMethodArgumentNotValidException(
+        e: MethodArgumentNotValidException
+    ): ApiError =
+        ApiError(
+            "Validation error(s)",
+            e.bindingResult.fieldErrors.map { ApiValidationErrorItem(it.field, it.defaultMessage) }
+        )
 
-  @ExceptionHandler(HttpMessageNotReadableException::class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ResponseBody
-  fun handleHttpMessageNotReadableException(
-    e: HttpMessageNotReadableException
-  ): ApiError =
-    ApiError(e.message)
+    @ExceptionHandler(EntityNotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    fun handleNonExistingEntityException(
+        e: EntityNotFoundException
+    ): ApiError =
+        ApiError(e.message)
 
-  @ExceptionHandler(JeluException::class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  @ResponseBody
-  fun handleJeluException(
-    e: JeluException
-  ): ApiError =
-    ApiError(e.message)
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleHttpMessageNotReadableException(
+        e: HttpMessageNotReadableException
+    ): ApiError =
+        ApiError(e.message)
+
+    @ExceptionHandler(JeluException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    fun handleJeluException(
+        e: JeluException
+    ): ApiError =
+        ApiError(e.message)
 }
 
 data class ApiError(
-  val message: String? = null,
-  val violations: List<ApiValidationErrorItem> = emptyList()
+    val message: String? = null,
+    val violations: List<ApiValidationErrorItem> = emptyList()
 )
 
 data class ApiValidationErrorItem(
-  val field: String? = null,
-  val error: String? = null
+    val field: String? = null,
+    val error: String? = null
 )
