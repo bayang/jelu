@@ -94,7 +94,7 @@ tasks.register<JavaExec>("unpack") {
 
 node {
     nodeProjectDir.set(file("${project.projectDir}/src/jelu-ui"))
-    version.set("12.18.3")
+    version.set("16.13.2")
     download.set(true)
 }
 

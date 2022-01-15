@@ -2,10 +2,15 @@
   "devDependencies": {
     "@commitlint/cli": "^16.0.2",
     "@commitlint/config-conventional": "^16.0.0",
+    "@google/semantic-release-replace-plugin": "^1.1.0",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "commitlint": "^16.0.2",
     "husky": "^7.0.0",
     "is-ci": "^3.0.1",
-    "pinst": "^2.1.6"
+    "pinst": "^2.1.6",
+    "semantic-release": "^18.0.1"
   },
   "scripts": {
     "prepare": "is-ci || husky install",
@@ -15,6 +20,86 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
+    ]
+  },
+  "release": {
+    "branches": [
+      "main",
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "next",
+      "next-major",
+      {
+        "name": "beta",
+        "prerelease": true
+      },
+      {
+        "name": "alpha",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      ["@semantic-release/commit-analyzer", {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          {"type": "feat", "release": "minor"},
+          {"type": "fix", "release": "patch"},
+          {"type": "style", "release": "patch"},
+          {"type": "test", "release": false}
+        ]
+      }],
+      ["@semantic-release/release-notes-generator", {
+        "preset": "conventionalcommits"
+      }],
+      "@semantic-release/changelog",
+      [
+        "@google/semantic-release-replace-plugin",
+        {
+          "replacements": [
+            {
+              "files": [
+                "gradle.properties"
+              ],
+              "from": "version=.*",
+              "to": "version=${nextRelease.version}",
+              "results": [
+                {
+                  "file": "gradle.properties",
+                  "hasChanged": true,
+                  "numMatches": 1,
+                  "numReplacements": 1
+                }
+              ],
+              "countMatches": true
+            }
+          ]
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "ci/prepare-release.sh ${nextRelease.version} ${nextRelease.channel}",
+          "publishCmd": "ci/publish-dockerhub.sh ${nextRelease.version} ${nextRelease.channel}"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "gradle.properties",
+            "CHANGELOG.md"
+          ]
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "build/libs/*.jar"
+            }
+          ]
+        }
+      ]
     ]
   }
 }
