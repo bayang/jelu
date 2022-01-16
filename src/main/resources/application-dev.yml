@@ -5,6 +5,8 @@ jelu:
     dir: '${user.home}/.jelu/files/'
   session:
     duration: 604800 #7 days
+#  cors.allowed-origins:
+#    - http://localhost:9000
 server:
   port: 11111
 spring:
@@ -19,7 +21,7 @@ spring:
     driver-class-name: org.sqlite.JDBC
   exposed:
     generate-ddl: false
-    show-sql: false
+    show-sql: true
   servlet:
     multipart:
       enabled: true

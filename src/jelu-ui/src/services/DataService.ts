@@ -9,7 +9,6 @@ import { Metadata } from "../model/Metadata";
 import { Page } from "../model/Page";
 import { Quote } from "../model/Quote";
 
-
 class DataService {
 
   private apiClient: AxiosInstance;
@@ -33,10 +32,25 @@ class DataService {
   private API_QUOTES = '/quotes';
 
   private API_READING_EVENTS = '/reading-events';
+
+  private MODE: string;
+
+  private BASE_URL: string;
   
   constructor() {
+    if (import.meta.env.DEV) {
+      this.MODE = "dev"
+      this.BASE_URL = import.meta.env.VITE_API_URL as string
+    }
+    else {
+      this.MODE = "prod"
+      this.BASE_URL = window.location.origin
+      this.BASE_URL.endsWith("/") ? this.BASE_URL = this.BASE_URL + "api" : this.BASE_URL = this.BASE_URL + "/api"
+    }
+    console.log(`running in ${this.MODE} mode at ${this.BASE_URL}`)
+
     this.apiClient = axios.create({
-      baseURL: "http://localhost:11111/api",
+      baseURL: this.BASE_URL,
       headers: {
         "Content-type": "application/json",
         'X-Requested-With': 'XMLHttpRequest'
