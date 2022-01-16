@@ -1,3 +1,10 @@
+### [0.1.2](https://github.com/bayang/jelu/compare/v0.1.1...v0.1.2) (2022-01-16)
+
+
+### Bug Fixes
+
+* ci replacement ([0dabd70](https://github.com/bayang/jelu/commit/0dabd7020c062c692310fc4476d302af51e11edc))
+
 ### [0.1.1](https://github.com/bayang/jelu/compare/v0.1.0...v0.1.1) (2022-01-16)
 
 
