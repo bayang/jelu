@@ -1,3 +1,12 @@
+### [0.1.3](https://github.com/bayang/jelu/compare/v0.1.2...v0.1.3) (2022-01-16)
+
+
+### Bug Fixes
+
+* frontend config ([39952b7](https://github.com/bayang/jelu/commit/39952b73fd6ffacca623e3e64c7b5a529c1da1ce))
+* frontend url ([dfda488](https://github.com/bayang/jelu/commit/dfda488e7a2df09bc832257323abd07d6ef45e7b))
+* linting ([246d2ae](https://github.com/bayang/jelu/commit/246d2ae402e248cf131c06d15e701d98a993865a))
+
 ### [0.1.2](https://github.com/bayang/jelu/compare/v0.1.1...v0.1.2) (2022-01-16)
 
 
