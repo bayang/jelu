@@ -9,7 +9,7 @@ import javax.validation.constraints.Positive
 @ConfigurationProperties(prefix = "jelu")
 @ConstructorBinding
 @Validated
-data class JeluProperties(val database: Database, val files: Files, val session: Session, val cors: Cors=Cors()) {
+data class JeluProperties(val database: Database, val files: Files, val session: Session, val cors: Cors = Cors()) {
 
     data class Database(
         @get:NotBlank var path: String
