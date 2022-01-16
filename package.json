@@ -97,7 +97,7 @@
                 "src/jelu-ui/package.json"
               ],
               "from": "\"version\": .*",
-              "to": "\"version\": \"${nextRelease.version}\"",
+              "to": "\"version\": \"${nextRelease.version}\",",
               "results": [
                 {
                   "file": "src/jelu-ui/package.json",
