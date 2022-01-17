@@ -1,10 +1,9 @@
-package io.github.bayang.jelu.service
+package io.github.bayang.jelu.service.metadata
 
 import com.ctc.wstx.stax.WstxInputFactory
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.errors.JeluException
-import io.github.bayang.jelu.service.metadata.*
 import io.github.bayang.jelu.utils.sanitizeHtml
 import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
@@ -33,7 +32,7 @@ class FetchMetadataService(
             throw JeluException("At least one of isbn, authors or title is required to fetch metadata")
         }
         var bookFileName: String = FILE_PREFIX
-        var commandArray: MutableList<String> = mutableListOf("/usr/bin/fetch-ebook-metadata", "-o", "-d 90")
+        val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path, "-o", "-d 90")
         var fileNameComplete = false
         if (!isbn.isNullOrBlank()) {
             bookFileName += isbn
@@ -61,7 +60,7 @@ class FetchMetadataService(
         val targetCover = File(properties.files.dir, bookFileName)
         commandArray.add("-c")
         commandArray.add(targetCover.absolutePath)
-        val builder: ProcessBuilder = ProcessBuilder()
+        val builder = ProcessBuilder()
 
         builder.command(commandArray)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
@@ -96,7 +95,7 @@ class FetchMetadataService(
     fun parseOpf(input: String): MetadataDto {
         val stream = BufferedInputStream(ByteArrayInputStream(input.toByteArray(Charsets.UTF_8)))
         val root: SMHierarchicCursor = factory.rootElementCursor(stream)
-        var dto = MetadataDto()
+        val dto = MetadataDto()
         try {
             root.advance()
             val rootChildrenCursor = root.childElementCursor()

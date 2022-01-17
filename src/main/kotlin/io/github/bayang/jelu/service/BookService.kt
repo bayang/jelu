@@ -3,6 +3,7 @@ package io.github.bayang.jelu.service
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.*
 import io.github.bayang.jelu.dto.*
+import io.github.bayang.jelu.service.metadata.FILE_PREFIX
 import io.github.bayang.jelu.utils.imageName
 import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging

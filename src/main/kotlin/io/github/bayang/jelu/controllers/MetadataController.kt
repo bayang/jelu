@@ -2,7 +2,7 @@ package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
-import io.github.bayang.jelu.service.FetchMetadataService
+import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

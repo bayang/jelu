@@ -1,4 +1,4 @@
-package io.github.bayang.jelu.service
+package io.github.bayang.jelu.service.quotes
 
 import io.github.bayang.jelu.dto.QuoteDto
 import reactor.core.publisher.Mono

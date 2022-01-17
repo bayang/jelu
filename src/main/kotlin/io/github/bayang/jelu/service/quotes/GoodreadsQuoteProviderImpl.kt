@@ -1,8 +1,9 @@
-package io.github.bayang.jelu.service
+package io.github.bayang.jelu.service.quotes
 
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.github.bayang.jelu.dto.QuoteDto
+import io.github.bayang.jelu.service.BookService
 import mu.KotlinLogging
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -30,7 +31,7 @@ class GoodreadsQuoteProviderImpl(
     val bookService: BookService
 ) : IQuoteProvider {
 
-    val exchange = ExchangeStrategies.builder().codecs { c: ClientCodecConfigurer ->
+    final val exchange = ExchangeStrategies.builder().codecs { c: ClientCodecConfigurer ->
         c.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
     }.build()
 
