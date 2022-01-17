@@ -5,6 +5,9 @@ jelu:
     dir: '${user.home}/.jelu/files/'
   session:
     duration: 604800 #7 days
+  metadata:
+    calibre:
+      path: /usr/bin/fetch-ebook-metadata
 server:
   port: 11111
 spring:
