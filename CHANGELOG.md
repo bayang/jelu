@@ -1,3 +1,11 @@
+### [0.1.8](https://github.com/bayang/jelu/compare/v0.1.7...v0.1.8) (2022-01-18)
+
+
+### Bug Fixes
+
+* amd calibre folder ([e611dbb](https://github.com/bayang/jelu/commit/e611dbbafc1ade566123588af50581f2c205fdb9))
+* revert add amd calibre folder" ([ec29273](https://github.com/bayang/jelu/commit/ec29273fd2315c5526c6663533b1bc2bbcf2a26c))
+
 ### [0.1.7](https://github.com/bayang/jelu/compare/v0.1.6...v0.1.7) (2022-01-18)
 
 
