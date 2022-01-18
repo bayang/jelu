@@ -14,7 +14,7 @@ docker buildx build \
     --file ./Dockerfile . \
     --push
 
-# push arm
+# push arm images
 docker buildx build \
     --platform $ARM_PLATFORMS \
     --cache-from wabayang/jelu:$DOCKER_CHANNEL \
