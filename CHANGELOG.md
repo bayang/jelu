@@ -1,3 +1,13 @@
+### [0.1.4](https://github.com/bayang/jelu/compare/v0.1.3...v0.1.4) (2022-01-18)
+
+
+### Bug Fixes
+
+* arm dockerfile ([2fdfce2](https://github.com/bayang/jelu/commit/2fdfce2c13dd102293aa617af6396c3175a7353d))
+* arm images ([fbbed72](https://github.com/bayang/jelu/commit/fbbed7256374fca6907f434f8ac8598d873a9667))
+* arm images file ([b2d528b](https://github.com/bayang/jelu/commit/b2d528b9ac9e95e663bc269fae1d3d356f22b3c6))
+* metadata fetcher path ([6c8d452](https://github.com/bayang/jelu/commit/6c8d45282791d21e0476224df962fe3482209621))
+
 ### [0.1.3](https://github.com/bayang/jelu/compare/v0.1.2...v0.1.3) (2022-01-16)
 
 
