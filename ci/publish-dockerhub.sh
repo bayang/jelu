@@ -8,16 +8,8 @@ source "$(dirname "$0")/docker-common.sh" $1 $2
 # Push docker images (built previously)
 docker buildx build \
     --platform $PLATFORMS \
-    --tag wabayang/jelu:$DOCKER_CHANNEL \
-    --tag wabayang/jelu:$1 \
-    --file ./Dockerfile . \
-    --push
-
-# push arm images
-docker buildx build \
-    --platform $ARM_PLATFORMS \
     --cache-from wabayang/jelu:$DOCKER_CHANNEL \
     --tag wabayang/jelu:$DOCKER_CHANNEL \
     --tag wabayang/jelu:$1 \
-    --file ./Dockerfile-arm . \
+    --file ./Dockerfile . \
     --push
