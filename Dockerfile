@@ -30,7 +30,6 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       qt5-default \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/* \
-      && mkdir /.config/calibre/ \
       && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin install_dir=/ isolated=y \
       && curl https://www.mobileread.com/forums/attachment.php\?attachmentid\=182200\&d\=1641360812 > goodreads.zip \
       && /calibre/calibre-customize --add-plugin goodreads.zip \
