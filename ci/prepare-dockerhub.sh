@@ -22,4 +22,4 @@ docker buildx build \
     --cache-from wabayang/jelu:$DOCKER_CHANNEL \
     --tag wabayang/jelu:$DOCKER_CHANNEL \
     --tag wabayang/jelu:$1 \
-    --file ./Dockerfile .
+    --file ./Dockerfile-arm .
