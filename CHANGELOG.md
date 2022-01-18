@@ -1,3 +1,10 @@
+### [0.1.5](https://github.com/bayang/jelu/compare/v0.1.4...v0.1.5) (2022-01-18)
+
+
+### Bug Fixes
+
+* arm images push ([24d4df6](https://github.com/bayang/jelu/commit/24d4df674a02de819f02a8092a027f70ee7563c0))
+
 ### [0.1.4](https://github.com/bayang/jelu/compare/v0.1.3...v0.1.4) (2022-01-18)
 
 
