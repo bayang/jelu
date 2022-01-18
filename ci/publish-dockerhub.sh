@@ -13,3 +13,12 @@ docker buildx build \
     --tag wabayang/jelu:$1 \
     --file ./Dockerfile . \
     --push
+
+# push arm
+docker buildx build \
+    --platform $ARM_PLATFORMS \
+    --cache-from wabayang/jelu:$DOCKER_CHANNEL \
+    --tag wabayang/jelu:$DOCKER_CHANNEL \
+    --tag wabayang/jelu:$1 \
+    --file ./Dockerfile . \
+    --push

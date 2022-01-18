@@ -15,3 +15,11 @@ docker buildx build \
     --tag wabayang/jelu:$DOCKER_CHANNEL \
     --tag wabayang/jelu:$1 \
     --file ./Dockerfile .
+
+# build arm
+docker buildx build \
+    --platform $ARM_PLATFORMS \
+    --cache-from wabayang/jelu:$DOCKER_CHANNEL \
+    --tag wabayang/jelu:$DOCKER_CHANNEL \
+    --tag wabayang/jelu:$1 \
+    --file ./Dockerfile .
