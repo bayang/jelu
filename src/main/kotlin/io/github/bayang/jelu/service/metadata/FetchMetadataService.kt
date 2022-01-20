@@ -32,7 +32,7 @@ class FetchMetadataService(
             throw JeluException("At least one of isbn, authors or title is required to fetch metadata")
         }
         var bookFileName: String = FILE_PREFIX
-        val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path, "-o", "-d 90")
+        val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path!!, "-o", "-d 90")
         var fileNameComplete = false
         if (!isbn.isNullOrBlank()) {
             bookFileName += isbn

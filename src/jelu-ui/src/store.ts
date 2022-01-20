@@ -3,13 +3,15 @@ import { UserAuthentication, User } from './model/User'
 import dataService from './services/DataService'
 import router from './router'
 import { InjectionKey } from 'vue'
+import { ServerSettings } from './model/ServerSettings'
 
 export interface State {
   count: number,
   isLogged: boolean,
   isInitialSetup : boolean,
   user : User | null,
-  entryPoint: string
+  entryPoint: string,
+  serverSettings: ServerSettings
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -22,7 +24,11 @@ const store = createStore<State>({
       isLogged: false,
       isInitialSetup : false,
       user: null,
-      entryPoint: '/'
+      entryPoint: '/',
+      serverSettings: {
+        metadataFetchEnabled: false,
+        metadataFetchCalibreEnabled: false
+      } as ServerSettings
     }
   },
   mutations: {
@@ -40,6 +46,9 @@ const store = createStore<State>({
     },
     entryPoint(state, entryPoint: string) {
       state.entryPoint = entryPoint
+    },
+    serverSettings(state, serverSettings: ServerSettings) {
+      state.serverSettings = serverSettings
     },
   },
   actions: {
@@ -59,13 +68,14 @@ const store = createStore<State>({
           throw error
         }
       },
-      async authenticate({commit, state}, payload) {
+      async authenticate({dispatch, commit, state}, payload) {
         try {
           const user: User = await dataService.authenticateUser(payload.user, payload.password)
           console.log('store authenticate')
           console.log(user)
           commit('login', true)
           commit('user', user)
+          dispatch('getServerSettings')
           await router.push({path: state.entryPoint})
         } catch (error) {
           commit('login', false)
@@ -83,15 +93,28 @@ const store = createStore<State>({
         commit('login', false)
         commit('user', null)
         router.push({name: 'login'})
-      }
+      },
+      async getServerSettings({commit}) {
+        dataService.serverSettings()
+          .then(res => {
+            console.log(res)
+            commit('serverSettings', res)
+          })
+          .catch(err => {
+            return err
+          })
+      },
 
   },
   getters : {
-    getUsername(state) {
+    getUsername(state): string {
       return state.user != null ? state.user.login : 'anonymous'
     },
-    isAdmin(state) {
+    isAdmin(state): boolean {
       return state.user != null && state.user.isAdmin
+    },
+    getSettings(state): ServerSettings {
+      return state.serverSettings
     }
   }, 
   plugins : [createLogger()],

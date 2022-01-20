@@ -8,6 +8,7 @@ import { Tag } from "../model/Tag";
 import { Metadata } from "../model/Metadata";
 import { Page } from "../model/Page";
 import { Quote } from "../model/Quote";
+import { ServerSettings } from "../model/ServerSettings";
 
 class DataService {
 
@@ -32,6 +33,8 @@ class DataService {
   private API_QUOTES = '/quotes';
 
   private API_READING_EVENTS = '/reading-events';
+
+  private API_SERVER_SETTINGS = '/server-settings';
 
   private MODE: string;
 
@@ -592,6 +595,22 @@ class DataService {
       }
       console.log("error my events " + (error as AxiosError).code)
       throw new Error("error my events " + error)
+    }
+  }
+
+  serverSettings = async () => {
+    try {
+      const response = await this.apiClient.get<ServerSettings>(`${this.API_SERVER_SETTINGS}`);
+      console.log("called server settings")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error server settings " + (error as AxiosError).code)
+      throw new Error("error server settings " + error)
     }
   }
 

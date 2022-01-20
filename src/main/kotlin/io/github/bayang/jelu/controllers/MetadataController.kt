@@ -2,6 +2,7 @@ package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,5 +25,9 @@ class MetadataController(
         @RequestParam(name = "title", required = false) title: String?,
         @RequestParam(name = "authors", required = false) authors: String?
     ): MetadataDto =
-        metadataService.fetchMetadata(isbn, title, authors)
+        if (properties.metadata.calibre.path.isNullOrBlank()) {
+            throw JeluException("Automatic fetching of metadata is disabled, install calibre first")
+        } else {
+            metadataService.fetchMetadata(isbn, title, authors)
+        }
 }

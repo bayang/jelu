@@ -22,6 +22,7 @@ store.dispatch('getUser')
     console.log("entrypoint " + store.state.entryPoint)
     await router.push({ path: store.state.entryPoint })
     console.log("ok nav")
+    store.dispatch('getServerSettings')
     // } catch(e) {
     // console.log("error nav")
     // console.log(e)

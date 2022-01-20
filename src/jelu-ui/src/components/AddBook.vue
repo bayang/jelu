@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, reactive, Ref, ref } from "vue";
+import { useStore } from 'vuex'
 import { UserBook } from "../model/Book";
 import dataService from "../services/DataService";
 import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { key } from '../store'
 import { Author } from "../model/Author";
 import { Tag } from "../model/Tag";
 import AutoImportFormModalVue from "./AutoImportFormModal.vue";
@@ -12,6 +14,7 @@ import { ObjectUtils } from "../utils/ObjectUtils";
 import IsbnVerify from '@saekitominaga/isbn-verify';
 import Swal from 'sweetalert2';
 
+const store = useStore(key)
 const { oruga } = useProgrammatic();
 
 const datepicker = ref(null);
@@ -396,6 +399,16 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
   }
   return null
 }
+
+let autoImportPopupContent = computed(() => {
+  if (store.state.serverSettings.metadataFetchEnabled) {
+    return "Try to auto fill some fields from the web, given a isbn or a title"
+  }
+  else {
+    return "Auto import requires Calibre to be installed"
+  }
+})
+
 </script>
 
 <template>
@@ -408,11 +421,12 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
       </div>
       <div class="column is-one-fifth">
         <o-tooltip
-          label="Try to auto fill some fields from the web, given a isbn or a title"
+          :label="autoImportPopupContent"
           multiline
         >
           <button
             class="button is-success is-light"
+            :disabled="!store.state.serverSettings.metadataFetchEnabled"
             @click="toggleModal"
           >
             Auto fill

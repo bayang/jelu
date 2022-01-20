@@ -9,7 +9,13 @@ import javax.validation.constraints.Positive
 @ConfigurationProperties(prefix = "jelu")
 @ConstructorBinding
 @Validated
-data class JeluProperties(val database: Database, val files: Files, val session: Session, val cors: Cors = Cors(), val metadata: Metadata) {
+data class JeluProperties(
+    val database: Database,
+    val files: Files,
+    val session: Session,
+    val cors: Cors = Cors(),
+    val metadata: Metadata = Metadata(Calibre(null))
+) {
 
     data class Database(
         @get:NotBlank var path: String
@@ -28,7 +34,7 @@ data class JeluProperties(val database: Database, val files: Files, val session:
     )
 
     data class Calibre(
-        var path: String
+        var path: String?
     )
 
     data class Metadata(
