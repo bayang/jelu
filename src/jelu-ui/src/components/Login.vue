@@ -201,8 +201,6 @@ const submit = () => {
           {{ errorMessage }}
         </p>
       </div>
-
-      <p>login {{ form.login }},  pw  {{ form.password }}</p>
     </div>
   </div>
 </template>

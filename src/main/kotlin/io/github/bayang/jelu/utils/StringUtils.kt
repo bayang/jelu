@@ -12,7 +12,7 @@ fun sanitizeHtml(input: String?): String {
     if (input.isNullOrBlank()) {
         return ""
     }
-    return Jsoup.clean(input, whitelist)
+    return Jsoup.clean(input.trim(), whitelist)
 }
 
 fun slugify(input: String): String = slugifier.slugify(input)

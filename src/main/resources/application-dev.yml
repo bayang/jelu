@@ -2,7 +2,8 @@ jelu:
   database:
     path: ${user.home}/.jelu/database/
   files:
-    dir: '${user.home}/.jelu/files/'
+    images: '${user.home}/.jelu/files/images/'
+    imports: '${user.home}/.jelu/files/imports/'
   session:
     duration: 604800 #7 days
   metadata:
@@ -38,3 +39,5 @@ logging:
     #    name: \${user.home}/.jelu/jelu.log
   level:
     io.github.bayang.jelu: DEBUG
+    io.github.bayang.jelu.service.metadata: TRACE
+    io.github.bayang.jelu.service.quotes: TRACE

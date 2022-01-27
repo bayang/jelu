@@ -24,7 +24,8 @@ data class CreateReadingEventWithUserInfoDto(
 )
 data class CreateReadingEventDto(
     val eventType: ReadingEventType,
-    val bookId: UUID?
+    val bookId: UUID?,
+    val readDate: Instant?
 )
 data class UpdateReadingEventDto(
     val eventType: ReadingEventType,

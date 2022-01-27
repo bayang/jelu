@@ -114,7 +114,7 @@ const logout = () => {
             :to="{ name: 'add-book' }"
             class="navbar-item is-family-sans-serif is-uppercase"
           >
-            Import book
+            Add book
           </router-link>
         </div>
         <div class="navbar-end">
@@ -136,6 +136,17 @@ const logout = () => {
                   :to="{ name: 'login' }"
                 >
                   Login
+                </router-link>
+              </div>
+              <div
+                v-if="isLogged"
+                class="navbar-item"
+              >
+                <router-link
+                  class="is-family-sans-serif"
+                  :to="{ name: 'import' }"
+                >
+                  Import books
                 </router-link>
               </div>
             </div>

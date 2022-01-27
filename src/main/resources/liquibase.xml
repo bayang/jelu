@@ -66,6 +66,12 @@
                     remarks="The book's language ">
             </column>
         </createTable>
+        <createIndex tableName="book" indexName="idx_book_isbn10">
+            <column name="isbn10" />
+        </createIndex>
+        <createIndex tableName="book" indexName="idx_book_isbn13">
+            <column name="isbn13" />
+        </createIndex>
     </changeSet>
     <changeSet id="create_author" author="byng">
         <createTable tableName="author">
@@ -218,6 +224,84 @@
             FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
             );
         </sql>
+    </changeSet>
+    <changeSet id="csv_imports" author="byng">
+        <createTable tableName="import_entity">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="processing_status" type="varchar(100)"
+                    remarks="The current status ">
+                <constraints nullable="false" />
+            </column>
+            <column name="import_source" type="varchar(100)"
+                    remarks="The import source ">
+                <constraints nullable="false" />
+            </column>
+            <column name="goodreads_id" type="varchar(50)"
+                    remarks="The goodreads id ">
+            </column>
+            <column name="librarything_id" type="varchar(50)"
+                    remarks="The librarything id ">
+            </column>
+            <column name="title" type="varchar(1000)"
+                    remarks="The title ">
+            </column>
+            <column name="authors" type="varchar(10000)"
+                    remarks="The authors ">
+            </column>
+            <column name="isbn10" type="varchar(20)"
+                    remarks="isbn10 ">
+            </column>
+            <column name="isbn13" type="varchar(20)"
+                    remarks="isbn13 ">
+            </column>
+            <column name="publisher" type="varchar(500)"
+                    remarks="publisher ">
+            </column>
+            <column name="number_of_pages" type="int"
+                    remarks="number of pages ">
+            </column>
+            <column name="published_date" type="varchar(50)"
+                    remarks="published date ">
+            </column>
+            <column name="read_dates" type="varchar(1000)"
+                    remarks="read dates ">
+            </column>
+            <column name="tags" type="varchar(10000)"
+                    remarks="tags ">
+            </column>
+            <column name="personal_notes" type="varchar(10000)"
+                    remarks="personal notes ">
+            </column>
+            <column name="read_count" type="int"
+                    remarks="number reads ">
+            </column>
+            <column name="userId" type="binary(16)" remarks="user id UUID">
+                <constraints nullable="false" />
+            </column>
+            <column name="should_fetch_metadata" type="boolean"
+                    remarks="If we should fetch metadata online ">
+                <constraints nullable="false" />
+            </column>
+            <column name="owned" type="boolean"
+                    remarks="If the book is owned ">
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="add-status-and-user-index" author="byng">
+        <createIndex tableName="import_entity" indexName="idx_status_user">
+            <column name="processing_status" />
+            <column name="userId" />
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

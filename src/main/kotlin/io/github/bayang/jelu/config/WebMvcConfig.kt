@@ -13,7 +13,7 @@ class WebMvcConfig(private val properties: JeluProperties) : WebMvcConfigurer {
     }
 
     fun getExternalFilesFolderPath(): String {
-        var suffix: String = if (properties.files.dir.endsWith("/")) { "" } else { "/" }
-        return "file:" + properties.files.dir + suffix
+        var suffix: String = if (properties.files.images.endsWith("/")) { "" } else { "/" }
+        return "file:" + properties.files.images + suffix
     }
 }

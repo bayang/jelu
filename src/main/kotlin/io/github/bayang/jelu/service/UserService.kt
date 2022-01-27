@@ -30,6 +30,9 @@ class UserService(
     fun findUserById(id: UUID): UserDto = User[id].toUserDto()
 
     @Transactional
+    fun findUserEntityById(id: UUID): User = User[id]
+
+    @Transactional
     fun save(user: CreateUserDto): UserDto {
         if (! userRepository.findByLogin(user.login).empty()) {
             logger.error { "user already exists ${user.login}" }

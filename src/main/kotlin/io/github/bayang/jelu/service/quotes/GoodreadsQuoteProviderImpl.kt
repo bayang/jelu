@@ -108,7 +108,7 @@ class GoodreadsQuoteProviderImpl(
     }
 
     private fun parse(body: String): List<QuoteDto> {
-        logger.debug { "body : $body" }
+        logger.trace { "body : $body" }
         val doc = Jsoup.parse(body)
         val quotesElements: Elements = doc.select(".quoteText")
         val quotes = mutableListOf<QuoteDto>()

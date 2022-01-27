@@ -22,7 +22,8 @@ data class JeluProperties(
     )
 
     data class Files(
-        @get:NotBlank var dir: String
+        @get:NotBlank var images: String,
+        @get:NotBlank var imports: String
     )
 
     data class Session(

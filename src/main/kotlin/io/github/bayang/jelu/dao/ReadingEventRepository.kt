@@ -97,16 +97,25 @@ class ReadingEventRepository {
         val alreadyReadingEvent: ReadingEvent? =
             userBook.readingEvents.find { it.eventType == ReadingEventType.CURRENTLY_READING }
         val instant: Instant = nowInstant()
-        userBook.lastReadingEvent = createReadingEventDto.eventType
-        userBook.lastReadingEventDate = instant
+        if (userBook.lastReadingEvent != null) {
+            if (createReadingEventDto.readDate != null && createReadingEventDto.readDate.isAfter(userBook.lastReadingEventDate)) {
+                userBook.lastReadingEvent = createReadingEventDto.eventType
+                userBook.lastReadingEventDate = createReadingEventDto.readDate
+            }
+        } else {
+            userBook.lastReadingEvent = createReadingEventDto.eventType
+            userBook.lastReadingEventDate = createReadingEventDto.readDate ?: instant
+        }
         if (alreadyReadingEvent != null) {
-            logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_READING state for book ${userBook.book.id}" }
-            alreadyReadingEvent.eventType = createReadingEventDto.eventType
-            alreadyReadingEvent.modificationDate = instant
-            return alreadyReadingEvent
+            if (createReadingEventDto.readDate == null || createReadingEventDto.readDate.isAfter(alreadyReadingEvent.creationDate)) {
+                logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_READING state for book ${userBook.book.id}" }
+                alreadyReadingEvent.eventType = createReadingEventDto.eventType
+                alreadyReadingEvent.modificationDate = instant
+                return alreadyReadingEvent
+            }
         }
         return ReadingEvent.new {
-            this.creationDate = instant
+            this.creationDate = createReadingEventDto.readDate ?: instant
             this.modificationDate = instant
             this.eventType = createReadingEventDto.eventType
             this.userBook = userBook

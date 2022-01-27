@@ -15,6 +15,7 @@ plugins {
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     outputToConsole.set(true)
+    coloredOutput.set(true)
     disabledRules.set(setOf("no-wildcard-imports"))
 }
 
@@ -61,6 +62,8 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
     implementation("commons-validator:commons-validator:1.7")
     implementation("org.jsoup:jsoup:1.14.3")
+
+    implementation("org.apache.commons:commons-csv:1.9.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")

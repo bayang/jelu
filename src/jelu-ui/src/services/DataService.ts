@@ -9,12 +9,13 @@ import { Metadata } from "../model/Metadata";
 import { Page } from "../model/Page";
 import { Quote } from "../model/Quote";
 import { ServerSettings } from "../model/ServerSettings";
+import { ImportConfigurationDto } from "../model/ImportConfiguration";
 
 class DataService {
 
   private apiClient: AxiosInstance;
   
-  private token?: string = ''
+  private token?: string = '';
 
   private TOKEN_KEY = 'jelu-token'
 
@@ -35,6 +36,8 @@ class DataService {
   private API_READING_EVENTS = '/reading-events';
 
   private API_SERVER_SETTINGS = '/server-settings';
+
+  private API_IMPORTS = '/imports';
 
   private MODE: string;
 
@@ -611,6 +614,30 @@ class DataService {
       }
       console.log("error server settings " + (error as AxiosError).code)
       throw new Error("error server settings " + error)
+    }
+  }
+
+  importCsv = async (importConfig: ImportConfigurationDto, file: File, onUploadProgress:any) => {
+    try {
+      const formData = new FormData()
+      formData.append('file', file);
+      formData.append('importConfig', new Blob([JSON.stringify(importConfig)], {
+        type: "application/json"
+    }));
+      await this.apiClient.post(this.API_IMPORTS, formData,
+       { 
+        headers:{
+          'Content-Type':'multipart/form-data',
+          'Accept':'application/json'
+        }, 
+        onUploadProgress: onUploadProgress})
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error import csv " + error.response.status + " " + error.response.data.error)
+        throw new Error("error import csv " + error.response.status + " " + error)
+      }
+      console.log("error import csv " + (error as AxiosError).code)
+      throw new Error("error importing csv " + error)
     }
   }
 

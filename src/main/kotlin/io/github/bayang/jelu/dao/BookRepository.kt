@@ -121,33 +121,58 @@ class BookRepository(
         )
     }
 
-    public fun displayRow(resultRow: ResultRow) {
+    fun displayRow(resultRow: ResultRow) {
         logger.debug { "row $resultRow" }
     }
 
     fun update(updated: Book, book: BookUpdateDto): Book {
         if (!book.title.isNullOrBlank()) {
-            updated.title = book.title
+            updated.title = book.title.trim()
         }
-        book.isbn10.let { updated.isbn10 = it }
-        book.isbn13.let { updated.isbn13 = it }
-        book.pageCount.let { updated.pageCount = it }
-        book.publisher.let { updated.publisher = it }
-        book.summary.let { updated.summary = sanitizeHtml(it) }
+        if (!book.isbn10.isNullOrBlank()) {
+            updated.isbn10 = book.isbn10.trim()
+        }
+        if (!book.isbn13.isNullOrBlank()) {
+            updated.isbn13 = book.isbn13.trim()
+        }
+        if (book.pageCount != null) {
+            updated.pageCount = book.pageCount
+        }
+        if (!book.publisher.isNullOrBlank()) {
+            updated.publisher = book.publisher.trim()
+        }
+        if (!book.summary.isNullOrBlank()) {
+            updated.summary = sanitizeHtml(book.summary)
+        }
         // image must be set when saving file succeeds
-//        book.image.let { updated.image = it }
-        book.publishedDate.let { updated.publishedDate = it }
-        book.series.let { updated.series = it }
-        book.numberInSeries.let { updated.numberInSeries = it }
-        book.amazonId.let { updated.amazonId = it }
-        book.goodreadsId.let { updated.goodreadsId = it }
-        book.googleId.let { updated.googleId = it }
-        book.librarythingId.let { updated.librarythingId = it }
-        book.language.let { updated.language = it }
+        if (!book.publishedDate.isNullOrBlank()) {
+            updated.publishedDate = book.publishedDate.trim()
+        }
+        if (!book.series.isNullOrBlank()) {
+            updated.series = book.series.trim()
+        }
+        if (book.numberInSeries != null) {
+            updated.numberInSeries = book.numberInSeries
+        }
+        if (!book.amazonId.isNullOrBlank()) {
+            updated.amazonId = book.amazonId.trim()
+        }
+        if (!book.goodreadsId.isNullOrBlank()) {
+            updated.goodreadsId = book.goodreadsId.trim()
+        }
+        if (!book.googleId.isNullOrBlank()) {
+            updated.googleId = book.googleId.trim()
+        }
+        if (!book.librarythingId.isNullOrBlank()) {
+            updated.librarythingId = book.librarythingId.trim()
+        }
+        if (!book.language.isNullOrBlank()) {
+            updated.language = book.language.trim()
+        }
         updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
-            val authorEntity: Author? = findAuthorsByName(it.name).firstOrNull()
+            val authorEntity: Author? = findAuthorsByName(it.name.trim()).firstOrNull()
             if (authorEntity != null) {
                 authorsList.add(authorEntity)
             } else {
@@ -166,7 +191,7 @@ class BookRepository(
         }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
-            val tagEntity: Tag? = findTagsByName(it.name).firstOrNull()
+            val tagEntity: Tag? = findTagsByName(it.name.trim()).firstOrNull()
             if (tagEntity != null) {
                 tagsList.add(tagEntity)
             } else {
@@ -187,17 +212,17 @@ class BookRepository(
     }
 
     fun update(bookId: UUID, book: BookUpdateDto): Book {
-        var found: Book = Book[bookId]
+        val found: Book = Book[bookId]
         return update(found, book)
     }
 
     fun update(userBookId: UUID, book: UserBookUpdateDto): UserBook {
-        var found: UserBook = UserBook[userBookId]
+        val found: UserBook = UserBook[userBookId]
         if (book.owned != null) {
             found.owned = book.owned
         }
         if (!book.personalNotes.isNullOrBlank()) {
-            found.personalNotes = book.personalNotes
+            found.personalNotes = book.personalNotes.trim()
         }
         if (book.toRead != null) {
             found.toRead = book.toRead
@@ -213,7 +238,8 @@ class BookRepository(
                 found,
                 CreateReadingEventDto(
                     eventType = book.lastReadingEvent,
-                    bookId = null
+                    bookId = null,
+                    readDate = null
                 )
             )
         }
@@ -222,11 +248,21 @@ class BookRepository(
 
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): Author {
         val found: Author = Author[authorId]
-        author.name?.run { found.name = author.name }
-        author.biography?.run { found.biography = author.biography }
-        author.dateOfDeath?.run { found.dateOfDeath = author.dateOfDeath }
-        author.dateOfBirth?.run { found.dateOfBirth = author.dateOfBirth }
-        author.image?.run { found.image = author.image }
+        if (!author.name.isNullOrBlank()) {
+            found.name = author.name.trim()
+        }
+        if (!author.biography.isNullOrBlank()) {
+            found.biography = author.biography.trim()
+        }
+        if (!author.dateOfDeath.isNullOrBlank()) {
+            found.dateOfDeath = author.dateOfDeath.trim()
+        }
+        if (!author.dateOfBirth.isNullOrBlank()) {
+            found.dateOfBirth = author.dateOfBirth.trim()
+        }
+        if (!author.image.isNullOrBlank()) {
+            found.image = author.image.trim()
+        }
         found.modificationDate = nowInstant()
         return found
     }
@@ -234,57 +270,72 @@ class BookRepository(
     fun save(book: BookCreateDto): Book {
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach { authorDto ->
-            val authorEntity: Author? = findAuthorsByName(authorDto.name).firstOrNull()
+            val authorEntity: Author? = findAuthorsByName(authorDto.name.trim()).firstOrNull()
             if (authorEntity != null) {
-                authorsList.add(authorEntity)
+                // we can receive the same author or the same but
+                // with only one letter with a different case
+                // so do not put twice the same entity in the list
+                if (!authorsList.contains(authorEntity)) {
+                    authorsList.add(authorEntity)
+                }
             } else {
                 authorsList.add(save(authorDto))
             }
         }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
-            val tagEntity: Tag? = findTagsByName(it.name).firstOrNull()
+            val tagEntity: Tag? = findTagsByName(it.name.trim()).firstOrNull()
             if (tagEntity != null) {
-                tagsList.add(tagEntity)
+                if (! tagsList.contains(tagEntity)) {
+                    tagsList.add(tagEntity)
+                }
             } else {
                 tagsList.add(save(it))
             }
         }
         val created = Book.new(UUID.randomUUID()) {
-            this.title = book.title
+            this.title = book.title.trim()
             val instant: Instant = nowInstant()
             this.creationDate = instant
             this.modificationDate = instant
             this.summary = sanitizeHtml(book.summary)
-            this.isbn10 = book.isbn10
-            this.isbn13 = book.isbn13
+            this.isbn10 = cleanString(book.isbn10)
+            this.isbn13 = cleanString(book.isbn13)
             this.pageCount = book.pageCount
-            this.publishedDate = book.publishedDate
-            this.publisher = book.publisher
-            this.image = book.image
-            this.series = book.series
+            this.publishedDate = cleanString(book.publishedDate)
+            this.publisher = cleanString(book.publisher)
+            this.image = cleanString(book.image)
+            this.series = cleanString(book.series)
             this.numberInSeries = book.numberInSeries
-            this.amazonId = book.amazonId
-            this.goodreadsId = book.goodreadsId
-            this.googleId = book.googleId
-            this.librarythingId = book.librarythingId
-            this.language = book.language
+            this.amazonId = cleanString(book.amazonId)
+            this.goodreadsId = cleanString(book.goodreadsId)
+            this.googleId = cleanString(book.googleId)
+            this.librarythingId = cleanString(book.librarythingId)
+            this.language = cleanString(book.language)
         }
 
         created.authors = SizedCollection(authorsList)
         created.tags = SizedCollection(tagsList)
+        // eager loading, see if we keep this in the long term
         created.load(Book::authors)
         created.load(Book::tags)
         return created
     }
 
+    fun cleanString(input: String?): String? {
+        if (input.isNullOrBlank()) {
+            return null
+        }
+        return input.trim()
+    }
+
     fun save(author: AuthorDto): Author {
         val created = Author.new {
-            name = author.name
-            image = author.image
-            dateOfBirth = author.dateOfBirth
-            dateOfDeath = author.dateOfDeath
-            biography = author.biography
+            name = author.name.trim()
+            image = cleanString(author.image)
+            dateOfBirth = cleanString(author.dateOfBirth)
+            dateOfDeath = cleanString(author.dateOfDeath)
+            biography = cleanString(author.biography)
             val instant: Instant = nowInstant()
             creationDate = instant
             modificationDate = instant
@@ -294,7 +345,7 @@ class BookRepository(
 
     fun save(tag: TagDto): Tag {
         val created = Tag.new(UUID.randomUUID()) {
-            name = tag.name
+            name = tag.name.trim()
             val instant: Instant = nowInstant()
             creationDate = instant
             modificationDate = instant
@@ -311,7 +362,7 @@ class BookRepository(
             this.book = book
             this.owned = createUserBookDto.owned
             this.toRead = createUserBookDto.toRead
-            this.personalNotes = createUserBookDto.personalNotes
+            this.personalNotes = cleanString(createUserBookDto.personalNotes)
             this.percentRead = createUserBookDto.percentRead
         }
     }

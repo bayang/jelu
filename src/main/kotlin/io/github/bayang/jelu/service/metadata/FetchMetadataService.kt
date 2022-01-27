@@ -27,7 +27,13 @@ class FetchMetadataService(
     val factory: SMInputFactory = SMInputFactory(WstxInputFactory())
     val validator: ISBNValidator = ISBNValidator.getInstance(false)
 
-    fun fetchMetadata(isbn: String?, title: String?, authors: String?): MetadataDto {
+    fun fetchMetadata(
+        isbn: String?,
+        title: String?,
+        authors: String?,
+        onlyUseCorePlugins: Boolean = false,
+        fetchCover: Boolean = true
+    ): MetadataDto {
         if (isbn.isNullOrBlank() && title.isNullOrBlank() && authors.isNullOrBlank()) {
             throw JeluException("At least one of isbn, authors or title is required to fetch metadata")
         }
@@ -56,10 +62,18 @@ class FetchMetadataService(
                 fileNameComplete = true
             }
         }
+        if (onlyUseCorePlugins) {
+            commandArray.add("-p")
+            commandArray.add("Google")
+            commandArray.add("-p")
+            commandArray.add("Amazon.com")
+        }
         bookFileName += ".jpg"
-        val targetCover = File(properties.files.dir, bookFileName)
-        commandArray.add("-c")
-        commandArray.add(targetCover.absolutePath)
+        val targetCover = File(properties.files.images, bookFileName)
+        if (fetchCover) {
+            commandArray.add("-c")
+            commandArray.add(targetCover.absolutePath)
+        }
         val builder = ProcessBuilder()
 
         builder.command(commandArray)
@@ -70,7 +84,7 @@ class FetchMetadataService(
             val exitVal = process.waitFor()
             if (exitVal == 0) {
                 val output: String = process.inputStream.bufferedReader().readText()
-                logger.debug { "fetch metadata output $output" }
+                logger.trace { "fetch metadata output $output" }
                 val parseOpf: MetadataDto = parseOpf(output)
                 if (!isbn.isNullOrBlank()) {
                     if (validator.isValidISBN13(isbn) && parseOpf.isbn13.isNullOrBlank()) {
@@ -140,7 +154,8 @@ class FetchMetadataService(
                 TITLE -> dto.title = childElementCursor.elemStringValue
                 CREATOR -> {
                     when (childElementCursor.getAttrValue("role")) {
-                        "aut" -> dto.authors.add(childElementCursor.elemStringValue)
+                        // sometimes we receive mutliple authors on one line, separated by ;
+                        "aut" -> dto.authors.addAll(splitValues(childElementCursor.elemStringValue))
                         else -> logger.debug { "unhandled creator role ${childElementCursor.getAttrValue("role")}" }
                     }
                 }
@@ -157,6 +172,18 @@ class FetchMetadataService(
                         else -> logger.debug { "unhandled meta name ${childElementCursor.getAttrValue("name")}" }
                     }
                 }
+            }
+        }
+    }
+
+    private fun splitValues(elemStringValue: String?): Collection<String> {
+        return if (elemStringValue.isNullOrBlank()) {
+            emptySet()
+        } else {
+            if (elemStringValue.contains(";")) {
+                elemStringValue.split(";").filter { !it.isNullOrBlank() }.map { it.trim() }.toSet()
+            } else {
+                setOf(elemStringValue.trim())
             }
         }
     }

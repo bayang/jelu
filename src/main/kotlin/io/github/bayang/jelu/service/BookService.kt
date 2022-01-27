@@ -65,19 +65,19 @@ class BookService(
         var backup: File? = null
         // if we need to update image and there is already one, backup it
         if ((file != null || !book.book?.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
-            val currentImage = File(properties.files.dir, previousImage)
-            backup = File(properties.files.dir, "$previousImage.bak")
+            val currentImage = File(properties.files.images, previousImage)
+            backup = File(properties.files.images, "$previousImage.bak")
             Files.move(currentImage.toPath(), backup.toPath())
         }
-        val savedImage: String = saveImages(file, updated.book, book.book, properties.files.dir)
+        val savedImage: String = saveImages(file, updated.book, book.book, properties.files.images)
         // we had a previous image and we saved a new one : delete the old one
-        if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
+        if (backup != null && backup.exists() && savedImage.isNotBlank()) {
             Files.deleteIfExists(backup.toPath())
         }
         return updated.toUserBookLightDto()
     }
 
-    @Transactional()
+    @Transactional
     fun save(userBook: CreateUserBookDto, user: User, file: MultipartFile?): UserBookLightDto {
         val book: Book = if (userBook.book.id != null) {
             bookRepository.update(userBook.book.id, fromBookCreateDto(userBook.book))
@@ -90,30 +90,31 @@ class BookService(
                 created,
                 CreateReadingEventDto(
                     eventType = userBook.lastReadingEvent,
-                    bookId = null
+                    bookId = null,
+                    readDate = null
                 )
             )
         }
 
-        saveImages(file, book, userBook.book, properties.files.dir)
+        saveImages(file, book, userBook.book, properties.files.images)
         return created.toUserBookLightDto()
     }
 
     @Transactional
     fun save(book: BookCreateDto, file: MultipartFile?): BookDto {
         val saved: Book = bookRepository.save(book)
-        saveImages(file, saved, book, properties.files.dir)
+        saveImages(file, saved, book, properties.files.images)
         return saved.toBookDto()
     }
 
     fun saveImages(file: MultipartFile?, book: Book, bookDto: BookCreateDto?, targetDir: String): String {
         var importedFile = false
-        var savedImage: String = ""
+        var savedImage = ""
         // FIXME resize image when saving (protect with a flag)
         if (file != null) {
             try {
-                var destFileName: String = imageName(slugify(book.title), book.id.toString(), FilenameUtils.getExtension(file.originalFilename))
-                var destFile = File(targetDir, destFileName)
+                val destFileName: String = imageName(slugify(book.title), book.id.toString(), FilenameUtils.getExtension(file.originalFilename))
+                val destFile = File(targetDir, destFileName)
                 logger.debug { "target import file at ${destFile.absolutePath}" }
                 file.transferTo(destFile)
                 book.image = destFile.name
@@ -126,21 +127,22 @@ class BookService(
 
         if (! importedFile && bookDto != null && ! bookDto.image.isNullOrBlank()) {
             try {
+                val bookDtoImage = bookDto.image!!
                 // file already exists in the right folder, just rename it
-                if (bookDto.image.startsWith(FILE_PREFIX)) {
+                if (bookDtoImage.startsWith(FILE_PREFIX)) {
                     val targetFilename: String = imageName(
                         slugify(book.title),
-                        book.id.toString(), FilenameUtils.getExtension(bookDto.image)
+                        book.id.toString(), FilenameUtils.getExtension(bookDtoImage)
                     )
-                    val currentFile = File(targetDir, bookDto.image)
+                    val currentFile = File(targetDir, bookDtoImage)
                     val targetFile = File(currentFile.parent, targetFilename)
                     val succeeded = currentFile.renameTo(targetFile)
-                    logger.debug { "renaming of metadata imported file ${bookDto.image} was successful: $succeeded" }
+                    logger.debug { "renaming of metadata imported file $bookDtoImage was successful: $succeeded" }
                     book.image = targetFilename
                     savedImage = targetFilename
                 } else {
                     val destFileName: String = downloadService.download(
-                        bookDto.image,
+                        bookDtoImage,
                         slugify(book.title),
                         book.id.toString(),
                         targetDir
