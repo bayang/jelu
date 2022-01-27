@@ -1,3 +1,16 @@
+## [0.2.0](https://github.com/bayang/jelu/compare/v0.1.8...v0.2.0) (2022-01-27)
+
+
+### Features
+
+* csv import ([4515285](https://github.com/bayang/jelu/commit/4515285b93f6151281c9e9137e7cf1ef56842ed5))
+
+
+### Bug Fixes
+
+* check server capabilities before calling them ([c0cec92](https://github.com/bayang/jelu/commit/c0cec9234c91e8d8c6969045f080efd0098cca5e))
+* ellipsis on book card ([0197911](https://github.com/bayang/jelu/commit/019791127addfb840fb284f5c1b715c4897da2cd))
+
 ### [0.1.8](https://github.com/bayang/jelu/compare/v0.1.7...v0.1.8) (2022-01-18)
 
 
