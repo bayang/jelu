@@ -22,6 +22,7 @@
     "v-tooltip": "^4.0.0-beta.8",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",
+    "vue-snip": "^1.3.0",
     "vue3-carousel": "^0.1.35",
     "vuex": "^4.0.2"
   },

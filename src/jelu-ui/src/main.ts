@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import VTooltipPlugin from 'v-tooltip'
+import VueSnip from 'vue-snip'
 import Oruga from '@oruga-ui/oruga-next'
 // import '@oruga-ui/oruga-next/dist/oruga.css'
 
@@ -19,6 +20,7 @@ createApp(App)
     .use(router)
     .use(store, key)
     .use(VTooltipPlugin)
+    .use(VueSnip)
     .use(Oruga, {
         iconPack: 'mdi',
         ...bulmaConfig

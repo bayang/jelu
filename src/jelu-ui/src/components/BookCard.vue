@@ -76,16 +76,22 @@ const showProgressBar = (book: UserBook) => {
       />
     </div>
     <header class="card-header">
-      <p class="p-3 card-header-title is-capitalized is-family-sans-serif is-ellipsis">
+      <p
+        v-snip:js="4" 
+        class="p-3 card-header-title is-capitalized is-family-sans-serif"
+      >
         {{ book.book.title }}
       </p>
     </header>
     <div class="card-content has-text-dark py-2">
       <div class="content has-text-left m-0">
-        <span
+        <p
           v-if="book.book.authors != null && book.book.authors.length > 0"
+          v-snip:js="3"
           class="is-inline-block"
-        >{{ authorsText }}</span>
+        >
+          {{ authorsText }}
+        </p>
       </div>
       <footer class="card-footer">
         <div>
