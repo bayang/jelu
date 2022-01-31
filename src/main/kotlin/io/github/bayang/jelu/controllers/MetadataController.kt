@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 private val logger = KotlinLogging.logger {}
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 class MetadataController(
     private val properties: JeluProperties,
     private val metadataService: FetchMetadataService

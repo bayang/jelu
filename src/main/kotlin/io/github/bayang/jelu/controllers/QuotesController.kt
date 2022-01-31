@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 class QuotesController(
     private val quotesProvider: IQuoteProvider
 ) {

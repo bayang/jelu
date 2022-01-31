@@ -80,8 +80,14 @@ router.beforeEach((to, from, next) => {
     if (from.name == undefined 
         && from.matched.length < 1) {
         console.log('undefined wanting to go to ' + to.name?.toString())
+        console.log('undefined wanting to go to ' + to.query['page'])
+        console.log(to.query)
         if (to.name !== 'login') {
-            store.commit('entryPoint', to.path)
+            // store.commit('entryPoint', to.path)
+            store.commit('route', to)
+            // if (to.query != null && to.query != undefined) {
+            //     store.commit('query', to.query)
+            // }
         }
     }
     // if (to.name !== 'login' && !store.state.isLogged) {

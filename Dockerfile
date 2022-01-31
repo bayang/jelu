@@ -12,7 +12,8 @@ COPY ${DEPENDENCY}/snapshot-dependencies/ ./
 COPY ${DEPENDENCY}/application/ ./
 
 ENV JELU_DATABASE_PATH="/database/"
-ENV JELU_FILES_DIR="/files/"
+ENV JELU_FILES_IMAGES="/files/images/"
+ENV JELU_FILES_IMPORTS="/files/imports/"
 ENV JELU_METADATA_CALIBRE_PATH="/calibre/fetch-ebook-metadata"
 ENV LC_ALL=en_US.UTF-8
 

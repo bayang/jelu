@@ -17,7 +17,7 @@ import javax.validation.Valid
 private val logger = KotlinLogging.logger {}
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 class BooksController(
     private val repository: BookService,
     private val properties: JeluProperties,

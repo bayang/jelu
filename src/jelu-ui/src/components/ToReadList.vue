@@ -3,32 +3,31 @@ import { onMounted, Ref, ref, watch } from 'vue'
 import { UserBook } from '../model/Book'
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
+import usePagination from '../composables/pagination';
 
 const books: Ref<Array<UserBook>> = ref([]);
 
-const total: Ref<number> = ref(0)
-const currentPageNumber: Ref<number> = ref(1)
-const perPage: Ref<number> = ref(24)
+const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
 
 const getToRead = async () => {
   try {
     const res = await dataService.findUserBookByCriteria(null, true, 
-      currentPageNumber.value - 1, perPage.value)
+      Number.parseInt(page.value) - 1, perPage.value)
     total.value = res.totalElements
     books.value = res.content
     if (! res.empty) {
-      currentPageNumber.value = res.number + 1
+      page.value =  (res.number + 1).toString(10)
     }
     else {
-      currentPageNumber.value = 1
+      page.value = "1"
     }
   } catch (error) {
     console.log("failed get books : " + error);
   }
 };
 
-watch(currentPageNumber, (newVal, oldVal) => {
-  console.log(currentPageNumber.value)
+watch(page, (newVal, oldVal) => {
+  console.log(page.value)
   if (newVal !== oldVal) {
     getToRead()
   }
@@ -75,14 +74,11 @@ getToRead()
   </div>
   <o-pagination
     v-if="books.length > 0"
-    v-model:current="currentPageNumber"
+    v-model:current="pageAsNumber"
     :total="total"
     order="centered"
     :per-page="perPage"
-    aria-next-label="Next page"
-    aria-previous-label="Previous page"
-    aria-page-label="Page"
-    aria-current-label="Current page"
+    @change="updatePage"
   />
 </template>
 

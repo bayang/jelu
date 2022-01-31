@@ -34,16 +34,16 @@ export class ObjectUtils {
           book: rest,
           ...userBooks[0]
         } as UserBook
-        console.log('after full')
-        console.log(converted)
+        // console.log('after full')
+        // console.log(converted)
         return converted
       }
       else {
         const converted =  {
           book: rest
         } as UserBook
-        console.log('after')
-        console.log(converted)
+        // console.log('after')
+        // console.log(converted)
         return converted
       }
   }

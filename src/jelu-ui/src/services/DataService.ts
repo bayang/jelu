@@ -51,7 +51,8 @@ class DataService {
     else {
       this.MODE = "prod"
       this.BASE_URL = window.location.origin
-      this.BASE_URL.endsWith("/") ? this.BASE_URL = this.BASE_URL + "api" : this.BASE_URL = this.BASE_URL + "/api"
+      this.BASE_URL.endsWith("/") ? this.BASE_URL = this.BASE_URL + "api/v1" 
+      : this.BASE_URL = this.BASE_URL + "/api/v1"
     }
     console.log(`running in ${this.MODE} mode at ${this.BASE_URL}`)
 

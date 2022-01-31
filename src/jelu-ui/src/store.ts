@@ -1,4 +1,5 @@
 import { createLogger, createStore, Store } from 'vuex'
+import { LocationQuery, RouteLocationNormalized } from 'vue-router';
 import { UserAuthentication, User } from './model/User'
 import dataService from './services/DataService'
 import router from './router'
@@ -6,12 +7,13 @@ import { InjectionKey } from 'vue'
 import { ServerSettings } from './model/ServerSettings'
 
 export interface State {
-  count: number,
   isLogged: boolean,
   isInitialSetup : boolean,
   user : User | null,
-  entryPoint: string,
-  serverSettings: ServerSettings
+  // entryPoint: string,
+  serverSettings: ServerSettings,
+  // query: LocationQuery | null,
+  route: RouteLocationNormalized | null
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -20,21 +22,20 @@ export const key: InjectionKey<Store<State>> = Symbol()
 const store = createStore<State>({
   state () {
     return {
-      count: 0,
       isLogged: false,
       isInitialSetup : false,
       user: null,
-      entryPoint: '/',
+      // entryPoint: '/',
+      // query: null,
+      state: null,
+      route: null,
       serverSettings: {
         metadataFetchEnabled: false,
         metadataFetchCalibreEnabled: false
-      } as ServerSettings
+      } as ServerSettings,
     }
   },
   mutations: {
-    increment (state) {
-      state.count++
-    },
     login(state, isLogged) {
         state.isLogged = isLogged
     },
@@ -44,8 +45,14 @@ const store = createStore<State>({
     user(state, user: User) {
       state.user = user
     },
-    entryPoint(state, entryPoint: string) {
-      state.entryPoint = entryPoint
+    // entryPoint(state, entryPoint: string) {
+    //   state.entryPoint = entryPoint
+    // },
+    // query(state, query: LocationQuery) {
+    //   state.query = query
+    // },
+    route(state, route: RouteLocationNormalized) {
+      state.route = route
     },
     serverSettings(state, serverSettings: ServerSettings) {
       state.serverSettings = serverSettings
@@ -76,7 +83,18 @@ const store = createStore<State>({
           commit('login', true)
           commit('user', user)
           dispatch('getServerSettings')
-          await router.push({path: state.entryPoint})
+          if (state.route != null) {
+            await router.push(state.route)
+          }
+          else {
+            console.log("route is null")
+          }
+          // if (state.query != null) {
+          //   await router.push({path: state.entryPoint, query: state.query})
+          // }
+          // else {
+          //   await router.push({path: state.entryPoint})
+          // }
         } catch (error) {
           commit('login', false)
           throw error

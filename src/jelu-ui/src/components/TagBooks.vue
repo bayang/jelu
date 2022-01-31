@@ -1,27 +1,26 @@
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref, watch } from 'vue';
 import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { computed, onMounted, Ref, ref, watch } from 'vue';
+import usePagination from '../composables/pagination';
 import { BookWithUserBook, UserBook } from '../model/Book';
 import { Tag } from '../model/Tag';
 import dataService from "../services/DataService";
-import BookCard from "./BookCard.vue";
-import EditBookModal from "./EditBookModal.vue"
 import { ObjectUtils } from '../utils/ObjectUtils';
+import BookCard from "./BookCard.vue";
+import EditBookModal from "./EditBookModal.vue";
 
 const {oruga} = useProgrammatic();
 
 const props = defineProps<{ tagId: string }>()
 
-const total: Ref<number> = ref(0)
-const currentPageNumber: Ref<number> = ref(1)
-const perPage: Ref<number> = ref(24)
-
 const tag: Ref<Tag> = ref({name: ""})
 const tagBooks: Ref<Array<BookWithUserBook>> = ref([]);
 const edit: Ref<boolean> = ref(false)
 
-watch(currentPageNumber, (newVal, oldVal) => {
-  console.log(currentPageNumber.value)
+const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
+
+watch(page, (newVal, oldVal) => {
+  console.log(page.value)
   console.log(newVal + " " + oldVal)
   if (newVal !== oldVal) {
     getBooks()
@@ -38,16 +37,16 @@ const getTag = async () => {
 
 const getBooks = () => {
   dataService.getTagBooksById(props.tagId, 
-    currentPageNumber.value - 1, perPage.value)
+    Number.parseInt(page.value) - 1, perPage.value)
     .then(res => {
         console.log(res)
           total.value = res.totalElements
           tagBooks.value = res.content
         if (! res.empty) {
-          currentPageNumber.value = res.number + 1
+          page.value =  (res.number + 1).toString(10)
         }
         else {
-          currentPageNumber.value = 1
+          page.value = "1"
         }
     }
     )
@@ -128,14 +127,11 @@ getBooks()
     </div>
   </div>
   <o-pagination
-    v-model:current="currentPageNumber"
+    v-model:current="pageAsNumber"
     :total="total"
     order="centered"
     :per-page="perPage"
-    aria-next-label="Next page"
-    aria-previous-label="Previous page"
-    aria-page-label="Page"
-    aria-current-label="Current page"
+    @change="updatePage"
   />
 </template>
 

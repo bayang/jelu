@@ -7,14 +7,14 @@ import BookCard from "./BookCard.vue";
 import { StringUtils } from '../utils/StringUtils'
 import { ObjectUtils } from '../utils/ObjectUtils';
 import EditBookModal from "./EditBookModal.vue"
+import usePagination from '../composables/pagination';
 
 const {oruga} = useProgrammatic();
 const props = defineProps<{ query: string|null }>()
 
 const books: Ref<Array<BookWithUserBook>> = ref([]);
-const total: Ref<number> = ref(0)
-const currentPageNumber: Ref<number> = ref(1)
-const perPage: Ref<number> = ref(24)
+
+const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
 
 const edit: Ref<boolean> = ref(false)
 const advancedMode: Ref<boolean> = ref(false)
@@ -34,23 +34,23 @@ const search = () => {
       dataService.findBooks(query.value.get('title'), 
       query.value.get('isbn10'), query.value.get('isbn13'), 
       query.value.get('series'), 
-      currentPageNumber.value - 1, perPage.value)
+      Number.parseInt(page.value) - 1, perPage.value)
     .then(res => {
         console.log(res)
           total.value = res.totalElements
           books.value = res.content
         if (! res.empty) {
-          currentPageNumber.value = res.number + 1
+          page.value =  (res.number + 1).toString(10)
         }
         else {
-          currentPageNumber.value = 1
+          page.value = "1"
         }
     }
     )
 }
 
-watch(currentPageNumber, (newVal, oldVal) => {
-  console.log(currentPageNumber.value)
+watch(page, (newVal, oldVal) => {
+  console.log(page.value)
   console.log(newVal + " " + oldVal)
   if (newVal !== oldVal) {
     search()
@@ -244,14 +244,11 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
     </div>
   </div>
   <o-pagination
-    v-model:current="currentPageNumber"
+    v-model:current="pageAsNumber"
     :total="total"
     order="centered"
     :per-page="perPage"
-    aria-next-label="Next page"
-    aria-previous-label="Previous page"
-    aria-page-label="Page"
-    aria-current-label="Current page"
+    @change="updatePage"
   />
 </template>
 

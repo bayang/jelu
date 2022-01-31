@@ -19,8 +19,10 @@ store.dispatch('getUser')
   .then(async () => {
     console.log("then")
     // try {
-    console.log("entrypoint " + store.state.entryPoint)
-    await router.push({ path: store.state.entryPoint })
+    // await router.push({ path: store.state.entryPoint })
+    if (store.state.route != null) {
+      await router.push(store.state.route)
+    }
     console.log("ok nav")
     store.dispatch('getServerSettings')
     // } catch(e) {
