@@ -1,3 +1,17 @@
+## [0.3.0](https://github.com/bayang/jelu/compare/v0.2.0...v0.3.0) (2022-02-14)
+
+
+### Features
+
+* add sorting and filtering ([f2f1793](https://github.com/bayang/jelu/commit/f2f1793707425c3af0f59679353dffc034810954))
+* change banner ([da1012f](https://github.com/bayang/jelu/commit/da1012fdb1530d778f058611142362dfc57d349d))
+
+
+### Bug Fixes
+
+* pagination propagation in query ([094f0c5](https://github.com/bayang/jelu/commit/094f0c54f4ecea03da1938c73ba441318ff3adbf))
+* quotes width ([45dd9b0](https://github.com/bayang/jelu/commit/45dd9b0cedabb597cdbd52b9fe78086071e9a3e0))
+
 ## [0.2.0](https://github.com/bayang/jelu/compare/v0.1.8...v0.2.0) (2022-01-27)
 
 
