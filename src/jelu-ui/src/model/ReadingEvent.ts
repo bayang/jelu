@@ -3,14 +3,12 @@ import { UserBook } from "./Book";
 export interface ReadingEvent {
     id?: string,
     creationDate?: string,
-    // name: string,
     eventType: ReadingEventType,
   }
 
 export interface ReadingEventWithUserBook {
     id?: string,
     creationDate?: string,
-    // name: string,
     eventType: ReadingEventType,
     userBook: UserBook
   }

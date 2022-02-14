@@ -2,16 +2,39 @@ package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dto.*
+import io.github.bayang.jelu.dto.AuthorDto
+import io.github.bayang.jelu.dto.AuthorUpdateDto
+import io.github.bayang.jelu.dto.BookCreateDto
+import io.github.bayang.jelu.dto.BookDto
+import io.github.bayang.jelu.dto.BookUpdateDto
+import io.github.bayang.jelu.dto.CreateUserBookDto
+import io.github.bayang.jelu.dto.JeluUser
+import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.UserBookLightDto
+import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.BookService
 import mu.KotlinLogging
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import java.util.*
+import java.util.UUID
 import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
@@ -29,11 +52,12 @@ class BooksController(
         @RequestParam(name = "isbn10", required = false) isbn10: String?,
         @RequestParam(name = "isbn13", required = false) isbn13: String?,
         @RequestParam(name = "series", required = false) series: String?,
-        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+        @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) pageable: Pageable,
         principal: Authentication
-    ): Page<BookWithUserBookDto> =
-        repository.findAll(title, isbn10, isbn13, series, page, pageSize, (principal.principal as JeluUser).user)
+    ): Page<BookDto> {
+        return repository.findAll(title, isbn10, isbn13, series, pageable, (principal.principal as JeluUser).user, libraryFilter ?: LibraryFilter.ANY)
+    }
 
     @GetMapping(path = ["/books/{id}"])
     fun bookById(@PathVariable("id") bookId: UUID) = repository.findBookById(bookId)
@@ -86,42 +110,33 @@ class BooksController(
     @GetMapping(path = ["/userbooks"])
     fun userbooks(
         principal: Authentication,
-        @RequestParam(name = "lastEventType", required = false) searchTerm: ReadingEventType?,
+        @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @RequestParam(name = "toRead", required = false) toRead: Boolean?,
-        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
+        @RequestParam(name = "user", required = false) userId: UUID?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) pageable: Pageable
     ): Page<UserBookLightDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findUserBookByCriteria((principal.principal as JeluUser).user.id, searchTerm, toRead, page, pageSize)
-    }
-
-    @GetMapping(path = ["/userbooks/me"])
-    fun myBooks(
-        principal: Authentication,
-        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
-    ): Page<UserBookLightDto> {
-        assertIsJeluUser(principal.principal)
-        return repository.findAllBooksByUser((principal.principal as JeluUser).user, page, pageSize)
+        val finalUserId = if ((principal.principal as JeluUser).user.isAdmin && userId != null) {
+            userId
+        } else {
+            (principal.principal as JeluUser).user.id.value
+        }
+        return repository.findUserBookByCriteria(finalUserId, eventTypes, toRead, pageable)
     }
 
     @GetMapping(path = ["/authors"])
     fun authors(
         @RequestParam(name = "name", required = false) name: String?,
-        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) pageable: Pageable
     ): Page<AuthorDto> {
-        return repository.findAllAuthors(name, page, pageSize)
+        return repository.findAllAuthors(name, pageable)
     }
 
     @GetMapping(path = ["/tags"])
-    fun tags(@RequestParam(name = "name", required = false) name: String?): List<TagDto> {
-        return if (name.isNullOrBlank()) {
-            repository.findAllTags()
-        } else {
-            repository.findTagsByName(name)
-        }
-    }
+    fun tags(
+        @RequestParam(name = "name", required = false) name: String?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) pageable: Pageable
+    ): Page<TagDto> = repository.findAllTags(name, pageable)
 
     @GetMapping(path = ["/tags/{id}"])
     fun tagById(
@@ -135,25 +150,25 @@ class BooksController(
     @GetMapping(path = ["/tags/{id}/books"])
     fun tagBooksById(
         @PathVariable("id") tagId: UUID,
-        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+        @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) pageable: Pageable,
         principal: Authentication
-    ): Page<BookWithUserBookDto> {
+    ): Page<BookDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, page, pageSize)
+        return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY)
     }
 
     @GetMapping(path = ["/authors/{id}"])
-    fun authorById(@PathVariable("id") authorId: UUID) = repository.findAuthorsById(authorId)
+    fun authorById(@PathVariable("id") authorId: UUID): AuthorDto = repository.findAuthorsById(authorId)
 
     @GetMapping(path = ["/authors/{id}/books"])
     fun authorBooksById(
         @PathVariable("id") authorId: UUID,
-        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+        @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) pageable: Pageable,
         principal: Authentication
-    ): Page<BookWithUserBookDto> =
-        repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, page, pageSize)
+    ): Page<BookDto> =
+        repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY)
 
     @PostMapping(path = ["/books"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun saveBook(@RequestBody @Valid book: BookCreateDto): BookDto {

@@ -1,30 +1,74 @@
 package io.github.bayang.jelu.dao
 
-import io.github.bayang.jelu.dto.*
+import io.github.bayang.jelu.dto.AuthorDto
+import io.github.bayang.jelu.dto.AuthorUpdateDto
+import io.github.bayang.jelu.dto.BookCreateDto
+import io.github.bayang.jelu.dto.BookUpdateDto
+import io.github.bayang.jelu.dto.CreateReadingEventDto
+import io.github.bayang.jelu.dto.CreateUserBookDto
+import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.utils.nowInstant
 import io.github.bayang.jelu.utils.sanitizeHtml
 import mu.KotlinLogging
-import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.load
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.Expression
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.Query
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SizedCollection
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.andWhere
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
+
+fun parseSorts(sort: Sort, defaultSort: Pair<Expression<*>, SortOrder>, vararg tables: Table): Array<Pair<Expression<*>, SortOrder>> {
+    val orders = mutableListOf<Pair<Expression<*>, SortOrder>>()
+    val columns = mutableListOf<Column<*>>()
+    for (table in tables) {
+        columns.addAll(table.columns)
+    }
+    // will fail for common names in multiple tables like creationDate, so
+    // put most important table first
+    // eg if sort by creationDate should be applied on BookTable rather than UserBookTable put it first
+    for (o in sort) {
+        val found = columns.find { column -> column.name.replace("_", "", true).equals(o.property, true) }
+        if (found != null) {
+            orders.add(Pair(found, if (o.isAscending) SortOrder.ASC_NULLS_LAST else SortOrder.DESC_NULLS_LAST))
+        }
+    }
+    if (orders.isEmpty()) {
+        orders.add(defaultSort)
+    }
+    return orders.toTypedArray()
+}
 
 @Repository
 class BookRepository(
     val readingEventRepository: ReadingEventRepository
 ) {
 
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, page: Long = 0, pageSize: Long = 20): Page<Book> {
-        val query: Query = BookTable.selectAll()
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+        val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
+            .slice(BookTable.id)
+            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+        val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .selectAll()
         title?.let {
             query.andWhere { BookTable.title like "%$title%" }
         }
@@ -37,56 +81,56 @@ class BookRepository(
         series?.let {
             query.andWhere { BookTable.series like "%$series%" }
         }
+        if (filter == LibraryFilter.ONLY_USER_BOOKS) {
+            // only books where user has an userbook
+            query.andWhere { UserBookTable.user eq user.id }
+        } else if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
+            // only books where there are no userbooks or only other users have userbooks
+            query.andWhere { BookTable.id notInSubQuery booksWithSameIdAndUserHasUserbook }
+        }
+
         val total = query.count()
-        query.limit(pageSize.toInt(), page * pageSize)
-        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
         return PageImpl(
-            Book.wrapRows(query).toList(),
-            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
-            else PageRequest.of(0, 20, Sort.unsorted()),
+            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            pageable,
             total
         )
     }
 
-//    private fun displayBook(book: Book) {
-//        println(book.title)
-//        book.userBooks.forEach { userBook: UserBook -> println(userBook.user.id) }
-//    }
-
-    fun findAllBooksByUser(user: User, page: Long, pageSize: Long): Page<UserBook> {
-        val op: Op<Boolean> = UserBookTable.user eq user.id
-        val total = UserBook.find { op }.count()
-        val res = UserBook.find { op }.limit(pageSize.toInt(), page * pageSize)
-        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
-        return PageImpl(
-            res.toList(),
-            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
-            else PageRequest.of(0, 20, Sort.unsorted()),
-            total
-        )
-//        return UserBook.find { UserBookTable.user eq user.id }
-//            .limit(pageSize.toInt(), page * pageSize)
-//                .orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
-//                .toList()
-    }
-
-    fun findAllAuthors(name: String?, page: Long = 0, pageSize: Long = 20): Page<Author> {
+    fun findAllAuthors(name: String?, pageable: Pageable): Page<Author> {
         val query: Query = AuthorTable.selectAll()
         name?.let {
             query.andWhere { AuthorTable.name like "%$name%" }
         }
         val total = query.count()
-        query.limit(pageSize.toInt(), page * pageSize)
-        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(AuthorTable.name, SortOrder.ASC_NULLS_LAST), AuthorTable)
+        query.orderBy(*orders)
         return PageImpl(
             query.map { resultRow -> Author.wrapRow(resultRow) },
-            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
-            else PageRequest.of(0, 20, Sort.unsorted()),
+            pageable,
             total
         )
     }
 
-    fun findAllTags(): SizedIterable<Tag> = Tag.all()
+    fun findAllTags(name: String?, pageable: Pageable): Page<Tag> {
+        val query: Query = TagTable.selectAll()
+        name?.let {
+            query.andWhere { TagTable.name like "%$name%" }
+        }
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(TagTable.name, SortOrder.ASC_NULLS_LAST), TagTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> Tag.wrapRow(resultRow) },
+            pageable,
+            total
+        )
+    }
 
     fun findAuthorsByName(name: String): List<Author> {
         return Author.find { AuthorTable.name like "%$name%" }.toList()
@@ -98,31 +142,81 @@ class BookRepository(
 
     fun findBookById(bookId: UUID): Book = Book[bookId]
 
-    fun findBookByTitle(title: String): SizedIterable<Book> = Book.find { BookTable.title like title }
-
     fun findAuthorsById(authorId: UUID): Author = Author[authorId]
 
     fun findTagById(tagId: UUID): Tag = Tag[tagId]
 
-    fun findTagBooksById(tagId: UUID, page: Long, pageSize: Long): Page<Book> {
-        val t = Tag[tagId]
-        val query = BookTags.join(BookTable, JoinType.LEFT)
-            .slice(BookTable.columns)
-            .selectAll()
-            .andWhere { BookTags.tag eq t.id }
+    fun findTagBooksById(tagId: UUID, user: User, pageable: Pageable, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+        val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
+            .slice(BookTable.id)
+            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+        val query = BookTable.join(BookTags, JoinType.LEFT)
+            .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .select { BookTags.tag eq tagId }
+        if (filter == LibraryFilter.ONLY_USER_BOOKS) {
+            // only books where user has an userbook
+            query.andWhere { UserBookTable.user eq user.id }
+        } else if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
+            // only books where there are no userbooks or only other users have userbooks
+            query.andWhere { BookTable.id notInSubQuery booksWithSameIdAndUserHasUserbook }
+        }
+        query.withDistinct(true)
         val total = query.count()
-        query.limit(pageSize.toInt(), page * pageSize)
-        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
         return PageImpl(
-            query.map { resultRow -> Book.wrapRow(resultRow) },
-            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
-            else PageRequest.of(0, 20, Sort.unsorted()),
+            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            pageable,
             total
         )
     }
 
+    fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+        val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
+            .slice(BookTable.id)
+            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+        // val a = Author[authorId]
+        val query = BookTable.join(BookAuthors, JoinType.LEFT)
+            .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            // .slice(BookTable.columns)
+            .select { BookAuthors.author eq authorId }
+        if (libaryFilter == LibraryFilter.ONLY_USER_BOOKS) {
+            // only books where user has an userbook
+            query.andWhere { UserBookTable.user eq user.id }
+        } else if (libaryFilter == LibraryFilter.ONLY_NON_USER_BOOKS) {
+            // only books where there are no userbooks or only other users have userbooks
+            query.andWhere { BookTable.id notInSubQuery booksWithSameIdAndUserHasUserbook }
+        }
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            pageable,
+            total
+        )
+    }
+
+    fun wrapRow(resultRow: ResultRow, userId: UUID): Book {
+        val e = Book.wrapRow(resultRow)
+        val userbook = e.userBooks.firstOrNull { u -> u.user.id.value == userId }
+        if (userbook != null) {
+            e.userBookId = userbook.id.value
+        }
+        return e
+    }
+
+    fun filterRow(resultRow: ResultRow): Boolean {
+        displayRow(resultRow)
+        return true
+    }
+
     fun displayRow(resultRow: ResultRow) {
         logger.debug { "row $resultRow" }
+        logger.debug { "${resultRow[BookTable.id]}  ${resultRow[UserBookTable.id]} ${resultRow[UserBookTable.user]}" }
     }
 
     fun update(updated: Book, book: BookUpdateDto): Book {
@@ -370,65 +464,28 @@ class BookRepository(
     fun findUserBookById(userbookId: UUID): UserBook = UserBook[userbookId]
 
     fun findUserBookByCriteria(
-        userID: EntityID<UUID>,
-        searchTerm: ReadingEventType?,
+        userID: UUID,
+        eventTypes: List<ReadingEventType>?,
         toRead: Boolean?,
-        page: Long,
-        pageSize: Long
+        pageable: Pageable
     ): PageImpl<UserBook> {
-        val query: Query = UserBookTable.selectAll()
+        val query: Query = UserBookTable.join(BookTable, JoinType.LEFT).slice(UserBookTable.columns).selectAll()
             .andWhere { UserBookTable.user eq userID }
-        searchTerm?.let {
-            query.andWhere { UserBookTable.lastReadingEvent eq searchTerm }
+        if (eventTypes != null && eventTypes.isNotEmpty()) {
+            query.andWhere { UserBookTable.lastReadingEvent inList eventTypes }
         }
         toRead?.let {
             query.andWhere { UserBookTable.toRead eq toRead }
         }
-
-//        val query = UserBook.find {
-//            val userFilter: Op<Boolean> = UserBookTable.user eq userID
-//            val eventFilter: Op<Boolean> = if (searchTerm != null) {
-//                UserBookTable.lastReadingEvent eq searchTerm
-//            } else {
-//                Op.TRUE
-//            }
-//            val toReadFilter: Op<Boolean> = if (toRead != null) {
-//                UserBookTable.toRead eq toRead
-//            } else {
-//                Op.TRUE
-//            }
-//            userFilter and eventFilter and toReadFilter
-//        }.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
         val total = query.count()
-        query.limit(pageSize.toInt(), page * pageSize)
-        query.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
-        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST), UserBookTable, BookTable)
+        query.orderBy(*orders)
         return PageImpl(
             UserBook.wrapRows(query).toList(),
-            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
-            else PageRequest.of(0, 20, Sort.unsorted()),
+            pageable,
             total
         )
-
-//        return UserBook.find {
-//            val userFilter: Op<Boolean> = UserBookTable.user eq userID
-//            val eventFilter: Op<Boolean> = if (searchTerm != null) {
-//                UserBookTable.lastReadingEvent eq searchTerm
-//            } else {
-//                Op.TRUE
-//            }
-//            val toReadFilter: Op<Boolean> = if (toRead != null) {
-//                UserBookTable.toRead eq toRead
-//            } else {
-//                Op.TRUE
-//            }
-//            userFilter and eventFilter and toReadFilter
-//        }.orderBy(Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST))
-//            .toList()
-    }
-
-    fun findUserBookByUserAndBook(user: User, book: Book): UserBook? {
-        return UserBook.find { UserBookTable.user eq user.id and (UserBookTable.book.eq(book.id)) }.firstOrNull()
     }
 
     fun deleteUserBookById(userbookId: UUID) {
@@ -458,22 +515,5 @@ class BookRepository(
 
     fun deleteAuthorById(authorId: UUID) {
         Author[authorId].delete()
-    }
-
-    fun findAuthorBooksById(authorId: UUID, page: Long, pageSize: Long): Page<Book> {
-        val a = Author[authorId]
-        val query = BookAuthors.join(BookTable, JoinType.LEFT)
-            .slice(BookTable.columns)
-            .selectAll()
-            .andWhere { BookAuthors.author eq a.id }
-        val total = query.count()
-        query.limit(pageSize.toInt(), page * pageSize)
-        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
-        return PageImpl(
-            query.map { resultRow -> Book.wrapRow(resultRow) },
-            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
-            else PageRequest.of(0, 20, Sort.unsorted()),
-            total
-        )
     }
 }

@@ -1,5 +1,5 @@
-import { LocationQuery, RouteLocationNormalized } from 'vue-router';
-import { Store } from 'vuex'
+import { RouteLocationNormalized } from 'vue-router';
+import { Store } from 'vuex';
 import { ServerSettings } from './src/model/ServerSettings';
 import { User } from './src/model/User';
 
@@ -9,9 +9,7 @@ interface State {
     isLogged: boolean,
     isInitialSetup : boolean,
     user : User| null,
-    entryPoint: string,
     serverSettings: ServerSettings,
-    query: LocationQuery,
     route: RouteLocationNormalized | null
   }
 

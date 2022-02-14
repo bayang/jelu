@@ -1,4 +1,4 @@
-import { BookWithUserBook, UserBook } from "../model/Book";
+import { Book, UserBook } from "../model/Book";
 import Swal from 'sweetalert2';
 
 export class ObjectUtils {
@@ -27,25 +27,13 @@ export class ObjectUtils {
     });
   };
 
-  public static toUserBook = (book: BookWithUserBook):UserBook => {
-    const {userBooks, ...rest} = book
-      if (userBooks && userBooks.length > 0) {
+  public static toUserBook = (book: Book):UserBook => {
         const converted =  {
-          book: rest,
-          ...userBooks[0]
-        } as UserBook
-        // console.log('after full')
-        // console.log(converted)
-        return converted
-      }
-      else {
-        const converted =  {
-          book: rest
+          book: book
         } as UserBook
         // console.log('after')
         // console.log(converted)
         return converted
-      }
   }
 
   public static swalMixin = Swal.mixin({

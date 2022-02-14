@@ -5,13 +5,18 @@ import io.github.bayang.jelu.dto.UpdateReadingEventDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Expression
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.andWhere
+import org.jetbrains.exposed.sql.selectAll
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
@@ -19,53 +24,25 @@ private val logger = KotlinLogging.logger {}
 class ReadingEventRepository {
 
     fun findAll(
-        searchTerm: ReadingEventType?,
+        eventTypes: List<ReadingEventType>?,
         userId: UUID?,
-        page: Long = 0,
-        pageSize: Long = 20
-    ): PageImpl<ReadingEvent> {
-        if (userId != null) {
-            return findAllByUser(userId, searchTerm, page, pageSize)
+        pageable: Pageable
+    ): Page<ReadingEvent> {
+        val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
+            .selectAll()
+        if (eventTypes != null && eventTypes.isNotEmpty()) {
+            query.andWhere { ReadingEventTable.eventType inList eventTypes }
         }
-        val query = ReadingEventTable.selectAll()
-        searchTerm?.let {
-            query.andWhere { ReadingEventTable.eventType eq searchTerm }
+        if (userId != null) {
+            query.andWhere { UserBookTable.user eq userId }
         }
         val total = query.count()
-        query.limit(pageSize.toInt(), page * pageSize)
-        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(ReadingEventTable.modificationDate, SortOrder.DESC_NULLS_LAST), ReadingEventTable)
+        query.orderBy(*orders)
         return PageImpl(
             ReadingEvent.wrapRows(query).toList(),
-            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
-            else PageRequest.of(0, 20, Sort.unsorted()),
-            total
-        )
-    }
-
-    fun findAllByUser(
-        userID: UUID,
-        searchTerm: ReadingEventType? = null,
-        page: Long = 0,
-        pageSize: Long = 20
-    ): PageImpl<ReadingEvent> {
-        val query = UserBookTable.innerJoin(ReadingEventTable)
-            .slice(ReadingEventTable.columns)
-            .select { UserBookTable.user eq userID }
-
-        searchTerm?.let {
-            query.andWhere { ReadingEventTable.eventType eq searchTerm }
-        }
-
-        val total = query.count()
-        query.limit(pageSize.toInt(), page * pageSize)
-        query.orderBy(Pair(ReadingEventTable.modificationDate, SortOrder.DESC_NULLS_LAST))
-        val res = ReadingEvent.wrapRows(query).toList()
-
-        val pageRequest = PageRequest.of(page.toInt(), pageSize.toInt(), Sort.by(Sort.Order.desc("createdDate")))
-        return PageImpl(
-            res,
-            if (pageRequest.isPaged) PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize, Sort.unsorted())
-            else PageRequest.of(0, 20, Sort.unsorted()),
+            pageable,
             total
         )
     }

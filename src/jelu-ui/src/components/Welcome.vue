@@ -25,7 +25,7 @@ const hasBooks = computed(() => books.value.length > 0)
 
 const getCurrentlyReading = async () => {
   try {
-    const res = await dataService.findUserBookByCriteria(ReadingEventType.CURRENTLY_READING, null)
+    const res = await dataService.findUserBookByCriteria([ReadingEventType.CURRENTLY_READING], null)
     if (res.numberOfElements <= 6) {
       books.value = res.content
     }
@@ -38,16 +38,13 @@ const getCurrentlyReading = async () => {
 
 };
 
+const nonCurrentlyReadingEvents: Array<ReadingEventType> = [ReadingEventType.DROPPED, ReadingEventType.FINISHED]
+
 const getMyEvents = async () => {
   try {
-    const res = await dataService.myReadingEvents()
+    const res = await dataService.myReadingEvents(nonCurrentlyReadingEvents, 0, 8)
     const notCurrentlyReading = res.content.filter(e => e.eventType !== ReadingEventType.CURRENTLY_READING)
-    if (notCurrentlyReading.length <= 8) {
-      events.value = notCurrentlyReading
-    }
-    else {
-      events.value = notCurrentlyReading.slice(0,8)
-    }
+    events.value = notCurrentlyReading
   } catch (error) {
     console.log("failed get events : " + error)
   }

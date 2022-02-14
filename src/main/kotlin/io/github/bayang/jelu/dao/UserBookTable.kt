@@ -1,9 +1,7 @@
 package io.github.bayang.jelu.dao
 
-import io.github.bayang.jelu.dao.BookTable.nullable
 import io.github.bayang.jelu.dto.UserBookDto
 import io.github.bayang.jelu.dto.UserBookLightDto
-import io.github.bayang.jelu.dto.UserBookWithoutBookDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsDto
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -13,7 +11,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.javatime.timestamp
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 object UserBookTable : UUIDTable("user_book") {
     val creationDate = timestamp("creation_date")
@@ -82,19 +80,5 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             book = this.book.toBookDto(),
             user = this.user.toUserDto(),
             percentRead = this.percentRead,
-        )
-
-    fun toUserBookWithoutBookDto(): UserBookWithoutBookDto =
-        UserBookWithoutBookDto(
-            id = this.id.value,
-            creationDate = this.creationDate,
-            modificationDate = this.modificationDate,
-            owned = this.owned,
-            toRead = this.toRead,
-            personalNotes = this.personalNotes,
-            lastReadingEvent = this.lastReadingEvent,
-            lastReadingEventDate = this.lastReadingEventDate,
-            percentRead = this.percentRead,
-            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
         )
 }

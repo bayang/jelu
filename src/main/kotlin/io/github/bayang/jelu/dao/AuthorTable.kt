@@ -1,7 +1,6 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.AuthorDto
-import io.github.bayang.jelu.dto.AuthorWithBooksDto
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -10,7 +9,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.timestamp
-import java.util.*
+import java.util.UUID
 
 object AuthorTable : UUIDTable("author") {
     val name: Column<String> = varchar("name", 1000)
@@ -30,7 +29,6 @@ class Author(id: EntityID<UUID>) : UUIDEntity(id) {
     var dateOfBirth by AuthorTable.dateOfBirth
     var dateOfDeath by AuthorTable.dateOfDeath
     var image by AuthorTable.image
-    var books by Book via BookAuthors
     fun toAuthorDto(): AuthorDto =
         AuthorDto(
             id = this.id.value,
@@ -41,18 +39,6 @@ class Author(id: EntityID<UUID>) : UUIDEntity(id) {
             dateOfBirth = this.dateOfBirth,
             dateOfDeath = this.dateOfDeath,
             image = this.image
-        )
-    fun toAuthorWithBooksDto(): AuthorWithBooksDto =
-        AuthorWithBooksDto(
-            id = this.id.value,
-            creationDate = this.creationDate,
-            modificationDate = this.modificationDate,
-            name = this.name,
-            biography = this.biography,
-            dateOfBirth = this.dateOfBirth,
-            dateOfDeath = this.dateOfDeath,
-            image = this.image,
-            books = this.books.map { it.toBookDto() }
         )
 }
 object BookAuthors : Table(name = "book_authors") {

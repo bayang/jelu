@@ -1,20 +1,30 @@
 <script setup lang="ts">
 import { computed, Ref, ref, watch } from 'vue'
 import { useProgrammatic } from "@oruga-ui/oruga-next";
-import { BookWithUserBook, UserBook } from '../model/Book'
+import { Book, UserBook } from '../model/Book'
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
 import { StringUtils } from '../utils/StringUtils'
 import { ObjectUtils } from '../utils/ObjectUtils';
 import EditBookModal from "./EditBookModal.vue"
+import SortFilterBarVue from "./SortFilterBar.vue";
 import usePagination from '../composables/pagination';
+import useSort from '../composables/sort';
+import { LibraryFilter } from '../model/LibraryFilter';
+import { useRouteQuery } from '@vueuse/router';
 
 const {oruga} = useProgrammatic();
 const props = defineProps<{ query: string|null }>()
 
-const books: Ref<Array<BookWithUserBook>> = ref([]);
+const books: Ref<Array<Book>> = ref([]);
 
 const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
+
+const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
+
+const libraryFilter: Ref<LibraryFilter> = useRouteQuery('libraryFilter', 'ANY' as LibraryFilter)
+
+const open = ref(false)
 
 const edit: Ref<boolean> = ref(false)
 const advancedMode: Ref<boolean> = ref(false)
@@ -34,7 +44,7 @@ const search = () => {
       dataService.findBooks(query.value.get('title'), 
       query.value.get('isbn10'), query.value.get('isbn13'), 
       query.value.get('series'), 
-      Number.parseInt(page.value) - 1, perPage.value)
+      pageAsNumber.value - 1, perPage.value, sortQuery.value, libraryFilter.value)
     .then(res => {
         console.log(res)
           total.value = res.totalElements
@@ -49,7 +59,7 @@ const search = () => {
     )
 }
 
-watch(page, (newVal, oldVal) => {
+watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(page.value)
   console.log(newVal + " " + oldVal)
   if (newVal !== oldVal) {
@@ -123,8 +133,85 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
 </script>
 
 <template>
-  <div class="columns is-centered">
-    <div class="column is-4 field">
+<sort-filter-bar-vue
+    :open="open"
+    :order="sortOrder"
+    class="sort-filter-bar"
+    @update:open="open = $event"
+    @update:sort-order="sortOrderUpdated"
+  >
+    <template #sort-fields>
+      <div class="field">
+        <label class="label">Sort by : </label>
+        <o-radio
+          v-model="sortBy"
+          native-value="title"
+        >
+          Title
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="publisher"
+        >
+          Publisher
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="series"
+        >
+          Series
+        </o-radio>
+        <o-radio
+          v-model="sortBy"
+          native-value="publishedDate"
+        >
+          Publication date
+        </o-radio>
+      </div>
+    </template>
+    <template #filters>
+      <div class="field">
+        <label class="label">Books type : </label>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ANY"
+        >
+          Any
+        </o-radio>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ONLY_USER_BOOKS"
+        >
+          Only books in my lists
+        </o-radio>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ONLY_NON_USER_BOOKS"
+        >
+          Only books not in my lists
+        </o-radio>
+      </div>
+    </template>
+  </sort-filter-bar-vue>
+  <div class="level">
+    <div class="level-left mobile-level-right">
+      <div class="level-item">
+        <o-button
+          variant="primary"
+          outlined
+          @click="open = !open"
+        >
+          <span class="icon">
+            <i class="mdi mdi-filter-variant" />
+          </span>
+        </o-button>
+      </div>
+    </div>
+    <div class="level-item">
       <o-checkbox v-model="advancedMode">
         Advanced search
       </o-checkbox>
@@ -214,12 +301,12 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
   <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
     <div
       v-for="book in convertedBooks"
-      :key="book.id"
+      :key="book.book.id"
       class="books-grid-item my-2"
     >
       <router-link
-        v-if="book.id != undefined"
-        :to="{ name: 'book-detail', params: { bookId: book.id } }"
+        v-if="book.book.userBookId != undefined"
+        :to="{ name: 'book-detail', params: { bookId: book.book.userBookId } }"
       >
         <book-card :book="book" />
       </router-link>

@@ -14,16 +14,16 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .cors { }
             .csrf { it.disable() }
             .logout { it ->
-                it.logoutUrl("/api/logout")
+                it.logoutUrl("/api/v1/logout")
                     .invalidateHttpSession(true)
             }
             .authorizeRequests {
                 it.antMatchers(
-                    "/api/token", "/api/setup/status"
+                    "/api/v1/token", "/api/v1/setup/status"
                 ).permitAll()
-                it.mvcMatchers(HttpMethod.POST, "/api/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
+                it.mvcMatchers(HttpMethod.POST, "/api/v1/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
                 it.antMatchers(
-                    "/api/users**",
+                    "/api/v1/users**",
                 ).hasRole("ADMIN")
                 it.antMatchers(
                     "/api/**",

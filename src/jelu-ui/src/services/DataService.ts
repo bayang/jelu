@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { UserBook, Book, BookWithUserBook } from "../model/Book";
+import { UserBook, Book } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
@@ -10,6 +10,8 @@ import { Page } from "../model/Page";
 import { Quote } from "../model/Quote";
 import { ServerSettings } from "../model/ServerSettings";
 import { ImportConfigurationDto } from "../model/ImportConfiguration";
+import qs from "qs";
+import { LibraryFilter } from "../model/LibraryFilter";
 
 class DataService {
 
@@ -107,26 +109,26 @@ class DataService {
     }
   }
 
-  findUserBooks = async (page?: number, pageSize?: number) => {
-    try {
-      const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}/me`, {
-        params: {
-          page: page,
-          pageSize: pageSize
-        }
-      });
-      console.log("called backend")
-      console.log(response)
-      return response.data;
-    }
-    catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        console.log("error axios " + error.response.status + " " + error.response.data.error)
-      }
-      console.log("error findall " + (error as AxiosError).code)
-      throw new Error("error findall " + error)
-    }
-  }
+  // findUserBooks = async (page?: number, pageSize?: number) => {
+  //   try {
+  //     const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}/me`, {
+  //       params: {
+  //         page: page,
+  //         pageSize: pageSize
+  //       }
+  //     });
+  //     console.log("called backend")
+  //     console.log(response)
+  //     return response.data;
+  //   }
+  //   catch (error) {
+  //     if (axios.isAxiosError(error) && error.response) {
+  //       console.log("error axios " + error.response.status + " " + error.response.data.error)
+  //     }
+  //     console.log("error findall " + (error as AxiosError).code)
+  //     throw new Error("error findall " + error)
+  //   }
+  // }
 
   getUserBookById = async (userBookId: string) => {
     try {
@@ -352,16 +354,20 @@ class DataService {
     }
   }
 
-  findUserBookByCriteria = async (eventType?: ReadingEventType|null, 
-    toRead?: boolean|null, page?: number, pageSize?: number) => {
+  findUserBookByCriteria = async (lastEventTypes?: Array<ReadingEventType>|null, 
+    toRead?: boolean|null, page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}`, {
         params: {
-          lastEventType: eventType,
+          lastEventTypes: lastEventTypes,
           toRead: toRead,
           page: page,
-          pageSize: pageSize
-        }
+          size: size,
+          sort: sort
+        },
+        paramsSerializer: function(params) {
+          return qs.stringify(params, {arrayFormat: 'comma'})
+       },
       });
       console.log("called userbook by eventtype")
       console.log(response)
@@ -433,12 +439,14 @@ class DataService {
   }
 
   getTagBooksById = async (tagId: string, 
-    page?: number, pageSize?: number) => {
+    page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
     try {
-      const response = await this.apiClient.get<Page<BookWithUserBook>>(`${this.API_TAG}/${tagId}${this.API_BOOK}`, {
+      const response = await this.apiClient.get<Page<Book>>(`${this.API_TAG}/${tagId}${this.API_BOOK}`, {
         params: {
           page: page,
-          pageSize: pageSize
+          size: size,
+          sort: sort,
+          libraryFilter: libraryFilter
         }
       });
       console.log("called tag books by id")
@@ -493,16 +501,19 @@ class DataService {
   }
 
   findBooks = async (title?:string, isbn10?: string, isbn13?: string, 
-    series?: string, page?: number, pageSize?: number) => {
+    series?: string, page?: number, size?: number, sort?: string,
+  libraryFilter?: LibraryFilter) => {
     try {
-      const response = await this.apiClient.get<Page<BookWithUserBook>>(`${this.API_BOOK}`, {
+      const response = await this.apiClient.get<Page<Book>>(`${this.API_BOOK}`, {
         params: {
           isbn10: isbn10,
           title: title,
           isbn13: isbn13,
           series: series,
           page: page,
-          pageSize: pageSize
+          size: size,
+          sort: sort,
+          libraryFilter: libraryFilter
         }
       });
       console.log("called find books")
@@ -586,9 +597,20 @@ class DataService {
     }
   }
 
-  myReadingEvents = async () => {
+  myReadingEvents = async (eventTypes?: Array<ReadingEventType>|null, 
+    page?: number, size?: number, sort?: string) => {
     try {
-      const response = await this.apiClient.get<Page<ReadingEventWithUserBook>>(`${this.API_READING_EVENTS}/me`);
+      const response = await this.apiClient.get<Page<ReadingEventWithUserBook>>(`${this.API_READING_EVENTS}/me`, {
+        params: {
+          eventTypes: eventTypes,
+          page: page,
+          size: size,
+          sort: sort
+        },
+        paramsSerializer: function(params) {
+          return qs.stringify(params, {arrayFormat: 'comma'})
+       },
+      });
       console.log("called my events")
       console.log(response)
       return response.data;

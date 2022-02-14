@@ -99,6 +99,7 @@ $navbar-item-active-background-color: $jelu_background_contrast;
 $navbar-dropdown-background-color:$jelu_background_accent;
 // $navbar-dropdown-arrow: $jelu_background;
 
+
 $text : $jelu_text_primary;
 $text-strong : $jelu_text_secondary;
 $text-invert: findColorInvert($text);
@@ -122,7 +123,6 @@ $dropdown-content-background-color: $white-ter;
 // $modal-content-fullscreen-background-color: $jelu_background_accent;
 // $modal-content-background-color: $jelu_background_accent;
 // $modal-overlay-background-color: #404040;
-
 
 label.label {
     color: $text;
@@ -291,3 +291,12 @@ footer.card-footer span.tag {
   .carousel__pagination-button--active {
     background-color: $jelu_background_accent;
   }
+
+.b-sidebar .sidebar-content {
+  background-color: $jelu_background_accent;
+}
+
+.sort-filter-bar {
+  font-size: $small-font-size;
+}
+

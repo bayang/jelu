@@ -1,14 +1,13 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.BookDto
-import io.github.bayang.jelu.dto.BookWithUserBookDto
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.javatime.timestamp
-import java.util.*
+import java.util.UUID
 
 object BookTable : UUIDTable("book") {
     val title: Column<String> = varchar("title", 1000)
@@ -51,6 +50,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
     var goodreadsId by BookTable.goodreadsId
     var librarythingId by BookTable.librarythingId
     val userBooks by UserBook referrersOn UserBookTable.book
+    var userBookId: UUID? = null
 
     fun toBookDto(): BookDto =
         BookDto(
@@ -73,31 +73,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             librarythingId = this.librarythingId,
             language = this.language,
             authors = this.authors.map { it.toAuthorDto() },
-            tags = this.tags.map { it.toTagDto() }
-        )
-
-    fun toBookWithUserBookDto(userId: UUID): BookWithUserBookDto =
-        BookWithUserBookDto(
-            id = this.id.value,
-            creationDate = this.creationDate,
-            title = this.title,
-            isbn10 = this.isbn10,
-            isbn13 = this.isbn13,
-            summary = this.summary,
-            image = this.image,
-            publisher = this.publisher,
-            publishedDate = this.publishedDate,
-            pageCount = this.pageCount,
-            modificationDate = this.modificationDate,
-            series = this.series,
-            numberInSeries = this.numberInSeries,
-            goodreadsId = this.goodreadsId,
-            googleId = this.googleId,
-            amazonId = this.amazonId,
-            librarythingId = this.librarythingId,
-            language = this.language,
-            authors = this.authors.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() },
-            userBooks = this.userBooks.filter { it.user.id.value == userId }.map { it.toUserBookWithoutBookDto() }
+            userBookId = this.userBookId
         )
 }

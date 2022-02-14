@@ -1,18 +1,16 @@
-import { createLogger, createStore, Store } from 'vuex'
-import { LocationQuery, RouteLocationNormalized } from 'vue-router';
-import { UserAuthentication, User } from './model/User'
-import dataService from './services/DataService'
-import router from './router'
-import { InjectionKey } from 'vue'
-import { ServerSettings } from './model/ServerSettings'
+import { InjectionKey } from 'vue';
+import { RouteLocationNormalized } from 'vue-router';
+import { createLogger, createStore, Store } from 'vuex';
+import { ServerSettings } from './model/ServerSettings';
+import { User, UserAuthentication } from './model/User';
+import router from './router';
+import dataService from './services/DataService';
 
 export interface State {
   isLogged: boolean,
   isInitialSetup : boolean,
   user : User | null,
-  // entryPoint: string,
   serverSettings: ServerSettings,
-  // query: LocationQuery | null,
   route: RouteLocationNormalized | null
 }
 
@@ -25,8 +23,6 @@ const store = createStore<State>({
       isLogged: false,
       isInitialSetup : false,
       user: null,
-      // entryPoint: '/',
-      // query: null,
       state: null,
       route: null,
       serverSettings: {
@@ -45,12 +41,6 @@ const store = createStore<State>({
     user(state, user: User) {
       state.user = user
     },
-    // entryPoint(state, entryPoint: string) {
-    //   state.entryPoint = entryPoint
-    // },
-    // query(state, query: LocationQuery) {
-    //   state.query = query
-    // },
     route(state, route: RouteLocationNormalized) {
       state.route = route
     },
@@ -69,7 +59,6 @@ const store = createStore<State>({
           console.log(auth)
           commit('login', true)
           commit('user', auth.user)
-          // await router.push({name: 'home'})
         } catch (error) {
           commit('login', false)
           throw error
@@ -89,12 +78,6 @@ const store = createStore<State>({
           else {
             console.log("route is null")
           }
-          // if (state.query != null) {
-          //   await router.push({path: state.entryPoint, query: state.query})
-          // }
-          // else {
-          //   await router.push({path: state.entryPoint})
-          // }
         } catch (error) {
           commit('login', false)
           throw error

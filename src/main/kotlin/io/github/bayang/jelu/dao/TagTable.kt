@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.timestamp
-import java.util.*
+import java.util.UUID
 
 object TagTable : UUIDTable("tag") {
     val name: Column<String> = varchar("name", 1000)
@@ -21,7 +21,6 @@ class Tag(id: EntityID<UUID>) : UUIDEntity(id) {
     var name by TagTable.name
     var creationDate by TagTable.creationDate
     var modificationDate by TagTable.modificationDate
-//    var books by Book via BookTags
     fun toTagDto(): TagDto =
         TagDto(
             id = this.id.value,
@@ -29,14 +28,6 @@ class Tag(id: EntityID<UUID>) : UUIDEntity(id) {
             modificationDate = this.modificationDate,
             name = this.name
         )
-//    fun toTagWithBooksDto(userId: UUID): TagWithBooksDto =
-//        TagWithBooksDto(
-//            id = this.id.value,
-//            creationDate = this.creationDate,
-//            modificationDate = this.modificationDate,
-//            name = this.name,
-//            books = this.books.map { it.toBookWithUserBookDto(userId) }
-//        )
 }
 object BookTags : Table(name = "book_tags") {
     val book = reference("book", BookTable, fkName = "fk_booktags_book_id", onDelete = ReferenceOption.CASCADE)

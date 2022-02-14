@@ -2,14 +2,29 @@ package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dto.*
+import io.github.bayang.jelu.dto.CreateReadingEventDto
+import io.github.bayang.jelu.dto.JeluUser
+import io.github.bayang.jelu.dto.ReadingEventDto
+import io.github.bayang.jelu.dto.UpdateReadingEventDto
+import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.ReadingEventService
 import mu.KotlinLogging
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
@@ -23,21 +38,19 @@ class ReadingEventsController(
 
     @GetMapping(path = ["/reading-events"])
     fun readingEvents(
-        @RequestParam(name = "type", required = false) searchTerm: ReadingEventType?,
+        @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @RequestParam(name = "userId", required = false) userId: UUID?,
-        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long
-    ): Page<ReadingEventDto> = repository.findAll(searchTerm, userId, page, pageSize)
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) pageable: Pageable
+    ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, pageable)
 
     @GetMapping(path = ["/reading-events/me"])
     fun myReadingEvents(
-        @RequestParam(name = "type", required = false) searchTerm: ReadingEventType?,
-        @RequestParam(name = "page", required = false, defaultValue = "0") page: Long,
-        @RequestParam(name = "pageSize", required = false, defaultValue = "20") pageSize: Long,
+        @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) pageable: Pageable,
         principal: Authentication
     ): Page<ReadingEventDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findAllByUser((principal.principal as JeluUser).user, searchTerm, page, pageSize)
+        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, pageable)
     }
 
     @PostMapping(path = ["/reading-events"])

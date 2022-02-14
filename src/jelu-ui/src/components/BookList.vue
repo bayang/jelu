@@ -1,24 +1,40 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref, watch } from "vue";
+import { computed, onMounted, Ref, ref, watch } from "vue";
+import { useRouteQuery } from '@vueuse/router';
 import dataService from "../services/DataService";
 import { UserBook } from "../model/Book";
 import BookCard from "./BookCard.vue";
 import usePagination from '../composables/pagination';
+import { ReadingEventType } from "../model/ReadingEvent";
+import { useRouteQueryArray } from "../composables/useVueRouterArray";
+import { useThrottleFn } from '@vueuse/core'
+import useSort from "../composables/sort";
+import SortFilterBarVue from "./SortFilterBar.vue";
 
 const books: Ref<Array<UserBook>> = ref([]);
 
 const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
 
-watch(page, (newVal, oldVal) => {
-  console.log(page.value)
-  console.log(newVal + " " + oldVal)
+const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('lastReadingEventDate,desc')
+
+const open = ref(false)
+
+const toRead: Ref<string|null> = useRouteQuery('toRead', "null")
+
+const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTypes', [])
+
+watch([page, eventTypes, toRead, sortQuery], (newVal, oldVal) => {
+  console.log("all " + newVal + " " + oldVal)
   if (newVal !== oldVal) {
-    getBooks()
+    throttledGetBooks()
   }
 })
 
+const toReadAsBool = computed(() => toRead.value?.toLowerCase() === "null" ? null : toRead.value?.toLowerCase() === "true")
+
 const getBooks = () => {
-  dataService.findUserBooks(Number.parseInt(page.value) - 1, perPage.value)
+  dataService.findUserBookByCriteria(eventTypes.value, toReadAsBool.value, 
+  pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
         console.log(res)
           total.value = res.totalElements
@@ -34,6 +50,17 @@ const getBooks = () => {
   
 };
 
+// watches set above sometimes called twice
+// so getBooks was sometimes called twice at the same instant
+const throttledGetBooks = useThrottleFn(() => {
+  getBooks()
+}, 100, false)
+
+// const sortOrderUpdated = (newval: string) => {
+//   console.log('sortOrderUpdated ' + newval)
+//   sortOrder.value = newval
+// }
+
 onMounted(() => {
   console.log("Component is mounted!");
   try {
@@ -45,7 +72,113 @@ onMounted(() => {
 </script>
 
 <template>
+  <sort-filter-bar-vue
+    :open="open"
+    :order="sortOrder"
+    class="sort-filter-bar"
+    @update:open="open = $event"
+    @update:sort-order="sortOrderUpdated"
+  >
+    <template #sort-fields>
+      <div class="field">
+        <label class="label">Sort by : </label>
+        <o-radio
+          v-model="sortBy"
+          native-value="lastReadingEventDate"
+        >
+          Last reading event date
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="title"
+        >
+          Title
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="publisher"
+        >
+          Publisher
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="series"
+        >
+          Series
+        </o-radio>
+      </div>
+    </template>
+    <template #filters>
+      <div class="field">
+        <label class="label">Last event type : </label>
+        <o-checkbox
+          v-model="eventTypes"
+          native-value="FINISHED"
+        >
+          Finished
+        </o-checkbox>
+        <o-checkbox
+          v-model="eventTypes"
+          native-value="CURRENTLY_READING"
+        >
+          Currently reading
+        </o-checkbox>
+        <o-checkbox
+          v-model="eventTypes"
+          native-value="DROPPED"
+        >
+          Dropped
+        </o-checkbox>
+      </div>
+      <div class="field">
+        <label class="label">Book is in to-read list : </label>
+        <div class="field">
+          <o-radio
+            v-model="toRead"
+            native-value="null"
+          >
+            Unset
+          </o-radio>
+        </div>
+        <div class="field">
+          <o-radio
+            v-model="toRead"
+            native-value="false"
+          >
+            False
+          </o-radio>
+        </div>
+        <div class="field">
+          <o-radio
+            v-model="toRead"
+            native-value="true"
+          >
+            True
+          </o-radio>
+        </div>
+      </div>
+    </template>
+  </sort-filter-bar-vue>
   <div class="level">
+    <div class="level-left mobile-level-right">
+      <div class="level-item">
+        <o-button
+          variant="primary"
+          outlined
+          @click="open = !open"
+        >
+          <span class="icon">
+            <i class="mdi mdi-filter-variant" />
+          </span>
+        </o-button>
+      </div>
+    </div>
     <div class="level-item">
       <h2 class="title has-text-weight-normal typewriter">
         <span class="icon">
@@ -83,7 +216,7 @@ onMounted(() => {
 
   <o-pagination
     v-if="books.length > 0"
-    v-model:current="pageAsNumber"
+    :current="pageAsNumber"
     :total="total"
     order="centered"
     :per-page="perPage"
@@ -96,6 +229,11 @@ onMounted(() => {
 label {
   margin: 0 0.5em;
   font-weight: bold;
+}
+
+/* fields in slots are shifted to the right and alignment is broken */
+.field {
+  margin-left: -8px;
 }
 
 </style>

@@ -8,6 +8,7 @@ import mu.KotlinLogging
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.stereotype.Service
@@ -74,7 +75,7 @@ class GoodreadsQuoteProviderImpl(
     }
 
     private fun randomAuthor(): String {
-        val page = bookService.findAllAuthors(null)
+        val page = bookService.findAllAuthors(null, Pageable.ofSize(20))
         return if (page.isEmpty) {
             ""
         } else {

@@ -1,21 +1,37 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.config.JeluProperties
-import io.github.bayang.jelu.dao.*
-import io.github.bayang.jelu.dto.*
+import io.github.bayang.jelu.dao.Book
+import io.github.bayang.jelu.dao.BookRepository
+import io.github.bayang.jelu.dao.ReadingEventRepository
+import io.github.bayang.jelu.dao.ReadingEventType
+import io.github.bayang.jelu.dao.User
+import io.github.bayang.jelu.dao.UserBook
+import io.github.bayang.jelu.dto.AuthorDto
+import io.github.bayang.jelu.dto.AuthorUpdateDto
+import io.github.bayang.jelu.dto.BookCreateDto
+import io.github.bayang.jelu.dto.BookDto
+import io.github.bayang.jelu.dto.BookUpdateDto
+import io.github.bayang.jelu.dto.CreateReadingEventDto
+import io.github.bayang.jelu.dto.CreateUserBookDto
+import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.UserBookLightDto
+import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.service.metadata.FILE_PREFIX
 import io.github.bayang.jelu.utils.imageName
 import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
-import org.jetbrains.exposed.dao.id.EntityID
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.nio.file.Files
-import java.util.*
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
@@ -28,29 +44,28 @@ class BookService(
 ) {
 
     @Transactional
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, page: Long, pageSize: Long, user: User): Page<BookWithUserBookDto> =
-        bookRepository.findAll(title, isbn10, isbn13, series, page, pageSize).map { it.toBookWithUserBookDto(user.id.value) }
+    fun findAll(
+        title: String?,
+        isbn10: String?,
+        isbn13: String?,
+        series: String?,
+        pageable: Pageable,
+        user: User,
+        libraryFilter: LibraryFilter
+    ): Page<BookDto> =
+        bookRepository.findAll(title, isbn10, isbn13, series, pageable, user, libraryFilter).map { it.toBookDto() }
 
     @Transactional
-    fun findAllAuthors(name: String?, page: Long = 0, pageSize: Long = 20): Page<AuthorDto> = bookRepository.findAllAuthors(name, page, pageSize).map { it.toAuthorDto() }
+    fun findAllAuthors(name: String?, pageable: Pageable): Page<AuthorDto> = bookRepository.findAllAuthors(name, pageable).map { it.toAuthorDto() }
 
     @Transactional
-    fun findAllTags(): List<TagDto> = bookRepository.findAllTags().map { it.toTagDto() }
-
-    @Transactional
-    fun findAuthorsByName(name: String): List<AuthorDto> = bookRepository.findAuthorsByName(name).map { it.toAuthorDto() }
-
-    @Transactional
-    fun findTagsByName(name: String): List<TagDto> = bookRepository.findTagsByName(name).map { it.toTagDto() }
+    fun findAllTags(name: String?, pageable: Pageable): Page<TagDto> = bookRepository.findAllTags(name, pageable).map { it.toTagDto() }
 
     @Transactional
     fun findBookById(bookId: UUID): BookDto = bookRepository.findBookById(bookId).toBookDto()
 
     @Transactional
-    fun findBookByTitle(title: String): List<BookDto> = bookRepository.findBookByTitle(title).map { it.toBookDto() }
-
-    @Transactional
-    fun findAuthorsById(authorId: UUID): AuthorWithBooksDto = bookRepository.findAuthorsById(authorId).toAuthorWithBooksDto()
+    fun findAuthorsById(authorId: UUID): AuthorDto = bookRepository.findAuthorsById(authorId).toAuthorDto()
 
     @Transactional
     fun update(bookId: UUID, book: BookUpdateDto): BookDto = bookRepository.update(bookId, book).toBookDto()
@@ -162,10 +177,6 @@ class BookService(
     fun save(author: AuthorDto): AuthorDto = bookRepository.save(author).toAuthorDto()
 
     @Transactional
-    fun findAllBooksByUser(user: User, page: Long, pageSize: Long): Page<UserBookLightDto> =
-        bookRepository.findAllBooksByUser(user, page, pageSize).map { it.toUserBookLightDto() }
-
-    @Transactional
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto = bookRepository.updateAuthor(authorId, author).toAuthorDto()
 
     @Transactional
@@ -173,13 +184,12 @@ class BookService(
 
     @Transactional
     fun findUserBookByCriteria(
-        userId: EntityID<UUID>,
-        eventType: ReadingEventType?,
+        userId: UUID,
+        eventTypes: List<ReadingEventType>?,
         toRead: Boolean?,
-        page: Long,
-        pageSize: Long
+        pageable: Pageable
     ): Page<UserBookLightDto> =
-        bookRepository.findUserBookByCriteria(userId, eventType, toRead, page, pageSize).map { it.toUserBookLightDto() }
+        bookRepository.findUserBookByCriteria(userId, eventTypes, toRead, pageable).map { it.toUserBookLightDto() }
 
     @Transactional
     fun findTagById(tagId: UUID, user: User): TagDto {
@@ -187,8 +197,8 @@ class BookService(
     }
 
     @Transactional
-    fun findTagBooksById(tagId: UUID, user: User, page: Long, pageSize: Long): Page<BookWithUserBookDto> {
-        return bookRepository.findTagBooksById(tagId, page, pageSize).map { book -> book.toBookWithUserBookDto(user.id.value) }
+    fun findTagBooksById(tagId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
+        return bookRepository.findTagBooksById(tagId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
     }
 
     @Transactional
@@ -222,7 +232,7 @@ class BookService(
     }
 
     @Transactional
-    fun findAuthorBooksById(authorId: UUID, user: User, page: Long, pageSize: Long): Page<BookWithUserBookDto> {
-        return bookRepository.findAuthorBooksById(authorId, page, pageSize).map { book -> book.toBookWithUserBookDto(user.id.value) }
+    fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
+        return bookRepository.findAuthorBooksById(authorId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
     }
 }

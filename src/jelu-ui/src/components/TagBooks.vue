@@ -1,25 +1,35 @@
 <script setup lang="ts">
 import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useRouteQuery } from "@vueuse/router";
 import { computed, onMounted, Ref, ref, watch } from 'vue';
 import usePagination from '../composables/pagination';
-import { BookWithUserBook, UserBook } from '../model/Book';
+import useSort from "../composables/sort";
+import { Book, UserBook } from '../model/Book';
+import { LibraryFilter } from "../model/LibraryFilter";
 import { Tag } from '../model/Tag';
 import dataService from "../services/DataService";
 import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
 import EditBookModal from "./EditBookModal.vue";
+import SortFilterBarVue from "./SortFilterBar.vue";
 
 const {oruga} = useProgrammatic();
 
 const props = defineProps<{ tagId: string }>()
 
 const tag: Ref<Tag> = ref({name: ""})
-const tagBooks: Ref<Array<BookWithUserBook>> = ref([]);
+const tagBooks: Ref<Array<Book>> = ref([]);
 const edit: Ref<boolean> = ref(false)
 
 const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
 
-watch(page, (newVal, oldVal) => {
+const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
+
+const libraryFilter: Ref<LibraryFilter> = useRouteQuery('libraryFilter', 'ANY' as LibraryFilter)
+
+const open = ref(false)
+
+watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(page.value)
   console.log(newVal + " " + oldVal)
   if (newVal !== oldVal) {
@@ -37,7 +47,8 @@ const getTag = async () => {
 
 const getBooks = () => {
   dataService.getTagBooksById(props.tagId, 
-    Number.parseInt(page.value) - 1, perPage.value)
+    pageAsNumber.value - 1, perPage.value, sortQuery.value, 
+    libraryFilter.value)
     .then(res => {
         console.log(res)
           total.value = res.totalElements
@@ -91,18 +102,99 @@ getBooks()
 </script>
 
 <template>
-  <h2 class="title has-text-weight-normal typewriter">
-    Books tagged #{{ tag.name }} :
-  </h2>
+  <sort-filter-bar-vue
+    :open="open"
+    :order="sortOrder"
+    class="sort-filter-bar"
+    @update:open="open = $event"
+    @update:sort-order="sortOrderUpdated"
+  >
+    <template #sort-fields>
+      <div class="field">
+        <label class="label">Sort by : </label>
+        <o-radio
+          v-model="sortBy"
+          native-value="title"
+        >
+          Title
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="publisher"
+        >
+          Publisher
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="series"
+        >
+          Series
+        </o-radio>
+        <o-radio
+          v-model="sortBy"
+          native-value="publishedDate"
+        >
+          Publication date
+        </o-radio>
+      </div>
+    </template>
+    <template #filters>
+      <div class="field">
+        <label class="label">Books type : </label>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ANY"
+        >
+          Any
+        </o-radio>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ONLY_USER_BOOKS"
+        >
+          Only books in my lists
+        </o-radio>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ONLY_NON_USER_BOOKS"
+        >
+          Only books not in my lists
+        </o-radio>
+      </div>
+    </template>
+  </sort-filter-bar-vue>
+  <div class="level">
+    <div class="level-left mobile-level-right">
+      <div class="level-item">
+        <o-button
+          variant="primary"
+          outlined
+          @click="open = !open"
+        >
+          <span class="icon">
+            <i class="mdi mdi-filter-variant" />
+          </span>
+        </o-button>
+      </div>
+    </div>
+    <div class="level-item">
+      <h2 class="title has-text-weight-normal typewriter">
+        Books tagged #{{ tag.name }} :
+      </h2>
+    </div>
+  </div>
   <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
     <div
       v-for="book in convertedBooks"
-      :key="book.id"
+      :key="book.book.id"
       class="books-grid-item my-2"
     >
       <router-link
-        v-if="book.id != undefined"
-        :to="{ name: 'book-detail', params: { bookId: book.id } }"
+        v-if="book.book.userBookId != null"
+        :to="{ name: 'book-detail', params: { bookId: book.book.userBookId } }"
       >
         <book-card :book="book" />
       </router-link>
