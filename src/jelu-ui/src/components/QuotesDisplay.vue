@@ -86,5 +86,4 @@ if (isLogged.value) {
 
 <style lang="scss" scoped>
 
-
 </style>

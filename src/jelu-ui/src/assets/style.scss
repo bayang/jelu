@@ -246,6 +246,8 @@ footer.card-footer span.tag {
 
   .carousel__slide {
     padding: 10px;
+    // margin-left: 20px;
+    // margin-right: 20px;
     // min-height: 20px;
     width: 80%;
     background-color: $jelu_background_accent;
@@ -278,6 +280,15 @@ footer.card-footer span.tag {
     box-sizing: content-box;
     border: 2px solid $jelu_background_contrast;
     background-color: $jelu_background_accent;
+    top: 45%;
+  }
+
+  .carousel__prev {
+    left: 2%;
+  }
+
+  .carousel__next {
+    right: 2%;
   }
 
   .carousel__icon {
@@ -291,6 +302,10 @@ footer.card-footer span.tag {
   .carousel__pagination-button--active {
     background-color: $jelu_background_accent;
   }
+
+// .carousel-wrap {
+//   width: 90%;
+// }
 
 .b-sidebar .sidebar-content {
   background-color: $jelu_background_accent;
