@@ -344,20 +344,14 @@ getBook()
         v-if="book?.owned || book?.toRead"
         class="field has-text-left"
       >
-        <o-checkbox
+        <span
           v-if="book?.owned"
-          v-model="book.owned"
-          disabled
-        >
-          Owned
-        </o-checkbox>
-        <o-checkbox
+          class="tag is-info mx-1"
+        >Owned</span>
+        <span
           v-if="book?.toRead"
-          v-model="book.toRead"
-          disabled
-        >
-          To Read
-        </o-checkbox>
+          class="tag is-info"
+        >To read</span>
       </div>
     </div>
     <div
