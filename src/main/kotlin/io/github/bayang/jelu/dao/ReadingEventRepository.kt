@@ -75,25 +75,28 @@ class ReadingEventRepository {
             userBook.readingEvents.find { it.eventType == ReadingEventType.CURRENTLY_READING }
         val instant: Instant = nowInstant()
         if (userBook.lastReadingEvent != null) {
-            if (createReadingEventDto.readDate != null && createReadingEventDto.readDate.isAfter(userBook.lastReadingEventDate)) {
+            if (createReadingEventDto.eventDate != null && createReadingEventDto.eventDate.isAfter(userBook.lastReadingEventDate)) {
                 userBook.lastReadingEvent = createReadingEventDto.eventType
-                userBook.lastReadingEventDate = createReadingEventDto.readDate
+                userBook.lastReadingEventDate = createReadingEventDto.eventDate
             }
         } else {
             userBook.lastReadingEvent = createReadingEventDto.eventType
-            userBook.lastReadingEventDate = createReadingEventDto.readDate ?: instant
+            userBook.lastReadingEventDate = createReadingEventDto.eventDate ?: instant
         }
         if (alreadyReadingEvent != null) {
-            if (createReadingEventDto.readDate == null || createReadingEventDto.readDate.isAfter(alreadyReadingEvent.creationDate)) {
+            if (createReadingEventDto.eventDate == null || createReadingEventDto.eventDate.isAfter(alreadyReadingEvent.creationDate)) {
                 logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_READING state for book ${userBook.book.id}" }
                 alreadyReadingEvent.eventType = createReadingEventDto.eventType
-                alreadyReadingEvent.modificationDate = instant
+                alreadyReadingEvent.modificationDate = createReadingEventDto.eventDate ?: instant
                 return alreadyReadingEvent
             }
+            // else : alreadyReadingEvent is not null and createReadingEventDto.eventDate is before an already existing CURRENTLY_READING EVENT
+            // this could create CURRENTLY_READING events in the past
+            // should we allow this ? Let's wait and see for the moment, user can edit events in bookdetail page
         }
         return ReadingEvent.new {
-            this.creationDate = createReadingEventDto.readDate ?: instant
-            this.modificationDate = instant
+            this.creationDate = instant
+            this.modificationDate = createReadingEventDto.eventDate ?: instant
             this.eventType = createReadingEventDto.eventType
             this.userBook = userBook
         }
@@ -101,10 +104,17 @@ class ReadingEventRepository {
 
     fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEvent {
         return ReadingEvent[readingEventId].apply {
-            this.modificationDate = nowInstant()
+            this.modificationDate = updateReadingEventDto.eventDate ?: nowInstant()
             this.eventType = updateReadingEventDto.eventType
-            this.userBook.lastReadingEvent = updateReadingEventDto.eventType
-            this.userBook.lastReadingEventDate = this.modificationDate
+            val lastEvent = this.userBook.readingEvents
+                .maxByOrNull { e -> e.modificationDate }
+            if (lastEvent == null) {
+                this.userBook.lastReadingEvent = null
+                this.userBook.lastReadingEventDate = null
+            } else {
+                this.userBook.lastReadingEventDate = lastEvent.modificationDate
+                this.userBook.lastReadingEvent = lastEvent.eventType
+            }
         }
     }
 

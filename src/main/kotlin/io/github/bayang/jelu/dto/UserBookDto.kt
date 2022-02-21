@@ -44,6 +44,7 @@ data class UserBookWithoutEventsDto(
 )
 data class CreateUserBookDto(
     val lastReadingEvent: ReadingEventType?,
+    val lastReadingEventDate: Instant?,
     val personalNotes: String?,
     val owned: Boolean?,
     val book: BookCreateDto,

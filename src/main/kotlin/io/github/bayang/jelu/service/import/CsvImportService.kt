@@ -176,6 +176,7 @@ class CsvImportService(
                     // update book only and create userbook
                     val userbook = CreateUserBookDto(
                         if (readStatusEnum == ReadingEventType.CURRENTLY_READING || readStatusEnum == ReadingEventType.DROPPED) readStatusEnum else null,
+                        null,
                         importEntity.personalNotes,
                         importEntity.owned,
                         merge(book, bookFromDb),
@@ -187,6 +188,7 @@ class CsvImportService(
             } else {
                 val userbook = CreateUserBookDto(
                     if (readStatusEnum == ReadingEventType.CURRENTLY_READING || readStatusEnum == ReadingEventType.DROPPED) readStatusEnum else null,
+                    null,
                     importEntity.personalNotes,
                     importEntity.owned,
                     book,

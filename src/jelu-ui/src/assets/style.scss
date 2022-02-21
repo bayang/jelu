@@ -174,6 +174,37 @@ $typewriter-font: 'AnotherTypewriter', sans-serif;
     max-height: calc(100vh - 40px);
 }
 
+
+
+.event-modal {
+  // position: relative;
+  // overflow-y: scroll;
+  background-color: $jelu_background_accent;
+  // padding: 20px;
+  // max-height: 100%;
+  // height: 100%;
+  display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 40px);
+
+  margin: 0 20px;
+  // max-height: calc(100vh - 160px);
+  max-height: 100%;
+  overflow: auto;
+  position: relative;
+  // width: 100%;
+  max-width: 95vh;
+  height: 90vh;
+}
+
+.event-modal-body {
+  -webkit-overflow-scrolling: touch;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: visible;
+  padding: 20px;
+}
+
 .small-cover {
     width: 100px;
   }

@@ -3,7 +3,7 @@ import { UserBook, Book } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
 import { User, UserAuthentication } from "../model/User";
-import { ReadingEventType, ReadingEventWithUserBook } from "../model/ReadingEvent";
+import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from "../model/ReadingEvent";
 import { Tag } from "../model/Tag";
 import { Metadata } from "../model/Metadata";
 import { Page } from "../model/Page";
@@ -11,6 +11,7 @@ import { Quote } from "../model/Quote";
 import { ServerSettings } from "../model/ServerSettings";
 import { ImportConfigurationDto } from "../model/ImportConfiguration";
 import qs from "qs";
+import dayjs from "dayjs";
 import { LibraryFilter } from "../model/LibraryFilter";
 
 class DataService {
@@ -109,30 +110,11 @@ class DataService {
     }
   }
 
-  // findUserBooks = async (page?: number, pageSize?: number) => {
-  //   try {
-  //     const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}/me`, {
-  //       params: {
-  //         page: page,
-  //         pageSize: pageSize
-  //       }
-  //     });
-  //     console.log("called backend")
-  //     console.log(response)
-  //     return response.data;
-  //   }
-  //   catch (error) {
-  //     if (axios.isAxiosError(error) && error.response) {
-  //       console.log("error axios " + error.response.status + " " + error.response.data.error)
-  //     }
-  //     console.log("error findall " + (error as AxiosError).code)
-  //     throw new Error("error findall " + error)
-  //   }
-  // }
-
   getUserBookById = async (userBookId: string) => {
     try {
-      const response = await this.apiClient.get<UserBook>(`${this.API_USERBOOK}/${userBookId}`);
+      const response = await this.apiClient.get<UserBook>(`${this.API_USERBOOK}/${userBookId}`, {
+        transformResponse: this.transformUserbook
+      });
       console.log("called userBook " + userBookId)
       console.log(response)
       return response.data;
@@ -141,9 +123,24 @@ class DataService {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
-      console.log("error findall " + (error as AxiosError).code)
+      console.log("error userbook by id " + (error as AxiosError).code)
       throw new Error("error finding userBook " + userBookId + " " + error)
     }
+  }
+
+  /*
+  * Dates are deserialized as strings, convert to Date instead
+  */
+  transformUserbook = (data: string) => {
+    const tr = JSON.parse(data)
+    if (tr.readingEvents != null && tr.readingEvents.length > 0) {
+      for (const ev of tr.readingEvents) {
+        if (ev.modificationDate != null) {
+          ev.modificationDate = dayjs(ev.modificationDate).toDate()
+        }
+      }
+    }
+    return tr
   }
 
   getUser = async () => {
@@ -384,7 +381,7 @@ class DataService {
 
   findAuthorByCriteria = async (query?: string|null) => {
     try {
-      const response = await this.apiClient.get<Array<Author>>(`${this.API_AUTHOR}`, {
+      const response = await this.apiClient.get<Page<Author>>(`${this.API_AUTHOR}`, {
         params: {
           name: query
         }
@@ -404,7 +401,7 @@ class DataService {
 
   findTagsByCriteria = async (query?: string|null) => {
     try {
-      const response = await this.apiClient.get<Array<Tag>>(`${this.API_TAG}`, {
+      const response = await this.apiClient.get<Page<Tag>>(`${this.API_TAG}`, {
         params: {
           name: query
         }
@@ -561,6 +558,22 @@ class DataService {
     }
   }
 
+  deleteReadingEvent = async (eventId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_READING_EVENTS}/${eventId}`);
+      console.log("delete event")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete event " + (error as AxiosError).code)
+      throw new Error("error delete event " + error)
+    }
+  }
+
   quotes = async (query?:string) => {
     try {
       const response = await this.apiClient.get<Array<Quote>>(`${this.API_QUOTES}`, {
@@ -661,6 +674,37 @@ class DataService {
       }
       console.log("error import csv " + (error as AxiosError).code)
       throw new Error("error importing csv " + error)
+    }
+  }
+
+  updateReadingEvent = async (event: ReadingEvent) => {
+    try {
+      const resp = await this.apiClient.put<ReadingEvent>(`${this.API_READING_EVENTS}/${event.id}`, {
+          eventType : event.eventType,
+          eventDate : event.modificationDate
+      })
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error updating event " + error.response.status + " " + error.response.data.error)
+        throw new Error("error updating event " + error.response.status + " " + error)
+      }
+      console.log("error updating event " + (error as AxiosError).code)
+      throw new Error("error updating event " + error)
+    }
+  }
+
+  createReadingEvent = async (event: CreateReadingEvent) => {
+    try {
+      const resp = await this.apiClient.post<ReadingEvent>(`${this.API_READING_EVENTS}`, event)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error creating event " + error.response.status + " " + error.response.data.error)
+        throw new Error("error creating event " + error.response.status + " " + error)
+      }
+      console.log("error creating event " + (error as AxiosError).code)
+      throw new Error("error creating event " + error)
     }
   }
 

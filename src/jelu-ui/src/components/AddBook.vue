@@ -122,6 +122,7 @@ const importBook = async () => {
         "type " + StringUtils.readingEventTypeForValue(eventType.value)
       );
       userBook.lastReadingEvent = StringUtils.readingEventTypeForValue(eventType.value);
+      userBook.lastReadingEventDate = new Date().toISOString()
     }
     try {
       console.log(`push book ` + userBook);
@@ -219,11 +220,11 @@ const clearImageField = () => {
 };
 
 function getFilteredAuthors(text: string) {
-  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data)
+  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
 }
 
 function getFilteredTags(text: string) {
-  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data)
+  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
 
 function beforeAdd(item: Author | string) {

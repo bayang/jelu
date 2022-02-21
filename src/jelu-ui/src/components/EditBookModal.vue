@@ -112,11 +112,11 @@ const importBook = () => {
 
 function getFilteredAuthors(text: string) {
   console.log("option " + text)
-  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data)
+  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
 }
 
 function getFilteredTags(text: string) {
-  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data)
+  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
 
 const clearDatePicker = () => {

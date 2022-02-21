@@ -3,19 +3,24 @@ import { computed, onMounted, Ref, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { UserBook } from '../model/Book'
-import { ReadingEventType, ReadingEventWithUserBook } from '../model/ReadingEvent'
+import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from '../model/ReadingEvent'
 import dataService from "../services/DataService"
 import { key } from '../store'
 import { StringUtils } from '../utils/StringUtils'
 import BookCard from "./BookCard.vue"
 import QuotesDisplay from './QuotesDisplay.vue'
+import { useProgrammatic } from "@oruga-ui/oruga-next";
+import ReadingEventModalVue from './ReadingEventModal.vue'
 
 const store = useStore(key)
 const router = useRouter()
+const {oruga} = useProgrammatic();
 
 const isLogged = computed(() => {
     return store.state.isLogged
   })
+
+const showModal: Ref<boolean> = ref(false)
 
 const books: Ref<Array<UserBook>> = ref([]);
 
@@ -89,6 +94,38 @@ if (isLogged.value) {
   }
 }
 
+function modalClosed() {
+  console.log("modal closed")
+  getCurrentlyReading()
+}
+
+function defaultCreateEvent(bookId: string): CreateReadingEvent {
+  return {
+  eventType: ReadingEventType.FINISHED, 
+  eventDate: new Date(), 
+  bookId: bookId
+}
+}
+
+function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
+  showModal.value = !showModal.value
+  oruga.modal.open({
+    // parent: this,
+    component: ReadingEventModalVue,
+    trapFocus: true,
+    // fullScreen: true,
+    custom:true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    props: {
+      "readingEvent": currentEvent,
+      "edit": edit
+    },
+    onClose: modalClosed
+  });
+}
+
 </script>
 
 <template>
@@ -130,7 +167,21 @@ if (isLogged.value) {
             v-if="book.id != undefined"
             :to="{ name: 'book-detail', params: { bookId: book.id } }"
           >
-            <book-card :book="book" />
+            <book-card :book="book">
+              <template #icon>
+                <o-tooltip
+                  label="Mark read or drop"
+                  variant="info"
+                >
+                  <span
+                    class="icon has-text-info"
+                    @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
+                  >
+                    <i class="mdi mdi-check-circle mdi-18px" />
+                  </span>
+                </o-tooltip>
+              </template>
+            </book-card>
           </router-link>
         </div>
       </div>

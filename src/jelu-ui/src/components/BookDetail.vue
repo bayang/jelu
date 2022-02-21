@@ -8,9 +8,10 @@ import dataService from "../services/DataService"
 import { DateUtils } from "../utils/DateUtils"
 import { ObjectUtils } from '../utils/ObjectUtils'
 import EditBookModal from "./EditBookModal.vue"
+import ReadingEventModalVue from './ReadingEventModal.vue'
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import dayjs from 'dayjs'
-import { ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
+import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
 
 const props = defineProps<{ bookId: string }>()
 
@@ -25,6 +26,7 @@ const isAdmin = computed(() => {
 
 const book : Ref<UserBook|null> = ref(null)
 const edit: Ref<boolean> = ref(false)
+const showModal: Ref<boolean> = ref(false)
 
 const getBook = async () => {
   try {
@@ -40,7 +42,7 @@ watch(() => props.bookId, (newValue, oldValue) => {
 
 const sortedEvents = computed(() => {
   if (book.value && book.value.readingEvents) {
-    return [...book.value.readingEvents].sort((a, b) => dayjs(a.creationDate).isAfter(dayjs(b.creationDate)) ? -1 : 1)
+    return [...book.value.readingEvents].sort((a, b) => dayjs(a.modificationDate).isAfter(dayjs(b.modificationDate)) ? -1 : 1)
   }
   else {
     return []
@@ -53,7 +55,7 @@ const hasExternalLink = computed(() => book.value?.book.amazonId != null
                                         || book.value?.book.googleId != null
                                         || book.value?.book.librarythingId != null)
 
-const format = (dateString: string|null|undefined) => {
+const format = (dateString: string|Date|null|undefined) => {
   if (dateString != null) {
     return DateUtils.formatDate(dateString)
   }
@@ -80,6 +82,43 @@ const toggleEdit = () => {
           },
           onClose: modalClosed
         });
+}
+
+// const toggleEditEventModal = (currentEvent: ReadingEvent) => {
+//   showModal.value = !showModal.value
+//   oruga.modal.open({
+//     parent: this,
+//     component: EditReadingEventModalVue,
+//     trapFocus: true,
+//     fullScreen: true,
+//     custom:true,
+//     active: true,
+//     canCancel: ['x', 'button', 'outside'],
+//     scroll: 'keep',
+//     props: {
+//       "readingEvent" : currentEvent
+//     },
+//     onClose: modalClosed
+//   });
+// }
+
+function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
+  showModal.value = !showModal.value
+  oruga.modal.open({
+    // parent: this,
+    component: ReadingEventModalVue,
+    trapFocus: true,
+    // fullScreen: true,
+    custom:true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    props: {
+      "readingEvent": currentEvent,
+      "edit": edit
+    },
+    onClose: modalClosed
+  });
 }
 
 const deleteBook = async () => {
@@ -170,20 +209,28 @@ const iconClass = (event: ReadingEvent) => {
   else return "";
 };
 
+function defaultCreateEvent(): CreateReadingEvent {
+  return {
+  eventType: ReadingEventType.CURRENTLY_READING, 
+  eventDate: new Date(), 
+  bookId: book.value?.book.id
+}
+}
+
 getBook()
 
 </script>
 
 <template>
   <div class="columns is-multiline box">
-    <div class="column is-centered is-four-fifths">
+    <div class="column is-centered is-three-fifths">
       <h3 class="subtitle is-3 is-capitalized has-text-weight-normal typewriter">
         {{ book?.book?.title }}
       </h3>
     </div>
     <div
       v-if="book != null"
-      class="column is-one-fifth"
+      class="column is-two-fifth"
     >
       <button
         class="button is-primary is-light mr-2"
@@ -195,13 +242,22 @@ getBook()
         <span>Edit</span>
       </button>
       <button
-        class="button is-danger is-light"
+        class="button is-danger is-light mr-2"
         @click="deleteBook"
       >
         <span class="icon">
           <i class="mdi mdi-delete" />
         </span>
         <span>Delete</span>
+      </button>
+      <button
+        class="button is-info is-light"
+        @click="toggleReadingEventModal(defaultCreateEvent(), false)"
+      >
+        <span class="icon">
+          <i class="mdi mdi-plus" />
+        </span>
+        <span>Event</span>
       </button>
     </div>
     <div class="column is-one-fifth is-offset-one-fifth">
@@ -395,10 +451,14 @@ getBook()
           v-for="event in sortedEvents"
           :key="event.id"
         >
-          <div class="timeline-item">
+          <div
+            class="timeline-item"
+          >
             <div
+              v-tooltip="{ content: 'Double click to edit.', delay: {show: 5,hide:2} }"
               class="timeline-marker is-icon"
               :class="eventClass(event)"
+              @dblclick="toggleReadingEventModal(event, true)"
             >
               <i
                 class="mdi"
@@ -407,9 +467,19 @@ getBook()
             </div>
             <div class="timeline-content">
               <p class="heading">
-                {{ format(event.creationDate) }}
+                {{ format(event.modificationDate) }}
               </p>
-              <p>{{ event.eventType }}</p>
+              <div>
+                <p>
+                  {{ event.eventType }} 
+                  <span 
+                    class="icon is-hidden-tablet"
+                    @click="toggleReadingEventModal(event, true)"
+                  >
+                    <i class="background-on-hover mdi mdi-pencil" />
+                  </span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -425,6 +495,11 @@ getBook()
 
 .columns {
   margin-top: 10px;
+}
+.background-on-hover:hover {
+  background-color: #cccccccc;
+  border-radius: 10px;
+  padding: 3px;
 }
 
 </style>
