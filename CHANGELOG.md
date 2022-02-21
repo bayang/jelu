@@ -1,3 +1,15 @@
+## [0.4.0](https://github.com/bayang/jelu/compare/v0.3.0...v0.4.0) (2022-02-21)
+
+
+### Features
+
+* reading events management ([448e284](https://github.com/bayang/jelu/commit/448e284d644dd460373fb74fe0650cbac72c71e2))
+
+
+### Bug Fixes
+
+* bug in some queries ([af546dd](https://github.com/bayang/jelu/commit/af546dde932fed3e5f3a1e95615ef60cd76b9d70))
+
 ## [0.3.0](https://github.com/bayang/jelu/compare/v0.2.0...v0.3.0) (2022-02-14)
 
 
