@@ -67,8 +67,12 @@ class BookRepository(
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
             .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .withDistinct()
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .slice(BookTable.columns)
             .selectAll()
+            .withDistinct()
+
         title?.let {
             query.andWhere { BookTable.title like "%$title%" }
         }
@@ -150,8 +154,10 @@ class BookRepository(
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
             .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .withDistinct()
         val query = BookTable.join(BookTags, JoinType.LEFT)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .slice(BookTable.columns)
             .select { BookTags.tag eq tagId }
         if (filter == LibraryFilter.ONLY_USER_BOOKS) {
             // only books where user has an userbook
@@ -176,10 +182,10 @@ class BookRepository(
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
             .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
-        // val a = Author[authorId]
+            .withDistinct()
         val query = BookTable.join(BookAuthors, JoinType.LEFT)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
-            // .slice(BookTable.columns)
+            .slice(BookTable.columns)
             .select { BookAuthors.author eq authorId }
         if (libaryFilter == LibraryFilter.ONLY_USER_BOOKS) {
             // only books where user has an userbook
