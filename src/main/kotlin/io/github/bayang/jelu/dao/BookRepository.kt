@@ -25,6 +25,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.orWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -172,7 +173,7 @@ class BookRepository(
     }
 
     fun findTagsByName(name: String): List<Tag> {
-        return Tag.find { TagTable.name like "%$name%" }.toList()
+        return Tag.find { TagTable.name.lowerCase() eq name.lowercase() }.toList()
     }
 
     fun findBookById(bookId: UUID): Book = Book[bookId]
@@ -330,14 +331,7 @@ class BookRepository(
             }
         }
         if (tagsList.isNotEmpty()) {
-            if (updated.tags.empty()) {
-                updated.tags = SizedCollection(tagsList)
-            } else {
-                val existing = updated.tags.toMutableList()
-                existing.addAll(tagsList)
-                val merged: SizedCollection<Tag> = SizedCollection(existing)
-                updated.tags = merged
-            }
+            updated.tags = SizedCollection(tagsList)
         }
         return updated
     }
