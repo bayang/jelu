@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { onKeyStroke } from '@vueuse/core'
+import { onMounted, Ref, ref, watch } from "vue";
+import { useMagicKeys } from '@vueuse/core'
+
+const keys = useMagicKeys()
+const shiftF = keys['Shift+F']
 
 const props = defineProps<{
   order: string
@@ -27,10 +30,12 @@ watch(sortOrder, (newVal, oldVal) => {
   }
 })
 
-onKeyStroke('f', (e) => {
-  e.preventDefault()
-  emit('update:open', !props.open)
+watch(shiftF, (v) => {
+  if (v) {
+    emit('update:open', !props.open)
+  }
 })
+
 
 onMounted(() => {
   console.log("Component is mounted!");

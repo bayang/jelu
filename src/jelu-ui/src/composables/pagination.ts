@@ -1,7 +1,11 @@
 import { useRouteQuery } from '@vueuse/router';
-import { computed, Ref, ref } from 'vue';
+import { computed, Ref, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { onKeyStroke } from '@vueuse/core'
+import { useMagicKeys } from '@vueuse/core'
+
+const keys = useMagicKeys()
+const shiftLeft = keys['Shift+Left']
+const shiftRight = keys['Shift+Right']
 
 export default function usePagination() {
     const route = useRoute()
@@ -23,15 +27,17 @@ export default function usePagination() {
     // instead of 1+1 eq 2, so return a number prop
     const pageAsNumber = computed(() => Number.parseInt(page.value))
 
-    onKeyStroke('ArrowLeft', (e) => {
-        e.preventDefault()
-        updatePage(pageAsNumber.value - 1)
-    })
+    watch(shiftLeft, (v) => {
+        if (v) {
+            updatePage(pageAsNumber.value - 1)
+        }
+      })
 
-    onKeyStroke('ArrowRight', (e) => {
-        e.preventDefault()
-        updatePage(pageAsNumber.value + 1)
-    })
+    watch(shiftRight, (v) => {
+        if (v) {
+            updatePage(pageAsNumber.value + 1)
+        }
+      })
 
     return {
         total,
