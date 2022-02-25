@@ -498,7 +498,7 @@ class DataService {
   }
 
   findBooks = async (title?:string, isbn10?: string, isbn13?: string, 
-    series?: string, page?: number, size?: number, sort?: string,
+    series?: string, authors?: Array<string>, tags?: Array<string>,page?: number, size?: number, sort?: string,
   libraryFilter?: LibraryFilter) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_BOOK}`, {
@@ -507,11 +507,16 @@ class DataService {
           title: title,
           isbn13: isbn13,
           series: series,
+          authors: authors,
+          tags: tags,
           page: page,
           size: size,
           sort: sort,
           libraryFilter: libraryFilter
-        }
+        },
+        paramsSerializer: function(params) {
+          return qs.stringify(params, {arrayFormat: 'comma'})
+       },
       });
       console.log("called find books")
       console.log(response)

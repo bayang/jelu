@@ -52,11 +52,13 @@ class BooksController(
         @RequestParam(name = "isbn10", required = false) isbn10: String?,
         @RequestParam(name = "isbn13", required = false) isbn13: String?,
         @RequestParam(name = "series", required = false) series: String?,
+        @RequestParam(name = "authors", required = false) authors: List<String>?,
+        @RequestParam(name = "tags", required = false) tags: List<String>?,
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) pageable: Pageable,
         principal: Authentication
     ): Page<BookDto> {
-        return repository.findAll(title, isbn10, isbn13, series, pageable, (principal.principal as JeluUser).user, libraryFilter ?: LibraryFilter.ANY)
+        return repository.findAll(title, isbn10, isbn13, series, authors, tags, pageable, (principal.principal as JeluUser).user, libraryFilter ?: LibraryFilter.ANY)
     }
 
     @GetMapping(path = ["/books/{id}"])

@@ -43,7 +43,8 @@ const search = () => {
     }
       dataService.findBooks(query.value.get('title'), 
       query.value.get('isbn10'), query.value.get('isbn13'), 
-      query.value.get('series'), 
+      query.value.get('series'), arrayParam(query.value.get('authors')),
+      arrayParam(query.value.get('tags')),
       pageAsNumber.value - 1, perPage.value, sortQuery.value, libraryFilter.value)
     .then(res => {
         console.log(res)
@@ -57,6 +58,13 @@ const search = () => {
         }
     }
     )
+}
+
+const arrayParam = (input: string|undefined) => {
+  if (input != null) {
+    return input.split(",")
+  }
+  return input
 }
 
 watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
@@ -133,7 +141,7 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
 </script>
 
 <template>
-<sort-filter-bar-vue
+  <sort-filter-bar-vue
     :open="open"
     :order="sortOrder"
     class="sort-filter-bar"
@@ -251,6 +259,12 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
           <option value="title">
             Title
           </option>
+          <option value="authors">
+            Authors
+          </option>
+          <option value="tags">
+            Tags
+          </option>
           <option value="isbn10">
             Isbn10
           </option>
@@ -266,14 +280,14 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
           type="text"
         />
         <o-button
-          v-tooltip="'Add to query params'"
+          v-tooltip="'Add to query'"
           variant="warning"
           icon-pack="mdi"
           icon-right="magnify-plus-outline"
           @click="addToQuery"
         />
         <o-button
-          v-tooltip="'Search selected query params'"
+          v-tooltip="'Search selected query'"
           variant="success"
           icon-pack="mdi"
           icon-right="magnify"

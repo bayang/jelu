@@ -25,6 +25,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.orWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.springframework.data.domain.Page
@@ -58,17 +59,25 @@ fun parseSorts(sort: Sort, defaultSort: Pair<Expression<*>, SortOrder>, vararg t
     return orders.toTypedArray()
 }
 
+fun formatLike(input: String): String {
+    return "%$input%"
+}
+
 @Repository
 class BookRepository(
     val readingEventRepository: ReadingEventRepository
 ) {
 
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, tags: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
             .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
+            .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
+            .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
+            .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .slice(BookTable.columns)
             .selectAll()
             .withDistinct()
@@ -84,6 +93,28 @@ class BookRepository(
         }
         series?.let {
             query.andWhere { BookTable.series like "%$series%" }
+        }
+        if (authors != null && authors.isNotEmpty()) {
+            var first = true
+            authors.forEach { author: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { AuthorTable.name like(formatLike(author)) }
+                } else {
+                    query.orWhere { AuthorTable.name like(formatLike(author)) }
+                }
+            }
+        }
+        if (tags != null && tags.isNotEmpty()) {
+            var first = true
+            tags.forEach { tag: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { TagTable.name like (formatLike(tag)) }
+                } else {
+                    query.orWhere { TagTable.name like (formatLike(tag)) }
+                }
+            }
         }
         if (filter == LibraryFilter.ONLY_USER_BOOKS) {
             // only books where user has an userbook

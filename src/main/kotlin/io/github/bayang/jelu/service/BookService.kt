@@ -49,11 +49,13 @@ class BookService(
         isbn10: String?,
         isbn13: String?,
         series: String?,
+        authors: List<String>?,
+        tags: List<String>?,
         pageable: Pageable,
         user: User,
         libraryFilter: LibraryFilter
     ): Page<BookDto> =
-        bookRepository.findAll(title, isbn10, isbn13, series, pageable, user, libraryFilter).map { it.toBookDto() }
+        bookRepository.findAll(title, isbn10, isbn13, series, authors, tags, pageable, user, libraryFilter).map { it.toBookDto() }
 
     @Transactional
     fun findAllAuthors(name: String?, pageable: Pageable): Page<AuthorDto> = bookRepository.findAllAuthors(name, pageable).map { it.toAuthorDto() }
