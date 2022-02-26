@@ -78,6 +78,7 @@ const showProgressBar = (book: UserBook) => {
     <header class="card-header">
       <p
         v-snip:js="4" 
+        v-tooltip="book.book.title"
         class="p-3 card-header-title is-capitalized is-family-sans-serif"
       >
         {{ book.book.title }}
