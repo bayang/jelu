@@ -92,6 +92,14 @@ onMounted(() => {
       <div class="field">
         <o-radio
           v-model="sortBy"
+          native-value="creationDate"
+        >
+          Date added
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
           native-value="title"
         >
           Title
