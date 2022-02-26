@@ -1,3 +1,23 @@
+## [0.5.0](https://github.com/bayang/jelu/compare/v0.4.0...v0.5.0) (2022-02-26)
+
+
+### Features
+
+* add date added sort on books list ([ee81a1a](https://github.com/bayang/jelu/commit/ee81a1ac9c6d849dcf726245a8c607f1554470b9))
+* choose event date on import ([0a4ac5d](https://github.com/bayang/jelu/commit/0a4ac5dd1d4eeec3fc26500e488369622932f3de))
+* search by authors and tags ([7be74ff](https://github.com/bayang/jelu/commit/7be74ffb28585b8e21cd6f02dde2ed5f50901075))
+
+
+### Bug Fixes
+
+* duplicate events while editing ([dbe3ad1](https://github.com/bayang/jelu/commit/dbe3ad113419e388686ab0f72d2b016af47a3cb9))
+* duplicate tags management on update ([b153036](https://github.com/bayang/jelu/commit/b1530363a797226d8af5a511a4422b8348b106ca))
+* keyboard shortcuts navigation ([0410ba0](https://github.com/bayang/jelu/commit/0410ba0b627c0fbb90c10b67bf636fb09b48d9db))
+* redirect after import ([5219625](https://github.com/bayang/jelu/commit/5219625285798719b09204e70f246d2dd984e5b5))
+* show book title in tooltip on card ([a446354](https://github.com/bayang/jelu/commit/a44635459400ce06bf5fa93f8c8a8587d6875d51))
+* submit auto import via enter ([e059a9f](https://github.com/bayang/jelu/commit/e059a9fd1ddc06d0307bcf1a106d350269995793))
+* unstyled auto import buttons ([4fc1cfd](https://github.com/bayang/jelu/commit/4fc1cfddc37cc461325c7e7b0e15bd85eea222a8))
+
 ## [0.4.0](https://github.com/bayang/jelu/compare/v0.3.0...v0.4.0) (2022-02-21)
 
 
