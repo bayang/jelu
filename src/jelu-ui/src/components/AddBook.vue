@@ -13,12 +13,15 @@ import { Metadata } from "../model/Metadata";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import IsbnVerify from '@saekitominaga/isbn-verify';
 import Swal from 'sweetalert2';
+import { useRouter } from 'vue-router'
 
 const store = useStore(key)
-const { oruga } = useProgrammatic();
+const router = useRouter()
+const { oruga } = useProgrammatic()
 
 const datepicker = ref(null);
 const publishedDate: Ref<Date | null> = ref(null)
+const progress: Ref<boolean> = ref(false)
 const form = reactive({
   title: "",
   summary: "",
@@ -127,6 +130,7 @@ const importBook = async () => {
     try {
       console.log(`push book ` + userBook);
       console.log(userBook);
+      progress.value = true
       let res: UserBook = await dataService.saveUserBookImage(
         userBook,
         file.value,
@@ -136,10 +140,13 @@ const importBook = async () => {
           uploadPercentage.value = percent;
         }
       );
+      progress.value = false
       console.log(`saved book ${res.book.title}`);
       ObjectUtils.toast(oruga, "success", `Book ${res.book.title} imported !`, 4000)
       clearForm();
+      await router.push({name: 'my-books'})
     } catch (error: any) {
+      progress.value = false
       // errorMessage.value = error.message
       ObjectUtils.toast(oruga, "danger", `Error ` + error.message, 4000)
     }
@@ -806,6 +813,11 @@ let autoImportPopupContent = computed(() => {
               Import book
             </button>
           </p>
+          <progress
+            v-if="progress"
+            class="progress is-small is-success"
+            max="100"
+          />
           <p
             v-if="errorMessage"
             class="has-text-danger"
