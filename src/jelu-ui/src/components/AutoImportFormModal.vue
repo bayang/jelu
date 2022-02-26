@@ -257,7 +257,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         class="column is-one-fifth"
       >
         <button
-          class="button"
+          class="button is-light is-primary"
           @click="importData"
         >
           <span class="icon">
@@ -270,7 +270,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         class="column is-one-fifth is-offset-one-fifth"
       >
         <button
-          class="button"
+          class="button is-light is-warning"
           @click="discard"
         >
           <span class="icon">
