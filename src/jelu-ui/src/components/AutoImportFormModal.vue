@@ -74,7 +74,10 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
             horizontal
             label="Isbn"
           >
-            <o-input v-model="form.isbn" />
+            <o-input
+              v-model="form.isbn"
+              @keyup.enter="fetchMetadata"
+            />
           </o-field>
         </div>
         <div class="field">
@@ -82,7 +85,10 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
             horizontal
             label="Title"
           >
-            <o-input v-model="form.title" />
+            <o-input
+              v-model="form.title"
+              @keyup.enter="fetchMetadata"
+            />
           </o-field>
         </div>
         <div class="field">
@@ -90,7 +96,10 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
             horizontal
             label="Authors"
           >
-            <o-input v-model="form.authors" />
+            <o-input
+              v-model="form.authors"
+              @keyup.enter="fetchMetadata"
+            />
           </o-field>
         </div>
       </div>
