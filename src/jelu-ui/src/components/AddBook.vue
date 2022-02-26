@@ -43,6 +43,7 @@ const form = reactive({
   language: ""
 });
 const eventType = ref(null);
+const eventDate = ref(new Date());
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
 const isSwitchedCustom = ref("Upload from the web");
@@ -125,7 +126,7 @@ const importBook = async () => {
         "type " + StringUtils.readingEventTypeForValue(eventType.value)
       );
       userBook.lastReadingEvent = StringUtils.readingEventTypeForValue(eventType.value);
-      userBook.lastReadingEventDate = new Date().toISOString()
+      userBook.lastReadingEventDate = eventDate.value.toISOString()
     }
     try {
       console.log(`push book ` + userBook);
@@ -417,6 +418,10 @@ let autoImportPopupContent = computed(() => {
   }
 })
 
+let displayDatepicker = computed(() => {
+  return eventType.value !== null && eventType.value !== "NONE"
+})
+
 </script>
 
 <template>
@@ -661,6 +666,30 @@ let autoImportPopupContent = computed(() => {
             >
               None
             </o-radio>
+          </o-field>
+        </div>
+        <div
+          v-if="displayDatepicker"
+          class="field"
+        >
+          <o-field
+            horizontal
+            label="Event date"
+          >
+            <o-datepicker
+              ref="datepicker"
+              v-model="eventDate"
+              :show-week-number="false"
+              :locale="undefined"
+              placeholder="Click to select..."
+              :expanded="true"
+              icon="calendar"
+              icon-right="close"
+              icon-right-clickable="true"
+              mobile-native="false"
+              mobile-modal="false"
+              trap-focus
+            />
           </o-field>
         </div>
         <div class="field">
