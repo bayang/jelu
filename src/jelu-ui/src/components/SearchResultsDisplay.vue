@@ -110,7 +110,8 @@ const toggleEdit = (book: UserBook) => {
           canCancel: ['x', 'button', 'outside'],
           scroll: 'clip',
           props: {
-            "book" : book
+            "book" : book,
+            canAddEvent: true
           },
           onClose: modalClosed
         });

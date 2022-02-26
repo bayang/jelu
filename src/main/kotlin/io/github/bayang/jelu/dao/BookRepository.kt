@@ -261,46 +261,24 @@ class BookRepository(
         if (!book.title.isNullOrBlank()) {
             updated.title = book.title.trim()
         }
-        if (!book.isbn10.isNullOrBlank()) {
-            updated.isbn10 = book.isbn10.trim()
-        }
-        if (!book.isbn13.isNullOrBlank()) {
-            updated.isbn13 = book.isbn13.trim()
-        }
-        if (book.pageCount != null) {
-            updated.pageCount = book.pageCount
-        }
-        if (!book.publisher.isNullOrBlank()) {
-            updated.publisher = book.publisher.trim()
-        }
+        updated.isbn10 = book.isbn10?.trim()
+        updated.isbn13 = book.isbn13?.trim()
+        updated.pageCount = book.pageCount
+        updated.publisher = book.publisher?.trim()
         if (!book.summary.isNullOrBlank()) {
             updated.summary = sanitizeHtml(book.summary)
+        } else {
+            updated.summary = book.summary
         }
         // image must be set when saving file succeeds
-        if (!book.publishedDate.isNullOrBlank()) {
-            updated.publishedDate = book.publishedDate.trim()
-        }
-        if (!book.series.isNullOrBlank()) {
-            updated.series = book.series.trim()
-        }
-        if (book.numberInSeries != null) {
-            updated.numberInSeries = book.numberInSeries
-        }
-        if (!book.amazonId.isNullOrBlank()) {
-            updated.amazonId = book.amazonId.trim()
-        }
-        if (!book.goodreadsId.isNullOrBlank()) {
-            updated.goodreadsId = book.goodreadsId.trim()
-        }
-        if (!book.googleId.isNullOrBlank()) {
-            updated.googleId = book.googleId.trim()
-        }
-        if (!book.librarythingId.isNullOrBlank()) {
-            updated.librarythingId = book.librarythingId.trim()
-        }
-        if (!book.language.isNullOrBlank()) {
-            updated.language = book.language.trim()
-        }
+        updated.publishedDate = book.publishedDate?.trim()
+        updated.series = book.series?.trim()
+        updated.numberInSeries = book.numberInSeries
+        updated.amazonId = book.amazonId?.trim()
+        updated.goodreadsId = book.goodreadsId?.trim()
+        updated.googleId = book.googleId?.trim()
+        updated.librarythingId = book.librarythingId?.trim()
+        updated.language = book.language?.trim()
         updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
@@ -346,9 +324,7 @@ class BookRepository(
         if (book.owned != null) {
             found.owned = book.owned
         }
-        if (!book.personalNotes.isNullOrBlank()) {
-            found.personalNotes = book.personalNotes.trim()
-        }
+        found.personalNotes = book.personalNotes?.trim()
         if (book.toRead != null) {
             found.toRead = book.toRead
         }
@@ -376,18 +352,10 @@ class BookRepository(
         if (!author.name.isNullOrBlank()) {
             found.name = author.name.trim()
         }
-        if (!author.biography.isNullOrBlank()) {
-            found.biography = author.biography.trim()
-        }
-        if (!author.dateOfDeath.isNullOrBlank()) {
-            found.dateOfDeath = author.dateOfDeath.trim()
-        }
-        if (!author.dateOfBirth.isNullOrBlank()) {
-            found.dateOfBirth = author.dateOfBirth.trim()
-        }
-        if (!author.image.isNullOrBlank()) {
-            found.image = author.image.trim()
-        }
+        found.biography = author.biography?.trim()
+        found.dateOfDeath = author.dateOfDeath?.trim()
+        found.dateOfBirth = author.dateOfBirth?.trim()
+        found.image = author.image?.trim()
         found.modificationDate = nowInstant()
         return found
     }

@@ -10,7 +10,7 @@ import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { Tag } from "../model/Tag";
 
-const props = defineProps<{ bookId: string, book: UserBook|null }>()
+const props = defineProps<{ bookId: string, book: UserBook|null, canAddEvent: boolean }>()
 const oruga = useProgrammatic();
 const emit = defineEmits(['close']);
 
@@ -62,7 +62,7 @@ const toReadDisplay = computed(() => {
 const importBook = () => {
   console.log("import")
   console.log(userbook)
-  if (userbook.value.lastReadingEvent === ReadingEventType.NONE) {
+  if (!props.canAddEvent || userbook.value.lastReadingEvent === ReadingEventType.NONE) {
     userbook.value.lastReadingEvent = null
   }
   userbook.value.book.image = null
@@ -375,7 +375,10 @@ function toggleRemoveImage() {
             />
           </o-field>
         </div>
-        <div class="block">
+        <div
+          v-if="props.canAddEvent"
+          class="block"
+        >
           <o-field
             horizontal
             label="Status : "
