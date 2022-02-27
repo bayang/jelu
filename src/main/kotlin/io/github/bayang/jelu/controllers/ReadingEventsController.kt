@@ -8,7 +8,9 @@ import io.github.bayang.jelu.dto.ReadingEventDto
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
 import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.ReadingEventService
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import mu.KotlinLogging
+import org.springdoc.api.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -40,13 +42,13 @@ class ReadingEventsController(
     fun readingEvents(
         @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @RequestParam(name = "userId", required = false) userId: UUID?,
-        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) pageable: Pageable
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
     ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, pageable)
 
     @GetMapping(path = ["/reading-events/me"])
     fun myReadingEvents(
         @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
-        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) pageable: Pageable,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
         principal: Authentication
     ): Page<ReadingEventDto> {
         assertIsJeluUser(principal.principal)
@@ -65,6 +67,7 @@ class ReadingEventsController(
         return repository.updateReadingEvent(readingEventId, readingEvent)
     }
 
+    @ApiResponse(responseCode = "204", description = "Deleted the reading event")
     @DeleteMapping(path = ["/reading-events/{id}"])
     fun deleteEventById(@PathVariable("id") eventId: UUID): ResponseEntity<Unit> {
         repository.deleteReadingEventById(eventId)

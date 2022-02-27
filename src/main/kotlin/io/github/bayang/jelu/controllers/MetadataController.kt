@@ -4,6 +4,7 @@ import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
+import io.swagger.v3.oas.annotations.Operation
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,6 +20,7 @@ class MetadataController(
     private val metadataService: FetchMetadataService
 ) {
 
+    @Operation(description = "fetch metadata from the configured providers")
     @GetMapping(path = ["/metadata"])
     fun fetchMetadata(
         @RequestParam(name = "isbn", required = false) isbn: String?,

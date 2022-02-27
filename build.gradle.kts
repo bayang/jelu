@@ -68,6 +68,12 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
+
+    val springdocVersion = "1.5.12" // later uses Spring Boot 2.6.0
+    implementation("org.springdoc:springdoc-openapi-ui:$springdocVersion")
+    implementation("org.springdoc:springdoc-openapi-security:$springdocVersion")
+    implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")
+    implementation("org.springdoc:springdoc-openapi-data-rest:$springdocVersion")
 }
 
 tasks.withType<Test> {

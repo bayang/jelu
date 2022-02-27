@@ -3,6 +3,7 @@ package io.github.bayang.jelu.controllers
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.service.UserService
+import io.swagger.v3.oas.annotations.Operation
 import mu.KotlinLogging
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -20,9 +21,11 @@ class UsersController(
     private val properties: JeluProperties
 ) {
 
+    @Operation(description = "get the current session token that the caller should provide in the X-Auth-Token header")
     @GetMapping(path = ["/token"])
     fun getToken(session: HttpSession) = mapOf<String, String>("token" to session.id)
 
+    @Operation(description = "tells if the initial setup has been done (first user has been created)")
     @GetMapping(path = ["/setup/status"])
     fun setupStatus(session: HttpSession) = mapOf<String, Boolean>("isInitialSetup" to repository.isInitialSetup())
 
