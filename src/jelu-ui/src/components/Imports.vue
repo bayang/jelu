@@ -57,22 +57,6 @@ const importFile = async () => {
           >
             Goodreads
           </o-radio>
-          <o-radio
-            v-model="importSource"
-            name="source"
-            native-value="STORYGRAPH"
-            disabled
-          >
-            Storygraph
-          </o-radio>
-          <o-radio
-            v-model="importSource"
-            name="source"
-            native-value="LIBRARYTHING"
-            disabled
-          >
-            Librarything
-          </o-radio>
         </o-field>
       </div>
       <div class="field">
