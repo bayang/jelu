@@ -3,15 +3,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    id("org.springframework.boot") version "2.5.6"
+    id("org.springframework.boot") version "2.6.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.31"
-    kotlin("plugin.spring") version "1.5.31"
-    kotlin("plugin.jpa") version "1.5.31"
-    kotlin("plugin.allopen") version "1.5.31"
-    kotlin("kapt") version "1.5.31"
-    id("com.github.node-gradle.node") version "3.1.1"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.spring") version "1.6.10"
+    kotlin("plugin.jpa") version "1.6.10"
+    kotlin("plugin.allopen") version "1.6.10"
+    kotlin("kapt") version "1.6.10"
+    id("com.github.node-gradle.node") version "3.2.1"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
@@ -44,8 +44,8 @@ dependencies {
 
     implementation("com.github.ben-manes.caffeine:caffeine")
 
-    implementation("com.fasterxml.staxmate:staxmate:2.3.0")
-    implementation("com.fasterxml.woodstox:woodstox-core:6.2.7")
+    implementation("com.fasterxml.staxmate:staxmate:2.4.0")
+    implementation("com.fasterxml.woodstox:woodstox-core:6.2.8")
 
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -58,8 +58,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.10")
-    implementation("com.github.slugify:slugify:2.4")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
+    implementation("com.github.slugify:slugify:2.5")
     implementation("commons-io:commons-io:2.11.0")
     implementation("commons-validator:commons-validator:1.7")
     implementation("org.jsoup:jsoup:1.14.3")
@@ -69,7 +69,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
 
-    val springdocVersion = "1.5.12" // later uses Spring Boot 2.6.0
+    val springdocVersion = "1.6.6"
     implementation("org.springdoc:springdoc-openapi-ui:$springdocVersion")
     implementation("org.springdoc:springdoc-openapi-security:$springdocVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")

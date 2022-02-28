@@ -104,6 +104,7 @@ class CsvImportService(
                 when (importEntity(entity, user, importConfig)) {
                     ProcessingStatus.IMPORTED -> success ++
                     ProcessingStatus.ERROR -> failures ++
+                    else -> continue
                 }
             }
         }
