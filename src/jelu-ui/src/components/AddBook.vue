@@ -493,7 +493,7 @@ let displayDatepicker = computed(() => {
               :before-adding="beforeAddTag"
               :create-item="createTag"
               icon-pack="mdi"
-              icon="account-plus"
+              icon="tag-plus"
               field="name"
               placeholder="Add a tag"
               @typing="getFilteredTags"
