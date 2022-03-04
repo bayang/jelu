@@ -303,5 +303,10 @@
             <column name="userId" />
         </createIndex>
     </changeSet>
+    <changeSet id="add_image_index" author="byng">
+        <createIndex tableName="book" indexName="idx_book_image">
+            <column name="image" />
+        </createIndex>
+    </changeSet>
 
 </databaseChangeLog>
