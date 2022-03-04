@@ -1,3 +1,17 @@
+## [0.7.0](https://github.com/bayang/jelu/compare/v0.6.0...v0.7.0) (2022-03-04)
+
+
+### Features
+
+* add index on book image for future use ([39c9c2a](https://github.com/bayang/jelu/commit/39c9c2a4ae4f7d504bdd123dee6596b429889124))
+* add REST documentation ([aa3c635](https://github.com/bayang/jelu/commit/aa3c635cc2ea0f7a5a01ca9006263482fcc479b7))
+* resize covers and discarded files management ([072cd16](https://github.com/bayang/jelu/commit/072cd166ea81bba8b4e5f93d14ae8655d24831c2))
+
+
+### Bug Fixes
+
+* wrong icon on tag add ([fc75358](https://github.com/bayang/jelu/commit/fc753582b23884f2c9f6dc29c481464b9d6e8808))
+
 ## [0.6.0](https://github.com/bayang/jelu/compare/v0.5.0...v0.6.0) (2022-02-27)
 
 
