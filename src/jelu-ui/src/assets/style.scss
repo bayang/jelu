@@ -334,10 +334,6 @@ footer.card-footer span.tag {
     background-color: $jelu_background_accent;
   }
 
-// .carousel-wrap {
-//   width: 90%;
-// }
-
 .b-sidebar .sidebar-content {
   background-color: $jelu_background_accent;
 }
@@ -346,3 +342,12 @@ footer.card-footer span.tag {
   font-size: $small-font-size;
 }
 
+.jelu-taginput .taginput-container .tag {
+  background-color: $warning;
+  color: $warning-invert;
+}
+
+.jelu-authorinput .taginput-container .tag {
+  background-color: $success;
+  color: $success-invert;
+}

@@ -212,7 +212,7 @@ function toggleRemoveImage() {
           </o-field>
         </div>
 
-        <div class="field">
+        <div class="field jelu-authorinput">
           <o-field
             horizontal
             label="Authors"
@@ -235,7 +235,7 @@ function toggleRemoveImage() {
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field jelu-taginput">
           <o-field
             horizontal
             label="Tags"
@@ -568,6 +568,5 @@ function toggleRemoveImage() {
 </template>
 
 <style lang="scss">
-
 
 </style>

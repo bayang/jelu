@@ -456,7 +456,7 @@ let displayDatepicker = computed(() => {
           </o-field>
         </div>
 
-        <div class="field">
+        <div class="field jelu-authorinput">
           <o-field 
             horizontal 
             label="Authors"
@@ -478,7 +478,7 @@ let displayDatepicker = computed(() => {
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field jelu-taginput">
           <o-field
             horizontal
             label="Tags"
@@ -860,4 +860,5 @@ let displayDatepicker = computed(() => {
 </template>
 
 <style lang="scss">
+
 </style>
