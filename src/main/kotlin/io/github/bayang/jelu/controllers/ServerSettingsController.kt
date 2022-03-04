@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1")
 class ServerSettingsController(
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) {
 
     @Operation(description = "Get the capabilities configured for this server, eg : is the metadata binary installed etc...")

@@ -21,6 +21,7 @@ import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.service.metadata.FILE_PREFIX
 import io.github.bayang.jelu.utils.imageName
+import io.github.bayang.jelu.utils.resizeImage
 import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
@@ -171,6 +172,9 @@ class BookService(
                 logger.error { "failed to save remote file ${book.image}" }
                 book.image = null
             }
+        }
+        if (!savedImage.isNullOrBlank() && properties.files.resizeImages) {
+            resizeImage(File(properties.files.images, savedImage))
         }
         return savedImage
     }

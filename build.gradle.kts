@@ -52,17 +52,20 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
+
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.liquibase:liquibase-core")
     val exposedVersion = "0.37.3"
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
+
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
     implementation("com.github.slugify:slugify:2.5")
     implementation("commons-io:commons-io:2.11.0")
     implementation("commons-validator:commons-validator:1.7")
     implementation("org.jsoup:jsoup:1.14.3")
+    implementation("net.coobird:thumbnailator:0.4.17")
 
     implementation("org.apache.commons:commons-csv:1.9.0")
 

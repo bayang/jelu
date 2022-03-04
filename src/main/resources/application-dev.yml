@@ -40,4 +40,5 @@ logging:
   level:
     io.github.bayang.jelu: DEBUG
     io.github.bayang.jelu.service.metadata: TRACE
-    io.github.bayang.jelu.service.quotes: TRACE
+    io.github.bayang.jelu.service.quotes: DEBUG
+    io.github.bayang.jelu.service.FileManager: TRACE

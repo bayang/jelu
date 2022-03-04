@@ -23,7 +23,8 @@ data class JeluProperties(
 
     data class Files(
         @get:NotBlank var images: String,
-        @get:NotBlank var imports: String
+        @get:NotBlank var imports: String,
+        var resizeImages: Boolean = true
     )
 
     data class Session(
