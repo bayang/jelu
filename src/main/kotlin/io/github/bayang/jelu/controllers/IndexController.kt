@@ -1,12 +1,13 @@
 package io.github.bayang.jelu.controllers
 
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
-public class ForwardController {
-    @GetMapping(value = ["/{path:[^\\.]*}"])
-    fun forward(): String {
-        return "forward:/"
+class IndexController {
+    @GetMapping("/")
+    fun index(model: Model): String {
+        return "/index.html"
     }
 }

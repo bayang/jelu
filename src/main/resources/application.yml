@@ -9,6 +9,11 @@ jelu:
 server:
   port: 11111
 spring:
+  web:
+    resources:
+      add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
   liquibase:
     enabled: true
     drop-first: false

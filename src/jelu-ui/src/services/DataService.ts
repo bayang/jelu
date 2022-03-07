@@ -172,7 +172,7 @@ class DataService {
       console.log(response.data.token)
       if (response.data.token != null && response.data.token.length > 0) {
         this.token = response.data.token
-        localStorage.setItem("jelu-token", this.token)
+        localStorage.setItem(this.TOKEN_KEY, this.token)
       }
       return response.data.user
 
@@ -464,6 +464,8 @@ class DataService {
       const response = await this.apiClient.post(`${this.API_LOGOUT}`);
       console.log("called logout")
       console.log(response)
+      localStorage.removeItem(this.TOKEN_KEY)
+      this.token = ''
       return response.data;
     }
     catch (error) {
