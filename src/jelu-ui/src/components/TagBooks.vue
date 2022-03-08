@@ -12,6 +12,8 @@ import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
 import EditBookModal from "./EditBookModal.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
+import { useTitle } from '@vueuse/core'
+
 
 const {oruga} = useProgrammatic();
 
@@ -40,6 +42,7 @@ watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
 const getTag = async () => {
   try {
     tag.value = await dataService.getTagById(props.tagId)
+    useTitle('Jelu | #' + tag.value.name)
   } catch (error) {
     console.log("failed get tag : " + error);
   }

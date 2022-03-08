@@ -14,6 +14,9 @@ import { ObjectUtils } from "../utils/ObjectUtils";
 import IsbnVerify from '@saekitominaga/isbn-verify';
 import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router'
+import { useTitle } from '@vueuse/core'
+
+useTitle('Jelu | Add book')
 
 const store = useStore(key)
 const router = useRouter()

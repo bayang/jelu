@@ -9,6 +9,9 @@ import useSort from '../composables/sort';
 import { useThrottleFn } from '@vueuse/core'
 import { ReadingEventType } from '../model/ReadingEvent';
 import { useRouteQueryArray } from '../composables/useVueRouterArray';
+import { useTitle } from '@vueuse/core'
+
+useTitle('Jelu | To read')
 
 const books: Ref<Array<UserBook>> = ref([]);
 

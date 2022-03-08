@@ -9,6 +9,9 @@ const form = reactive({'login' : '', 'password' : ''})
 const loginValidation = ref('')
 const passwordValidation = ref('')
 const errorMessage = ref('')
+import { useTitle } from '@vueuse/core'
+
+useTitle('Jelu | Login')
 
 watch(form, (oldVal, newVal) => {
   if (isInitialSetup.value) {

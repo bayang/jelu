@@ -2,6 +2,9 @@
 import { ref } from "vue";
 import { ImportSource } from "../model/ImportConfiguration";
 import dataService from "../services/DataService";
+import { useTitle } from '@vueuse/core'
+
+useTitle('Jelu | Imports')
 
 const file = ref(new File([], "dummy"));
 const importSource = ref(ImportSource.GOODREADS);

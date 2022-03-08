@@ -11,6 +11,9 @@ import BookCard from "./BookCard.vue"
 import QuotesDisplay from './QuotesDisplay.vue'
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import ReadingEventModalVue from './ReadingEventModal.vue'
+import { useTitle } from '@vueuse/core'
+
+useTitle('Jelu | Home')
 
 const store = useStore(key)
 const router = useRouter()

@@ -12,6 +12,7 @@ import ReadingEventModalVue from './ReadingEventModal.vue'
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import dayjs from 'dayjs'
 import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
+import { useTitle } from '@vueuse/core'
 
 const props = defineProps<{ bookId: string }>()
 
@@ -31,6 +32,7 @@ const showModal: Ref<boolean> = ref(false)
 const getBook = async () => {
   try {
     book.value = await dataService.getUserBookById(props.bookId)
+    useTitle('Jelu | ' + book.value.book.title)
   } catch (error) {
     console.log("failed get book : " + error);
   }

@@ -10,6 +10,9 @@ import { useRouteQueryArray } from "../composables/useVueRouterArray";
 import { useThrottleFn } from '@vueuse/core'
 import useSort from "../composables/sort";
 import SortFilterBarVue from "./SortFilterBar.vue";
+import { useTitle } from '@vueuse/core'
+
+useTitle('Jelu | My books')
 
 const books: Ref<Array<UserBook>> = ref([]);
 

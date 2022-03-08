@@ -12,6 +12,9 @@ import usePagination from '../composables/pagination';
 import useSort from '../composables/sort';
 import { LibraryFilter } from '../model/LibraryFilter';
 import { useRouteQuery } from '@vueuse/router';
+import { useTitle } from '@vueuse/core'
+
+useTitle('Jelu | Search')
 
 const {oruga} = useProgrammatic();
 const props = defineProps<{ query: string|null }>()
