@@ -292,14 +292,7 @@ class BookRepository(
             }
         }
         if (authorsList.isNotEmpty()) {
-            if (updated.authors.empty()) {
-                updated.authors = SizedCollection(authorsList)
-            } else {
-                val existing = updated.authors.toMutableList()
-                existing.addAll(authorsList)
-                val merged: SizedCollection<Author> = SizedCollection(existing)
-                updated.authors = merged
-            }
+            updated.authors = SizedCollection(authorsList)
         }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
