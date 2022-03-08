@@ -17,14 +17,14 @@ const props = defineProps<{ bookId: string }>()
 
 const store = useStore(key)
 const router = useRouter()
-const {oruga} = useProgrammatic();
+const { oruga } = useProgrammatic();
 console.log(oruga)
 
 const isAdmin = computed(() => {
   return store.getters.isAdmin
 })
 
-const book : Ref<UserBook|null> = ref(null)
+const book: Ref<UserBook | null> = ref(null)
 const edit: Ref<boolean> = ref(false)
 const showModal: Ref<boolean> = ref(false)
 
@@ -47,15 +47,15 @@ const sortedEvents = computed(() => {
   else {
     return []
   }
-  }
-  )
+}
+)
 
-const hasExternalLink = computed(() => book.value?.book.amazonId != null 
-                                        || book.value?.book.goodreadsId != null
-                                        || book.value?.book.googleId != null
-                                        || book.value?.book.librarythingId != null)
+const hasExternalLink = computed(() => book.value?.book.amazonId != null
+  || book.value?.book.goodreadsId != null
+  || book.value?.book.googleId != null
+  || book.value?.book.librarythingId != null)
 
-const format = (dateString: string|Date|null|undefined) => {
+const format = (dateString: string | Date | null | undefined) => {
   if (dateString != null) {
     return DateUtils.formatDate(dateString)
   }
@@ -68,21 +68,21 @@ function modalClosed() {
 }
 
 const toggleEdit = () => {
-  edit.value = ! edit.value
+  edit.value = !edit.value
   oruga.modal.open({
     parent: this,
-          component: EditBookModal,
-          trapFocus: true,
-          active: true,
-          // fullScreen: false,
-          canCancel: ['x', 'button', 'outside'],
-          scroll: 'clip',
-          props: {
-            "book" : book.value,
-            canAddEvent: false
-          },
-          onClose: modalClosed
-        });
+    component: EditBookModal,
+    trapFocus: true,
+    active: true,
+    // fullScreen: false,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'clip',
+    props: {
+      "book": book.value,
+      canAddEvent: false
+    },
+    onClose: modalClosed
+  });
 }
 
 // const toggleEditEventModal = (currentEvent: ReadingEvent) => {
@@ -110,7 +110,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
     component: ReadingEventModalVue,
     trapFocus: true,
     // fullScreen: true,
-    custom:true,
+    custom: true,
     active: true,
     canCancel: ['x', 'button', 'outside'],
     scroll: 'keep',
@@ -127,36 +127,36 @@ const deleteBook = async () => {
   let abort = false
   if (isAdmin.value) {
     await ObjectUtils.swalMixin.fire({
-        html: `<p>Delete book for all users or only you ?</p>`,
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Only me',
-        denyButtonText: 'All users',
-        cancelButtonText: `Don't delete`,
-      }).then((result) => {
-        if (result.isDenied) {
-          deleteForUserOnly = false
-        } else if (result.isDismissed) {
-          abort = true
-          return;
-        }
-      })
+      html: `<p>Delete book for all users or only you ?</p>`,
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Only me',
+      denyButtonText: 'All users',
+      cancelButtonText: `Don't delete`,
+    }).then((result) => {
+      if (result.isDenied) {
+        deleteForUserOnly = false
+      } else if (result.isDismissed) {
+        abort = true
+        return;
+      }
+    })
   }
   else {
     await ObjectUtils.swalMixin.fire({
-        html: `<p>Delete this book ?</p>`,
-        showCancelButton: true,
-        showConfirmButton: false,
-        showDenyButton: true,
-        confirmButtonText: 'Delete',
-        cancelButtonText: `Don't delete`,
-        denyButtonText: 'Delete',
-      }).then((result) => {
-        if (result.isDismissed) {
-          abort = true
-          return;
-        }
-      })
+      html: `<p>Delete this book ?</p>`,
+      showCancelButton: true,
+      showConfirmButton: false,
+      showDenyButton: true,
+      confirmButtonText: 'Delete',
+      cancelButtonText: `Don't delete`,
+      denyButtonText: 'Delete',
+    }).then((result) => {
+      if (result.isDismissed) {
+        abort = true
+        return;
+      }
+    })
   }
   if (abort) {
     return
@@ -175,9 +175,9 @@ const deleteBook = async () => {
   }
   promise?.then(res => {
     ObjectUtils.toast(oruga, "success", `Book was deleted`, 4000);
-    router.push({name: 'home'})
+    router.push({ name: 'home' })
   })
-  .catch (err => {
+    .catch(err => {
       ObjectUtils.toast(oruga, "danger", `Error deleteting ` + err.message, 4000);
     })
 }
@@ -193,7 +193,7 @@ const eventClass = (event: ReadingEvent) => {
     event.eventType === ReadingEventType.CURRENTLY_READING
   ) {
     return "is-success";
-  } 
+  }
   else return "";
 };
 
@@ -206,16 +206,16 @@ const iconClass = (event: ReadingEvent) => {
     event.eventType === ReadingEventType.CURRENTLY_READING
   ) {
     return "mdi-book-open-page-variant";
-  } 
+  }
   else return "";
 };
 
 function defaultCreateEvent(): CreateReadingEvent {
   return {
-  eventType: ReadingEventType.CURRENTLY_READING, 
-  eventDate: new Date(), 
-  bookId: book.value?.book.id
-}
+    eventType: ReadingEventType.CURRENTLY_READING,
+    eventDate: new Date(),
+    bookId: book.value?.book.id
+  }
 }
 
 getBook()
@@ -225,7 +225,9 @@ getBook()
 <template>
   <div class="columns is-multiline box">
     <div class="column is-centered is-three-fifths">
-      <h3 class="subtitle is-3 is-capitalized has-text-weight-normal typewriter">
+      <h3
+        class="subtitle is-3 is-capitalized has-text-weight-normal typewriter"
+      >
         {{ book?.book?.title }}
       </h3>
     </div>
@@ -280,7 +282,7 @@ getBook()
         v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
         class="has-text-left"
       >
-        <span class="has-text-weight-semibold">Authors : </span>
+        <span class="has-text-weight-semibold">Authors :</span>
       </p>
       <ul
         v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
@@ -297,49 +299,51 @@ getBook()
         v-if="book?.book?.publisher"
         class="has-text-left block"
       >
-        <span class="has-text-weight-semibold">Publisher : </span>{{ book.book.publisher }}
+        <span class="has-text-weight-semibold">Publisher :</span>
+        {{ book.book.publisher }}
       </p>
       <p
         v-if="book?.book?.isbn10"
         class="has-text-left block"
       >
-        <span class="has-text-weight-semibold">ISBN10 : </span>{{ book.book.isbn10 }}
+        <span class="has-text-weight-semibold">ISBN10 :</span>
+        {{ book.book.isbn10 }}
       </p>
       <p
         v-if="book?.book?.isbn13"
         class="has-text-left block"
       >
-        <span class="has-text-weight-semibold">ISBN13 : </span>{{ book.book.isbn13 }}
+        <span class="has-text-weight-semibold">ISBN13 :</span>
+        {{ book.book.isbn13 }}
       </p>
       <p
         v-if="book?.book?.pageCount"
         class="has-text-left block"
       >
-        <span class="has-text-weight-semibold">Pages : </span>{{ book.book.pageCount }}
+        <span class="has-text-weight-semibold">Pages :</span>
+        {{ book.book.pageCount }}
       </p>
       <p
         v-if="book?.book?.publishedDate"
         class="has-text-left block"
       >
-        <span class="has-text-weight-semibold">Published date : </span>{{ format(book.book.publishedDate) }}
+        <span class="has-text-weight-semibold">Published date :</span>
+        {{ format(book.book.publishedDate) }}
       </p>
       <p
         v-if="book?.book?.series"
         class="has-text-left block"
       >
-        <span class="has-text-weight-semibold">Series : </span>{{ book.book.series }}
-      </p>
-      <p
-        v-if="book?.book?.numberInSeries"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">Number in series : </span>{{ book.book.numberInSeries }}
+        <span class="has-text-weight-semibold">Series :</span>
+        {{ book.book.series }}&nbsp;
+        <span v-if="book?.book?.numberInSeries">-&nbsp;{{ book.book.numberInSeries }}</span>
       </p>
       <p
         v-if="book?.book?.language"
         class="has-text-left block"
       >
-        <span class="has-text-weight-semibold">Language : </span>{{ book.book.language }}
+        <span class="has-text-weight-semibold">Language :</span>
+        {{ book.book.language }}
       </p>
       <div
         v-if="book?.owned || book?.toRead"
@@ -371,12 +375,16 @@ getBook()
         v-html="book.book.summary"
       />
     </div>
-    <div class="column is-full is-offset-one-quarter content tags has-text-left  has-text-weight-semibold">
+    <div
+      class="column is-full is-offset-one-quarter content tags has-text-left has-text-weight-semibold"
+    >
       <span
         v-for="tag in book?.book?.tags"
         :key="tag.id"
         class="tag is-primary is-light"
-      ><router-link :to="{ name: 'tag-detail', params: { tagId: tag.id } }">{{ tag.name }}&nbsp;</router-link></span>
+      >
+        <router-link :to="{ name: 'tag-detail', params: { tagId: tag.id } }">{{ tag.name }}&nbsp;</router-link>
+      </span>
     </div>
     <div
       v-if="hasExternalLink"
@@ -385,31 +393,39 @@ getBook()
       <span
         v-if="book?.book.goodreadsId"
         class="tag is-warning"
-      ><a
-        :href="'https://www.goodreads.com/book/show/' + book.book.goodreadsId"
-        target="_blank"
-      >goodreads</a></span>
+      >
+        <a
+          :href="'https://www.goodreads.com/book/show/' + book.book.goodreadsId"
+          target="_blank"
+        >goodreads</a>
+      </span>
       <span
         v-if="book?.book.googleId"
         class="tag is-warning"
-      ><a
-        :href="'https://books.google.com/books?id=' + book.book.googleId"
-        target="_blank"
-      >google</a></span>
+      >
+        <a
+          :href="'https://books.google.com/books?id=' + book.book.googleId"
+          target="_blank"
+        >google</a>
+      </span>
       <span
         v-if="book?.book.amazonId"
         class="tag is-warning"
-      ><a
-        :href="'https://www.amazon.com/dp/' + book.book.amazonId"
-        target="_blank"
-      >amazon</a></span>
+      >
+        <a
+          :href="'https://www.amazon.com/dp/' + book.book.amazonId"
+          target="_blank"
+        >amazon</a>
+      </span>
       <span
         v-if="book?.book.librarythingId"
         class="tag is-warning"
-      ><a
-        :href="'https://www.librarything.com/work/' + book.book.librarythingId"
-        target="_blank"
-      >librarything</a></span>
+      >
+        <a
+          :href="'https://www.librarything.com/work/' + book.book.librarythingId"
+          target="_blank"
+        >librarything</a>
+      </span>
     </div>
     <div
       v-if="book?.personalNotes"
@@ -417,7 +433,7 @@ getBook()
     >
       <p
         v-if="book?.personalNotes"
-        class="has-text-left  has-text-weight-semibold"
+        class="has-text-left has-text-weight-semibold"
       >
         Personal Notes :
       </p>
@@ -446,11 +462,9 @@ getBook()
           v-for="event in sortedEvents"
           :key="event.id"
         >
-          <div
-            class="timeline-item"
-          >
+          <div class="timeline-item">
             <div
-              v-tooltip="{ content: 'Double click to edit.', delay: {show: 5,hide:2} }"
+              v-tooltip="{ content: 'Double click to edit.', delay: { show: 5, hide: 2 } }"
               class="timeline-marker is-icon"
               :class="eventClass(event)"
               @dblclick="toggleReadingEventModal(event, true)"
@@ -466,8 +480,8 @@ getBook()
               </p>
               <div>
                 <p>
-                  {{ event.eventType }} 
-                  <span 
+                  {{ event.eventType }}
+                  <span
                     class="icon is-hidden-tablet"
                     @click="toggleReadingEventModal(event, true)"
                   >
@@ -487,7 +501,6 @@ getBook()
 </template>
 
 <style lang="scss" scoped>
-
 .columns {
   margin-top: 10px;
 }
@@ -496,5 +509,4 @@ getBook()
   border-radius: 10px;
   padding: 3px;
 }
-
 </style>
