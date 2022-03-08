@@ -97,6 +97,10 @@ tasks.getByName<BootJar>("bootJar") {
     }
 }
 
+springBoot {
+    buildInfo()
+}
+
 tasks.getByName<Jar>("jar") {
     enabled = false
 }

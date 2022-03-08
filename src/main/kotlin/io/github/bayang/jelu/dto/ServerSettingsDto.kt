@@ -8,5 +8,6 @@ data class ServerSettingsDto(
     /**
      * Is the calibre metadata provider activated
      */
-    val metadataFetchCalibreEnabled: Boolean
+    val metadataFetchCalibreEnabled: Boolean,
+    val appVersion: String
 )

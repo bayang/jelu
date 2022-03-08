@@ -27,7 +27,8 @@ const store = createStore<State>({
       route: null,
       serverSettings: {
         metadataFetchEnabled: false,
-        metadataFetchCalibreEnabled: false
+        metadataFetchCalibreEnabled: false,
+        appVersion: ""
       } as ServerSettings,
     }
   },
