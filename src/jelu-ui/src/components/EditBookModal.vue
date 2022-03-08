@@ -20,6 +20,8 @@ let userbook: Ref<UserBook> = ref(copyInput(props.book))
 let hasImage: Ref<boolean> = ref(userbook.value.book.image != null)
 let deleteImage: Ref<boolean> = ref(false)
 
+const progress: Ref<boolean> = ref(false)
+
 const publishedDate = ref(new Date(userbook.value.book.publishedDate ? userbook.value.book.publishedDate: ""))
 
 function copyInput(book: UserBook|null): any {
@@ -73,6 +75,7 @@ const importBook = () => {
       console.log(`push book ` + userbook.value);
       console.log(userbook.value);
       let promise: Promise<UserBook>
+      progress.value = true
       // no id on userbook -> we have a book and save the userbook
       if (StringUtils.isBlank(userbook.value.id)) {
         promise = dataService.saveUserBookImage(
@@ -101,10 +104,12 @@ const importBook = () => {
       .then(res => 
         {
           console.log(`update book ${res.book.title}`);
+          progress.value = false
           ObjectUtils.toast(oruga.oruga, "success", `Book ${res.book.title} updated !`, 4000);
           emit('close')
       })
     .catch (err => {
+      progress.value = false
       ObjectUtils.toast(oruga.oruga, "danger", `Error ` + err.message, 4000);
     })
 
@@ -563,6 +568,11 @@ function toggleRemoveImage() {
           {{ errorMessage }}
         </p>
       </div>
+      <progress
+        v-if="progress"
+        class="progress is-small is-success mt-3"
+        max="100"
+      />
     </div>
   </section>
 </template>
