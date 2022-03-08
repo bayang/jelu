@@ -1,3 +1,17 @@
+## [0.8.0](https://github.com/bayang/jelu/compare/v0.7.0...v0.8.0) (2022-03-08)
+
+
+### Features
+
+* dynamically provide version at runtime ([3dce43e](https://github.com/bayang/jelu/commit/3dce43eb0caaa0a89de45aa80c424ce13d187af0))
+
+
+### Bug Fixes
+
+* forward controller pattern ([c528b51](https://github.com/bayang/jelu/commit/c528b51b7b76964ddfc84c4b8e1d8c4f61046d51))
+* forwarding pages broken after boot 2.6 update ([323d644](https://github.com/bayang/jelu/commit/323d6441e0292619c6dfed5835e8e3feb2fc3d9f))
+* removing authors when updating was not possible ([dba5bd3](https://github.com/bayang/jelu/commit/dba5bd31492b0113775bbfe77f0a7fa6d193e292))
+
 ## [0.7.0](https://github.com/bayang/jelu/compare/v0.6.0...v0.7.0) (2022-03-04)
 
 
