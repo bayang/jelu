@@ -21,7 +21,7 @@ const router = useRouter()
 const { oruga } = useProgrammatic();
 console.log(oruga)
 
-const { formatDate } = useDates()
+const { formatDate, formatDateString } = useDates()
 
 const isAdmin = computed(() => {
   return store.getters.isAdmin
@@ -309,7 +309,7 @@ getBook()
         class="has-text-left block"
       >
         <span class="has-text-weight-semibold">Published date :</span>
-        {{ formatDate(book.book.publishedDate) }}
+        {{ formatDateString(book.book.publishedDate) }}
       </p>
       <p
         v-if="book?.book?.series"
