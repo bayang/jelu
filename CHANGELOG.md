@@ -1,3 +1,15 @@
+## [0.9.0](https://github.com/bayang/jelu/compare/v0.8.0...v0.9.0) (2022-03-13)
+
+
+### Features
+
+* author page ([1e80993](https://github.com/bayang/jelu/commit/1e80993b1d99047b4f779ab23eea79fd7b0ffd7c))
+
+
+### Bug Fixes
+
+* ui error ([90db9c7](https://github.com/bayang/jelu/commit/90db9c7f97d17ffb4e7d656c9e32905ad70eb894))
+
 ## [0.8.0](https://github.com/bayang/jelu/compare/v0.7.0...v0.8.0) (2022-03-08)
 
 
