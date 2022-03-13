@@ -269,7 +269,7 @@ function toggleRemoveImage() {
           >
             <o-input
               v-model="userbook.book.summary"
-              maxlength="200"
+              maxlength="50000"
               type="textarea"
             />
           </o-field>

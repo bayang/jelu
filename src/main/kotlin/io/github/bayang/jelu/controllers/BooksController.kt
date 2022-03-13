@@ -219,9 +219,19 @@ class BooksController(
     fun updateBook(@PathVariable("id") bookId: UUID, @RequestBody @Valid book: BookUpdateDto): BookDto {
         return repository.update(bookId, book)
     }
-    @PutMapping(path = ["/authors/{id}"])
+
+    @PutMapping(path = ["/authors/{id}"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun updateAuthor(@PathVariable("id") authorId: UUID, @RequestBody @Valid author: AuthorUpdateDto): AuthorDto {
         return repository.updateAuthor(authorId, author)
+    }
+
+    @PutMapping(path = ["/authors/{id}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun updateAuthor(
+        @PathVariable("id") authorId: UUID,
+        @RequestPart("author") @Valid author: AuthorUpdateDto,
+        @RequestPart("file", required = false) file: MultipartFile?
+    ): AuthorDto {
+        return repository.updateAuthor(authorId, author, file)
     }
 
     @PutMapping(path = ["/userbooks/{id}"], consumes = [MediaType.APPLICATION_JSON_VALUE])

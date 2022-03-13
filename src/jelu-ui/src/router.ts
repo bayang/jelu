@@ -62,6 +62,13 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
+            path: '/authors/:authorId',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/AuthorBooks.vue'),
+            name: 'author-detail',
+            props: true,
+            beforeEnter: [isLogged],
+        },
+        {
             path: '/search',
             component: () => import(/* webpackChunkName: "recommend" */ './components/SearchResultsDisplay.vue'),
             name: 'search',

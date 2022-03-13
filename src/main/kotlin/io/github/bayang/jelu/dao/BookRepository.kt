@@ -350,7 +350,7 @@ class BookRepository(
         found.biography = author.biography?.trim()
         found.dateOfDeath = author.dateOfDeath?.trim()
         found.dateOfBirth = author.dateOfBirth?.trim()
-        found.image = author.image?.trim()
+        // found.image = author.image?.trim()
         found.modificationDate = nowInstant()
         return found
     }

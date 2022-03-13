@@ -4,4 +4,5 @@ declare module 'v-tooltip';
 
 declare module 'vue3-carousel';
 
-declare module 'vue-float-menu'
+declare module 'vue-float-menu';
+

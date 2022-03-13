@@ -13,6 +13,8 @@ import { ImportConfigurationDto } from "../model/ImportConfiguration";
 import qs from "qs";
 import dayjs from "dayjs";
 import { LibraryFilter } from "../model/LibraryFilter";
+import { WikipediaSearchResult } from "../model/WikipediaSearchResult";
+import { WikipediaPageResult } from "../model/WikipediaPageResult";
 
 class DataService {
 
@@ -41,6 +43,12 @@ class DataService {
   private API_SERVER_SETTINGS = '/server-settings';
 
   private API_IMPORTS = '/imports';
+
+  private API_WIKIPEDIA = '/wikipedia';
+
+  private API_SEARCH = '/search';
+
+  private API_PAGE = '/page';
 
   private MODE: string;
 
@@ -435,6 +443,38 @@ class DataService {
     }
   }
 
+  getAuthorById = async (authorId: string) => {
+    try {
+      const response = await this.apiClient.get<Author>(`${this.API_AUTHOR}/${authorId}`, {
+        transformResponse: this.transformAuthor
+      });
+      console.log("called author by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error author by id " + (error as AxiosError).code)
+      throw new Error("error get author by id " + error)
+    }
+  }
+
+  /*
+  * Dates are deserialized as strings, convert to Date instead
+  */
+  transformAuthor = (data: string) => {
+    const tr = JSON.parse(data)
+    if (tr.dateOfBirth != null) {
+      tr.dateOfBirth = dayjs(tr.dateOfBirth).toDate()
+    }
+    if (tr.dateOfDeath != null) {
+      tr.dateOfDeath = dayjs(tr.dateOfDeath).toDate()
+    }
+    return tr
+  }
+
   getTagBooksById = async (tagId: string, 
     page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
     try {
@@ -455,7 +495,31 @@ class DataService {
         console.log("error axios " + error.response.status + " " + error.response.data.error)
       }
       console.log("error tag books by id " + (error as AxiosError).code)
-      throw new Error("error get tag by id " + error)
+      throw new Error("error get tag books by id " + error)
+    }
+  }
+
+  getAuthorBooksById = async (authorId: string, 
+    page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
+    try {
+      const response = await this.apiClient.get<Page<Book>>(`${this.API_AUTHOR}/${authorId}${this.API_BOOK}`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort,
+          libraryFilter: libraryFilter
+        }
+      });
+      console.log("called author books by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error author books by id " + (error as AxiosError).code)
+      throw new Error("error get author books by id " + error)
     }
   }
 
@@ -712,6 +776,75 @@ class DataService {
       }
       console.log("error creating event " + (error as AxiosError).code)
       throw new Error("error creating event " + error)
+    }
+  }
+
+  wikipediaSearch = async (query: string, language: string) => {
+    try {
+      const response = await this.apiClient.get<WikipediaSearchResult>(`${this.API_WIKIPEDIA}${this.API_SEARCH}`, {
+        params: {
+          query: query,
+          language: language
+        }
+      });
+      console.log("called wikipedia search")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error wikipedia search " + (error as AxiosError).code)
+      throw new Error("error wikipedia search " + error)
+    }
+  }
+
+  wikipediaPage = async (pageTitle: string, language: string) => {
+    try {
+      const response = await this.apiClient.get<WikipediaPageResult>(`${this.API_WIKIPEDIA}${this.API_PAGE}`, {
+        params: {
+          pageTitle: pageTitle,
+          language: language
+        }
+      });
+      console.log("called wikipedia page")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error wikipedia page " + (error as AxiosError).code)
+      throw new Error("error wikipedia page " + error)
+    }
+  }
+
+  updateAuthor = async (author: Author, file: File|null, onUploadProgress:any) => {
+    try {
+      const formData = new FormData()
+      if (file != null) {
+        formData.append('file', file);
+      }
+      formData.append('author', new Blob([JSON.stringify(author)], {
+        type: "application/json"
+    }));
+      const resp = await this.apiClient.put<Author>(`${this.API_AUTHOR}/${author.id}`, formData,
+       { 
+        headers:{
+          'Content-Type':'multipart/form-data',
+          'Accept':'application/json'
+        }, 
+        onUploadProgress: onUploadProgress})
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error updating book " + error.response.status + " " + error.response.data.error)
+        throw new Error("error updating book " + error.response.status + " " + error)
+      }
+      console.log("error updating book " + (error as AxiosError).code)
+      throw new Error("error updating book " + error)
     }
   }
 

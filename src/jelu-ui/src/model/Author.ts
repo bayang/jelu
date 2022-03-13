@@ -4,8 +4,8 @@ export interface Author {
     name: string,
     modificationDate?: string,
     biography?: string,
-    dateOfBirth?: string,
-    dateOfDeath?: string,
+    dateOfBirth?: Date,
+    dateOfDeath?: Date,
     image?: string
   }
   

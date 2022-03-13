@@ -10,14 +10,13 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
-import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriBuilder
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import java.util.concurrent.TimeUnit
+import javax.annotation.Resource
 import kotlin.random.Random
 
 private val logger = KotlinLogging.logger {}
@@ -29,14 +28,9 @@ const val KEY: String = "quotes"
 
 @Service
 class GoodreadsQuoteProviderImpl(
-    val bookService: BookService
+    val bookService: BookService,
+    @Resource(name = "restClient") val restClient: WebClient
 ) : IQuoteProvider {
-
-    final val exchange = ExchangeStrategies.builder().codecs { c: ClientCodecConfigurer ->
-        c.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-    }.build()
-
-    val client = WebClient.builder().exchangeStrategies(exchange).build()
 
     var cache: Cache<String, List<QuoteDto>> = Caffeine.newBuilder()
         .expireAfterWrite(60, TimeUnit.MINUTES)
@@ -53,7 +47,7 @@ class GoodreadsQuoteProviderImpl(
     }
 
     override fun random(): Mono<List<QuoteDto>> {
-        val mono: Mono<List<QuoteDto>> = client.get()
+        val mono: Mono<List<QuoteDto>> = restClient.get()
             .uri { uriBuilder: UriBuilder ->
                 uriBuilder
                     .scheme("https")
@@ -84,7 +78,7 @@ class GoodreadsQuoteProviderImpl(
     }
 
     fun fetch(query: String): Mono<List<QuoteDto>> {
-        val mono: Mono<List<QuoteDto>> = client.get()
+        val mono: Mono<List<QuoteDto>> = restClient.get()
             .uri { uriBuilder: UriBuilder ->
                 uriBuilder
                     .scheme("https")

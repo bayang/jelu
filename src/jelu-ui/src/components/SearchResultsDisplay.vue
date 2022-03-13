@@ -29,6 +29,8 @@ const libraryFilter: Ref<LibraryFilter> = useRouteQuery('libraryFilter', 'ANY' a
 
 const open = ref(false)
 
+const progress: Ref<boolean> = ref(false)
+
 const edit: Ref<boolean> = ref(false)
 const advancedMode: Ref<boolean> = ref(false)
 const selectedField: Ref<string|null> = ref(null)
@@ -41,6 +43,7 @@ console.log(props.query)
 const search = () => {
     console.log(queryTerm.value)
     console.log(query.value)
+    progress.value = true
     if (! advancedMode.value) {
       query.value.set('title', queryTerm.value)
     }
@@ -50,6 +53,7 @@ const search = () => {
       arrayParam(query.value.get('tags')),
       pageAsNumber.value - 1, perPage.value, sortQuery.value, libraryFilter.value)
     .then(res => {
+      progress.value = false
         console.log(res)
           total.value = res.totalElements
           books.value = res.content
@@ -61,6 +65,9 @@ const search = () => {
         }
     }
     )
+    .catch(e => {
+      progress.value = false
+    })
 }
 
 const arrayParam = (input: string|undefined) => {
@@ -209,6 +216,11 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
       </div>
     </template>
   </sort-filter-bar-vue>
+  <progress
+            v-if="progress"
+            class="progress is-small is-success"
+            max="100"
+          />
   <div class="level">
     <div class="level-left mobile-level-right">
       <div class="level-item">

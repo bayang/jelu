@@ -445,7 +445,10 @@ let displayDatepicker = computed(() => {
             :disabled="!store.state.serverSettings.metadataFetchEnabled"
             @click="toggleModal"
           >
-            Auto fill
+            <span class="icon">
+              <i class="mdi mdi-auto-fix" />
+            </span>
+            <span>Auto fill</span>
           </button>
         </o-tooltip>
       </div>

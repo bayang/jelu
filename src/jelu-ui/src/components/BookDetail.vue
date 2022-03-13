@@ -5,7 +5,6 @@ import { UserBook } from '../model/Book'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import dataService from "../services/DataService"
-import { DateUtils } from "../utils/DateUtils"
 import { ObjectUtils } from '../utils/ObjectUtils'
 import EditBookModal from "./EditBookModal.vue"
 import ReadingEventModalVue from './ReadingEventModal.vue'
@@ -13,6 +12,7 @@ import { useProgrammatic } from "@oruga-ui/oruga-next";
 import dayjs from 'dayjs'
 import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
 import { useTitle } from '@vueuse/core'
+import useDates from '../composables/dates'
 
 const props = defineProps<{ bookId: string }>()
 
@@ -20,6 +20,8 @@ const store = useStore(key)
 const router = useRouter()
 const { oruga } = useProgrammatic();
 console.log(oruga)
+
+const { formatDate } = useDates()
 
 const isAdmin = computed(() => {
   return store.getters.isAdmin
@@ -57,13 +59,6 @@ const hasExternalLink = computed(() => book.value?.book.amazonId != null
   || book.value?.book.googleId != null
   || book.value?.book.librarythingId != null)
 
-const format = (dateString: string | Date | null | undefined) => {
-  if (dateString != null) {
-    return DateUtils.formatDate(dateString)
-  }
-  return ''
-}
-
 function modalClosed() {
   console.log("modal closed")
   getBook()
@@ -86,24 +81,6 @@ const toggleEdit = () => {
     onClose: modalClosed
   });
 }
-
-// const toggleEditEventModal = (currentEvent: ReadingEvent) => {
-//   showModal.value = !showModal.value
-//   oruga.modal.open({
-//     parent: this,
-//     component: EditReadingEventModalVue,
-//     trapFocus: true,
-//     fullScreen: true,
-//     custom:true,
-//     active: true,
-//     canCancel: ['x', 'button', 'outside'],
-//     scroll: 'keep',
-//     props: {
-//       "readingEvent" : currentEvent
-//     },
-//     onClose: modalClosed
-//   });
-// }
 
 function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
   showModal.value = !showModal.value
@@ -294,7 +271,9 @@ getBook()
           v-for="author in book?.book?.authors"
           :key="author.id"
         >
-          {{ author.name }}
+          <router-link :to="{ name: 'author-detail', params: { authorId: author.id } }">
+            {{ author.name }}&nbsp;
+          </router-link>
         </li>
       </ul>
       <p
@@ -330,7 +309,7 @@ getBook()
         class="has-text-left block"
       >
         <span class="has-text-weight-semibold">Published date :</span>
-        {{ format(book.book.publishedDate) }}
+        {{ formatDate(book.book.publishedDate) }}
       </p>
       <p
         v-if="book?.book?.series"
@@ -478,7 +457,7 @@ getBook()
             </div>
             <div class="timeline-content">
               <p class="heading">
-                {{ format(event.modificationDate) }}
+                {{ formatDate(event.modificationDate) }}
               </p>
               <div>
                 <p>
@@ -506,9 +485,5 @@ getBook()
 .columns {
   margin-top: 10px;
 }
-.background-on-hover:hover {
-  background-color: #cccccccc;
-  border-radius: 10px;
-  padding: 3px;
-}
+
 </style>

@@ -103,6 +103,7 @@ $navbar-dropdown-background-color:$jelu_background_accent;
 $text : $jelu_text_primary;
 $text-strong : $jelu_text_secondary;
 $text-invert: findColorInvert($text);
+$subtitle-color: $text-strong;
 
 $field-label-color: $text;
 
@@ -174,8 +175,6 @@ $typewriter-font: 'AnotherTypewriter', sans-serif;
     max-height: calc(100vh - 40px);
 }
 
-
-
 .event-modal {
   // position: relative;
   // overflow-y: scroll;
@@ -193,11 +192,33 @@ $typewriter-font: 'AnotherTypewriter', sans-serif;
   overflow: auto;
   position: relative;
   // width: 100%;
-  max-width: 95vh;
+  max-width: 95vw;
   height: 90vh;
 }
 
 .event-modal-body {
+  -webkit-overflow-scrolling: touch;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: visible;
+  padding: 20px;
+}
+
+.author-modal {
+  background-color: $jelu_background_accent;
+  display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 40px);
+
+  margin: 0 20px;
+  max-height: 100%;
+  overflow: auto;
+  position: relative;
+  width: min(600px, 90vw);
+  height: 90vh;
+}
+
+.author-modal-body {
   -webkit-overflow-scrolling: touch;
   flex-grow: 1;
   flex-shrink: 1;
@@ -252,6 +273,19 @@ $typewriter-font: 'AnotherTypewriter', sans-serif;
     -webkit-box-shadow: 10px 10px 10px 0px $jelu_background; 
     box-shadow: 10px 10px 10px 0px $jelu_background;
   }
+
+.hoverable {
+    box-shadow: 3px 3px 3px 0px $jelu_background;
+  }
+
+.hoverable:hover {
+  box-shadow: 7px 7px 7px 0px $jelu_background;
+  transform: translateY(-0.15em);
+}
+
+.lighter-background {
+  background-color: #535353;
+}
 
 $tag-color: findColorInvert($tag-background-color);
 
@@ -351,3 +385,10 @@ footer.card-footer span.tag {
   background-color: $success;
   color: $success-invert;
 }
+
+.background-on-hover:hover {
+  background-color: #cccccccc;
+  border-radius: 10px;
+  padding: 3px;
+}
+
