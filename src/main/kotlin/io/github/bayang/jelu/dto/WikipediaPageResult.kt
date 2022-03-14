@@ -8,11 +8,11 @@ data class WikipediaPageResult(
     @JsonAlias("displaytitle")
     val displayTitle: String?,
     @JsonAlias("wikibase_item")
-    val wikibaseItem: String,
+    val wikibaseItem: String?,
     @JsonAlias("pageid")
     val pageId: Long,
-    val lang: String,
-    val description: String,
+    val lang: String?,
+    val description: String?,
     val extract: String,
     @JsonAlias("extract_html")
     val extractHtml: String,

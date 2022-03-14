@@ -6,7 +6,7 @@ export interface WikipediaPageResult {
     wikibaseItem: string,
     pageId: number,
     lang: string,
-    description: string,
+    description?: string,
     extract: string,
     extractHtml: string,
     contentUrls: ContentUrlList,
