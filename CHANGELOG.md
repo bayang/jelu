@@ -1,3 +1,16 @@
+## [0.10.0](https://github.com/bayang/jelu/compare/v0.9.0...v0.10.0) (2022-03-14)
+
+
+### Features
+
+* author page improvement ([129ae35](https://github.com/bayang/jelu/commit/129ae35f87438da74140d2acf43f8497f4b91490))
+* show progress on events modal ([d4605fe](https://github.com/bayang/jelu/commit/d4605fe9c8ca0503126d8c0d6cc7787e2c2b60cc))
+
+
+### Bug Fixes
+
+* metadata source deserialization ([bbf1c2a](https://github.com/bayang/jelu/commit/bbf1c2adedaf5584c31608302c9f38792d1ededd))
+
 ## [0.9.0](https://github.com/bayang/jelu/compare/v0.8.0...v0.9.0) (2022-03-13)
 
 
