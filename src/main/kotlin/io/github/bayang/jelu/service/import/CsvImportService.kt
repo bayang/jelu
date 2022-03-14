@@ -355,7 +355,7 @@ class CsvImportService(
         }
         val authors = mutableListOf<AuthorDto>()
         for (authorString in authorsStrings) {
-            authors.add(AuthorDto(null, null, null, authorString, null, null, null, null))
+            authors.add(AuthorDto(null, null, null, authorString, null, null, null, null, null, null, null, null, null, null, null))
         }
         book.authors = authors
         return book

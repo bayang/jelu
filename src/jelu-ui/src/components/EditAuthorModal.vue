@@ -87,7 +87,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
   progress.value = true
   dataService.wikipediaPage(entry.title, searchlanguage.value)
   .then(res => {
-    currentAuthor.value.biography = res.extractHtml + "\n" + toHtmlLink(res.contentUrls.desktop.page)
+    currentAuthor.value.biography = res.extractHtml
+    currentAuthor.value.wikipediaPage = res.contentUrls.desktop.page
     imageUrl.value = res.thumbnail?.source
     progress.value = false
     currentPhase.value = FORM
@@ -107,10 +108,10 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
     >
       <div>
         <progress
-      v-if="progress"
-      class="progress is-small is-success"
-      max="100"
-    />
+          v-if="progress"
+          class="progress is-small is-success"
+          max="100"
+        />
         <div>
           <h1 class="title has-text-weight-normal typewriter">
             Edit author
@@ -177,6 +178,77 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
           >
             <o-input
               v-model="currentAuthor.biography"
+              maxlength="5000"
+              type="textarea"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            label="Official page"
+          >
+            <o-input
+              v-model="currentAuthor.officialPage"
+              maxlength="5000"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            label="Wikipedia page"
+          >
+            <o-input
+              v-model="currentAuthor.wikipediaPage"
+              maxlength="5000"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            label="Goodreads page"
+          >
+            <o-input
+              v-model="currentAuthor.goodreadsPage"
+              maxlength="5000"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            label="Twitter page"
+          >
+            <o-input
+              v-model="currentAuthor.twitterPage"
+              maxlength="5000"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            label="Facebook page"
+          >
+            <o-input
+              v-model="currentAuthor.facebookPage"
+              maxlength="5000"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            label="Instagram page"
+          >
+            <o-input
+              v-model="currentAuthor.instagramPage"
+              maxlength="5000"
+            />
+          </o-field>
+        </div>
+        <div class="field">
+          <o-field
+            label="Personal notes"
+          >
+            <o-input
+              v-model="currentAuthor.notes"
               maxlength="5000"
               type="textarea"
             />
@@ -349,7 +421,10 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
           >
             <article class="media">
               <div class="media-left">
-                <figure v-if="res.thumbnail?.url" class="small-cover">
+                <figure
+                  v-if="res.thumbnail?.url"
+                  class="small-cover"
+                >
                   <img
                     :src="'https:' + res.thumbnail?.url"
                     :class="deleteImage ? 'altered' : ''"

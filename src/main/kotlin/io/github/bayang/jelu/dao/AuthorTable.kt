@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.dao
 
+import io.github.bayang.jelu.dao.UserBookTable.nullable
 import io.github.bayang.jelu.dto.AuthorDto
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -19,6 +20,13 @@ object AuthorTable : UUIDTable("author") {
     val image: Column<String?> = varchar("image", 1000).nullable()
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
+    val notes: Column<String?> = varchar("notes", 5000).nullable()
+    val officialPage: Column<String?> = varchar("official_page", 5000).nullable()
+    val wikipediaPage: Column<String?> = varchar("wikipedia_page", 5000).nullable()
+    val goodreadsPage: Column<String?> = varchar("goodreads_page", 5000).nullable()
+    val twitterPage: Column<String?> = varchar("twitter_page", 5000).nullable()
+    val facebookPage: Column<String?> = varchar("facebook_page", 5000).nullable()
+    val instagramPage: Column<String?> = varchar("instagram_page", 5000).nullable()
 }
 class Author(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Author>(AuthorTable)
@@ -29,6 +37,13 @@ class Author(id: EntityID<UUID>) : UUIDEntity(id) {
     var dateOfBirth by AuthorTable.dateOfBirth
     var dateOfDeath by AuthorTable.dateOfDeath
     var image by AuthorTable.image
+    var notes by AuthorTable.notes
+    var officialPage by AuthorTable.officialPage
+    var wikipediaPage by AuthorTable.wikipediaPage
+    var goodreadsPage by AuthorTable.goodreadsPage
+    var twitterPage by AuthorTable.twitterPage
+    var facebookPage by AuthorTable.facebookPage
+    var instagramPage by AuthorTable.instagramPage
     fun toAuthorDto(): AuthorDto =
         AuthorDto(
             id = this.id.value,
@@ -38,7 +53,14 @@ class Author(id: EntityID<UUID>) : UUIDEntity(id) {
             biography = this.biography,
             dateOfBirth = this.dateOfBirth,
             dateOfDeath = this.dateOfDeath,
-            image = this.image
+            image = this.image,
+            notes = this.notes,
+            officialPage = this.officialPage,
+            wikipediaPage = this.wikipediaPage,
+            goodreadsPage = this.goodreadsPage,
+            twitterPage = this.twitterPage,
+            facebookPage = this.facebookPage,
+            instagramPage = this.instagramPage
         )
 }
 object BookAuthors : Table(name = "book_authors") {

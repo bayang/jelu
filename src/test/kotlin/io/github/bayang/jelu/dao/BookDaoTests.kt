@@ -48,7 +48,7 @@ class BookDaoTests(@Autowired private val bookService: BookService) {
 
     @Test
     fun testInsertBooksWithAuthors() {
-        var author = AuthorDto(id = null, creationDate = null, modificationDate = null, name = "test", image = "", dateOfBirth = "", dateOfDeath = "", biography = "")
+        var author = AuthorDto(id = null, creationDate = null, modificationDate = null, name = "test", image = "", dateOfBirth = "", dateOfDeath = "", biography = "", facebookPage = null, goodreadsPage = null, instagramPage = null, notes = null, officialPage = null, twitterPage = null, wikipediaPage = null)
         val res: BookDto = bookService.save(
             BookCreateDto(
                 id = null,

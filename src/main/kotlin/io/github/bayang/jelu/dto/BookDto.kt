@@ -76,7 +76,14 @@ data class AuthorDto(
     val biography: String?,
     val dateOfBirth: String?,
     val dateOfDeath: String?,
-    val image: String?
+    val image: String?,
+    val notes: String?,
+    val officialPage: String?,
+    val wikipediaPage: String?,
+    val goodreadsPage: String?,
+    val twitterPage: String?,
+    val facebookPage: String?,
+    val instagramPage: String?,
 )
 
 data class AuthorUpdateDto(
@@ -87,7 +94,14 @@ data class AuthorUpdateDto(
     val biography: String?,
     val dateOfBirth: String?,
     val dateOfDeath: String?,
-    val image: String?
+    val image: String?,
+    val notes: String?,
+    val officialPage: String?,
+    val wikipediaPage: String?,
+    val goodreadsPage: String?,
+    val twitterPage: String?,
+    val facebookPage: String?,
+    val instagramPage: String?,
 )
 
 data class TagDto(

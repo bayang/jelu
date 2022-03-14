@@ -308,5 +308,16 @@
             <column name="image" />
         </createIndex>
     </changeSet>
+    <changeSet id="add_author_columns" author="byng">
+        <sql>
+            ALTER TABLE author ADD notes varchar(5000);
+            ALTER TABLE author ADD official_page varchar(5000);
+            ALTER TABLE author ADD wikipedia_page varchar(5000);
+            ALTER TABLE author ADD goodreads_page varchar(5000);
+            ALTER TABLE author ADD twitter_page varchar(5000);
+            ALTER TABLE author ADD facebook_page varchar(5000);
+            ALTER TABLE author ADD instagram_page varchar(5000);
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>

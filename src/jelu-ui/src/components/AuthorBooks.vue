@@ -199,15 +199,53 @@ getBooks()
   </sort-filter-bar-vue>
   <div class="columns is-multiline box">
     <div class="column is-full">
-      <h2 class="title has-text-weight-normal typewriter">
-        {{ author.name }}
-        <span
-          class="icon is-medium has-text-light"
-          @click="editAuthor"
-        >
-          <i class="background-on-hover mdi mdi-24px mdi-pencil" />
-        </span>
-      </h2>
+      <div class="level">
+        <div class="level-item">
+          <h2 class="title has-text-weight-normal typewriter">
+            {{ author.name }}
+          </h2>
+          <span
+            class="icon is-medium has-text-light"
+            @click="editAuthor"
+          >
+            <i class="background-on-hover mdi mdi-24px mdi-pencil" />
+          </span>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <a
+              v-if="author.officialPage"
+              :href="author.officialPage"
+              target="_blank"
+            ><i class="mdi mdi-24px mdi-web" /></a>
+            <a
+              v-if="author.wikipediaPage"
+              :href="author.wikipediaPage"
+              target="_blank"
+            ><i class="mdi mdi-24px mdi-wikipedia" /></a>
+            <a
+              v-if="author.goodreadsPage"
+              :href="author.goodreadsPage"
+              target="_blank"
+            ><i class="mdi mdi-24px mdi-goodreads" /></a>
+            <a
+              v-if="author.twitterPage"
+              :href="author.twitterPage"
+              target="_blank"
+            ><i class="mdi mdi-24px mdi-twitter" /></a>
+            <a
+              v-if="author.facebookPage"
+              :href="author.facebookPage"
+              target="_blank"
+            ><i class="mdi mdi-24px mdi-facebook" /></a>
+            <a
+              v-if="author.instagramPage"
+              :href="author.instagramPage"
+              target="_blank"
+            ><i class="mdi mdi-24px mdi-instagram" /></a>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="column is-one-fifth is-offset-one-fifth">
       <figure class="image">
@@ -229,7 +267,8 @@ getBooks()
         class="has-text-left"
       >
         <span class="has-text-weight-semibold">Biography :</span>
-      </p><p v-html="author.biography" />
+      </p>
+      <p class="has-text-left" v-html="author.biography" />
       <p
         v-if="author.dateOfBirth"
         class="has-text-left block"
@@ -244,6 +283,13 @@ getBooks()
         <span class="has-text-weight-semibold">Death :</span>
         {{ formatDate(author.dateOfDeath) }}
       </p>
+      <p
+        v-if=" author.notes != null"
+        class="has-text-left"
+      >
+        <span class="has-text-weight-semibold">Additional notes :</span>
+      </p>
+      <p class="has-text-left" v-html="author.notes" />
     </div>
   </div>
   <div class="level">

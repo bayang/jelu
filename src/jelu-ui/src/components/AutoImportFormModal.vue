@@ -3,7 +3,9 @@ import { computed, reactive, Ref, ref } from "vue";
 import { StringUtils } from "../utils/StringUtils";
 import dataService from "../services/DataService";
 import { Metadata } from "../model/Metadata";
-import { DateUtils } from "../utils/DateUtils";
+import useDates from '../composables/dates'
+
+const { formatDate, formatDateString } = useDates()
 
 const form = reactive({
   title: "",
@@ -42,13 +44,6 @@ const discard = () => {
 const importData = () => {
     emit('metadataReceived', metadata.value)
     emit('close')
-}
-
-const format = (dateString: string|null|undefined) => {
-  if (dateString != null) {
-    return DateUtils.formatDate(dateString)
-  }
-  return ''
 }
 
 const isValid = computed(() => StringUtils.isNotBlank(form.title) 
@@ -203,7 +198,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
           v-if="metadata?.publishedDate"
           class="has-text-left"
         >
-          <span class="has-text-weight-semibold">Published date : </span>{{ format(metadata.publishedDate) }}
+          <span class="has-text-weight-semibold">Published date : </span>{{ formatDateString(metadata.publishedDate) }}
         </p>
         <p
           v-if="metadata?.series"

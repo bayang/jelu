@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
@@ -74,6 +75,7 @@ class BookService(
     @Transactional
     fun update(bookId: UUID, book: BookUpdateDto): BookDto = bookRepository.update(bookId, book).toBookDto()
 
+    // call saveImages in case image url is set
     @Transactional
     fun update(userBookId: UUID, book: UserBookUpdateDto): UserBookLightDto = bookRepository.update(userBookId, book).toUserBookLightDto()
 
@@ -82,17 +84,27 @@ class BookService(
         val updated: UserBook = bookRepository.update(userBookId, book)
         val previousImage: String? = updated.book.image
         var backup: File? = null
-        // if we need to update image and there is already one, backup it
-        if ((file != null || !book.book?.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
-            val currentImage = File(properties.files.images, previousImage)
-            backup = File(properties.files.images, "$previousImage.bak")
-            Files.move(currentImage.toPath(), backup.toPath())
+        var skipSave = false
+        // no multipart image and url image field is empty in udate dto
+        if (file == null && book.book?.image.isNullOrBlank()) {
+            skipSave = true
+        } else if (file == null && !book.book?.image.isNullOrBlank() && ! previousImage.isNullOrBlank() && previousImage.equals(book.book?.image, false)) {
+            // no multipart file and image field in update dto is the same as in BDD -> no change
+            skipSave = true
         }
-        val savedImage: String? = saveImages(file, updated.book.title, updated.book.id.toString(), book.book?.image, properties.files.images)
-        updated.book.image = savedImage
-        // we had a previous image and we saved a new one : delete the old one
-        if (backup != null && backup.exists() && savedImage != null && savedImage.isNotBlank()) {
-            Files.deleteIfExists(backup.toPath())
+        if (!skipSave) {
+            // if we need to update image and there is already one, backup it
+            if ((file != null || !book.book?.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
+                val currentImage = File(properties.files.images, previousImage)
+                backup = File(properties.files.images, "$previousImage.bak")
+                Files.move(currentImage.toPath(), backup.toPath())
+            }
+            val savedImage: String? = saveImages(file, updated.book.title, updated.book.id.toString(), book.book?.image, properties.files.images)
+            updated.book.image = savedImage
+            // we had a previous image and we saved a new one : delete the old one
+            if (backup != null && backup.exists() && savedImage != null && savedImage.isNotBlank()) {
+                Files.deleteIfExists(backup.toPath())
+            }
         }
         return updated.toUserBookLightDto()
     }
@@ -179,27 +191,38 @@ class BookService(
     @Transactional
     fun save(author: AuthorDto): AuthorDto = bookRepository.save(author).toAuthorDto()
 
+    // call saveImages in case image url is set
     @Transactional
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto = bookRepository.updateAuthor(authorId, author).toAuthorDto()
 
     @Transactional
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto, file: MultipartFile?): AuthorDto {
         var updated: Author = bookRepository.updateAuthor(authorId, author)
-
         // val updated: UserBook = bookRepository.update(userBookId, book)
         val previousImage: String? = updated.image
-        var backup: File? = null
-        // if we need to update image and there is already one, backup it
-        if ((file != null || !author.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
-            val currentImage = File(properties.files.images, previousImage)
-            backup = File(properties.files.images, "$previousImage.bak")
-            Files.move(currentImage.toPath(), backup.toPath())
+        var skipSave = false
+        // no multipart image and url image field is empty in udate dto
+        if (file == null && author.image.isNullOrBlank()) {
+            skipSave = true
+        } else if (file == null && !author.image.isNullOrBlank() && ! previousImage.isNullOrBlank() && previousImage.equals(author.image, false)) {
+            // no multipart file and image field in update dto is the same as in BDD -> no change
+            skipSave = true
         }
-        val savedImage: String? = saveImages(file, updated.name, updated.id.toString(), author.image, properties.files.images)
-        updated.image = savedImage
-        // we had a previous image and we saved a new one : delete the old one
-        if (backup != null && backup.exists() && savedImage != null && savedImage.isNotBlank()) {
-            Files.deleteIfExists(backup.toPath())
+        // no new multipartFile and image field in update dto is the same as in bdd -> image has not changed, skip image saving
+        if (! skipSave) {
+            var backup: File? = null
+            // if we need to update image and there is already one, backup it
+            if ((file != null || !author.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
+                val currentImage = File(properties.files.images, previousImage)
+                backup = File(properties.files.images, "$previousImage.bak")
+                Files.move(currentImage.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            }
+            val savedImage: String? = saveImages(file, updated.name, updated.id.toString(), author.image, properties.files.images)
+            updated.image = savedImage
+            // we had a previous image and we saved a new one : delete the old one
+            if (backup != null && backup.exists() && savedImage != null && savedImage.isNotBlank()) {
+                Files.deleteIfExists(backup.toPath())
+            }
         }
         return updated.toAuthorDto()
     }

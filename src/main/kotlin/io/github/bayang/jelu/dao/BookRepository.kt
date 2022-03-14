@@ -350,6 +350,13 @@ class BookRepository(
         found.biography = author.biography?.trim()
         found.dateOfDeath = author.dateOfDeath?.trim()
         found.dateOfBirth = author.dateOfBirth?.trim()
+        found.notes = author.notes?.trim()
+        found.officialPage = author.officialPage?.trim()
+        found.wikipediaPage = author.wikipediaPage?.trim()
+        found.goodreadsPage = author.goodreadsPage?.trim()
+        found.twitterPage = author.twitterPage?.trim()
+        found.facebookPage = author.facebookPage?.trim()
+        found.instagramPage = author.instagramPage?.trim()
         // found.image = author.image?.trim()
         found.modificationDate = nowInstant()
         return found
@@ -427,6 +434,13 @@ class BookRepository(
             val instant: Instant = nowInstant()
             creationDate = instant
             modificationDate = instant
+            notes = cleanString(author.notes)
+            officialPage = cleanString(author.officialPage)
+            wikipediaPage = cleanString(author.wikipediaPage)
+            goodreadsPage = cleanString(author.goodreadsPage)
+            twitterPage = cleanString(author.twitterPage)
+            facebookPage = cleanString(author.facebookPage)
+            instagramPage = cleanString(author.instagramPage)
         }
         return created
     }
