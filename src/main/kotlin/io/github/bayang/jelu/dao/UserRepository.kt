@@ -21,6 +21,10 @@ class UserRepository {
         }
     }
 
+    fun deleteUser(userId: UUID) {
+        User[userId].delete()
+    }
+
     fun countUsers(): Long = User.count()
 
     fun findByLogin(login: String): SizedIterable<User> =

@@ -53,4 +53,9 @@ class UserService(
             return JeluUser(it.first())
         }
     }
+
+    @Transactional
+    fun deleteUser(userId: UUID) {
+        userRepository.deleteUser(userId)
+    }
 }
