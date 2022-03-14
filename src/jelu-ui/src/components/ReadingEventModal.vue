@@ -13,30 +13,46 @@ const currentCreateEvent: Ref<CreateReadingEvent> = ref(props.readingEvent)
 console.log(currentEvent.value)
 console.log(currentCreateEvent.value)
 
+const progress: Ref<boolean> = ref(false)
 
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
 const create = () => {
+  progress.value = true
   dataService.createReadingEvent(currentCreateEvent.value)
     .then(res => {
+      progress.value = false
       emit('close')
+    })
+    .catch(e => {
+      progress.value = false
     })
 }
 
 const update = () => {
+  progress.value = true
   dataService.updateReadingEvent(currentEvent.value)
     .then(res => {
+      progress.value = false
       emit('close')
+    })
+    .catch(e => {
+      progress.value = false
     })
 }
 
 const deleteEvent = () => {
   if (currentEvent.value.id != null) {
+    progress.value = true
     dataService.deleteReadingEvent(currentEvent.value.id)
     .then(res => {
+      progress.value = false
       emit('close')
+    })
+    .catch(e => {
+      progress.value = false
     })
   }
 }
@@ -186,6 +202,11 @@ const deleteEvent = () => {
         </div>
       </div>
     </div>
+    <progress
+        v-if="progress"
+        class="progress is-small is-success mt-3"
+        max="100"
+      />
   </section>
 </template>
 
