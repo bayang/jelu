@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, Ref, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import { StringUtils } from '../utils/StringUtils'
@@ -9,6 +9,7 @@ const form = reactive({'login' : '', 'password' : ''})
 const loginValidation = ref('')
 const passwordValidation = ref('')
 const errorMessage = ref('')
+const progress: Ref<boolean> = ref(false)
 import { useTitle } from '@vueuse/core'
 
 useTitle('Jelu | Login')
@@ -35,9 +36,12 @@ const isInitialSetup = computed(() => {
   })
 const logUser = async () => {
   if (validateInputLight()) {
+    progress.value = true
     try {
       await store.dispatch('authenticate', {"user" : form.login, "password" : form.password})
+      progress.value = false
     } catch (error: any) {
+      progress.value = false
       console.log('failed to auth user ' + error)
       console.log(`failed to auth user ${error.message}`)
   
@@ -204,6 +208,11 @@ const submit = () => {
           {{ errorMessage }}
         </p>
       </div>
+      <progress
+        v-if="progress"
+        class="progress is-small is-success mt-5"
+        max="100"
+      />
     </div>
   </div>
 </template>

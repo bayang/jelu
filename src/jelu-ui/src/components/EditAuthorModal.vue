@@ -10,7 +10,6 @@ const props = defineProps<{
 }>()
 
 const currentAuthor: Ref<Author> = ref(props.author)
-// const currentCreateEvent: Ref<CreateReadingEvent> = ref(props.readingEvent)
 console.log(currentAuthor.value)
 const progress: Ref<boolean> = ref(false)
 let deleteImage: Ref<boolean> = ref(false)
@@ -90,7 +89,6 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
     currentAuthor.value.biography = res.extractHtml
     currentAuthor.value.wikipediaPage = res.contentUrls.desktop.page
     imageUrl.value = res.thumbnail?.source
-    console.log("imurl " + imageUrl.value)
     // we have a picture in search result but not in page result...
     // so use the search result picture as final picture
     if ((imageUrl.value === null || imageUrl.value === undefined) && entry.thumbnail !== null && entry.thumbnail !== undefined && entry.thumbnail.url !== null) {
@@ -113,11 +111,6 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
       class="author-modal-body"
     >
       <div>
-        <progress
-          v-if="progress"
-          class="progress is-small is-success"
-          max="100"
-        />
         <div>
           <h1 class="title has-text-weight-normal typewriter">
             Edit author
@@ -373,6 +366,11 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
           </button>
         </div>
       </div>
+      <progress
+        v-if="progress"
+        class="progress is-small is-success mt-5"
+        max="100"
+      />
     </div>
     <div
       v-else-if="currentPhase == SEARCH"
@@ -456,12 +454,12 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
           If result is empty try another language.
         </div>
       </div>
+      <progress
+        v-if="progress"
+        class="progress is-small is-success mt-5"
+        max="100"
+      />
     </div>
-    <!-- <progress
-      v-if="progress"
-      class="progress is-small is-success"
-      max="100"
-    /> -->
   </section>
 </template>
 
