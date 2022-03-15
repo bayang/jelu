@@ -10,7 +10,7 @@ private val logger = KotlinLogging.logger {}
 fun resizeImage(originalFile: File) {
     var backup: File? = null
     try {
-        backup = originalFile.copyTo(File("${originalFile.absolutePath}.bak"))
+        backup = originalFile.copyTo(File("${originalFile.absolutePath}.bak"), true)
         Thumbnails.of(originalFile)
             .allowOverwrite(true)
             .useOriginalFormat()
