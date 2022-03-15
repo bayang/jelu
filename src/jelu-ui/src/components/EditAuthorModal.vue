@@ -90,6 +90,12 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
     currentAuthor.value.biography = res.extractHtml
     currentAuthor.value.wikipediaPage = res.contentUrls.desktop.page
     imageUrl.value = res.thumbnail?.source
+    console.log("imurl " + imageUrl.value)
+    // we have a picture in search result but not in page result...
+    // so use the search result picture as final picture
+    if ((imageUrl.value === null || imageUrl.value === undefined) && entry.thumbnail !== null && entry.thumbnail !== undefined && entry.thumbnail.url !== null) {
+      imageUrl.value = 'https:' + entry.thumbnail?.url
+    }
     progress.value = false
     currentPhase.value = FORM
   })
