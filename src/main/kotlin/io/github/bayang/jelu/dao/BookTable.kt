@@ -1,6 +1,7 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.BookDto
+import io.github.bayang.jelu.dto.BookUpdateDto
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -75,5 +76,26 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             authors = this.authors.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() },
             userBookId = this.userBookId
+        )
+
+    fun toBookUpdateDto(): BookUpdateDto =
+        BookUpdateDto(
+            title = this.title,
+            isbn10 = this.isbn10,
+            isbn13 = this.isbn13,
+            summary = this.summary,
+            image = this.image,
+            publisher = this.publisher,
+            publishedDate = this.publishedDate,
+            pageCount = this.pageCount,
+            series = this.series,
+            numberInSeries = this.numberInSeries,
+            goodreadsId = this.goodreadsId,
+            googleId = this.googleId,
+            amazonId = this.amazonId,
+            librarythingId = this.librarythingId,
+            language = this.language,
+            authors = this.authors.map { it.toAuthorDto() },
+            tags = this.tags.map { it.toTagDto() },
         )
 }

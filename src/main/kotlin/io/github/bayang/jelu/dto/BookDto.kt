@@ -57,7 +57,7 @@ data class BookUpdateDto(
     val publisher: String?,
     val pageCount: Int?,
     val publishedDate: String?,
-    val authors: List<AuthorDto>?,
+    var authors: List<AuthorDto>?,
     val tags: List<TagDto>?,
     val series: String?,
     val numberInSeries: Double?,

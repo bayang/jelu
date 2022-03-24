@@ -1,6 +1,5 @@
 package io.github.bayang.jelu.dao
 
-import io.github.bayang.jelu.dao.UserBookTable.nullable
 import io.github.bayang.jelu.dto.AuthorDto
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass

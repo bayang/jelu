@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from './store'
+import AdminBaseVue from './components/AdminBase.vue'
+// import ProfilePageVue from './components/ProfilePage.vue'
+// import AdminAuthorsVue from './components/AdminAuthors.vue'
 
 const isLogged = () => {
     if (!store.state.isLogged) {
@@ -74,6 +77,17 @@ const router = createRouter({
             name: 'search',
             props: route => ({ query: route.query.title }),
             beforeEnter: [isLogged],
+        },
+        {
+            path: '/profile',
+            component: AdminBaseVue,
+            name: 'profile-page',
+            redirect: '/profile/me',
+            beforeEnter: [isLogged],
+            children: [
+                { path : 'me', component: () => import(/* webpackChunkName: "recommend" */ './components/ProfilePage.vue')},
+                { path : 'admin/authors', component: () => import(/* webpackChunkName: "recommend" */ './components/AdminAuthors.vue')},
+            ]
         },
     ],
 })

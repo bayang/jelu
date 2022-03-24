@@ -234,6 +234,16 @@ class BooksController(
         return repository.updateAuthor(authorId, author, file)
     }
 
+    @PutMapping(path = ["/authors/{id}/merge/{otherId}"], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun mergeAuthors(
+        @PathVariable("id") authorId: UUID,
+        @PathVariable("otherId") otherId: UUID,
+        @RequestBody @Valid author: AuthorUpdateDto,
+        principal: Authentication,
+    ): AuthorDto {
+        return repository.mergeAuthors(authorId, otherId, author, (principal.principal as JeluUser).user)
+    }
+
     @PutMapping(path = ["/userbooks/{id}"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun updateUserBook(@PathVariable("id") userBookId: UUID, @RequestBody @Valid book: UserBookUpdateDto): UserBookLightDto {
         return repository.update(userBookId, book)

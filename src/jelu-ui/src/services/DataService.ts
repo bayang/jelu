@@ -50,6 +50,8 @@ class DataService {
 
   private API_PAGE = '/page';
 
+  private API_MERGE = '/merge';
+
   private MODE: string;
 
   private BASE_URL: string;
@@ -845,6 +847,20 @@ class DataService {
       }
       console.log("error updating book " + (error as AxiosError).code)
       throw new Error("error updating book " + error)
+    }
+  }
+
+  mergeAuthors = async (authorId: string, otherId: string, authorDto: Author) => {
+    try {
+      const resp = await this.apiClient.put<Author>(`${this.API_AUTHOR}/${authorId}${this.API_MERGE}/${otherId}`, authorDto)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error merging authors " + error.response.status + " " + error.response.data.error)
+        throw new Error("error merging authors " + error.response.status + " " + error)
+      }
+      console.log("error merging authors " + (error as AxiosError).code)
+      throw new Error("error merging authors " + error)
     }
   }
 

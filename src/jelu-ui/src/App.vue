@@ -4,6 +4,8 @@ import { computed, onMounted, ref } from 'vue'
 import { key } from './store'
 import { useRoute, useRouter } from 'vue-router'
 import dataService from "./services/DataService";
+import Avatar from 'vue-avatar-sdh'
+
 const store = useStore(key)
 const router = useRouter()
 const route = useRoute()
@@ -120,14 +122,20 @@ const logout = () => {
           </router-link>
         </div>
         <div class="navbar-end">
+          <div class="navbar-item" />
           <div class="navbar-item has-dropdown is-hoverable">
+            <Avatar
+              :size="40"
+              :username="username"
+              class="mt-2"
+            />
             <a class="navbar-link">{{ username }}</a>
             <div class="navbar-dropdown is-boxed">
               <div
                 v-if="isLogged"
                 class="navbar-item"
               >
-                <a @click="logout()">logout</a>
+                <a @click="logout()">Logout</a>
               </div>
               <div
                 v-if="!isLogged"
@@ -149,6 +157,17 @@ const logout = () => {
                   :to="{ name: 'import' }"
                 >
                   Import books
+                </router-link>
+              </div>
+              <div
+                v-if="isLogged"
+                class="navbar-item"
+              >
+                <router-link
+                  class="is-family-sans-serif"
+                  :to="{ name: 'profile-page' }"
+                >
+                  Dashboard
                 </router-link>
               </div>
             </div>

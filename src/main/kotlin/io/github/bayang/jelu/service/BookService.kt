@@ -27,6 +27,7 @@ import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -282,5 +283,32 @@ class BookService(
     @Transactional
     fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
         return bookRepository.findAuthorBooksById(authorId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
+    }
+
+    @Transactional
+    fun mergeAuthors(authorId: UUID, otherId: UUID, authorUpdateDto: AuthorUpdateDto, user: User): AuthorDto {
+        val pageNum = 0
+        val size = 30
+        val author = bookRepository.findAuthorsById(authorId)
+        val authorToKeepDto = author.toAuthorDto()
+        do {
+            val booksPage: Page<Book> = bookRepository.findAuthorBooksById(otherId, user, PageRequest.of(pageNum, size))
+            if (booksPage.hasContent()) {
+                for (book in booksPage.content) {
+                    val dto = book.toBookUpdateDto()
+                    var filtered = dto.authors?.filter { authorDto -> authorDto.id != otherId }?.toMutableList()
+                    if (filtered == null) {
+                        filtered = mutableListOf()
+                    }
+                    if (!filtered.contains(authorToKeepDto)) {
+                        filtered.add(authorToKeepDto)
+                    }
+                    dto.authors = filtered
+                    bookRepository.update(book, dto)
+                }
+            }
+        } while (booksPage.hasNext())
+        bookRepository.deleteAuthorById(otherId)
+        return bookRepository.updateAuthor(authorId, authorUpdateDto).toAuthorDto()
     }
 }

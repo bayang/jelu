@@ -3,6 +3,8 @@ import App from './App.vue'
 import VTooltipPlugin from 'v-tooltip'
 import VueSnip from 'vue-snip'
 import Oruga from '@oruga-ui/oruga-next'
+import SidebarMenu from 'vuejs-sidebar-menu'
+import 'vuejs-sidebar-menu/dist/vuejs-sidebar-menu.css'
 // import '@oruga-ui/oruga-next/dist/oruga.css'
 
 import { bulmaConfig } from '@oruga-ui/theme-bulma'
@@ -25,4 +27,5 @@ createApp(App)
         iconPack: 'mdi',
         ...bulmaConfig
     })
+    .use(SidebarMenu)
     .mount('#app')

@@ -90,6 +90,9 @@ $link-focus-border: $primary;
 
 $body-background-color: $jelu_background;
 
+$footer-background-color: $jelu_background_accent;
+$footer-padding: 1.5rem 1rem 1.5rem;
+
 $navbar-background-color: $jelu_background;
 $navbar-item-hover-color: $primary;
 $navbar-item-hover-background-color: $jelu_background;
@@ -242,6 +245,10 @@ $typewriter-font: 'AnotherTypewriter', sans-serif;
     bottom: 5%;
     left: 2%;
   }
+
+  .pointy-hand {
+    cursor: pointer;
+  }
   
   .altered {
     filter: blur(4px) invert(38%);
@@ -392,3 +399,10 @@ footer.card-footer span.tag {
   padding: 3px;
 }
 
+.shrinked-height {
+  height: 80vh !important;
+}
+
+.step-title {
+  margin-top: 10px;
+}

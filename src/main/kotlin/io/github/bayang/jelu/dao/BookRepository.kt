@@ -284,7 +284,14 @@ class BookRepository(
         updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
-            val authorEntity: Author? = findAuthorsByName(it.name.trim()).firstOrNull()
+            // first try to find exact match by id
+            var authorEntity: Author? = if (it.id != null) {
+                findAuthorsById(it.id)
+            }
+            // if no id provided or research by id doesn't return anything try to find by name
+            else {
+                findAuthorsByName(it.name.trim()).firstOrNull()
+            }
             if (authorEntity != null) {
                 authorsList.add(authorEntity)
             } else {
