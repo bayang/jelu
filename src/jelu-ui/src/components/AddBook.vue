@@ -850,7 +850,7 @@ let displayDatepicker = computed(() => {
           </p>
           <progress
             v-if="progress"
-            class="progress is-small is-success"
+            class="progress is-small is-success mt-4"
             max="100"
           />
           <p
