@@ -303,7 +303,14 @@ class BookRepository(
         }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
-            val tagEntity: Tag? = findTagsByName(it.name.trim()).firstOrNull()
+            // first try to find exact match by id
+            val tagEntity: Tag? = if (it.id != null) {
+                findTagById(it.id)
+            }
+            // if no id provided or research by id doesn't return anything try to find by name
+            else {
+                findTagsByName(it.name.trim()).firstOrNull()
+            }
             if (tagEntity != null) {
                 tagsList.add(tagEntity)
             } else {
