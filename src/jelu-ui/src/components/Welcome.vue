@@ -25,6 +25,10 @@ const isLogged = computed(() => {
 
 const showModal: Ref<boolean> = ref(false)
 
+const currentlyReadingIsLoading: Ref<boolean> = ref(false)
+
+const recentEventsIsLoading: Ref<boolean> = ref(false)
+
 const books: Ref<Array<UserBook>> = ref([]);
 
 const events: Ref<Array<ReadingEventWithUserBook>> = ref([]);
@@ -32,6 +36,7 @@ const events: Ref<Array<ReadingEventWithUserBook>> = ref([]);
 const hasBooks = computed(() => books.value.length > 0)
 
 const getCurrentlyReading = async () => {
+  currentlyReadingIsLoading.value = true
   try {
     const res = await dataService.findUserBookByCriteria([ReadingEventType.CURRENTLY_READING], null)
     if (res.numberOfElements <= 6) {
@@ -40,8 +45,10 @@ const getCurrentlyReading = async () => {
     else {
       books.value = res.content.slice(0,6)
     }
+    currentlyReadingIsLoading.value = false
   } catch (error) {
     console.log("failed get books : " + error)
+    currentlyReadingIsLoading.value = false
   }
 
 };
@@ -49,12 +56,15 @@ const getCurrentlyReading = async () => {
 const nonCurrentlyReadingEvents: Array<ReadingEventType> = [ReadingEventType.DROPPED, ReadingEventType.FINISHED]
 
 const getMyEvents = async () => {
+  recentEventsIsLoading.value = true
   try {
     const res = await dataService.myReadingEvents(nonCurrentlyReadingEvents, 0, 8)
     const notCurrentlyReading = res.content.filter(e => e.eventType !== ReadingEventType.CURRENTLY_READING)
     events.value = notCurrentlyReading
+    recentEventsIsLoading.value = false
   } catch (error) {
     console.log("failed get events : " + error)
+    recentEventsIsLoading.value = false
   }
 
 };
@@ -186,6 +196,21 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
         </div>
       </div>
     </div>
+    <div
+      v-else-if="currentlyReadingIsLoading"
+      class="flex flex-row justify-center justify-items-center gap-3"
+    >
+      <o-skeleton
+        class="justify-self-center basis-44"
+        height="250px"
+        animated="true"
+      />
+      <o-skeleton
+        class="justify-self-center basis-44"
+        height="250px"
+        animated="true"
+      />
+    </div>
     <!-- logged, no books -->
     <div v-else>
       <h2 class="text-3xl typewriter">
@@ -225,6 +250,26 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
           </router-link>
         </div>
       </div>
+    </div>
+    <div
+      v-else-if="recentEventsIsLoading"
+      class="flex flex-row justify-center justify-items-center gap-3"
+    >
+      <o-skeleton
+        class="justify-self-center basis-36"
+        height="250px"
+        animated="true"
+      />
+      <o-skeleton
+        class="justify-self-center basis-36"
+        height="250px"
+        animated="true"
+      />
+      <o-skeleton
+        class="justify-self-center basis-36"
+        height="250px"
+        animated="true"
+      />
     </div>
     <quotes-display v-if="isLogged" />
   </div>
