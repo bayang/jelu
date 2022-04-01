@@ -71,7 +71,7 @@ const toggleEdit = () => {
     component: EditBookModal,
     trapFocus: true,
     active: true,
-    // fullScreen: false,
+    // fullScreen: true,
     canCancel: ['x', 'button', 'outside'],
     scroll: 'clip',
     props: {
@@ -89,7 +89,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
     component: ReadingEventModalVue,
     trapFocus: true,
     // fullScreen: true,
-    custom: true,
+    // custom: true,
     active: true,
     canCancel: ['x', 'button', 'outside'],
     scroll: 'keep',
@@ -165,13 +165,13 @@ console.log('The id value is: ' + props.bookId)
 
 const eventClass = (event: ReadingEvent) => {
   if (event.eventType === ReadingEventType.FINISHED) {
-    return "is-info";
+    return "bg-info";
   } else if (event.eventType === ReadingEventType.DROPPED) {
-    return "is-danger";
+    return "bg-error";
   } else if (
     event.eventType === ReadingEventType.CURRENTLY_READING
   ) {
-    return "is-success";
+    return "bg-success";
   }
   else return "";
 };
@@ -202,178 +202,165 @@ getBook()
 </script>
 
 <template>
-  <div class="columns is-multiline box">
-    <div class="column is-centered is-three-fifths">
-      <h3
-        class="subtitle is-3 is-capitalized has-text-weight-normal typewriter"
+  <div class="grid grid-cols-1 justify-center justify-items-center">
+    <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12">
+      <div />
+      <div class>
+        <h3 class="typewriter text-3xl">
+          {{ book?.book?.title }}
+        </h3>
+      </div>
+      <div
+        v-if="book != null"
+        class
       >
-        {{ book?.book?.title }}
-      </h3>
+        <button
+          class="btn btn-primary btn-outline is-light mr-2"
+          @click="toggleEdit"
+        >
+          <span class="icon">
+            <i class="mdi mdi-pencil mdi-18px" />
+          </span>
+          <span>Edit</span>
+        </button>
+        <button
+          class="btn btn-error btn-outline mr-2"
+          @click="deleteBook"
+        >
+          <span class="icon">
+            <i class="mdi mdi-delete mdi-18px" />
+          </span>
+          <span>Delete</span>
+        </button>
+        <button
+          class="btn btn-info btn-outline"
+          @click="toggleReadingEventModal(defaultCreateEvent(), false)"
+        >
+          <span class="icon">
+            <i class="mdi mdi-plus mdi-18px" />
+          </span>
+          <span>Event</span>
+        </button>
+      </div>
     </div>
     <div
-      v-if="book != null"
-      class="column is-two-fifth"
+      class="justify-center justify-items-center sm:gap-10 grid grid-cols-1 sm:grid-cols-2 sm:w-10/12"
     >
-      <button
-        class="button is-primary is-light mr-2"
-        @click="toggleEdit"
-      >
-        <span class="icon">
-          <i class="mdi mdi-pencil" />
-        </span>
-        <span>Edit</span>
-      </button>
-      <button
-        class="button is-danger is-light mr-2"
-        @click="deleteBook"
-      >
-        <span class="icon">
-          <i class="mdi mdi-delete" />
-        </span>
-        <span>Delete</span>
-      </button>
-      <button
-        class="button is-info is-light"
-        @click="toggleReadingEventModal(defaultCreateEvent(), false)"
-      >
-        <span class="icon">
-          <i class="mdi mdi-plus" />
-        </span>
-        <span>Event</span>
-      </button>
-    </div>
-    <div class="column is-one-fifth is-offset-one-fifth">
-      <figure class="image is-3by4">
-        <img
-          v-if="book?.book?.image"
-          :src="'/files/' + book.book.image"
-          alt="cover image"
+      <div class="sm:justify-self-end">
+        <figure class="image is-3by4">
+          <img
+            v-if="book?.book?.image"
+            :src="'/files/' + book.book.image"
+            alt="cover image"
+            class="max-h-96"
+          >
+          <img
+            v-else
+            src="../assets/placeholder_asset.jpg"
+            alt="cover placeholder"
+          >
+        </figure>
+      </div>
+      <div class="text-left sm:justify-self-start">
+        <p
+          v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
         >
-        <img
-          v-else
-          src="../assets/placeholder_asset.png"
-          alt="cover placeholder"
+          <span class="font-semibold">Authors :</span>
+        </p>
+        <ul
+          v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
         >
-      </figure>
-    </div>
-    <div class="column is-three-fifths content">
-      <p
-        v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
-        class="has-text-left"
-      >
-        <span class="has-text-weight-semibold">Authors :</span>
-      </p>
-      <ul
-        v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
-        class="has-text-left block"
-      >
-        <li
-          v-for="author in book?.book?.authors"
-          :key="author.id"
-        >
-          <router-link :to="{ name: 'author-detail', params: { authorId: author.id } }">
-            {{ author.name }}&nbsp;
-          </router-link>
-        </li>
-      </ul>
-      <p
-        v-if="book?.book?.publisher"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">Publisher :</span>
-        {{ book.book.publisher }}
-      </p>
-      <p
-        v-if="book?.book?.isbn10"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">ISBN10 :</span>
-        {{ book.book.isbn10 }}
-      </p>
-      <p
-        v-if="book?.book?.isbn13"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">ISBN13 :</span>
-        {{ book.book.isbn13 }}
-      </p>
-      <p
-        v-if="book?.book?.pageCount"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">Pages :</span>
-        {{ book.book.pageCount }}
-      </p>
-      <p
-        v-if="book?.book?.publishedDate"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">Published date :</span>
-        {{ formatDateString(book.book.publishedDate) }}
-      </p>
-      <p
-        v-if="book?.book?.series"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">Series :</span>
-        {{ book.book.series }}&nbsp;
-        <span v-if="book?.book?.numberInSeries">-&nbsp;{{ book.book.numberInSeries }}</span>
-      </p>
-      <p
-        v-if="book?.book?.language"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">Language :</span>
-        {{ book.book.language }}
-      </p>
-      <div
-        v-if="book?.owned || book?.toRead"
-        class="field has-text-left"
-      >
-        <span
-          v-if="book?.owned"
-          class="tag is-info mx-1"
-        >Owned</span>
-        <span
-          v-if="book?.toRead"
-          class="tag is-info"
-        >To read</span>
+          <li
+            v-for="author in book?.book?.authors"
+            :key="author.id"
+          >
+            <router-link
+              class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+              :to="{ name: 'author-detail', params: { authorId: author.id } }"
+            >
+              {{ author.name }}&nbsp;
+            </router-link>
+          </li>
+        </ul>
+        <p v-if="book?.book?.publisher">
+          <span class="font-semibold">Publisher :</span>
+          {{ book.book.publisher }}
+        </p>
+        <p v-if="book?.book?.isbn10">
+          <span class="font-semibold">ISBN10 :</span>
+          {{ book.book.isbn10 }}
+        </p>
+        <p v-if="book?.book?.isbn13">
+          <span class="font-semibold">ISBN13 :</span>
+          {{ book.book.isbn13 }}
+        </p>
+        <p v-if="book?.book?.pageCount">
+          <span class="font-semibold">Pages :</span>
+          {{ book.book.pageCount }}
+        </p>
+        <p v-if="book?.book?.publishedDate">
+          <span class="font-semibold">Published date :</span>
+          {{ formatDateString(book.book.publishedDate) }}
+        </p>
+        <p v-if="book?.book?.series">
+          <span class="font-semibold">Series :</span>
+          {{ book.book.series }}&nbsp;
+          <span
+            v-if="book?.book?.numberInSeries"
+          >-&nbsp;{{ book.book.numberInSeries }}</span>
+        </p>
+        <p v-if="book?.book?.language">
+          <span class="font-semibold">Language :</span>
+          {{ book.book.language }}
+        </p>
+        <div v-if="book?.owned || book?.toRead">
+          <span
+            v-if="book?.owned"
+            class="badge badge-info mx-1"
+          >Owned</span>
+          <span
+            v-if="book?.toRead"
+            class="badge badge-info"
+          >To read</span>
+        </div>
       </div>
     </div>
     <div
       v-if="book?.book?.summary"
-      class="column is-three-fifths is-offset-one-quarter content jelu-bordered"
+      class="flex flex-row justify-center mt-4 prose-base dark:prose-invert sm:w-10/12"
     >
-      <p
+      <div
         v-if="book?.book?.summary"
-        class="has-text-left has-text-weight-semibold"
+        class="column is-three-fifths is-offset-one-quarter content jelu-bordered w-11/12 sm:w-9/12 p-2.5"
       >
-        Summary :
-      </p>
-      <p
-        v-if="book?.book?.summary"
-        class="has-text-left"
-        v-html="book.book.summary"
-      />
+        <p
+          v-if="book?.book?.summary"
+          class="font-semibold"
+        >
+          Summary :
+        </p>
+        <p
+          v-if="book?.book?.summary"
+          v-html="book.book.summary"
+        />
+      </div>
     </div>
-    <div
-      class="column is-full is-offset-one-quarter content tags has-text-left has-text-weight-semibold"
-    >
+    <div class="flex flex-row justify-center">
       <span
         v-for="tag in book?.book?.tags"
         :key="tag.id"
-        class="tag is-primary is-light"
+        class="badge badge-primary mt-3 m-0.5 hover:border-secondary hover:border-4"
       >
         <router-link :to="{ name: 'tag-detail', params: { tagId: tag.id } }">{{ tag.name }}&nbsp;</router-link>
       </span>
     </div>
     <div
       v-if="hasExternalLink"
-      class="column is-full is-offset-one-quarter content tags has-text-left has-text-weight-semibold"
+      class="space-x-2"
     >
       <span
         v-if="book?.book.goodreadsId"
-        class="tag is-warning"
+        class="badge badge-warning mt-2 hover:font-bold"
       >
         <a
           :href="'https://www.goodreads.com/book/show/' + book.book.goodreadsId"
@@ -382,7 +369,7 @@ getBook()
       </span>
       <span
         v-if="book?.book.googleId"
-        class="tag is-warning"
+        class="badge badge-warning hover:font-bold"
       >
         <a
           :href="'https://books.google.com/books?id=' + book.book.googleId"
@@ -391,7 +378,7 @@ getBook()
       </span>
       <span
         v-if="book?.book.amazonId"
-        class="tag is-warning"
+        class="badge badge-warning hover:font-bold"
       >
         <a
           :href="'https://www.amazon.com/dp/' + book.book.amazonId"
@@ -400,7 +387,7 @@ getBook()
       </span>
       <span
         v-if="book?.book.librarythingId"
-        class="tag is-warning"
+        class="badge badge-warning hover:font-bold"
       >
         <a
           :href="'https://www.librarything.com/work/' + book.book.librarythingId"
@@ -410,43 +397,65 @@ getBook()
     </div>
     <div
       v-if="book?.personalNotes"
-      class="column is-full is-offset-one-quarter content"
+      class="mt-4"
     >
       <p
         v-if="book?.personalNotes"
-        class="has-text-left has-text-weight-semibold"
+        class="font-semibold"
       >
         Personal Notes :
       </p>
-      <p
-        v-if="book?.personalNotes"
-        class="has-text-left"
-      >
+      <p v-if="book?.personalNotes">
         {{ book.personalNotes }}
       </p>
     </div>
+    <!-- https://tailwindcomponents.com/component/vertical-timeline -->
     <div
       v-if="book?.readingEvents != null && book?.readingEvents?.length > 0"
-      class="column is-full is-offset-one-quarter content"
+      class="mt-4"
     >
       <p
         v-if="book?.readingEvents != null && book?.readingEvents?.length > 0"
-        class="has-text-left has-text-weight-semibold typewriter"
+        class="typewriter text-2xl mb-3"
       >
         Reading events :
       </p>
-      <div class="timeline">
-        <header class="timeline-header">
-          <span class="tag is-medium is-success">Now</span>
-        </header>
+      <div class="flex flex-col md:grid grid-cols-9 mx-auto p-2 text-blue-50">
+        <div class="col-start-5 bg-accent mb-3 p-2 rounded font-semibold">
+          Now
+        </div>
+
         <div
-          v-for="event in sortedEvents"
+          v-for="(event, index) in sortedEvents"
           :key="event.id"
+          class="flex md:contents"
+          :class="{ 'flex-row-reverse': index % 2 === 0 }"
         >
-          <div class="timeline-item">
+          <div
+            v-if="index % 2 === 0"
+            class="bg-accent col-start-1 col-end-5 p-2 rounded my-4 ml-auto shadow-md"
+          >
+            <h3 class="font-semibold">
+              {{ formatDate(event.modificationDate) }}
+            </h3>
+            <p>{{ event.eventType }}</p>
+            <button
+              class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
+              @click="toggleReadingEventModal(event, true)"
+            >
+              <i class="mdi mdi-pencil mdi-18px" />
+            </button>
+          </div>
+          <div
+            v-if="index % 2 === 0"
+            class="col-start-5 col-end-6 md:mx-auto relative mr-10"
+          >
+            <div class="h-full w-6 flex items-center justify-center">
+              <div class="h-full w-1 bg-base-content pointer-events-none" />
+            </div>
             <div
               v-tooltip="{ content: 'Double click to edit.', delay: { show: 5, hide: 2 } }"
-              class="timeline-marker is-icon"
+              class="w-6 h-6 absolute top-1/2 -mt-3 rounded-full shadow"
               :class="eventClass(event)"
               @dblclick="toggleReadingEventModal(event, true)"
             >
@@ -455,26 +464,44 @@ getBook()
                 :class="iconClass(event)"
               />
             </div>
-            <div class="timeline-content">
-              <p class="heading">
-                {{ formatDate(event.modificationDate) }}
-              </p>
-              <div>
-                <p>
-                  {{ event.eventType }}
-                  <span
-                    class="icon is-hidden-tablet"
-                    @click="toggleReadingEventModal(event, true)"
-                  >
-                    <i class="background-on-hover mdi mdi-pencil" />
-                  </span>
-                </p>
-              </div>
+          </div>
+          <div
+            v-if="index % 2 !== 0"
+            class="col-start-5 col-end-6 mr-10 md:mx-auto relative"
+          >
+            <div class="h-full w-6 flex items-center justify-center">
+              <div class="h-full w-1 bg-base-content pointer-events-none" />
+            </div>
+            <div
+              v-tooltip="{ content: 'Double click to edit.', delay: { show: 5, hide: 2 } }"
+              class="w-6 h-6 absolute top-1/2 -mt-3 rounded-full shadow"
+              :class="eventClass(event)"
+              @dblclick="toggleReadingEventModal(event, true)"
+            >
+              <i
+                class="mdi"
+                :class="iconClass(event)"
+              />
             </div>
           </div>
+          <div
+            v-if="index % 2 !== 0"
+            class="bg-accent col-start-6 col-end-10 p-2 rounded my-4 mr-auto shadow-md"
+          >
+            <h3 class="font-semibold">
+              {{ formatDate(event.modificationDate) }}
+            </h3>
+            <p>{{ event.eventType }}</p>
+            <button
+              class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
+              @click="toggleReadingEventModal(event, true)"
+            >
+              <i class="mdi mdi-pencil mdi-18px" />
+            </button>
+          </div>
         </div>
-        <div class="timeline-header">
-          <span class="tag is-medium is-success">Before</span>
+        <div class="col-start-5 bg-accent mt-3 p-2 rounded font-semibold">
+          Before
         </div>
       </div>
     </div>
@@ -482,8 +509,4 @@ getBook()
 </template>
 
 <style lang="scss" scoped>
-.columns {
-  margin-top: 10px;
-}
-
 </style>

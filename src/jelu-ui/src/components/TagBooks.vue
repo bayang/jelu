@@ -170,27 +170,26 @@ getBooks()
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="level">
-    <div class="level-left mobile-level-right">
-      <div class="level-item">
-        <o-button
-          variant="primary"
-          outlined
-          @click="open = !open"
-        >
-          <span class="icon">
-            <i class="mdi mdi-filter-variant" />
-          </span>
-        </o-button>
-      </div>
-    </div>
-    <div class="level-item">
-      <h2 class="title has-text-weight-normal typewriter">
-        Books tagged #{{ tag.name }} :
-      </h2>
-    </div>
+  <div class="flex flex-row justify-between">
+    <o-button
+      variant="success"
+      outlined
+      class="order-last sm:order-first"
+      @click="open = !open"
+    >
+      <span class="icon">
+        <i class="mdi mdi-filter-variant" />
+      </span>
+    </o-button>
+    <h2 class="text-3xl typewriter">
+      <span class="icon">
+        <i class="mdi mdi-bookshelf" />
+      </span>
+      Books tagged #{{ tag.name }} :
+    </h2>
+    <div />
   </div>
-  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
+  <div class="grid grid-cols-2 sm:grid-cols-8 gap-1 is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
     <div
       v-for="book in convertedBooks"
       :key="book.book.id"
@@ -209,14 +208,12 @@ getBooks()
           @dblclick="toggleEdit(book)"
         >
           <template #icon>
-            <o-tooltip
-              label="not in your books"
-              variant="danger"
+            <span
+              v-tooltip="'not in your books'"
+              class="icon text-error"
             >
-              <span class="icon has-text-danger">
-                <i class="mdi mdi-plus-circle mdi-18px" />
-              </span>
-            </o-tooltip>
+              <i class="mdi mdi-plus-circle mdi-18px" />
+            </span>
           </template>
         </book-card>
       </div>

@@ -114,69 +114,66 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="columns  is-centered">
-    <div class="column is-centered is-half">
+  <div class="flex flex-row justify-center">
+    <div class="basis-10/12 sm:basis-1/3">
       <div class="field">
-        <o-field
-          label="Login"
-          class="control"
-        >
-          <o-input
-            v-model="form.login"
-            type="text"
-            value="john"
-            maxlength="50"
-          />
-        </o-field>
+        <label class="label">
+          <span class="label-text font-semibold">Login</span>
+        </label>
+
+        <o-input
+          v-model="form.login"
+          type="text"
+          value="john"
+          maxlength="50"
+          class="input focus:input-accent"
+        />
       </div>
       <div
         v-if="isInitialSetup"
         class="field"
       >
-        <o-field
-          label="Confirm Login"
-          class="control"
-        >
-          <o-input
-            v-model="loginValidation"
-            type="text"
-            value="john"
-            maxlength="50"
-          />
-        </o-field>
+        <label class="label">
+          <span class="label-text font-semibold">Confirm Login</span>
+        </label>
+        <o-input
+          v-model="loginValidation"
+          type="text"
+          value="john"
+          maxlength="50"
+          class="input focus:input-accent"
+        />
       </div>
       <div class="field">
-        <o-field
-          label="Password"
-          class="control"
-        >
-          <o-input
-            v-model="form.password"
-            value="123"
-            type="password"
-            maxlength="30"
-            password-reveal
-            @keyup.enter="submit"
-          />
-        </o-field>
+        <label class="label">
+          <span class="label-text font-semibold">Password</span>
+        </label>
+        <o-input
+          v-model="form.password"
+          value="123"
+          type="password"
+          maxlength="30"
+          password-reveal
+          class="input focus:input-accent"
+          @keyup.enter="submit"
+        />
       </div>
       <div
         v-if="isInitialSetup"
         class="field"
       >
-        <o-field
-          label="Confirm Password"
-          class="control"
-        >
-          <o-input
-            v-model="passwordValidation"
-            value="123"
-            type="password"
-            maxlength="30"
-            password-reveal
-            @keyup.enter="submit"
-          />
-        </o-field>
+        <label class="label">
+          <span class="label-text font-semibold">Confirm Password</span>
+        </label>
+        <o-input
+          v-model="passwordValidation"
+          value="123"
+          type="password"
+          maxlength="30"
+          password-reveal
+          class="input focus:input-accent"
+          @keyup.enter="submit"
+        />
       </div>
       <div class="field">
         <p
@@ -184,7 +181,7 @@ const submit = () => {
           class="control"
         >
           <button
-            class="button is-warning"
+            class="btn btn-warning"
             @click="createInitialUser"
           >
             Create First User
@@ -195,7 +192,7 @@ const submit = () => {
           class="control"
         >
           <button
-            class="button is-primary"
+            class="btn btn-success mt-2"
             @click="logUser"
           >
             Login
@@ -203,21 +200,19 @@ const submit = () => {
         </p>
         <p
           v-if="errorMessage"
-          class="has-text-danger"
+          class="text-error"
         >
           {{ errorMessage }}
         </p>
       </div>
       <progress
         v-if="progress"
-        class="progress is-small is-success mt-5"
-        max="100"
+        class="animate-pulse progress progress-success mt-5"
       />
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-
 
 </style>

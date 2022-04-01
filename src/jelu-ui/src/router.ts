@@ -46,12 +46,6 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
-            path: '/import',
-            component: () => import(/* webpackChunkName: "recommend" */ './components/Imports.vue'),
-            name: 'import',
-            beforeEnter: [isLogged],
-        },
-        {
             path: '/to-read',
             component: () => import(/* webpackChunkName: "recommend" */ './components/ToReadList.vue'),
             name: 'to-read',
@@ -87,6 +81,9 @@ const router = createRouter({
             children: [
                 { path : 'me', component: () => import(/* webpackChunkName: "recommend" */ './components/ProfilePage.vue')},
                 { path : 'admin/authors', component: () => import(/* webpackChunkName: "recommend" */ './components/AdminAuthors.vue')},
+                { path: 'imports', component: () => import(/* webpackChunkName: "recommend" */ './components/Imports.vue')},
+                { path: 'settings', component: () => import(/* webpackChunkName: "recommend" */ './components/UserSettings.vue')},
+
             ]
         },
     ],

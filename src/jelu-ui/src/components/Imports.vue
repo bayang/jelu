@@ -39,16 +39,12 @@ const importFile = async () => {
 </script>
 
 <template>
-  <div class="columns is-centered">
-    <div class="column is-centered is-one-third">
-      <h1 class="title has-text-weight-normal typewriter">
-        Import Csv file
-      </h1>
-    </div>
-  </div>
-  <div class="columns is-multiline is-centered">
-    <div class="column is-9-desktop">
-      <div class="block">
+  <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center columns is-centered">
+    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4">
+      Import Csv file
+    </h1>
+    <div class="w-11/12 sm:w-8/12">
+      <div class="form-control">
         <o-field
           horizontal
           label="Import source : "
@@ -95,6 +91,7 @@ const importFile = async () => {
           <input
             type="file"
             accept=".csv,.tsv"
+            class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-primary hover:file:bg-gray-300"
             @change="handleFileUpload($event)"
           >
           <br>
@@ -102,6 +99,7 @@ const importFile = async () => {
             v-if="uploadPercentage > 0"
             max="100"
             :value.prop="uploadPercentage"
+            class="progress progress-primary"
           />
           <br>
         </o-field>
@@ -110,7 +108,7 @@ const importFile = async () => {
       <div class="field">
         <p class="control">
           <button
-            class="button is-success"
+            class="btn btn-success"
             @click="importFile"
           >
             Import File
@@ -118,7 +116,7 @@ const importFile = async () => {
         </p>
         <p
           v-if="errorMessage"
-          class="has-text-danger"
+          class="text-error"
         >
           {{ errorMessage }}
         </p>

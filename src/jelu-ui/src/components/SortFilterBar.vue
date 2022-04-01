@@ -51,7 +51,7 @@ onMounted(() => {
     :right="false"
     @close="emit('update:open', false)"
   >
-    <div class="section p-5">
+    <div class="p-5">
       <div class="field">
         <label class="label">Sort order : </label>
         <o-radio

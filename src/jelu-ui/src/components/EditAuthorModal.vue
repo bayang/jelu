@@ -108,17 +108,16 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
   <section class="author-modal">
     <div
       v-if="currentPhase == FORM"
-      class="author-modal-body"
     >
       <div>
         <div>
-          <h1 class="title has-text-weight-normal typewriter">
+          <h1 class="text-2xl typewriter">
             Edit author
           </h1>
         </div>
       </div>
-      <div>
-        <div class="field">
+      <div class="form-control">
+        <div class="field pb-2">
           <o-field
             label="Name"
           >
@@ -126,10 +125,11 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               v-model="currentAuthor.name"
               maxlength="1000"
               name="name"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Date of birth"
           >
@@ -146,11 +146,12 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               mobile-native="false"
               mobile-modal="false"
               trap-focus
+              class="input focus:input-accent"
               @icon-right-click="currentAuthor.dateOfBirth = undefined"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Date of death"
           >
@@ -167,11 +168,12 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               mobile-native="false"
               mobile-modal="false"
               trap-focus
+              class="input focus:input-accent"
               @icon-right-click="currentAuthor.dateOfDeath = undefined"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Biography"
           >
@@ -179,70 +181,77 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               v-model="currentAuthor.biography"
               maxlength="5000"
               type="textarea"
+              class="textarea focus:textarea-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Official page"
           >
             <o-input
               v-model="currentAuthor.officialPage"
               maxlength="5000"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Wikipedia page"
           >
             <o-input
               v-model="currentAuthor.wikipediaPage"
               maxlength="5000"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Goodreads page"
           >
             <o-input
               v-model="currentAuthor.goodreadsPage"
               maxlength="5000"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Twitter page"
           >
             <o-input
               v-model="currentAuthor.twitterPage"
               maxlength="5000"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Facebook page"
           >
             <o-input
               v-model="currentAuthor.facebookPage"
               maxlength="5000"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Instagram page"
           >
             <o-input
               v-model="currentAuthor.instagramPage"
               maxlength="5000"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             label="Personal notes"
           >
@@ -250,16 +259,18 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               v-model="currentAuthor.notes"
               maxlength="5000"
               type="textarea"
+              class="textarea focus:textarea-accent"
             />
           </o-field>
         </div>
         <div v-if="hasImage">
-          <o-field>
+          <o-field class="pb-6">
             <template #label>
               Actual cover :
               <o-tooltip
                 v-if="!deleteImage"
                 label="Click bin to remove current image and upload another one"
+                multiline
                 position="right"
               >
                 <span class="icon">
@@ -276,30 +287,35 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
                 </span>
               </o-tooltip>
             </template>
-            <figure class="small-cover">
-              <img
-                :src="'/files/' + author.image"
-                :class="deleteImage ? 'altered' : ''"
-                alt="cover image"
-              >
+            <div class="indicator">
               <span
                 v-if="!deleteImage"
-                class="icon overlay-button"
+                class="badge indicator-item indicator-bottom indicator-start"
                 @click="toggleRemoveImage"
               >
                 <i class="mdi mdi-delete" />
               </span>
               <span
                 v-if="deleteImage"
-                class="icon overlay-button"
+                class="badge indicator-item indicator-bottom indicator-start"
                 @click="toggleRemoveImage"
               >
                 <i class="mdi mdi-autorenew" />
               </span>
-            </figure>
+              <figure class="small-cover">
+                <img
+                  :src="'/files/' + author.image"
+                  :class="deleteImage ? 'altered' : ''"
+                  alt="cover image"
+                >
+              </figure>
+            </div>
           </o-field>
         </div>
-        <div v-if="!hasImage || deleteImage">
+        <div
+          v-if="!hasImage || deleteImage"
+          class="py-2"
+        >
           <o-field
             label="Upload image"
           >
@@ -324,6 +340,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               icon-right-clickable
               title="Url must start with http or https"
               placeholder="Url must start with http or https"
+              class="input focus:input-accent"
               @icon-right-click="clearImageField"
             />
           </o-field>
@@ -335,32 +352,34 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <input
               type="file"
               accept="image/*"
+              class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-primary hover:file:bg-gray-300"
               @change="handleFileUpload($event)"
             >
             <br>
             <progress
               max="100"
               :value.prop="uploadPercentage"
+              class="progress progress-primary"
             />
             <br>
           </o-field>
         </div>
-        <div class="mt-2">
+        <div class="mt-2 flex flex-row justify-center space-x-8">
           <button
-            class="button is-primary is-light mr-2"
+            class="btn btn-primary button btn-outline"
             @click="update"
           >
             <span class="icon">
-              <i class="mdi mdi-content-save" />
+              <i class="mdi mdi-content-save mdi-18px" />
             </span>
             <span>Save changes</span>
           </button>
           <button
-            class="button is-info is-light"
+            class="btn btn-info btn-outline"
             @click="currentPhase = SEARCH"
           >
             <span class="icon">
-              <i class="mdi mdi-auto-fix" />
+              <i class="mdi mdi-auto-fix mdi-18px" />
             </span>
             <span>Auto fill</span>
           </button>
@@ -368,17 +387,16 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
       </div>
       <progress
         v-if="progress"
-        class="progress is-small is-success mt-5"
+        class="animate-pulse progress progress-success mt-5"
         max="100"
       />
     </div>
     <div
       v-else-if="currentPhase == SEARCH"
-      class="author-modal-body"
     >
       <div>
         <div>
-          <h1 class="title has-text-weight-normal typewriter">
+          <h1 class="text-2xl typewriter">
             Search
           </h1>
         </div>
@@ -392,12 +410,13 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               v-model="searchlanguage"
               maxlength="4"
               name="language"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="mb-2">
+        <div class="mb-2 flex flex-row justify-center space-x-8 my-4">
           <button
-            class="button is-info is-light mr-2"
+            class="btn btn-info btn-outline"
             @click="search"
           >
             <span class="icon">
@@ -406,7 +425,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <span>Search</span>
           </button>
           <button
-            class="button is-warning is-light"
+            class="btn btn-warning btn-outline"
             @click="currentPhase = FORM"
           >
             <span class="icon">
@@ -420,32 +439,29 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             v-for="res in searchResult.pages"
             :key="res.id"
             v-tooltip="'click to import'"
-            class="box hoverable lighter-background mb-2"
+            class="card card-side box mb-2 shadow-lg shadow-base-300 hover:shadow-2xl hover:border-2 hover:border-accent"
             @click="fillFormWithEntry(res)"
           >
-            <article class="media">
-              <div class="media-left">
-                <figure
-                  v-if="res.thumbnail?.url"
-                  class="small-cover"
-                >
-                  <img
-                    :src="'https:' + res.thumbnail?.url"
-                    :class="deleteImage ? 'altered' : ''"
-                    alt="search thumbnail"
-                  >
-                </figure>
+            <figure
+              v-if="res.thumbnail?.url"
+              class="small-cover"
+            >
+              <img
+                :src="'https:' + res.thumbnail?.url"
+                :class="deleteImage ? 'altered' : ''"
+                alt="search thumbnail"
+              >
+            </figure>
+            <div class="card-body media-content">
+              <h2 class="card-title">
+                {{ res.title }}
+              </h2>
+              <div class="content">
+                <p>
+                  {{ res.description }}
+                </p>
               </div>
-              <div class="media-content">
-                <div class="content">
-                  <p>
-                    <strong>{{ res.title }}</strong>
-                    <br>
-                    {{ res.description }}
-                  </p>
-                </div>
-              </div>
-            </article>
+            </div>
           </div>
         </div>
         <div v-else>
@@ -456,7 +472,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
       </div>
       <progress
         v-if="progress"
-        class="progress is-small is-success mt-5"
+        class="animate-pulse progress progress-success mt-5"
         max="100"
       />
     </div>

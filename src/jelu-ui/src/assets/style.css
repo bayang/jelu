@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '@oruga-ui/oruga/dist/oruga-full-vars.css';
+@import '@oruga-ui/oruga/dist/oruga-full.css';
+
+:root {
+  --jelu_background: #262429;
+  --jelu_background_accent: #262429;
+  --jelu_background_contrast: #f7f5d1;
+
+  --jelu_text_primary : #ffffff;
+  --jelu_text_secondary : #aaaaaa;
+  --jelu_text_accent : #69ea7d;
+
+  --jelu_test : #69ea7d;
+
+  --oruga-checkbox-border-color: theme('colors.primary');
+  --oruga-checkbox-active-background-color: theme('colors.primary');
+  --oruga-checkbox-background-color: theme('colors.neutral');
+
+  --oruga-pagination-link-color: theme('colors.neutral');
+  --oruga-pagination-link-border-color: theme('colors.transparent');
+
+  --oruga-variant-primary: theme('colors.primary');
+  --oruga-variant-success: theme('colors.success');
+  --oruga-variant-danger: theme('colors.error');
+  --oruga-variant-warning: theme('colors.warning');
+  --oruga-variant-info: theme('colors.info');
+
+  --oruga-datepicker-item-selected-background-color: theme('colors.primary');
+
+  --oruga-slider-tick-background: theme('colors.primary');
+
+  --oruga-slider-fill-background: theme('colors.primary');
+
+  --oruga-slider-thumb-radius: 100%;
+
+  --oruga-slider-thumb-background: theme('colors.primary');
+  --oruga-slider-thumb-border: 0px solid transparent;
+  --oruga-tooltip-background-color: theme('colors.primary');
+  --oruga-tooltip-color: theme('colors.primary-content');
+
+  --oruga-switch-active-background-color: theme('colors.primary');
+
+  --oruga-modal-content-background-color: theme('colors.base-100');
+
+  --oruga-modal-content-max-height: calc(100vh - 75px);
+
+  --oruga-steps-marker-color: theme('colors.base-content');
+
+  --oruga-steps-marker-background: theme('colors.base-100');
+
+
+}
+
+/* oruga customization with daisyui */
+
+.o-btn.o-btn--success.o-btn--outlined-success {
+  @apply btn btn-success;
+}
+
+.o-side__content.o-side__content--fixed {
+  @apply bg-base-100;
+}
+
+.o-radio .o-radio__check{
+  @apply radio radio-sm radio-primary bg-none;
+  
+}
+
+.o-radio__check--checked {
+  @apply radio radio-primary radio-sm bg-none;
+}
+
+.o-chk__check {
+  @apply bg-none;
+}
+
+.o-pag__link {
+  @apply btn text-neutral-content !important;
+}
+
+.o-pag__link.o-pag__link--current {
+  @apply btn btn-active bg-primary text-primary-content !important;
+}
+
+.o-pag__ellipsis {
+  @apply btn btn-disabled;
+}
+
+.o-ctrl-sel {
+  @apply bg-white;
+}
+
+.o-field.o-field--horizontal .o-field__horizontal-label .o-field__label {
+  @apply text-base-content;
+}
+
+.o-field .o-field__label {
+  @apply text-base-content;
+}
+
+.o-input.o-inputit__input {
+  @apply w-fit sm:w-full;
+}
+
+.o-steps__title {
+  @apply bg-base-100 text-base-content !important;
+}
+
+/* end oruga customization with daisyui */
+
+.swal2-container {
+  @apply w-11/12 sm:w-fit sm:fixed sm:inset-x-1/3;
+}
+
+.swal2-container .swal2-popup.swal2-modal {
+  @apply bg-base-300 !important;
+}
+
+.bar {
+    background-color: var(--jelu_background_accent);
+    height: 5px;
+    width: 100%;
+    margin-top: 3px;
+    margin-bottom: 10px;
+}
+
+
+@font-face {
+    font-family: 'AnotherTypewriter';
+    font-style: normal;
+    font-display: swap;
+    src: url('./atwriter.ttf') format('truetype');
+    
+  }
+
+.typewriter {
+    /* // font-family: $typewriter-font; */
+    font-family: AnotherTypewriter;
+}
+
+.edit-modal {
+    margin: 30px;
+}
+
+.event-modal {
+  margin: 30px;
+}
+
+.author-modal {
+  @apply m-2 sm:p-5;
+  width: min(600px, 90vw);
+}
+
+.small-cover {
+    @apply w-28;
+  }
+  
+  .small-cover img {
+    @apply w-28 relative;
+  }
+
+  .altered {
+    filter: blur(4px) invert(38%);
+    -webkit-filter: blur(4px) invert(38%);
+    -moz-filter: blur(4px) invert(38%);
+  }
+
+
+/* // book detail */
+
+.jelu-bordered {
+  @apply border-2 rounded-none border-accent;
+    -webkit-box-shadow: 10px 10px 10px 0px var(--jelu_background); 
+    box-shadow: 10px 10px 10px 0px var(--jelu_background);
+  }
+
+
+/* dashboard sidebar customizing */
+
+.sidebar {
+  @apply h-fit !important;
+}
+
+.sidebar-header {
+  @apply bg-base-100 text-base-content !important;
+}
+
+.sidebar-content {
+   @apply bg-base-100 !important;
+}
+
+.sidebar-content ul li a {
+  @apply bg-base-100 rounded-lg text-base-content hover:bg-accent/50 !important;
+}
+
+/* end dashboard sidebar */
+
+
+.jelu-authorinput .o-inputit__item {
+  @apply bg-success rounded my-1;
+}
+
+.jelu-taginput .o-inputit__item {
+  @apply bg-warning rounded text-warning-content my-1;
+}

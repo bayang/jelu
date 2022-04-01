@@ -10,7 +10,7 @@ import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { Tag } from "../model/Tag";
 
-const props = defineProps<{ bookId: string, book: UserBook|null, canAddEvent: boolean }>()
+const props = defineProps<{ bookId: string, book: UserBook | null, canAddEvent: boolean }>()
 const oruga = useProgrammatic();
 const emit = defineEmits(['close']);
 
@@ -22,9 +22,9 @@ let deleteImage: Ref<boolean> = ref(false)
 
 const progress: Ref<boolean> = ref(false)
 
-const publishedDate = ref(new Date(userbook.value.book.publishedDate ? userbook.value.book.publishedDate: ""))
+const publishedDate = ref(new Date(userbook.value.book.publishedDate ? userbook.value.book.publishedDate : ""))
 
-function copyInput(book: UserBook|null): any {
+function copyInput(book: UserBook | null): any {
   if (book == null) {
     return {}
   }
@@ -49,17 +49,17 @@ const uploadPercentage = ref(0);
 const errorMessage = ref("");
 const datepicker = ref(null)
 const ownedDisplay = computed(() => {
-    if (userbook.value.owned) {
-      return "Owned"
-    }
-    return ""
-  })
+  if (userbook.value.owned) {
+    return "Owned"
+  }
+  return ""
+})
 const toReadDisplay = computed(() => {
-    if (userbook.value.toRead) {
-      return "Book will be added to to-read list"
-    }
-    return ""
-  })
+  if (userbook.value.toRead) {
+    return "Book will be added to to-read list"
+  }
+  return ""
+})
 
 const importBook = () => {
   console.log("import")
@@ -71,44 +71,43 @@ const importBook = () => {
   if (StringUtils.isNotBlank(imageUrl.value)) {
     userbook.value.book.image = imageUrl.value
   }
-  
-      console.log(`push book ` + userbook.value);
-      console.log(userbook.value);
-      let promise: Promise<UserBook>
-      progress.value = true
-      // no id on userbook -> we have a book and save the userbook
-      if (StringUtils.isBlank(userbook.value.id)) {
-        promise = dataService.saveUserBookImage(
-        userbook.value,
-        file.value,
-        (event: { loaded: number; total: number }) => {
-          let percent = Math.round((100 * event.loaded) / event.total);
-          console.log("percent " + percent);
-          uploadPercentage.value = percent;
-        }
-      )
+
+  console.log(`push book ` + userbook.value);
+  console.log(userbook.value);
+  let promise: Promise<UserBook>
+  progress.value = true
+  // no id on userbook -> we have a book and save the userbook
+  if (StringUtils.isBlank(userbook.value.id)) {
+    promise = dataService.saveUserBookImage(
+      userbook.value,
+      file.value,
+      (event: { loaded: number; total: number }) => {
+        let percent = Math.round((100 * event.loaded) / event.total);
+        console.log("percent " + percent);
+        uploadPercentage.value = percent;
       }
-      // just update the existing userbook
-      else {
-        promise = dataService.updateUserBookImage(
-        userbook.value,
-        file.value,
-        (event: { loaded: number; total: number }) => {
-          let percent = Math.round((100 * event.loaded) / event.total);
-          console.log("percent " + percent);
-          uploadPercentage.value = percent;
-        }
-      )
+    )
+  }
+  // just update the existing userbook
+  else {
+    promise = dataService.updateUserBookImage(
+      userbook.value,
+      file.value,
+      (event: { loaded: number; total: number }) => {
+        let percent = Math.round((100 * event.loaded) / event.total);
+        console.log("percent " + percent);
+        uploadPercentage.value = percent;
       }
-      promise
-      .then(res => 
-        {
-          console.log(`update book ${res.book.title}`);
-          progress.value = false
-          ObjectUtils.toast(oruga.oruga, "success", `Book ${res.book.title} updated !`, 4000);
-          emit('close')
-      })
-    .catch (err => {
+    )
+  }
+  promise
+    .then(res => {
+      console.log(`update book ${res.book.title}`);
+      progress.value = false
+      ObjectUtils.toast(oruga.oruga, "success", `Book ${res.book.title} updated !`, 4000);
+      emit('close')
+    })
+    .catch(err => {
       progress.value = false
       ObjectUtils.toast(oruga.oruga, "danger", `Error ` + err.message, 4000);
     })
@@ -126,7 +125,7 @@ function getFilteredTags(text: string) {
 
 const clearDatePicker = () => {
   // close datepicker on reset
-    userbook.value.book.publishedDate = null;
+  userbook.value.book.publishedDate = null;
 };
 
 function itemAdded() {
@@ -134,12 +133,12 @@ function itemAdded() {
   console.log(userbook.value.book.authors)
 }
 
-function beforeAdd(item: Author|string) {
+function beforeAdd(item: Author | string) {
   let shouldAdd = true
   if (item instanceof Object) {
     userbook.value.book?.authors?.forEach(author => {
       console.log(`author ${author.name}`)
-      if(author.name === item.name) {
+      if (author.name === item.name) {
         console.log(`author ${author.name} item ${item.name}`)
         shouldAdd = false;
       }
@@ -148,21 +147,21 @@ function beforeAdd(item: Author|string) {
   else {
     userbook.value.book?.authors?.forEach(author => {
       console.log(`author ${author.name}`)
-      if(author.name === item) {
+      if (author.name === item) {
         console.log(`author ${author.name} item ${item}`)
         shouldAdd = false;
       }
     });
   }
-    return shouldAdd
+  return shouldAdd
 }
 
-function beforeAddTag(item: Tag|string) {
+function beforeAddTag(item: Tag | string) {
   let shouldAdd = true
   if (item instanceof Object) {
     userbook.value.book?.tags?.forEach(tag => {
       console.log(`tag ${tag.name}`)
-      if(tag.name === item.name) {
+      if (tag.name === item.name) {
         console.log(`tag ${tag.name} item ${item.name}`)
         shouldAdd = false;
       }
@@ -171,30 +170,30 @@ function beforeAddTag(item: Tag|string) {
   else {
     userbook.value.book?.tags?.forEach(tag => {
       console.log(`tag ${tag.name}`)
-      if(tag.name === item) {
+      if (tag.name === item) {
         console.log(`tag ${tag.name} item ${item}`)
         shouldAdd = false;
       }
     });
   }
-    return shouldAdd
+  return shouldAdd
 }
 
-function createAuthor(item: Author|string) {
+function createAuthor(item: Author | string) {
   if (item instanceof Object) {
     return item
   }
   return {
-    "name" : item
+    "name": item
   }
 }
 
-function createTag(item: Tag|string) {
+function createTag(item: Tag | string) {
   if (item instanceof Object) {
     return item
   }
   return {
-    "name" : item
+    "name": item
   }
 }
 
@@ -206,18 +205,21 @@ function toggleRemoveImage() {
 
 <template>
   <section class="edit-modal">
-    <div class="columns is-centered is-multiline">
-      <div class="column is-centered is-full">
-        <div class="field">
+    <div class="">
+      <div class="form-control">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Title"
           >
-            <o-input v-model="userbook.book.title" />
+            <o-input
+              v-model="userbook.book.title"
+              class="input focus:input-accent"
+            />
           </o-field>
         </div>
 
-        <div class="field jelu-authorinput">
+        <div class="field jelu-authorinput pb-2">
           <o-field
             horizontal
             label="Authors"
@@ -240,7 +242,7 @@ function toggleRemoveImage() {
             />
           </o-field>
         </div>
-        <div class="field jelu-taginput">
+        <div class="field jelu-taginput pb-2">
           <o-field
             horizontal
             label="Tags"
@@ -262,7 +264,7 @@ function toggleRemoveImage() {
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Summary"
@@ -271,6 +273,7 @@ function toggleRemoveImage() {
               v-model="userbook.book.summary"
               maxlength="50000"
               type="textarea"
+              class="textarea focus:textarea-accent"
             />
           </o-field>
         </div>
@@ -283,11 +286,13 @@ function toggleRemoveImage() {
               v-model="userbook.book.isbn10"
               name="isbn10"
               placeholder="isbn10"
+              class="input focus:input-accent"
             />
             <o-input
               v-model="userbook.book.isbn13"
               name="isbn13"
               placeholder="isbn13"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
@@ -300,33 +305,40 @@ function toggleRemoveImage() {
               v-model="userbook.book.goodreadsId"
               name="goodreadsId"
               placeholder="goodreadsId"
+              class="input focus:input-accent"
             />
             <o-input
               v-model="userbook.book.googleId"
               name="googleId"
               placeholder="googleId"
+              class="input focus:input-accent"
             />
             <o-input
               v-model="userbook.book.amazonId"
               name="amazonId"
               placeholder="amazonId"
+              class="input focus:input-accent"
             />
             <o-input
               v-model="userbook.book.librarythingId"
               name="librarythingId"
               placeholder="librarythingId"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Publisher"
           >
-            <o-input v-model="userbook.book.publisher" />
+            <o-input 
+              v-model="userbook.book.publisher" 
+              class="input focus:input-accent"
+            />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Published date"
@@ -342,11 +354,12 @@ function toggleRemoveImage() {
               icon-right="close"
               icon-right-clickable="true"
               trap-focus
+              class="input focus:input-accent"
               @icon-right-click="clearDatePicker"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Page count"
@@ -355,15 +368,19 @@ function toggleRemoveImage() {
               v-model="userbook.book.pageCount"
               type="number"
               min="0"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Language"
           >
-            <o-input v-model="userbook.book.language" />
+            <o-input 
+              v-model="userbook.book.language" 
+              class="input focus:input-accent"
+            />
           </o-field>
         </div>
         <div class="field">
@@ -371,12 +388,16 @@ function toggleRemoveImage() {
             horizontal
             label="Series"
           >
-            <o-input v-model="userbook.book.series" />
+            <o-input 
+              v-model="userbook.book.series" 
+              class="input focus:input-accent"
+            />
             <o-input
               v-model="userbook.book.numberInSeries"
               type="number"
               min="0"
               step="0.1"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
@@ -418,7 +439,7 @@ function toggleRemoveImage() {
             </o-radio>
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Personal notes"
@@ -427,10 +448,11 @@ function toggleRemoveImage() {
               v-model="userbook.personalNotes"
               maxlength="200"
               type="textarea"
+              class="textarea focus:textarea-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Owned"
@@ -440,7 +462,7 @@ function toggleRemoveImage() {
             </o-checkbox>
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="To read ?"
@@ -450,7 +472,7 @@ function toggleRemoveImage() {
             </o-checkbox>
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
             horizontal
             label="Percent read"
@@ -463,7 +485,10 @@ function toggleRemoveImage() {
           </o-field>
         </div>
         <div v-if="hasImage">
-          <o-field horizontal>
+          <o-field
+            horizontal
+            class=" pb-6"
+          >
             <template #label>
               Actual cover :
               <o-tooltip
@@ -472,7 +497,8 @@ function toggleRemoveImage() {
                 position="right"
               >
                 <span class="icon">
-                  <i class="mdi mdi-information-outline" /> </span>
+                  <i class="mdi mdi-information-outline" />
+                </span>
               </o-tooltip>
               <o-tooltip
                 v-if="deleteImage"
@@ -480,31 +506,39 @@ function toggleRemoveImage() {
                 position="right"
               >
                 <span class="icon">
-                  <i class="mdi mdi-information-outline" /> </span>
+                  <i class="mdi mdi-information-outline" />
+                </span>
               </o-tooltip>
             </template>
-            <figure class="small-cover">
-              <img
-                :src="'/files/' + userbook.book.image"
-                :class="deleteImage ? 'altered' : ''"
-                alt="cover image"
-              >
+            <div class="indicator">
               <span
                 v-if="!deleteImage"
-                class="icon overlay-button"
+                class="badge indicator-item indicator-bottom indicator-start"
                 @click="toggleRemoveImage"
               >
-                <i class="mdi mdi-delete" /> </span>  
+                <i class="mdi mdi-delete" />
+              </span>
               <span
                 v-if="deleteImage"
-                class="icon overlay-button"
+                class="badge indicator-item indicator-bottom indicator-start"
                 @click="toggleRemoveImage"
               >
-                <i class="mdi mdi-autorenew" /> </span>
-            </figure>
+                <i class="mdi mdi-autorenew" />
+              </span>
+              <figure class="small-cover">
+                <img
+                  :src="'/files/' + userbook.book.image"
+                  :class="deleteImage ? 'altered' : ''"
+                  alt="cover image"
+                >
+              </figure>
+            </div>
           </o-field>
         </div>
-        <div v-if="!hasImage || deleteImage">
+        <div
+          v-if="!hasImage || deleteImage"
+          class=" pt-2"
+        >
           <o-field
             horizontal
             label="Upload book cover"
@@ -522,6 +556,7 @@ function toggleRemoveImage() {
             v-if="isSwitchedCustom == 'Upload from the web'"
             horizontal
             label="Enter image adress"
+            class="pb-2"
           >
             <o-input
               v-model="imageUrl"
@@ -531,6 +566,7 @@ function toggleRemoveImage() {
               icon-right-clickable
               title="Url must start with http or https"
               placeholder="Url must start with http or https"
+              class="input focus:input-accent"
               @icon-right-click="clearImageField"
             />
           </o-field>
@@ -543,34 +579,36 @@ function toggleRemoveImage() {
             <input
               type="file"
               accept="image/*"
+              class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-primary hover:file:bg-gray-300"
               @change="handleFileUpload($event)"
             >
             <br>
             <progress
               max="100"
               :value.prop="uploadPercentage"
+              class="progress progress-primary"
             />
             <br>
           </o-field>
         </div>
       </div>
-      <div class="column is-centered is-one-fifth">
+      <div class="column is-centered is-one-fifth flex flex-row justify-center pt-6">
         <button
-          class="button is-primary"
+          class="btn btn-primary"
           @click="importBook"
         >
           Save changes
         </button>
         <p
           v-if="errorMessage"
-          class="has-text-danger"
+          class="text-error"
         >
           {{ errorMessage }}
         </p>
       </div>
       <progress
         v-if="progress"
-        class="progress is-small is-success mt-3"
+        class="animate-pulse progress progress-success mt-5"
         max="100"
       />
     </div>
@@ -578,5 +616,4 @@ function toggleRemoveImage() {
 </template>
 
 <style lang="scss">
-
 </style>

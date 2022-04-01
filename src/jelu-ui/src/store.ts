@@ -117,6 +117,15 @@ const store = createStore<State>({
     },
     getSettings(state): ServerSettings {
       return state.serverSettings
+    },
+    getMetadataFetchEnabled(state): boolean {
+      return state.serverSettings.metadataFetchEnabled
+    },
+    getLogged(state): boolean {
+      return state.isLogged
+    },
+    getAppVersion(state): string {
+      return state.serverSettings.appVersion
     }
   }, 
   plugins : [createLogger()],

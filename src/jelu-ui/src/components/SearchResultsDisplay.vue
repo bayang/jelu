@@ -217,35 +217,31 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
     </template>
   </sort-filter-bar-vue>
   <progress
-            v-if="progress"
-            class="progress is-small is-success"
-            max="100"
-          />
-  <div class="level">
-    <div class="level-left mobile-level-right">
-      <div class="level-item">
-        <o-button
-          variant="primary"
-          outlined
-          @click="open = !open"
-        >
-          <span class="icon">
-            <i class="mdi mdi-filter-variant" />
-          </span>
-        </o-button>
-      </div>
-    </div>
-    <div class="level-item">
-      <o-checkbox v-model="advancedMode">
-        Advanced search
-      </o-checkbox>
-    </div>
+    v-if="progress"
+    class="animate-pulse progress progress-success"
+    max="100"
+  />
+  <div class="flex flex-row sm:justify-between justify-center justify-items-center w-11/12">
+    <o-button
+      variant="success"
+      outlined
+      class="order-last sm:order-first"
+      @click="open = !open"
+    >
+      <span class="icon">
+        <i class="mdi mdi-filter-variant" />
+      </span>
+    </o-button>
+    <o-checkbox v-model="advancedMode">
+      Advanced search
+    </o-checkbox>
+    <div />
   </div>
   <div
     v-if="!advancedMode"
-    class="columns is-centered is-multiline"
+    class="flex flex-row justify-center justify-items-center"
   >
-    <div class="column is-4">
+    <div class="basis-10/12 sm:basis-1/3">
       <o-field>
         <o-input
           v-model="queryTerm"
@@ -261,9 +257,9 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
   </div>
   <div
     v-else
-    class="columns is-centered is-multiline"
+    class="grid grid-cols-1 sm:grid-cols-6"
   >
-    <div class="column is-8 is-offset-4-desktop">
+    <div class="sm:col-span-4 sm:col-start-3">
       <o-field
         group-multiline
         class="tablet-up"
@@ -311,28 +307,37 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
         />
       </o-field>
     </div>
-    <div class="column is-full is-offset-8-desktop">
-      <div class="tags has-addons">
+    <div class="sm:col-span-4 sm:col-start-2 mt-5">
+      <div class="tags has-addons inline-flex">
         <div
           v-for="[field, term] in query"
           :key="field"
         >
-          <span class="tag is-success">{{ field }}</span>
-          <span class="tag is-white">{{ term }}
-            <button
-              class="delete is-small"
-              @click="removeFromQuery(field)"
-            />
+          <span class="">{{ field }}:
+            <span class="badge badge-info">{{ term }}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                class="inline-block w-4 h-4 stroke-current cursor-pointer"
+                @click="removeFromQuery(field)"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              /></svg>
+            </span>
           </span>
         </div>
       </div>
     </div>
   </div>
-  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
+  <div class="grid grid-cols-2 sm:grid-cols-8 gap-1 mt-4">
     <div
       v-for="book in convertedBooks"
       :key="book.book.id"
-      class="books-grid-item my-2"
+      class="m-1"
     >
       <router-link
         v-if="book.book.userBookId != undefined"
@@ -347,14 +352,12 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
           @dblclick="toggleEdit(book)"
         >
           <template #icon>
-            <o-tooltip
-              label="not in your books"
-              variant="danger"
+            <span
+              v-tooltip="'not in your books'"
+              class="icon text-error"
             >
-              <span class="icon has-text-danger">
-                <i class="mdi mdi-plus-circle mdi-18px" />
-              </span>
-            </o-tooltip>
+              <i class="mdi mdi-plus-circle mdi-18px" />
+            </span>
           </template>
         </book-card>
       </div>
@@ -370,6 +373,5 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
 </template>
 
 <style lang="scss" scoped>
-
 
 </style>

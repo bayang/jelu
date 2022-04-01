@@ -54,9 +54,9 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
 
 <template>
   <section class="edit-modal">
-    <div class="columns is-centered is-multiline">
-      <div class="column is-centered is-two-fifths">
-        <h1 class="title has-text-weight-normal typewriter">
+    <div class="grid justify-center justify-items-center columns is-centered is-multiline">
+      <div class="mb-2">
+        <h1 class="text-2xl title has-text-weight-normal typewriter">
           Import book
         </h1>
       </div>
@@ -64,35 +64,38 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         v-if="displayForm"
         class="column is-centered is-full"
       >
-        <div class="field">
+        <div class="field mb-2">
           <o-field
             horizontal
             label="Isbn"
           >
             <o-input
               v-model="form.isbn"
+              class="input focus:input-accent"
               @keyup.enter="fetchMetadata"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-2">
           <o-field
             horizontal
             label="Title"
           >
             <o-input
               v-model="form.title"
+              class="input focus:input-accent"
               @keyup.enter="fetchMetadata"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Authors"
           >
             <o-input
               v-model="form.authors"
+              class="input focus:input-accent"
               @keyup.enter="fetchMetadata"
             />
           </o-field>
@@ -100,13 +103,12 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
       </div>
       <div
         v-if="displayForm"
-        class="column is-centered is-one-fifth"
       >
         <div class="field">
-          <p class="control">
+          <p class="">
             <button
               :disabled="!isValid"
-              class="button is-success"
+              class="btn btn-success"
               @click="fetchMetadata"
             >
               Fetch book
@@ -114,7 +116,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
           </p>
           <p
             v-if="errorMessage"
-            class="has-text-danger"
+            class="text-error"
           >
             {{ errorMessage }}
           </p>
@@ -122,19 +124,18 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
       </div>
       <div
         v-if="displayForm"
-        class="column is-centered is-full"
       >
         <progress
           v-if="progress"
-          class="progress is-small is-success"
+          class="animate-pulse progress progress-success mt-5"
           max="100"
         />
       </div>
     </div>
-    <div class="columns is-centered is-multiline">
+    <div class="grid grid-cols-5 justify-center justify-items-center justify-self-center">
       <div
         v-if="!displayForm"
-        class="column is-one-fifth"
+        class="col-span-1 mr-3"
       >
         <figure>
           <img
@@ -145,23 +146,21 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
       </div>
       <div
         v-if="!displayForm"
-        class="column is-four-fifths"
+        class="col-span-4"
       >
         <p
           v-if="metadata?.title"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Title : </span>{{ metadata.title }}
+          <span class="font-semibold">Title : </span>{{ metadata.title }}
         </p>
         <p
           v-if="metadata?.authors != null && metadata?.authors?.length > 0"
-          class="has-text-left"
         >
-          <span class="has-text-weight-semibold">Authors : </span>
+          <span class="font-semibold">Authors : </span>
         </p>
         <ul
           v-if="metadata?.authors != null && metadata?.authors?.length > 0"
-          class="has-text-left"
         >
           <li
             v-for="author in metadata?.authors"
@@ -172,113 +171,107 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         </ul>
         <p
           v-if="metadata?.publisher"
-          class="has-text-left"
+          class="my-2"
         >
-          <span class="has-text-weight-semibold">Publisher : </span>{{ metadata.publisher }}
+          <span class="font-semibold">Publisher : </span>{{ metadata.publisher }}
         </p>
         <p
           v-if="metadata?.isbn10"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Isbn10 : </span>{{ metadata.isbn10 }}
+          <span class="font-semibold">Isbn10 : </span>{{ metadata.isbn10 }}
         </p>
         <p
           v-if="metadata?.isbn13"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Isbn13 : </span>{{ metadata.isbn13 }}
+          <span class="font-semibold">Isbn13 : </span>{{ metadata.isbn13 }}
         </p>
         <p
           v-if="metadata?.pageCount"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Pages : </span>{{ metadata.pageCount }}
+          <span class="font-semibold">Pages : </span>{{ metadata.pageCount }}
         </p>
         <p
           v-if="metadata?.publishedDate"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Published date : </span>{{ formatDateString(metadata.publishedDate) }}
+          <span class="font-semibold">Published date : </span>{{ formatDateString(metadata.publishedDate) }}
         </p>
         <p
           v-if="metadata?.series"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Series : </span>{{ metadata.series }}
+          <span class="font-semibold">Series : </span>{{ metadata.series }}
         </p>
         <p
           v-if="metadata?.numberInSeries"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold"># in series : </span>{{ metadata.numberInSeries }}
+          <span class="font-semibold"># in series : </span>{{ metadata.numberInSeries }}
         </p>
         <p
           v-if="metadata?.language"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Language : </span>{{ metadata.language }}
+          <span class="font-semibold">Language : </span>{{ metadata.language }}
         </p>
         <p
           v-if="metadata?.goodreadsId"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Goodreads id : </span>{{ metadata.goodreadsId }}
+          <span class="font-semibold">Goodreads id : </span>{{ metadata.goodreadsId }}
         </p>
         <p
           v-if="metadata?.googleId"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Google id : </span>{{ metadata.googleId }}
+          <span class="font-semibold">Google id : </span>{{ metadata.googleId }}
         </p>
         <p
           v-if="metadata?.amazonId"
-          class="has-text-left"
+          class="mb-2"
         >
-          <span class="has-text-weight-semibold">Amazon id : </span>{{ metadata.amazonId }}
+          <span class="font-semibold">Amazon id : </span>{{ metadata.amazonId }}
         </p>
         <p
           v-if="metadata?.tags != null && metadata?.tags?.length > 0"
-          class="has-text-left"
         >
-          <span class="has-text-weight-semibold">Tags : </span>
+          <span class="font-semibold">Tags : </span>
         </p>
         <p v-if="metadata?.tags != null && metadata?.tags?.length > 0">
           <span
             v-for="tag in metadata?.tags"
             :key="tag"
-            class="tag is-primary is-light"
+            class="badge badge-accent badge-outline font-semibold border-2"
           >{{ tag }}&nbsp;</span>
         </p>
         <p
           v-if="metadata?.summary"
-          class="has-text-left"
+          class="my-2"
         >
-          <span class="has-text-weight-semibold">Summary : </span>{{ metadata.summary }}
+          <span class="font-semibold">Summary : </span>{{ metadata.summary }}
         </p>
       </div>
       <div
         v-if="!displayForm"
-        class="column is-one-fifth"
+        class="col-span-5 space-x-5 mt-3"
       >
         <button
-          class="button is-light is-primary"
+          class="btn btn-primary"
           @click="importData"
         >
           <span class="icon">
-            <i class="mdi mdi-check" />
+            <i class="mdi mdi-check mdi-18px" />
           </span><span>Import</span>
         </button>
-      </div>
-      <div
-        v-if="!displayForm"
-        class="column is-one-fifth is-offset-one-fifth"
-      >
         <button
-          class="button is-light is-warning"
+          class="btn btn-warning"
           @click="discard"
         >
           <span class="icon">
-            <i class="mdi mdi-cancel" />
+            <i class="mdi mdi-cancel mdi-18px" />
           </span><span>Discard</span>
         </button>
       </div>

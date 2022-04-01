@@ -429,40 +429,38 @@ let displayDatepicker = computed(() => {
 
 <template>
   <section>
-    <div class="columns is-multiline is-centered">
-      <div class="column is-centered is-offset-one-fifth is-three-fifths">
-        <h1 class="title has-text-weight-normal typewriter">
+    <div class="grid columns is-multiline is-centered">
+      <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12 justify-center justify-items-center justify-self-center column is-centered is-offset-one-fifth is-three-fifths">
+        <div />
+        <h1 class="text-2xl title has-text-weight-normal typewriter">
           Add book
         </h1>
-      </div>
-      <div class="column is-one-fifth">
-        <o-tooltip
-          :label="autoImportPopupContent"
-          multiline
+        <button
+          v-tooltip="autoImportPopupContent"
+          class="btn btn-success button is-success is-light"
+          :disabled="store != null && !store.getters.getMetadataFetchEnabled"
+          @click="toggleModal"
         >
-          <button
-            class="button is-success is-light"
-            :disabled="!store.state.serverSettings.metadataFetchEnabled"
-            @click="toggleModal"
-          >
-            <span class="icon">
-              <i class="mdi mdi-auto-fix" />
-            </span>
-            <span>Auto fill</span>
-          </button>
-        </o-tooltip>
+          <span class="icon">
+            <i class="mdi mdi-auto-fix mdi-18px" />
+          </span>
+          <span>Auto fill</span>
+        </button>
       </div>
-      <div class="column is-two-thirds">
-        <div class="field">
+      <div class="form-control sm:w-8/12 justify-center justify-items-center justify-self-center column is-two-thirds">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Title"
           >
-            <o-input v-model="form.title" />
+            <o-input 
+              v-model="form.title" 
+              class="input focus:input-accent"
+            />
           </o-field>
         </div>
 
-        <div class="field jelu-authorinput">
+        <div class="field jelu-authorinput mb-3">
           <o-field 
             horizontal 
             label="Authors"
@@ -484,7 +482,7 @@ let displayDatepicker = computed(() => {
             />
           </o-field>
         </div>
-        <div class="field jelu-taginput">
+        <div class="field jelu-taginput mb-3">
           <o-field
             horizontal
             label="Tags"
@@ -506,7 +504,7 @@ let displayDatepicker = computed(() => {
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Summary"
@@ -515,10 +513,11 @@ let displayDatepicker = computed(() => {
               v-model="form.summary"
               maxlength="200"
               type="textarea"
+              class="textarea focus:textarea-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="ISBN10"
@@ -529,11 +528,12 @@ let displayDatepicker = computed(() => {
               v-model="form.isbn10"
               name="isbn10"
               placeholder="isbn10"
+              class="input focus:input-accent"
               @blur="validateIsbn10($event.target.value)"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="ISBN13"
@@ -544,6 +544,7 @@ let displayDatepicker = computed(() => {
               v-model="form.isbn13"
               name="isbn13"
               placeholder="isbn13"
+              class="input focus:input-accent"
               @blur="validateIsbn13($event.target.value)"
             />
           </o-field>
@@ -557,33 +558,40 @@ let displayDatepicker = computed(() => {
               v-model="form.googleId"
               name="googleId"
               placeholder="googleId"
+              class="input focus:input-accent"
             />
             <o-input
               v-model="form.goodreadsId"
               name="goodreadsId"
               placeholder="goodreadsId"
+              class="input focus:input-accent"
             />
             <o-input
               v-model="form.amazonId"
               name="amazonId"
               placeholder="amazonId"
+              class="input focus:input-accent"
             />
             <o-input
               v-model="form.librarythingId"
               name="librarythingId"
               placeholder="librarythingId"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Publisher"
           >
-            <o-input v-model="form.publisher" />
+            <o-input
+              v-model="form.publisher"
+              class="input focus:input-accent"
+            />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Published date"
@@ -598,11 +606,12 @@ let displayDatepicker = computed(() => {
               icon-right="close"
               icon-right-clickable="true"
               trap-focus
+              class="input focus:input-accent"
               @icon-right-click="clearDatePicker"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Page count"
@@ -611,10 +620,11 @@ let displayDatepicker = computed(() => {
               v-model="form.pageCount"
               type="number"
               min="0"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Language"
@@ -622,20 +632,25 @@ let displayDatepicker = computed(() => {
             <o-input
               v-model="form.language"
               type="text"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Series"
           >
-            <o-input v-model="form.series" />
+            <o-input
+              v-model="form.series"
+              class="input focus:input-accent"
+            />
             <o-input
               v-model="form.numberInSeries"
               type="number"
               min="0"
               step="0.1"
+              class="input focus:input-accent"
             />
           </o-field>
         </div>
@@ -698,7 +713,7 @@ let displayDatepicker = computed(() => {
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Personal notes"
@@ -707,10 +722,11 @@ let displayDatepicker = computed(() => {
               v-model="form.personalNotes"
               maxlength="200"
               type="textarea"
+              class="textarea focus:textarea-accent"
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-2">
           <o-field
             horizontal
             label="Owned"
@@ -720,7 +736,7 @@ let displayDatepicker = computed(() => {
             </o-checkbox>
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="To read ?"
@@ -730,7 +746,7 @@ let displayDatepicker = computed(() => {
             </o-checkbox>
           </o-field>
         </div>
-        <div class="field">
+        <div class="field mb-3">
           <o-field
             horizontal
             label="Percent read"
@@ -742,7 +758,10 @@ let displayDatepicker = computed(() => {
             />
           </o-field>
         </div>
-        <div v-if="hasImage">
+        <div
+          v-if="hasImage"
+          class="mb-4"
+        >
           <o-field horizontal>
             <template #label>
               Actual cover :
@@ -765,31 +784,35 @@ let displayDatepicker = computed(() => {
                 </span>
               </o-tooltip>
             </template>
-            <figure class="small-cover">
-              <img
-                :src="'/files/' + metadata?.image"
-                :class="deleteImage ? 'altered' : ''"
-                alt="cover image"
-              >
-              <!-- <button v-if="!deleteImage" @click="toggleRemoveImage" class="delete is-large overlay-button"></button> -->
+            <div class="indicator">
               <span
                 v-if="!deleteImage"
-                class="icon overlay-button"
+                class="badge indicator-item indicator-bottom indicator-start"
                 @click="toggleRemoveImage"
               >
                 <i class="mdi mdi-delete" />
               </span>
               <span
                 v-if="deleteImage"
-                class="icon overlay-button"
+                class="badge indicator-item indicator-bottom indicator-start"
                 @click="toggleRemoveImage"
               >
                 <i class="mdi mdi-autorenew" />
               </span>
-            </figure>
+              <figure class="small-cover">
+                <img
+                  :src="'/files/' + metadata?.image"
+                  :class="deleteImage ? 'altered' : ''"
+                  alt="cover image"
+                >
+              </figure>
+            </div>
           </o-field>
         </div>
-        <div v-if="!hasImage || deleteImage">
+        <div
+          v-if="!hasImage || deleteImage"
+          class="mb-4"
+        >
           <o-field
             horizontal
             label="Upload book cover"
@@ -816,6 +839,7 @@ let displayDatepicker = computed(() => {
               icon-right-clickable
               title="Url must start with http or https"
               placeholder="Url must start with http or https"
+              class="input focus:input-accent"
               @icon-right-click="clearImageField"
             />
           </o-field>
@@ -828,34 +852,34 @@ let displayDatepicker = computed(() => {
             <input
               type="file"
               accept="image/*"
+              class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-primary hover:file:bg-gray-300"
               @change="handleFileUpload($event)"
             >
             <br>
             <progress
               max="100"
               :value.prop="uploadPercentage"
+              class="progress progress-primary"
             />
             <br>
           </o-field>
         </div>
 
         <div class="field">
-          <p class="control">
-            <button
-              class="button is-success"
-              @click="importBook"
-            >
-              Import book
-            </button>
-          </p>
+          <button
+            class="btn btn-success mb-3"
+            @click="importBook"
+          >
+            Import book
+          </button>
           <progress
             v-if="progress"
-            class="progress is-small is-success mt-4"
+            class="animate-pulse progress progress-success mt-5"
             max="100"
           />
           <p
             v-if="errorMessage"
-            class="has-text-danger"
+            class="text-error"
           >
             {{ errorMessage }}
           </p>

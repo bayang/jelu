@@ -8,13 +8,13 @@ const props = defineProps<{ book: UserBook }>();
 const eventClass = computed(() => {
   if (props.book.lastReadingEvent) {
     if (props.book.lastReadingEvent === ReadingEventType.FINISHED) {
-      return "is-info";
+      return "badge-info";
     } else if (props.book.lastReadingEvent === ReadingEventType.DROPPED) {
-      return "is-danger";
+      return "badge-error";
     } else if (
       props.book.lastReadingEvent === ReadingEventType.CURRENTLY_READING
     ) {
-      return "is-primary";
+      return "badge-success";
     } else return "";
   }
   return "";
@@ -55,9 +55,9 @@ const showProgressBar = (book: UserBook) => {
 </script>
 
 <template>
-  <div class="card">
-    <div class="card-image">
-      <figure class="image is-3by4">
+  <div class="card card-compact bg-base-100 shadow-2xl shadow-base-300 rounded">
+    <div>
+      <figure>
         <img
           v-if="book.book.image"
           :src="'/files/' + book.book.image"
@@ -65,76 +65,54 @@ const showProgressBar = (book: UserBook) => {
         >
         <img
           v-else
-          src="../assets/placeholder_asset.png"
+          src="../assets/placeholder_asset.jpg"
           alt="cover placeholder"
         >
       </figure>
       <div
         v-if="showProgressBar(book)"
-        class="jelu-progress"
+        class="bg-success absolute h-1.5"
         :style="{ width: book.percentRead + '%' }"
       />
     </div>
-    <header class="card-header">
-      <p
-        v-snip:js="4" 
-        v-tooltip="book.book.title"
-        class="p-3 card-header-title is-capitalized is-family-sans-serif"
+    <div class="card-body">
+      <h2
+        v-snip:js="4"
+        v-tooltip="book.book.title" 
+        class="card-title text-base"
       >
         {{ book.book.title }}
+      </h2>
+      <p
+        v-if="book.book.authors != null && book.book.authors.length > 0"
+        v-snip:js="3"
+      >
+        {{ authorsText }}
       </p>
-    </header>
-    <div class="card-content has-text-dark py-2">
-      <div class="content has-text-left m-0">
-        <p
-          v-if="book.book.authors != null && book.book.authors.length > 0"
-          v-snip:js="3"
-          class="is-inline-block"
-        >
-          {{ authorsText }}
-        </p>
-      </div>
-      <footer class="card-footer">
+      <div class="card-actions justify-end">
+        <span
+          v-if="book.lastReadingEvent"
+          :class="eventClass"
+          class="badge is-capitalized is-family-sans-serif"
+        >{{ eventText }}</span>
         <div>
-          <div
-            v-if="book.lastReadingEvent"
-            class="m-0 tags has-addons "
+          <span
+            v-if="book.owned"
+            v-tooltip="'owned'"
+            class="icon text-info"
           >
-            <span class="tag is-family-sans-serif">Status</span>
-            <span
-              :class="eventClass"
-              class="tag is-capitalized is-family-sans-serif"
-            >{{ eventText }}</span>
-          </div>
-          <div>
-            <o-tooltip
-              v-if="book.owned"
-              label="owned"
-              variant="info"
-            >
-              <span
-                v-if="book.owned"
-                class="icon has-text-info"
-              >
-                <i class="mdi mdi-bookshelf mdi-18px" />
-              </span>
-            </o-tooltip>
-            <o-tooltip
-              v-if="book.toRead"
-              label="in read list"
-              variant="info"
-            >
-              <span
-                v-if="book.toRead"
-                class="icon has-text-info"
-              >
-                <i class="mdi mdi-eye mdi-18px" />
-              </span>
-            </o-tooltip>
-            <slot name="icon" />
-          </div>
+            <i class="mdi mdi-bookshelf mdi-18px" />
+          </span>
+          <span
+            v-if="book.toRead"
+            v-tooltip="'in read list'"
+            class="icon text-info"
+          >
+            <i class="mdi mdi-eye mdi-18px" />
+          </span>
+          <slot name="icon" />
         </div>
-      </footer>
+      </div>
     </div>
   </div>
 </template>

@@ -176,37 +176,33 @@ onMounted(() => {
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="level">
-    <div class="level-left mobile-level-right">
-      <div class="level-item">
-        <o-button
-          variant="primary"
-          outlined
-          @click="open = !open"
-        >
-          <span class="icon">
-            <i class="mdi mdi-filter-variant" />
-          </span>
-        </o-button>
-      </div>
-    </div>
-    <div class="level-item">
-      <h2 class="title has-text-weight-normal typewriter">
-        <span class="icon">
-          <i class="mdi mdi-bookshelf" />
-        </span>
-        &nbsp; My books :
-      </h2>
-    </div>
+  <div class="flex flex-row justify-between">
+    <o-button
+      variant="success"
+      outlined
+      class="order-last sm:order-first"
+      @click="open = !open"
+    >
+      <span class="icon">
+        <i class="mdi mdi-filter-variant" />
+      </span>
+    </o-button>
+    <h2 class="text-3xl typewriter">
+      <span class="icon">
+        <i class="mdi mdi-bookshelf" />
+      </span>
+      &nbsp; My books :
+    </h2>
+    <div />
   </div>
   <div
     v-if="books.length > 0"
-    class="is-flex is-flex-wrap-wrap is-justify-content-center"
+    class="grid grid-cols-2 sm:grid-cols-8 gap-0"
   >
     <div
       v-for="book in books"
       :key="book.id"
-      class="books-grid-item m-1"
+      class="m-1"
     >
       <router-link
         v-if="book.id != undefined"
@@ -242,7 +238,7 @@ label {
   font-weight: bold;
 }
 
-/* fields in slots are shifted to the right and alignment is broken */
+/* fields in side bar slots are shifted to the right and alignment is broken */
 .field {
   margin-left: -8px;
 }

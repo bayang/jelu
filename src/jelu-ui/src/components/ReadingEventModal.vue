@@ -63,18 +63,19 @@ const deleteEvent = () => {
   <section class="event-modal">
     <div
       v-if="props.edit"
-      class="event-modal-body"
     >
       <div>
         <div>
-          <h1 class="title has-text-weight-normal typewriter">
+          <h1 class="typewriter text-2xl">
             Edit event
           </h1>
         </div>
       </div>
       <div>
         <div class="field">
-          <label class="label">Last event type : </label>
+          <label class="label">
+            <span class="label-text font-semibold">Last event type : </span>
+          </label>
           <o-radio
             v-model="currentEvent.eventType"
             native-value="FINISHED"
@@ -95,41 +96,40 @@ const deleteEvent = () => {
           </o-radio>
         </div>
         <div class="field">
-          <o-field
-            label="Event date"
-          >
-            <o-datepicker
-              ref="datepicker"
-              v-model="currentEvent.modificationDate"
-              :show-week-number="false"
-              :locale="undefined"
-              placeholder="Click to select..."
-              :expanded="true"
-              icon="calendar"
-              icon-right="close"
-              icon-right-clickable="true"
-              mobile-native="false"
-              mobile-modal="false"
-              trap-focus
-            />
-          </o-field>
+          <label class="label">
+            <span class="label-text font-semibold">Event date : </span>
+          </label>
+          <o-datepicker
+            ref="datepicker"
+            v-model="currentEvent.modificationDate"
+            :show-week-number="false"
+            :locale="undefined"
+            placeholder="Click to select..."
+            :expanded="true"
+            icon="calendar"
+            icon-right="close"
+            icon-right-clickable="true"
+            mobile-native="false"
+            mobile-modal="false"
+            trap-focus
+          />
         </div>
-        <div>
+        <div class="mt-3">
           <button
-            class="button is-primary is-light mr-2"
+            class="btn btn-secondary mr-2"
             @click="update"
           >
             <span class="icon">
-              <i class="mdi mdi-pencil" />
+              <i class="mdi mdi-pencil mdi-18px" />
             </span>
             <span>Submit</span>
           </button>
           <button
-            class="button is-danger is-light"
+            class="btn btn-error"
             @click="deleteEvent"
           >
             <span class="icon">
-              <i class="mdi mdi-delete" />
+              <i class="mdi mdi-delete mdi-18px" />
             </span>
             <span>Delete</span>
           </button>
@@ -138,18 +138,19 @@ const deleteEvent = () => {
     </div>
     <div
       v-else
-      class="event-modal-body"
     >
       <div>
         <div>
-          <h1 class="title has-text-weight-normal typewriter">
+          <h1 class="typewriter text-2xl">
             Choose event
           </h1>
         </div>
       </div>
       <div>
         <div class="field">
-          <label class="label">Event type : </label>
+          <label class="label">
+            <span class="label-text font-semibold">Event type : </span>
+          </label>
           <o-radio
             v-model="currentCreateEvent.eventType"
             native-value="FINISHED"
@@ -170,32 +171,31 @@ const deleteEvent = () => {
           </o-radio>
         </div>
         <div class="field">
-          <o-field
-            label="Event date"
-          >
-            <o-datepicker
-              ref="datepicker"
-              v-model="currentCreateEvent.eventDate"
-              :show-week-number="false"
-              :locale="undefined"
-              placeholder="Click to select..."
-              :expanded="true"
-              icon="calendar"
-              icon-right="close"
-              icon-right-clickable="true"
-              mobile-native="false"
-              mobile-modal="false"
-              trap-focus
-            />
-          </o-field>
+          <label class="label">
+            <span class="label-text font-semibold">Event date :</span>
+          </label>
+          <o-datepicker
+            ref="datepicker"
+            v-model="currentCreateEvent.eventDate"
+            :show-week-number="false"
+            :locale="undefined"
+            placeholder="Click to select..."
+            :expanded="true"
+            icon="calendar"
+            icon-right="close"
+            icon-right-clickable="true"
+            mobile-native="false"
+            mobile-modal="false"
+            trap-focus
+          />
         </div>
         <div>
           <button
-            class="button is-primary is-light mr-2"
+            class="btn btn-secondary btn-outline mt-3"
             @click="create"
           >
             <span class="icon">
-              <i class="mdi mdi-pencil" />
+              <i class="mdi mdi-pencil mdi-18px" />
             </span>
             <span>Create</span>
           </button>
@@ -203,10 +203,10 @@ const deleteEvent = () => {
       </div>
     </div>
     <progress
-        v-if="progress"
-        class="progress is-small is-success mt-3"
-        max="100"
-      />
+      v-if="progress"
+      class="animate-pulse progress progress-success mt-5"
+      max="100"
+    />
   </section>
 </template>
 

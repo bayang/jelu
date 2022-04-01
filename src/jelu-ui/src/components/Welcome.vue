@@ -20,7 +20,7 @@ const router = useRouter()
 const {oruga} = useProgrammatic();
 
 const isLogged = computed(() => {
-    return store.state.isLogged
+    return store != null && store != undefined && store.getters.getLogged
   })
 
 const showModal: Ref<boolean> = ref(false)
@@ -78,13 +78,13 @@ const search = (searchterm: string) => {
 
 const eventClass = (type: ReadingEventType) => {
     if (type === ReadingEventType.FINISHED) {
-      return "is-info";
+      return "badge-info";
     } else if (type === ReadingEventType.DROPPED) {
-      return "is-danger";
+      return "badge-error";
     } else if (
       type === ReadingEventType.CURRENTLY_READING
     ) {
-      return "is-primary";
+      return "badge-success";
     } else return "";
 };
 
@@ -133,8 +133,8 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
 
 <template>
   <div v-if="isLogged">
-    <div class="columns is-centered">
-      <div class="column is-4">
+    <div class="flex flex-row justify-center">
+      <div class="basis-10/12 sm:basis-1/3">
         <o-field>
           <o-input
             placeholder="Search..."
@@ -142,6 +142,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             icon="magnify"
             icon-clickable 
             icon-pack="mdi"
+            class="input focus:input-accent"
             @focus="visibleAdvanced = true"
             @blur="hideAdvanced"
             @keyup.enter="search($event.target.value)"
@@ -149,7 +150,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
         </o-field>
         <router-link
           v-if="visibleAdvanced"
-          class="is-family-sans-serif is-size-7"
+          class="link-hover font-sans"
           :to="{ name: 'search' }"
         >
           Advanced search
@@ -157,14 +158,14 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
       </div>
     </div>
     <div v-if="hasBooks">
-      <h2 class="title has-text-weight-normal typewriter">
+      <h2 class="typewriter text-3xl py-4">
         Currently reading :
       </h2>
-      <div class="columns is-multiline is-variable is-4 is-centered">
+      <div class="flex flex-row flex-wrap justify-center gap-3">
         <div
           v-for="book in books"
           :key="book.id"
-          class="column is-2 is-8-mobile is-offset-2-mobile"
+          class="sm:basis-1/6 basis-8/12"
         >
           <router-link
             v-if="book.id != undefined"
@@ -172,17 +173,13 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
           >
             <book-card :book="book">
               <template #icon>
-                <o-tooltip
-                  label="Mark read or drop"
-                  variant="info"
+                <span
+                  v-tooltip="'Mark read or drop'"
+                  class="icon has-text-info text-info"
+                  @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
                 >
-                  <span
-                    class="icon has-text-info"
-                    @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
-                  >
-                    <i class="mdi mdi-check-circle mdi-18px" />
-                  </span>
-                </o-tooltip>
+                  <i class="mdi mdi-check-circle mdi-18px" />
+                </span>
               </template>
             </book-card>
           </router-link>
@@ -191,7 +188,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
     </div>
     <!-- logged, no books -->
     <div v-else>
-      <h2 class="title has-text-weight-normal typewriter">
+      <h2 class="text-3xl typewriter">
         Not currently reading anything
       </h2>
       <span class="icon is-large">
@@ -200,23 +197,23 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
     </div>
     <h2
       v-if="events.length > 0"
-      class="title has-text-weight-normal typewriter pt-4"
+      class="text-3xl typewriter py-4"
     >
       recent reading events :
     </h2>
     <div
       v-if="events.length > 0"
-      class="is-flex is-flex-wrap-wrap is-justify-content-center"
+      class="grid grid-cols-2 sm:grid-cols-8 gap-1"
     >
       <div
         v-for="event in events"
         :key="event.id"
-        class="books-grid-item m-1"
+        class="m-1"
       >
         <div>
           <p>
             <span
-              class="tag mb-1"
+              class="badge mb-1"
               :class="eventClass(event.eventType)"
             >{{ event.eventType }}</span>
           </p>
@@ -229,11 +226,11 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
         </div>
       </div>
     </div>
-    <quotes-display />
+    <quotes-display v-if="isLogged" />
   </div>
   <!-- not logged -->
   <div v-else>
-    <p class="is-capitalized">
+    <p class="capitalize">
       Please log in first
     </p>
   </div>

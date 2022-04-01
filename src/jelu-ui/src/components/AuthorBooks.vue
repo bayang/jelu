@@ -197,126 +197,138 @@ getBooks()
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="columns is-multiline box">
-    <div class="column is-full">
-      <div class="level">
-        <div class="level-item">
-          <h2 class="title has-text-weight-normal typewriter">
-            {{ author.name }}
-          </h2>
-          <span
-            class="icon is-medium has-text-light"
-            @click="editAuthor"
-          >
-            <i class="background-on-hover mdi mdi-24px mdi-pencil" />
-          </span>
-        </div>
-        <div class="level-right">
-          <div class="level-item">
-            <a
-              v-if="author.officialPage"
-              :href="author.officialPage"
-              target="_blank"
-            ><i class="mdi mdi-24px mdi-web" /></a>
-            <a
-              v-if="author.wikipediaPage"
-              :href="author.wikipediaPage"
-              target="_blank"
-            ><i class="mdi mdi-24px mdi-wikipedia" /></a>
-            <a
-              v-if="author.goodreadsPage"
-              :href="author.goodreadsPage"
-              target="_blank"
-            ><i class="mdi mdi-24px mdi-goodreads" /></a>
-            <a
-              v-if="author.twitterPage"
-              :href="author.twitterPage"
-              target="_blank"
-            ><i class="mdi mdi-24px mdi-twitter" /></a>
-            <a
-              v-if="author.facebookPage"
-              :href="author.facebookPage"
-              target="_blank"
-            ><i class="mdi mdi-24px mdi-facebook" /></a>
-            <a
-              v-if="author.instagramPage"
-              :href="author.instagramPage"
-              target="_blank"
-            ><i class="mdi mdi-24px mdi-instagram" /></a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="column is-one-fifth is-offset-one-fifth">
-      <figure class="image">
-        <img
-          v-if="author.image"
-          :src="'/files/' + author.image"
-          alt="cover image"
-        >
-        <img
-          v-else
-          src="../assets/placeholder_asset.png"
-          alt="cover placeholder"
-        >
-      </figure>
-    </div>
-    <div class="column is-three-fifths content">
-      <p
-        v-if=" author.biography != null"
-        class="has-text-left"
-      >
-        <span class="has-text-weight-semibold">Biography :</span>
-      </p>
-      <p class="has-text-left" v-html="author.biography" />
-      <p
-        v-if="author.dateOfBirth"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">Birth :</span>
-        {{ formatDate(author.dateOfBirth) }}
-      </p>
-      <p
-        v-if="author.dateOfDeath"
-        class="has-text-left block"
-      >
-        <span class="has-text-weight-semibold">Death :</span>
-        {{ formatDate(author.dateOfDeath) }}
-      </p>
-      <p
-        v-if=" author.notes != null"
-        class="has-text-left"
-      >
-        <span class="has-text-weight-semibold">Additional notes :</span>
-      </p>
-      <p class="has-text-left" v-html="author.notes" />
-    </div>
-  </div>
-  <div class="level">
-    <div class="level-left mobile-level-right">
+  <div class="grid columns is-multiline box">
+    <div class="grid items-center justify-center justify-items-center justify-self-center sm:grid-cols-3 mb-4 sm:w-10/12 column is-full">
+      <div />
       <div class="level-item">
-        <o-button
-          variant="primary"
-          outlined
-          @click="open = !open"
+        <h2 class="text-2xl inline mr-2 title has-text-weight-normal typewriter">
+          {{ author.name }}
+        </h2>
+        <button
+          class="btn btn-circle btn-xs bg-transparent border-0 hover:bg-accent/30"
+          @click="editAuthor"
         >
-          <span class="icon">
-            <i class="mdi mdi-filter-variant" />
-          </span>
-        </o-button>
+          <i class="mdi mdi-24px mdi-pencil" />
+        </button>
+      </div>
+      <div>
+        <a
+          v-if="author.officialPage"
+          :href="author.officialPage"
+          target="_blank"
+          class="link link-accent"
+        ><i class="mdi mdi-24px mdi-web" /></a>
+        <a
+          v-if="author.wikipediaPage"
+          :href="author.wikipediaPage"
+          target="_blank"
+          class="link link-accent"
+        ><i class="mdi mdi-24px mdi-wikipedia" /></a>
+        <a
+          v-if="author.goodreadsPage"
+          :href="author.goodreadsPage"
+          target="_blank"
+          class="link link-accent"
+        ><i class="mdi mdi-24px mdi-goodreads" /></a>
+        <a
+          v-if="author.twitterPage"
+          :href="author.twitterPage"
+          target="_blank"
+          class="link link-accent"
+        ><i class="mdi mdi-24px mdi-twitter" /></a>
+        <a
+          v-if="author.facebookPage"
+          :href="author.facebookPage"
+          target="_blank"
+          class="link link-accent"
+        ><i class="mdi mdi-24px mdi-facebook" /></a>
+        <a
+          v-if="author.instagramPage"
+          :href="author.instagramPage"
+          target="_blank"
+          class="link link-accent"
+        ><i class="mdi mdi-24px mdi-instagram" /></a>
       </div>
     </div>
-    <div class="level-item">
-      <h4 class="subtitle has-text-weight-normal typewriter is-4">
-        Books from {{ author.name }} :
-      </h4>
+    <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-10 column is-one-fifth is-offset-one-fifth">
+      <div class="justify-self-center sm:justify-self-end">
+        <figure class="image">
+          <img
+            v-if="author.image"
+            :src="'/files/' + author.image"
+            alt="cover image"
+            class="max-h-80"
+          >
+          <img
+            v-else
+            src="../assets/placeholer_author.jpg"
+            alt="cover placeholder"
+          >
+        </figure>
+      </div>
+    
+      <div class="column is-three-fifths content text-left w-11/12 sm:w-full justify-self-center sm:justify-self-start">
+        <p
+          v-if=" author.biography != null"
+          class="has-text-left"
+        >
+          <span class="font-semibold">Biography :</span>
+        </p>
+        <p
+          class="has-text-left prose-base"
+          v-html="author.biography"
+        />
+        <p
+          v-if="author.dateOfBirth"
+          class="has-text-left block"
+        >
+          <span class="font-semibold">Birth :</span>
+          {{ formatDate(author.dateOfBirth) }}
+        </p>
+        <p
+          v-if="author.dateOfDeath"
+          class="has-text-left block"
+        >
+          <span class="font-semibold">Death :</span>
+          {{ formatDate(author.dateOfDeath) }}
+        </p>
+        <p
+          v-if=" author.notes != null"
+          class="has-text-left"
+        >
+          <span class="font-semibold">Additional notes :</span>
+        </p>
+        <p
+          class="has-text-left prose-base"
+          v-html="author.notes"
+        />
+      </div>
     </div>
   </div>
-  <div class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
+  <div class="flex flex-row justify-between mt-4">
+    <o-button
+      variant="success"
+      outlined
+      class="order-last sm:order-first"
+      @click="open = !open"
+    >
+      <span class="icon">
+        <i class="mdi mdi-filter-variant" />
+      </span>
+    </o-button>
+    <h2 class="text-xl typewriter">
+      <span class="icon">
+        <i class="mdi mdi-bookshelf" />
+      </span>
+      Books from {{ author.name }} :
+    </h2>
+    <div />
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-8 gap-0 justify-center justify-items-center justify-self-center">
     <div
       v-for="book in convertedBooks"
       :key="book.book.id"
-      class="books-grid-item my-2"
+      class="my-2"
     >
       <router-link
         v-if="book.book.userBookId != null"
@@ -331,14 +343,12 @@ getBooks()
           @dblclick="toggleEdit(book)"
         >
           <template #icon>
-            <o-tooltip
-              label="not in your books"
-              variant="danger"
+            <span
+              v-tooltip="'not in your books'"
+              class="icon text-error"
             >
-              <span class="icon has-text-danger">
-                <i class="mdi mdi-plus-circle mdi-18px" />
-              </span>
-            </o-tooltip>
+              <i class="mdi mdi-plus-circle mdi-18px" />
+            </span>
           </template>
         </book-card>
       </div>
@@ -354,10 +364,5 @@ getBooks()
 </template>
 
 <style lang="scss" scoped>
-
-.columns {
-  margin-top: 10px;
-}
-
 
 </style>

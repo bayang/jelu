@@ -27,18 +27,29 @@ export class ObjectUtils {
     });
   };
 
-  public static toUserBook = (book: Book):UserBook => {
-        const converted =  {
-          book: book
-        } as UserBook
-        // console.log('after')
-        // console.log(converted)
-        return converted
+  public static toUserBook = (book: Book): UserBook => {
+    const converted = {
+      book: book
+    } as UserBook
+    // console.log('after')
+    // console.log(converted)
+    return converted
   }
 
   public static swalMixin = Swal.mixin({
     background: '#404040',
     color: '#ffffff',
+    buttonsStyling: false,
+    customClass: {
+      container: '',
+      htmlContainer: 'mb-3 ml-3',
+      popup: 'p-2 shadow-lg sm:p-3 bg-red-600',
+      title: 'ml-4 font-semibold text-white truncate',
+      input: 'bg-white text-center',
+      confirmButton: 'btn btn-warning font-bold border-b-4 rounded mx-1',
+      cancelButton: 'btn btn-info font-bold border-b-4 rounded mx-1',
+      denyButton: 'btn btn-error font-bold rounded mx-1'
+    }
   })
-  
+
 }

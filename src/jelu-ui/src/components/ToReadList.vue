@@ -142,29 +142,25 @@ const pageleft =  () => {
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="level">
-    <div class="level-left mobile-level-right">
-      <div class="level-item">
-        <o-button
-          variant="primary"
-          outlined
-          @click="open = !open"
-        >
-          <span class="icon">
-            <i class="mdi mdi-filter-variant" />
-          </span>
-        </o-button>
-      </div>
-    </div>
-    <div class="level-item">
-      <h2 class="title has-text-weight-normal typewriter">
-        To Read List :
-      </h2>
-    </div>
+  <div class="flex flex-row justify-between">
+    <o-button
+      variant="success"
+      outlined
+      class="order-last sm:order-first"
+      @click="open = !open"
+    >
+      <span class="icon">
+        <i class="mdi mdi-filter-variant" />
+      </span>
+    </o-button>
+    <h2 class="text-3xl typewriter">
+      To Read List :
+    </h2>
+    <div />
   </div>
   <div
     v-if="books.length > 0"
-    class="is-flex is-flex-wrap-wrap is-justify-content-center"
+    class="is-flex is-flex-wrap-wrap is-justify-content-center grid grid-cols-2 sm:grid-cols-8 gap-0"
   >
     <div
       v-for="book in books"
@@ -180,7 +176,7 @@ const pageleft =  () => {
     </div>
   </div>
   <div v-else>
-    <h2 class="title has-text-weight-normal typewriter">
+    <h2 class="text-3xl typewriter">
       Nothing to read
     </h2>
     <span class="icon is-large">

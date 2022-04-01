@@ -4,19 +4,19 @@ import VTooltipPlugin from 'v-tooltip'
 import VueSnip from 'vue-snip'
 import Oruga from '@oruga-ui/oruga-next'
 import SidebarMenu from 'vuejs-sidebar-menu'
-import 'vuejs-sidebar-menu/dist/vuejs-sidebar-menu.css'
-// import '@oruga-ui/oruga-next/dist/oruga.css'
-
-import { bulmaConfig } from '@oruga-ui/theme-bulma'
-
-import '@oruga-ui/theme-bulma/dist/bulma.css'
-import '@mdi/font/css/materialdesignicons.min.css'
-import 'v-tooltip/dist/v-tooltip.css'
-import 'bulma/bulma.sass'
-import './assets/style.scss'
 import router from './router'
 import store, { key } from './store'
+import VueSplide from '@splidejs/vue-splide';
 
+import './assets/style.css'
+
+import '@oruga-ui/oruga-next/dist/oruga.css'
+import '@oruga-ui/oruga-next/dist/oruga-full-vars.css'
+
+import 'vuejs-sidebar-menu/dist/vuejs-sidebar-menu.css'
+import '@mdi/font/css/materialdesignicons.min.css'
+import 'v-tooltip/dist/v-tooltip.css'
+import '@splidejs/splide/dist/css/splide.min.css';
 
 createApp(App)
     .use(router)
@@ -25,7 +25,7 @@ createApp(App)
     .use(VueSnip)
     .use(Oruga, {
         iconPack: 'mdi',
-        ...bulmaConfig
     })
     .use(SidebarMenu)
+    .use(VueSplide)
     .mount('#app')

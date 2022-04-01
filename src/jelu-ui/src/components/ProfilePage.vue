@@ -1,19 +1,13 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import Avatar from 'vue-avatar-sdh'
 import { useStore } from 'vuex'
 import { key } from '../store'
-import Avatar from 'vue-avatar-sdh'
 
 useTitle('Jelu | User page')
 
 const store = useStore(key)
-const router = useRouter()
-const { oruga } = useProgrammatic();
-
-
 
 onMounted(() => {
   console.log("Component is mounted!");
@@ -23,37 +17,29 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="box">
-    <article class="media">
-      <!-- <figure class="media-left">
-        <p class="image is-128x128">
-          <img src="../assets/placeholder_asset.png">
-        </p>
-      </figure> -->
+  <div class="w-fit">
+    <h1 class="typewriter text-2xl mb-3">
+      Profile :
+    </h1>
+    <div class="card card-side bg-base-100 shadow-2xl">
       <Avatar
-        :username="store.state.user?.login!"
-        class="mr-2"
+        :username="store.getters.getUsername"
+        class="ml-4 mt-8"
       />
-      <div class="media-content">
-        <div class="content">
-          <p>
-            Username : <strong>{{ store.state.user?.login }}</strong>
-            <br>
-            Roles :  <span class="tag is-info">USER</span> &nbsp;<span
-              v-if="store.state.user?.isAdmin"
-              class="tag is-warning"
-            >ADMIN</span>
-          </p>
-        </div>
+      <div class="card-body">
+        <p>
+          Username : <strong>{{ store.getters.getUsername }}</strong>
+          <br>
+          Roles :  <span class="badge badge-info tag is-info">USER</span> &nbsp;<span
+            v-if="store.getters.isAdmin"
+            class="badge badge-warning tag is-warning"
+          >ADMIN</span>
+        </p>
       </div>
-    </article>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-
-.box {
-  text-align: left;
-}
 
 </style>
