@@ -40,7 +40,7 @@ const username = computed(() => {
   return store.getters.getUsername
 })
 const isLogged = computed(() => {
-  return store.state.isLogged
+  return store.getters.getLogged
 })
 
 onMounted(() => {

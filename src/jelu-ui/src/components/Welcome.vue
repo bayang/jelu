@@ -203,12 +203,12 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
       <o-skeleton
         class="justify-self-center basis-44"
         height="250px"
-        animated="true"
+        :animated="true"
       />
       <o-skeleton
         class="justify-self-center basis-44"
         height="250px"
-        animated="true"
+        :animated="true"
       />
     </div>
     <!-- logged, no books -->
@@ -258,17 +258,17 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
       <o-skeleton
         class="justify-self-center basis-36"
         height="250px"
-        animated="true"
+        :animated="true"
       />
       <o-skeleton
         class="justify-self-center basis-36"
         height="250px"
-        animated="true"
+        :animated="true"
       />
       <o-skeleton
         class="justify-self-center basis-36"
         height="250px"
-        animated="true"
+        :animated="true"
       />
     </div>
     <quotes-display v-if="isLogged" />

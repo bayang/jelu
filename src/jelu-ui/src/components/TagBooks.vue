@@ -31,6 +31,8 @@ const libraryFilter: Ref<LibraryFilter> = useRouteQuery('libraryFilter', 'ANY' a
 
 const open = ref(false)
 
+const getBooksIsLoading: Ref<boolean> = ref(false)
+
 watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(page.value)
   console.log(newVal + " " + oldVal)
@@ -49,6 +51,7 @@ const getTag = async () => {
 };
 
 const getBooks = () => {
+  getBooksIsLoading.value = true
   dataService.getTagBooksById(props.tagId, 
     pageAsNumber.value - 1, perPage.value, sortQuery.value, 
     libraryFilter.value)
@@ -62,8 +65,12 @@ const getBooks = () => {
         else {
           page.value = "1"
         }
+        getBooksIsLoading.value = false
     }
     )
+    .catch(e => {
+      getBooksIsLoading.value = false
+    })
   
 };
 
@@ -188,6 +195,21 @@ getBooks()
       Books tagged #{{ tag.name }} :
     </h2>
     <div />
+  </div>
+  <div
+    v-if="getBooksIsLoading && tagBooks.length < 1"
+    class="flex flex-row justify-center justify-items-center gap-3"
+  >
+    <o-skeleton
+      class="justify-self-center basis-44"
+      height="250px"
+      :animated="true"
+    />
+    <o-skeleton
+      class="justify-self-center basis-44"
+      height="250px"
+      :animated="true"
+    />
   </div>
   <div class="grid grid-cols-2 sm:grid-cols-8 gap-1 is-flex is-flex-wrap-wrap is-justify-content-space-evenly">
     <div

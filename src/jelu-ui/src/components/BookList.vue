@@ -22,6 +22,8 @@ const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('lastReadingE
 
 const open = ref(false)
 
+const getBookIsLoading: Ref<boolean> = ref(false)
+
 const toRead: Ref<string|null> = useRouteQuery('toRead', "null")
 
 const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTypes', [])
@@ -36,6 +38,7 @@ watch([page, eventTypes, toRead, sortQuery], (newVal, oldVal) => {
 const toReadAsBool = computed(() => toRead.value?.toLowerCase() === "null" ? null : toRead.value?.toLowerCase() === "true")
 
 const getBooks = () => {
+  getBookIsLoading.value = true
   dataService.findUserBookByCriteria(eventTypes.value, toReadAsBool.value, 
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
@@ -48,8 +51,12 @@ const getBooks = () => {
         else {
           page.value = "1"
         }
+        getBookIsLoading.value = false
     }
     )
+    .catch(e => {
+      getBookIsLoading.value = false
+    })
   
 };
 
@@ -211,6 +218,26 @@ onMounted(() => {
         <book-card :book="book" />
       </router-link>
     </div>
+  </div>
+  <div
+    v-else-if="getBookIsLoading"
+    class="flex flex-row justify-center justify-items-center gap-3"
+  >
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
   </div>
   <div v-else>
     <h2 class="title has-text-weight-normal typewriter">

@@ -126,6 +126,9 @@ const store = createStore<State>({
     },
     getAppVersion(state): string {
       return state.serverSettings.appVersion
+    },
+    getInitialSetup(state): boolean {
+      return state.isInitialSetup
     }
   }, 
   plugins : [createLogger()],

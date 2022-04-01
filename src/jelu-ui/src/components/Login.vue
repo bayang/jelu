@@ -32,7 +32,7 @@ watch(loginValidation, (oldVal, newVal) => {
 })
 
 const isInitialSetup = computed(() => {
-    return store.state.isInitialSetup
+    return store.getters.getInitialSetup
   })
 const logUser = async () => {
   if (validateInputLight()) {
@@ -99,7 +99,6 @@ const createInitialUser = async () => {
   }
 }
 onMounted(() => {
-            console.log('Component login is mounted in script setup!')
             console.log(`form data ${form}`)
         })
 

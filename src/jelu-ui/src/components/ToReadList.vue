@@ -23,7 +23,10 @@ const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTy
 
 const open = ref(false)
 
+const getToReadIsLoading: Ref<boolean> = ref(false)
+
 const getToRead = async () => {
+  getToReadIsLoading.value = true
   try {
     const res = await dataService.findUserBookByCriteria(eventTypes.value, 
     true, pageAsNumber.value - 1, perPage.value, sortQuery.value)
@@ -35,8 +38,10 @@ const getToRead = async () => {
     else {
       page.value = "1"
     }
+    getToReadIsLoading.value = false
   } catch (error) {
     console.log("failed get books : " + error);
+    getToReadIsLoading.value = false
   }
 };
 
@@ -174,6 +179,26 @@ const pageleft =  () => {
         <book-card :book="book" />
       </router-link>
     </div>
+  </div>
+  <div
+    v-else-if="getToReadIsLoading"
+    class="flex flex-row justify-center justify-items-center gap-3"
+  >
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
   </div>
   <div v-else>
     <h2 class="text-3xl typewriter">

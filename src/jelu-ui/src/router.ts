@@ -5,7 +5,7 @@ import AdminBaseVue from './components/AdminBase.vue'
 // import AdminAuthorsVue from './components/AdminAuthors.vue'
 
 const isLogged = () => {
-    if (!store.state.isLogged) {
+    if (!store.getters.getLogged) {
         console.log("is not logged")
         return false
     }
@@ -94,7 +94,7 @@ router.beforeEach((to, from, next) => {
     console.log(to)
     console.log(`from : ${from.name?.toString()}`)
     console.log(from)
-    console.log(store.state.isLogged)
+    console.log(store.getters.getLogged)
     if (from.name == undefined 
         && from.matched.length < 1) {
         console.log('undefined wanting to go to ' + to.name?.toString())
@@ -108,7 +108,7 @@ router.beforeEach((to, from, next) => {
             // }
         }
     }
-    // if (to.name !== 'login' && !store.state.isLogged) {
+    // if (to.name !== 'login' && !store.getters.getLogged) {
     //     next({ name: 'login' })
     // }
     // else next()

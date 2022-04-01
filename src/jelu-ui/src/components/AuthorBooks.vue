@@ -35,6 +35,8 @@ const libraryFilter: Ref<LibraryFilter> = useRouteQuery('libraryFilter', 'ANY' a
 
 const open = ref(false)
 
+const getBooksIsLoading: Ref<boolean> = ref(false)
+
 watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(page.value)
   console.log(newVal + " " + oldVal)
@@ -53,6 +55,7 @@ const getAuthor = async () => {
 };
 
 const getBooks = () => {
+  getBooksIsLoading.value = true
   dataService.getAuthorBooksById(props.authorId, 
     pageAsNumber.value - 1, perPage.value, sortQuery.value, 
     libraryFilter.value)
@@ -66,8 +69,12 @@ const getBooks = () => {
         else {
           page.value = "1"
         }
+        getBooksIsLoading.value = false
     }
     )
+    .catch(e => {
+      getBooksIsLoading.value = false
+    })
   
 };
 
@@ -353,6 +360,26 @@ getBooks()
         </book-card>
       </div>
     </div>
+  </div>
+  <div
+    v-if="getBooksIsLoading && authorBooks.length < 1"
+    class="flex flex-row justify-center justify-items-center gap-3"
+  >
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
+    <o-skeleton
+      class="justify-self-center basis-36"
+      height="250px"
+      :animated="true"
+    />
   </div>
   <o-pagination
     v-model:current="pageAsNumber"

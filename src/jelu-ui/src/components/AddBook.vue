@@ -413,7 +413,7 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
 }
 
 let autoImportPopupContent = computed(() => {
-  if (store.state.serverSettings.metadataFetchEnabled) {
+  if (store != null && store.getters.getSettings.metadataFetchEnabled) {
     return "Try to auto fill some fields from the web, given a isbn or a title"
   }
   else {
@@ -604,7 +604,7 @@ let displayDatepicker = computed(() => {
               placeholder="Click to select..."
               icon="calendar"
               icon-right="close"
-              icon-right-clickable="true"
+              :icon-right-clickable="true"
               trap-focus
               class="input focus:input-accent"
               @icon-right-click="clearDatePicker"
@@ -835,7 +835,7 @@ let displayDatepicker = computed(() => {
               v-model="imageUrl"
               type="url"
               pattern="https?://.*"
-              clearable="true"
+              :clearable="true"
               icon-right-clickable
               title="Url must start with http or https"
               placeholder="Url must start with http or https"
