@@ -1,3 +1,20 @@
+## [0.11.0](https://github.com/bayang/jelu/compare/v0.10.0...v0.11.0) (2022-04-01)
+
+
+### Features
+
+* possibility to merge authors ([6e237f1](https://github.com/bayang/jelu/commit/6e237f18b677b2ea1b12af24d31891d14519dc99))
+
+
+### Bug Fixes
+
+* add indeterminate state while loading ([96fc1e5](https://github.com/bayang/jelu/commit/96fc1e543787129cff9bfe46ff703e95fb0dd889))
+* add progress indicators for login and metadata search ([f22a91f](https://github.com/bayang/jelu/commit/f22a91fe47b22ca84b6eabdbe22a592b9470cb14))
+* author picture sometimes absent from metadata search ([b7e0d16](https://github.com/bayang/jelu/commit/b7e0d161a6602cf5a06a95ad83e3eecfb82aa680))
+* error while resizing image ([d43c054](https://github.com/bayang/jelu/commit/d43c054f36282bbcbbabe390caf162d3ab772b88))
+* progress positioning on book add ([e8227dd](https://github.com/bayang/jelu/commit/e8227ddaa670947f843223bd29b943cfa5f6d92d))
+* update book requests ([f0b95e8](https://github.com/bayang/jelu/commit/f0b95e8e91f8f55f7fd6d93e0971321d500e7dd3))
+
 ## [0.10.0](https://github.com/bayang/jelu/compare/v0.9.0...v0.10.0) (2022-03-14)
 
 
