@@ -23,7 +23,7 @@ const tag: Ref<Tag> = ref({name: ""})
 const tagBooks: Ref<Array<Book>> = ref([]);
 const edit: Ref<boolean> = ref(false)
 
-const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
 
@@ -66,10 +66,12 @@ const getBooks = () => {
           page.value = "1"
         }
         getBooksIsLoading.value = false
+        updatePageLoading(false)
     }
     )
     .catch(e => {
       getBooksIsLoading.value = false
+      updatePageLoading(false)
     })
   
 };
@@ -247,6 +249,11 @@ getBooks()
     order="centered"
     :per-page="perPage"
     @change="updatePage"
+  />
+  <o-loading
+    v-model:active="getPageIsLoading"
+    :full-page="true"
+    :can-cancel="true"
   />
 </template>
 

@@ -21,7 +21,7 @@ const props = defineProps<{ query: string|null }>()
 
 const books: Ref<Array<Book>> = ref([]);
 
-const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
 
@@ -44,6 +44,7 @@ const search = () => {
     console.log(queryTerm.value)
     console.log(query.value)
     progress.value = true
+    updatePageLoading(true)
     if (! advancedMode.value) {
       query.value.set('title', queryTerm.value)
     }
@@ -54,6 +55,7 @@ const search = () => {
       pageAsNumber.value - 1, perPage.value, sortQuery.value, libraryFilter.value)
     .then(res => {
       progress.value = false
+      updatePageLoading(false)
         console.log(res)
           total.value = res.totalElements
           books.value = res.content
@@ -67,6 +69,7 @@ const search = () => {
     )
     .catch(e => {
       progress.value = false
+      updatePageLoading(false)
     })
 }
 
@@ -216,11 +219,11 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
       </div>
     </template>
   </sort-filter-bar-vue>
-  <progress
+  <!-- <progress
     v-if="progress"
     class="animate-pulse progress progress-success"
     max="100"
-  />
+  /> -->
   <div class="flex flex-row sm:justify-between justify-center justify-items-center w-11/12">
     <o-button
       variant="success"
@@ -369,6 +372,11 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
     order="centered"
     :per-page="perPage"
     @change="updatePage"
+  />
+  <o-loading
+    v-model:active="getPageIsLoading"
+    :full-page="true"
+    :can-cancel="true"
   />
 </template>
 

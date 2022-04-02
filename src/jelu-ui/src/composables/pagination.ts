@@ -13,6 +13,7 @@ export default function usePagination() {
     const page: Ref<string> = useRouteQuery('page', '1')
     const total: Ref<number> = ref(0)
     const perPage: Ref<number> = ref(24)
+    const getPageIsLoading: Ref<boolean> = ref(false)
     const pageCount = computed(() => {
         return Math.ceil(total.value / perPage.value)
     })
@@ -21,6 +22,10 @@ export default function usePagination() {
             return
         }
         page.value = newVal.toString(10)
+        getPageIsLoading.value = true
+    }
+    const updatePageLoading = (newVal: boolean) => {
+        getPageIsLoading.value = newVal
     }
     // despite what oruga doc says, if page is a string, it returns page +1
     // on clicking next, so for page 1, 1+1 eq 11 ... and so on
@@ -44,6 +49,8 @@ export default function usePagination() {
         page,
         pageAsNumber,
         perPage,
-        updatePage
+        updatePage,
+        getPageIsLoading,
+        updatePageLoading
     }
 }

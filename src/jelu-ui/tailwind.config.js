@@ -17,15 +17,6 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    // colors: {
-    //   mytest: withOpacityValue('--jelu_test'),
-    //   // jelu_background: withOpacityValue('--jelu-background'),
-    //   // jelu_background_accent: withOpacityValue('--jelu_background_accent'),
-    //   // jelu_background_contrast: withOpacityValue('--jelu_background_contrast'),
-    //   // jelu_text_primary: withOpacityValue('--jelu_text_primary'),
-    //   // jelu_text_secondary: withOpacityValue('--jelu_text_secondary'),
-    //   // jelu_text_accent: withOpacityValue('--jelu_text_accent'),
-    // },
     extend: {
       colors: {
         jelu_background: withOpacityValue('--jelu_background'),
@@ -34,6 +25,7 @@ module.exports = {
         jelu_text_primary: withOpacityValue('--jelu_text_primary'),
         jelu_text_secondary: withOpacityValue('--jelu_text_secondary'),
         jelu_text_accent: withOpacityValue('--jelu_text_accent'),
+        jelu_overlay: 'rgba(255, 255,255, 0.3)',
       },
     },
   },

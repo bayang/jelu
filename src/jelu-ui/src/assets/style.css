@@ -52,6 +52,7 @@
 
   --oruga-steps-marker-background: theme('colors.base-100');
 
+  --oruga-loading-overlay: theme('colors.jelu_overlay');
 
 }
 
@@ -108,6 +109,10 @@
 
 .o-steps__title {
   @apply bg-base-100 text-base-content !important;
+}
+
+.o-icon.o-icon--spin.o-icon--medium.o-load__icon {
+  @apply text-gray-700;
 }
 
 /* end oruga customization with daisyui */

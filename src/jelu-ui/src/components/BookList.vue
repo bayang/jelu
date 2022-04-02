@@ -16,7 +16,7 @@ useTitle('Jelu | My books')
 
 const books: Ref<Array<UserBook>> = ref([]);
 
-const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('lastReadingEventDate,desc')
 
@@ -52,10 +52,12 @@ const getBooks = () => {
           page.value = "1"
         }
         getBookIsLoading.value = false
+        updatePageLoading(false)
     }
     )
     .catch(e => {
       getBookIsLoading.value = false
+      updatePageLoading(false)
     })
   
 };
@@ -255,6 +257,11 @@ onMounted(() => {
     order="centered"
     :per-page="perPage"
     @change="updatePage"
+  />
+  <o-loading
+    v-model:active="getPageIsLoading"
+    :full-page="true"
+    :can-cancel="true"
   />
 </template>
 

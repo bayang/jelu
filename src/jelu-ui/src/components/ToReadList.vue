@@ -15,7 +15,7 @@ useTitle('Jelu | To read')
 
 const books: Ref<Array<UserBook>> = ref([]);
 
-const { total, page, pageAsNumber, perPage, updatePage } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('creationDate,desc')
 
@@ -39,9 +39,11 @@ const getToRead = async () => {
       page.value = "1"
     }
     getToReadIsLoading.value = false
+    updatePageLoading(false)
   } catch (error) {
     console.log("failed get books : " + error);
     getToReadIsLoading.value = false
+    updatePageLoading(false)
   }
 };
 
@@ -216,6 +218,11 @@ const pageleft =  () => {
     :per-page="perPage"
     @change="updatePage"
     @keyup.left="pageleft"
+  />
+  <o-loading
+    v-model:active="getPageIsLoading"
+    :full-page="true"
+    :can-cancel="true"
   />
 </template>
 
