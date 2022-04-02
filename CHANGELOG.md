@@ -1,3 +1,16 @@
+## [0.12.0](https://github.com/bayang/jelu/compare/v0.11.0...v0.12.0) (2022-04-02)
+
+
+### Features
+
+* more loading feedback ([7ad0b25](https://github.com/bayang/jelu/commit/7ad0b25c9861a7a331666085734d18db899cf5a8))
+
+
+### Bug Fixes
+
+* remove useless class ([1729b6a](https://github.com/bayang/jelu/commit/1729b6a8b11f022346f8d2ed56c592e0f755fc5c))
+* small improvements in UI ([7b27e94](https://github.com/bayang/jelu/commit/7b27e94ae9228c8291180c61e46b37d292674312))
+
 ## [0.11.0](https://github.com/bayang/jelu/compare/v0.10.0...v0.11.0) (2022-04-01)
 
 
