@@ -491,8 +491,13 @@ class BookRepository(
         toRead: Boolean?,
         pageable: Pageable
     ): PageImpl<UserBook> {
-        val query: Query = UserBookTable.join(BookTable, JoinType.LEFT).slice(UserBookTable.columns).selectAll()
+        val cols = mutableListOf<Expression<*>>()
+        cols.addAll(UserBookTable.columns)
+        cols.addAll(BookTable.columns)
+        val query: Query = UserBookTable.join(BookTable, JoinType.LEFT)
+            .slice(cols).selectAll()
             .andWhere { UserBookTable.user eq userID }
+            .withDistinct(true)
         if (eventTypes != null && eventTypes.isNotEmpty()) {
             query.andWhere { UserBookTable.lastReadingEvent inList eventTypes }
         }
@@ -503,8 +508,9 @@ class BookRepository(
         query.limit(pageable.pageSize, pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST), UserBookTable, BookTable)
         query.orderBy(*orders)
+        val res = UserBook.wrapRows(query).toList()
         return PageImpl(
-            UserBook.wrapRows(query).toList(),
+            res,
             pageable,
             total
         )

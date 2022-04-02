@@ -19,6 +19,7 @@ import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.service.metadata.FILE_PREFIX
 import io.github.bayang.jelu.utils.imageName
@@ -237,8 +238,9 @@ class BookService(
         eventTypes: List<ReadingEventType>?,
         toRead: Boolean?,
         pageable: Pageable
-    ): Page<UserBookLightDto> =
-        bookRepository.findUserBookByCriteria(userId, eventTypes, toRead, pageable).map { it.toUserBookLightDto() }
+    ): Page<UserBookWithoutEventsAndUserDto> {
+        return bookRepository.findUserBookByCriteria(userId, eventTypes, toRead, pageable).map { it.toUserBookWthoutEventsAndUserDto() }
+    }
 
     @Transactional
     fun findTagById(tagId: UUID, user: User): TagDto {

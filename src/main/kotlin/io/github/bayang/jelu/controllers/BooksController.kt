@@ -13,6 +13,7 @@ import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.BookService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -124,7 +125,7 @@ class BooksController(
         @RequestParam(name = "toRead", required = false) toRead: Boolean?,
         @RequestParam(name = "user", required = false) userId: UUID?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
-    ): Page<UserBookLightDto> {
+    ): Page<UserBookWithoutEventsAndUserDto> {
         assertIsJeluUser(principal.principal)
         val finalUserId = if ((principal.principal as JeluUser).user.isAdmin && userId != null) {
             userId
