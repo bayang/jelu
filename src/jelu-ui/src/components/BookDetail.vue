@@ -349,7 +349,7 @@ getBook()
       <span
         v-for="tag in book?.book?.tags"
         :key="tag.id"
-        class="badge badge-primary mt-3 m-0.5 hover:border-secondary hover:border-4"
+        class="badge badge-primary mt-3 m-0.5 hover:font-bold hover:border-4"
       >
         <router-link :to="{ name: 'tag-detail', params: { tagId: tag.id } }">{{ tag.name }}&nbsp;</router-link>
       </span>
