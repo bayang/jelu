@@ -247,7 +247,7 @@ getBook()
       class="justify-center justify-items-center sm:gap-10 grid grid-cols-1 sm:grid-cols-2 sm:w-10/12"
     >
       <div class="sm:justify-self-end">
-        <figure class="image is-3by4">
+        <figure>
           <img
             v-if="book?.book?.image"
             :src="'/files/' + book.book.image"
