@@ -1,3 +1,17 @@
+## [0.13.0](https://github.com/bayang/jelu/compare/v0.12.0...v0.13.0) (2022-04-04)
+
+
+### Features
+
+* add jelu theme ([318d161](https://github.com/bayang/jelu/commit/318d161a1955fb2567613adf9232cc8fbdee0f03))
+* search ux improvement ([7117cfc](https://github.com/bayang/jelu/commit/7117cfc3ccb386091ed94a9d1783d7c22f09e1fb))
+
+
+### Bug Fixes
+
+* class clean up ([9ecaff2](https://github.com/bayang/jelu/commit/9ecaff2c04ee8adceb5abe87c8377653a5228cce))
+* tag aspect on book detail ([9de6fab](https://github.com/bayang/jelu/commit/9de6fab920c39c9c40b455765f596e740699ae5c))
+
 ## [0.12.0](https://github.com/bayang/jelu/compare/v0.11.0...v0.12.0) (2022-04-02)
 
 
