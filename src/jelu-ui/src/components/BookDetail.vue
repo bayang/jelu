@@ -421,7 +421,7 @@ getBook()
         Reading events :
       </p>
       <div class="flex flex-col md:grid grid-cols-9 mx-auto p-2 text-blue-50">
-        <div class="col-start-5 bg-accent mb-3 p-2 rounded font-semibold">
+        <div class="col-start-5 mb-3 p-2 font-semibold timeline-item">
           Now
         </div>
 
@@ -433,7 +433,7 @@ getBook()
         >
           <div
             v-if="index % 2 === 0"
-            class="bg-accent col-start-1 col-end-5 p-2 rounded my-4 ml-auto shadow-md"
+            class="col-start-1 col-end-5 p-2 my-4 ml-auto shadow-md timeline-item"
           >
             <h3 class="font-semibold">
               {{ formatDate(event.modificationDate) }}
@@ -486,7 +486,7 @@ getBook()
           </div>
           <div
             v-if="index % 2 !== 0"
-            class="bg-accent col-start-6 col-end-10 p-2 rounded my-4 mr-auto shadow-md"
+            class="col-start-6 col-end-10 p-2 my-4 mr-auto shadow-md timeline-item"
           >
             <h3 class="font-semibold">
               {{ formatDate(event.modificationDate) }}
@@ -500,7 +500,7 @@ getBook()
             </button>
           </div>
         </div>
-        <div class="col-start-5 bg-accent mt-3 p-2 rounded font-semibold">
+        <div class="col-start-5 mt-3 p-2 font-semibold timeline-item">
           Before
         </div>
       </div>

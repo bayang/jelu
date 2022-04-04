@@ -55,7 +55,7 @@ const showProgressBar = (book: UserBook) => {
 </script>
 
 <template>
-  <div class="card card-compact bg-base-100 shadow-2xl shadow-base-300 rounded">
+  <div class="card card-compact bg-base-100 shadow-2xl shadow-base-300">
     <div>
       <figure>
         <img

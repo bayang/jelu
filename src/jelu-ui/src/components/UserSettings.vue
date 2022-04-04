@@ -13,6 +13,7 @@ const store = useStore(key)
 const themes = [
         "light",
         "dark",
+        "jelu",
         "cupcake",
         "bumblebee",
         "emerald",

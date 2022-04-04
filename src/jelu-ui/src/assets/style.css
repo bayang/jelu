@@ -225,3 +225,18 @@
 
 /* end search form */
 
+[data-theme="jelu"] .card.card-compact {
+  @apply rounded-none;
+}
+
+.card.card-compact {
+  @apply rounded;
+}
+
+[data-theme="jelu"] .timeline-item {
+  @apply bg-neutral rounded-none;
+}
+
+.timeline-item {
+  @apply bg-accent rounded;
+}
