@@ -4,7 +4,6 @@ import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { Book, UserBook } from '../model/Book'
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
-import { StringUtils } from '../utils/StringUtils'
 import { ObjectUtils } from '../utils/ObjectUtils';
 import EditBookModal from "./EditBookModal.vue"
 import SortFilterBarVue from "./SortFilterBar.vue";
@@ -13,11 +12,28 @@ import useSort from '../composables/sort';
 import { LibraryFilter } from '../model/LibraryFilter';
 import { useRouteQuery } from '@vueuse/router';
 import { useTitle } from '@vueuse/core'
+import { useRouteQueryArray } from "../composables/useVueRouterArray";
 
 useTitle('Jelu | Search')
 
 const {oruga} = useProgrammatic();
-const props = defineProps<{ query: string|null }>()
+
+const titleQuery: Ref<string|undefined> = useRouteQuery('title', undefined)
+const isbn10Query: Ref<string|undefined> = useRouteQuery('isbn10', undefined)
+const isbn13Query: Ref<string|undefined> = useRouteQuery('isbn13', undefined)
+const seriesQuery: Ref<string|undefined> = useRouteQuery('series', undefined)
+const authorsQuery: Ref<Array<string>> = useRouteQueryArray('authors', [])
+const tagsQuery: Ref<Array<string>> = useRouteQueryArray('tags', [])
+
+const tagsArrayString: Ref<string> = ref("")
+if (tagsQuery.value.length > 0) {
+  tagsArrayString.value = tagsQuery.value.join(",")
+}
+
+const authorsArrayString: Ref<string> = ref("")
+if (authorsQuery.value.length > 0) {
+  authorsArrayString.value = authorsQuery.value.join(",")
+}
 
 const books: Ref<Array<Book>> = ref([]);
 
@@ -33,25 +49,22 @@ const progress: Ref<boolean> = ref(false)
 
 const edit: Ref<boolean> = ref(false)
 const advancedMode: Ref<boolean> = ref(false)
-const selectedField: Ref<string|null> = ref(null)
-const queryTerm: Ref<string> = ref("")
-const query: Ref<Map<string, string>> = ref(new Map())
 
-console.log("query")
-console.log(props.query)
+if (isbn10Query.value !== null ||  
+isbn13Query.value !== null || 
+seriesQuery.value !== null || 
+(tagsArrayString.value !== null && tagsArrayString.value.trim().length > 0) || 
+(authorsArrayString.value !== null && authorsArrayString.value.trim().length > 0)) {
+  advancedMode.value = true
+}
 
 const search = () => {
-    console.log(queryTerm.value)
-    console.log(query.value)
     progress.value = true
     updatePageLoading(true)
-    if (! advancedMode.value) {
-      query.value.set('title', queryTerm.value)
-    }
-      dataService.findBooks(query.value.get('title'), 
-      query.value.get('isbn10'), query.value.get('isbn13'), 
-      query.value.get('series'), arrayParam(query.value.get('authors')),
-      arrayParam(query.value.get('tags')),
+      dataService.findBooks(titleQuery.value, 
+      isbn10Query.value, isbn13Query.value, 
+      seriesQuery.value, authorsQuery.value,
+      tagsQuery.value,
       pageAsNumber.value - 1, perPage.value, sortQuery.value, libraryFilter.value)
     .then(res => {
       progress.value = false
@@ -73,11 +86,8 @@ const search = () => {
     })
 }
 
-const arrayParam = (input: string|undefined) => {
-  if (input != null) {
-    return input.split(",")
-  }
-  return input
+const arrayParam = (input: string) => {
+  return input.split(",")
 }
 
 watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
@@ -88,24 +98,12 @@ watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
   }
 })
 
-watch(selectedField, (newVal, oldVal) => {
-  console.log(selectedField.value)
-  queryTerm.value = ""
+watch(authorsArrayString, (newVal, oldVal) => {
+  authorsQuery.value = arrayParam(authorsArrayString.value)
 })
 
-watch(advancedMode, (newVal, oldVal) => {
-  if (advancedMode.value) {
-    // query.value.set('title', queryTerm.value)
-  }
-  else {
-    if (query.value.has('title')) {
-      let title = query.value.get('title')
-      query.value.clear()
-      if (title != null && StringUtils.isNotBlank(title)) {
-        queryTerm.value = title
-      }
-    }
-  }
+watch(tagsArrayString, (newVal, oldVal) => {
+  tagsQuery.value = arrayParam(tagsArrayString.value)
 })
 
 const convertedBooks = computed(() => books.value?.map(b => ObjectUtils.toUserBook(b)))
@@ -135,22 +133,14 @@ function modalClosed() {
   search()
 }
 
-const addToQuery = () => {
-  if (selectedField.value != null && StringUtils.isNotBlank(selectedField.value) && StringUtils.isNotBlank(queryTerm.value)) {
-    query.value.set(selectedField.value, queryTerm.value)
+if (titleQuery.value != null || 
+  isbn10Query.value != null || 
+  isbn13Query.value != null ||
+  seriesQuery.value != null ||
+  authorsQuery.value.length > 0 ||
+  tagsQuery.value.length > 0) {
+    search()
   }
-}
-
-const removeFromQuery = (field: string) => {
-  query.value.delete(field)
-}
-
-console.log('props query ' + props.query)
-
-if (props.query != null && StringUtils.isNotBlank(props.query)) {
-  queryTerm.value = props.query?.slice()
-  search()
-}
 
 </script>
 
@@ -219,11 +209,6 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
       </div>
     </template>
   </sort-filter-bar-vue>
-  <!-- <progress
-    v-if="progress"
-    class="animate-pulse progress progress-success"
-    max="100"
-  /> -->
   <div class="flex flex-row sm:justify-between justify-center justify-items-center w-11/12">
     <o-button
       variant="success"
@@ -241,97 +226,98 @@ if (props.query != null && StringUtils.isNotBlank(props.query)) {
     <div />
   </div>
   <div
-    v-if="!advancedMode"
     class="flex flex-row justify-center justify-items-center"
   >
-    <div class="basis-10/12 sm:basis-1/3">
-      <o-field>
-        <o-input
-          v-model="queryTerm"
-          placeholder="Search..." 
-          type="search"
-          icon="magnify" 
-          icon-clickable
-          icon-pack="mdi"
-          @keyup.enter="search"
-        />
-      </o-field>
-    </div>
-  </div>
-  <div
-    v-else
-    class="grid grid-cols-1 sm:grid-cols-6"
-  >
-    <div class="sm:col-span-4 sm:col-start-3">
-      <o-field
-        group-multiline
-        class="tablet-up"
-      >
-        <o-select
-          v-model="selectedField"
-          placeholder="Fields"
-        >
-          <option value="title">
-            Title
-          </option>
-          <option value="authors">
-            Authors
-          </option>
-          <option value="tags">
-            Tags
-          </option>
-          <option value="isbn10">
-            Isbn10
-          </option>
-          <option value="isbn13">
-            Isbn13
-          </option>
-          <option value="series">
-            Series
-          </option>
-        </o-select>
-        <o-input
-          v-model="queryTerm"
-          type="text"
-        />
-        <o-button
-          v-tooltip="'Add to query'"
-          variant="warning"
-          icon-pack="mdi"
-          icon-right="magnify-plus-outline"
-          @click="addToQuery"
-        />
-        <o-button
-          v-tooltip="'Search selected query'"
-          variant="success"
-          icon-pack="mdi"
-          icon-right="magnify"
-          @click="search"
-        />
-      </o-field>
-    </div>
-    <div class="sm:col-span-4 sm:col-start-2 mt-5">
-      <div class="tags has-addons inline-flex">
-        <div
-          v-for="[field, term] in query"
-          :key="field"
-        >
-          <span class="">{{ field }}:
-            <span class="badge badge-info">{{ term }}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                class="inline-block w-4 h-4 stroke-current cursor-pointer"
-                @click="removeFromQuery(field)"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              /></svg>
-            </span>
-          </span>
+    <div class="basis-full sm:basis-5/12">
+      <div
+        tabindex="0"
+        class="collapse"
+        :class="advancedMode ? 'collapse-open' : 'collapse-close'"
+      > 
+        <div class="collapse-title pr-5">
+          <o-field>
+            <o-input
+              v-model="titleQuery"
+              placeholder="Search title..." 
+              type="search"
+              icon="magnify" 
+              icon-clickable
+              icon-pack="mdi"
+              class="input focus:input-accent"
+              @keyup.enter="search"
+            />
+            <o-button
+              v-tooltip="'Search selected query'"
+              variant="success"
+              icon-pack="mdi"
+              icon-right="magnify"
+              @click="search"
+            />
+          </o-field>
+        </div>
+        <div class="collapse-content">
+          <div class="flex flex-wrap justify-center justify-items-center search-form-extended">
+            <div class="search-form-extended-input">
+              <o-input
+                v-model="isbn10Query"
+                placeholder="isbn10"
+                type="search"
+                icon="magnify"
+                icon-clickable
+                icon-pack="mdi"
+                class="input focus:input-accent"
+                @keyup.enter="search"
+              />
+            </div>
+            <div class="search-form-extended-input">
+              <o-input
+                v-model="isbn13Query"
+                placeholder="isbn13" 
+                type="search"
+                icon="magnify" 
+                icon-clickable
+                icon-pack="mdi"
+                class="input focus:input-accent"
+                @keyup.enter="search"
+              />
+            </div>
+            <div class="search-form-extended-input">
+              <o-input
+                v-model="authorsArrayString"
+                placeholder="authors" 
+                type="search"
+                icon="magnify" 
+                icon-clickable
+                icon-pack="mdi"
+                class="input focus:input-accent"
+                @keyup.enter="search"
+              />
+            </div>
+            <div class="search-form-extended-input">
+              <o-input
+                v-model="tagsArrayString"
+                placeholder="tags" 
+                type="search"
+                icon="magnify" 
+                icon-clickable
+                icon-pack="mdi"
+                class="input focus:input-accent"
+                @keyup.enter="search"
+              />
+            </div>
+            <div class="search-form-extended-input">
+              <o-input
+                v-model="seriesQuery"
+                placeholder="series" 
+                type="search"
+                icon="magnify" 
+                icon-clickable
+                icon-pack="mdi"
+                class="input focus:input-accent"
+                @keyup.enter="search"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

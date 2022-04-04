@@ -85,16 +85,16 @@ class BookRepository(
             .selectAll()
             .withDistinct()
 
-        title?.let {
+        if (!title?.trim().isNullOrBlank()) {
             query.andWhere { BookTable.title like "%$title%" }
         }
-        isbn10?.let {
+        if (!isbn10?.trim().isNullOrBlank()) {
             query.andWhere { BookTable.isbn10 eq isbn10 }
         }
-        isbn13?.let {
+        if (!isbn13?.trim().isNullOrBlank()) {
             query.andWhere { BookTable.isbn13 eq isbn13 }
         }
-        series?.let {
+        if (!series?.trim().isNullOrBlank()) {
             query.andWhere { BookTable.series like "%$series%" }
         }
         if (authors != null && authors.isNotEmpty()) {

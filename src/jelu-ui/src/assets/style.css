@@ -212,3 +212,16 @@
 .jelu-taginput .o-inputit__item {
   @apply bg-warning rounded text-warning-content my-1;
 }
+
+/* search form */
+
+.search-form-extended-input {
+  @apply basis-1/2 p-1;
+}
+
+.collapse-title .o-field .o-field__body .o-field.o-field--addons .o-ctrl-input {
+  @apply basis-full;
+}
+
+/* end search form */
+
