@@ -5,13 +5,13 @@
 
 ## Purpose
 
-This app main purpose is to track read books and to-read list.
+This app main purpose is to track what you have read, what you are reading and what you want to read.
 
 It acts as a self hosted "personal Goodreads" because I became tired of switching providers every time an online service was shut.
 
-I became tired of having to export and reimport my data each time with data loss in the process.
+I also became tired of having to export and reimport my data each time with data loss in the process.
 
-Also I wanted control on my data, so Jelu offers an API you can script or integrate with third party tools or services (which you cannot do with the vast majority of other online services).
+Also I wanted control on my data, so Jelu offers an API you can script or integrate with any third party tool or service (which you cannot do with the vast majority of other online services).
 
 All my data is now located into a single-file database which can be saved anywhere.
 
@@ -24,6 +24,9 @@ All my data is now located into a single-file database which can be saved anywhe
 * Mark books as currently reading, finished or dropped
 * Books can be tagged and a tag page can display all books with that tag
 * Links to third party providers are fetched online (google books, amazon, goodreads, librarythings) or computed from those providers id you could enter manually.
+* Author page with author detail and books from this author
+* Auto import author details from wikipedia
+* Auto merge authors (to fix duplicates resulting from automatic imports for example)
 
 ## Usage
 
@@ -38,7 +41,7 @@ All my data is now located into a single-file database which can be saved anywhe
 
 * download the java Jar from the releases section in a dedicated folder
 * go to this folder
-* start the jar (it is a spring fat jar so dependencies are included) : eg `java -jar jelu-0.5.0.jar`
+* start the jar (it is a spring fat jar so dependencies are included) : eg `java -jar jelu-0.13.0.jar`
 * If you want to tweak the default config (see `src/main/resources/application.yml`), just create a yaml file called application.yml in the same foler as the jar.
  
 For example if you want the database to be located next to the jar file (instead of being located in the default `${user.home}/.jelu/database/` folder) :
@@ -146,4 +149,19 @@ Book detail page :
 Book detail, events part :
 
 ![](screenshots/book-detail-events.png)
+
+Author page : 
+
+![](screenshots/author-page.png)
+
+## Roadmap
+
+* Koreader integration (https://koreader.rocks/)
+* Komga integration (https://komga.org/)
+* Calibre integration (A bit less likely, but why not)
+* Isbn scanning via camera on mobile
+* Social features
+  *  possibility to 'follow' another user on another instance ?
+  *  public RSS feed of reading events
+* Storygraph csv import
 
