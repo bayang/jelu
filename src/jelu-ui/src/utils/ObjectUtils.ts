@@ -44,7 +44,7 @@ export class ObjectUtils {
       container: '',
       htmlContainer: 'mb-3 ml-3',
       popup: 'p-2 shadow-lg sm:p-3 bg-red-600',
-      title: 'ml-4 font-semibold text-white truncate',
+      title: 'ml-4 truncate',
       input: 'bg-white text-center',
       confirmButton: 'btn btn-warning font-bold border-b-4 rounded mx-1',
       cancelButton: 'btn btn-info font-bold border-b-4 rounded mx-1',
