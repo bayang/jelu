@@ -167,7 +167,7 @@ const pageleft =  () => {
   </div>
   <div
     v-if="books.length > 0"
-    class="is-flex is-flex-wrap-wrap is-justify-content-center grid grid-cols-2 sm:grid-cols-8 gap-0"
+    class="is-flex is-flex-wrap-wrap is-justify-content-center grid grid-cols-2 sm:grid-cols-8 gap-0 my-3"
   >
     <div
       v-for="book in books"
@@ -178,7 +178,10 @@ const pageleft =  () => {
         v-if="book.id != undefined"
         :to="{ name: 'book-detail', params: { bookId: book.id } }"
       >
-        <book-card :book="book" />
+        <book-card
+          :book="book"
+          class="h-full"
+        />
       </router-link>
     </div>
   </div>

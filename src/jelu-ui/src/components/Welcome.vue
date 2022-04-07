@@ -181,7 +181,10 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             v-if="book.id != undefined"
             :to="{ name: 'book-detail', params: { bookId: book.id } }"
           >
-            <book-card :book="book">
+            <book-card
+              :book="book"
+              size="xl"
+            >
               <template #icon>
                 <span
                   v-tooltip="'Mark read or drop'"
@@ -233,9 +236,9 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
       <div
         v-for="event in events"
         :key="event.id"
-        class="m-1"
+        class="m-1 pb-6"
       >
-        <div>
+        <div class="h-full">
           <p>
             <span
               class="badge mb-1"
@@ -246,7 +249,10 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             v-if="event.userBook.id != undefined"
             :to="{ name: 'book-detail', params: { bookId: event.userBook.id } }"
           >
-            <book-card :book="event.userBook" />
+            <book-card
+              :book="event.userBook"
+              class="h-full"
+            />
           </router-link>
         </div>
       </div>

@@ -205,7 +205,7 @@ onMounted(() => {
   </div>
   <div
     v-if="books.length > 0"
-    class="grid grid-cols-2 sm:grid-cols-8 gap-0"
+    class="grid grid-cols-2 sm:grid-cols-8 gap-0 my-3"
   >
     <div
       v-for="book in books"
@@ -216,7 +216,10 @@ onMounted(() => {
         v-if="book.id != undefined"
         :to="{ name: 'book-detail', params: { bookId: book.id } }"
       >
-        <book-card :book="book" />
+        <book-card
+          :book="book"
+          class="h-full"
+        />
       </router-link>
     </div>
   </div>

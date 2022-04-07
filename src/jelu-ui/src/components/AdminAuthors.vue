@@ -22,6 +22,8 @@ const { formatDate, formatDateString } = useDates()
 
 const isFetching = ref(false)
 
+const isMerging = ref(false)
+
 const activeStep = ref("left")
 
 let filteredAuthors: Ref<Array<Author>> = ref([]);
@@ -74,13 +76,16 @@ function dispatchAuthor(author: Author, event: UIEvent) {
 function save() {
   console.log("save")
   if (leftAuthor.value.id != null && rightAuthor.value.id != null) {
+    isMerging.value = true
     dataService.mergeAuthors(leftAuthor.value.id, rightAuthor.value.id, leftAuthor.value)
       .then(res => {
         console.log("merged author " + res)
+        isMerging.value = false
         router.push({ name: 'author-detail', params: { authorId: leftAuthor.value.id } })
       })
       .catch(err => {
         console.log("merge failur " + err)
+        isMerging.value = false
         ObjectUtils.toast(oruga, "danger", `Error ` + err.message, 4000)
       })
   }
@@ -478,7 +483,6 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
     </div>
-    <!-- </div> -->
     <div class="mt-2 col-span-2">
       <button
         class="btn btn-primary button is-primary is-light mb-4"
@@ -492,6 +496,11 @@ const rightDoD = computed(() => {
       </button>
     </div>
   </div>
+  <o-loading
+    v-model:active="isMerging"
+    :full-page="true"
+    :can-cancel="true"
+  />
 </template>
 
 <style lang="scss" scoped>

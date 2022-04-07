@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { UserBook } from "../model/Book";
 import { ReadingEventType } from "../model/ReadingEvent";
 
-const props = defineProps<{ book: UserBook }>();
+const props = defineProps<{ book: UserBook, size?: string }>();
 
 const eventClass = computed(() => {
   if (props.book.lastReadingEvent) {
@@ -62,11 +62,14 @@ const showProgressBar = (book: UserBook) => {
           v-if="book.book.image"
           :src="'/files/' + book.book.image"
           alt="cover image"
+          class="object-fill"
+          :class=" props.size === 'xl' ? 'h-96' : 'h-72' "
         >
         <img
           v-else
           src="../assets/placeholder_asset.jpg"
           alt="cover placeholder"
+          class="h-72 object-fill"
         >
       </figure>
       <div
@@ -77,15 +80,15 @@ const showProgressBar = (book: UserBook) => {
     </div>
     <div class="card-body">
       <h2
-        v-snip:js="4"
-        v-tooltip="book.book.title" 
-        class="card-title text-base"
+        v-tooltip="book.book.title"
+        class="card-title text-base max-h-11 line-clamp-2"
       >
         {{ book.book.title }}
       </h2>
       <p
         v-if="book.book.authors != null && book.book.authors.length > 0"
-        v-snip:js="3"
+        v-tooltip="authorsText"
+        class="line-clamp-2"
       >
         {{ authorsText }}
       </p>

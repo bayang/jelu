@@ -322,7 +322,7 @@ if (titleQuery.value != null ||
       </div>
     </div>
   </div>
-  <div class="grid grid-cols-2 sm:grid-cols-8 gap-1 mt-4">
+  <div class="grid grid-cols-2 sm:grid-cols-8 gap-1 my-4">
     <div
       v-for="book in convertedBooks"
       :key="book.book.id"
@@ -332,12 +332,16 @@ if (titleQuery.value != null ||
         v-if="book.book.userBookId != undefined"
         :to="{ name: 'book-detail', params: { bookId: book.book.userBookId } }"
       >
-        <book-card :book="book" />
+        <book-card
+          :book="book"
+          class="h-full"
+        />
       </router-link>
       <div v-else>
         <book-card
           v-tooltip="'This book is not yet in your books, double click to add it'"
           :book="book"
+          class="h-full"
           @dblclick="toggleEdit(book)"
         >
           <template #icon>
