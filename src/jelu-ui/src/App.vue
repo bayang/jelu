@@ -89,7 +89,7 @@ const logout = () => {
             <li>
               <router-link
                 v-if="isLogged"
-                class="navbar-item is-family-sans-serif is-uppercase"
+                class="font-sans"
                 :to="{ name: 'my-books' }"
               >
                 My books
@@ -98,7 +98,7 @@ const logout = () => {
             <li>
               <router-link
                 v-if="isLogged"
-                class="navbar-item is-family-sans-serif is-uppercase"
+                class="font-sans"
                 :to="{ name: 'to-read' }"
               >
                 To Read List
@@ -108,7 +108,7 @@ const logout = () => {
               <router-link
                 v-if="isLogged"
                 :to="{ name: 'add-book' }"
-                class="navbar-item is-family-sans-serif is-uppercase"
+                class="font-sans"
               >
                 Add book
               </router-link>
@@ -131,7 +131,7 @@ const logout = () => {
           <li>
             <router-link
               v-if="isLogged"
-              class="navbar-item is-family-sans-serif is-uppercase"
+              class="font-sans text-xl"
               :to="{ name: 'my-books' }"
             >
               My books
@@ -140,7 +140,7 @@ const logout = () => {
           <li>
             <router-link
               v-if="isLogged"
-              class="navbar-item is-family-sans-serif is-uppercase"
+              class="font-sans text-xl"
               :to="{ name: 'to-read' }"
             >
               To Read List
@@ -150,7 +150,7 @@ const logout = () => {
             <router-link
               v-if="isLogged"
               :to="{ name: 'add-book' }"
-              class="navbar-item is-family-sans-serif is-uppercase"
+              class="font-sans text-xl"
             >
               Add book
             </router-link>
@@ -175,7 +175,7 @@ const logout = () => {
           >
             <li v-if="isLogged">
               <router-link
-                class="is-family-sans-serif"
+                class="font-sans text-base"
                 :to="{ name: 'profile-page' }"
               >
                 Dashboard
@@ -183,14 +183,17 @@ const logout = () => {
             </li>
             <li v-if="!isLogged">
               <router-link
-                class="is-family-sans-serif is-uppercase"
+                class="font-sans text-base"
                 :to="{ name: 'login' }"
               >
                 Login
               </router-link>
             </li>
             <li v-if="isLogged">
-              <a @click="logout()">Logout</a>
+              <a
+                class="font-sans text-base"
+                @click="logout()"
+              >Logout</a>
             </li>
           </ul>
         </div>
