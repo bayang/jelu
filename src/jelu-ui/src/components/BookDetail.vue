@@ -31,12 +31,17 @@ const book: Ref<UserBook | null> = ref(null)
 const edit: Ref<boolean> = ref(false)
 const showModal: Ref<boolean> = ref(false)
 
+const getBookIsLoading: Ref<boolean> = ref(false)
+
 const getBook = async () => {
   try {
+    getBookIsLoading.value = true
     book.value = await dataService.getUserBookById(props.bookId)
+    getBookIsLoading.value = false
     useTitle('Jelu | ' + book.value.book.title)
   } catch (error) {
     console.log("failed get book : " + error);
+    getBookIsLoading.value = false
   }
 };
 
@@ -506,6 +511,11 @@ getBook()
       </div>
     </div>
   </div>
+  <o-loading
+    v-model:active="getBookIsLoading"
+    :full-page="true"
+    :can-cancel="true"
+  />
 </template>
 
 <style lang="scss" scoped>
