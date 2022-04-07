@@ -1,3 +1,13 @@
+### [0.13.1](https://github.com/bayang/jelu/compare/v0.13.0...v0.13.1) (2022-04-07)
+
+
+### Bug Fixes
+
+* add loading on book detail ([e580d25](https://github.com/bayang/jelu/commit/e580d258723a894aa4d17c61d8450f6227976138))
+* delete popup positioning ([ae454f9](https://github.com/bayang/jelu/commit/ae454f93444203ca975fe7e06bfd66f68b231c4d))
+* missing gap between cards on author page ([2be56b2](https://github.com/bayang/jelu/commit/2be56b2da425b75f4d6d3de581737e80a6783585))
+* missing space between date and notes on add book page ([18c862f](https://github.com/bayang/jelu/commit/18c862ff76dead154794f424a1d06edd127f7cff))
+
 ## [0.13.0](https://github.com/bayang/jelu/compare/v0.12.0...v0.13.0) (2022-04-04)
 
 
