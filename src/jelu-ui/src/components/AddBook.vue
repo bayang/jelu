@@ -713,7 +713,7 @@ let displayDatepicker = computed(() => {
             />
           </o-field>
         </div>
-        <div class="field mb-3">
+        <div class="field my-3">
           <o-field
             horizontal
             label="Personal notes"
