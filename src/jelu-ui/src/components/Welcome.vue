@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref } from 'vue'
+import { computed, onMounted, Ref, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { UserBook } from '../model/Book'
@@ -17,11 +17,13 @@ useTitle('Jelu | Home')
 
 const store = useStore(key)
 const router = useRouter()
-const {oruga} = useProgrammatic();
+const {oruga} = useProgrammatic()
 
 const isLogged = computed(() => {
     return store != null && store != undefined && store.getters.getLogged
   })
+
+const initialLoad : Ref<boolean> = ref(true)
 
 const showModal: Ref<boolean> = ref(false)
 
@@ -106,6 +108,19 @@ if (isLogged.value) {
     console.log("failed get books : " + error);
   }
 }
+
+watch(() => isLogged.value, (newValue, oldValue) => {
+  console.log('logged changed ' + isLogged.value)
+  if (initialLoad.value && isLogged.value) {
+    try {
+      initialLoad.value = false
+      getCurrentlyReading()
+      getMyEvents()
+  } catch (error) {
+    console.log("failed get books : " + error);
+  }
+  }
+})
 
 function modalClosed() {
   console.log("modal closed")
