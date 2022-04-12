@@ -1,3 +1,15 @@
+## [0.14.0](https://github.com/bayang/jelu/compare/v0.13.1...v0.14.0) (2022-04-12)
+
+
+### Features
+
+* add i18n, english and french for now ([4f5ee22](https://github.com/bayang/jelu/commit/4f5ee224fb573dd5caf4fdc364c551a3f84ace69))
+
+
+### Bug Fixes
+
+* fix hp sometimes not updated ([e131306](https://github.com/bayang/jelu/commit/e13130601cb329b867072b651606aa35518d6b05))
+
 ### [0.13.1](https://github.com/bayang/jelu/compare/v0.13.0...v0.13.1) (2022-04-07)
 
 
