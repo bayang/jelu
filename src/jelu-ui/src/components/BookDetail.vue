@@ -13,6 +13,12 @@ import dayjs from 'dayjs'
 import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
 import { useTitle } from '@vueuse/core'
 import useDates from '../composables/dates'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const props = defineProps<{ bookId: string }>()
 
@@ -24,7 +30,7 @@ console.log(oruga)
 const { formatDate, formatDateString } = useDates()
 
 const isAdmin = computed(() => {
-  return store.getters.isAdmin
+  return store !== undefined && store.getters.isAdmin
 })
 
 const book: Ref<UserBook | null> = ref(null)
@@ -111,12 +117,12 @@ const deleteBook = async () => {
   let abort = false
   if (isAdmin.value) {
     await ObjectUtils.swalMixin.fire({
-      html: `<p>Delete book for all users or only you ?</p>`,
+      html: `<p>${t('labels.delete_for_all_or_only_you')}</p>`,
       showDenyButton: true,
       showCancelButton: true,
-      confirmButtonText: 'Only me',
-      denyButtonText: 'All users',
-      cancelButtonText: `Don't delete`,
+      confirmButtonText: t('labels.only_me'),
+      denyButtonText: t('labels.all_users'),
+      cancelButtonText: t('labels.dont_delete'),
     }).then((result) => {
       if (result.isDenied) {
         deleteForUserOnly = false
@@ -128,13 +134,13 @@ const deleteBook = async () => {
   }
   else {
     await ObjectUtils.swalMixin.fire({
-      html: `<p>Delete this book ?</p>`,
+      html: `<p>${t('labels.delete_this_book')}</p>`,
       showCancelButton: true,
       showConfirmButton: false,
       showDenyButton: true,
-      confirmButtonText: 'Delete',
-      cancelButtonText: `Don't delete`,
-      denyButtonText: 'Delete',
+      confirmButtonText: t('labels.delete'),
+      cancelButtonText: t('labels.dont_delete'),
+      denyButtonText: t('labels.delete'),
     }).then((result) => {
       if (result.isDismissed) {
         abort = true
@@ -158,11 +164,11 @@ const deleteBook = async () => {
     }
   }
   promise?.then(res => {
-    ObjectUtils.toast(oruga, "success", `Book was deleted`, 4000);
+    ObjectUtils.toast(oruga, "success", t('labels.book_was_deleted'), 4000);
     router.push({ name: 'home' })
   })
     .catch(err => {
-      ObjectUtils.toast(oruga, "danger", `Error deleteting ` + err.message, 4000);
+      ObjectUtils.toast(oruga, "danger", t('labels.delete_for_all_or_only_you', {msg : err.message}), 4000);
     })
 }
 
@@ -192,6 +198,16 @@ const iconClass = (event: ReadingEvent) => {
     return "mdi-book-open-page-variant";
   }
   else return "";
+};
+
+const eventLabel = (type: ReadingEventType) => {
+    if (type === ReadingEventType.FINISHED) {
+      return t('reading_events.finished');
+    } else if (type === ReadingEventType.DROPPED) {
+      return t('reading_events.dropped');
+    } else if (type === ReadingEventType.CURRENTLY_READING) {
+      return t('reading_events.reading');
+    } else return "";
 };
 
 function defaultCreateEvent(): CreateReadingEvent {
@@ -226,7 +242,7 @@ getBook()
           <span class="icon">
             <i class="mdi mdi-pencil mdi-18px" />
           </span>
-          <span>Edit</span>
+          <span>{{ t('labels.edit') }}</span>
         </button>
         <button
           class="btn btn-error btn-outline mr-2"
@@ -235,7 +251,7 @@ getBook()
           <span class="icon">
             <i class="mdi mdi-delete mdi-18px" />
           </span>
-          <span>Delete</span>
+          <span>{{ t('labels.delete') }}</span>
         </button>
         <button
           class="btn btn-info btn-outline"
@@ -244,7 +260,7 @@ getBook()
           <span class="icon">
             <i class="mdi mdi-plus mdi-18px" />
           </span>
-          <span>Event</span>
+          <span>{{ t('labels.event') }}</span>
         </button>
       </div>
     </div>
@@ -270,7 +286,7 @@ getBook()
         <p
           v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
         >
-          <span class="font-semibold">Authors :</span>
+          <span class="font-semibold capitalize">{{ t('book.author', 2) }} :</span>
         </p>
         <ul
           v-if="book != null && book.book != null && book.book.authors != null && book?.book?.authors?.length > 0"
@@ -288,45 +304,45 @@ getBook()
           </li>
         </ul>
         <p v-if="book?.book?.publisher">
-          <span class="font-semibold">Publisher :</span>
+          <span class="font-semibold capitalize">{{ t('book.publisher') }} :</span>
           {{ book.book.publisher }}
         </p>
         <p v-if="book?.book?.isbn10">
-          <span class="font-semibold">ISBN10 :</span>
+          <span class="font-semibold uppercase">{{ t('book.isbn10') }} :</span>
           {{ book.book.isbn10 }}
         </p>
         <p v-if="book?.book?.isbn13">
-          <span class="font-semibold">ISBN13 :</span>
+          <span class="font-semibold uppercase">{{ t('book.isbn13') }} :</span>
           {{ book.book.isbn13 }}
         </p>
         <p v-if="book?.book?.pageCount">
-          <span class="font-semibold">Pages :</span>
+          <span class="font-semibold capitalize">{{ t('book.page', 2) }} :</span>
           {{ book.book.pageCount }}
         </p>
         <p v-if="book?.book?.publishedDate">
-          <span class="font-semibold">Published date :</span>
+          <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
           {{ formatDateString(book.book.publishedDate) }}
         </p>
         <p v-if="book?.book?.series">
-          <span class="font-semibold">Series :</span>
+          <span class="font-semibold capitalize">{{ t('book.series') }} :</span>
           {{ book.book.series }}&nbsp;
           <span
             v-if="book?.book?.numberInSeries"
           >-&nbsp;{{ book.book.numberInSeries }}</span>
         </p>
         <p v-if="book?.book?.language">
-          <span class="font-semibold">Language :</span>
+          <span class="font-semibold capitalize">{{ t('book.language') }} :</span>
           {{ book.book.language }}
         </p>
         <div v-if="book?.owned || book?.toRead">
           <span
             v-if="book?.owned"
             class="badge badge-info mx-1"
-          >Owned</span>
+          >{{ t('book.owned') }}</span>
           <span
             v-if="book?.toRead"
             class="badge badge-info"
-          >To read</span>
+          >{{ t('book.to_read') }}</span>
         </div>
       </div>
     </div>
@@ -340,9 +356,9 @@ getBook()
       >
         <p
           v-if="book?.book?.summary"
-          class="font-semibold"
+          class="font-semibold capitalize"
         >
-          Summary :
+          {{ t('book.summary') }} :
         </p>
         <p
           v-if="book?.book?.summary"
@@ -406,9 +422,9 @@ getBook()
     >
       <p
         v-if="book?.personalNotes"
-        class="font-semibold"
+        class="font-semibold capitalize"
       >
-        Personal Notes :
+        {{ t('book.personal_notes') }} :
       </p>
       <p v-if="book?.personalNotes">
         {{ book.personalNotes }}
@@ -421,13 +437,13 @@ getBook()
     >
       <p
         v-if="book?.readingEvents != null && book?.readingEvents?.length > 0"
-        class="typewriter text-2xl mb-3"
+        class="typewriter text-2xl mb-3 capitalize"
       >
-        Reading events :
+        {{ t('reading_events.reading_events') }} :
       </p>
       <div class="flex flex-col md:grid grid-cols-9 mx-auto p-2 text-blue-50">
-        <div class="col-start-5 mb-3 p-2 font-semibold timeline-item">
-          Now
+        <div class="col-start-5 mb-3 p-2 font-semibold timeline-item capitalize">
+          {{ t('reading_events.now') }}
         </div>
 
         <div
@@ -443,7 +459,9 @@ getBook()
             <h3 class="font-semibold">
               {{ formatDate(event.modificationDate) }}
             </h3>
-            <p>{{ event.eventType }}</p>
+            <p class="capitalize">
+              {{ eventLabel(event.eventType) }}
+            </p>
             <button
               class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
               @click="toggleReadingEventModal(event, true)"
@@ -459,7 +477,7 @@ getBook()
               <div class="h-full w-1 bg-base-content pointer-events-none" />
             </div>
             <div
-              v-tooltip="{ content: 'Double click to edit.', delay: { show: 5, hide: 2 } }"
+              v-tooltip="{ content: t('labels.double_click_to_edit'), delay: { show: 5, hide: 2 } }"
               class="w-6 h-6 absolute top-1/2 -mt-3 rounded-full shadow"
               :class="eventClass(event)"
               @dblclick="toggleReadingEventModal(event, true)"
@@ -478,7 +496,7 @@ getBook()
               <div class="h-full w-1 bg-base-content pointer-events-none" />
             </div>
             <div
-              v-tooltip="{ content: 'Double click to edit.', delay: { show: 5, hide: 2 } }"
+              v-tooltip="{ content: t('labels.double_click_to_edit'), delay: { show: 5, hide: 2 } }"
               class="w-6 h-6 absolute top-1/2 -mt-3 rounded-full shadow"
               :class="eventClass(event)"
               @dblclick="toggleReadingEventModal(event, true)"
@@ -496,7 +514,9 @@ getBook()
             <h3 class="font-semibold">
               {{ formatDate(event.modificationDate) }}
             </h3>
-            <p>{{ event.eventType }}</p>
+            <p class="capitalize">
+              {{ eventLabel(event.eventType) }}
+            </p>
             <button
               class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
               @click="toggleReadingEventModal(event, true)"
@@ -505,8 +525,8 @@ getBook()
             </button>
           </div>
         </div>
-        <div class="col-start-5 mt-3 p-2 font-semibold timeline-item">
-          Before
+        <div class="col-start-5 mt-3 p-2 font-semibold timeline-item capitalize">
+          {{ t('reading_events.before') }}
         </div>
       </div>
     </div>

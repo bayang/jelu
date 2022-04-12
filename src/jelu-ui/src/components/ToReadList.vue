@@ -10,6 +10,12 @@ import { useThrottleFn } from '@vueuse/core'
 import { ReadingEventType } from '../model/ReadingEvent';
 import { useRouteQueryArray } from '../composables/useVueRouterArray';
 import { useTitle } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 useTitle('Jelu | To read')
 
@@ -60,17 +66,7 @@ watch([page, eventTypes, sortQuery], (newVal, oldVal) => {
   }
 })
 
-onMounted(() => {
-  console.log("Component is mounted!");
-    
-    }
-);
-
 getToRead()
-
-const pageleft =  () => {
-  console.log("left")
-}
 
 </script>
 
@@ -84,12 +80,12 @@ const pageleft =  () => {
   >
     <template #sort-fields>
       <div class="field">
-        <label class="label">Sort by : </label>
+        <label class="label">{{ t('sorting.sort_by') }} : </label>
         <o-radio
           v-model="sortBy"
           native-value="creationDate"
         >
-          Date added to list
+          {{ t('sorting.date_added_to_list') }}
         </o-radio>
       </div>
       <div class="field">
@@ -97,7 +93,7 @@ const pageleft =  () => {
           v-model="sortBy"
           native-value="lastReadingEventDate"
         >
-          Last reading event date
+          {{ t('sorting.last_reading_event_date') }}
         </o-radio>
       </div>
       <div class="field">
@@ -105,7 +101,7 @@ const pageleft =  () => {
           v-model="sortBy"
           native-value="title"
         >
-          Title
+          {{ t('sorting.title') }}
         </o-radio>
       </div>
       <div class="field">
@@ -113,7 +109,7 @@ const pageleft =  () => {
           v-model="sortBy"
           native-value="publisher"
         >
-          Publisher
+          {{ t('sorting.publisher') }}
         </o-radio>
       </div>
       <div class="field">
@@ -121,30 +117,30 @@ const pageleft =  () => {
           v-model="sortBy"
           native-value="series"
         >
-          Series
+          {{ t('sorting.series') }}
         </o-radio>
       </div>
     </template>
     <template #filters>
       <div class="field">
-        <label class="label">Last event type : </label>
+        <label class="label">{{ t('reading_events.last_event_type') }} : </label>
         <o-checkbox
           v-model="eventTypes"
           native-value="FINISHED"
         >
-          Finished
+          {{ t('reading_events.finished') }}
         </o-checkbox>
         <o-checkbox
           v-model="eventTypes"
           native-value="CURRENTLY_READING"
         >
-          Currently reading
+          {{ t('reading_events.currently_reading') }}
         </o-checkbox>
         <o-checkbox
           v-model="eventTypes"
           native-value="DROPPED"
         >
-          Dropped
+          {{ t('reading_events.dropped') }}
         </o-checkbox>
       </div>
     </template>
@@ -160,8 +156,8 @@ const pageleft =  () => {
         <i class="mdi mdi-filter-variant" />
       </span>
     </o-button>
-    <h2 class="text-3xl typewriter">
-      To Read List :
+    <h2 class="text-3xl typewriter capitalize">
+      {{ t('nav.to_read') }} :
     </h2>
     <div />
   </div>
@@ -207,7 +203,7 @@ const pageleft =  () => {
   </div>
   <div v-else>
     <h2 class="text-3xl typewriter">
-      Nothing to read
+      {{ t('labels.nothing_to_read') }}
     </h2>
     <span class="icon is-large">
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
@@ -220,7 +216,6 @@ const pageleft =  () => {
     order="centered"
     :per-page="perPage"
     @change="updatePage"
-    @keyup.left="pageleft"
   />
   <o-loading
     v-model:active="getPageIsLoading"

@@ -3,6 +3,12 @@ import { computed, onMounted, reactive, Ref, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import { StringUtils } from '../utils/StringUtils'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const store = useStore(key)
 const form = reactive({'login' : '', 'password' : ''})
@@ -54,11 +60,11 @@ const validateInputLight = (): boolean => {
   let isValid = true;
   errorMessage.value = ''
   if (!StringUtils.isNotBlank(form.login)) {
-    errorMessage.value = errorMessage.value + ' login cannot be empty'
+    errorMessage.value = errorMessage.value + " " + t('login.login_not_empty')
     isValid = false
   }
   if (!StringUtils.isNotBlank(form.password)) {
-    errorMessage.value = errorMessage.value + ' password cannot be empty'
+    errorMessage.value = errorMessage.value + " " + t('login.password_not_empty')
     isValid = false
   }
   return isValid
@@ -68,19 +74,19 @@ const validateInput = (): boolean => {
   let isValid: boolean = validateInputLight()
   errorMessage.value = ''
   if (form.login !== loginValidation.value) {
-    errorMessage.value = 'login fields do not match'
+    errorMessage.value = t('login.login_not_match')
     isValid = false;
   }
   if (form.password !== passwordValidation.value) {
-    errorMessage.value = errorMessage.value + ' password fields do not match'
+    errorMessage.value = errorMessage.value + " " + t('login.password_not_match')
     isValid = false;
   }
   if (StringUtils.isNotBlank(form.login) && form.login.length < 3) {
-    errorMessage.value = errorMessage.value + ' login must be 3 chars long minimum'
+    errorMessage.value = errorMessage.value + " " + t('login.login_length')
     isValid = false
   }
   if (StringUtils.isNotBlank(form.password) && form.password.length < 3) {
-    errorMessage.value = errorMessage.value + ' password must be 3 chars long minimum'
+    errorMessage.value = errorMessage.value + " " + t('login.password_length')
     isValid = false
   }
   return isValid
@@ -117,7 +123,7 @@ const submit = () => {
     <div class="basis-10/12 sm:basis-1/3">
       <div class="field">
         <label class="label">
-          <span class="label-text font-semibold">Login</span>
+          <span class="label-text font-semibold capitalize">{{ t('login.login') }}</span>
         </label>
 
         <o-input
@@ -133,7 +139,7 @@ const submit = () => {
         class="field"
       >
         <label class="label">
-          <span class="label-text font-semibold">Confirm Login</span>
+          <span class="label-text font-semibold capitalize">{{ t('login.confirm_login') }}</span>
         </label>
         <o-input
           v-model="loginValidation"
@@ -145,7 +151,7 @@ const submit = () => {
       </div>
       <div class="field">
         <label class="label">
-          <span class="label-text font-semibold">Password</span>
+          <span class="label-text font-semibold capitalize">{{ t('login.password') }}</span>
         </label>
         <o-input
           v-model="form.password"
@@ -162,7 +168,7 @@ const submit = () => {
         class="field"
       >
         <label class="label">
-          <span class="label-text font-semibold">Confirm Password</span>
+          <span class="label-text font-semibold capitalize">{{ t('login.confirm_password') }}</span>
         </label>
         <o-input
           v-model="passwordValidation"
@@ -180,10 +186,10 @@ const submit = () => {
           class="control"
         >
           <button
-            class="btn btn-warning"
+            class="btn btn-warning mt-2"
             @click="createInitialUser"
           >
-            Create First User
+            {{ t('login.create_first_user') }}
           </button>
         </p>
         <p
@@ -194,7 +200,7 @@ const submit = () => {
             class="btn btn-success mt-2"
             @click="logUser"
           >
-            Login
+            {{ t('login.login') }}
           </button>
         </p>
         <p

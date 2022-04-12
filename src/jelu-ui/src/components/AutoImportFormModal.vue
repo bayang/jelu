@@ -4,6 +4,12 @@ import { StringUtils } from "../utils/StringUtils";
 import dataService from "../services/DataService";
 import { Metadata } from "../model/Metadata";
 import useDates from '../composables/dates'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const { formatDate, formatDateString } = useDates()
 
@@ -56,8 +62,8 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
   <section class="edit-modal">
     <div class="grid justify-center justify-items-center columns is-centered is-multiline">
       <div class="mb-2">
-        <h1 class="text-2xl title has-text-weight-normal typewriter">
-          Import book
+        <h1 class="text-2xl title has-text-weight-normal typewriter capitalize">
+          {{ t('labels.import_book') }}
         </h1>
       </div>
       <div
@@ -67,7 +73,8 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         <div class="field mb-2">
           <o-field
             horizontal
-            label="Isbn"
+            :label="t('book.isbn')"
+            class="capitalize"
           >
             <o-input
               v-model="form.isbn"
@@ -79,7 +86,8 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         <div class="field mb-2">
           <o-field
             horizontal
-            label="Title"
+            :label="t('book.title')"
+            class="capitalize"
           >
             <o-input
               v-model="form.title"
@@ -91,7 +99,8 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Authors"
+            :label="t('book.author', 2)"
+            class="capitalize"
           >
             <o-input
               v-model="form.authors"
@@ -111,7 +120,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
               class="btn btn-success"
               @click="fetchMetadata"
             >
-              Fetch book
+              {{ t('labels.fetch_book') }}
             </button>
           </p>
           <p
@@ -152,12 +161,12 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
           v-if="metadata?.title"
           class="mb-2"
         >
-          <span class="font-semibold">Title : </span>{{ metadata.title }}
+          <span class="font-semibold capitalize">{{ t('book.title') }} : </span>{{ metadata.title }}
         </p>
         <p
           v-if="metadata?.authors != null && metadata?.authors?.length > 0"
         >
-          <span class="font-semibold">Authors : </span>
+          <span class="font-semibold capitalize">{{ t('book.author', 2) }} : </span>
         </p>
         <ul
           v-if="metadata?.authors != null && metadata?.authors?.length > 0"
@@ -173,72 +182,72 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
           v-if="metadata?.publisher"
           class="my-2"
         >
-          <span class="font-semibold">Publisher : </span>{{ metadata.publisher }}
+          <span class="font-semibold capitalize">{{ t('book.publisher') }} : </span>{{ metadata.publisher }}
         </p>
         <p
           v-if="metadata?.isbn10"
           class="mb-2"
         >
-          <span class="font-semibold">Isbn10 : </span>{{ metadata.isbn10 }}
+          <span class="font-semibold uppercase">{{ t('book.isbn10') }} : </span>{{ metadata.isbn10 }}
         </p>
         <p
           v-if="metadata?.isbn13"
           class="mb-2"
         >
-          <span class="font-semibold">Isbn13 : </span>{{ metadata.isbn13 }}
+          <span class="font-semibold uppercase">{{ t('book.isbn13') }} : </span>{{ metadata.isbn13 }}
         </p>
         <p
           v-if="metadata?.pageCount"
           class="mb-2"
         >
-          <span class="font-semibold">Pages : </span>{{ metadata.pageCount }}
+          <span class="font-semibold capitalize">{{ t('book.page', 2) }} : </span>{{ metadata.pageCount }}
         </p>
         <p
           v-if="metadata?.publishedDate"
           class="mb-2"
         >
-          <span class="font-semibold">Published date : </span>{{ formatDateString(metadata.publishedDate) }}
+          <span class="font-semibold capitalize">{{ t('book.published_date') }} : </span>{{ formatDateString(metadata.publishedDate) }}
         </p>
         <p
           v-if="metadata?.series"
           class="mb-2"
         >
-          <span class="font-semibold">Series : </span>{{ metadata.series }}
+          <span class="font-semibold capitalize">{{ t('book.series') }} : </span>{{ metadata.series }}
         </p>
         <p
           v-if="metadata?.numberInSeries"
           class="mb-2"
         >
-          <span class="font-semibold"># in series : </span>{{ metadata.numberInSeries }}
+          <span class="font-semibold">{{ t('book.nb_in_series') }} : </span>{{ metadata.numberInSeries }}
         </p>
         <p
           v-if="metadata?.language"
           class="mb-2"
         >
-          <span class="font-semibold">Language : </span>{{ metadata.language }}
+          <span class="font-semibold capitalize">{{ t('book.language') }} : </span>{{ metadata.language }}
         </p>
         <p
           v-if="metadata?.goodreadsId"
           class="mb-2"
         >
-          <span class="font-semibold">Goodreads id : </span>{{ metadata.goodreadsId }}
+          <span class="font-semibold">{{ t('book.goodreads_id') }} : </span>{{ metadata.goodreadsId }}
         </p>
         <p
           v-if="metadata?.googleId"
           class="mb-2"
         >
-          <span class="font-semibold">Google id : </span>{{ metadata.googleId }}
+          <span class="font-semibold">{{ t('book.google_id') }} : </span>{{ metadata.googleId }}
         </p>
         <p
           v-if="metadata?.amazonId"
           class="mb-2"
         >
-          <span class="font-semibold">Amazon id : </span>{{ metadata.amazonId }}
+          <span class="font-semibold">{{ t('book.amazon_id') }} : </span>{{ metadata.amazonId }}
         </p>
         <p
           v-if="metadata?.tags != null && metadata?.tags?.length > 0"
         >
-          <span class="font-semibold">Tags : </span>
+          <span class="font-semibold capitalize">{{ t('book.tag', 2) }} : </span>
         </p>
         <p v-if="metadata?.tags != null && metadata?.tags?.length > 0">
           <span
@@ -251,7 +260,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
           v-if="metadata?.summary"
           class="my-2"
         >
-          <span class="font-semibold">Summary : </span>{{ metadata.summary }}
+          <span class="font-semibold capitalize">{{ t('book.summary') }} : </span>{{ metadata.summary }}
         </p>
       </div>
       <div
@@ -264,7 +273,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         >
           <span class="icon">
             <i class="mdi mdi-check mdi-18px" />
-          </span><span>Import</span>
+          </span><span>{{ t('labels.import') }}</span>
         </button>
         <button
           class="btn btn-warning"
@@ -272,7 +281,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
         >
           <span class="icon">
             <i class="mdi mdi-cancel mdi-18px" />
-          </span><span>Discard</span>
+          </span><span>{{ t('labels.discard') }}</span>
         </button>
       </div>
     </div>

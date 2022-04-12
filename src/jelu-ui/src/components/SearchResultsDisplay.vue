@@ -13,6 +13,12 @@ import { LibraryFilter } from '../model/LibraryFilter';
 import { useRouteQuery } from '@vueuse/router';
 import { useTitle } from '@vueuse/core'
 import { useRouteQueryArray } from "../composables/useVueRouterArray";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 useTitle('Jelu | Search')
 
@@ -154,12 +160,12 @@ if (titleQuery.value != null ||
   >
     <template #sort-fields>
       <div class="field">
-        <label class="label">Sort by : </label>
+        <label class="label">{{ t('sorting.sort_by') }} : </label>
         <o-radio
           v-model="sortBy"
           native-value="title"
         >
-          Title
+          {{ t('sorting.title') }}
         </o-radio>
       </div>
       <div class="field">
@@ -167,7 +173,7 @@ if (titleQuery.value != null ||
           v-model="sortBy"
           native-value="publisher"
         >
-          Publisher
+          {{ t('sorting.publisher') }}
         </o-radio>
       </div>
       <div class="field">
@@ -175,36 +181,36 @@ if (titleQuery.value != null ||
           v-model="sortBy"
           native-value="series"
         >
-          Series
+          {{ t('sorting.series') }}
         </o-radio>
         <o-radio
           v-model="sortBy"
           native-value="publishedDate"
         >
-          Publication date
+          {{ t('sorting.publication_date') }}
         </o-radio>
       </div>
     </template>
     <template #filters>
       <div class="field">
-        <label class="label">Books type : </label>
+        <label class="label">{{ t('filtering.books_type') }} : </label>
         <o-radio
           v-model="libraryFilter"
           native-value="ANY"
         >
-          Any
+          {{ t('filtering.any') }}
         </o-radio>
         <o-radio
           v-model="libraryFilter"
           native-value="ONLY_USER_BOOKS"
         >
-          Only books in my lists
+          {{ t('filtering.only_in_my_list') }}
         </o-radio>
         <o-radio
           v-model="libraryFilter"
           native-value="ONLY_NON_USER_BOOKS"
         >
-          Only books not in my lists
+          {{ t('filtering.only_not_in_my_list') }}
         </o-radio>
       </div>
     </template>
@@ -221,7 +227,7 @@ if (titleQuery.value != null ||
       </span>
     </o-button>
     <o-checkbox v-model="advancedMode">
-      Advanced search
+      {{ t('labels.advanced_search') }}
     </o-checkbox>
     <div />
   </div>
@@ -238,7 +244,7 @@ if (titleQuery.value != null ||
           <o-field>
             <o-input
               v-model="titleQuery"
-              placeholder="Search title..." 
+              :placeholder="t('labels.search_title')" 
               type="search"
               icon="magnify" 
               icon-clickable
@@ -247,7 +253,7 @@ if (titleQuery.value != null ||
               @keyup.enter="search"
             />
             <o-button
-              v-tooltip="'Search selected query'"
+              v-tooltip="t('labels.search_selected')"
               variant="success"
               icon-pack="mdi"
               icon-right="magnify"
@@ -260,7 +266,7 @@ if (titleQuery.value != null ||
             <div class="search-form-extended-input">
               <o-input
                 v-model="isbn10Query"
-                placeholder="isbn10"
+                :placeholder="t('book.isbn10')"
                 type="search"
                 icon="magnify"
                 icon-clickable
@@ -272,7 +278,7 @@ if (titleQuery.value != null ||
             <div class="search-form-extended-input">
               <o-input
                 v-model="isbn13Query"
-                placeholder="isbn13" 
+                :placeholder="t('book.isbn13')"
                 type="search"
                 icon="magnify" 
                 icon-clickable
@@ -284,7 +290,7 @@ if (titleQuery.value != null ||
             <div class="search-form-extended-input">
               <o-input
                 v-model="authorsArrayString"
-                placeholder="authors" 
+                :placeholder="t('book.author', 2)"
                 type="search"
                 icon="magnify" 
                 icon-clickable
@@ -296,7 +302,7 @@ if (titleQuery.value != null ||
             <div class="search-form-extended-input">
               <o-input
                 v-model="tagsArrayString"
-                placeholder="tags" 
+                :placeholder="t('book.tag', 2)"
                 type="search"
                 icon="magnify" 
                 icon-clickable
@@ -308,7 +314,7 @@ if (titleQuery.value != null ||
             <div class="search-form-extended-input">
               <o-input
                 v-model="seriesQuery"
-                placeholder="series" 
+                :placeholder="t('book.series')"
                 type="search"
                 icon="magnify" 
                 icon-clickable
@@ -339,14 +345,14 @@ if (titleQuery.value != null ||
       </router-link>
       <div v-else>
         <book-card
-          v-tooltip="'This book is not yet in your books, double click to add it'"
+          v-tooltip="t('labels.book_not_yet_in_books')"
           :book="book"
           class="h-full"
           @dblclick="toggleEdit(book)"
         >
           <template #icon>
             <span
-              v-tooltip="'not in your books'"
+              v-tooltip="t('labels.not_in_your_books')"
               class="icon text-error"
             >
               <i class="mdi mdi-plus-circle mdi-18px" />
@@ -367,7 +373,7 @@ if (titleQuery.value != null ||
     v-model:active="getPageIsLoading"
     :full-page="true"
     :can-cancel="true"
-  />
+  />  
 </template>
 
 <style lang="scss" scoped>

@@ -4,6 +4,12 @@ import { Author } from "../model/Author";
 import { WikipediaSearchResult, WikipediaSearchResultElement } from "../model/WikipediaSearchResult";
 import dataService from "../services/DataService";
 import { StringUtils } from "../utils/StringUtils";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const props = defineProps<{
   author : Author
@@ -13,7 +19,14 @@ const currentAuthor: Ref<Author> = ref(props.author)
 console.log(currentAuthor.value)
 const progress: Ref<boolean> = ref(false)
 let deleteImage: Ref<boolean> = ref(false)
-const isSwitchedCustom = ref("Upload from the web");
+const uploadFromWeb = ref(true);
+let uploadlabel = computed(() => {
+  if (uploadFromWeb.value) {
+    return t('labels.upload_from_web')
+  } else {
+    return t('labels.upload_from_file')
+  }
+}) 
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
 const uploadPercentage = ref(0);
@@ -111,15 +124,16 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
     >
       <div>
         <div>
-          <h1 class="text-2xl typewriter">
-            Edit author
+          <h1 class="text-2xl typewriter first-letter:capitalize">
+            {{ t('labels.edit_author') }}
           </h1>
         </div>
       </div>
       <div class="form-control">
         <div class="field pb-2">
           <o-field
-            label="Name"
+            :label="t('author.name')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.name"
@@ -131,14 +145,15 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Date of birth"
+            :label="t('author.date_of_birth')"
+            class="capitalize"
           >
             <o-datepicker
               ref="datepicker"
               v-model="currentAuthor.dateOfBirth"
               :show-week-number="false"
               :locale="undefined"
-              placeholder="Click to select..."
+              :placeholder="t('labels.click_to_select')"
               :expanded="true"
               icon="calendar"
               icon-right="close"
@@ -153,14 +168,15 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Date of death"
+            :label="t('author.date_of_death')"
+            class="capitalize"
           >
             <o-datepicker
               ref="datepicker"
               v-model="currentAuthor.dateOfDeath"
               :show-week-number="false"
               :locale="undefined"
-              placeholder="Click to select..."
+              :placeholder="t('labels.click_to_select')"
               :expanded="true"
               icon="calendar"
               icon-right="close"
@@ -175,7 +191,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Biography"
+            :label="t('author.biography')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.biography"
@@ -187,7 +204,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Official page"
+            :label="t('author.official_page')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.officialPage"
@@ -198,7 +216,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Wikipedia page"
+            :label="t('author.wikipedia_page')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.wikipediaPage"
@@ -209,7 +228,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Goodreads page"
+            :label="t('author.goodreads_page')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.goodreadsPage"
@@ -220,7 +240,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Twitter page"
+            :label="t('author.twitter_page')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.twitterPage"
@@ -231,7 +252,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Facebook page"
+            :label="t('author.facebook_page')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.facebookPage"
@@ -242,7 +264,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Instagram page"
+            :label="t('author.instagram_page')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.instagramPage"
@@ -253,7 +276,8 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            label="Personal notes"
+            :label="t('author.personal_notes')"
+            class="capitalize"
           >
             <o-input
               v-model="currentAuthor.notes"
@@ -266,10 +290,10 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         <div v-if="hasImage">
           <o-field class="pb-6">
             <template #label>
-              Actual cover :
+              {{ t('labels.actual_cover') }} :
               <o-tooltip
                 v-if="!deleteImage"
-                label="Click bin to remove current image and upload another one"
+                :label="t('labels.click_bin_to_remove')"
                 multiline
                 position="right"
               >
@@ -279,7 +303,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               </o-tooltip>
               <o-tooltip
                 v-if="deleteImage"
-                label="Press refresh to restore image"
+                :label="t('labels.refresh_to_restore')"
                 position="right"
               >
                 <span class="icon">
@@ -317,20 +341,19 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
           class="py-2"
         >
           <o-field
-            label="Upload image"
+            :label="t('labels.upload_image')"
+            class="capitalize"
           >
             <o-switch
-              v-model="isSwitchedCustom"
-              true-value="Upload from file"
-              false-value="Upload from the web"
-              :left-label="true"
+              v-model="uploadFromWeb"
+              position="left"
             >
-              {{ isSwitchedCustom }}
+              {{ uploadlabel }}
             </o-switch>
           </o-field>
           <o-field
-            v-if="isSwitchedCustom == 'Upload from the web'"
-            label="Enter image adress"
+            v-if="uploadFromWeb"
+            :label="t('labels.enter_image_address')"
           >
             <o-input
               v-model="imageUrl"
@@ -339,14 +362,14 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               clearable="true"
               icon-right-clickable
               title="Url must start with http or https"
-              placeholder="Url must start with http or https"
+              :placeholder="t('labels.url_must_start')"
               class="input focus:input-accent"
               @icon-right-click="clearImageField"
             />
           </o-field>
           <o-field
             v-else
-            label="Choose file"
+            :label="t('labels.choose_file')"
             class="file is-primary has-name"
           >
             <input
@@ -372,7 +395,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <span class="icon">
               <i class="mdi mdi-content-save mdi-18px" />
             </span>
-            <span>Save changes</span>
+            <span>{{ t('labels.save_changes') }}</span>
           </button>
           <button
             class="btn btn-info btn-outline"
@@ -381,7 +404,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <span class="icon">
               <i class="mdi mdi-auto-fix mdi-18px" />
             </span>
-            <span>Auto fill</span>
+            <span>{{ t('labels.auto_fill') }}</span>
           </button>
         </div>
       </div>
@@ -397,14 +420,14 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
       <div>
         <div>
           <h1 class="text-2xl typewriter">
-            Search
+            {{ t('labels.search') }}
           </h1>
         </div>
       </div>
       <div class="mt-2">
         <div class="field">
           <o-field
-            label="Short language code"
+            :label="t('labels.short_language_code')"
           >
             <o-input
               v-model="searchlanguage"
@@ -422,7 +445,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <span class="icon">
               <i class="mdi mdi-magnify" />
             </span>
-            <span>Search</span>
+            <span>{{ t('labels.search') }}</span>
           </button>
           <button
             class="btn btn-warning btn-outline"
@@ -431,14 +454,14 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <span class="icon">
               <i class="mdi mdi-arrow-u-left-top" />
             </span>
-            <span>Back</span>
+            <span>{{ t('labels.back') }}</span>
           </button>
         </div>
         <div v-if="searchResult.pages.length > 0">
           <div 
             v-for="res in searchResult.pages"
             :key="res.id"
-            v-tooltip="'click to import'"
+            v-tooltip="t('labels.click_to_import')"
             class="card card-side box mb-2 shadow-lg shadow-base-300 hover:shadow-2xl hover:border-2 hover:border-accent"
             @click="fillFormWithEntry(res)"
           >
@@ -465,9 +488,9 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
           </div>
         </div>
         <div v-else>
-          Choose in which language the search should happen.
+          {{ t('labels.author_import_help1') }}
           <br>
-          If result is empty try another language.
+          {{ t('labels.author_import_help2') }}
         </div>
       </div>
       <progress

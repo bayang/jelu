@@ -3,7 +3,12 @@ import { onMounted, Ref, ref } from 'vue'
 import { Quote } from '../model/Quote'
 import dataService from "../services/DataService"
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 const quotes: Ref<Array<Quote>> = ref([]);
 
 const getQuotes = async () => {
@@ -37,8 +42,8 @@ catch (err) {
 </script>
 
 <template>
-  <div class="divider typewriter">
-    Quotes
+  <div class="divider typewriter capitalize">
+    {{ t('home.quotes') }}
   </div>
   <Splide :options="{ rewind: true, autoplay: true, interval: 5000 }">
     <SplideSlide

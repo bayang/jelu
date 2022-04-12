@@ -9,6 +9,12 @@ import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { Tag } from "../model/Tag";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const props = defineProps<{ bookId: string, book: UserBook | null, canAddEvent: boolean }>()
 const oruga = useProgrammatic();
@@ -44,19 +50,26 @@ const clearImageField = () => {
 
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
-const isSwitchedCustom = ref("Upload from the web");
+const uploadFromWeb = ref(true);
+let uploadlabel = computed(() => {
+  if (uploadFromWeb.value) {
+    return t('labels.upload_from_web')
+  } else {
+    return t('labels.upload_from_file')
+  }
+})
 const uploadPercentage = ref(0);
 const errorMessage = ref("");
 const datepicker = ref(null)
 const ownedDisplay = computed(() => {
   if (userbook.value.owned) {
-    return "Owned"
+    return t('book.owned')
   }
   return ""
 })
 const toReadDisplay = computed(() => {
   if (userbook.value.toRead) {
-    return "Book will be added to to-read list"
+    return t('labels.book_will_be_added')
   }
   return ""
 })
@@ -104,12 +117,12 @@ const importBook = () => {
     .then(res => {
       console.log(`update book ${res.book.title}`);
       progress.value = false
-      ObjectUtils.toast(oruga.oruga, "success", `Book ${res.book.title} updated !`, 4000);
+      ObjectUtils.toast(oruga.oruga, "success", t('labels.book_title_updated', { title : res.book.title}), 4000);
       emit('close')
     })
     .catch(err => {
       progress.value = false
-      ObjectUtils.toast(oruga.oruga, "danger", `Error ` + err.message, 4000);
+      ObjectUtils.toast(oruga.oruga, "danger", t('labels.error_message', {msg : err.message}), 4000);
     })
 
 }
@@ -210,7 +223,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Title"
+            :label="t('book.title')"
+            class="capitalize"
           >
             <o-input
               v-model="userbook.book.title"
@@ -222,7 +236,8 @@ function toggleRemoveImage() {
         <div class="field jelu-authorinput pb-2">
           <o-field
             horizontal
-            label="Authors"
+            :label="t('book.author', 2)"
+            class="capitalize"
           >
             <o-inputitems
               v-model="userbook.book.authors"
@@ -236,7 +251,7 @@ function toggleRemoveImage() {
               icon-pack="mdi"
               icon="account-plus"
               field="name"
-              placeholder="Add an author"
+              :placeholder="t('labels.add_author')"
               @typing="getFilteredAuthors"
               @add="itemAdded"
             />
@@ -245,7 +260,8 @@ function toggleRemoveImage() {
         <div class="field jelu-taginput pb-2">
           <o-field
             horizontal
-            label="Tags"
+            :label="t('book.tag', 2)"
+            class="capitalize"
           >
             <o-inputitems
               v-model="userbook.book.tags"
@@ -259,7 +275,7 @@ function toggleRemoveImage() {
               icon-pack="mdi"
               icon="tag-plus"
               field="name"
-              placeholder="Add a tag"
+              :placeholder="t('labels.add_tag')"
               @typing="getFilteredTags"
             />
           </o-field>
@@ -267,7 +283,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Summary"
+            :label="t('book.summary')"
+            class="capitalize"
           >
             <o-input
               v-model="userbook.book.summary"
@@ -280,18 +297,19 @@ function toggleRemoveImage() {
         <div class="field">
           <o-field
             horizontal
-            label="ISBN"
+            :label="t('book.isbn')"
+            class="uppercase"
           >
             <o-input
               v-model="userbook.book.isbn10"
               name="isbn10"
-              placeholder="isbn10"
+              :placeholder="t('book.isbn10')"
               class="input focus:input-accent"
             />
             <o-input
               v-model="userbook.book.isbn13"
               name="isbn13"
-              placeholder="isbn13"
+              :placeholder="t('book.isbn13')"
               class="input focus:input-accent"
             />
           </o-field>
@@ -299,30 +317,31 @@ function toggleRemoveImage() {
         <div class="field">
           <o-field
             horizontal
-            label="Identifiers"
+            :label="t('book.identifiers')"
+            class="capitalize"
           >
             <o-input
               v-model="userbook.book.goodreadsId"
               name="goodreadsId"
-              placeholder="goodreadsId"
+              :placeholder="t('book.goodreads_id')"
               class="input focus:input-accent"
             />
             <o-input
               v-model="userbook.book.googleId"
               name="googleId"
-              placeholder="googleId"
+              :placeholder="t('book.google_id')"
               class="input focus:input-accent"
             />
             <o-input
               v-model="userbook.book.amazonId"
               name="amazonId"
-              placeholder="amazonId"
+              :placeholder="t('book.amazon_id')"
               class="input focus:input-accent"
             />
             <o-input
               v-model="userbook.book.librarythingId"
               name="librarythingId"
-              placeholder="librarythingId"
+              :placeholder="t('book.librarything_id')"
               class="input focus:input-accent"
             />
           </o-field>
@@ -330,7 +349,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Publisher"
+            :label="t('book.publisher')"
+            class="capitalize"
           >
             <o-input 
               v-model="userbook.book.publisher" 
@@ -341,7 +361,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Published date"
+            :label="t('book.published_date')"
+            class="capitalize"
           >
             <o-datepicker
               v-show="true"
@@ -349,7 +370,7 @@ function toggleRemoveImage() {
               v-model="publishedDate"
               :show-week-number="false"
               :locale="undefined"
-              placeholder="Click to select..."
+              :placeholder="t('labels.click_to_select')"
               icon="calendar"
               icon-right="close"
               icon-right-clickable="true"
@@ -362,7 +383,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Page count"
+            :label="t('book.page_count')"
+            class="capitalize"
           >
             <o-input
               v-model="userbook.book.pageCount"
@@ -375,7 +397,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Language"
+            :label="t('book.language')"
+            class="capitalize"
           >
             <o-input 
               v-model="userbook.book.language" 
@@ -386,7 +409,8 @@ function toggleRemoveImage() {
         <div class="field">
           <o-field
             horizontal
-            label="Series"
+            :label="t('book.series')"
+            class="capitalize"
           >
             <o-input 
               v-model="userbook.book.series" 
@@ -407,42 +431,44 @@ function toggleRemoveImage() {
         >
           <o-field
             horizontal
-            label="Status : "
+            :label="t('book.status') + ' : '"
+            class="capitalize"
           >
             <o-radio
               v-model="userbook.lastReadingEvent"
               name="type"
               native-value="FINISHED"
             >
-              Finished
+              {{ t('reading_events.finished') }}
             </o-radio>
             <o-radio
               v-model="userbook.lastReadingEvent"
               name="type"
               native-value="CURRENTLY_READING"
             >
-              Currently reading
+              {{ t('reading_events.currently_reading') }}
             </o-radio>
             <o-radio
               v-model="userbook.lastReadingEvent"
               name="type"
               native-value="DROPPED"
             >
-              Dropped
+              {{ t('reading_events.dropped') }}
             </o-radio>
             <o-radio
               v-model="userbook.lastReadingEvent"
               name="type"
               native-value="NONE"
             >
-              None
+              {{ t('reading_events.none') }}
             </o-radio>
           </o-field>
         </div>
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Personal notes"
+            :label="t('book.personal_notes')"
+            class="capitalize"
           >
             <o-input
               v-model="userbook.personalNotes"
@@ -455,7 +481,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Owned"
+            :label="t('book.owned')"
+            class="capitalize"
           >
             <o-checkbox v-model="userbook.owned">
               {{ ownedDisplay }}
@@ -465,7 +492,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="To read ?"
+            :label="t('book.to_read') + ' ?'"
+            class="capitalize"
           >
             <o-checkbox v-model="userbook.toRead">
               {{ toReadDisplay }}
@@ -475,7 +503,8 @@ function toggleRemoveImage() {
         <div class="field pb-2">
           <o-field
             horizontal
-            label="Percent read"
+            :label="t('book.percent_read')"
+            class="capitalize"
           >
             <o-slider
               v-model="userbook.percentRead"
@@ -490,10 +519,11 @@ function toggleRemoveImage() {
             class=" pb-6"
           >
             <template #label>
-              Actual cover :
+              {{ t('labels.actual_cover') }} :
               <o-tooltip
                 v-if="!deleteImage"
-                label="Click bin to remove current cover"
+                :label="t('labels.click_bin_to_remove')"
+                multiline
                 position="right"
               >
                 <span class="icon">
@@ -502,7 +532,8 @@ function toggleRemoveImage() {
               </o-tooltip>
               <o-tooltip
                 v-if="deleteImage"
-                label="Press refresh to restore cover"
+                :label="t('labels.refresh_to_restore')"
+                multiline
                 position="right"
               >
                 <span class="icon">
@@ -541,21 +572,19 @@ function toggleRemoveImage() {
         >
           <o-field
             horizontal
-            label="Upload book cover"
+            :label="t('labels.upload_cover')"
           >
             <o-switch
-              v-model="isSwitchedCustom"
-              true-value="Upload from file"
-              false-value="Upload from the web"
-              :left-label="true"
+              v-model="uploadFromWeb"
+              position="left"
             >
-              {{ isSwitchedCustom }}
+              {{ uploadlabel }}
             </o-switch>
           </o-field>
           <o-field
-            v-if="isSwitchedCustom == 'Upload from the web'"
+            v-if="uploadFromWeb"
             horizontal
-            label="Enter image adress"
+            :label="t('labels.enter_image_address')"
             class="pb-2"
           >
             <o-input
@@ -565,7 +594,7 @@ function toggleRemoveImage() {
               clearable="true"
               icon-right-clickable
               title="Url must start with http or https"
-              placeholder="Url must start with http or https"
+              :placeholder="t('labels.url_must_start')"
               class="input focus:input-accent"
               @icon-right-click="clearImageField"
             />
@@ -573,7 +602,7 @@ function toggleRemoveImage() {
           <o-field
             v-else
             horizontal
-            label="Choose file"
+            :label="t('labels.choose_file')"
             class="file is-primary has-name"
           >
             <input
@@ -597,7 +626,7 @@ function toggleRemoveImage() {
           class="btn btn-primary"
           @click="importBook"
         >
-          Save changes
+          {{ t('labels.save_changes') }}
         </button>
         <p
           v-if="errorMessage"

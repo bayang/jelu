@@ -3,6 +3,12 @@ import { ref } from "vue";
 import { ImportSource } from "../model/ImportConfiguration";
 import dataService from "../services/DataService";
 import { useTitle } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 useTitle('Jelu | Imports')
 
@@ -40,14 +46,15 @@ const importFile = async () => {
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center columns is-centered">
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4">
-      Import Csv file
+    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
+      {{ t('csv_import.import_csv') }}
     </h1>
     <div class="w-11/12 sm:w-8/12">
       <div class="form-control">
         <o-field
           horizontal
-          label="Import source : "
+          :label="t('csv_import.import_source') + ' : '"
+          class="capitalize"
         >
           <o-radio
             v-model="importSource"
@@ -61,7 +68,8 @@ const importFile = async () => {
       <div class="field">
         <o-field
           horizontal
-          label="Automatically fetch metadata online"
+          :label="t('csv_import.auto_fetch_online')"
+          class="capitalize"
         >
           <o-checkbox v-model="fetchMetadata">
             {{ fetchMetadata }}
@@ -71,7 +79,8 @@ const importFile = async () => {
       <div class="field">
         <o-field
           horizontal
-          label="Also fetch covers ?"
+          :label="t('csv_import.fetch_covers') + ' ?'"
+          class="capitalize"
         >
           <o-checkbox
             v-model="fetchCovers" 
@@ -85,7 +94,7 @@ const importFile = async () => {
       <div>
         <o-field
           horizontal
-          label="Choose file to import"
+          :label="t('csv_import.choose_file')"
           class="file is-primary has-name"
         >
           <input
@@ -111,7 +120,7 @@ const importFile = async () => {
             class="btn btn-success"
             @click="importFile"
           >
-            Import File
+            {{ t('csv_import.import_file') }}
           </button>
         </p>
         <p

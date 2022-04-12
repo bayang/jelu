@@ -11,8 +11,14 @@ import { StringUtils } from "../utils/StringUtils"
 import dayjs from "dayjs";
 import useDates from '../composables/dates'
 import { ObjectUtils } from "../utils/ObjectUtils";
+import { useI18n } from 'vue-i18n'
 
 useTitle('Jelu | Authors admin')
+
+const { t, locale, availableLocales } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const store = useStore(key)
 const router = useRouter()
@@ -33,10 +39,6 @@ function getFilteredAuthors(text: string) {
   dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
   isFetching.value = false
 }
-
-onMounted(() => {
-  console.log("Component is mounted!");
-});
 
 const leftAuthor: Ref<Author> = ref({ "name": "" })
 const rightAuthor: Ref<Author> = ref({ "name": "" })
@@ -74,7 +76,6 @@ function dispatchAuthor(author: Author, event: UIEvent) {
 }
 
 function save() {
-  console.log("save")
   if (leftAuthor.value.id != null && rightAuthor.value.id != null) {
     isMerging.value = true
     dataService.mergeAuthors(leftAuthor.value.id, rightAuthor.value.id, leftAuthor.value)
@@ -84,7 +85,7 @@ function save() {
         router.push({ name: 'author-detail', params: { authorId: leftAuthor.value.id } })
       })
       .catch(err => {
-        console.log("merge failur " + err)
+        console.log("merge failure " + err)
         isMerging.value = false
         ObjectUtils.toast(oruga, "danger", `Error ` + err.message, 4000)
       })
@@ -114,7 +115,7 @@ const rightDoD = computed(() => {
   <div class="grid grid-cols-2 gap-10 mr-2">
     <div class="col-span-2 justify-self-center">
       <h1 class="text-2xl typewriter mb-4">
-        Authors merging utility
+        {{ t('authors_merge.authors_merging_utility') }}
       </h1>
       <o-steps
         v-model="activeStep"
@@ -131,41 +132,41 @@ const rightDoD = computed(() => {
         <o-step-item
           step="1"
           value="left"
-          label="Author 1"
+          :label="t('authors_merge.author_nb', {nb : 1})"
           :clickable="false"
           variant="success"
         >
           <h1 class="text-xl title has-text-centered">
-            Author to keep
-          </h1>Choose first the author that will be modified and kept in database.
+            {{ t('authors_merge.author_left_subtitle') }}
+          </h1>{{ t('authors_merge.author_left_description') }}
         </o-step-item>
 
         <o-step-item
           step="2"
           value="right"
-          label="Author 2"
+          :label="t('authors_merge.author_nb', {nb : 2})"
           :clickable="false"
           variant="success"
         >
           <h1 class="text-xl title has-text-centered">
-            Author to merge in 1
-          </h1>Choose next the author you want to merge with the other.
+            {{ t('authors_merge.author_right_subtitle') }}
+          </h1>{{ t('authors_merge.author_right_description') }}
         </o-step-item>
 
         <o-step-item
           step="3"
           value="merge"
-          label="Merge"
+          :label="t('authors_merge.authors_merge_subtitle')"
           :clickable="false"
           variant="success"
         >
           <h1 class="text-xl title has-text-centered">
-            Merge
-          </h1>Use fields on the right author to complete the author on the left one, then merge.
+            {{ t('authors_merge.authors_merge_subtitle') }}
+          </h1>{{ t('authors_merge.authors_merge_description') }}
         </o-step-item>
       </o-steps>
       <div class="field jelu-authorinput">
-        <o-field label="Search authors to merge">
+        <o-field :label="t('authors_merge.search_message')">
           <o-autocomplete
             :data="filteredAuthors"
             :clear-on-select="true"
@@ -181,7 +182,10 @@ const rightDoD = computed(() => {
     <!-- <div class=""> -->
     <div class="justify-self-center col-span-2 sm:col-span-1 w-11/12 sm:w-8/12">
       <div class="field">
-        <o-field label="Name">
+        <o-field
+          :label="t('author.name')"
+          class="capitalize"
+        >
           <o-input
             v-model="leftAuthor.name"
             maxlength="1000"
@@ -190,13 +194,16 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Date of birth">
+        <o-field
+          :label="t('author.date_of_birth')"
+          class="capitalize"
+        >
           <o-datepicker
             ref="datepicker"
             v-model="leftAuthor.dateOfBirth"
             :show-week-number="false"
             :locale="undefined"
-            placeholder="Click to select..."
+            :placeholder="t('labels.click_to_select')"
             :expanded="true"
             icon="calendar"
             icon-right="close"
@@ -209,13 +216,16 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Date of death">
+        <o-field
+          :label="t('author.date_of_death')"
+          class="capitalize"
+        >
           <o-datepicker
             ref="datepicker"
             v-model="leftAuthor.dateOfDeath"
             :show-week-number="false"
             :locale="undefined"
-            placeholder="Click to select..."
+            :placeholder="t('labels.click_to_select')"
             :expanded="true"
             icon="calendar"
             icon-right="close"
@@ -228,7 +238,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Biography">
+        <o-field
+          :label="t('author.biography')"
+          class="capitalize"
+        >
           <o-input
             v-model="leftAuthor.biography"
             maxlength="5000"
@@ -237,7 +250,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Official page">
+        <o-field
+          :label="t('author.official_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="leftAuthor.officialPage"
             maxlength="5000"
@@ -245,7 +261,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Wikipedia page">
+        <o-field
+          :label="t('author.wikipedia_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="leftAuthor.wikipediaPage"
             maxlength="5000"
@@ -253,7 +272,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Goodreads page">
+        <o-field
+          :label="t('author.goodreads_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="leftAuthor.goodreadsPage"
             maxlength="5000"
@@ -261,14 +283,20 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Twitter page">
+        <o-field
+          :label="t('author.twitter_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="leftAuthor.twitterPage"
             maxlength="5000"
           />
         </o-field>
       </div>
-      <div class="field">
+      <div
+        :label="t('author.facebook_page')"
+        class="capitalize"
+      >
         <o-field label="Facebook page">
           <o-input
             v-model="leftAuthor.facebookPage"
@@ -277,7 +305,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Instagram page">
+        <o-field
+          :label="t('author.instagram_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="leftAuthor.instagramPage"
             maxlength="5000"
@@ -285,7 +316,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Personal notes">
+        <o-field
+          :label="t('author.personal_notes')"
+          class="capitalize"
+        >
           <o-input
             v-model="leftAuthor.notes"
             maxlength="5000"
@@ -315,7 +349,10 @@ const rightDoD = computed(() => {
     </div>
     <div class="justify-self-center w-11/12 sm:w-8/12 col-span-2 sm:col-span-1">
       <div class="field">
-        <o-field label="Name">
+        <o-field
+          :label="t('author.name')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.name"
             maxlength="1000"
@@ -329,7 +366,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Date of birth">
+        <o-field
+          :label="t('author.date_of_birth')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightDoB"
             maxlength="1000"
@@ -344,7 +384,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Date of death">
+        <o-field
+          :label="t('author.date_of_death')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightDoD"
             maxlength="1000"
@@ -358,7 +401,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Biography">
+        <o-field
+          :label="t('author.biography')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.biography"
             maxlength="5000"
@@ -372,7 +418,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Official page">
+        <o-field
+          :label="t('author.official_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.officialPage"
             maxlength="5000"
@@ -385,7 +434,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Wikipedia page">
+        <o-field
+          :label="t('author.wikipedia_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.wikipediaPage"
             maxlength="5000"
@@ -398,7 +450,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Goodreads page">
+        <o-field
+          :label="t('author.goodreads_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.goodreadsPage"
             maxlength="5000"
@@ -411,7 +466,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Twitter page">
+        <o-field
+          :label="t('author.twitter_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.twitterPage"
             maxlength="5000"
@@ -424,7 +482,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Facebook page">
+        <o-field
+          :label="t('author.facebook_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.facebookPage"
             maxlength="5000"
@@ -437,7 +498,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Instagram page">
+        <o-field
+          :label="t('author.instagram_page')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.instagramPage"
             maxlength="5000"
@@ -450,7 +514,10 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
       <div class="field">
-        <o-field label="Personal notes">
+        <o-field
+          :label="t('author.personal_notes')"
+          class="capitalize"
+        >
           <o-input
             v-model="rightAuthor.notes"
             maxlength="5000"
@@ -492,7 +559,7 @@ const rightDoD = computed(() => {
         <span class="icon">
           <i class="mdi mdi-content-save mdi-18px" />
         </span>
-        <span>Merge changes</span>
+        <span>{{ t('author.merge_changes') }}</span>
       </button>
     </div>
   </div>

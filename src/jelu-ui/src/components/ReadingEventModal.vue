@@ -2,6 +2,12 @@
 import { Ref, ref } from "vue";
 import { CreateReadingEvent, ReadingEvent } from "../model/ReadingEvent";
 import dataService from "../services/DataService";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const props = defineProps<{
   readingEvent: ReadingEvent|CreateReadingEvent,
@@ -66,45 +72,45 @@ const deleteEvent = () => {
     >
       <div>
         <div>
-          <h1 class="typewriter text-2xl">
-            Edit event
+          <h1 class="typewriter text-2xl first-letter:capitalize">
+            {{ t('reading_events.edit_event') }}
           </h1>
         </div>
       </div>
       <div>
         <div class="field">
           <label class="label">
-            <span class="label-text font-semibold">Last event type : </span>
+            <span class="label-text font-semibold">{{ t('reading_events.last_event_type') }} : </span>
           </label>
           <o-radio
             v-model="currentEvent.eventType"
             native-value="FINISHED"
           >
-            Finished
+            {{ t('reading_events.finished') }}
           </o-radio>
           <o-radio
             v-model="currentEvent.eventType"
             native-value="CURRENTLY_READING"
           >
-            Currently reading
+            {{ t('reading_events.currently_reading') }}
           </o-radio>
           <o-radio
             v-model="currentEvent.eventType"
             native-value="DROPPED"
           >
-            Dropped
+            {{ t('reading_events.dropped') }}
           </o-radio>
         </div>
         <div class="field">
           <label class="label">
-            <span class="label-text font-semibold">Event date : </span>
+            <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_date') }} : </span>
           </label>
           <o-datepicker
             ref="datepicker"
             v-model="currentEvent.modificationDate"
             :show-week-number="false"
             :locale="undefined"
-            placeholder="Click to select..."
+            :placeholder="t('labels.click_to_select')"
             :expanded="true"
             icon="calendar"
             icon-right="close"
@@ -122,7 +128,7 @@ const deleteEvent = () => {
             <span class="icon">
               <i class="mdi mdi-pencil mdi-18px" />
             </span>
-            <span>Submit</span>
+            <span>{{ t('labels.submit') }}</span>
           </button>
           <button
             class="btn btn-error"
@@ -131,7 +137,7 @@ const deleteEvent = () => {
             <span class="icon">
               <i class="mdi mdi-delete mdi-18px" />
             </span>
-            <span>Delete</span>
+            <span>{{ t('labels.delete') }}</span>
           </button>
         </div>
       </div>
@@ -141,45 +147,45 @@ const deleteEvent = () => {
     >
       <div>
         <div>
-          <h1 class="typewriter text-2xl">
-            Choose event
+          <h1 class="typewriter text-2xl capitalize">
+            {{ t('reading_events.choose_event') }}
           </h1>
         </div>
       </div>
       <div>
         <div class="field">
           <label class="label">
-            <span class="label-text font-semibold">Event type : </span>
+            <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_type') }} : </span>
           </label>
           <o-radio
             v-model="currentCreateEvent.eventType"
             native-value="FINISHED"
           >
-            Finished
+            {{ t('reading_events.finished') }}
           </o-radio>
           <o-radio
             v-model="currentCreateEvent.eventType"
             native-value="CURRENTLY_READING"
           >
-            Currently reading
+            {{ t('reading_events.currently_reading') }}
           </o-radio>
           <o-radio
             v-model="currentCreateEvent.eventType"
             native-value="DROPPED"
           >
-            Dropped
+            {{ t('reading_events.dropped') }}
           </o-radio>
         </div>
         <div class="field">
           <label class="label">
-            <span class="label-text font-semibold">Event date :</span>
+            <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_date') }} :</span>
           </label>
           <o-datepicker
             ref="datepicker"
             v-model="currentCreateEvent.eventDate"
             :show-week-number="false"
             :locale="undefined"
-            placeholder="Click to select..."
+            :placeholder="t('labels.click_to_select')"
             :expanded="true"
             icon="calendar"
             icon-right="close"
@@ -197,7 +203,7 @@ const deleteEvent = () => {
             <span class="icon">
               <i class="mdi mdi-pencil mdi-18px" />
             </span>
-            <span>Create</span>
+            <span>{{ t('labels.create') }}</span>
           </button>
         </div>
       </div>

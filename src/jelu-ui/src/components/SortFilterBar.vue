@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref, watch } from "vue";
 import { useMagicKeys } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const keys = useMagicKeys()
 const shiftF = keys['Shift+F']
@@ -37,9 +43,6 @@ watch(shiftF, (v) => {
 })
 
 
-onMounted(() => {
-  console.log("Component is mounted!");
-});
 </script>
 
 <template>
@@ -53,12 +56,12 @@ onMounted(() => {
   >
     <div class="p-5">
       <div class="field">
-        <label class="label">Sort order : </label>
+        <label class="label">{{ t('sorting.sort_order') }} : </label>
         <o-radio
           v-model="sortOrder"
           native-value="desc"
         >
-          Descending
+          {{ t('sorting.descending') }}
         </o-radio>
       </div>
       <div class="field">
@@ -66,7 +69,7 @@ onMounted(() => {
           v-model="sortOrder"
           native-value="asc"
         >
-          Ascending
+          {{ t('sorting.ascending') }}
         </o-radio>
       </div>
       <slot name="sort-fields" />
@@ -76,5 +79,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
+label {
+  font-weight: bold;
+}
 
 </style>

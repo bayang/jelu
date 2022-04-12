@@ -15,6 +15,12 @@ import IsbnVerify from '@saekitominaga/isbn-verify';
 import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router'
 import { useTitle } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 useTitle('Jelu | Add book')
 
@@ -49,18 +55,26 @@ const eventType = ref(null);
 const eventDate = ref(new Date());
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
-const isSwitchedCustom = ref("Upload from the web");
+const uploadFromWeb = ref(true);
+let uploadlabel = computed(() => {
+  if (uploadFromWeb.value) {
+    return t('labels.upload_from_web')
+  } else {
+    return t('labels.upload_from_file')
+  }
+}) 
+
 const uploadPercentage = ref(0);
 const errorMessage = ref("");
 const ownedDisplay = computed(() => {
   if (form.owned) {
-    return "Owned"
+    return t('book.owned')
   }
   return ""
 })
 const toReadDisplay = computed(() => {
   if (form.toRead) {
-    return "Book will be added to to-read list"
+    return t('labels.book_will_be_added')
   }
   return ""
 })
@@ -97,15 +111,15 @@ const importBook = async () => {
     if (alreadyExisting != null) {
       saveBook = false
       await swalMixin.fire({
-        html: `<p>Book with same isbn already exists:<br>${alreadyExisting.title}<br>Do you want to save the save a new one anyway?</p>`,
+        html: `<p>${t('labels.book_with_same_isbn_already_exists')}:<br>${alreadyExisting.title}<br>${t('labels.save_new_anyway')}</p>`,
         showDenyButton: true,
-        confirmButtonText: 'Save',
-        denyButtonText: `Don't save`,
+        confirmButtonText: t('labels.save'),
+        denyButtonText: t('labels.dont_save'),
       }).then((result) => {
         if (result.isConfirmed) {
           saveBook = true
         } else if (result.isDenied) {
-          swalMixin.fire('', 'Changes are not saved', 'info')
+          swalMixin.fire('', t('sorting.sort_by'), 'info')
         }
       })
     }
@@ -146,16 +160,16 @@ const importBook = async () => {
       );
       progress.value = false
       console.log(`saved book ${res.book.title}`);
-      ObjectUtils.toast(oruga, "success", `Book ${res.book.title} imported !`, 4000)
+      ObjectUtils.toast(oruga, "success", t('labels.book_title_saved', {title : res.book.title}), 4000)
       clearForm();
       await router.push({name: 'my-books'})
     } catch (error: any) {
       progress.value = false
       // errorMessage.value = error.message
-      ObjectUtils.toast(oruga, "danger", `Error ` + error.message, 4000)
+      ObjectUtils.toast(oruga, "danger", t('labels.error_message', {msg : error.message}), 4000)
     }
   } else {
-    errorMessage.value = "provide at least a title";
+    errorMessage.value = t('labels.provide_title');
   }
 };
 
@@ -359,7 +373,7 @@ const validateIsbn10 = (isbn: string) => {
   if (StringUtils.isNotBlank(isbn)) {
     const isbnVerify = new IsbnVerify(isbn);
     if (!isbnVerify.isIsbn10()) {
-      isbn10ValidationMessage.value = "Invalid isbn10"
+      isbn10ValidationMessage.value = t('labels.invalid_isbn10')
       isbn10LabelVariant.value = "danger"
     }
     else {
@@ -377,7 +391,7 @@ const validateIsbn13 = (isbn: string) => {
   if (StringUtils.isNotBlank(isbn)) {
     const isbnVerify = new IsbnVerify(isbn);
     if (!isbnVerify.isIsbn13()) {
-      isbn13ValidationMessage.value = "Invalid isbn13"
+      isbn13ValidationMessage.value = t('labels.invalid_isbn13')
       isbn13LabelVariant.value = "danger"
     }
     else {
@@ -414,10 +428,10 @@ async function checkIsbnExists(isbn10: string, isbn13: string) {
 
 let autoImportPopupContent = computed(() => {
   if (store != null && store.getters.getSettings.metadataFetchEnabled) {
-    return "Try to auto fill some fields from the web, given a isbn or a title"
+    return t('labels.auto_fill_doc')
   }
   else {
-    return "Auto import requires Calibre to be installed"
+    return t('labels.auto_import_disabled')
   }
 })
 
@@ -432,8 +446,8 @@ let displayDatepicker = computed(() => {
     <div class="grid columns is-multiline is-centered">
       <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12 justify-center justify-items-center justify-self-center column is-centered is-offset-one-fifth is-three-fifths">
         <div />
-        <h1 class="text-2xl title has-text-weight-normal typewriter">
-          Add book
+        <h1 class="text-2xl title has-text-weight-normal typewriter capitalize">
+          {{ t('nav.add_book') }}
         </h1>
         <button
           v-tooltip="autoImportPopupContent"
@@ -444,14 +458,15 @@ let displayDatepicker = computed(() => {
           <span class="icon">
             <i class="mdi mdi-auto-fix mdi-18px" />
           </span>
-          <span>Auto fill</span>
+          <span>{{ t('labels.auto_fill') }}</span>
         </button>
       </div>
       <div class="form-control sm:w-8/12 justify-center justify-items-center justify-self-center column is-two-thirds">
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Title"
+            :label="t('book.title')"
+            class="capitalize"
           >
             <o-input 
               v-model="form.title" 
@@ -463,7 +478,8 @@ let displayDatepicker = computed(() => {
         <div class="field jelu-authorinput mb-3">
           <o-field 
             horizontal 
-            label="Authors"
+            :label="t('book.author', 2)"
+            class="capitalize"
           >
             <o-inputitems
               v-model="authors"
@@ -477,7 +493,7 @@ let displayDatepicker = computed(() => {
               icon-pack="mdi"
               icon="account-plus"
               field="name"
-              placeholder="Add an author"
+              :placeholder="t('labels.add_author')"
               @typing="getFilteredAuthors"
             />
           </o-field>
@@ -485,7 +501,8 @@ let displayDatepicker = computed(() => {
         <div class="field jelu-taginput mb-3">
           <o-field
             horizontal
-            label="Tags"
+            :label="t('book.tag', 2)"
+            class="capitalize"
           >
             <o-inputitems
               v-model="tags"
@@ -499,7 +516,7 @@ let displayDatepicker = computed(() => {
               icon-pack="mdi"
               icon="tag-plus"
               field="name"
-              placeholder="Add a tag"
+              :placeholder="t('labels.add_tag')"
               @typing="getFilteredTags"
             />
           </o-field>
@@ -507,7 +524,8 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Summary"
+            :label="t('book.summary')"
+            class="capitalize"
           >
             <o-input
               v-model="form.summary"
@@ -520,14 +538,15 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="ISBN10"
+            :label="t('book.isbn10')"
             :message="isbn10ValidationMessage"
             :variant="isbn10LabelVariant"
+            class="uppercase"
           >
             <o-input
               v-model="form.isbn10"
               name="isbn10"
-              placeholder="isbn10"
+              :placeholder="t('book.isbn10')"
               class="input focus:input-accent"
               @blur="validateIsbn10($event.target.value)"
             />
@@ -536,14 +555,15 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="ISBN13"
+            :label="t('book.isbn13')"
             :message="isbn13ValidationMessage"
             :variant="isbn13LabelVariant"
+            class="uppercase"
           >
             <o-input
               v-model="form.isbn13"
               name="isbn13"
-              placeholder="isbn13"
+              :placeholder="t('book.isbn13')"
               class="input focus:input-accent"
               @blur="validateIsbn13($event.target.value)"
             />
@@ -552,30 +572,31 @@ let displayDatepicker = computed(() => {
         <div class="field">
           <o-field
             horizontal
-            label="Identifiers"
+            :label="t('book.identifiers')"
+            class="capitalize"
           >
             <o-input
               v-model="form.googleId"
               name="googleId"
-              placeholder="googleId"
+              :placeholder="t('book.google_id')"
               class="input focus:input-accent"
             />
             <o-input
               v-model="form.goodreadsId"
               name="goodreadsId"
-              placeholder="goodreadsId"
+              :placeholder="t('book.goodreads_id')"
               class="input focus:input-accent"
             />
             <o-input
               v-model="form.amazonId"
               name="amazonId"
-              placeholder="amazonId"
+              :placeholder="t('book.amazon_id')"
               class="input focus:input-accent"
             />
             <o-input
               v-model="form.librarythingId"
               name="librarythingId"
-              placeholder="librarythingId"
+              :placeholder="t('book.librarything_id')"
               class="input focus:input-accent"
             />
           </o-field>
@@ -583,7 +604,8 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Publisher"
+            :label="t('book.publisher')"
+            class="capitalize"
           >
             <o-input
               v-model="form.publisher"
@@ -594,14 +616,15 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Published date"
+            :label="t('book.published_date')"
+            class="capitalize"
           >
             <o-datepicker
               ref="datepicker"
               v-model="publishedDate"
               :show-week-number="false"
               :locale="undefined"
-              placeholder="Click to select..."
+              :placeholder="t('labels.click_to_select')"
               icon="calendar"
               icon-right="close"
               :icon-right-clickable="true"
@@ -614,7 +637,8 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Page count"
+            :label="t('book.page_count')"
+            class="capitalize"
           >
             <o-input
               v-model="form.pageCount"
@@ -627,7 +651,8 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Language"
+            :label="t('book.language')"
+            class="capitalize"
           >
             <o-input
               v-model="form.language"
@@ -639,7 +664,8 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Series"
+            :label="t('book.series')"
+            class="capitalize"
           >
             <o-input
               v-model="form.series"
@@ -657,35 +683,36 @@ let displayDatepicker = computed(() => {
         <div class="block">
           <o-field
             horizontal
-            label="Status : "
+            :label="t('book.status') + ' :'"
+            class="capitalize"
           >
             <o-radio
               v-model="eventType"
               name="type"
               native-value="FINISHED"
             >
-              Finished
+              {{ t('reading_events.finished') }}
             </o-radio>
             <o-radio
               v-model="eventType"
               name="type"
               native-value="CURRENTLY_READING"
             >
-              Currently reading
+              {{ t('reading_events.currently_reading') }}
             </o-radio>
             <o-radio
               v-model="eventType"
               name="type"
               native-value="DROPPED"
             >
-              Dropped
+              {{ t('reading_events.dropped') }}
             </o-radio>
             <o-radio
               v-model="eventType"
               name="type"
               native-value="NONE"
             >
-              None
+              {{ t('reading_events.none') }}
             </o-radio>
           </o-field>
         </div>
@@ -695,14 +722,15 @@ let displayDatepicker = computed(() => {
         >
           <o-field
             horizontal
-            label="Event date"
+            :label="t('labels.event_date')"
+            class="capitalize"
           >
             <o-datepicker
               ref="datepicker"
               v-model="eventDate"
               :show-week-number="false"
               :locale="undefined"
-              placeholder="Click to select..."
+              :placeholder="t('labels.click_to_select')"
               :expanded="true"
               icon="calendar"
               icon-right="close"
@@ -716,7 +744,8 @@ let displayDatepicker = computed(() => {
         <div class="field my-3">
           <o-field
             horizontal
-            label="Personal notes"
+            :label="t('book.personal_notes')"
+            class="capitalize"
           >
             <o-input
               v-model="form.personalNotes"
@@ -729,7 +758,8 @@ let displayDatepicker = computed(() => {
         <div class="field mb-2">
           <o-field
             horizontal
-            label="Owned"
+            :label="t('book.owned')"
+            class="capitalize"
           >
             <o-checkbox v-model="form.owned">
               {{ ownedDisplay }}
@@ -739,7 +769,8 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="To read ?"
+            :label="t('book.to_read') + ' ?'"
+            class="capitalize"
           >
             <o-checkbox v-model="form.toRead">
               {{ toReadDisplay }}
@@ -749,7 +780,8 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
-            label="Percent read"
+            :label="t('book.percent_read')"
+            class="capitalize"
           >
             <o-slider
               v-model="form.percentRead"
@@ -764,10 +796,11 @@ let displayDatepicker = computed(() => {
         >
           <o-field horizontal>
             <template #label>
-              Actual cover :
+              {{ t('labels.actual_cover') }} :
               <o-tooltip
                 v-if="!deleteImage"
-                label="Click bin to remove current cover and upload another one"
+                :label="t('labels.click_bin_to_remove')"
+                multiline
                 position="right"
               >
                 <span class="icon">
@@ -776,8 +809,9 @@ let displayDatepicker = computed(() => {
               </o-tooltip>
               <o-tooltip
                 v-if="deleteImage"
-                label="Press refresh to restore cover"
+                :label="t('labels.refresh_to_restore')"
                 position="right"
+                multiline
               >
                 <span class="icon">
                   <i class="mdi mdi-information-outline" />
@@ -815,21 +849,19 @@ let displayDatepicker = computed(() => {
         >
           <o-field
             horizontal
-            label="Upload book cover"
+            :label="t('labels.upload_cover')"
           >
             <o-switch
-              v-model="isSwitchedCustom"
-              true-value="Upload from file"
-              false-value="Upload from the web"
-              :left-label="true"
+              v-model="uploadFromWeb"
+              position="left"
             >
-              {{ isSwitchedCustom }}
+              {{ uploadlabel }}
             </o-switch>
           </o-field>
           <o-field
-            v-if="isSwitchedCustom == 'Upload from the web'"
+            v-if="uploadFromWeb"
             horizontal
-            label="Enter image adress"
+            :label="t('labels.enter_image_address')"
           >
             <o-input
               v-model="imageUrl"
@@ -838,7 +870,7 @@ let displayDatepicker = computed(() => {
               :clearable="true"
               icon-right-clickable
               title="Url must start with http or https"
-              placeholder="Url must start with http or https"
+              :placeholder="t('labels.url_must_start')"
               class="input focus:input-accent"
               @icon-right-click="clearImageField"
             />
@@ -846,7 +878,7 @@ let displayDatepicker = computed(() => {
           <o-field
             v-else
             horizontal
-            label="Choose file"
+            :label="t('labels.choose_file')"
             class="file is-primary has-name"
           >
             <input
@@ -870,7 +902,7 @@ let displayDatepicker = computed(() => {
             class="btn btn-success mb-3"
             @click="importBook"
           >
-            Import book
+            {{ t('labels.import_book') }}
           </button>
           <progress
             v-if="progress"

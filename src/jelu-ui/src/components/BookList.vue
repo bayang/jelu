@@ -11,8 +11,14 @@ import { useThrottleFn } from '@vueuse/core'
 import useSort from "../composables/sort";
 import SortFilterBarVue from "./SortFilterBar.vue";
 import { useTitle } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 
 useTitle('Jelu | My books')
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const books: Ref<Array<UserBook>> = ref([]);
 
@@ -92,12 +98,12 @@ onMounted(() => {
   >
     <template #sort-fields>
       <div class="field">
-        <label class="label">Sort by : </label>
+        <label class="label">{{ t('sorting.sort_by') }} : </label>
         <o-radio
           v-model="sortBy"
           native-value="lastReadingEventDate"
         >
-          Last reading event date
+          {{ t('sorting.last_reading_event_date') }}
         </o-radio>
       </div>
       <div class="field">
@@ -105,7 +111,7 @@ onMounted(() => {
           v-model="sortBy"
           native-value="creationDate"
         >
-          Date added
+          {{ t('sorting.date_added') }}
         </o-radio>
       </div>
       <div class="field">
@@ -113,7 +119,7 @@ onMounted(() => {
           v-model="sortBy"
           native-value="title"
         >
-          Title
+          {{ t('sorting.title') }}
         </o-radio>
       </div>
       <div class="field">
@@ -121,7 +127,7 @@ onMounted(() => {
           v-model="sortBy"
           native-value="publisher"
         >
-          Publisher
+          {{ t('sorting.publisher') }}
         </o-radio>
       </div>
       <div class="field">
@@ -129,40 +135,40 @@ onMounted(() => {
           v-model="sortBy"
           native-value="series"
         >
-          Series
+          {{ t('sorting.series') }}
         </o-radio>
       </div>
     </template>
     <template #filters>
-      <div class="field">
-        <label class="label">Last event type : </label>
+      <div class="field capitalize">
+        <label class="label">{{ t('reading_events.last_event_type') }} : </label>
         <o-checkbox
           v-model="eventTypes"
           native-value="FINISHED"
         >
-          Finished
+          {{ t('reading_events.finished') }}
         </o-checkbox>
         <o-checkbox
           v-model="eventTypes"
           native-value="CURRENTLY_READING"
         >
-          Currently reading
+          {{ t('reading_events.currently_reading') }}
         </o-checkbox>
         <o-checkbox
           v-model="eventTypes"
           native-value="DROPPED"
         >
-          Dropped
+          {{ t('reading_events.dropped') }}
         </o-checkbox>
       </div>
       <div class="field">
-        <label class="label">Book is in to-read list : </label>
+        <label class="label">{{ t('filtering.book_in_list') }} : </label>
         <div class="field">
           <o-radio
             v-model="toRead"
             native-value="null"
           >
-            Unset
+            {{ t('filtering.unset') }}
           </o-radio>
         </div>
         <div class="field">
@@ -170,7 +176,7 @@ onMounted(() => {
             v-model="toRead"
             native-value="false"
           >
-            False
+            {{ t('labels.false') }}
           </o-radio>
         </div>
         <div class="field">
@@ -178,7 +184,7 @@ onMounted(() => {
             v-model="toRead"
             native-value="true"
           >
-            True
+            {{ t('labels.true') }}
           </o-radio>
         </div>
       </div>
@@ -195,11 +201,11 @@ onMounted(() => {
         <i class="mdi mdi-filter-variant" />
       </span>
     </o-button>
-    <h2 class="text-3xl typewriter">
+    <h2 class="text-3xl typewriter capitalize">
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
-      &nbsp; My books :
+      &nbsp; {{ t('nav.my_books') }} :
     </h2>
     <div />
   </div>
@@ -244,8 +250,8 @@ onMounted(() => {
     />
   </div>
   <div v-else>
-    <h2 class="title has-text-weight-normal typewriter">
-      Library is empty
+    <h2 class="title has-text-weight-normal typewriter capitalize">
+      {{ t('labels.library_empty') }}
     </h2>
     <span class="icon is-large">
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />

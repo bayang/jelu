@@ -12,12 +12,17 @@ import QuotesDisplay from './QuotesDisplay.vue'
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import ReadingEventModalVue from './ReadingEventModal.vue'
 import { useTitle } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 
 useTitle('Jelu | Home')
 
 const store = useStore(key)
 const router = useRouter()
 const {oruga} = useProgrammatic()
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const isLogged = computed(() => {
     return store != null && store != undefined && store.getters.getLogged
@@ -71,10 +76,6 @@ const getMyEvents = async () => {
 
 };
 
-onMounted(() => {
-  console.log("Component is mounted!");
-});
-
 const visibleAdvanced: Ref<boolean> = ref(false);
 
 const hideAdvanced = () => {
@@ -97,6 +98,16 @@ const eventClass = (type: ReadingEventType) => {
       type === ReadingEventType.CURRENTLY_READING
     ) {
       return "badge-success";
+    } else return "";
+};
+
+const eventLabel = (type: ReadingEventType) => {
+    if (type === ReadingEventType.FINISHED) {
+      return t('reading_events.finished');
+    } else if (type === ReadingEventType.DROPPED) {
+      return t('reading_events.dropped');
+    } else if (type === ReadingEventType.CURRENTLY_READING) {
+      return t('reading_events.reading');
     } else return "";
 };
 
@@ -162,7 +173,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
       <div class="basis-10/12 sm:basis-1/3">
         <o-field>
           <o-input
-            placeholder="Search..."
+            :placeholder="t('labels.search') + '...'"
             type="search" 
             icon="magnify"
             icon-clickable 
@@ -178,13 +189,13 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
           class="link-hover font-sans"
           :to="{ name: 'search' }"
         >
-          Advanced search
+          {{ t('labels.advanced_search') }}
         </router-link>
       </div>
     </div>
     <div v-if="hasBooks">
       <h2 class="typewriter text-3xl py-4">
-        Currently reading :
+        {{ t('home.currently_reading') }} :
       </h2>
       <div class="flex flex-row flex-wrap justify-center gap-3">
         <div
@@ -232,7 +243,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
     <!-- logged, no books -->
     <div v-else>
       <h2 class="text-3xl typewriter">
-        Not currently reading anything
+        {{ t('home.not_reading') }}
       </h2>
       <span class="icon is-large">
         <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
@@ -242,7 +253,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
       v-if="events.length > 0"
       class="text-3xl typewriter py-4"
     >
-      recent reading events :
+      {{ t('home.recent_events') }} :
     </h2>
     <div
       v-if="events.length > 0"
@@ -258,7 +269,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             <span
               class="badge mb-1"
               :class="eventClass(event.eventType)"
-            >{{ event.eventType }}</span>
+            >{{ eventLabel(event.eventType) }}</span>
           </p>
           <router-link
             v-if="event.userBook.id != undefined"
@@ -297,7 +308,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
   <!-- not logged -->
   <div v-else>
     <p class="capitalize">
-      Please log in first
+      {{ t('user.log_first') }}
     </p>
   </div>
 </template>

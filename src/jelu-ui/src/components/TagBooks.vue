@@ -13,7 +13,12 @@ import BookCard from "./BookCard.vue";
 import EditBookModal from "./EditBookModal.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
 import { useTitle } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const {oruga} = useProgrammatic();
 
@@ -76,12 +81,6 @@ const getBooks = () => {
   
 };
 
-onMounted(() => {
-  console.log("Component is mounted!");
-    
-    }
-);
-
 const convertedBooks = computed(() => tagBooks.value?.map(b => ObjectUtils.toUserBook(b)))
 
 function modalClosed() {
@@ -124,12 +123,12 @@ getBooks()
   >
     <template #sort-fields>
       <div class="field">
-        <label class="label">Sort by : </label>
+        <label class="label">{{ t('sorting.sort_by') }} : </label>
         <o-radio
           v-model="sortBy"
           native-value="title"
         >
-          Title
+          {{ t('sorting.title') }}
         </o-radio>
       </div>
       <div class="field">
@@ -137,7 +136,7 @@ getBooks()
           v-model="sortBy"
           native-value="publisher"
         >
-          Publisher
+          {{ t('sorting.publisher') }}
         </o-radio>
       </div>
       <div class="field">
@@ -145,36 +144,36 @@ getBooks()
           v-model="sortBy"
           native-value="series"
         >
-          Series
+          {{ t('sorting.series') }}
         </o-radio>
         <o-radio
           v-model="sortBy"
           native-value="publishedDate"
         >
-          Publication date
+          {{ t('sorting.publication_date') }}
         </o-radio>
       </div>
     </template>
     <template #filters>
       <div class="field">
-        <label class="label">Books type : </label>
+        <label class="label">{{ t('filtering.books_type') }} : </label>
         <o-radio
           v-model="libraryFilter"
           native-value="ANY"
         >
-          Any
+          {{ t('filtering.any') }}
         </o-radio>
         <o-radio
           v-model="libraryFilter"
           native-value="ONLY_USER_BOOKS"
         >
-          Only books in my lists
+          {{ t('filtering.only_in_my_list') }}
         </o-radio>
         <o-radio
           v-model="libraryFilter"
           native-value="ONLY_NON_USER_BOOKS"
         >
-          Only books not in my lists
+          {{ t('filtering.only_not_in_my_list') }}
         </o-radio>
       </div>
     </template>
@@ -194,7 +193,7 @@ getBooks()
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
-      Books tagged #{{ tag.name }} :
+      {{ t('labels.books_tagged_name', { tag : tag.name}) }} :
     </h2>
     <div />
   </div>
@@ -230,14 +229,14 @@ getBooks()
       </router-link>
       <div v-else>
         <book-card
-          v-tooltip="'This book is not yet in your books, double click to add it'"
+          v-tooltip="t('labels.book_not_yet_in_books')"
           :book="book"
           class="h-full"
           @dblclick="toggleEdit(book)"
         >
           <template #icon>
             <span
-              v-tooltip="'not in your books'"
+              v-tooltip="t('labels.not_in_your_books')"
               class="icon text-error"
             >
               <i class="mdi mdi-plus-circle mdi-18px" />

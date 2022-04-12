@@ -2,6 +2,12 @@
 import { computed } from "vue";
 import { UserBook } from "../model/Book";
 import { ReadingEventType } from "../model/ReadingEvent";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 const props = defineProps<{ book: UserBook, size?: string }>();
 
@@ -23,11 +29,16 @@ const eventClass = computed(() => {
 const eventText = computed(() => {
   if (props.book.lastReadingEvent) {
     if (props.book.lastReadingEvent === ReadingEventType.CURRENTLY_READING) {
-      return "reading";
-    } else return props.book.lastReadingEvent.toLowerCase();
+      return t('reading_events.reading');
+    } else if (props.book.lastReadingEvent === ReadingEventType.DROPPED) {
+      return t('reading_events.dropped');
+    } else if (props.book.lastReadingEvent === ReadingEventType.FINISHED) {
+      return t('reading_events.finished');
+    }
   }
   return "";
 });
+
 const authorsText = computed(() => {
   let txt = "";
   if (props.book.book.authors && props.book.book.authors.length > 0) {
@@ -101,14 +112,14 @@ const showProgressBar = (book: UserBook) => {
         <div>
           <span
             v-if="book.owned"
-            v-tooltip="'owned'"
+            v-tooltip="t('book.owned')"
             class="icon text-info"
           >
             <i class="mdi mdi-bookshelf mdi-18px" />
           </span>
           <span
             v-if="book.toRead"
-            v-tooltip="'in read list'"
+            v-tooltip="t('book.in_read_list')"
             class="icon text-info"
           >
             <i class="mdi mdi-eye mdi-18px" />

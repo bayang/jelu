@@ -6,10 +6,15 @@ import { useRoute, useRouter } from 'vue-router'
 import dataService from "./services/DataService";
 import Avatar from 'vue-avatar-sdh'
 import { themeChange } from 'theme-change'
+import { useI18n } from 'vue-i18n'
 
 const store = useStore(key)
 const router = useRouter()
 const route = useRoute()
+const { t, locale } = useI18n({
+      inheritLocale: true,
+      useScope: 'global'
+    })
 
 console.log("route " + route.fullPath + " " + route.path + " " + route.redirectedFrom)
 console.log(route)
@@ -89,28 +94,28 @@ const logout = () => {
             <li>
               <router-link
                 v-if="isLogged"
-                class="font-sans"
+                class="font-sans capitalize"
                 :to="{ name: 'my-books' }"
               >
-                My books
+                {{ t('nav.my_books') }}
               </router-link>
             </li>
             <li>
               <router-link
                 v-if="isLogged"
-                class="font-sans"
+                class="font-sans capitalize"
                 :to="{ name: 'to-read' }"
               >
-                To Read List
+                {{ t('nav.to_read') }}
               </router-link>
             </li>
             <li>
               <router-link
                 v-if="isLogged"
                 :to="{ name: 'add-book' }"
-                class="font-sans"
+                class="font-sans capitalize"
               >
-                Add book
+                {{ t('nav.add_book') }}
               </router-link>
             </li>
           </ul>
@@ -131,28 +136,28 @@ const logout = () => {
           <li>
             <router-link
               v-if="isLogged"
-              class="font-sans text-xl"
+              class="font-sans text-xl capitalize"
               :to="{ name: 'my-books' }"
             >
-              My books
+              {{ t('nav.my_books') }}
             </router-link>
           </li>
           <li>
             <router-link
               v-if="isLogged"
-              class="font-sans text-xl"
+              class="font-sans text-xl capitalize"
               :to="{ name: 'to-read' }"
             >
-              To Read List
+              {{ t('nav.to_read') }}
             </router-link>
           </li>
           <li>
             <router-link
               v-if="isLogged"
               :to="{ name: 'add-book' }"
-              class="font-sans text-xl"
+              class="font-sans text-xl capitalize"
             >
-              Add book
+              {{ t('nav.add_book') }}
             </router-link>
           </li>
         </ul>
@@ -175,10 +180,10 @@ const logout = () => {
           >
             <li v-if="isLogged">
               <router-link
-                class="font-sans text-base"
+                class="font-sans text-base capitalize"
                 :to="{ name: 'profile-page' }"
               >
-                Dashboard
+                {{ t('nav.dashboard') }}
               </router-link>
             </li>
             <li v-if="!isLogged">
@@ -186,14 +191,16 @@ const logout = () => {
                 class="font-sans text-base"
                 :to="{ name: 'login' }"
               >
-                Login
+                {{ t('nav.login') }}
               </router-link>
             </li>
             <li v-if="isLogged">
               <a
-                class="font-sans text-base"
+                class="font-sans text-base capitalize"
                 @click="logout()"
-              >Logout</a>
+              >
+                {{ t('nav.logout') }}
+              </a>
             </li>
           </ul>
         </div>

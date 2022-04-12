@@ -24,11 +24,13 @@
     "v-tooltip": "^4.0.0-beta.8",
     "vue": "^3.2.16",
     "vue-avatar-sdh": "^1.0.3",
+    "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.12",
     "vuejs-sidebar-menu": "^1.0.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@intlify/vite-plugin-vue-i18n": "^3.4.0",
     "@tailwindcss/line-clamp": "^0.3.1",
     "@tailwindcss/typography": "^0.5.2",
     "@types/qs": "^6.9.7",
