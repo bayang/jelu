@@ -122,7 +122,7 @@ getToRead()
       </div>
     </template>
     <template #filters>
-      <div class="field">
+      <div class="field flex flex-col capitalize">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
         <o-checkbox
           v-model="eventTypes"
@@ -225,6 +225,16 @@ getToRead()
 </template>
 
 <style scoped>
+
+label {
+  margin: 0 0.5em;
+  font-weight: bold;
+}
+
+/* fields in side bar slots are shifted to the right and alignment is broken */
+.field {
+  margin-left: -8px;
+}
 
 
 </style>

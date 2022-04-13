@@ -140,7 +140,7 @@ onMounted(() => {
       </div>
     </template>
     <template #filters>
-      <div class="field capitalize">
+      <div class="field capitalize flex flex-col">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
         <o-checkbox
           v-model="eventTypes"

@@ -378,4 +378,15 @@ if (titleQuery.value != null ||
 
 <style lang="scss" scoped>
 
+label {
+  margin: 0 0.5em;
+  font-weight: bold;
+}
+
+/* fields in side bar slots are shifted to the right and alignment is broken */
+.field {
+  margin-left: -8px;
+}
+
+
 </style>
