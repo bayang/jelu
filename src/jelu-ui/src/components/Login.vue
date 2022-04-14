@@ -4,6 +4,7 @@ import { useStore } from 'vuex'
 import { key } from '../store'
 import { StringUtils } from '../utils/StringUtils'
 import { useI18n } from 'vue-i18n'
+import { useTitle } from '@vueuse/core'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -16,7 +17,6 @@ const loginValidation = ref('')
 const passwordValidation = ref('')
 const errorMessage = ref('')
 const progress: Ref<boolean> = ref(false)
-import { useTitle } from '@vueuse/core'
 
 useTitle('Jelu | Login')
 

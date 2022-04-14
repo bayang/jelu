@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import VTooltipPlugin from 'v-tooltip'
+import FloatingVue from 'floating-vue'
 import Oruga from '@oruga-ui/oruga-next'
 import SidebarMenu from 'vuejs-sidebar-menu'
 import router from './router'
@@ -14,7 +14,7 @@ import '@oruga-ui/oruga-next/dist/oruga-full-vars.css'
 
 import 'vuejs-sidebar-menu/dist/vuejs-sidebar-menu.css'
 import '@mdi/font/css/materialdesignicons.min.css'
-import 'v-tooltip/dist/v-tooltip.css'
+import 'floating-vue/dist/style.css'
 import '@splidejs/splide/dist/css/splide.min.css';
 
 // import { setupI18n } from './i18n'
@@ -61,7 +61,7 @@ createApp(App)
     .use(i18n)
     .use(router)
     .use(store, key)
-    .use(VTooltipPlugin)
+    .use(FloatingVue)
     .use(Oruga, {
         iconPack: 'mdi',
     })
