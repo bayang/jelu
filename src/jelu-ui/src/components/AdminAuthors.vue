@@ -208,7 +208,7 @@ const rightDoD = computed(() => {
             icon="calendar"
             icon-right="close"
             icon-right-clickable="true"
-            mobile-native="false"
+            :mobile-native="false"
             mobile-modal="false"
             trap-focus
             @icon-right-click="leftAuthor.dateOfBirth = undefined"
