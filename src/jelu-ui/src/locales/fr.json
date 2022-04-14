@@ -78,7 +78,8 @@
     "books_tagged_name" : "Livres étiquetés {tag}",
     "upload_from_web" : "Importer depuis le web",
     "upload_from_file" : "Importer depuis un fichier",
-    "double_click_to_edit" : "Double clic pour modifier"
+    "double_click_to_edit" : "Double clic pour modifier",
+    "mark_read_or_drop" : "Marquer comme lu ou abandonner"
 
   },
   "settings" : {
