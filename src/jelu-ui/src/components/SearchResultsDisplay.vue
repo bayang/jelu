@@ -119,11 +119,9 @@ const toggleEdit = (book: UserBook) => {
   console.log("book")
   console.log(book)
   oruga.modal.open({
-    // parent: this,
           component: EditBookModal,
           trapFocus: true,
           active: true,
-          // fullScreen: false,
           canCancel: ['x', 'button', 'outside'],
           scroll: 'clip',
           props: {

@@ -82,7 +82,6 @@ const toggleEdit = () => {
     component: EditBookModal,
     trapFocus: true,
     active: true,
-    // fullScreen: true,
     canCancel: ['x', 'button', 'outside'],
     scroll: 'clip',
     props: {
@@ -96,11 +95,8 @@ const toggleEdit = () => {
 function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
   showModal.value = !showModal.value
   oruga.modal.open({
-    // parent: this,
     component: ReadingEventModalVue,
     trapFocus: true,
-    // fullScreen: true,
-    // custom: true,
     active: true,
     canCancel: ['x', 'button', 'outside'],
     scroll: 'keep',

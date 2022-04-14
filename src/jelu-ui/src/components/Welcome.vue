@@ -149,11 +149,8 @@ function defaultCreateEvent(bookId: string): CreateReadingEvent {
 function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
   showModal.value = !showModal.value
   oruga.modal.open({
-    // parent: this,
     component: ReadingEventModalVue,
     trapFocus: true,
-    // fullScreen: true,
-    custom:true,
     active: true,
     canCancel: ['x', 'button', 'outside'],
     scroll: 'keep',
@@ -213,7 +210,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             >
               <template #icon>
                 <span
-                  v-tooltip="'Mark read or drop'"
+                  v-tooltip="t('labels.mark_read_or_drop')"
                   class="icon has-text-info text-info"
                   @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
                 >
