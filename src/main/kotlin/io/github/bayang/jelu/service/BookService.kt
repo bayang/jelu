@@ -129,8 +129,9 @@ class BookService(
                 )
             )
         }
-
-        book.image = saveImages(file, book.title, book.id.toString(), userBook.book.image, properties.files.images)
+        if (file != null || userBook.book.image != null) {
+            book.image = saveImages(file, book.title, book.id.toString(), userBook.book.image, properties.files.images)
+        }
         return created.toUserBookLightDto()
     }
 
