@@ -45,7 +45,7 @@ const importFile = async () => {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center columns is-centered">
+  <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center">
     <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
       {{ t('csv_import.import_csv') }}
     </h1>

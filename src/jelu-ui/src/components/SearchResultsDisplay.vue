@@ -374,7 +374,7 @@ if (titleQuery.value != null ||
   />  
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 
 label {
   margin: 0 0.5em;

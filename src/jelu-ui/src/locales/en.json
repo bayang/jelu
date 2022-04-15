@@ -93,7 +93,9 @@
         "csv_import" : "Csv import",
         "authors" : "Authors",
         "username" : "username",
-        "role" : "role | roles"
+        "role" : "role | roles",
+        "users" : "Users",
+        "users_management" : "Users management"
     },
     "user" : {
         "log_first" : "Please log in first"
@@ -207,6 +209,15 @@
         "password_not_match" : "password fields do not match",
         "login_length" : "login must be 3 chars long minimum",
         "password_length" : "password must be 3 chars long minimum"
+    },
+    "admin_user" : {
+        "create_user" : "create user",
+        "password_confirm" : "confirm password",
+        "password" : "password",
+        "admin" : "admin",
+        "admin_help" : "user should have admin rights ?",
+        "user_saved" : "User saved : {name}",
+        "login" : "login"
     }
 }
   

@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import { UserBook, Book } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
-import { User, UserAuthentication } from "../model/User";
+import { CreateUser, User, UserAuthentication } from "../model/User";
 import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from "../model/ReadingEvent";
 import { Tag } from "../model/Tag";
 import { Metadata } from "../model/Metadata";
@@ -101,6 +101,8 @@ class DataService {
       console.log(`response error interceptor ${error.response.status}`)
       if (error.response.status === 401) {
         router.push({name: 'login'}).then(() => {console.log("ok nav in interceptor")}).catch(() => {console.log("error nav in interceptor")})
+      } else {
+        throw error
       }
     });
   }
@@ -240,7 +242,25 @@ class DataService {
     }
   }
 
-  createUser = async (login: string, password: string) => {
+  createUser = async (user: CreateUser) => {
+    try {
+      const resp = await this.apiClient.post<User>('/users', user)
+      console.log('create user ')
+      console.log(resp)
+      console.log(resp.data)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error create user " + error.response.status + " " + error.response.data)
+        console.log(error.response.data)
+        throw new Error("Error ! " + error.response.data.message)
+      }
+      console.log("error create user " + (error as AxiosError).code)
+      throw new Error("error create user " + error)
+    }
+  }
+
+  createInitialUser = async (login: string, password: string) => {
     try {
       const resp = await this.apiClient.post<User>('/users', {
           'login' : login,
@@ -253,7 +273,7 @@ class DataService {
           password: 'initial',
         },
       })
-      console.log('create user ')
+      console.log('create initial user')
       console.log(resp.data)
       return resp.data
     } catch (error) {

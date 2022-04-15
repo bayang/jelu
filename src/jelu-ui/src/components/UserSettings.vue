@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core'
-import { onMounted, watch } from 'vue'
-import Avatar from 'vue-avatar-sdh'
+import { inject, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import { themeChange } from 'theme-change'
@@ -15,6 +14,7 @@ const { t, locale, availableLocales } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
+const formKitConfig: any = inject(Symbol.for('FormKitConfig'))
 
 availableLocales.forEach(locale => {
       console.log(`${locale} locale `)
@@ -61,6 +61,7 @@ watch(() => locale.value,(newValue, oldValue) => {
   console.log('locale changed: ' + newValue + " " + oldValue)
   const storedLanguage = useLocalStorage("jelu_language", oldValue)
   storedLanguage.value = newValue
+  formKitConfig.locale = newValue
 })
 
 </script>

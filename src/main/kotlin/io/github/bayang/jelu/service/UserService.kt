@@ -34,11 +34,11 @@ class UserService(
 
     @Transactional
     fun save(user: CreateUserDto): UserDto {
-        if (! userRepository.findByLogin(user.login).empty()) {
+        if (! userRepository.findByLogin(user.login.trim()).empty()) {
             logger.error { "user already exists ${user.login}" }
             throw JeluException("User already exists ${user.login}")
         }
-        return userRepository.save(user.copy(password = passwordEncoder.encode(user.password))).toUserDto()
+        return userRepository.save(user.copy(password = passwordEncoder.encode(user.password.trim()))).toUserDto()
     }
 
     @Transactional

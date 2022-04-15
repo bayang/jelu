@@ -85,7 +85,7 @@ const store = createStore<State>({
         }
       }, 
       async createInitialUser({dispatch, commit, state}, payload) {
-        const user: User = await dataService.createUser(payload.user, payload.password)
+        const user: User = await dataService.createInitialUser(payload.user, payload.password)
         console.log('created')
         console.log(user)
         await dispatch('authenticate', {"user" : payload.user, "password" : payload.password})

@@ -94,7 +94,9 @@
       "csv_import" : "Import Csv",
       "authors" : "Auteurs",
       "username" : "nom d'utilisateur",
-      "role" : "rôle | rôles"
+      "role" : "rôle | rôles",
+      "users" : "Utilisateurs",
+      "users_management" : "gestion des utilisateurs"
   },
   "user" : {
       "log_first" : "Veuillez vous identifier"
@@ -208,5 +210,14 @@
       "password_not_match" : "les mots de passe ne sont pas identiques",
       "login_length" : "l'identifiant doit avoir une taille de 3 caractères au moins",
       "password_length" : "le mot de passe doit avoir une taille de 3 caractères au moins"
+  },
+  "admin_user" : {
+    "create_user" : "créer utilisateur",
+    "password_confirm" : "confirmer mot de passe",
+    "password" : "mot de passe",
+    "admin" : "admin",
+    "admin_help" : "Créer utilisateur avec droits admin ?",
+    "user_saved" : "Utilisateur sauvegardé : {name}",
+    "login" : "identifiant"
   }
 }

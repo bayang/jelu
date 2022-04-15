@@ -20,6 +20,10 @@ const items = ref([{ name:t('settings.profile'), tooltip:t('settings.my_profile'
                 { name:t('settings.imports'), icon:"bxs-file-plus", href:"/profile/imports", tooltip: t('settings.csv_import') },
                 ])
 
+if (store.getters.isAdmin) {
+  items.value.push({ name:t('settings.users'), icon:"bxs-user-plus", href:"/profile/admin/users", tooltip: t('settings.users_management') })
+}
+
 const isOpened = ref(false)
 
 const sideBarWidth = ref(175)

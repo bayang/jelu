@@ -11,6 +11,13 @@ const isLogged = () => {
     }
 }
 
+const isAdmin = () => {
+    if (!store.getters.isAdmin) {
+        console.log("is not admin")
+        return false
+    }
+}
+
 const router = createRouter({
     history: createWebHistory(),
     linkActiveClass: 'is-active',
@@ -80,6 +87,7 @@ const router = createRouter({
             children: [
                 { path : 'me', component: () => import(/* webpackChunkName: "recommend" */ './components/ProfilePage.vue')},
                 { path : 'admin/authors', component: () => import(/* webpackChunkName: "recommend" */ './components/AdminAuthors.vue')},
+                { path : 'admin/users', beforeEnter: [isAdmin], component: () => import(/* webpackChunkName: "recommend" */ './components/AdminUsers.vue')},
                 { path: 'imports', component: () => import(/* webpackChunkName: "recommend" */ './components/Imports.vue')},
                 { path: 'settings', component: () => import(/* webpackChunkName: "recommend" */ './components/UserSettings.vue')},
 
