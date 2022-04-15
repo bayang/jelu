@@ -202,6 +202,12 @@ const logout = () => {
                 {{ t('nav.logout') }}
               </a>
             </li>
+            <li>
+              <label
+                for="shortcuts-modal"
+                class="font-sans text-base modal-button"
+              >{{ t('settings.shortcuts') }}</label>
+            </li>
           </ul>
         </div>
       </div>
@@ -209,6 +215,41 @@ const logout = () => {
     <div class="divider" /> 
 
     <router-view />
+    <input
+      id="shortcuts-modal"
+      type="checkbox"
+      class="modal-toggle"
+    >
+    <label
+      for="shortcuts-modal"
+      class="modal cursor-pointer"
+    >
+      <label
+        class="modal-box relative"
+        for=""
+      >
+        <h1 class="typewriter text-2xl mb-3 capitalize">
+          {{ t('settings.shortcuts') }} :
+        </h1>
+        <div class="flex flex-row flex-wrap justify-center basis-10/12 sm:basis-1/3">
+          <p class="basis-full mt-2">
+            <kbd class="kbd">shift</kbd>
+            +
+            <kbd class="kbd">f</kbd> : {{ t('shortcuts.toggle_bar') }}
+          </p>
+          <p class="basis-full mt-2">
+            <kbd class="kbd">shift</kbd>
+            +
+            <kbd class="kbd">◀︎</kbd> : {{ t('shortcuts.page_previous') }}
+          </p>
+          <p class="basis-full mt-2">
+            <kbd class="kbd">shift</kbd>
+            +
+            <kbd class="kbd">▶︎</kbd> : {{ t('shortcuts.page_next') }}
+          </p>
+        </div>
+      </label>
+    </label>
   </section>
 </template>
 
