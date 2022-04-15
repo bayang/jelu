@@ -18,6 +18,7 @@ const items = ref([{ name:t('settings.profile'), tooltip:t('settings.my_profile'
                 { name:t('settings.settings'), icon:"bxs-cog", href:"/profile/settings", tooltip: t('settings.profile') },
                 { name:t('settings.authors'), icon:"bxs-user-account", href:"/profile/admin/authors", tooltip: t('settings.author_management') },
                 { name:t('settings.imports'), icon:"bxs-file-plus", href:"/profile/imports", tooltip: t('settings.csv_import') },
+                { name:t('settings.shortcuts'), icon:"bxs-keyboard", href:"/profile/shortcuts", tooltip: t('settings.shortcuts_tooltip') },
                 ])
 
 if (store.getters.isAdmin) {

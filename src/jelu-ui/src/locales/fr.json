@@ -96,7 +96,9 @@
       "username" : "nom d'utilisateur",
       "role" : "rôle | rôles",
       "users" : "Utilisateurs",
-      "users_management" : "gestion des utilisateurs"
+      "users_management" : "gestion des utilisateurs",
+      "shortcuts" : "Raccourcis",
+      "shortcuts_tooltip" : "Raccourcis claviers"
   },
   "user" : {
       "log_first" : "Veuillez vous identifier"
@@ -219,5 +221,10 @@
     "admin_help" : "Créer utilisateur avec droits admin ?",
     "user_saved" : "Utilisateur sauvegardé : {name}",
     "login" : "identifiant"
+  },
+  "shortcuts" : {
+      "toggle_bar" : "Afficher la barre de filtres",
+      "page_previous" : "Aller à la page précédente",
+      "page_next" : "Aller à la page suivante"
   }
 }

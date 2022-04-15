@@ -95,7 +95,9 @@
         "username" : "username",
         "role" : "role | roles",
         "users" : "Users",
-        "users_management" : "Users management"
+        "users_management" : "Users management",
+        "shortcuts" : "Shortcuts",
+        "shortcuts_tooltip" : "Keyboard shortcuts"
     },
     "user" : {
         "log_first" : "Please log in first"
@@ -218,6 +220,10 @@
         "admin_help" : "user should have admin rights ?",
         "user_saved" : "User saved : {name}",
         "login" : "login"
+    },
+    "shortcuts" : {
+        "toggle_bar" : "Toggle filters bar",
+        "page_previous" : "Go to previous page",
+        "page_next" : "Go to next page"
     }
 }
-  
