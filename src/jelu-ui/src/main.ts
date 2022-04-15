@@ -17,7 +17,6 @@ import '@mdi/font/css/materialdesignicons.min.css'
 import 'floating-vue/dist/style.css'
 import '@splidejs/splide/dist/css/splide.min.css';
 
-// import { setupI18n } from './i18n'
 /*
  * All i18n resources specified in the plugin `include` option can be loaded
  * at once using the import syntax
@@ -27,14 +26,6 @@ import messages from '@intlify/vite-plugin-vue-i18n/messages'
 import { usePreferredLanguages } from '@vueuse/core'
 import { useLocalStorage } from '@vueuse/core'
 
-// const i18n = setupI18n({
-//     legacy: false,
-//     locale: 'en',
-//     fallbackLocale: 'en',
-//     messages: {
-//       messages
-//     }
-//   })
 const languages = usePreferredLanguages()
 console.log("languages : ")
 console.log(languages)
