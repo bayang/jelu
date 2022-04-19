@@ -22,8 +22,16 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                     "/api/v1/token", "/api/v1/setup/status"
                 ).permitAll()
                 it.mvcMatchers(HttpMethod.POST, "/api/v1/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
+                it.mvcMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("USER")
+                it.mvcMatchers(
+                    HttpMethod.GET,
+                    "/api/v1/users/me",
+                ).hasRole("USER")
                 it.antMatchers(
-                    "/api/v1/users**",
+                    "/api/v1/users/**",
+                ).hasRole("ADMIN")
+                it.antMatchers(
+                    "/api/v1/users",
                 ).hasRole("ADMIN")
                 it.antMatchers(
                     "/api/**",

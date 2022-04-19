@@ -16,6 +16,10 @@ data class CreateUserDto(
     val password: String,
     val isAdmin: Boolean,
 )
+data class UpdateUserDto(
+    val password: String,
+    val isAdmin: Boolean?,
+)
 data class AuthenticationDto(
     val user: UserDto,
     val token: String?

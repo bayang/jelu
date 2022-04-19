@@ -1,12 +1,13 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.CreateUserDto
+import io.github.bayang.jelu.dto.UpdateUserDto
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.SizedIterable
 import org.springframework.stereotype.Repository
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
@@ -42,5 +43,15 @@ class UserRepository {
             isAdmin = user.isAdmin
         }
         return created
+    }
+
+    fun updateUser(userId: UUID, updateUserDto: UpdateUserDto): User {
+        return User[userId].apply {
+            this.modificationDate = nowInstant()
+            this.password = updateUserDto.password
+            if (updateUserDto.isAdmin != null) {
+                this.isAdmin = updateUserDto.isAdmin
+            }
+        }
     }
 }

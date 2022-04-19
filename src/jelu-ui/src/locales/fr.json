@@ -220,11 +220,16 @@
     "admin" : "admin",
     "admin_help" : "Créer utilisateur avec droits admin ?",
     "user_saved" : "Utilisateur sauvegardé : {name}",
-    "login" : "identifiant"
+    "user_updated" : "Utilisateur mis à jour : {name}",
+    "login" : "identifiant",
+    "edit_user" : "Modifier utilisateur {name}"
   },
   "shortcuts" : {
       "toggle_bar" : "Afficher la barre de filtres",
       "page_previous" : "Aller à la page précédente",
       "page_next" : "Aller à la page suivante"
+  },
+  "profile" : {
+      "edit_user" : "Modifier utilisateur"
   }
 }

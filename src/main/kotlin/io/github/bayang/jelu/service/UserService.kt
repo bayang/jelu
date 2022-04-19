@@ -5,6 +5,7 @@ import io.github.bayang.jelu.dao.UserRepository
 import io.github.bayang.jelu.dto.*
 import io.github.bayang.jelu.errors.JeluException
 import mu.KotlinLogging
+import org.springframework.security.core.session.SessionRegistry
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -17,6 +18,7 @@ private val logger = KotlinLogging.logger {}
 @Component
 class UserService(
     private val userRepository: UserRepository,
+    private val sessionRegistry: SessionRegistry,
     private val passwordEncoder: PasswordEncoder
 ) : UserDetailsService {
 
@@ -57,5 +59,15 @@ class UserService(
     @Transactional
     fun deleteUser(userId: UUID) {
         userRepository.deleteUser(userId)
+    }
+
+    @Transactional
+    fun updateUser(userId: UUID, userDto: UpdateUserDto): UserDto {
+        val updated = userRepository.updateUser(userId, userDto.copy(password = passwordEncoder.encode(userDto.password.trim()))).toUserDto()
+        val jeluUser: JeluUser = this.loadUserByUsername(updated.login) as JeluUser
+        sessionRegistry.getAllSessions(jeluUser, false).forEach {
+            it.expireNow()
+        }
+        return updated
     }
 }

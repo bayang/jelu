@@ -1,14 +1,27 @@
 package io.github.bayang.jelu.controllers
 
-import io.github.bayang.jelu.config.JeluProperties
-import io.github.bayang.jelu.dto.*
+import io.github.bayang.jelu.dto.AuthenticationDto
+import io.github.bayang.jelu.dto.CreateUserDto
+import io.github.bayang.jelu.dto.DummyUser
+import io.github.bayang.jelu.dto.JeluUser
+import io.github.bayang.jelu.dto.ROLE_ADMIN
+import io.github.bayang.jelu.dto.UpdateUserDto
+import io.github.bayang.jelu.dto.UserDto
+import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import mu.KotlinLogging
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 import javax.servlet.http.HttpSession
 import javax.validation.Valid
 
@@ -18,7 +31,6 @@ private val logger = KotlinLogging.logger {}
 @RequestMapping("/api/v1")
 class UsersController(
     private val repository: UserService,
-    private val properties: JeluProperties
 ) {
 
     @Operation(description = "get the current session token that the caller should provide in the X-Auth-Token header")
@@ -83,6 +95,22 @@ class UsersController(
 
     @GetMapping(path = ["/users/{id}"])
     fun userById(@PathVariable("id") userId: UUID): UserDto = repository.findUserById(userId)
+
+    @PutMapping(path = ["/users/{id}"])
+    fun updateUser(@PathVariable("id") userId: UUID, @RequestBody @Valid user: UpdateUserDto, principal: Authentication, session: HttpSession): UserDto {
+        if (principal.principal is JeluUser) {
+            if ((principal.principal as JeluUser).user.isAdmin || (principal.principal as JeluUser).user.id.value == userId) {
+                // only admin user can remove or add admin rights
+                val cleanedUpdateUserDto: UpdateUserDto = if ((principal.principal as JeluUser).user.isAdmin) {
+                    user
+                } else {
+                    user.copy(isAdmin = null)
+                }
+                return repository.updateUser(userId, cleanedUpdateUserDto)
+            }
+        }
+        throw JeluAuthenticationException("principal ${principal.name} not allowed to edit user $userId")
+    }
 
     @PostMapping(path = ["/users"])
     fun saveUser(@RequestBody @Valid user: CreateUserDto): UserDto {

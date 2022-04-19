@@ -14,3 +14,7 @@ export interface CreateUser {
   password: string,
   isAdmin: boolean
 }
+export interface UpdateUser {
+  password: string,
+  isAdmin?: boolean
+}

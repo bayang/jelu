@@ -219,11 +219,16 @@
         "admin" : "admin",
         "admin_help" : "user should have admin rights ?",
         "user_saved" : "User saved : {name}",
-        "login" : "login"
+        "user_updated" : "User updated : {name}",
+        "login" : "login",
+        "edit_user" : "Edit user {name}"
     },
     "shortcuts" : {
         "toggle_bar" : "Toggle filters bar",
         "page_previous" : "Go to previous page",
         "page_next" : "Go to next page"
+    },
+    "profile" : {
+        "edit_user" : "Edit user"
     }
 }

@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import { UserBook, Book } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
-import { CreateUser, User, UserAuthentication } from "../model/User";
+import { CreateUser, UpdateUser, User, UserAuthentication } from "../model/User";
 import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from "../model/ReadingEvent";
 import { Tag } from "../model/Tag";
 import { Metadata } from "../model/Metadata";
@@ -27,6 +27,8 @@ class DataService {
   private API_BOOK = '/books';
 
   private API_USERBOOK = '/userbooks';
+
+  private API_USER = '/users';
 
   private API_AUTHOR = '/authors';
 
@@ -157,7 +159,7 @@ class DataService {
 
   getUser = async () => {
     try {
-      const response = await this.apiClient.get<UserAuthentication>('/users/me')
+      const response = await this.apiClient.get<UserAuthentication>(`${this.API_USER}/me`)
       console.log("called user")
       console.log(response.data)
       return response.data;
@@ -173,7 +175,7 @@ class DataService {
 
   authenticateUser = async (login: string, password: string) => {
     try {
-      const response = await this.apiClient.get<UserAuthentication>('/users/me', {
+      const response = await this.apiClient.get<UserAuthentication>(`${this.API_USER}/me`, {
         auth: {
           username: login,
           password: password,
@@ -244,7 +246,7 @@ class DataService {
 
   createUser = async (user: CreateUser) => {
     try {
-      const resp = await this.apiClient.post<User>('/users', user)
+      const resp = await this.apiClient.post<User>(`${this.API_USER}`, user)
       console.log('create user ')
       console.log(resp)
       console.log(resp.data)
@@ -260,9 +262,27 @@ class DataService {
     }
   }
 
+  updateUser = async (userId: string, user: UpdateUser) => {
+    try {
+      const resp = await this.apiClient.put<User>(`${this.API_USER}/${userId}`, user)
+      console.log('update user ')
+      console.log(resp)
+      console.log(resp.data)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error update user " + error.response.status + " " + error.response.data)
+        console.log(error.response.data)
+        throw new Error("Error ! " + error.response.data.message)
+      }
+      console.log("error update user " + (error as AxiosError).code)
+      throw new Error("error update user " + error)
+    }
+  }
+
   createInitialUser = async (login: string, password: string) => {
     try {
-      const resp = await this.apiClient.post<User>('/users', {
+      const resp = await this.apiClient.post<User>(`${this.API_USER}`, {
           'login' : login,
           'password' : password, 
           'isAdmin' : true

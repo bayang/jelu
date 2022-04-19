@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.controllers
 
+import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.errors.JeluException
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.springframework.http.HttpStatus
@@ -57,6 +58,14 @@ class GlobalControllerExceptionHandler {
     @ResponseBody
     fun handleJeluException(
         e: JeluException
+    ): ApiError =
+        ApiError(e.message)
+
+    @ExceptionHandler(JeluAuthenticationException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    fun handleJeluAuthenticationException(
+        e: JeluAuthenticationException
     ): ApiError =
         ApiError(e.message)
 }

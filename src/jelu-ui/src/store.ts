@@ -112,6 +112,9 @@ const store = createStore<State>({
     getUsername(state): string {
       return state.user != null ? state.user.login : 'anonymous'
     },
+    getUser(state): User|null {
+      return state.user
+    },
     isAdmin(state): boolean {
       return state.user != null && state.user.isAdmin
     },

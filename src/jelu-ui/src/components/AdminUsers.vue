@@ -25,6 +25,7 @@ async function createUser(user: any) {
   console.log("create user")
   console.log(user)
   try {
+    setErrors('create-user-form', [], undefined)
     await dataService.createUser({"login" : user.login, "password": user.password, "isAdmin" : user.admin})
     ObjectUtils.toast(oruga, "success", t('admin_user.user_saved', {name : user.login}), 4000)
   } catch (err: any) {
