@@ -1,3 +1,23 @@
+## [0.15.0](https://github.com/bayang/jelu/compare/v0.14.0...v0.15.0) (2022-04-19)
+
+
+### Features
+
+* add ability to create users ([631e386](https://github.com/bayang/jelu/commit/631e3865f6623d1b73aa86e67f260c65fd4feb3a))
+* add shortcuts explanation ([6f3f05f](https://github.com/bayang/jelu/commit/6f3f05f34a3f2502e10cbbf30cbc5216c747030e))
+* add user editing ([c6a0700](https://github.com/bayang/jelu/commit/c6a07008ee86dc11043a66660192d4749d9c5fbc))
+* refactor shortcuts explanation ([ac316c9](https://github.com/bayang/jelu/commit/ac316c966a9843793c6bd8a0683f8b35fb06b847))
+
+
+### Bug Fixes
+
+* add missing translation ([51ea3cf](https://github.com/bayang/jelu/commit/51ea3cfd82c4850e89753767ad2c187adf89fc66))
+* book update image bug ([0365533](https://github.com/bayang/jelu/commit/0365533f37555d14e88a9d145253f659b5135985))
+* inconsistent font size in filter bar ([d0f905c](https://github.com/bayang/jelu/commit/d0f905c06100de85b3f666042996084965bb9286))
+* remove useless variable ([c5cbe6c](https://github.com/bayang/jelu/commit/c5cbe6cd89f2fd0f739c1e317b9093fc56db1312))
+* runtime warnings ([2515662](https://github.com/bayang/jelu/commit/2515662d8078684a9c2b7faea9fe33295b62b57b))
+* some modal had wrong config ([543f09f](https://github.com/bayang/jelu/commit/543f09fc4fbc06890ed9f6a3a97ba962ec6167e6))
+
 ## [0.14.0](https://github.com/bayang/jelu/compare/v0.13.1...v0.14.0) (2022-04-12)
 
 
