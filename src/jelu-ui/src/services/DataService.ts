@@ -195,8 +195,8 @@ class DataService {
         console.log("error axios auth user " + error.response.status + " " + error.response.data.error)
         throw new Error("login error " + error.response.status + " " + error)
       }
-      console.log("error auth user " + (error as AxiosError).code)
-      throw new Error("login error " + error)
+      console.log("error auth user " + (error as AxiosError))
+      throw new Error("login error, backend seems down or unreachable")
     }
   }
 

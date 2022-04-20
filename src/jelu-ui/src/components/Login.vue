@@ -49,8 +49,6 @@ const logUser = async () => {
     } catch (error: any) {
       progress.value = false
       console.log('failed to auth user ' + error)
-      console.log(`failed to auth user ${error.message}`)
-  
       errorMessage.value = error.message
     }
   }
