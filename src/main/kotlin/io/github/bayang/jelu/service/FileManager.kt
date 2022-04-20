@@ -22,12 +22,12 @@ class FileManager(
     private val jeluProperties: JeluProperties
 ) {
 
-    @Scheduled(cron = "\${files.metadataImportCleanCron:0 0 * * * *}")
+    @Scheduled(cron = "\${files.metadataImportCleanCron:0 0 */6 * * *}")
     fun cleanMetadataImportFiles() {
         doCleanMetadataImportFiles()
     }
 
-    @Scheduled(cron = "\${files.bakFilesCleanCron:0 30 * * * *}")
+    @Scheduled(cron = "\${files.bakFilesCleanCron:0 30 */6 * * *}")
     fun cleanTemporaryImageFiles() {
         doCleanTemporaryImageFiles()
     }
