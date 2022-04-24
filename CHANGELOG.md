@@ -1,3 +1,10 @@
+### [0.16.1](https://github.com/bayang/jelu/compare/v0.16.0...v0.16.1) (2022-04-24)
+
+
+### Bug Fixes
+
+* readme markdown was corrupted ([798351c](https://github.com/bayang/jelu/commit/798351cd7d860f98e450346654c7999da70188cc))
+
 ## [0.16.0](https://github.com/bayang/jelu/compare/v0.15.0...v0.16.0) (2022-04-24)
 
 
