@@ -152,7 +152,7 @@ Book detail, events part :
 ![](screenshots/book-detail-events.png)
 
 Author page : 
-~~~~
+
 ![](screenshots/author-page.png)
 
 Embed code and preview :
