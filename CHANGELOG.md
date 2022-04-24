@@ -1,3 +1,10 @@
+## [0.16.0](https://github.com/bayang/jelu/compare/v0.15.0...v0.16.0) (2022-04-24)
+
+
+### Features
+
+* provide embed code ([f8cde36](https://github.com/bayang/jelu/commit/f8cde3629c75211d8796c51f09bad5c6a6b03435))
+
 ## [0.15.0](https://github.com/bayang/jelu/compare/v0.14.0...v0.15.0) (2022-04-19)
 
 
