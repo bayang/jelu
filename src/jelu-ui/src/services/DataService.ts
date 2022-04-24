@@ -108,7 +108,7 @@ class DataService {
       }
     });
   }
-  
+
   getToken = ():string | null => {
     if (this.token != null && this.token.trim().length > 0) {
       console.log('get tok from property')

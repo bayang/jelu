@@ -27,6 +27,7 @@ All my data is now located into a single-file database which can be saved anywhe
 * Author page with author detail and books from this author
 * Auto import author details from wikipedia
 * Auto merge authors (to fix duplicates resulting from automatic imports for example)
+* Provide embed code snippets so that books can be tracked in other sites, blogs or even markdown notes/journal
 
 ## Usage
 
@@ -151,8 +152,12 @@ Book detail, events part :
 ![](screenshots/book-detail-events.png)
 
 Author page : 
-
+~~~~
 ![](screenshots/author-page.png)
+
+Embed code and preview :
+
+![](screenshots/embed.png)
 
 ## Roadmap
 

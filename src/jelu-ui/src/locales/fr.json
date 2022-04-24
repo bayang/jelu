@@ -79,7 +79,11 @@
     "upload_from_web" : "Importer depuis le web",
     "upload_from_file" : "Importer depuis un fichier",
     "double_click_to_edit" : "Double clic pour modifier",
-    "mark_read_or_drop" : "Marquer comme lu ou abandonner"
+    "mark_read_or_drop" : "Marquer comme lu ou abandonner",
+    "preview" : "Aperçu",
+    "copy_paste_code" : "copier coller le code",
+    "get_embed_code" : "Générer aperçu externe",
+    "saved" : "Sauvegardé"
 
   },
   "settings" : {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, Ref, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { UserBook } from '../model/Book'
+import { Book, UserBook } from '../model/Book'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import dataService from "../services/DataService"
@@ -14,11 +14,17 @@ import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/Rea
 import { useTitle } from '@vueuse/core'
 import useDates from '../composables/dates'
 import { useI18n } from 'vue-i18n'
+import { useClipboard } from '@vueuse/core'
+import { usePermission } from '@vueuse/core'
 
 const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
+
+const { isSupported, copy } = useClipboard()
+usePermission('clipboard-read')
+usePermission('clipboard-write')
 
 const props = defineProps<{ bookId: string }>()
 
@@ -214,6 +220,41 @@ function defaultCreateEvent(): CreateReadingEvent {
   }
 }
 
+const embedCode = computed(() => {
+  if (book.value) {
+    return generateEmbed(book.value)
+  }
+  return ''
+})
+
+function generateEmbed(book: UserBook) {
+  let baseUrl = window.location.origin
+  let bookUrl = router.resolve({ name: 'book-detail', params: { bookId: book.id } }).href
+  let top = `<div id="embed-body" style="padding: 5px; width: 150px; border: 1px solid #cccccc;}"><div class="embed-element" style="overflow: hidden;list-style: none; text-align: center; padding: 5px; margin: 0px;">`
+  if (book.book.image != null) {
+    let couv = `<div class="embed-cover"> <a href="${baseUrl}${bookUrl}" target="_blank"><img src="${baseUrl}/files/${book.book.image}" title="${book.book.title}" alt="${book.book.title}" style="border: 1px solid #cccccc;border-width:1px; padding: 3px; background-color: #fff;width:80px;"></a></div>`
+    top = top.concat(couv)
+  }
+  let body = `<div class="embed-book" style="margin: 0px 3px 5px 5px;font-size: 13px;font-family:sans-serif; font-weight : bold;"><a href="${baseUrl}${bookUrl}" target="_blank" style="text-decoration:none;">${book.book.title}</a></div>`
+  top = top.concat(body)
+  if (book.book.authors != undefined && book.book.authors?.length > 0) {
+      let firstAuthor = book?.book.authors[0]
+      let authorId = firstAuthor.id
+      let rout = router.resolve({ name: 'author-detail', params: { authorId: authorId } }).href
+  let authorPart = `<div class="embed-author" style="margin: 0px 3px 5px 5px;font-size: 12px;color: gray;"><a href="${baseUrl}${rout}" target="_blank" style="text-decoration:none;">${firstAuthor.name}</a></div>`
+      top = top.concat(authorPart)
+    }
+  let bottom = `<div class="embed-tail" style="clear:both;"></div></div></div>`
+  top = top.concat(bottom)
+  return top
+}
+
+function copyToClipboard(content: string) {
+  copy(content)
+  ObjectUtils.toast(oruga, "success", t('labels.saved'), 1000)
+
+}
+
 getBook()
 
 </script>
@@ -258,6 +299,18 @@ getBook()
           </span>
           <span>{{ t('labels.event') }}</span>
         </button>
+        <label
+          v-tooltip="t('labels.get_embed_code')"
+          for="my-modal-4"
+          class="btn btn-circle btn-outline ml-0 border-none modal-button"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+        </svg></label>
       </div>
     </div>
     <div
@@ -532,6 +585,48 @@ getBook()
     :full-page="true"
     :can-cancel="true"
   />
+  <input
+    id="my-modal-4"
+    type="checkbox"
+    class="modal-toggle"
+  >
+  <label
+    for="my-modal-4"
+    class="modal cursor-pointer"
+  >
+    <label
+      class="modal-box relative"
+      for=""
+    >
+      <div class="flex justify-center items-center">
+        <h3 class="text-lg font-bold first-letter:capitalize">{{ t('labels.copy_paste_code') }}</h3>
+        <button
+          v-if="isSupported"
+          class="btn btn-outline btn-sm btn-circle border-none ml-1"
+          @click="copyToClipboard(embedCode)"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+          />
+        </svg></button>
+      </div>
+      <div class="py-4 prose"><pre><code>{{ embedCode }}</code></pre></div>
+      <div class="mt-2 capitalize">{{ t('labels.preview') }} : </div>
+      <div
+        class="inline-block mt-2"
+        v-html="embedCode"
+      />
+    </label>
+  </label>
 </template>
 
 <style lang="scss" scoped>

@@ -79,7 +79,11 @@
       "upload_from_web" : "Upload from the web",
       "upload_from_file" : "Upload from a file",
       "double_click_to_edit" : "Double click to edit",
-      "mark_read_or_drop" : "Mark read or drop"
+      "mark_read_or_drop" : "Mark read or drop",
+      "preview" : "preview",
+      "copy_paste_code" : "copy paste this code",
+      "get_embed_code" : "Get embed code",
+      "saved" : "Saved"
     },
     "settings" : {
         "pick_language" : "Pick your language",
