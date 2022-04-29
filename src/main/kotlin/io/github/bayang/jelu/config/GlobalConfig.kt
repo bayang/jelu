@@ -40,7 +40,7 @@ class GlobalConfig {
             registerCorsConfiguration(
                 "/**",
                 CorsConfiguration().applyPermitDefaultValues().apply {
-                    allowedOrigins = if (jeluProperties.cors.allowedOrigins.isNullOrEmpty()) null else jeluProperties.cors.allowedOrigins
+                    allowedOriginPatterns = if (jeluProperties.cors.allowedOrigins.isNullOrEmpty()) listOf("*") else jeluProperties.cors.allowedOrigins
                     allowedMethods = HttpMethod.values().map { it.name }
                     allowCredentials = true
                     addExposedHeader(HttpHeaders.CONTENT_DISPOSITION)
