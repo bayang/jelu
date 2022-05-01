@@ -74,10 +74,16 @@ class BookService(
     @Transactional
     fun findAuthorsById(authorId: UUID): AuthorDto = bookRepository.findAuthorsById(authorId).toAuthorDto()
 
+    /**
+     * Image not updated, to add or update an image call the variant which accepts a MultiPartFile
+     */
     @Transactional
     fun update(bookId: UUID, book: BookUpdateDto): BookDto = bookRepository.update(bookId, book).toBookDto()
 
-    // call saveImages in case image url is set
+    // call saveImages in case image url is set ?
+    /**
+     * Image not updated, to add or update an image call the variant which accepts a MultiPartFile
+     */
     @Transactional
     fun update(userBookId: UUID, book: UserBookUpdateDto): UserBookLightDto = bookRepository.update(userBookId, book).toUserBookLightDto()
 
@@ -129,8 +135,29 @@ class BookService(
                 )
             )
         }
+        var backup: File? = null
+        var currentImage: File? = null
         if (file != null || userBook.book.image != null) {
+            // existing book used on UserBook already had an image, backup it
+            if (!book.image.isNullOrBlank()) {
+                currentImage = File(properties.files.images, book.image)
+                backup = File(properties.files.images, "${book.image}.bak")
+                Files.move(currentImage.toPath(), backup.toPath())
+            }
             book.image = saveImages(file, book.title, book.id.toString(), userBook.book.image, properties.files.images)
+            // we had a previous image and we saved a new one : delete the old one
+            if (backup != null && backup.exists()) {
+                // successfully saved new image, delete backup
+                if (book.image != null && book.image!!.isNotBlank()) {
+                    Files.deleteIfExists(backup.toPath())
+                } else {
+                    // saving new file failed ? Restore backup
+                    if (currentImage != null) {
+                        Files.move(backup.toPath(), currentImage.toPath())
+                        book.image = currentImage.name
+                    }
+                }
+            }
         }
         return created.toUserBookLightDto()
     }
@@ -145,7 +172,6 @@ class BookService(
     fun saveImages(file: MultipartFile?, title: String, id: String, dtoImage: String?, targetDir: String): String? {
         var importedFile = false
         var savedImage: String? = null
-        // FIXME resize image when saving (protect with a flag)
         if (file != null) {
             try {
                 val destFileName: String = imageName(slugify(title), id, FilenameUtils.getExtension(file.originalFilename))
@@ -273,6 +299,10 @@ class BookService(
         bookRepository.deleteTagById(tagId)
     }
 
+    /**
+     * Removes an author from a book without deleting the author from the database.
+     * The author is removed only from that book.
+     */
     @Transactional
     fun deleteAuthorFromBook(bookId: UUID, authorId: UUID) {
         bookRepository.deleteAuthorFromBook(bookId, authorId)

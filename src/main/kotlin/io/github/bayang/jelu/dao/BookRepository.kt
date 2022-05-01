@@ -263,24 +263,46 @@ class BookRepository(
         if (!book.title.isNullOrBlank()) {
             updated.title = book.title.trim()
         }
-        updated.isbn10 = book.isbn10?.trim()
-        updated.isbn13 = book.isbn13?.trim()
-        updated.pageCount = book.pageCount
-        updated.publisher = book.publisher?.trim()
+        book.isbn10?.let {
+            updated.isbn10 = book.isbn10.trim()
+        }
+        book.isbn13?.let {
+            updated.isbn13 = book.isbn13.trim()
+        }
+        book.pageCount?.let {
+            updated.pageCount = book.pageCount
+        }
+        book.publisher?.let {
+            updated.publisher = book.publisher.trim()
+        }
         if (!book.summary.isNullOrBlank()) {
             updated.summary = sanitizeHtml(book.summary)
-        } else {
-            updated.summary = book.summary
         }
         // image must be set when saving file succeeds
-        updated.publishedDate = book.publishedDate?.trim()
-        updated.series = book.series?.trim()
-        updated.numberInSeries = book.numberInSeries
-        updated.amazonId = book.amazonId?.trim()
-        updated.goodreadsId = book.goodreadsId?.trim()
-        updated.googleId = book.googleId?.trim()
-        updated.librarythingId = book.librarythingId?.trim()
-        updated.language = book.language?.trim()
+        book.publishedDate?.let {
+            updated.publishedDate = book.publishedDate.trim()
+        }
+        book.series?.let {
+            updated.series = book.series.trim()
+        }
+        book.numberInSeries?.let {
+            updated.numberInSeries = book.numberInSeries
+        }
+        book.amazonId?.let {
+            updated.amazonId = book.amazonId.trim()
+        }
+        book.goodreadsId?.let {
+            updated.goodreadsId = book.goodreadsId.trim()
+        }
+        book.googleId?.let {
+            updated.googleId = book.googleId.trim()
+        }
+        book.librarythingId?.let {
+            updated.librarythingId = book.librarythingId.trim()
+        }
+        book.language?.let {
+            updated.language = book.language.trim()
+        }
         updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
@@ -333,7 +355,9 @@ class BookRepository(
         if (book.owned != null) {
             found.owned = book.owned
         }
-        found.personalNotes = book.personalNotes?.trim()
+        book.personalNotes?.let {
+            found.personalNotes = book.personalNotes.trim()
+        }
         if (book.toRead != null) {
             found.toRead = book.toRead
         }
@@ -361,16 +385,36 @@ class BookRepository(
         if (!author.name.isNullOrBlank()) {
             found.name = author.name.trim()
         }
-        found.biography = author.biography?.trim()
-        found.dateOfDeath = author.dateOfDeath?.trim()
-        found.dateOfBirth = author.dateOfBirth?.trim()
-        found.notes = author.notes?.trim()
-        found.officialPage = author.officialPage?.trim()
-        found.wikipediaPage = author.wikipediaPage?.trim()
-        found.goodreadsPage = author.goodreadsPage?.trim()
-        found.twitterPage = author.twitterPage?.trim()
-        found.facebookPage = author.facebookPage?.trim()
-        found.instagramPage = author.instagramPage?.trim()
+        author.biography?.let {
+            found.biography = author.biography.trim()
+        }
+        author.dateOfDeath?.let {
+            found.dateOfDeath = author.dateOfDeath.trim()
+        }
+        author.dateOfBirth?.let {
+            found.dateOfBirth = author.dateOfBirth.trim()
+        }
+        author.notes?.let {
+            found.notes = author.notes.trim()
+        }
+        author.officialPage?.let {
+            found.officialPage = author.officialPage.trim()
+        }
+        author.wikipediaPage?.let {
+            found.wikipediaPage = author.wikipediaPage.trim()
+        }
+        author.goodreadsPage?.let {
+            found.goodreadsPage = author.goodreadsPage.trim()
+        }
+        author.twitterPage?.let {
+            found.twitterPage = author.twitterPage.trim()
+        }
+        author.facebookPage?.let {
+            found.facebookPage = author.facebookPage.trim()
+        }
+        author.instagramPage?.let {
+            found.instagramPage = author.instagramPage.trim()
+        }
         // found.image = author.image?.trim()
         found.modificationDate = nowInstant()
         return found
@@ -537,6 +581,10 @@ class BookRepository(
         Tag[tagId].delete()
     }
 
+    /**
+     * Removes an author from a book without deleting the author from the database.
+     * Used to clean the composite table
+     */
     fun deleteAuthorFromBook(bookId: UUID, authorId: UUID) {
         BookAuthors.deleteWhere {
             BookAuthors.book eq bookId and(BookAuthors.author eq authorId)

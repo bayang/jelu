@@ -2,14 +2,17 @@ jelu:
   database:
     path: ${java.io.tmpdir}
   files:
-    dir: ${java.io.tmpdir}
+    images: ${java.io.tmpdir}
+    imports: ${java.io.tmpdir}
+    resizeImages: false
 spring:
   liquibase:
     enabled: true
     drop-first: false
     change-log: classpath:liquibase.xml
   datasource:
-#    url: jdbc:sqlite:memory:myDb
+    url: jdbc:sqlite::memory:?foreign_keys=on;
     username: test
     password: test
     driver-class-name: org.sqlite.JDBC
+    generate-unique-name: true

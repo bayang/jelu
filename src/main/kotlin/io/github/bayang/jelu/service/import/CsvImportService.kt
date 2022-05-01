@@ -22,6 +22,7 @@ import io.github.bayang.jelu.service.ImportService
 import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
+import io.github.bayang.jelu.utils.toInstant
 import mu.KotlinLogging
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -32,7 +33,6 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
-import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -268,8 +268,6 @@ class CsvImportService(
             .filter { it.year == date.year && it.monthValue == date.monthValue && it.dayOfMonth == date.dayOfMonth }
             .count().toInt() > 0
     }
-
-    private fun toInstant(date: LocalDate): Instant = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()
 
     private fun readingStatus(readStatusFromShelves: String): ReadingEventType? {
         return if (readStatusFromShelves.equals(CURRENTLY_READING, true)) {

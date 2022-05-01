@@ -74,11 +74,15 @@ class ReadingEventRepository {
         val alreadyReadingEvent: ReadingEvent? =
             userBook.readingEvents.find { it.eventType == ReadingEventType.CURRENTLY_READING }
         val instant: Instant = nowInstant()
-        if (userBook.lastReadingEvent != null) {
-            if (createReadingEventDto.eventDate != null && createReadingEventDto.eventDate.isAfter(userBook.lastReadingEventDate)) {
+
+        // we have a previous event,
+        // only update lastReadingEvent if the new one has a date and is effectively after the one already existing
+        if (userBook.lastReadingEventDate != null && createReadingEventDto.eventDate != null) {
+            if (createReadingEventDto.eventDate.isAfter(userBook.lastReadingEventDate)) {
                 userBook.lastReadingEvent = createReadingEventDto.eventType
                 userBook.lastReadingEventDate = createReadingEventDto.eventDate
             }
+            // no previous event, or the new one does not have a date set lastReadingEvent in any case
         } else {
             userBook.lastReadingEvent = createReadingEventDto.eventType
             userBook.lastReadingEventDate = createReadingEventDto.eventDate ?: instant
@@ -90,7 +94,7 @@ class ReadingEventRepository {
                 alreadyReadingEvent.modificationDate = createReadingEventDto.eventDate ?: instant
                 return alreadyReadingEvent
             }
-            // else : alreadyReadingEvent is not null and createReadingEventDto.eventDate is before an already existing CURRENTLY_READING EVENT
+            // FIXME else : alreadyReadingEvent is not null and createReadingEventDto.eventDate is before an already existing CURRENTLY_READING EVENT
             // this could create CURRENTLY_READING events in the past
             // should we allow this ? Let's wait and see for the moment, user can edit events in bookdetail page
         }

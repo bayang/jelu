@@ -1,6 +1,7 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.dto.CreateUserDto
+import io.github.bayang.jelu.dto.UpdateUserDto
 import io.github.bayang.jelu.errors.JeluException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -30,7 +31,13 @@ class UserServiceTest(@Autowired private val userService: UserService) {
         assertThrows<JeluException> { userService.save(CreateUserDto(login = "login1", password = "password2", isAdmin = true)) }
         Assertions.assertFalse(userService.isInitialSetup())
 
-        val found = userService.findByLogin("login1")
+        var found = userService.findByLogin("login1")
         Assertions.assertEquals("login1", found[0].login)
+
+        val updated = userService.updateUser(created.id!!, UpdateUserDto(isAdmin = false, password = "newpass"))
+        Assertions.assertEquals(false, updated.isAdmin)
+
+        found = userService.findByLogin("login1")
+        Assertions.assertEquals(false, found[0].isAdmin)
     }
 }
