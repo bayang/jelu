@@ -69,10 +69,20 @@ If you run into a cors issue, update the config with the desired origins like so
 ```yaml
 jelu:
   cors.allowed-origins:
-    - http://localhost:3000
+    - https://jelu.myserver.org
 ```
 
 Then open the web UI in your web browser at `localhost:11111`
+
+Concerning Cors, the default is to accept everything, which you might not not want to do.
+
+No config in the config file is equivalent to : 
+
+```yaml
+jelu:
+  cors.allowed-origins:
+    - "*"
+```
 
 ### Docker
 
