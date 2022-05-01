@@ -1,3 +1,10 @@
+## [0.17.0](https://github.com/bayang/jelu/compare/v0.16.1...v0.17.0) (2022-05-01)
+
+
+### Features
+
+* allow more customization of cors ([19e0a58](https://github.com/bayang/jelu/commit/19e0a5885f9804e8667dbab1472e4df6d24102bd))
+
 ### [0.16.1](https://github.com/bayang/jelu/compare/v0.16.0...v0.16.1) (2022-04-24)
 
 
