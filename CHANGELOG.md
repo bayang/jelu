@@ -1,3 +1,11 @@
+### [0.17.1](https://github.com/bayang/jelu/compare/v0.17.0...v0.17.1) (2022-05-03)
+
+
+### Bug Fixes
+
+* csv import tests and bugfixes ([3b60f9b](https://github.com/bayang/jelu/commit/3b60f9b49c0a557f6038e0a82ea5d108175ccac6))
+* prompt styling ([1778628](https://github.com/bayang/jelu/commit/1778628edf25eef9791096ef791786abbc41d01a))
+
 ## [0.17.0](https://github.com/bayang/jelu/compare/v0.16.1...v0.17.0) (2022-05-01)
 
 
