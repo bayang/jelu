@@ -5,6 +5,7 @@ import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import java.time.Instant
@@ -15,6 +16,16 @@ const val DEFAULT_BLOCK_SIZE: Int = 50
 
 @Repository
 class ImportRepository {
+
+    fun deleteByprocessingStatusAndUser(
+        processingStatus: ProcessingStatus,
+        userId: UUID
+    ): Int {
+        // FIXME SQLite doesn't support LIMIT in DELETE clause., dialect: sqlite.
+        return ImportEntityTable.deleteWhere {
+            ImportEntityTable.processingStatus eq processingStatus and (ImportEntityTable.userId eq userId)
+        }
+    }
 
     fun getByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,

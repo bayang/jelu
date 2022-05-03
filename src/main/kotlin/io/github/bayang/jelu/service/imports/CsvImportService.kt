@@ -1,4 +1,4 @@
-package io.github.bayang.jelu.service.import
+package io.github.bayang.jelu.service.imports
 
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.ImportEntity
@@ -228,6 +228,7 @@ class CsvImportService(
             ) {
                 remainingToSave ++
             }
+            // bookService.findUserBookById(savedUserBook.id)
             val nbAlreadyFinishedEvents = if (savedUserBook.readingEvents != null) savedUserBook.readingEvents.stream().filter { it.eventType == ReadingEventType.FINISHED }.count().toInt() else 0
             remainingToSave -= nbAlreadyFinishedEvents
             // we know the book has been read 3 times for example but don't have dates

@@ -3,7 +3,7 @@ package io.github.bayang.jelu.controllers
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.JeluUser
-import io.github.bayang.jelu.service.import.CsvImportService
+import io.github.bayang.jelu.service.imports.CsvImportService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import mu.KotlinLogging

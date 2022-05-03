@@ -49,7 +49,6 @@ class BookServiceTest(
     fun setupUser() {
         userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
         jeluProperties.files.images = tempDir.absolutePath
-        println(jeluProperties.files.images)
     }
 
     @AfterAll

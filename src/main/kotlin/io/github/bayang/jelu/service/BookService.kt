@@ -193,7 +193,7 @@ class BookService(
                         slugify(title),
                         id, FilenameUtils.getExtension(dtoImage)
                     )
-                    val currentFile = File(targetDir, dtoImage)
+                    val currentFile = File(targetDir, "$dtoImage.bak")
                     val targetFile = File(currentFile.parent, targetFilename)
                     val succeeded = currentFile.renameTo(targetFile)
                     logger.debug { "renaming of metadata imported file $dtoImage was successful: $succeeded" }

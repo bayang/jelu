@@ -1,9 +1,11 @@
 package io.github.bayang.jelu
 
+import io.github.bayang.jelu.dao.ImportSource
 import io.github.bayang.jelu.dao.ReadingEventType
 import io.github.bayang.jelu.dto.AuthorDto
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
+import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.TagDto
 import java.time.Instant
 
@@ -55,4 +57,8 @@ fun tags(): List<TagDto> {
 
 fun tagDto(name: String = "science fiction"): TagDto {
     return TagDto(id = null, creationDate = null, modificationDate = null, name)
+}
+
+fun importConfigurationDto(): ImportConfigurationDto {
+    return ImportConfigurationDto(shouldFetchMetadata = false, shouldFetchCovers = false, ImportSource.GOODREADS)
 }

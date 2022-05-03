@@ -42,4 +42,10 @@ class ImportService(private val importRepository: ImportRepository) {
         processingStatus: ProcessingStatus,
         userId: UUID
     ): Long = importRepository.countByprocessingStatusAndUser(processingStatus, userId)
+
+    @Transactional
+    fun deleteByprocessingStatusAndUser(
+        processingStatus: ProcessingStatus,
+        userId: UUID
+    ): Int = importRepository.deleteByprocessingStatusAndUser(processingStatus, userId)
 }
