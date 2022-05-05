@@ -2,6 +2,9 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bayang/jelu/CI?style=flat-square) ![GitHub](https://img.shields.io/github/license/bayang/jelu?style=flat-square) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/bayang/jelu?style=flat-square) ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/wabayang/jelu/latest?label=docker%20hub&style=flat-square) [![Discord](https://img.shields.io/discord/970383499733381161?label=Discord&style=flat-square)](https://discord.gg/3RZJ4zuMP5)
 
+[Official documentation](https://bayang.github.io/jelu-web/) 
+
+Like Jelu or find it useful ? Offer me a [coffee ☕](https://ko-fi.com/bayang)
 
 ## Purpose
 
