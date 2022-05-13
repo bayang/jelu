@@ -54,5 +54,4 @@ class UserMessagesController(
     ): UserMessageDto {
         return userMessageService.save(createUserMessageDto, (principal.principal as JeluUser).user)
     }
-
 }
