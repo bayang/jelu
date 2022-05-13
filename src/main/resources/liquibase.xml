@@ -319,5 +319,36 @@
             ALTER TABLE author ADD instagram_page varchar(5000);
         </sql>
     </changeSet>
-
+    <changeSet id="usermessage" author="byng">
+    <createTable tableName="user_message">
+        <column name="id" type="binary(16)" remarks="Technical ID">
+            <constraints primaryKey="true" nullable="false" />
+        </column>
+        <column name="creation_date" type="timestamp"
+                remarks="date of creation">
+            <constraints nullable="false" />
+        </column>
+        <column name="modification_date" type="timestamp"
+                remarks="date of modification">
+            <constraints nullable="false" />
+        </column>
+        <column name="user" type="binary(16)" remarks="Technical ID">
+            <constraints foreignKeyName="fk_user_message_user_id" references="user(id)" nullable="false" deleteCascade="true" />
+        </column>
+        <column name="category" type="varchar(200)"
+                remarks="message category : INFO,ERROR,WARNING ">
+            <constraints nullable="false" />
+        </column>
+        <column name="message" type="varchar(50000)"
+                remarks="the message">
+        </column>
+        <column name="link" type="varchar(50000)"
+                remarks="the link">
+        </column>
+        <column name="read" type="boolean"
+                remarks="The message has been read ">
+            <constraints nullable="false" />
+        </column>
+    </createTable>
+    </changeSet>
 </databaseChangeLog>

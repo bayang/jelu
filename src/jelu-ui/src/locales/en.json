@@ -92,7 +92,7 @@
         "profile" : "Profile",
         "my_profile" : "My profile",
         "settings" : "Settings",
-        "imports" : "Imports",
+        "imports" : "Imports/Exports",
         "author_management" : "Authors management",
         "csv_import" : "Csv import",
         "authors" : "Authors",
@@ -101,7 +101,8 @@
         "users" : "Users",
         "users_management" : "Users management",
         "shortcuts" : "Shortcuts",
-        "shortcuts_tooltip" : "Keyboard shortcuts"
+        "shortcuts_tooltip" : "Keyboard shortcuts",
+        "messages" : "Messages"
     },
     "user" : {
         "log_first" : "Please log in first"
@@ -201,7 +202,12 @@
         "auto_fetch_online" : "Automatically fetch metadata online",
         "fetch_covers" : "Also fetch covers",
         "choose_file" : "Choose file to import",
-        "import_file" : "import file"
+        "import_file" : "import file",
+        "export" : "export your data",
+        "export_file" : "export file",
+        "export_message" : "clicking the button below will trigger an export request, you will be warned in the messages section when your export is ready.",
+        "export_ok" : "Your export request has been saved. You can leave this page, the report will be available in the messages section.",
+        "export_ko" : "An error happened and you export request has probably not been registered."
     },
     "login" : {
         "login" : "login",
@@ -234,5 +240,9 @@
     },
     "profile" : {
         "edit_user" : "Edit user"
+    },
+    "user-messages" : {
+        "link" : "link",
+        "mark_read": "mark as read"
     }
 }

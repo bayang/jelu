@@ -33,6 +33,10 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 it.antMatchers(
                     "/api/v1/users",
                 ).hasRole("ADMIN")
+                it.mvcMatchers(
+                    HttpMethod.POST,
+                    "/api/v1/user-messages",
+                ).hasRole("ADMIN")
                 it.antMatchers(
                     "/api/**",
                 ).hasRole("USER")

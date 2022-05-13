@@ -3,6 +3,7 @@ package io.github.bayang.jelu.controllers
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.JeluUser
+import io.github.bayang.jelu.service.exports.CsvExportService
 import io.github.bayang.jelu.service.imports.CsvImportService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
+import java.util.Locale
 import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
@@ -26,6 +28,7 @@ private val logger = KotlinLogging.logger {}
 @RequestMapping("/api/v1")
 class ImportController(
     val csvImportService: CsvImportService,
+    val csvExportService: CsvExportService,
     private val properties: JeluProperties,
 ) {
 
@@ -45,6 +48,17 @@ class ImportController(
             logger.error { "File ${destFile.absolutePath} not created, csv import aborted" }
         }
         csvImportService.import(destFile, (principal.principal as JeluUser).user.id.value, importConfig)
+        return ResponseEntity.status(HttpStatus.CREATED).build()
+    }
+
+    @ApiResponse(responseCode = "201", description = "Saved the export csv request")
+    @Operation(description = "Trigger a csv export")
+    @PostMapping(path = ["/exports"])
+    fun exportCsv(
+        principal: Authentication,
+        locale: Locale
+    ): ResponseEntity<Nothing> {
+        csvExportService.export((principal.principal as JeluUser).user, locale)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 }

@@ -18,6 +18,8 @@ const fetchMetadata = ref(true)
 const fetchCovers = ref(true)
 const uploadPercentage = ref(0);
 const errorMessage = ref("");
+const exportErrorMessage = ref("");
+const exportMessage = ref("");
 
 const handleFileUpload = (event: any) => {
   file.value = event.target.files[0];
@@ -40,6 +42,16 @@ const importFile = async () => {
           console.log("percent " + percent);
           uploadPercentage.value = percent;
         })
+}
+
+const exportFile =async () => {
+  console.log("export requested")
+  try {
+    await dataService.exportCsv()
+    exportMessage.value = t('csv_import.export_ok')
+  } catch (error) {
+    exportErrorMessage.value = t('csv_import.export_ko')
+  }
 }
 
 </script>
@@ -128,6 +140,36 @@ const importFile = async () => {
           class="text-error"
         >
           {{ errorMessage }}
+        </p>
+      </div>
+    </div>
+    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 py-4 capitalize">
+      {{ t('csv_import.export') }}
+    </h1>
+    <div class="w-11/12 sm:w-8/12">
+      <p class="first-letter:capitalize pb-2">
+        {{ t('csv_import.export_message') }}
+      </p>
+      <div class="field">
+        <p class="control">
+          <button
+            class="btn btn-info"
+            @click="exportFile"
+          >
+            {{ t('csv_import.export_file') }}
+          </button>
+        </p>
+        <p
+          v-if="exportMessage"
+          class=""
+        >
+          {{ exportMessage }}
+        </p>
+        <p
+          v-if="exportErrorMessage"
+          class="text-error"
+        >
+          {{ exportErrorMessage }}
         </p>
       </div>
     </div>

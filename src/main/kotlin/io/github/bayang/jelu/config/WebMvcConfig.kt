@@ -9,13 +9,21 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import java.util.concurrent.TimeUnit
 
+const val EXPORTS_PREFIX = "/exports"
+
 @Configuration
 class WebMvcConfig(private val properties: JeluProperties) : WebMvcConfigurer {
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        // serve pictures
         registry.addResourceHandler("/files/**")
             .addResourceLocations(getExternalFilesFolderPath())
             .setCacheControl(CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic())
+
+        // serve export csv
+        registry.addResourceHandler("$EXPORTS_PREFIX/**")
+            .addResourceLocations(getExternalExportsFolderPath())
+            .setCacheControl(CacheControl.noCache())
 
         registry.addResourceHandler("/assets/**")
             .addResourceLocations("classpath:public/assets/")
@@ -54,6 +62,11 @@ class WebMvcConfig(private val properties: JeluProperties) : WebMvcConfigurer {
     fun getExternalFilesFolderPath(): String {
         var suffix: String = if (properties.files.images.endsWith("/")) { "" } else { "/" }
         return "file:" + properties.files.images + suffix
+    }
+
+    fun getExternalExportsFolderPath(): String {
+        var suffix: String = if (properties.files.imports.endsWith("/")) { "" } else { "/" }
+        return "file:" + properties.files.imports + suffix
     }
 }
 @ControllerAdvice

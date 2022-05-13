@@ -93,7 +93,7 @@
       "profile" : "Profil",
       "my_profile" : "Mon profil",
       "settings" : "Paramètres",
-      "imports" : "Imports",
+      "imports" : "Imports/Exports",
       "author_management" : "Gestion des auteurs",
       "csv_import" : "Import Csv",
       "authors" : "Auteurs",
@@ -102,7 +102,8 @@
       "users" : "Utilisateurs",
       "users_management" : "gestion des utilisateurs",
       "shortcuts" : "Raccourcis",
-      "shortcuts_tooltip" : "Raccourcis claviers"
+      "shortcuts_tooltip" : "Raccourcis claviers",
+      "messages" : "Messages"
   },
   "user" : {
       "log_first" : "Veuillez vous identifier"
@@ -202,7 +203,12 @@
       "auto_fetch_online" : "Récupérer automatiquement les métadonnées depuis le web",
       "fetch_covers" : "Récupérer aussi les couvertures",
       "choose_file" : "Choisissez le fichier à importer",
-      "import_file" : "importer le fichier"
+      "import_file" : "importer le fichier",
+      "export" : "exportez vos données",
+      "export_file" : "exporter fichier",
+      "export_message" : "Cliquer sur le bouton pour déclencher un export, consulter ensuite la section messages pour savoir quand l'export est prêt.",
+      "export_ok" : "Votre demande d'export a bien été enregistrée. Vous pouvez quitter cette page, l'export sera disponible dans la section messages.",
+      "export_ko" : "Une erreur est survenue, votre demande d'export n'a probablement pas été prise en compte."
   },
   "login" : {
       "login" : "identifiant",
@@ -235,5 +241,9 @@
   },
   "profile" : {
       "edit_user" : "Modifier utilisateur"
+  },
+  "user-messages" : {
+      "link" : "lien",
+      "mark_read": "marquer comme lu"
   }
 }

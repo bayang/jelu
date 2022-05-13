@@ -15,8 +15,8 @@ import java.util.UUID
 class ReadingEventService(private val readingEventRepository: ReadingEventRepository) {
 
     @Transactional
-    fun findAll(eventTypes: List<ReadingEventType>?, userId: UUID?, pageable: Pageable) =
-        readingEventRepository.findAll(eventTypes, userId, pageable).map { it.toReadingEventDto() }
+    fun findAll(eventTypes: List<ReadingEventType>?, userId: UUID?, bookId: UUID?, pageable: Pageable) =
+        readingEventRepository.findAll(eventTypes, userId, bookId, pageable).map { it.toReadingEventDto() }
 
     @Transactional
     fun save(createReadingEventDto: CreateReadingEventDto, user: User): ReadingEventDto {

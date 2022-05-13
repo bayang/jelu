@@ -16,7 +16,8 @@ export default defineConfig({
   ],
   server : {
     proxy : {
-      '/files/': 'http://localhost:11111/'
+      '/files/': 'http://localhost:11111/',
+      '/exports/': 'http://localhost:11111/'
     }
   },
   build: {

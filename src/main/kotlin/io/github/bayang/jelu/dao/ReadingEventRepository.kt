@@ -26,6 +26,7 @@ class ReadingEventRepository {
     fun findAll(
         eventTypes: List<ReadingEventType>?,
         userId: UUID?,
+        bookId: UUID?,
         pageable: Pageable
     ): Page<ReadingEvent> {
         val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
@@ -35,6 +36,9 @@ class ReadingEventRepository {
         }
         if (userId != null) {
             query.andWhere { UserBookTable.user eq userId }
+        }
+        if (bookId != null) {
+            query.andWhere { UserBookTable.book eq bookId }
         }
         val total = query.count()
         query.limit(pageable.pageSize, pageable.offset)

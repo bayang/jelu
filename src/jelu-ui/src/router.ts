@@ -90,6 +90,7 @@ const router = createRouter({
                 { path : 'admin/users', beforeEnter: [isAdmin], component: () => import(/* webpackChunkName: "recommend" */ './components/AdminUsers.vue')},
                 { path: 'imports', component: () => import(/* webpackChunkName: "recommend" */ './components/Imports.vue')},
                 { path: 'settings', component: () => import(/* webpackChunkName: "recommend" */ './components/UserSettings.vue')},
+                { path: 'messages', component: () => import(/* webpackChunkName: "recommend" */ './components/UserMessages.vue')},
             ]
         },
     ],

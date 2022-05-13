@@ -3,6 +3,7 @@ package io.github.bayang.jelu.service.imports
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.ImportEntity
 import io.github.bayang.jelu.dao.ImportSource
+import io.github.bayang.jelu.dao.MessageCategory
 import io.github.bayang.jelu.dao.ProcessingStatus
 import io.github.bayang.jelu.dao.ReadingEventType
 import io.github.bayang.jelu.dto.AuthorDto
@@ -10,6 +11,7 @@ import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
+import io.github.bayang.jelu.dto.CreateUserMessageDto
 import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.ImportDto
 import io.github.bayang.jelu.dto.LibraryFilter
@@ -20,6 +22,7 @@ import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.service.ImportService
 import io.github.bayang.jelu.service.ReadingEventService
+import io.github.bayang.jelu.service.UserMessageService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import io.github.bayang.jelu.utils.toInstant
@@ -34,6 +37,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
 import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -55,6 +59,11 @@ const val CURRENTLY_READING = "currently-reading"
  */
 const val DROPPED = "did-not-finish"
 
+/**
+ * Works for goodreads and storygraph
+ */
+val goodreadsDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+
 @Service
 class CsvImportService(
     private val properties: JeluProperties,
@@ -62,18 +71,31 @@ class CsvImportService(
     private val fetchMetadataService: FetchMetadataService,
     private val bookService: BookService,
     private val userService: UserService,
-    private val readingEventService: ReadingEventService
+    private val readingEventService: ReadingEventService,
+    private val userMessageService: UserMessageService
 ) {
 
-    /**
-     * Works for goodreads and storygraph
-     */
-    val goodreadsDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+    // /**
+    //  * Works for goodreads and storygraph
+    //  */
+    // val goodreadsDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
     // maybe later : use coroutines ?
     @Async
     fun import(file: File, user: UUID, importConfig: ImportConfigurationDto) {
         val start = System.currentTimeMillis()
+        val userEntity = userService.findUserEntityById(user)
+        val nowString: String = OffsetDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
+        try {
+            userMessageService.save(
+                CreateUserMessageDto(
+                "Import started at $nowString",
+                null,
+                MessageCategory.INFO
+            ), userEntity)
+        } catch (e: Exception) {
+            logger.error(e) { "failed to save message for ${file.absolutePath} import" }
+        }
         // put file content in db
         parse(file, user, importConfig)
         var end = System.currentTimeMillis()
@@ -88,6 +110,16 @@ class CsvImportService(
         end = System.currentTimeMillis()
         deltaInSec = (end - start) / 1000
         logger.info { "Import for ${file.absolutePath} ended after : $deltaInSec seconds, with $success imports and $failures failures" }
+        try {
+            userMessageService.save(
+                CreateUserMessageDto(
+                    "Import for ${file.absolutePath} ended after : $deltaInSec seconds, with $success imports and $failures failures",
+                    null,
+                    MessageCategory.SUCCESS
+                ), userEntity)
+        } catch (e: Exception) {
+            logger.error(e) { "failed to save message for ${file.absolutePath} import" }
+        }
     }
 
     fun importFromDb(user: UUID, importConfig: ImportConfigurationDto): Pair<Long, Long> {

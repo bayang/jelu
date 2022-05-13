@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import { LibraryFilter } from "../model/LibraryFilter";
 import { WikipediaSearchResult } from "../model/WikipediaSearchResult";
 import { WikipediaPageResult } from "../model/WikipediaPageResult";
+import { MessageCategory, UpdateUserMessage, UserMessage } from "../model/UserMessage";
 
 class DataService {
 
@@ -46,6 +47,8 @@ class DataService {
 
   private API_IMPORTS = '/imports';
 
+  private API_EXPORTS = '/exports';
+
   private API_WIKIPEDIA = '/wikipedia';
 
   private API_SEARCH = '/search';
@@ -53,6 +56,8 @@ class DataService {
   private API_PAGE = '/page';
 
   private API_MERGE = '/merge';
+
+  private API_USER_MESSAGES = '/user-messages';
 
   private MODE: string;
 
@@ -790,6 +795,19 @@ class DataService {
     }
   }
 
+  exportCsv = async () => {
+    try {
+      await this.apiClient.post(this.API_EXPORTS)
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error export csv " + error.response.status + " " + error.response.data.error)
+        throw new Error("error export csv " + error.response.status + " " + error)
+      }
+      console.log("error export csv " + (error as AxiosError).code)
+      throw new Error("error exporting csv request" + error)
+    }
+  }
+
   updateReadingEvent = async (event: ReadingEvent) => {
     try {
       const resp = await this.apiClient.put<ReadingEvent>(`${this.API_READING_EVENTS}/${event.id}`, {
@@ -901,6 +919,62 @@ class DataService {
       }
       console.log("error merging authors " + (error as AxiosError).code)
       throw new Error("error merging authors " + error)
+    }
+  }
+
+  /*
+  * Dates are deserialized as strings, convert to Date instead
+  */
+  transformUserMessage = (data: string) => {
+    const ev = JSON.parse(data)
+    if (ev.modificationDate != null) {
+      ev.modificationDate = dayjs(ev.modificationDate).toDate()
+    }
+    return ev
+  }
+
+  messages = async (messageCategories?: Array<MessageCategory>|null, read?: boolean,
+    page?: number, size?: number, sort?: string) => {
+    try {
+      const response = await this.apiClient.get<Page<UserMessage>>(`${this.API_USER_MESSAGES}`, {
+        params: {
+          messageCategories: messageCategories,
+          read: read,
+          page: page,
+          size: size,
+          sort: sort
+        },
+        paramsSerializer: function(params) {
+          return qs.stringify(params, {arrayFormat: 'comma'})
+       },
+       transformResponse: this.transformUserMessage
+      });
+      console.log("called userMessages")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error userMessages " + (error as AxiosError).code)
+      throw new Error("error userMessages " + error)
+    }
+  }
+
+  updateUserMessage = async (messageId: string, updateDto: UpdateUserMessage) => {
+    try {
+      const response = await this.apiClient.put<UserMessage>(`${this.API_USER_MESSAGES}/${messageId}`, updateDto);
+      console.log("called update userMessage")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error update userMessage " + (error as AxiosError).code)
+      throw new Error("error update userMessage " + error)
     }
   }
 

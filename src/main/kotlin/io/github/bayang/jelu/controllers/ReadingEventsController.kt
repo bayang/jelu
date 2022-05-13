@@ -42,8 +42,9 @@ class ReadingEventsController(
     fun readingEvents(
         @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @RequestParam(name = "userId", required = false) userId: UUID?,
+        @RequestParam(name = "bookId", required = false) bookId: UUID?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
-    ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, pageable)
+    ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, bookId, pageable)
 
     @GetMapping(path = ["/reading-events/me"])
     fun myReadingEvents(
@@ -52,7 +53,7 @@ class ReadingEventsController(
         principal: Authentication
     ): Page<ReadingEventDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, pageable)
+        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, null, pageable)
     }
 
     @PostMapping(path = ["/reading-events"])
