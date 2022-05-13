@@ -20,7 +20,7 @@
     "@vueuse/core": "8.2.6",
     "@vueuse/router": "8.2.6",
     "axios": "0.26.1",
-    "daisyui": "2.13.6",
+    "daisyui": "2.14.3",
     "dayjs": "1.11.0",
     "floating-vue": "^2.0.0-beta.15",
     "sweetalert2": "11.4.8",
