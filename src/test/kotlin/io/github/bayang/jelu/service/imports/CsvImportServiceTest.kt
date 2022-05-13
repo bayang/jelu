@@ -1,9 +1,12 @@
 package io.github.bayang.jelu.service.imports
 
+import com.ninjasquad.springmockk.MockkBean
 import io.github.bayang.jelu.config.JeluProperties
+import io.github.bayang.jelu.dao.ImportSource
 import io.github.bayang.jelu.dao.ProcessingStatus
 import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.CreateUserDto
+import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.importConfigurationDto
@@ -11,6 +14,8 @@ import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.service.ImportService
 import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserService
+import io.github.bayang.jelu.service.metadata.FetchMetadataService
+import io.mockk.verify
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -67,6 +72,9 @@ class CsvImportServiceTest(
         }
     }
 
+    @MockkBean
+    private lateinit var fetchMetadataService: FetchMetadataService
+
     @Test
     fun testParse() {
         val userId = user().id.value
@@ -83,6 +91,29 @@ class CsvImportServiceTest(
                 Assertions.assertEquals(3, shelves?.size)
             }
         }
+    }
+
+    @Test
+    fun testParseAndImport() {
+        val userId = user().id.value
+        val csv = File(this::class.java.getResource("/csv-import/goodreads1.csv").file)
+        // shouldFetchMetadata true but binary path is null so we shouldn't try to call fetchMetadata
+        csvImportService.parse(csv, userId, ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = false, ImportSource.GOODREADS))
+        val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        Assertions.assertEquals(10, nb)
+        val dtos = importService.getByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        dtos.forEach {
+            if (it.title.equals("La somme de nos folies")) {
+                Assertions.assertEquals("9782843048302", it.isbn13)
+                Assertions.assertEquals("Éditions Zulma", it.publisher)
+                val shelves = it.tags?.split(",")
+                Assertions.assertEquals(3, shelves?.size)
+            }
+        }
+        val (success, failures) = csvImportService.importFromDb(userId, importConfigurationDto())
+        Assertions.assertEquals(10, success)
+        Assertions.assertEquals(0, failures)
+        verify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -106,6 +137,7 @@ class CsvImportServiceTest(
                 Assertions.assertEquals(1, userbook.readingEvents?.size)
             }
         }
+        verify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
     }
 
     fun user(): User {

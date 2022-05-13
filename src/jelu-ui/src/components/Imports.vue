@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { useStore } from 'vuex'
+import { key } from '../store'
 import { ImportSource } from "../model/ImportConfiguration";
 import dataService from "../services/DataService";
 import { useTitle } from '@vueuse/core'
@@ -12,6 +14,7 @@ const { t } = useI18n({
 
 useTitle('Jelu | Imports')
 
+const store = useStore(key)
 const file = ref(new File([], "dummy"));
 const importSource = ref(ImportSource.GOODREADS);
 const fetchMetadata = ref(true)
@@ -54,6 +57,14 @@ const exportFile =async () => {
   }
 }
 
+let fetchCoversDisabled = computed(() => {
+  if (store != null && !store.getters.getMetadataFetchEnabled) {
+    return true
+  } else {
+    return !fetchMetadata.value
+  }
+}) 
+
 </script>
 
 <template>
@@ -62,6 +73,12 @@ const exportFile =async () => {
       {{ t('csv_import.import_csv') }}
     </h1>
     <div class="w-11/12 sm:w-8/12">
+      <div
+        v-if="store != null && !store.getters.getMetadataFetchEnabled"
+        class="mb-3 text-warning font-bold"
+      >
+        !! {{ t('labels.auto_import_disabled') }}
+      </div>
       <div class="form-control">
         <o-field
           horizontal
@@ -83,7 +100,10 @@ const exportFile =async () => {
           :label="t('csv_import.auto_fetch_online')"
           class="capitalize"
         >
-          <o-checkbox v-model="fetchMetadata">
+          <o-checkbox
+            v-model="fetchMetadata"
+            :disabled="store != null && !store.getters.getMetadataFetchEnabled"
+          >
             {{ fetchMetadata }}
           </o-checkbox>
         </o-field>
@@ -96,7 +116,7 @@ const exportFile =async () => {
         >
           <o-checkbox
             v-model="fetchCovers" 
-            :disabled="!fetchMetadata"
+            :disabled="fetchCoversDisabled"
           >
             {{ fetchCovers }}
           </o-checkbox>

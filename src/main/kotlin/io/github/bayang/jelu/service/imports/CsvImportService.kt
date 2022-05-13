@@ -89,10 +89,12 @@ class CsvImportService(
         try {
             userMessageService.save(
                 CreateUserMessageDto(
-                "Import started at $nowString",
-                null,
-                MessageCategory.INFO
-            ), userEntity)
+                    "Import started at $nowString",
+                    null,
+                    MessageCategory.INFO
+                ),
+                userEntity
+            )
         } catch (e: Exception) {
             logger.error(e) { "failed to save message for ${file.absolutePath} import" }
         }
@@ -116,7 +118,9 @@ class CsvImportService(
                     "Import for ${file.absolutePath} ended after : $deltaInSec seconds, with $success imports and $failures failures",
                     null,
                     MessageCategory.SUCCESS
-                ), userEntity)
+                ),
+                userEntity
+            )
         } catch (e: Exception) {
             logger.error(e) { "failed to save message for ${file.absolutePath} import" }
         }
@@ -149,7 +153,7 @@ class CsvImportService(
         try {
             importService.updateStatus(importEntity.id.value, ProcessingStatus.PROCESSING)
             var metadata = MetadataDto()
-            if (importEntity.shouldFetchMetadata) {
+            if (importEntity.shouldFetchMetadata && !properties.metadata.calibre.path.isNullOrBlank()) {
                 val isbn: String = getIsbn(importEntity)
                 if (isbn.isNotBlank()) {
                     metadata = fetchMetadataService.fetchMetadata(isbn, null, null, onlyUseCorePlugins = true, fetchCover = importConfig.shouldFetchCovers)
