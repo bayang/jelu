@@ -1,3 +1,16 @@
+## [0.18.0](https://github.com/bayang/jelu/compare/v0.17.1...v0.18.0) (2022-05-13)
+
+
+### Features
+
+* add csv export ([efc8d9f](https://github.com/bayang/jelu/commit/efc8d9fc6eb4796bda0e264987daea3e69d130fc))
+
+
+### Bug Fixes
+
+* linting ([6497ebf](https://github.com/bayang/jelu/commit/6497ebf140a748b4dea7e744fa0d41bd8cb86ff8))
+* on import do not try to fetch metadata if binary not configured [#3](https://github.com/bayang/jelu/issues/3) ([92f2b90](https://github.com/bayang/jelu/commit/92f2b90f755f79254737eec394232066d5eb73a0))
+
 ### [0.17.1](https://github.com/bayang/jelu/compare/v0.17.0...v0.17.1) (2022-05-03)
 
 
