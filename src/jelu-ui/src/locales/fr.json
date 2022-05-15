@@ -103,7 +103,8 @@
       "users_management" : "gestion des utilisateurs",
       "shortcuts" : "Raccourcis",
       "shortcuts_tooltip" : "Raccourcis claviers",
-      "messages" : "Messages"
+      "messages" : "Messages",
+      "stats" : "Statistiques"
   },
   "user" : {
       "log_first" : "Veuillez vous identifier"
@@ -245,5 +246,10 @@
   "user-messages" : {
       "link" : "lien",
       "mark_read": "marquer comme lu"
+  },
+  "stats" : {
+      "all_time" : "Données globales",
+      "yearly_stats" : "Statistiques annuelles",
+      "choose_year" : "Choisir une année"
   }
 }

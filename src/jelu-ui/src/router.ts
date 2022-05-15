@@ -91,6 +91,7 @@ const router = createRouter({
                 { path: 'imports', component: () => import(/* webpackChunkName: "recommend" */ './components/Imports.vue')},
                 { path: 'settings', component: () => import(/* webpackChunkName: "recommend" */ './components/UserSettings.vue')},
                 { path: 'messages', component: () => import(/* webpackChunkName: "recommend" */ './components/UserMessages.vue')},
+                { path: 'stats', component: () => import(/* webpackChunkName: "recommend" */ './components/UserStats.vue')},
             ]
         },
     ],

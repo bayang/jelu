@@ -102,7 +102,8 @@
         "users_management" : "Users management",
         "shortcuts" : "Shortcuts",
         "shortcuts_tooltip" : "Keyboard shortcuts",
-        "messages" : "Messages"
+        "messages" : "Messages",
+        "stats" : "Stats"
     },
     "user" : {
         "log_first" : "Please log in first"
@@ -244,5 +245,10 @@
     "user-messages" : {
         "link" : "link",
         "mark_read": "mark as read"
+    },
+    "stats" : {
+        "all_time" : "All time stats",
+        "yearly_stats" : "Yearly stats",
+        "choose_year" : "Choose a year"
     }
 }

@@ -19,6 +19,7 @@ const items = ref([{ name:t('settings.profile'), tooltip:t('settings.my_profile'
                 { name:t('settings.authors'), icon:"bxs-user-account", href:"/profile/admin/authors", tooltip: t('settings.author_management') },
                 { name:t('settings.imports'), icon:"bxs-file-plus", href:"/profile/imports", tooltip: t('settings.csv_import') },
                 { name:t('settings.messages'), icon:"bxs-message-alt-detail", href:"/profile/messages" },
+                { name:t('settings.stats'), icon:"bxs-chart", href:"/profile/stats", tooltip: t('settings.stats') },
                 ])
 
 if (store.getters.isAdmin) {

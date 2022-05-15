@@ -16,6 +16,7 @@ import { LibraryFilter } from "../model/LibraryFilter";
 import { WikipediaSearchResult } from "../model/WikipediaSearchResult";
 import { WikipediaPageResult } from "../model/WikipediaPageResult";
 import { MessageCategory, UpdateUserMessage, UserMessage } from "../model/UserMessage";
+import { MonthStats, YearStats } from "../model/YearStats";
 
 class DataService {
 
@@ -58,6 +59,8 @@ class DataService {
   private API_MERGE = '/merge';
 
   private API_USER_MESSAGES = '/user-messages';
+
+  private API_STATS = '/stats';
 
   private MODE: string;
 
@@ -975,6 +978,54 @@ class DataService {
       }
       console.log("error update userMessage " + (error as AxiosError).code)
       throw new Error("error update userMessage " + error)
+    }
+  }
+
+  yearStats = async () => {
+    try {
+      const response = await this.apiClient.get<Array<YearStats>>(`${this.API_STATS}`);
+      console.log("called stats")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error stats " + (error as AxiosError).code)
+      throw new Error("error stats " + error)
+    }
+  }
+
+  monthStatsForYear = async (year: number) => {
+    try {
+      const response = await this.apiClient.get<Array<MonthStats>>(`${this.API_STATS}/${year}`);
+      console.log("called stats months")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error stats months " + (error as AxiosError).code)
+      throw new Error("error stats months " + error)
+    }
+  }
+
+  yearsWithStats = async () => {
+    try {
+      const response = await this.apiClient.get<Array<number>>(`${this.API_STATS}/years`);
+      console.log("called stats years")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error stats years " + (error as AxiosError).code)
+      throw new Error("error stats years " + error)
     }
   }
 

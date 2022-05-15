@@ -4,14 +4,17 @@ import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.ReadingEventType
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.JeluUser
+import io.github.bayang.jelu.dto.MonthStatsDto
 import io.github.bayang.jelu.dto.ReadingEventDto
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
+import io.github.bayang.jelu.dto.YearStatsDto
 import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.ReadingEventService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import mu.KotlinLogging
 import org.springdoc.api.annotations.ParameterObject
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -26,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.util.UUID
 import javax.validation.Valid
 
@@ -73,5 +78,78 @@ class ReadingEventsController(
     fun deleteEventById(@PathVariable("id") eventId: UUID): ResponseEntity<Unit> {
         repository.deleteReadingEventById(eventId)
         return ResponseEntity.noContent().build()
+    }
+
+    @GetMapping(path = ["/stats"])
+    fun stats(
+        principal: Authentication
+    ): ResponseEntity<List<YearStatsDto>> {
+        var events: Page<ReadingEventDto>
+        var currentPage = 0
+        val pageSize = 200
+        val yearStats = mutableMapOf<Int, YearStatsDto>()
+        do {
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, PageRequest.of(currentPage, pageSize))
+            currentPage ++
+            events.forEach {
+                val year = OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault()).year
+                if (yearStats.containsKey(year)) {
+                    if (it.eventType == ReadingEventType.DROPPED) {
+                        yearStats[year] = yearStats[year]!!.copy(dropped = yearStats[year]!!.dropped + 1)
+                    } else if (it.eventType == ReadingEventType.FINISHED) {
+                        yearStats[year] = yearStats[year]!!.copy(finished = yearStats[year]!!.finished + 1)
+                    }
+                } else {
+                    if (it.eventType == ReadingEventType.DROPPED) {
+                        yearStats[year] = YearStatsDto(year = year, dropped = 1)
+                    } else if (it.eventType == ReadingEventType.FINISHED) {
+                        yearStats[year] = YearStatsDto(year = year, finished = 1)
+                    }
+                }
+            }
+        } while (!events.isEmpty)
+        return ResponseEntity.ok(yearStats.values.toList())
+    }
+
+    @GetMapping(path = ["/stats/{year}"])
+    fun statsForYear(
+        @PathVariable("year") year: Int,
+        principal: Authentication
+    ): ResponseEntity<List<MonthStatsDto>> {
+        var events: Page<ReadingEventDto>
+        var currentPage = 0
+        val pageSize = 200
+        val monthStats = mutableMapOf<Int, MonthStatsDto>()
+        do {
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, PageRequest.of(currentPage, pageSize))
+            currentPage ++
+            events.filter { OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault()).year == year }.forEach {
+                val toDate = OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault())
+                val month = toDate.monthValue
+                if (monthStats.containsKey(month)) {
+                    if (it.eventType == ReadingEventType.DROPPED) {
+                        monthStats[month] = monthStats[month]!!.copy(dropped = monthStats[month]!!.dropped + 1)
+                    } else if (it.eventType == ReadingEventType.FINISHED) {
+                        monthStats[month] = monthStats[month]!!.copy(finished = monthStats[month]!!.finished + 1)
+                    }
+                } else {
+                    if (it.eventType == ReadingEventType.DROPPED) {
+                        monthStats[month] = MonthStatsDto(year = year, dropped = 1, month = month)
+                    } else if (it.eventType == ReadingEventType.FINISHED) {
+                        monthStats[month] = MonthStatsDto(year = year, finished = 1, month = month)
+                    }
+                }
+            }
+        } while (!events.isEmpty)
+        return ResponseEntity.ok(monthStats.values.toList())
+    }
+
+    @ApiResponse(description = "Return a list of years for which there are reading events")
+    @GetMapping(path = ["/stats/years"])
+    fun years(
+        principal: Authentication
+    ): ResponseEntity<List<Int>> {
+        val years = repository.findYears(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null)
+        return ResponseEntity.ok(years)
     }
 }

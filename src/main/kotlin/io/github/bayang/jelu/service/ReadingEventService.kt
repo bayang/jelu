@@ -19,6 +19,10 @@ class ReadingEventService(private val readingEventRepository: ReadingEventReposi
         readingEventRepository.findAll(eventTypes, userId, bookId, pageable).map { it.toReadingEventDto() }
 
     @Transactional
+    fun findYears(eventTypes: List<ReadingEventType>?, userId: UUID?, bookId: UUID?) =
+        readingEventRepository.findYears(eventTypes, userId, bookId)
+
+    @Transactional
     fun save(createReadingEventDto: CreateReadingEventDto, user: User): ReadingEventDto {
         return readingEventRepository.save(createReadingEventDto, user).toReadingEventDto()
     }
