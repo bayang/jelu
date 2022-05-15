@@ -2,7 +2,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bayang/jelu/CI?style=flat-square) ![GitHub](https://img.shields.io/github/license/bayang/jelu?style=flat-square) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/bayang/jelu?style=flat-square) ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/wabayang/jelu/latest?label=docker%20hub&style=flat-square) [![Discord](https://img.shields.io/discord/970383499733381161?label=Discord&style=flat-square)](https://discord.gg/3RZJ4zuMP5)
 
-[Official documentation](https://bayang.github.io/jelu-web/) 
+Check the [Official documentation](https://bayang.github.io/jelu-web/) for more detailed information. 
 
 Like Jelu or find it useful ? Offer me a [coffee ☕](https://ko-fi.com/bayang)
 
@@ -23,6 +23,7 @@ All my data is now located into a single-file database which can be saved anywhe
 * track read books so you don't have to remember everything
 * manage to-read list
 * Import history (from goodreads for now, via csv export)
+* Export your data in a csv file
 * Import single books manually or automatically via online search (through title, authors or isbn)
 * Mark books as currently reading, finished or dropped
 * Books can be tagged and a tag page can display all books with that tag
@@ -31,6 +32,7 @@ All my data is now located into a single-file database which can be saved anywhe
 * Auto import author details from wikipedia
 * Auto merge authors (to fix duplicates resulting from automatic imports for example)
 * Provide embed code snippets so that books can be tracked in other sites, blogs or even markdown notes/journal
+* Provide some stats about your readings
 
 ## Usage
 
