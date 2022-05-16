@@ -89,7 +89,7 @@ class ReadingEventsController(
         val pageSize = 200
         val yearStats = mutableMapOf<Int, YearStatsDto>()
         do {
-            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, PageRequest.of(currentPage, pageSize))
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, PageRequest.of(currentPage, pageSize, Sort.by("modificationDate, asc")))
             currentPage ++
             events.forEach {
                 val year = OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault()).year
@@ -108,7 +108,7 @@ class ReadingEventsController(
                 }
             }
         } while (!events.isEmpty)
-        return ResponseEntity.ok(yearStats.values.toList())
+        return ResponseEntity.ok(yearStats.values.sortedBy { it.year })
     }
 
     @GetMapping(path = ["/stats/{year}"])
@@ -141,7 +141,7 @@ class ReadingEventsController(
                 }
             }
         } while (!events.isEmpty)
-        return ResponseEntity.ok(monthStats.values.toList())
+        return ResponseEntity.ok(monthStats.values.sortedBy { it.month })
     }
 
     @ApiResponse(description = "Return a list of years for which there are reading events")
@@ -150,6 +150,10 @@ class ReadingEventsController(
         principal: Authentication
     ): ResponseEntity<List<Int>> {
         val years = repository.findYears(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null)
-        return ResponseEntity.ok(years)
+        return if (years != null && years.isNotEmpty()) {
+            ResponseEntity.ok(years.sorted())
+        } else {
+            ResponseEntity.ok(emptyList())
+        }
     }
 }
