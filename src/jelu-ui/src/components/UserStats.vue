@@ -30,6 +30,7 @@ const getYears = () => {
 }
 
 const getAllStats = () => {
+  loading.value = true
   dataService.yearStats()
   .then(res => {
     let labels = res.map(r => r.year)
@@ -50,14 +51,17 @@ const getAllStats = () => {
         ]
       }
       chartData.value = { ...updatedChartData }
+      loading.value = false
   })
   .catch(e => {
     console.log(e)
+    loading.value = false
   })
 }
 
 const getYearStats = () => {
   if (currentYear.value != null) {
+    loading.value = true
     dataService.monthStatsForYear(currentYear.value)
     .then(res => {
       let labels = res.map(r => r.month).map(m => dayjs(`2020-${m}-1`).format('MMMM'))
@@ -78,14 +82,16 @@ const getYearStats = () => {
           ]
         }
         yearChartData.value = { ...updatedChartData }
+        loading.value = false
     })
     .catch(e => {
+      loading.value = false
       console.log(e)
     })
   }
 }
 
-const loaded = ref(false)
+const loading = ref(false)
 const chartData = ref<ChartData<'bar'>>({
       datasets: []
     })
@@ -102,6 +108,8 @@ watch(currentYear, (newVal, oldVal) => {
   
 })
 
+const loaderFullPage = ref(false)
+
 getAllStats()
 getYears()
 
@@ -112,38 +120,52 @@ getYears()
     <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
       {{ t('stats.all_time') }}
     </h1>
-    <div class="">
+    <div
+      class=""
+    >
       <Bar
         :chart-data="chartData"
       />
     </div>
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 py-4 capitalize">
+    <h1
+      v-if="years != null && years !== undefined && years.length > 0"
+      class="text-2xl typewriter w-11/12 sm:w-8/12 py-4 capitalize"
+    >
       {{ t('stats.yearly_stats') }}
     </h1>
-    <div v-if="years != null && years !== undefined && years.length > 0" class="">
-      <select
-      v-model="currentYear"
-      class="select select-bordered select-accent pt-2 mb-4"
+    <div
+      v-if="years != null && years !== undefined && years.length > 0"
+      class=""
     >
-      <option
-        disabled
-        selected
+      <select
+        v-model="currentYear"
+        class="select select-bordered select-accent pt-2 mb-4"
       >
-        {{ t('stats.choose_year') }}
-      </option>
-      <option
-        v-for="year in years"
-        :key="year"
-        :value="year"
-      >
-        {{ year }}
-      </option>
-    </select>
+        <option
+          disabled
+          selected
+        >
+          {{ t('stats.choose_year') }}
+        </option>
+        <option
+          v-for="year in years"
+          :key="year"
+          :value="year"
+        >
+          {{ year }}
+        </option>
+      </select>
       <Bar
         :chart-data="yearChartData"
       />
     </div>
   </div>
+  <o-loading
+    v-model:active="loading"
+    :full-page="true"
+    :can-cancel="true"
+    :overlay="loaderFullPage"
+  />
 </template>
 
 <style scoped>
