@@ -244,7 +244,8 @@
     },
     "user-messages" : {
         "link" : "link",
-        "mark_read": "mark as read"
+        "mark_read": "mark as read",
+        "no_messages": "no messages here"
     },
     "stats" : {
         "all_time" : "All time stats",

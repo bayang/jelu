@@ -245,7 +245,8 @@
   },
   "user-messages" : {
       "link" : "lien",
-      "mark_read": "marquer comme lu"
+      "mark_read": "marquer comme lu",
+      "no_messages": "vous n'avez aucun message"
   },
   "stats" : {
       "all_time" : "Données globales",

@@ -111,6 +111,12 @@ onMounted(() => {
       {{ t('settings.messages') }}
     </h1>
     <div
+      v-if="messages == null || messages.length < 1"
+      class="font-bold italic text-xl"
+    >
+      {{ t('user-messages.no_messages') }} !
+    </div>
+    <div
       v-for="message in messages"
       :key="message.id"
       class="m-1 alert shadow-lg sm:w-9/12"
