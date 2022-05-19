@@ -101,31 +101,20 @@ The docker image we provide embeds the fetch-ebook-metada executable to automati
 
 A sample docker compose would look like that : 
 
-```dockerfile
-version: '3.3'
+```yaml
 services:
+version: '3.3'
   jelu:
     image: wabayang/jelu
     container_name: jelu
     volumes:
-      - type: bind
-        source: ~/jelu/config
-        target: /config
-      - type: bind
-        source: ~/jelu/database
-        target: /database
-      - type: bind
-        source: ~/jelu/files
-        target: /files
-      - type: bind
-        source: /etc/timezone
-        target: /etc/timezone
-        read_only: true
+      - ~/jelu/config:/config
+      - ~/jelu/database:/database
+      - ~/jelu/files/images:/files/images
+      - ~/jelu/files/imports:/files/imports
+      - /etc/timezone:/etc/timezone:ro
     ports:
       - 11111:11111
-    user: "1000:1000"
-    environment:
-      - MYENV=test
     restart: unless-stopped
 
 ```
