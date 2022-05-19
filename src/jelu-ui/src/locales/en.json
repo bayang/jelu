@@ -11,7 +11,8 @@
       "add_book" : "add book",
       "dashboard" : "dashboard",
       "login" : "login",
-      "logout" : "logout"
+      "logout" : "logout",
+      "search": "search"
     },
     "labels": {
       "search": "Search",

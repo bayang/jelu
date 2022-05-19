@@ -54,15 +54,6 @@ const open = ref(false)
 const progress: Ref<boolean> = ref(false)
 
 const edit: Ref<boolean> = ref(false)
-const advancedMode: Ref<boolean> = ref(false)
-
-if (isbn10Query.value !== null ||  
-isbn13Query.value !== null || 
-seriesQuery.value !== null || 
-(tagsArrayString.value !== null && tagsArrayString.value.trim().length > 0) || 
-(authorsArrayString.value !== null && authorsArrayString.value.trim().length > 0)) {
-  advancedMode.value = true
-}
 
 const search = () => {
     progress.value = true
@@ -213,7 +204,7 @@ if (titleQuery.value != null ||
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="flex flex-row sm:justify-between justify-center justify-items-center w-11/12">
+  <div class="flex flex-row sm:justify-between justify-center justify-items-center w-11/12 pb-2">
     <o-button
       variant="success"
       outlined
@@ -224,104 +215,93 @@ if (titleQuery.value != null ||
         <i class="mdi mdi-filter-variant" />
       </span>
     </o-button>
-    <o-checkbox v-model="advancedMode">
-      {{ t('labels.advanced_search') }}
-    </o-checkbox>
     <div />
   </div>
   <div
     class="flex flex-row justify-center justify-items-center"
   >
     <div class="basis-full sm:basis-5/12">
-      <div
-        tabindex="0"
-        class="collapse"
-        :class="advancedMode ? 'collapse-open' : 'collapse-close'"
-      > 
-        <div class="collapse-title pr-5">
-          <o-field>
-            <o-input
-              v-model="titleQuery"
-              :placeholder="t('labels.search_title')" 
-              type="search"
-              icon="magnify" 
-              icon-clickable
-              icon-pack="mdi"
-              class="input focus:input-accent"
-              @keyup.enter="search"
-            />
-            <o-button
-              v-tooltip="t('labels.search_selected')"
-              variant="success"
-              icon-pack="mdi"
-              icon-right="magnify"
-              @click="search"
-            />
-          </o-field>
+      <div class="basis-full">
+        <o-field class="title-input">
+          <o-input
+            v-model="titleQuery"
+            :placeholder="t('labels.search_title')" 
+            type="search"
+            icon="magnify" 
+            icon-clickable
+            icon-pack="mdi"
+            class="input focus:input-accent"
+            @keyup.enter="search"
+          />
+          <o-button
+            v-tooltip="t('labels.search_selected')"
+            variant="success"
+            icon-pack="mdi"
+            icon-right="magnify"
+            @click="search"
+          />
+        </o-field>
+      </div>
+      <div class="flex flex-wrap justify-center justify-items-center search-form-extended">
+        <div class="search-form-extended-input">
+          <o-input
+            v-model="isbn10Query"
+            :placeholder="t('book.isbn10')"
+            type="search"
+            icon="magnify"
+            icon-clickable
+            icon-pack="mdi"
+            class="input focus:input-accent"
+            @keyup.enter="search"
+          />
         </div>
-        <div class="collapse-content">
-          <div class="flex flex-wrap justify-center justify-items-center search-form-extended">
-            <div class="search-form-extended-input">
-              <o-input
-                v-model="isbn10Query"
-                :placeholder="t('book.isbn10')"
-                type="search"
-                icon="magnify"
-                icon-clickable
-                icon-pack="mdi"
-                class="input focus:input-accent"
-                @keyup.enter="search"
-              />
-            </div>
-            <div class="search-form-extended-input">
-              <o-input
-                v-model="isbn13Query"
-                :placeholder="t('book.isbn13')"
-                type="search"
-                icon="magnify" 
-                icon-clickable
-                icon-pack="mdi"
-                class="input focus:input-accent"
-                @keyup.enter="search"
-              />
-            </div>
-            <div class="search-form-extended-input">
-              <o-input
-                v-model="authorsArrayString"
-                :placeholder="t('book.author', 2)"
-                type="search"
-                icon="magnify" 
-                icon-clickable
-                icon-pack="mdi"
-                class="input focus:input-accent"
-                @keyup.enter="search"
-              />
-            </div>
-            <div class="search-form-extended-input">
-              <o-input
-                v-model="tagsArrayString"
-                :placeholder="t('book.tag', 2)"
-                type="search"
-                icon="magnify" 
-                icon-clickable
-                icon-pack="mdi"
-                class="input focus:input-accent"
-                @keyup.enter="search"
-              />
-            </div>
-            <div class="search-form-extended-input">
-              <o-input
-                v-model="seriesQuery"
-                :placeholder="t('book.series')"
-                type="search"
-                icon="magnify" 
-                icon-clickable
-                icon-pack="mdi"
-                class="input focus:input-accent"
-                @keyup.enter="search"
-              />
-            </div>
-          </div>
+        <div class="search-form-extended-input">
+          <o-input
+            v-model="isbn13Query"
+            :placeholder="t('book.isbn13')"
+            type="search"
+            icon="magnify" 
+            icon-clickable
+            icon-pack="mdi"
+            class="input focus:input-accent"
+            @keyup.enter="search"
+          />
+        </div>
+        <div class="search-form-extended-input">
+          <o-input
+            v-model="authorsArrayString"
+            :placeholder="t('book.author', 2)"
+            type="search"
+            icon="magnify" 
+            icon-clickable
+            icon-pack="mdi"
+            class="input focus:input-accent"
+            @keyup.enter="search"
+          />
+        </div>
+        <div class="search-form-extended-input">
+          <o-input
+            v-model="tagsArrayString"
+            :placeholder="t('book.tag', 2)"
+            type="search"
+            icon="magnify" 
+            icon-clickable
+            icon-pack="mdi"
+            class="input focus:input-accent"
+            @keyup.enter="search"
+          />
+        </div>
+        <div class="search-form-extended-input">
+          <o-input
+            v-model="seriesQuery"
+            :placeholder="t('book.series')"
+            type="search"
+            icon="magnify" 
+            icon-clickable
+            icon-pack="mdi"
+            class="input focus:input-accent"
+            @keyup.enter="search"
+          />
         </div>
       </div>
     </div>

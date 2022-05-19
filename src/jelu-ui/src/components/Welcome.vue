@@ -76,19 +76,6 @@ const getMyEvents = async () => {
 
 };
 
-const visibleAdvanced: Ref<boolean> = ref(false);
-
-const hideAdvanced = () => {
-  setTimeout(() => visibleAdvanced.value = false, 500)
-}
-
-const search = (searchterm: string) => {
-  console.log(searchterm)
-  if (StringUtils.isNotBlank(searchterm)) {
-    router.push({ path: '/search', query: { title: searchterm } })
-  }
-}
-
 const eventClass = (type: ReadingEventType) => {
     if (type === ReadingEventType.FINISHED) {
       return "badge-info";
@@ -166,32 +153,8 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
 
 <template>
   <div v-if="isLogged">
-    <div class="flex flex-row justify-center">
-      <div class="basis-10/12 sm:basis-1/3">
-        <o-field>
-          <o-input
-            :placeholder="t('labels.search') + '...'"
-            type="search" 
-            icon="magnify"
-            icon-clickable 
-            icon-pack="mdi"
-            class="input focus:input-accent"
-            @focus="visibleAdvanced = true"
-            @blur="hideAdvanced"
-            @keyup.enter="search($event.target.value)"
-          />
-        </o-field>
-        <router-link
-          v-if="visibleAdvanced"
-          class="link-hover font-sans"
-          :to="{ name: 'search' }"
-        >
-          {{ t('labels.advanced_search') }}
-        </router-link>
-      </div>
-    </div>
     <div v-if="hasBooks">
-      <h2 class="typewriter text-3xl py-4">
+      <h2 class="typewriter text-3xl pb-3">
         {{ t('home.currently_reading') }} :
       </h2>
       <div class="flex flex-row flex-wrap justify-center gap-3">

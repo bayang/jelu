@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { key } from './store'
 import { useRoute, useRouter } from 'vue-router'
 import dataService from "./services/DataService";
 import Avatar from 'vue-avatar-sdh'
 import { themeChange } from 'theme-change'
 import { useI18n } from 'vue-i18n'
+import { StringUtils } from './utils/StringUtils';
 
 const store = useStore(key)
 const router = useRouter()
@@ -61,6 +62,32 @@ const logout = () => {
     })
 }
 
+const searchQuery = ref('')
+
+const showAdvanced = ref(false)
+const hideAdvanced = () => {
+  setTimeout(() => showAdvanced.value = false, 1000)
+}
+
+const showSearchInput = ref(true)
+
+const search = () => {
+  console.log(searchQuery.value)
+  if (StringUtils.isNotBlank(searchQuery.value)) {
+    showAdvanced.value = false
+    router.push({ path: '/search', query: { title: searchQuery.value } })
+  }
+}
+
+// hide the search input if current view is the search page
+watch(() => route.name, (newVal, oldVal) => {
+  if (route.name === 'search') {
+    showSearchInput.value = false
+  } else {
+    showSearchInput.value = true
+  }
+})
+
 </script>
 
 <template>
@@ -94,7 +121,7 @@ const logout = () => {
             <li>
               <router-link
                 v-if="isLogged"
-                class="font-sans capitalize"
+                class="font-sans text-base capitalize"
                 :to="{ name: 'my-books' }"
               >
                 {{ t('nav.my_books') }}
@@ -103,7 +130,7 @@ const logout = () => {
             <li>
               <router-link
                 v-if="isLogged"
-                class="font-sans capitalize"
+                class="font-sans text-base capitalize"
                 :to="{ name: 'to-read' }"
               >
                 {{ t('nav.to_read') }}
@@ -113,9 +140,18 @@ const logout = () => {
               <router-link
                 v-if="isLogged"
                 :to="{ name: 'add-book' }"
-                class="font-sans capitalize"
+                class="font-sans text-base capitalize"
               >
                 {{ t('nav.add_book') }}
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                v-if="isLogged"
+                :to="{ name: 'search' }"
+                class="font-sans text-base capitalize"
+              >
+                {{ t('nav.search') }}
               </router-link>
             </li>
           </ul>
@@ -130,6 +166,63 @@ const logout = () => {
             class="w-14"
           >
         </router-link>
+        <div
+          v-if="isLogged && showSearchInput"
+          class="dropdown"
+        >
+          <label
+            tabindex="0"
+            class="btn btn-ghost rounded-btn lg:hidden"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          /></svg></label>
+          <div
+            tabindex="0"
+            class="dropdown-content mt-2 -left-20"
+          >
+            <div
+              class="form-control w-2"
+            >
+              <div class="input-group">
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Search…"
+                  class="input input-accent"
+                  @focus="showAdvanced = true"
+                  @blur="hideAdvanced"
+                  @keyup.enter="search"
+                >
+                <button
+                  class="btn btn-square btn-outline"
+                  @click="search"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  /></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal p-0">
@@ -161,6 +254,51 @@ const logout = () => {
             </router-link>
           </li>
         </ul>
+        <div
+          v-if="isLogged && showSearchInput"
+          class="form-control"
+        >
+          <div class="input-group">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search…"
+              class="input input-accent"
+              @focus="showAdvanced = true"
+              @blur="hideAdvanced"
+              @keyup.enter="search"
+            >
+            <button
+              class="btn btn-square btn-outline"
+              @click="search"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              /></svg>
+            </button>
+          </div>
+        </div>
+        <button
+          v-if="showAdvanced"
+          class="btn btn-circle btn-outline border-0 tooltip tooltip-bottom lowercase"
+          :data-tip="t('labels.advanced_search')"
+        >
+          <router-link
+            class="link-hover font-sans"
+            :to="{ name: 'search' }"
+          >
+            <span class="mdi mdi-magnify-plus-outline mdi-24 text-3xl" />
+          </router-link>
+        </button>
       </div>
       <div class="navbar-end">
         <div class="dropdown dropdown-end">
@@ -212,7 +350,7 @@ const logout = () => {
         </div>
       </div>
     </div>
-    <div class="divider" /> 
+    <div class="divider mt-0" /> 
 
     <router-view />
     <input

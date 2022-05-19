@@ -240,3 +240,8 @@
 .timeline-item {
   @apply bg-accent rounded;
 }
+
+/* title search input on search page, make it fill column */
+.title-input .o-ctrl-input {
+  @apply w-full;
+}

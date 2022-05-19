@@ -11,7 +11,8 @@
     "add_book" : "ajouter un livre",
     "dashboard" : "tableau de bord",
     "login" : "connexion",
-    "logout" : "déconnexion"
+    "logout" : "déconnexion",
+    "search": "recherche"
   },
   "labels": {
     "search": "Rechercher",
