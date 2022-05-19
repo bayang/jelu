@@ -75,10 +75,9 @@ class FetchMetadataService(
             commandArray.add(targetCover.absolutePath)
         }
         val builder = ProcessBuilder()
-
+        logger.trace { "fetch metadata command : $commandArray" }
         builder.command(commandArray)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
-            .redirectError(ProcessBuilder.Redirect.PIPE)
         try {
             val process: Process = builder.start()
             val exitVal = process.waitFor()
@@ -118,7 +117,7 @@ class FetchMetadataService(
                     METADATA -> metadata(rootChildrenCursor.childElementCursor(), dto)
                     GUIDE -> logPart(rootChildrenCursor.childElementCursor())
                     else -> {
-                        logger.debug { "rootChildren name ${rootChildrenCursor.localName} qname ${rootChildrenCursor.qName}" }
+                        logger.trace { "rootChildren name ${rootChildrenCursor.localName} qname ${rootChildrenCursor.qName}" }
                         logPart(rootChildrenCursor.childElementCursor())
                     }
                 }
@@ -148,7 +147,7 @@ class FetchMetadataService(
                                 dto.isbn10 = isbn
                             }
                         }
-                        else -> logger.debug { "unhandled identifier scheme ${childElementCursor.getAttrValue("scheme")}" }
+                        else -> logger.trace { "unhandled identifier scheme ${childElementCursor.getAttrValue("scheme")}" }
                     }
                 }
                 TITLE -> dto.title = childElementCursor.elemStringValue
@@ -156,7 +155,7 @@ class FetchMetadataService(
                     when (childElementCursor.getAttrValue("role")) {
                         // sometimes we receive mutliple authors on one line, separated by ;
                         "aut" -> dto.authors.addAll(splitValues(childElementCursor.elemStringValue))
-                        else -> logger.debug { "unhandled creator role ${childElementCursor.getAttrValue("role")}" }
+                        else -> logger.trace { "unhandled creator role ${childElementCursor.getAttrValue("role")}" }
                     }
                 }
                 DATE -> dto.publishedDate = childElementCursor.elemStringValue
@@ -168,8 +167,8 @@ class FetchMetadataService(
                     when (childElementCursor.getAttrValue("name")) {
                         "calibre:series" -> dto.series = childElementCursor.getAttrValue("content")
                         "calibre:series_index" -> dto.numberInSeries = childElementCursor.getAttrValue("content").toDoubleOrNull()
-                        "calibre:author_link_map" -> logger.debug { "author_link_map ${childElementCursor.getAttrValue("content")}" }
-                        else -> logger.debug { "unhandled meta name ${childElementCursor.getAttrValue("name")}" }
+                        "calibre:author_link_map" -> logger.trace { "author_link_map ${childElementCursor.getAttrValue("content")}" }
+                        else -> logger.trace { "unhandled meta name ${childElementCursor.getAttrValue("name")}" }
                     }
                 }
             }
@@ -190,7 +189,7 @@ class FetchMetadataService(
 
     private fun logPart(childElementCursor: SMInputCursor) {
         while (childElementCursor.next != null) {
-            logger.debug { "child cursor ${childElementCursor.localName}" }
+            logger.trace { "child cursor ${childElementCursor.localName}" }
         }
     }
 }
