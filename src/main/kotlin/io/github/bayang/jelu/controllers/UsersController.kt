@@ -45,7 +45,7 @@ class UsersController(
     fun authenticatedUser(principal: Authentication, session: HttpSession): AuthenticationDto {
         when (principal.principal) {
             is DummyUser -> {
-                logger.debug { "dummy user $principal" }
+                logger.trace { "dummy user $principal" }
                 return AuthenticationDto(
                     UserDto(
                         login = principal.name,
@@ -59,8 +59,8 @@ class UsersController(
                 )
             }
             is JeluUser -> {
-                logger.debug { "jelu user $principal" }
-                logger.info { "session ${session.id}" }
+                logger.trace { "jelu user $principal" }
+                logger.trace { "session ${session.id}" }
                 return AuthenticationDto(
                     UserDto(
                         login = principal.name,
@@ -74,7 +74,7 @@ class UsersController(
                 )
             }
             else -> {
-                logger.debug { "other principal $principal" }
+                logger.trace { "other principal $principal" }
                 return AuthenticationDto(
                     UserDto(
                         login = principal.name,
