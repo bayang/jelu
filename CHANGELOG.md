@@ -1,3 +1,17 @@
+## [0.20.0](https://github.com/bayang/jelu/compare/v0.19.0...v0.20.0) (2022-05-20)
+
+
+### Features
+
+* put the search bar in nav bar ([2fef551](https://github.com/bayang/jelu/commit/2fef5515b912abc08ebe2b3481065e42deb00d00))
+
+
+### Bug Fixes
+
+* add loading indicator when loading stats ([ffe2e35](https://github.com/bayang/jelu/commit/ffe2e35b6e67eb3ac18a7f7402f96fba42900486))
+* stats order ([83199f7](https://github.com/bayang/jelu/commit/83199f7d743db8fceaa813f70cbaa86104894ed2))
+* try to make metadata grabber work on ARM ([8cea20f](https://github.com/bayang/jelu/commit/8cea20fb770926677f03ef8aa4933edf3a8f2e6c))
+
 ## [0.19.0](https://github.com/bayang/jelu/compare/v0.18.0...v0.19.0) (2022-05-15)
 
 
