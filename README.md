@@ -120,7 +120,8 @@ version: '3.3'
 
 ```
 
-!!!! WARNING : ARM versions are built but have not been tested yet !
+!!!! WARNING : ARM versions must add this environment variable for automatic metadata fetching :
+`JELU_METADATA_CALIBRE_PATH=/usr/bin/fetch-ebook-metadata`
 
 ## Screenshots
 
