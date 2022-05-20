@@ -1,3 +1,4 @@
 files:
   - source: /src/jelu-ui/src/locales/en.json
     translation: /src/jelu-ui/src/locales/%two_letters_code%.json
+"commit_message": "[skip ci]"
