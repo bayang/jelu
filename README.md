@@ -176,3 +176,6 @@ Embed code and preview :
   *  public RSS feed of reading events
 * Storygraph csv import
 
+## Translations
+
+You can help with translations : everything is hosted on crowdin https://crowdin.com/project/jelu
