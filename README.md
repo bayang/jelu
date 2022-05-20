@@ -33,6 +33,7 @@ All my data is now located into a single-file database which can be saved anywhe
 * Auto merge authors (to fix duplicates resulting from automatic imports for example)
 * Provide embed code snippets so that books can be tracked in other sites, blogs or even markdown notes/journal
 * Provide some stats about your readings
+* Multi user support
 
 ## Usage
 
