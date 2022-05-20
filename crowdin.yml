@@ -1,0 +1,3 @@
+files:
+  - source: /src/jelu-ui/src/locales/
+    translation: '%original_path%/%two_letters_code%.json'
