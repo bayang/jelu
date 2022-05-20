@@ -82,7 +82,14 @@ class FetchMetadataService(
             val process: Process = builder.start()
             val exitVal = process.waitFor()
             if (exitVal == 0) {
-                val output: String = process.inputStream.bufferedReader().readText()
+                var output: String = process.inputStream.bufferedReader().readText()
+                // on ARM the fetch-ebook-metadata binary outputs a python byte string instead of a regular string
+                // cf test case for a sample string
+                // so we try to clean it ourselves... This is ugly
+                if (! output.startsWith('<')) {
+                    logger.trace { "fetch metadata output is not regular xml : $output" }
+                    output = cleanXml(output)
+                }
                 logger.trace { "fetch metadata output $output" }
                 val parseOpf: MetadataDto = parseOpf(output)
                 if (!isbn.isNullOrBlank()) {
@@ -103,6 +110,32 @@ class FetchMetadataService(
             logger.error(e) { "failure while calling fetch-ebook-metadata process" }
         }
         return MetadataDto()
+    }
+
+    fun removeTrailingAndLeadingChars(output: String): String {
+        if (output.isNullOrBlank()) {
+            return output
+        }
+        var startIndex = 0
+        var endIndex = output.length - 1
+        while (output[startIndex] != '<') {
+            startIndex ++
+        }
+        while (output[endIndex] != '>') {
+            endIndex --
+        }
+        return output.substring(startIndex, endIndex + 1)
+    }
+
+    fun cleanXml(input: String): String {
+        var trimmed = removeTrailingAndLeadingChars(input)
+        if (trimmed.contains("\\'")) {
+            trimmed = trimmed.replace("\\'", "'")
+        }
+        if (trimmed.contains("\\n")) {
+            trimmed = trimmed.replace("\\n", "")
+        }
+        return trimmed
     }
 
     fun parseOpf(input: String): MetadataDto {
