@@ -153,6 +153,7 @@
 
 .event-modal {
   margin: 30px;
+  height: min(600px, 70vh);
 }
 
 .author-modal {
