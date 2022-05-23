@@ -118,6 +118,10 @@ class ReadingEventRepository {
                 logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_READING state for book ${userBook.book.id}" }
                 alreadyReadingEvent.eventType = createReadingEventDto.eventType
                 alreadyReadingEvent.modificationDate = createReadingEventDto.eventDate ?: instant
+                // if we  mark book as read, remove to-read flag from the userbook
+                if (alreadyReadingEvent.userBook.toRead == true) {
+                    alreadyReadingEvent.userBook.toRead = null
+                }
                 return alreadyReadingEvent
             }
             // FIXME else : alreadyReadingEvent is not null and createReadingEventDto.eventDate is before an already existing CURRENTLY_READING EVENT
@@ -138,6 +142,9 @@ class ReadingEventRepository {
             this.eventType = updateReadingEventDto.eventType
             val lastEvent = this.userBook.readingEvents
                 .maxByOrNull { e -> e.modificationDate }
+            if (updateReadingEventDto.eventType == ReadingEventType.FINISHED && this.userBook.toRead == true) {
+                this.userBook.toRead = null
+            }
             if (lastEvent == null) {
                 this.userBook.lastReadingEvent = null
                 this.userBook.lastReadingEventDate = null

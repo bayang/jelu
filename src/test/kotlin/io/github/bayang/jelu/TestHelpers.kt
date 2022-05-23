@@ -9,13 +9,13 @@ import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.TagDto
 import java.time.Instant
 
-fun createUserBookDto(bookDto: BookCreateDto, lastReadingEvent: ReadingEventType? = null, lastreadingEventDate: Instant? = null): CreateUserBookDto {
+fun createUserBookDto(bookDto: BookCreateDto, lastReadingEvent: ReadingEventType? = null, lastreadingEventDate: Instant? = null, toRead: Boolean = false): CreateUserBookDto {
     return CreateUserBookDto(
         personalNotes = "test personal notes\nwith a newline",
         lastReadingEvent = lastReadingEvent,
         lastReadingEventDate = lastreadingEventDate,
         owned = true,
-        toRead = false,
+        toRead = toRead,
         percentRead = null,
         book = bookDto
     )
