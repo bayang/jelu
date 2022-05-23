@@ -16,3 +16,5 @@ spring:
     password: test
     driver-class-name: org.sqlite.JDBC
     generate-unique-name: true
+  exposed:
+    show-sql: true
