@@ -10,8 +10,8 @@ plugins {
     kotlin("plugin.jpa") version "1.6.10"
     kotlin("plugin.allopen") version "1.6.10"
     kotlin("kapt") version "1.6.10"
-    id("com.github.node-gradle.node") version "3.2.1"
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    id("com.github.node-gradle.node") version "3.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
@@ -60,11 +60,11 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
 
-    implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.23")
     implementation("com.github.slugify:slugify:2.5")
     implementation("commons-io:commons-io:2.11.0")
     implementation("commons-validator:commons-validator:1.7")
-    implementation("org.jsoup:jsoup:1.14.3")
+    implementation("org.jsoup:jsoup:1.15.1")
     implementation("net.coobird:thumbnailator:0.4.17")
 
     implementation("org.apache.commons:commons-csv:1.9.0")
