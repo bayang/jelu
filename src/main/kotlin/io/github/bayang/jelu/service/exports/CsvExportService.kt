@@ -179,7 +179,7 @@ class CsvExportService(
     }
 
     fun readDates(userbook: UserBookWithoutEventsAndUserDto, userId: UUID): String {
-        val reads = readingEventService.findAll(listOf(ReadingEventType.FINISHED), userId, userbook.book.id, Pageable.ofSize(100))
+        val reads = readingEventService.findAll(listOf(ReadingEventType.FINISHED), userId, userbook.book.id, null, null, Pageable.ofSize(100))
         if (! reads.isEmpty) {
             return reads.content.stream().map { toDateString(it.modificationDate) }.collect(Collectors.joining(","))
         }

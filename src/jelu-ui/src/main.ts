@@ -27,6 +27,7 @@ import '@splidejs/splide/dist/css/splide.min.css';
  */
 import { createI18n } from 'vue-i18n'
 import messages from '@intlify/vite-plugin-vue-i18n/messages'
+import { datetimeFormats } from './datetimeFormat'
 import { usePreferredLanguages } from '@vueuse/core'
 import { useLocalStorage } from '@vueuse/core'
 
@@ -49,7 +50,8 @@ console.log(`favourite language fetched from storage is : ${storedLanguage.value
     legacy: false,
     locale: storedLanguage.value,
     fallbackLocale: 'en',
-    messages
+    messages,
+    datetimeFormats: datetimeFormats
   })
 
 createApp(App)

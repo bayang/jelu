@@ -16,6 +16,7 @@ export interface CreateReadingEvent {
 export interface ReadingEventWithUserBook {
   id?: string,
   creationDate?: string,
+  modificationDate?: Date,
   eventType: ReadingEventType,
   userBook: UserBook
 }

@@ -65,7 +65,7 @@ const nonCurrentlyReadingEvents: Array<ReadingEventType> = [ReadingEventType.DRO
 const getMyEvents = async () => {
   recentEventsIsLoading.value = true
   try {
-    const res = await dataService.myReadingEvents(nonCurrentlyReadingEvents, 0, 8)
+    const res = await dataService.myReadingEvents(nonCurrentlyReadingEvents, undefined, undefined, undefined, 0, 8)
     const notCurrentlyReading = res.content.filter(e => e.eventType !== ReadingEventType.CURRENTLY_READING)
     events.value = notCurrentlyReading
     recentEventsIsLoading.value = false
@@ -174,7 +174,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
               <template #icon>
                 <span
                   v-tooltip="t('labels.mark_read_or_drop')"
-                  class="icon has-text-info text-info"
+                  class="icon text-info"
                   @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
                 >
                   <i class="mdi mdi-check-circle mdi-18px" />

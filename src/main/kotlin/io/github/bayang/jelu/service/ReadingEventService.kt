@@ -9,14 +9,15 @@ import io.github.bayang.jelu.dto.UpdateReadingEventDto
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.util.UUID
 
 @Component
 class ReadingEventService(private val readingEventRepository: ReadingEventRepository) {
 
     @Transactional
-    fun findAll(eventTypes: List<ReadingEventType>?, userId: UUID?, bookId: UUID?, pageable: Pageable) =
-        readingEventRepository.findAll(eventTypes, userId, bookId, pageable).map { it.toReadingEventDto() }
+    fun findAll(eventTypes: List<ReadingEventType>?, userId: UUID?, bookId: UUID?, after: LocalDate?, before: LocalDate?, pageable: Pageable) =
+        readingEventRepository.findAll(eventTypes, userId, bookId, after, before, pageable).map { it.toReadingEventDto() }
 
     @Transactional
     fun findYears(eventTypes: List<ReadingEventType>?, userId: UUID?, bookId: UUID?) =

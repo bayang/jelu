@@ -17,6 +17,10 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
@@ -28,6 +32,8 @@ class ReadingEventRepository {
         eventTypes: List<ReadingEventType>?,
         userId: UUID?,
         bookId: UUID?,
+        after: LocalDate?,
+        before: LocalDate?,
         pageable: Pageable
     ): Page<ReadingEvent> {
         val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
@@ -40,6 +46,14 @@ class ReadingEventRepository {
         }
         if (bookId != null) {
             query.andWhere { UserBookTable.book eq bookId }
+        }
+        if (before != null) {
+            val instant = OffsetDateTime.of(before, LocalTime.MAX, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            query.andWhere { ReadingEventTable.modificationDate lessEq instant }
+        }
+        if (after != null) {
+            val instant = OffsetDateTime.of(after, LocalTime.MIN, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            query.andWhere { ReadingEventTable.modificationDate greaterEq instant }
         }
         val total = query.count()
         query.limit(pageable.pageSize, pageable.offset)

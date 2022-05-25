@@ -13,8 +13,6 @@ const { t } = useI18n({
     })
 
 useTitle('Jelu | Stats')
-console.log(dayjs('2020-1-1').format('MMMM'))
-console.log(dayjs('2020-3-1').format('MMMM'))
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 

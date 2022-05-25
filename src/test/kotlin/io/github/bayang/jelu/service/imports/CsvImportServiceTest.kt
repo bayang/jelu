@@ -62,7 +62,7 @@ class CsvImportServiceTest(
             it.deleteRecursively()
         }
         importService.deleteByprocessingStatusAndUser(ProcessingStatus.SAVED, user().id.value)
-        readingEventService.findAll(null, null, null, Pageable.ofSize(30)).content.forEach {
+        readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
         bookService.findUserBookByCriteria(user().id.value, null, null, Pageable.ofSize(30))

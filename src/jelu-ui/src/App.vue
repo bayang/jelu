@@ -148,6 +148,15 @@ watch(() => route.name, (newVal, oldVal) => {
             <li>
               <router-link
                 v-if="isLogged"
+                :to="{ name: 'history' }"
+                class="font-sans text-base capitalize"
+              >
+                {{ t('nav.history') }}
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                v-if="isLogged"
                 :to="{ name: 'search' }"
                 class="font-sans text-base capitalize"
               >
@@ -251,6 +260,15 @@ watch(() => route.name, (newVal, oldVal) => {
               class="font-sans text-xl capitalize"
             >
               {{ t('nav.add_book') }}
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              v-if="isLogged"
+              :to="{ name: 'history' }"
+              class="font-sans text-xl capitalize"
+            >
+              {{ t('nav.history') }}
             </router-link>
           </li>
         </ul>

@@ -731,12 +731,31 @@ class DataService {
     }
   }
 
-  myReadingEvents = async (eventTypes?: Array<ReadingEventType>|null, 
+  /*
+  * Dates are deserialized as strings, convert to Date instead
+  */
+  transformReadingEvents = (data: string) => {
+    const page = JSON.parse(data)
+    if (page.content) {
+      for (const ev of page.content) {
+        if (ev.modificationDate != null) {
+          ev.modificationDate = dayjs(ev.modificationDate).toDate()
+        }
+      }
+    }
+    return page
+  }
+
+  myReadingEvents = async (eventTypes?: Array<ReadingEventType>|null, bookId?: string, 
+    after?: string, before?: string,
     page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<ReadingEventWithUserBook>>(`${this.API_READING_EVENTS}/me`, {
         params: {
           eventTypes: eventTypes,
+          bookId: bookId,
+          after: after,
+          before: before,
           page: page,
           size: size,
           sort: sort
@@ -744,6 +763,7 @@ class DataService {
         paramsSerializer: function(params) {
           return qs.stringify(params, {arrayFormat: 'comma'})
        },
+       transformResponse: this.transformReadingEvents
       });
       console.log("called my events")
       console.log(response)
@@ -755,6 +775,39 @@ class DataService {
       }
       console.log("error my events " + (error as AxiosError).code)
       throw new Error("error my events " + error)
+    }
+  }
+
+  findReadingEvents = async (eventTypes?: Array<ReadingEventType>|null, userId?: string, bookId?: string, 
+    after?: string, before?: string,
+    page?: number, size?: number, sort?: string) => {
+    try {
+      const response = await this.apiClient.get<Page<ReadingEventWithUserBook>>(`${this.API_READING_EVENTS}`, {
+        params: {
+          eventTypes: eventTypes,
+          userId: userId,
+          bookId: bookId,
+          after: after,
+          before: before,
+          page: page,
+          size: size,
+          sort: sort
+        },
+        paramsSerializer: function(params) {
+          return qs.stringify(params, {arrayFormat: 'comma'})
+       },
+       transformResponse: this.transformReadingEvents
+      });
+      console.log("called events")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error events " + (error as AxiosError).code)
+      throw new Error("error events " + error)
     }
   }
 

@@ -59,6 +59,12 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
+            path: '/history',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/History.vue'),
+            name: 'history',
+            beforeEnter: [isLogged],
+        },
+        {
             path: '/tags/:tagId',
             component: () => import(/* webpackChunkName: "recommend" */ './components/TagBooks.vue'),
             name: 'tag-detail',

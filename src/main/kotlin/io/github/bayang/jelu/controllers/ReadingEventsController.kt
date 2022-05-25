@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.util.UUID
@@ -48,17 +50,22 @@ class ReadingEventsController(
         @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @RequestParam(name = "userId", required = false) userId: UUID?,
         @RequestParam(name = "bookId", required = false) bookId: UUID?,
+        @RequestParam(name = "after", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) after: LocalDate?,
+        @RequestParam(name = "before", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) before: LocalDate?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
-    ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, bookId, pageable)
+    ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, bookId, after, before, pageable)
 
     @GetMapping(path = ["/reading-events/me"])
     fun myReadingEvents(
         @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
+        @RequestParam(name = "bookId", required = false) bookId: UUID?,
+        @RequestParam(name = "after", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) after: LocalDate?,
+        @RequestParam(name = "before", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) before: LocalDate?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
         principal: Authentication
     ): Page<ReadingEventDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, null, pageable)
+        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, bookId, after, before, pageable)
     }
 
     @PostMapping(path = ["/reading-events"])
@@ -89,7 +96,7 @@ class ReadingEventsController(
         val pageSize = 200
         val yearStats = mutableMapOf<Int, YearStatsDto>()
         do {
-            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, PageRequest.of(currentPage, pageSize, Sort.by("modificationDate, asc")))
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, PageRequest.of(currentPage, pageSize, Sort.by("modificationDate, asc")))
             currentPage ++
             events.forEach {
                 val year = OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault()).year
@@ -121,8 +128,9 @@ class ReadingEventsController(
         val pageSize = 200
         val monthStats = mutableMapOf<Int, MonthStatsDto>()
         do {
-            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, PageRequest.of(currentPage, pageSize))
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, PageRequest.of(currentPage, pageSize))
             currentPage ++
+            // FIXME use date filtering in repository method now
             events.filter { OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault()).year == year }.forEach {
                 val toDate = OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault())
                 val month = toDate.monthValue

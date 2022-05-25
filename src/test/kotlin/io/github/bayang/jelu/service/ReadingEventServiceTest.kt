@@ -26,6 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
 import java.io.File
+import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 
 @SpringBootTest
@@ -58,7 +61,7 @@ class ReadingEventServiceTest(
         tempDir.listFiles().forEach {
             it.deleteRecursively()
         }
-        readingEventService.findAll(null, null, null, Pageable.ofSize(30)).content.forEach {
+        readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
         bookService.findUserBookByCriteria(user().id.value, null, null, Pageable.ofSize(30))
@@ -94,7 +97,7 @@ class ReadingEventServiceTest(
         Assertions.assertNotNull(saved.book.modificationDate)
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, saved.lastReadingEvent)
         Assertions.assertNotNull(saved.lastReadingEventDate)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         val updater = UserBookUpdateDto(
@@ -125,7 +128,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(ReadingEventType.DROPPED, updated.lastReadingEvent)
         Assertions.assertNotNull(updated.lastReadingEventDate)
         Assertions.assertEquals(1, updated.readingEvents?.size)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
     }
 
@@ -152,7 +155,7 @@ class ReadingEventServiceTest(
         Assertions.assertNotNull(saved.book.modificationDate)
         Assertions.assertEquals(ReadingEventType.FINISHED, saved.lastReadingEvent)
         Assertions.assertNotNull(saved.lastReadingEventDate)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         val updater = UserBookUpdateDto(
@@ -183,7 +186,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(ReadingEventType.DROPPED, updated.lastReadingEvent)
         Assertions.assertNotNull(updated.lastReadingEventDate)
         Assertions.assertEquals(2, updated.readingEvents?.size)
-        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
     }
 
@@ -210,7 +213,7 @@ class ReadingEventServiceTest(
         Assertions.assertNotNull(saved.book.modificationDate)
         Assertions.assertEquals(ReadingEventType.FINISHED, saved.lastReadingEvent)
         Assertions.assertNotNull(saved.lastReadingEventDate)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         val thirtyDaysBefore = nowInstant().minus(30, ChronoUnit.DAYS)
@@ -228,11 +231,11 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(ReadingEventType.FINISHED, userbook.lastReadingEvent)
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(2, ChronoUnit.MINUTES))!!)
 
-        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         readingEventService.deleteReadingEventById(newEvent.id!!)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         userbook = bookService.findUserBookById(saved.id!!)
         Assertions.assertEquals(ReadingEventType.FINISHED, userbook.lastReadingEvent)
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(2, ChronoUnit.MINUTES))!!)
@@ -261,7 +264,7 @@ class ReadingEventServiceTest(
         Assertions.assertNotNull(saved.book.modificationDate)
         Assertions.assertEquals(ReadingEventType.FINISHED, saved.lastReadingEvent)
         Assertions.assertNotNull(saved.lastReadingEventDate)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         val thirtyDaysAfter = nowInstant().plus(30, ChronoUnit.DAYS)
@@ -279,11 +282,11 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, userbook.lastReadingEvent)
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().plus(29, ChronoUnit.DAYS))!!)
 
-        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         readingEventService.deleteReadingEventById(newEvent.id!!)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         userbook = bookService.findUserBookById(saved.id!!)
         Assertions.assertEquals(ReadingEventType.FINISHED, userbook.lastReadingEvent)
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(2, ChronoUnit.MINUTES))!!)
@@ -312,7 +315,7 @@ class ReadingEventServiceTest(
         Assertions.assertNotNull(saved.book.modificationDate)
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, saved.lastReadingEvent)
         Assertions.assertNotNull(saved.lastReadingEventDate)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         val thirtyDaysAfter = nowInstant().plus(30, ChronoUnit.DAYS)
@@ -331,11 +334,11 @@ class ReadingEventServiceTest(
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().plus(29, ChronoUnit.DAYS))!!)
         Assertions.assertNull(userbook.toRead)
 
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         readingEventService.deleteReadingEventById(newEvent.id!!)
-        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         userbook = bookService.findUserBookById(saved.id!!)
         Assertions.assertNull(userbook.lastReadingEvent)
         Assertions.assertNull(userbook.lastReadingEventDate)
@@ -352,7 +355,7 @@ class ReadingEventServiceTest(
         var nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, nbUserBooks)
 
-        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
         val dateAfter = nowInstant().plus(1, ChronoUnit.DAYS)
         val newEvent = readingEventService.save(
@@ -367,7 +370,7 @@ class ReadingEventServiceTest(
         nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, nbUserBooks)
 
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
     }
 
     @Test
@@ -390,7 +393,7 @@ class ReadingEventServiceTest(
                 user()
             )
         }
-        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
     }
 
     @Test
@@ -416,7 +419,7 @@ class ReadingEventServiceTest(
         Assertions.assertNotNull(saved.book.modificationDate)
         Assertions.assertEquals(ReadingEventType.FINISHED, saved.lastReadingEvent)
         Assertions.assertNotNull(saved.lastReadingEventDate)
-        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         val thirtyDaysAfter = nowInstant().plus(30, ChronoUnit.DAYS)
@@ -434,7 +437,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, userbook.lastReadingEvent)
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().plus(29, ChronoUnit.DAYS))!!)
 
-        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
 
         val updated = readingEventService.updateReadingEvent(
@@ -451,6 +454,96 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(ReadingEventType.FINISHED, userbook.lastReadingEvent)
         Assertions.assertNull(userbook.toRead)
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().plus(39, ChronoUnit.DAYS))!!)
+    }
+
+    @Test
+    fun testFindByDate() {
+        val createBook = bookDto()
+        val createUserBookDto = createUserBookDto(createBook, ReadingEventType.FINISHED, nowInstant(), true)
+        val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), null)
+        Assertions.assertEquals(createBook.title, saved.book.title)
+        Assertions.assertEquals(createBook.isbn10, saved.book.isbn10)
+        Assertions.assertEquals(createBook.isbn13?.trim(), saved.book.isbn13)
+        Assertions.assertEquals("This is a test summary with a newline", saved.book.summary)
+        Assertions.assertEquals(createBook.publisher, saved.book.publisher)
+        Assertions.assertEquals(createBook.pageCount, saved.book.pageCount)
+        Assertions.assertEquals(createBook.goodreadsId, saved.book.goodreadsId)
+        Assertions.assertNull(saved.book.librarythingId)
+        Assertions.assertEquals(createUserBookDto.owned, saved.owned)
+        Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
+        Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
+        Assertions.assertNull(saved.percentRead)
+        Assertions.assertNotNull(saved.creationDate)
+        Assertions.assertNotNull(saved.modificationDate)
+        Assertions.assertNotNull(saved.book.creationDate)
+        Assertions.assertNotNull(saved.book.modificationDate)
+        Assertions.assertEquals(ReadingEventType.FINISHED, saved.lastReadingEvent)
+        Assertions.assertNotNull(saved.lastReadingEventDate)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+
+        val thirtyDaysAfter = nowInstant().plus(30, ChronoUnit.DAYS)
+        val newEvent = readingEventService.save(
+            CreateReadingEventDto(
+                ReadingEventType.CURRENTLY_READING,
+                saved.book.id,
+                thirtyDaysAfter
+            ),
+            user()
+        )
+        Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
+
+        var userbook = bookService.findUserBookById(saved.id!!)
+        Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, userbook.lastReadingEvent)
+        Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().plus(29, ChronoUnit.DAYS))!!)
+
+        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+
+        val threeYearsBefore = OffsetDateTime.now(ZoneId.systemDefault()).minusYears(3).toInstant()
+        val newEventBefore = readingEventService.save(
+            CreateReadingEventDto(
+                ReadingEventType.CURRENTLY_READING,
+                saved.book.id,
+                threeYearsBefore
+            ),
+            user()
+        )
+        Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEventBefore.eventType)
+
+        userbook = bookService.findUserBookById(saved.id!!)
+        Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, userbook.lastReadingEvent)
+        Assertions.assertEquals(3, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+
+        val farPast = OffsetDateTime.now(ZoneId.systemDefault()).minusYears(4).toLocalDate()
+        val beforeAll = readingEventService.findAll(null, null, null, farPast, null, Pageable.ofSize(30))
+        Assertions.assertEquals(3, beforeAll.totalElements)
+
+        val nothingBefore = readingEventService.findAll(null, null, null, null, farPast, Pageable.ofSize(30))
+        Assertions.assertEquals(0, nothingBefore.totalElements)
+
+        val twoYearsBefore = OffsetDateTime.now(ZoneId.systemDefault()).minusYears(2).toLocalDate()
+        val before2Years = readingEventService.findAll(null, null, null, twoYearsBefore, null, Pageable.ofSize(30))
+        Assertions.assertEquals(2, before2Years.totalElements)
+
+        val after2Years = readingEventService.findAll(null, null, null, null, twoYearsBefore, Pageable.ofSize(30))
+        Assertions.assertEquals(1, after2Years.totalElements)
+
+        val farFuture = OffsetDateTime.now(ZoneId.systemDefault()).plusYears(4).toLocalDate()
+        val afterAll = readingEventService.findAll(null, null, null, farFuture, null, Pageable.ofSize(30))
+        Assertions.assertEquals(0, afterAll.totalElements)
+
+        val thirtyOneDaysAfter = LocalDate.ofInstant(nowInstant().plus(31, ChronoUnit.DAYS), ZoneId.systemDefault())
+        val twentyNineDaysAfter = LocalDate.ofInstant(nowInstant().plus(29, ChronoUnit.DAYS), ZoneId.systemDefault())
+        val between = readingEventService.findAll(null, null, null, twentyNineDaysAfter, thirtyOneDaysAfter, Pageable.ofSize(30))
+        Assertions.assertEquals(1, between.totalElements)
+
+        val thirtyDaysAfterMorning = LocalDate.ofInstant(nowInstant().plus(30, ChronoUnit.DAYS), ZoneId.systemDefault())
+        val betweenSameDayAtMorning = readingEventService.findAll(null, null, null, thirtyDaysAfterMorning, thirtyOneDaysAfter, Pageable.ofSize(30))
+        Assertions.assertEquals(1, betweenSameDayAtMorning.totalElements)
+
+        val betweenFarDates = readingEventService.findAll(null, null, null, farPast, farFuture, Pageable.ofSize(30))
+        Assertions.assertEquals(3, betweenFarDates.totalElements)
     }
 
     fun user(): User {
