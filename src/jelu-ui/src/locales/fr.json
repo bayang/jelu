@@ -12,7 +12,8 @@
         "dashboard": "tableau de bord",
         "login": "connexion",
         "logout": "déconnexion",
-        "search": "recherche"
+        "search": "recherche",
+        "history": "history"
     },
     "labels": {
         "search": "Rechercher",
@@ -252,5 +253,8 @@
         "all_time": "Données globales",
         "yearly_stats": "Statistiques annuelles",
         "choose_year": "Choisir une année"
+    },
+    "history": {
+        "years": "years"
     }
 }
