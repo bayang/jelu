@@ -13,7 +13,7 @@
         "login": "connexion",
         "logout": "déconnexion",
         "search": "recherche",
-        "history": "history"
+        "history": "historique"
     },
     "labels": {
         "search": "Rechercher",
@@ -255,6 +255,6 @@
         "choose_year": "Choisir une année"
     },
     "history": {
-        "years": "years"
+        "years": "années"
     }
 }
