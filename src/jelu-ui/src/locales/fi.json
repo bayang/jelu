@@ -12,7 +12,8 @@
         "dashboard": "dashboard",
         "login": "login",
         "logout": "logout",
-        "search": "search"
+        "search": "search",
+        "history": "history"
     },
     "labels": {
         "search": "Search",
@@ -252,5 +253,8 @@
         "all_time": "All time stats",
         "yearly_stats": "Yearly stats",
         "choose_year": "Choose a year"
+    },
+    "history": {
+        "years": "years"
     }
 }
