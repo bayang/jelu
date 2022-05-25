@@ -12,7 +12,8 @@
         "dashboard": "kontrolpanel",
         "login": "log ind",
         "logout": "log ud",
-        "search": "søg"
+        "search": "søg",
+        "history": "history"
     },
     "labels": {
         "search": "Søg",
@@ -252,5 +253,8 @@
         "all_time": "All time stats",
         "yearly_stats": "Yearly stats",
         "choose_year": "Choose a year"
+    },
+    "history": {
+        "years": "years"
     }
 }
