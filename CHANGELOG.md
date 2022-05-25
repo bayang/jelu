@@ -1,3 +1,16 @@
+## [0.21.0](https://github.com/bayang/jelu/compare/v0.20.0...v0.21.0) (2022-05-25)
+
+
+### Features
+
+* add history view ([e8ffb83](https://github.com/bayang/jelu/commit/e8ffb83520bbf1b77aed8c8089c85bf1f0fad5fe))
+
+
+### Bug Fixes
+
+* event modal too small ([6215202](https://github.com/bayang/jelu/commit/62152021935f6529a8cf287d024856663b120c4b))
+* remove to-read flag when book is finished ([c88a4fe](https://github.com/bayang/jelu/commit/c88a4fedfe3314de0ffaf16300ad92880bc3418e))
+
 ## [0.20.0](https://github.com/bayang/jelu/compare/v0.19.0...v0.20.0) (2022-05-20)
 
 
