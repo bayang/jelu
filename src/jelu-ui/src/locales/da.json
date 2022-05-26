@@ -156,20 +156,20 @@
         "isbn10": "ISBN10",
         "isbn13": "ISBN13",
         "identifiers": "identifikatorer",
-        "google_id": "Google Id",
-        "goodreads_id": "Goodreads Id",
-        "amazon_id": "Amazon Id",
-        "librarything_id": "Librarything Id",
-        "publisher": "publisher",
-        "published_date": "published date",
-        "page_count": "page count",
-        "language": "language",
-        "series": "series",
+        "google_id": "Google ID",
+        "goodreads_id": "Goodreads ID",
+        "amazon_id": "Amazon ID",
+        "librarything_id": "Librarything ID",
+        "publisher": "udgiver",
+        "published_date": "offentliggørelsesdato",
+        "page_count": "sideantal",
+        "language": "sprog",
+        "series": "serie",
         "status": "status",
-        "personal_notes": "personal notes",
-        "to_read": "to read",
-        "percent_read": "percent read",
-        "page": "page | pages",
+        "personal_notes": "personlige noter",
+        "to_read": "at læse",
+        "percent_read": "procent læst",
+        "page": "side | sider",
         "nb_in_series": "# i serie",
         "in_read_list": "på læseliste"
     },
@@ -230,31 +230,31 @@
         "password_confirm": "bekræft adgangskode",
         "password": "adgangskode",
         "admin": "administrator",
-        "admin_help": "user should have admin rights ?",
-        "user_saved": "User saved : {name}",
-        "user_updated": "User updated : {name}",
-        "login": "login",
-        "edit_user": "Edit user {name}"
+        "admin_help": "skal brugeren have adminrettigheder?",
+        "user_saved": "Bruger gemt: {name}",
+        "user_updated": "Bruger opdateret : {name}",
+        "login": "log ind",
+        "edit_user": "Rediger bruger {name}"
     },
     "shortcuts": {
-        "toggle_bar": "Toggle filters bar",
-        "page_previous": "Go to previous page",
-        "page_next": "Go to next page"
+        "toggle_bar": "Slå filterbjælke til/fra",
+        "page_previous": "Gå til forrige side",
+        "page_next": "Gå til næste side"
     },
     "profile": {
-        "edit_user": "Edit user"
+        "edit_user": "Redigér bruger"
     },
     "user-messages": {
         "link": "link",
-        "mark_read": "mark as read",
-        "no_messages": "no messages here"
+        "mark_read": "markér som læst",
+        "no_messages": "ingen beskeder her"
     },
     "stats": {
-        "all_time": "All time stats",
-        "yearly_stats": "Yearly stats",
-        "choose_year": "Choose a year"
+        "all_time": "Alle statistikker",
+        "yearly_stats": "Årlige statistikker",
+        "choose_year": "Vælg et år"
     },
     "history": {
-        "years": "years"
+        "years": "år"
     }
 }
