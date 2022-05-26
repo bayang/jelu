@@ -1,23 +1,23 @@
 {
     "home": {
-        "currently_reading": "Currently reading",
-        "recent_events": "Recent reading events",
-        "quotes": "quotes",
-        "not_reading": "Not currently reading anything"
+        "currently_reading": "Am lesen",
+        "recent_events": "Letzte Lese-Ereignisse",
+        "quotes": "Zitate",
+        "not_reading": "Zurzeit wird nichts gelesen"
     },
     "nav": {
-        "my_books": "my books",
-        "to_read": "to read list",
-        "add_book": "add book",
-        "dashboard": "dashboard",
-        "login": "login",
-        "logout": "logout",
-        "search": "search",
-        "history": "history"
+        "my_books": "Meine Bücher",
+        "to_read": "Leseliste",
+        "add_book": "Buch hinzufügen",
+        "dashboard": "Übersicht",
+        "login": "Anmelden",
+        "logout": "Abmelden",
+        "search": "Suchen",
+        "history": "Verlauf"
     },
     "labels": {
-        "search": "Search",
-        "advanced_search": "Advanced search",
+        "search": "Suchen",
+        "advanced_search": "Erweiterte Suche",
         "true": "True",
         "false": "False",
         "library_empty": "library is empty",
