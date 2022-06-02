@@ -1,3 +1,15 @@
+## [0.22.0](https://github.com/bayang/jelu/compare/v0.21.0...v0.22.0) (2022-06-02)
+
+
+### Features
+
+* ldap support ([9def6a1](https://github.com/bayang/jelu/commit/9def6a1ca3dbccb2b641a8027f5bee30ec2fa691))
+
+
+### Bug Fixes
+
+* please linter ([284f81c](https://github.com/bayang/jelu/commit/284f81cb500981013b302f60744f7f2a4cf8ffae))
+
 ## [0.21.0](https://github.com/bayang/jelu/compare/v0.20.0...v0.21.0) (2022-05-25)
 
 
