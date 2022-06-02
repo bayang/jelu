@@ -32,7 +32,7 @@ class SecurityConfig(
             }
             .authorizeRequests {
                 it.antMatchers(
-                    "/api/v1/token", "/api/v1/setup/status"
+                    "/api/v1/token", "/api/v1/setup/status", "/api/v1/server-settings"
                 ).permitAll()
                 it.mvcMatchers(HttpMethod.POST, "/api/v1/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
                 it.mvcMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("USER")

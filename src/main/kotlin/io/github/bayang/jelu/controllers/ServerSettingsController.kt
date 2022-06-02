@@ -19,9 +19,19 @@ class ServerSettingsController(
     @GetMapping(path = ["/server-settings"])
     fun getServerSettings(): ServerSettingsDto {
         return if (properties.metadata.calibre.path.isNullOrEmpty()) {
-            ServerSettingsDto(metadataFetchEnabled = false, metadataFetchCalibreEnabled = false, buildProperties.version)
+            ServerSettingsDto(
+                metadataFetchEnabled = false,
+                metadataFetchCalibreEnabled = false,
+                buildProperties.version,
+                ldapEnabled = properties.auth.ldap.enabled
+            )
         } else {
-            ServerSettingsDto(metadataFetchEnabled = true, metadataFetchCalibreEnabled = true, buildProperties.version)
+            ServerSettingsDto(
+                metadataFetchEnabled = true,
+                metadataFetchCalibreEnabled = true,
+                buildProperties.version,
+                ldapEnabled = properties.auth.ldap.enabled
+            )
         }
     }
 }

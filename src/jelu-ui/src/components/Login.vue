@@ -21,7 +21,7 @@ const progress: Ref<boolean> = ref(false)
 useTitle('Jelu | Login')
 
 watch(form, (oldVal, newVal) => {
-  if (isInitialSetup.value) {
+  if (displayInitialSetup.value) {
     validateInput()
   }
   else {
@@ -37,9 +37,10 @@ watch(loginValidation, (oldVal, newVal) => {
   validateInput()
 })
 
-const isInitialSetup = computed(() => {
-    return store.getters.getInitialSetup
-  })
+const displayInitialSetup = computed(() => {
+  return store.getters.getDisplayInitialSetup
+})
+
 const logUser = async () => {
   if (validateInputLight()) {
     progress.value = true
@@ -107,7 +108,7 @@ onMounted(() => {
         })
 
 const submit = () => {
-  if (isInitialSetup.value) {
+  if (displayInitialSetup.value) {
     createInitialUser()
   }
   else {
@@ -133,7 +134,7 @@ const submit = () => {
         />
       </div>
       <div
-        v-if="isInitialSetup"
+        v-if="displayInitialSetup"
         class="field"
       >
         <label class="label">
@@ -162,7 +163,7 @@ const submit = () => {
         />
       </div>
       <div
-        v-if="isInitialSetup"
+        v-if="displayInitialSetup"
         class="field"
       >
         <label class="label">
@@ -180,7 +181,7 @@ const submit = () => {
       </div>
       <div class="field">
         <p
-          v-if="isInitialSetup"
+          v-if="displayInitialSetup"
           class="control"
         >
           <button

@@ -51,8 +51,11 @@ const store = createStore<State>({
     },
   },
   actions: {
-      async setupStatus({commit, state}) {
+      async setupStatus({dispatch, commit, state}) {
         commit('initialSetup', await dataService.setupStatus())
+        if (state.isInitialSetup) {
+          dispatch('getServerSettings')
+        }
       },
       async getUser({commit}) {
         try {
@@ -136,6 +139,9 @@ const store = createStore<State>({
     },
     getInitialSetup(state): boolean {
       return state.isInitialSetup
+    },
+    getDisplayInitialSetup(state, getters): boolean {
+      return (getters.getInitialSetup && !getters.getLdapEnabled)
     }
   }, 
   plugins : [createLogger()],
