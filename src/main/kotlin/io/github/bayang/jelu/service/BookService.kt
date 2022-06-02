@@ -46,6 +46,7 @@ class BookService(
     private val eventRepository: ReadingEventRepository,
     private val properties: JeluProperties,
     private val downloadService: DownloadService,
+    private val fileManager: FileManager
 ) {
 
     @Transactional
@@ -94,8 +95,18 @@ class BookService(
         var backup: File? = null
         var skipSave = false
         // no multipart image and url image field is empty in udate dto
+        // it means no new file upload and image has been explicitely set to null in update dto -> remove existing image
+        // otherwise it is impossible to remove an image from the UI without replacing it by a new one
         if (file == null && book.book?.image.isNullOrBlank()) {
             skipSave = true
+            // if only userbook is provided (eg if only userbook fields have to be updated)
+            // then don't touch the image
+            if (book.book != null && book.book.image.isNullOrBlank()) {
+                updated.book.image = null
+                if (previousImage != null) {
+                    fileManager.deleteImage(previousImage)
+                }
+            }
         } else if (file == null && !book.book?.image.isNullOrBlank() && ! previousImage.isNullOrBlank() && previousImage.equals(book.book?.image, false)) {
             // no multipart file and image field in update dto is the same as in BDD -> no change
             skipSave = true

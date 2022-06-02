@@ -44,11 +44,12 @@ const handleFileUpload = (event: any) => {
   file.value = event.target.files[0];
 };
 
+const imageUrl = ref<string | null>(null);
+
 const clearImageField = () => {
   imageUrl.value = "";
 };
 
-const imageUrl = ref<string | null>(null);
 const file = ref(null);
 const uploadFromWeb = ref(true);
 let uploadlabel = computed(() => {
@@ -80,9 +81,10 @@ const importBook = () => {
   if (!props.canAddEvent || userbook.value.lastReadingEvent === ReadingEventType.NONE) {
     userbook.value.lastReadingEvent = null
   }
-  userbook.value.book.image = null
   if (StringUtils.isNotBlank(imageUrl.value)) {
     userbook.value.book.image = imageUrl.value
+  } else if (deleteImage.value) {
+    userbook.value.book.image = null
   }
 
   console.log(`push book ` + userbook.value);

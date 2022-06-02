@@ -512,6 +512,68 @@ class BookServiceTest(
     }
 
     @Test
+    fun testUpdateUserbookWithImageAndEventNewEventRequiredAndDeleteExistingImage() {
+        val createBook = bookDto()
+        val createUserBookDto = createUserBookDto(createBook, ReadingEventType.FINISHED, nowInstant())
+        val uploadFile = MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), uploadFile)
+        Assertions.assertEquals(createBook.title, saved.book.title)
+        Assertions.assertEquals(createBook.isbn10, saved.book.isbn10)
+        Assertions.assertEquals(createBook.isbn13?.trim(), saved.book.isbn13)
+        Assertions.assertEquals("This is a test summary with a newline", saved.book.summary)
+        Assertions.assertEquals(createBook.publisher, saved.book.publisher)
+        Assertions.assertEquals(createBook.pageCount, saved.book.pageCount)
+        Assertions.assertEquals(createBook.goodreadsId, saved.book.goodreadsId)
+        Assertions.assertNull(saved.book.librarythingId)
+        Assertions.assertEquals(createUserBookDto.owned, saved.owned)
+        Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
+        Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
+        Assertions.assertNull(saved.percentRead)
+        Assertions.assertNotNull(saved.creationDate)
+        Assertions.assertNotNull(saved.modificationDate)
+        Assertions.assertNotNull(saved.book.creationDate)
+        Assertions.assertNotNull(saved.book.modificationDate)
+        Assertions.assertTrue(saved.book.image!!.contains(slugify(saved.book.title), true))
+        Assertions.assertEquals(ReadingEventType.FINISHED, saved.lastReadingEvent)
+        Assertions.assertNotNull(saved.lastReadingEventDate)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
+
+        val updater = UserBookUpdateDto(
+            ReadingEventType.DROPPED,
+            personalNotes = "new notes",
+            owned = false,
+            book = createBook.copy(image = null),
+            toRead = null,
+            percentRead = 50
+        )
+        // val replacementFile = MockMultipartFile("test-replace-cover.jpg", "test-replace-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val updated = bookService.update(saved.id!!, updater, null)
+        Assertions.assertEquals(createBook.title, updated.book.title)
+        Assertions.assertEquals(createBook.isbn10, updated.book.isbn10)
+        Assertions.assertEquals(createBook.isbn13?.trim(), updated.book.isbn13)
+        Assertions.assertEquals("This is a test summary with a newline", updated.book.summary)
+        Assertions.assertEquals(createBook.publisher, updated.book.publisher)
+        Assertions.assertEquals(createBook.pageCount, updated.book.pageCount)
+        Assertions.assertEquals(createBook.goodreadsId, updated.book.goodreadsId)
+        Assertions.assertEquals("", updated.book.librarythingId)
+        Assertions.assertEquals(updater.owned, updated.owned)
+        Assertions.assertEquals(saved.toRead, updated.toRead)
+        Assertions.assertEquals(updater.percentRead, updated.percentRead)
+        Assertions.assertEquals(updater.personalNotes, updated.personalNotes)
+        Assertions.assertNotNull(updated.creationDate)
+        Assertions.assertNotNull(updated.modificationDate)
+        Assertions.assertNotNull(updated.book.creationDate)
+        Assertions.assertNotNull(updated.book.modificationDate)
+        Assertions.assertNull(updated.book.image)
+        Assertions.assertEquals(ReadingEventType.DROPPED, updated.lastReadingEvent)
+        Assertions.assertNotNull(updated.lastReadingEventDate)
+        Assertions.assertEquals(2, updated.readingEvents?.size)
+        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+    }
+
+    @Test
     fun testUpdateUserbookWithImageAndEventNewEventRequiredAndNewImage() {
         val createBook = bookDto()
         val createUserBookDto = createUserBookDto(createBook, ReadingEventType.FINISHED, nowInstant())
