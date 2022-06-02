@@ -1,3 +1,12 @@
+### [0.22.1](https://github.com/bayang/jelu/compare/v0.22.0...v0.22.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* cannot remove cover ([dd77866](https://github.com/bayang/jelu/commit/dd7786655c0f014910530bcb08dfa819c8c2efdd))
+* dev config ([a1df750](https://github.com/bayang/jelu/commit/a1df750b4350864d14182dd2b7fdad33a6aa02a3))
+* do not display create initial user with ldap enabled ([bb0a89c](https://github.com/bayang/jelu/commit/bb0a89cd2ac15d0a2156d866b7d9dead0da75106))
+
 ## [0.22.0](https://github.com/bayang/jelu/compare/v0.21.0...v0.22.0) (2022-06-02)
 
 
