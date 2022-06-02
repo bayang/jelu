@@ -28,6 +28,7 @@ const store = createStore<State>({
       serverSettings: {
         metadataFetchEnabled: false,
         metadataFetchCalibreEnabled: false,
+        ldapEnabled: false,
         appVersion: ""
       } as ServerSettings,
     }
@@ -123,6 +124,9 @@ const store = createStore<State>({
     },
     getMetadataFetchEnabled(state): boolean {
       return state.serverSettings.metadataFetchEnabled
+    },
+    getLdapEnabled(state): boolean {
+      return state.serverSettings.ldapEnabled
     },
     getLogged(state): boolean {
       return state.isLogged

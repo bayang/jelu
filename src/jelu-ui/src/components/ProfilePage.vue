@@ -7,6 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import UserModalVue from './UserModal.vue'
+import { Provider } from "../model/User"
 
 const {oruga} = useProgrammatic()
 
@@ -71,6 +72,7 @@ function modalClosed() {
         </p>
         <div class="card-actions justify-end">
           <button
+            v-if="user.provider !== Provider.LDAP"
             v-tooltip="t('profile.edit_user')"
             class="btn btn-circle btn-ghost"
             @click="toggleUserModal"

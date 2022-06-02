@@ -1,17 +1,23 @@
 package io.github.bayang.jelu.service
 
+import io.github.bayang.jelu.dao.Provider
 import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.UserRepository
-import io.github.bayang.jelu.dto.*
+import io.github.bayang.jelu.dto.CreateUserDto
+import io.github.bayang.jelu.dto.DummyUser
+import io.github.bayang.jelu.dto.JeluUser
+import io.github.bayang.jelu.dto.UpdateUserDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluException
 import mu.KotlinLogging
 import org.springframework.security.core.session.SessionRegistry
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
+import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
@@ -27,6 +33,9 @@ class UserService(
 
     @Transactional
     fun findByLogin(login: String): List<UserDto> = userRepository.findByLogin(login).map { it.toUserDto() }
+
+    @Transactional
+    fun findByLoginAndProvider(login: String, provider: Provider): List<UserDto> = userRepository.findByLoginAndProvider(login, provider).map { it.toUserDto() }
 
     @Transactional
     fun findUserById(id: UUID): UserDto = User[id].toUserDto()
@@ -51,9 +60,11 @@ class UserService(
         if (userRepository.countUsers() == 0L) {
             return DummyUser(passwordEncoder.encode("initial"))
         }
-        userRepository.findByLogin(username).let {
-            return JeluUser(it.first())
+        val res = userRepository.findByLogin(username)
+        if (!res.empty()) {
+            return JeluUser(res.first())
         }
+        throw UsernameNotFoundException("user $username not found in db")
     }
 
     @Transactional

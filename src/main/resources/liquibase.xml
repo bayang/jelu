@@ -351,4 +351,10 @@
         </column>
     </createTable>
     </changeSet>
+    <changeSet id="add_user_provider" author="byng">
+            <sql>
+                ALTER TABLE "user" ADD provider varchar(200);
+                UPDATE "user" SET provider = 'JELU_DB' WHERE provider IS NULL;
+            </sql>
+    </changeSet>
 </databaseChangeLog>

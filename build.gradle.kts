@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    id("org.springframework.boot") version "2.6.6"
+    id("org.springframework.boot") version "2.7.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
@@ -40,6 +40,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.session:spring-session-core")
     implementation("com.github.gotson:spring-session-caffeine:1.0.3")
+    implementation("org.springframework.security:spring-security-ldap")
+    // implementation("com.unboundid:unboundid-ldapsdk:6.0.5")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("com.github.ben-manes.caffeine:caffeine")

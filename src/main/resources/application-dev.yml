@@ -11,6 +11,14 @@ jelu:
       path: /usr/bin/fetch-ebook-metadata
   cors.allowed-origins:
     - http://localhost:3000
+  auth:
+    ldap:
+      enabled: true
+      url: "ldap://127.0.0.1:389/dc=home,dc=lab"
+      userDnPatterns:
+        - "uid={0}"
+        - "cn={0},ou=users"
+      userSearchFilter: "(cn={0})"
 server:
   port: 11111
 spring:
@@ -47,3 +55,5 @@ logging:
     io.github.bayang.jelu.service.metadata: TRACE
     io.github.bayang.jelu.service.quotes: DEBUG
     io.github.bayang.jelu.service.FileManager: TRACE
+    io.github.bayang.jelu.config.JeluLdapUserDetailsContextMapper: TRACE
+    org.springframework.security.ldap: TRACE

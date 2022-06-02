@@ -1,15 +1,28 @@
 package io.github.bayang.jelu.config
 
+import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.ProviderManager
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.SecurityFilterChain
 
 @EnableWebSecurity
-class SecurityConfig : WebSecurityConfigurerAdapter() {
+class SecurityConfig(
+    private val authenticationProvider: AuthenticationProvider?,
+    private val properties: JeluProperties,
+    private val userDetailsService: UserDetailsService,
+    private val passwordEncoder: PasswordEncoder,
+) {
 
-    override fun configure(http: HttpSecurity) {
+    @Bean
+    @Throws(Exception::class)
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain? {
         http
             .cors { }
             .csrf { it.disable() }
@@ -45,5 +58,12 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        if (properties.auth.ldap.enabled) {
+            val dao = DaoAuthenticationProvider()
+            dao.setUserDetailsService(userDetailsService)
+            dao.setPasswordEncoder(passwordEncoder)
+            http.authenticationManager(ProviderManager(authenticationProvider, dao))
+        }
+        return http.build()
     }
 }

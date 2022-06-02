@@ -1,5 +1,6 @@
 export interface ServerSettings {
   metadataFetchEnabled: boolean,
   metadataFetchCalibreEnabled: boolean,
-  appVersion: string
+  appVersion: string,
+  ldapEnabled: boolean
 }

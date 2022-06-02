@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.controllers
 
+import io.github.bayang.jelu.dao.Provider
 import io.github.bayang.jelu.dto.AuthenticationDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.DummyUser
@@ -53,7 +54,8 @@ class UsersController(
                         id = null,
                         password = "****",
                         modificationDate = null,
-                        creationDate = null
+                        creationDate = null,
+                        provider = Provider.JELU_DB
                     ),
                     token = session.id
                 )
@@ -68,7 +70,8 @@ class UsersController(
                         id = (principal.principal as JeluUser).user.id.value,
                         password = "****",
                         modificationDate = null,
-                        creationDate = null
+                        creationDate = null,
+                        provider = (principal.principal as JeluUser).user.provider
                     ),
                     token = session.id
                 )

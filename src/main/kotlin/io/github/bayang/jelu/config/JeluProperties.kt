@@ -14,7 +14,8 @@ data class JeluProperties(
     val files: Files,
     val session: Session,
     val cors: Cors = Cors(),
-    val metadata: Metadata = Metadata(Calibre(null))
+    val metadata: Metadata = Metadata(Calibre(null)),
+    val auth: Auth = Auth(Ldap())
 ) {
 
     data class Database(
@@ -41,5 +42,17 @@ data class JeluProperties(
 
     data class Metadata(
         var calibre: Calibre
+    )
+
+    data class Auth(
+        var ldap: Ldap
+    )
+
+    data class Ldap(
+        var enabled: Boolean = false,
+        val url: String = "",
+        val userDnPatterns: List<String> = emptyList(),
+        val userSearchFilter: String = "",
+        val userSearchBase: String = ""
     )
 }

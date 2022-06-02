@@ -15,6 +15,7 @@ object UserTable : UUIDTable("user") {
     val login: Column<String> = varchar("login", 50)
     val password: Column<String> = varchar("password", 1000)
     val isAdmin: Column<Boolean> = bool("is_admin")
+    val provider = enumerationByName("provider", 200, Provider::class)
 }
 
 class User(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -25,6 +26,7 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
         login = this.login,
         password = "****",
         isAdmin = this.isAdmin,
+        provider = this.provider
     )
 
     companion object : UUIDEntityClass<User>(UserTable)
@@ -33,5 +35,11 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
     var login by UserTable.login
     var password by UserTable.password
     var isAdmin by UserTable.isAdmin
+    var provider by UserTable.provider
     val userBooks by UserBook referrersOn UserBookTable.book
+}
+
+enum class Provider {
+    LDAP,
+    JELU_DB
 }

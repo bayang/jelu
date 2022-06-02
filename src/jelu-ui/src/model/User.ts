@@ -3,7 +3,8 @@ export interface User {
     creationDate?: string,
     login: string,
     isAdmin: boolean,
-    modificationDate?: string
+    modificationDate?: string,
+    provider?: Provider
   }
 export interface UserAuthentication {
   user: User,
@@ -12,9 +13,15 @@ export interface UserAuthentication {
 export interface CreateUser {
   login: string,
   password: string,
-  isAdmin: boolean
+  isAdmin: boolean,
+  provider?: Provider
 }
 export interface UpdateUser {
   password: string,
-  isAdmin?: boolean
+  isAdmin?: boolean,
+  provider?: Provider
+}
+export enum Provider {
+  LDAP = 'LDAP',
+  JELU_DB = 'JELU_DB'
 }
