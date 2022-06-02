@@ -13,7 +13,7 @@ jelu:
     - http://localhost:3000
   auth:
     ldap:
-      enabled: true
+      enabled: false
       url: "ldap://127.0.0.1:389/dc=home,dc=lab"
       userDnPatterns:
         - "uid={0}"
