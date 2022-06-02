@@ -179,3 +179,8 @@ Embed code and preview :
 ## Translations
 
 You can help with translations : everything is hosted on crowdin https://crowdin.com/project/jelu
+
+## Contributions : 
+
+* Danish translation : @SirBogner
+* German translation : @puckzuck
