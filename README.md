@@ -182,5 +182,6 @@ You can help with translations : everything is hosted on crowdin https://crowdin
 
 ## Contributions : 
 
+* Czech translation : @filcuk
 * Danish translation : @SirBogner
 * German translation : @puckzuck
