@@ -1,3 +1,10 @@
+### [0.22.2](https://github.com/bayang/jelu/compare/v0.22.1...v0.22.2) (2022-06-03)
+
+
+### Bug Fixes
+
+* czech translation ([9767cc6](https://github.com/bayang/jelu/commit/9767cc656b33971656373d302e78ce1aba5c0195))
+
 ### [0.22.1](https://github.com/bayang/jelu/compare/v0.22.0...v0.22.1) (2022-06-02)
 
 
