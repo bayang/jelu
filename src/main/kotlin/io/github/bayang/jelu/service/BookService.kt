@@ -152,8 +152,10 @@ class BookService(
             // existing book used on UserBook already had an image, backup it
             if (!book.image.isNullOrBlank()) {
                 currentImage = File(properties.files.images, book.image)
-                backup = File(properties.files.images, "${book.image}.bak")
-                Files.move(currentImage.toPath(), backup.toPath())
+                if (currentImage.exists()) {
+                    backup = File(properties.files.images, "${book.image}.bak")
+                    Files.move(currentImage.toPath(), backup.toPath())
+                }
             }
             book.image = saveImages(file, book.title, book.id.toString(), userBook.book.image, properties.files.images)
             // we had a previous image and we saved a new one : delete the old one

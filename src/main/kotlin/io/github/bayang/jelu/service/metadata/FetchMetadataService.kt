@@ -101,6 +101,7 @@ class FetchMetadataService(
                 }
                 if (targetCover.exists() && targetCover.length() > 0) {
                     parseOpf.image = targetCover.name
+                    logger.trace { "fetch metadata image ${targetCover.name}" }
                 }
                 return parseOpf
             } else {
