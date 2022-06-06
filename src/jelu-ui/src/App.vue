@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, Ref, ref, watch } from 'vue'
 import { key } from './store'
 import { useRoute, useRouter } from 'vue-router'
 import dataService from "./services/DataService";
@@ -21,7 +21,10 @@ console.log("route " + route.fullPath + " " + route.path + " " + route.redirecte
 console.log(route)
 console.log(router.currentRoute.value)
 
+const initialLoad : Ref<boolean> = ref(false)
+
 store.dispatch('setupStatus')
+initialLoad.value = true
 store.dispatch('getUser')
   .then(async () => {
     console.log("then")
@@ -31,6 +34,7 @@ store.dispatch('getUser')
       await router.push(store.state.route)
     }
     console.log("ok nav")
+    initialLoad.value = false
     store.dispatch('getServerSettings')
     // } catch(e) {
     // console.log("error nav")
@@ -38,6 +42,7 @@ store.dispatch('getUser')
     // }
   })
   .catch(() => {
+    initialLoad.value = false
     console.log("catch in App")
     router.push({ name: 'login' }).then(() => { console.log("ok nav") }).catch(() => { console.log("error nav") })
   })
@@ -406,6 +411,16 @@ watch(() => route.name, (newVal, oldVal) => {
         </div>
       </label>
     </label>
+    <o-loading
+      v-model:active="initialLoad"
+      :full-page="true"
+      :can-cancel="false"
+    >
+      <!-- loader from https://loading.io/css/ -->
+      <div class="lds-facebook">
+        <div /><div /><div />
+      </div>
+    </o-loading>
   </section>
 </template>
 
