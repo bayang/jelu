@@ -1,3 +1,5 @@
+### [0.23.1](https://github.com/bayang/jelu/compare/v0.23.0...v0.23.1) (2022-06-10)
+
 ## [0.23.0](https://github.com/bayang/jelu/compare/v0.22.2...v0.23.0) (2022-06-10)
 
 
