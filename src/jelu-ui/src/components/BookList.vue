@@ -31,21 +31,43 @@ const open = ref(false)
 const getBookIsLoading: Ref<boolean> = ref(false)
 
 const toRead: Ref<string|null> = useRouteQuery('toRead', "null")
+const owned: Ref<string|null> = useRouteQuery('owned', "null")
 
 const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTypes', [])
 
-watch([page, eventTypes, toRead, sortQuery], (newVal, oldVal) => {
+watch([page, eventTypes, toRead, owned, sortQuery], (newVal, oldVal) => {
   console.log("all " + newVal + " " + oldVal)
   if (newVal !== oldVal) {
     throttledGetBooks()
   }
 })
 
-const toReadAsBool = computed(() => toRead.value?.toLowerCase() === "null" ? null : toRead.value?.toLowerCase() === "true")
+const toReadAsBool = computed(() => {
+  if (toRead.value?.toLowerCase() === "null") {
+    return null
+  } else if (toRead.value?.toLowerCase() === "true") {
+    return true
+  } else {
+    return false
+  }
+  }
+)
+
+const ownedAsBool = computed(() => {
+  if (owned.value?.toLowerCase() === "null") {
+    return null
+  } else if (owned.value?.toLowerCase() === "true") {
+    return true
+  } else {
+    return false
+  }
+  }
+)
 
 const getBooks = () => {
   getBookIsLoading.value = true
   dataService.findUserBookByCriteria(eventTypes.value, toReadAsBool.value, 
+  ownedAsBool.value,
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
         console.log(res)
@@ -182,6 +204,33 @@ onMounted(() => {
         <div class="field">
           <o-radio
             v-model="toRead"
+            native-value="true"
+          >
+            {{ t('labels.true') }}
+          </o-radio>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">{{ t('filtering.owned') }} : </label>
+        <div class="field">
+          <o-radio
+            v-model="owned"
+            native-value="null"
+          >
+            {{ t('filtering.unset') }}
+          </o-radio>
+        </div>
+        <div class="field">
+          <o-radio
+            v-model="owned"
+            native-value="false"
+          >
+            {{ t('labels.false') }}
+          </o-radio>
+        </div>
+        <div class="field">
+          <o-radio
+            v-model="owned"
             native-value="true"
           >
             {{ t('labels.true') }}

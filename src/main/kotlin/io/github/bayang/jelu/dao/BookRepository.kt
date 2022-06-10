@@ -27,6 +27,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.lowerCase
+import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.orWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -533,6 +534,7 @@ class BookRepository(
         userID: UUID,
         eventTypes: List<ReadingEventType>?,
         toRead: Boolean?,
+        owned: Boolean?,
         pageable: Pageable
     ): PageImpl<UserBook> {
         val cols = mutableListOf<Expression<*>>()
@@ -545,8 +547,23 @@ class BookRepository(
         if (eventTypes != null && eventTypes.isNotEmpty()) {
             query.andWhere { UserBookTable.lastReadingEvent inList eventTypes }
         }
-        toRead?.let {
-            query.andWhere { UserBookTable.toRead eq toRead }
+        if (toRead != null) {
+            if (toRead) {
+                query.andWhere { UserBookTable.toRead eq toRead }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with toRead == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.toRead eq toRead or (UserBookTable.toRead.isNull()) }
+            }
+        }
+        if (owned != null) {
+            if (owned) {
+                query.andWhere { UserBookTable.owned eq owned }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with owned == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.owned eq owned or (UserBookTable.owned.isNull()) }
+            }
         }
         val total = query.count()
         query.limit(pageable.pageSize, pageable.offset)

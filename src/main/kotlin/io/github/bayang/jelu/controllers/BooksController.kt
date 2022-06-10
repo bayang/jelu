@@ -123,6 +123,7 @@ class BooksController(
         principal: Authentication,
         @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @RequestParam(name = "toRead", required = false) toRead: Boolean?,
+        @RequestParam(name = "owned", required = false) owned: Boolean?,
         @RequestParam(name = "user", required = false) userId: UUID?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
     ): Page<UserBookWithoutEventsAndUserDto> {
@@ -132,7 +133,7 @@ class BooksController(
         } else {
             (principal.principal as JeluUser).user.id.value
         }
-        return repository.findUserBookByCriteria(finalUserId, eventTypes, toRead, pageable)
+        return repository.findUserBookByCriteria(finalUserId, eventTypes, toRead, owned, pageable)
     }
 
     @GetMapping(path = ["/authors"])

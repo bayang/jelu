@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref, watch } from 'vue'
+import { computed, onMounted, Ref, ref, watch } from 'vue'
+import { useRouteQuery } from '@vueuse/router';
 import { UserBook } from '../model/Book'
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
@@ -29,13 +30,26 @@ const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTy
 
 const open = ref(false)
 
+const owned: Ref<string|null> = useRouteQuery('owned', "null")
+const ownedAsBool = computed(() => {
+  if (owned.value?.toLowerCase() === "null") {
+    return null
+  } else if (owned.value?.toLowerCase() === "true") {
+    return true
+  } else {
+    return false
+  }
+  }
+)
+
 const getToReadIsLoading: Ref<boolean> = ref(false)
 
 const getToRead = async () => {
   getToReadIsLoading.value = true
   try {
     const res = await dataService.findUserBookByCriteria(eventTypes.value, 
-    true, pageAsNumber.value - 1, perPage.value, sortQuery.value)
+    true, ownedAsBool.value,
+    pageAsNumber.value - 1, perPage.value, sortQuery.value)
     total.value = res.totalElements
     books.value = res.content
     if (! res.empty) {
@@ -59,7 +73,7 @@ const throttledGetToRead = useThrottleFn(() => {
   getToRead()
 }, 100, false)
 
-watch([page, eventTypes, sortQuery], (newVal, oldVal) => {
+watch([page, eventTypes, sortQuery, owned], (newVal, oldVal) => {
   console.log("all " + newVal + " " + oldVal)
   if (newVal !== oldVal) {
     throttledGetToRead()
@@ -142,6 +156,33 @@ getToRead()
         >
           {{ t('reading_events.dropped') }}
         </o-checkbox>
+      </div>
+      <div class="field">
+        <label class="label">{{ t('filtering.owned') }} : </label>
+        <div class="field">
+          <o-radio
+            v-model="owned"
+            native-value="null"
+          >
+            {{ t('filtering.unset') }}
+          </o-radio>
+        </div>
+        <div class="field">
+          <o-radio
+            v-model="owned"
+            native-value="false"
+          >
+            {{ t('labels.false') }}
+          </o-radio>
+        </div>
+        <div class="field">
+          <o-radio
+            v-model="owned"
+            native-value="true"
+          >
+            {{ t('labels.true') }}
+          </o-radio>
+        </div>
       </div>
     </template>
   </sort-filter-bar-vue>
