@@ -144,7 +144,8 @@
         "books_type": "Books type",
         "any": "Any",
         "only_in_my_list": "Only books in my lists",
-        "only_not_in_my_list": "Only books not in my lists"
+        "only_not_in_my_list": "Only books not in my lists",
+        "owned": "Book is owned"
     },
     "book": {
         "owned": "owned",

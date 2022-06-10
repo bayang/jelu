@@ -144,7 +144,8 @@
         "books_type": "Types de livres",
         "any": "Tous",
         "only_in_my_list": "Seulement dans mes listes",
-        "only_not_in_my_list": "Seulement absents de mes listes"
+        "only_not_in_my_list": "Seulement absents de mes listes",
+        "owned": "Possédé ?"
     },
     "book": {
         "owned": "possédé",
