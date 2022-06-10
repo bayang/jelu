@@ -59,6 +59,10 @@
               "release": "patch"
             },
             {
+              "type": "refactor",
+              "release": "patch"
+            },
+            {
               "type": "test",
               "release": false
             }
