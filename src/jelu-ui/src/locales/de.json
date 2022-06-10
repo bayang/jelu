@@ -144,7 +144,8 @@
         "books_type": "Bücherart",
         "any": "Beliebig",
         "only_in_my_list": "Nur Bücher in meinen Listen",
-        "only_not_in_my_list": "Nur Bücher außerhalb meiner Listen"
+        "only_not_in_my_list": "Nur Bücher außerhalb meiner Listen",
+        "owned": "Book is owned"
     },
     "book": {
         "owned": "Besitze ich",
