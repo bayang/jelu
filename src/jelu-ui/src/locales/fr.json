@@ -145,7 +145,7 @@
         "any": "Tous",
         "only_in_my_list": "Seulement dans mes listes",
         "only_not_in_my_list": "Seulement absents de mes listes",
-        "owned": "Book is owned"
+        "owned": "Possédé ?"
     },
     "book": {
         "owned": "possédé",
