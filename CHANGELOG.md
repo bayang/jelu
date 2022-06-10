@@ -1,3 +1,17 @@
+## [0.23.0](https://github.com/bayang/jelu/compare/v0.22.2...v0.23.0) (2022-06-10)
+
+
+### Features
+
+* add possibility to filter by owned field ([7afde5c](https://github.com/bayang/jelu/commit/7afde5cc594ab45e85d69325222e589023025e45))
+
+
+### Bug Fixes
+
+* prevent exception that could happen when adding a book ([231997b](https://github.com/bayang/jelu/commit/231997b8e1583654aef521222b4794a5c628807f))
+* provide feedback that initial user data is loading ([9c21f71](https://github.com/bayang/jelu/commit/9c21f71ecede0b21732d2da412b02c09d550ee39))
+* remove wrong locale files ([e89a69a](https://github.com/bayang/jelu/commit/e89a69a1237273fff28bf5d62cfb375a7a17fa2d))
+
 ### [0.22.2](https://github.com/bayang/jelu/compare/v0.22.1...v0.22.2) (2022-06-03)
 
 
