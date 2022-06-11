@@ -145,7 +145,7 @@
         "any": "Beliebig",
         "only_in_my_list": "Nur Bücher in meinen Listen",
         "only_not_in_my_list": "Nur Bücher außerhalb meiner Listen",
-        "owned": "Book is owned"
+        "owned": "Besitze ich"
     },
     "book": {
         "owned": "Besitze ich",
