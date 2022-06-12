@@ -175,7 +175,7 @@
         "in_read_list": "In der Leseliste"
     },
     "authors_merge": {
-        "authors_merging_utility": "Autor:innen zusammenlegen",
+        "authors_merging_utility": "Autor:innen zusammenführen",
         "author_nb": "Autor:in {nb}",
         "author_left_subtitle": "Zu behaltende Autor:in",
         "author_left_description": "Wähle als Erstes die Autor:in, die geändert und in der Datenbank behalten wird",
