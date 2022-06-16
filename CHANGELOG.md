@@ -1,3 +1,16 @@
+## [0.24.0](https://github.com/bayang/jelu/compare/v0.23.1...v0.24.0) (2022-06-16)
+
+
+### Features
+
+* add custom shelves ([3b50e2f](https://github.com/bayang/jelu/commit/3b50e2f3ad60fcefe1f8ab4e18f4d23833090663))
+
+
+### Bug Fixes
+
+* test failing on ci ([f5e92d7](https://github.com/bayang/jelu/commit/f5e92d7b3735d55d80e48706b867328b36395d8d))
+* textarea size on add book form ([98ace19](https://github.com/bayang/jelu/commit/98ace19da8d80f9caf2e27de2eebec05781aa6d2))
+
 ### [0.23.1](https://github.com/bayang/jelu/compare/v0.23.0...v0.23.1) (2022-06-10)
 
 ## [0.23.0](https://github.com/bayang/jelu/compare/v0.22.2...v0.23.0) (2022-06-10)
