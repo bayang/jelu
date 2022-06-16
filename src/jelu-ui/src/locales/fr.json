@@ -14,7 +14,7 @@
         "logout": "déconnexion",
         "search": "recherche",
         "history": "historique",
-        "shelves": "shelves"
+        "shelves": "Étagères"
     },
     "labels": {
         "search": "Rechercher",
@@ -107,9 +107,9 @@
         "shortcuts_tooltip": "Raccourcis claviers",
         "messages": "Messages",
         "stats": "Statistiques",
-        "shelves": "Shelves",
-        "shelves_max_number_reached": "Maximum number of shelves is reached. Delete existing ones to add more.",
-        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
+        "shelves": "Étagères",
+        "shelves_max_number_reached": "Le nombre maximum d'étagères est atteint. Supprimez-en pour en ajouter d'autres.",
+        "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante"
     },
     "user": {
         "log_first": "Veuillez vous identifier"
@@ -126,7 +126,7 @@
         "descending": "Descendant",
         "ascending": "Ascendant",
         "publication_date": "Date de publication",
-        "modification_date": "Modification date"
+        "modification_date": "Date de modification"
     },
     "reading_events": {
         "finished": "lu",
