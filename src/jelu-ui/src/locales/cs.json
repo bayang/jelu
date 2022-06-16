@@ -13,7 +13,8 @@
         "login": "přihlásit",
         "logout": "odhlásit",
         "search": "hledat",
-        "history": "historie"
+        "history": "historie",
+        "shelves": "shelves"
     },
     "labels": {
         "search": "Hledat",
@@ -105,7 +106,10 @@
         "shortcuts": "Zkratky",
         "shortcuts_tooltip": "Klávesové zkratky",
         "messages": "Zprávy",
-        "stats": "Statistiky"
+        "stats": "Statistiky",
+        "shelves": "Shelves",
+        "shelves_max_number_reached": "Maximum number of shelves is reached. Delete existing ones to add more.",
+        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
     },
     "user": {
         "log_first": "Nejprve se prosím přihlaste"
@@ -121,7 +125,8 @@
         "series": "Série",
         "descending": "Sestupně",
         "ascending": "Vzestupně",
-        "publication_date": "Datum publikace"
+        "publication_date": "Datum publikace",
+        "modification_date": "Modification date"
     },
     "reading_events": {
         "finished": "dokončeno",
