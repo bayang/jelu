@@ -13,7 +13,8 @@
         "login": "log ind",
         "logout": "log ud",
         "search": "søg",
-        "history": "historik"
+        "history": "historik",
+        "shelves": "shelves"
     },
     "labels": {
         "search": "Søg",
@@ -105,7 +106,10 @@
         "shortcuts": "Genveje",
         "shortcuts_tooltip": "Tastaturgenveje",
         "messages": "Beskeder",
-        "stats": "Statistikker"
+        "stats": "Statistikker",
+        "shelves": "Shelves",
+        "shelves_max_number_reached": "Maximum number of shelves is reached. Delete existing ones to add more.",
+        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
     },
     "user": {
         "log_first": "Log venligst ind først"
@@ -121,7 +125,8 @@
         "series": "Serie",
         "descending": "Faldende",
         "ascending": "Stigende",
-        "publication_date": "Dato for offentliggørelse"
+        "publication_date": "Dato for offentliggørelse",
+        "modification_date": "Modification date"
     },
     "reading_events": {
         "finished": "færdig",
