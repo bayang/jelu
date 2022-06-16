@@ -95,12 +95,14 @@ class ShelfServiceTest(
     fun testDeletingTagDeletesCorrespondingShelves() {
         shelfService.find(user(), null, null)
             .forEach { shelfService.delete(it.id!!) }
+        var tags = bookService.findAllTags(null, Pageable.ofSize(200))
+        tags.forEach { bookService.deleteTagById(it.id!!) }
         val tag = bookService.save(TagDto(null, null, null, "my-tag-shelf"))
         Assertions.assertNotNull(tag.creationDate)
         Assertions.assertNotNull(tag.modificationDate)
         Assertions.assertNotNull(tag.id)
         Assertions.assertEquals("my-tag-shelf", tag.name)
-        var tags = bookService.findAllTags(null, Pageable.ofSize(100))
+        tags = bookService.findAllTags(null, Pageable.ofSize(100))
         Assertions.assertEquals(1, tags.totalElements)
         val saved = shelfService.save(CreateShelfDto(tag.name, tag.id!!), user())
         Assertions.assertEquals(tag.name, saved.name)
