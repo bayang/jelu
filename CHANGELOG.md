@@ -1,3 +1,10 @@
+### [0.24.2](https://github.com/bayang/jelu/compare/v0.24.1...v0.24.2) (2022-06-16)
+
+
+### Bug Fixes
+
+* german translations ([0b1d64e](https://github.com/bayang/jelu/commit/0b1d64eeb14210ae48f3e7aef5b29f8cc16c511a))
+
 ### [0.24.1](https://github.com/bayang/jelu/compare/v0.24.0...v0.24.1) (2022-06-16)
 
 
