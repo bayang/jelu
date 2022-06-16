@@ -2,6 +2,7 @@ package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.errors.JeluException
+import io.github.bayang.jelu.errors.JeluValidationException
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -66,6 +67,14 @@ class GlobalControllerExceptionHandler {
     @ResponseBody
     fun handleJeluAuthenticationException(
         e: JeluAuthenticationException
+    ): ApiError =
+        ApiError(e.message)
+
+    @ExceptionHandler(JeluValidationException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleJeluValidationException(
+        e: JeluValidationException
     ): ApiError =
         ApiError(e.message)
 }

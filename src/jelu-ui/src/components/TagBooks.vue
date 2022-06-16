@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { useRouteQuery } from "@vueuse/router";
-import { computed, onMounted, Ref, ref, watch } from 'vue';
+import { computed, Ref, ref, watch } from 'vue';
 import usePagination from '../composables/pagination';
 import useSort from "../composables/sort";
 import { Book, UserBook } from '../model/Book';
@@ -14,6 +14,8 @@ import EditBookModal from "./EditBookModal.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
 import { useTitle } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { useThrottleFn } from '@vueuse/core'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -21,8 +23,7 @@ const { t } = useI18n({
     })
 
 const {oruga} = useProgrammatic();
-
-const props = defineProps<{ tagId: string }>()
+const route = useRoute()
 
 const tag: Ref<Tag> = ref({name: ""})
 const tagBooks: Ref<Array<Book>> = ref([]);
@@ -38,17 +39,23 @@ const open = ref(false)
 
 const getBooksIsLoading: Ref<boolean> = ref(false)
 
-watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
-  console.log(page.value)
+watch([() => route.params.tagId, page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(newVal + " " + oldVal)
   if (newVal !== oldVal) {
-    getBooks()
+    throttledGetBooks()
+  }
+})
+
+watch(() => route.params.tagId, (newVal, oldVal) => {
+  console.log(newVal + " " + oldVal)
+  if (newVal !== oldVal) {
+    getTag()
   }
 })
 
 const getTag = async () => {
   try {
-    tag.value = await dataService.getTagById(props.tagId)
+    tag.value = await dataService.getTagById(route.params.tagId as string)
     useTitle('Jelu | #' + tag.value.name)
   } catch (error) {
     console.log("failed get tag : " + error);
@@ -56,30 +63,33 @@ const getTag = async () => {
 };
 
 const getBooks = () => {
-  getBooksIsLoading.value = true
-  dataService.getTagBooksById(props.tagId, 
-    pageAsNumber.value - 1, perPage.value, sortQuery.value, 
-    libraryFilter.value)
-    .then(res => {
-        console.log(res)
-          total.value = res.totalElements
-          tagBooks.value = res.content
-        if (! res.empty) {
-          page.value =  (res.number + 1).toString(10)
-        }
-        else {
-          page.value = "1"
-        }
+    getBooksIsLoading.value = true
+    dataService.getTagBooksById(route.params.tagId as string, 
+      pageAsNumber.value - 1, perPage.value, sortQuery.value, 
+      libraryFilter.value)
+      .then(res => {
+          console.log(res)
+            total.value = res.totalElements
+            tagBooks.value = res.content
+          if (! res.empty) {
+            page.value =  (res.number + 1).toString(10)
+          }
+          else {
+            page.value = "1"
+          }
+          getBooksIsLoading.value = false
+          updatePageLoading(false)
+      }
+      )
+      .catch(e => {
         getBooksIsLoading.value = false
         updatePageLoading(false)
-    }
-    )
-    .catch(e => {
-      getBooksIsLoading.value = false
-      updatePageLoading(false)
-    })
-  
+      })
 };
+
+const throttledGetBooks = useThrottleFn(() => {
+  getBooks()
+}, 100, false)
 
 const convertedBooks = computed(() => tagBooks.value?.map(b => ObjectUtils.toUserBook(b)))
 
@@ -149,6 +159,12 @@ getBooks()
           native-value="publishedDate"
         >
           {{ t('sorting.publication_date') }}
+        </o-radio>
+        <o-radio
+          v-model="sortBy"
+          native-value="modificationDate"
+        >
+          {{ t('sorting.modification_date') }}
         </o-radio>
       </div>
     </template>

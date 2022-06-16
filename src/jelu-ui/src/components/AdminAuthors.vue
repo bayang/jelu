@@ -165,7 +165,7 @@ const rightDoD = computed(() => {
           </h1>{{ t('authors_merge.authors_merge_description') }}
         </o-step-item>
       </o-steps>
-      <div class="field jelu-authorinput">
+      <div class="field">
         <o-field :label="t('authors_merge.search_message')">
           <o-autocomplete
             :data="filteredAuthors"

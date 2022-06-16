@@ -36,6 +36,7 @@ store.dispatch('getUser')
     console.log("ok nav")
     initialLoad.value = false
     store.dispatch('getServerSettings')
+    store.dispatch('getUserShelves')
     // } catch(e) {
     // console.log("error nav")
     // console.log(e)
@@ -52,6 +53,9 @@ const username = computed(() => {
 })
 const isLogged = computed(() => {
   return store.getters.getLogged
+})
+const shelves = computed(() => {
+  return store.getters.getShelves
 })
 
 onMounted(() => {
@@ -171,7 +175,6 @@ watch(() => route.name, (newVal, oldVal) => {
           </ul>
         </div>
         <router-link
-          class
           :to="{ name: 'home' }"
         >
           <img
@@ -276,6 +279,35 @@ watch(() => route.name, (newVal, oldVal) => {
               {{ t('nav.history') }}
             </router-link>
           </li>
+          <li
+            v-if="shelves !== null && shelves.length > 0 && isLogged"
+            tabindex="0"
+            class="mr-1"
+          >
+            <a class="font-sans text-xl capitalize">
+              {{ t('nav.shelves') }}
+              <svg
+                class="fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+              ><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
+            </a>
+            <ul class="p-2 bg-base-100 z-50">
+              <li
+                v-for="shelf in shelves"
+                :key="shelf"
+              >
+                <router-link
+                  v-if="isLogged"
+                  :to="{ name: 'tag-detail', params: { tagId: shelf.targetId }, query: {sort: 'modificationDate,desc'} }"
+                >
+                  {{ shelf.name }}
+                </router-link>
+              </li>
+            </ul>
+          </li>
         </ul>
         <div
           v-if="isLogged && showSearchInput"
@@ -324,6 +356,38 @@ watch(() => route.name, (newVal, oldVal) => {
         </button>
       </div>
       <div class="navbar-end">
+        <div
+          v-if="isLogged && shelves != null && shelves.length > 0"
+          class="dropdown lg:hidden"
+        >
+          <label
+            tabindex="0"
+            class="btn btn-ghost rounded-btn lg:hidden"
+          >
+            <span class="h-fit"><i class="mdi mdi-bookshelf mdi-24px" /></span>
+          </label>
+          <div
+            tabindex="0"
+            class="dropdown-content mt-2 -left-20"
+          >
+            <ul
+              tabindex="0"
+              class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li
+                v-for="shelf in shelves"
+                :key="shelf"
+              >
+                <router-link
+                  v-if="isLogged"
+                  :to="{ name: 'tag-detail', params: { tagId: shelf.targetId }, query: {sort: 'modificationDate,desc'} }"
+                >
+                  {{ shelf.name }}
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
         <div class="dropdown dropdown-end">
           <label
             tabindex="0"

@@ -13,7 +13,8 @@
       "login" : "login",
       "logout" : "logout",
       "search": "search",
-      "history": "history"
+      "history": "history",
+      "shelves": "shelves"
     },
     "labels": {
       "search": "Search",
@@ -105,7 +106,10 @@
         "shortcuts" : "Shortcuts",
         "shortcuts_tooltip" : "Keyboard shortcuts",
         "messages" : "Messages",
-        "stats" : "Stats"
+        "stats" : "Stats",
+        "shelves": "Shelves",
+        "shelves_max_number_reached" : "Maximum number of shelves is reached. Delete existing ones to add more.",
+        "shelf_choose_tag" : "Pick a tag to create the corresponding shelf"
     },
     "user" : {
         "log_first" : "Please log in first"
@@ -121,7 +125,8 @@
         "series" : "Series",
         "descending" : "Descending",
         "ascending" : "Ascending",
-        "publication_date" : "Publication date"
+        "publication_date" : "Publication date",
+        "modification_date" : "Modification date"
     },
     "reading_events" : {
         "finished" : "finished",

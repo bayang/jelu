@@ -17,6 +17,7 @@ import { WikipediaSearchResult } from "../model/WikipediaSearchResult";
 import { WikipediaPageResult } from "../model/WikipediaPageResult";
 import { MessageCategory, UpdateUserMessage, UserMessage } from "../model/UserMessage";
 import { MonthStats, YearStats } from "../model/YearStats";
+import { Shelf } from "../model/Shelf";
 
 class DataService {
 
@@ -61,6 +62,8 @@ class DataService {
   private API_USER_MESSAGES = '/user-messages';
 
   private API_STATS = '/stats';
+
+  private API_SHELVES = '/shelves';
 
   private MODE: string;
 
@@ -1080,6 +1083,57 @@ class DataService {
       }
       console.log("error stats years " + (error as AxiosError).code)
       throw new Error("error stats years " + error)
+    }
+  }
+
+  shelves = async (name?: string, targetId?: string) => {
+    try {
+      const response = await this.apiClient.get<Array<Shelf>>(`${this.API_SHELVES}`, {
+        params: {
+          name: name,
+          targetId: targetId
+        }
+      });
+      console.log("called shelves")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error shelves " + (error as AxiosError).code)
+      throw new Error("error shelves " + error)
+    }
+  }
+
+  deleteShelf = async (shelfId?: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_SHELVES}/${shelfId}`);
+      console.log("called delete shelves")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete shelves " + (error as AxiosError).code)
+      throw new Error("error delete shelves " + error)
+    }
+  }
+
+  saveShelf = async (shelf: Shelf) => {
+    try {
+      const resp = await this.apiClient.post<Shelf>(`${this.API_SHELVES}`, shelf)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error creating shelf " + error.response.status + " " + error.response.data.error)
+        throw new Error("error creating shelf " + error.response.status + " " + error)
+      }
+      console.log("error creating shelf " + (error as AxiosError).code)
+      throw new Error("error creating event " + error)
     }
   }
 

@@ -46,7 +46,8 @@ class BookService(
     private val eventRepository: ReadingEventRepository,
     private val properties: JeluProperties,
     private val downloadService: DownloadService,
-    private val fileManager: FileManager
+    private val fileManager: FileManager,
+    private val shelfService: ShelfService
 ) {
 
     @Transactional
@@ -294,6 +295,11 @@ class BookService(
     }
 
     @Transactional
+    fun save(tag: TagDto): TagDto {
+        return bookRepository.save(tag).toTagDto()
+    }
+
+    @Transactional
     fun deleteUserBookById(userbookId: UUID) {
         bookRepository.deleteUserBookById(userbookId)
     }
@@ -310,6 +316,16 @@ class BookService(
 
     @Transactional
     fun deleteTagById(tagId: UUID) {
+        val shelves = shelfService.find(null, null, tagId)
+        shelves.forEach {
+            if (it.id != null) {
+                try {
+                    shelfService.delete(it.id)
+                } catch (e: Exception) {
+                    logger.debug { "failed to delete shelf ${it.name} while deleting corresponding tag" }
+                }
+            }
+        }
         bookRepository.deleteTagById(tagId)
     }
 
