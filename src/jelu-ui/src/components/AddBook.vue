@@ -529,7 +529,7 @@ let displayDatepicker = computed(() => {
           >
             <o-input
               v-model="form.summary"
-              maxlength="200"
+              maxlength="50000"
               type="textarea"
               class="textarea focus:textarea-accent"
             />
@@ -749,7 +749,7 @@ let displayDatepicker = computed(() => {
           >
             <o-input
               v-model="form.personalNotes"
-              maxlength="200"
+              maxlength="5000"
               type="textarea"
               class="textarea focus:textarea-accent"
             />
