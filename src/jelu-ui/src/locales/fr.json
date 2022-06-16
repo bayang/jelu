@@ -13,7 +13,8 @@
         "login": "connexion",
         "logout": "déconnexion",
         "search": "recherche",
-        "history": "historique"
+        "history": "historique",
+        "shelves": "Étagères"
     },
     "labels": {
         "search": "Rechercher",
@@ -105,7 +106,10 @@
         "shortcuts": "Raccourcis",
         "shortcuts_tooltip": "Raccourcis claviers",
         "messages": "Messages",
-        "stats": "Statistiques"
+        "stats": "Statistiques",
+        "shelves": "Étagères",
+        "shelves_max_number_reached": "Le nombre maximum d'étagères est atteint. Supprimez-en pour en ajouter d'autres.",
+        "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante"
     },
     "user": {
         "log_first": "Veuillez vous identifier"
@@ -121,7 +125,8 @@
         "series": "Série",
         "descending": "Descendant",
         "ascending": "Ascendant",
-        "publication_date": "Date de publication"
+        "publication_date": "Date de publication",
+        "modification_date": "Date de modification"
     },
     "reading_events": {
         "finished": "lu",

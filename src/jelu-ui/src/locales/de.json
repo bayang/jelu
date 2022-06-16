@@ -13,7 +13,8 @@
         "login": "Anmelden",
         "logout": "Abmelden",
         "search": "Suche",
-        "history": "Verlauf"
+        "history": "Verlauf",
+        "shelves": "shelves"
     },
     "labels": {
         "search": "Suche",
@@ -105,7 +106,10 @@
         "shortcuts": "Kurzbefehle",
         "shortcuts_tooltip": "Tastaturkürzel",
         "messages": "Mitteilungen",
-        "stats": "Statistik"
+        "stats": "Statistik",
+        "shelves": "Shelves",
+        "shelves_max_number_reached": "Maximum number of shelves is reached. Delete existing ones to add more.",
+        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
     },
     "user": {
         "log_first": "Bitte zuerst anmelden"
@@ -121,7 +125,8 @@
         "series": "Serie",
         "descending": "Absteigend",
         "ascending": "Aufsteigend",
-        "publication_date": "Veröffentlichungsdatum"
+        "publication_date": "Veröffentlichungsdatum",
+        "modification_date": "Modification date"
     },
     "reading_events": {
         "finished": "Fertig gelesen",
@@ -145,7 +150,7 @@
         "any": "Beliebig",
         "only_in_my_list": "Nur Bücher in meinen Listen",
         "only_not_in_my_list": "Nur Bücher außerhalb meiner Listen",
-        "owned": "Book is owned"
+        "owned": "Besitze ich"
     },
     "book": {
         "owned": "Besitze ich",
@@ -175,7 +180,7 @@
         "in_read_list": "In der Leseliste"
     },
     "authors_merge": {
-        "authors_merging_utility": "Autor:innen zusammenlegen",
+        "authors_merging_utility": "Autor:innen zusammenführen",
         "author_nb": "Autor:in {nb}",
         "author_left_subtitle": "Zu behaltende Autor:in",
         "author_left_description": "Wähle als Erstes die Autor:in, die geändert und in der Datenbank behalten wird",
