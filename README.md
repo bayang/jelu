@@ -14,19 +14,20 @@ It acts as a self hosted "personal Goodreads" because I became tired of switchin
 
 I also became tired of having to export and reimport my data each time with data loss in the process.
 
-Also I wanted control on my data, so Jelu offers an API you can script or integrate with any third party tool or service (which you cannot do with the vast majority of other online services).
+You have control on your data since Jelu offers an API you can script or integrate with any third party tool or service (which you cannot do with the vast majority of other online services).
 
-All my data is now located into a single-file database which can be saved anywhere.
+All your data is now located into a single-file database which can be saved anywhere.
 
 ## Features
 
-* track read books so you don't have to remember everything
+* track read books so you don't have to remember everything, and view your history (by year and month)
 * manage to-read list
 * Import history (from goodreads for now, via csv export)
 * Export your data in a csv file
 * Import single books manually or automatically via online search (through title, authors or isbn)
 * Mark books as currently reading, finished or dropped
 * Books can be tagged and a tag page can display all books with that tag
+* You can use tags to create custom shelves
 * Links to third party providers are fetched online (google books, amazon, goodreads, librarythings) or computed from those providers id you could enter manually.
 * Author page with author detail and books from this author
 * Auto import author details from wikipedia
@@ -34,6 +35,7 @@ All my data is now located into a single-file database which can be saved anywhe
 * Provide embed code snippets so that books can be tracked in other sites, blogs or even markdown notes/journal
 * Provide some stats about your readings
 * Multi user support
+* provides an API 
 
 ## Usage
 
