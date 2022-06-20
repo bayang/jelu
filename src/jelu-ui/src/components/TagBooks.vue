@@ -41,14 +41,14 @@ const getBooksIsLoading: Ref<boolean> = ref(false)
 
 watch([() => route.params.tagId, page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(newVal + " " + oldVal)
-  if (newVal !== oldVal) {
+  if (newVal !== oldVal && route.params.tagId !== undefined) {
     throttledGetBooks()
   }
 })
 
 watch(() => route.params.tagId, (newVal, oldVal) => {
   console.log(newVal + " " + oldVal)
-  if (newVal !== oldVal) {
+  if (newVal !== oldVal && route.params.tagId !== undefined) {
     getTag()
   }
 })
