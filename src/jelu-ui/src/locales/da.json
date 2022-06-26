@@ -109,7 +109,7 @@
         "stats": "Statistikker",
         "shelves": "Reoler",
         "shelves_max_number_reached": "Maksimalt antal hylder er opnået. Slet eksisterende for at tilføje flere.",
-        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
+        "shelf_choose_tag": "Vælg et mærkat for at oprette den tilsvarende hylde"
     },
     "user": {
         "log_first": "Log venligst ind først"
@@ -126,7 +126,7 @@
         "descending": "Faldende",
         "ascending": "Stigende",
         "publication_date": "Dato for offentliggørelse",
-        "modification_date": "Modification date"
+        "modification_date": "Ændringsdato"
     },
     "reading_events": {
         "finished": "færdig",
@@ -150,7 +150,7 @@
         "any": "Enhver",
         "only_in_my_list": "Kun bøger på mine lister",
         "only_not_in_my_list": "Kun bøger ikke på mine lister",
-        "owned": "Book is owned"
+        "owned": "Bogen ejes"
     },
     "book": {
         "owned": "ejet",
