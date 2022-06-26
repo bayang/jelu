@@ -14,7 +14,7 @@
         "logout": "log ud",
         "search": "søg",
         "history": "historik",
-        "shelves": "shelves"
+        "shelves": "reoler"
     },
     "labels": {
         "search": "Søg",
@@ -107,8 +107,8 @@
         "shortcuts_tooltip": "Tastaturgenveje",
         "messages": "Beskeder",
         "stats": "Statistikker",
-        "shelves": "Shelves",
-        "shelves_max_number_reached": "Maximum number of shelves is reached. Delete existing ones to add more.",
+        "shelves": "Reoler",
+        "shelves_max_number_reached": "Maksimalt antal hylder er opnået. Slet eksisterende for at tilføje flere.",
         "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
     },
     "user": {
