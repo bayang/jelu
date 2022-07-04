@@ -86,7 +86,10 @@
         "preview": "forhåndsvisning",
         "copy_paste_code": "kopiér og indsæt denne kode",
         "get_embed_code": "Hent indlejret kode",
-        "saved": "Gemt"
+        "saved": "Gemt",
+        "yes": "Yes",
+        "no": "No",
+        "do_nothing": "Do nothing"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -262,5 +265,17 @@
     },
     "history": {
         "years": "år"
+    },
+    "bulk": {
+        "bulk_edit_books": "Bulk edit books",
+        "owned": "Mark/unmark all as owned",
+        "toRead": "Mark/unmark all as to read",
+        "toggle": "Toggle bulk edit mode",
+        "select_all": "Select/deselect all",
+        "edit": "Start editing",
+        "add_or_remove": "Add or remove tag",
+        "add": "Add",
+        "remove": "Remove",
+        "choose_tag": "Choose the tag you want to add or remove"
     }
 }
