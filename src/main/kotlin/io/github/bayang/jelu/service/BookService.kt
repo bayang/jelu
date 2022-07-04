@@ -117,8 +117,10 @@ class BookService(
             // if we need to update image and there is already one, backup it
             if ((file != null || !book.book?.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
                 val currentImage = File(properties.files.images, previousImage)
-                backup = File(properties.files.images, "$previousImage.bak")
-                Files.move(currentImage.toPath(), backup.toPath())
+                if (currentImage.exists()) {
+                    backup = File(properties.files.images, "$previousImage.bak")
+                    Files.move(currentImage.toPath(), backup.toPath())
+                }
             }
             val savedImage: String? = saveImages(file, updated.book.title, updated.book.id.toString(), book.book?.image, properties.files.images)
             updated.book.image = savedImage
@@ -258,8 +260,10 @@ class BookService(
             // if we need to update image and there is already one, backup it
             if ((file != null || !author.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
                 val currentImage = File(properties.files.images, previousImage)
-                backup = File(properties.files.images, "$previousImage.bak")
-                Files.move(currentImage.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                if (currentImage.exists()) {
+                    backup = File(properties.files.images, "$previousImage.bak")
+                    Files.move(currentImage.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                }
             }
             val savedImage: String? = saveImages(file, updated.name, updated.id.toString(), author.image, properties.files.images)
             updated.image = savedImage
