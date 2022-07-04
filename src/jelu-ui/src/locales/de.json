@@ -87,9 +87,9 @@
         "copy_paste_code": "Diesen Code kopieren und einfügen",
         "get_embed_code": "Embed-Code erhalten",
         "saved": "Gespeichert",
-        "yes": "Yes",
-        "no": "No",
-        "do_nothing": "Do nothing"
+        "yes": "Ja",
+        "no": "Nein",
+        "do_nothing": "Nichts tun"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -267,15 +267,15 @@
         "years": "Jahre"
     },
     "bulk": {
-        "bulk_edit_books": "Bulk edit books",
-        "owned": "Mark/unmark all as owned",
-        "toRead": "Mark/unmark all as to read",
-        "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
-        "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove"
+        "bulk_edit_books": "Massenbearbeitung der Bücher",
+        "owned": "Alle als \"Besitze ich\" markieren/Markierung entfernen",
+        "toRead": "Alle als gelesen markieren/Markierung entfernen ",
+        "toggle": "Massenbearbeitung aktivieren/deaktivieren",
+        "select_all": "Alles auswählen / Auswahl aufheben",
+        "edit": "Bearbeitung starten",
+        "add_or_remove": "Tags hinzufügen oder entfernen",
+        "add": "Hinzufügen",
+        "remove": "Entfernen",
+        "choose_tag": "Tag zum hinzufügen/entfernen auswählen "
     }
 }
