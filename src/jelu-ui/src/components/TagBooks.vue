@@ -1,39 +1,37 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useThrottleFn, useTitle } from '@vueuse/core';
 import { useRouteQuery } from "@vueuse/router";
 import { computed, Ref, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import usePagination from '../composables/pagination';
 import useSort from "../composables/sort";
-import { Book, UserBook } from '../model/Book';
+import useBulkEdition from '../composables/bulkEdition';
+import { Book } from '../model/Book';
 import { LibraryFilter } from "../model/LibraryFilter";
 import { Tag } from '../model/Tag';
 import dataService from "../services/DataService";
 import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
-import EditBookModal from "./EditBookModal.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
-import { useTitle } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
-import { useThrottleFn } from '@vueuse/core'
 
 const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
 
-const {oruga} = useProgrammatic();
 const route = useRoute()
 
 const tag: Ref<Tag> = ref({name: ""})
 const tagBooks: Ref<Array<Book>> = ref([]);
-const edit: Ref<boolean> = ref(false)
 
 const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
 
 const libraryFilter: Ref<LibraryFilter> = useRouteQuery('libraryFilter', 'ANY' as LibraryFilter)
+
+const { showSelect, selectAll, checkedCards, cardChecked, toggleEdit } = useBulkEdition(modalClosed)
 
 const open = ref(false)
 
@@ -68,7 +66,7 @@ const getBooks = () => {
       pageAsNumber.value - 1, perPage.value, sortQuery.value, 
       libraryFilter.value)
       .then(res => {
-          console.log(res)
+        console.log(res)
             total.value = res.totalElements
             tagBooks.value = res.content
           if (! res.empty) {
@@ -95,25 +93,7 @@ const convertedBooks = computed(() => tagBooks.value?.map(b => ObjectUtils.toUse
 
 function modalClosed() {
   console.log("modal closed")
-  getBooks()
-}
-
-const toggleEdit = (book: UserBook) => {
-  edit.value = ! edit.value
-  console.log("book")
-  console.log(book)
-  oruga.modal.open({
-          component: EditBookModal,
-          trapFocus: true,
-          active: true,
-          canCancel: ['x', 'button', 'outside'],
-          scroll: 'clip',
-          props: {
-            "book" : book,
-            canAddEvent: true
-          },
-          onClose: modalClosed
-        });
+  throttledGetBooks()
 }
 
 getTag()
@@ -193,16 +173,46 @@ getBooks()
     </template>
   </sort-filter-bar-vue>
   <div class="flex flex-row justify-between">
-    <o-button
-      variant="success"
-      outlined
-      class="order-last sm:order-first"
-      @click="open = !open"
-    >
-      <span class="icon">
-        <i class="mdi mdi-filter-variant" />
-      </span>
-    </o-button>
+    <div class="flex flex-row gap-1 order-last sm:order-first">
+      <o-button
+        variant="success"
+        outlined
+        @click="open = !open"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-filter-variant" />
+        </span>
+      </o-button>
+      <button
+        v-tooltip="t('bulk.toggle')"
+        class="btn btn-outline btn-primary"
+        @click="showSelect = !showSelect"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-pencil" />
+        </span>
+      </button>
+      <button
+        v-if="showSelect"
+        v-tooltip="t('bulk.select_all')"
+        class="btn btn-outline btn-accent"
+        @click="selectAll = !selectAll"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-checkbox-multiple-marked" />
+        </span>
+      </button>
+      <button
+        v-if="showSelect && checkedCards.length > 0"
+        v-tooltip="t('bulk.edit')"
+        class="btn btn-outline btn-info"
+        @click="toggleEdit(checkedCards)"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-book-edit" />
+        </span>
+      </button>
+    </div>
     <h2 class="text-3xl typewriter">
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
@@ -232,32 +242,14 @@ getBooks()
       :key="book.book.id"
       class="books-grid-item my-2"
     >
-      <router-link
-        v-if="book.book.userBookId != null"
-        :to="{ name: 'book-detail', params: { bookId: book.book.userBookId } }"
-      >
-        <book-card
-          :book="book"
-          class="h-full"
-        />
-      </router-link>
-      <div v-else>
-        <book-card
-          v-tooltip="t('labels.book_not_yet_in_books')"
-          :book="book"
-          class="h-full"
-          @dblclick="toggleEdit(book)"
-        >
-          <template #icon>
-            <span
-              v-tooltip="t('labels.not_in_your_books')"
-              class="icon text-error"
-            >
-              <i class="mdi mdi-plus-circle mdi-18px" />
-            </span>
-          </template>
-        </book-card>
-      </div>
+      <book-card
+        :book="book"
+        :force-select="selectAll"
+        :show-select="showSelect"
+        class="h-full"
+        @update:modal-closed="modalClosed"
+        @update:checked="cardChecked"
+      />
     </div>
   </div>
   <o-pagination

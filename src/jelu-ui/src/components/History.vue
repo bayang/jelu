@@ -164,20 +164,18 @@ getYears()
             v-for="event in ev"
             :key="event.id"
           >
-            <router-link
-              v-if="event.userBook.id != undefined"
-              :to="{ name: 'book-detail', params: { bookId: event.userBook.id } }"
+            <book-card
+              :book="event.userBook"
+              class="h-full"
+              :force-select="false"
+              :show-select="false"
             >
-              <div class="relative h-full">
-                <book-card
-                  :book="event.userBook"
-                  class="h-full"
-                />
-                <div class="badge badge-accent absolute bottom-0 left-1 ">
+              <template #date>
+                <div class="badge badge-accent absolute bottom-0 left-1">
                   {{ d(event.modificationDate!!, 'short') }}
                 </div>
-              </div>
-            </router-link>
+              </template>
+            </book-card>
           </div>
         </div>
         <div class="divider" /> 

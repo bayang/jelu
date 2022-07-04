@@ -2,20 +2,19 @@
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { useTitle } from '@vueuse/core';
 import { useRouteQuery } from "@vueuse/router";
-import { computed, onMounted, Ref, ref, watch } from 'vue';
+import { computed, Ref, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import useDates from '../composables/dates';
 import usePagination from '../composables/pagination';
 import useSort from "../composables/sort";
 import { Author } from "../model/Author";
-import { Book, UserBook } from '../model/Book';
+import { Book } from '../model/Book';
 import { LibraryFilter } from "../model/LibraryFilter";
 import dataService from "../services/DataService";
 import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
 import EditAuthorModalVue from "./EditAuthorModal.vue";
-import EditBookModal from "./EditBookModal.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
-import useDates from '../composables/dates'
-import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -30,7 +29,6 @@ const props = defineProps<{ authorId: string }>()
 
 const author: Ref<Author> = ref({name: ""})
 const authorBooks: Ref<Array<Book>> = ref([]);
-const edit: Ref<boolean> = ref(false)
 const authorEdit: Ref<boolean> = ref(false)
 
 const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
@@ -96,24 +94,6 @@ function modalClosed() {
 function authorModalClosed() {
   console.log("author modal closed")
   getAuthor()
-}
-
-const toggleEdit = (book: UserBook) => {
-  edit.value = ! edit.value
-  console.log("book")
-  console.log(book)
-  oruga.modal.open({
-          component: EditBookModal,
-          trapFocus: true,
-          active: true,
-          canCancel: ['x', 'button', 'outside'],
-          scroll: 'clip',
-          props: {
-            "book" : book,
-            canAddEvent: true
-          },
-          onClose: modalClosed
-        });
 }
 
 const editAuthor = () => {
@@ -336,32 +316,13 @@ getBooks()
       :key="book.book.id"
       class="my-2"
     >
-      <router-link
-        v-if="book.book.userBookId != null"
-        :to="{ name: 'book-detail', params: { bookId: book.book.userBookId } }"
-      >
-        <book-card
-          :book="book"
-          class="h-full"
-        />
-      </router-link>
-      <div v-else>
-        <book-card
-          v-tooltip="t('labels.book_not_yet_in_books')"
-          :book="book"
-          class="h-full"
-          @dblclick="toggleEdit(book)"
-        >
-          <template #icon>
-            <span
-              v-tooltip="t('labels.not_in_your_books')"
-              class="icon text-error"
-            >
-              <i class="mdi mdi-plus-circle mdi-18px" />
-            </span>
-          </template>
-        </book-card>
-      </div>
+      <book-card
+        :book="book"
+        class="h-full"
+        :force-select="false"
+        :show-select="false"
+        @update:modal-closed="modalClosed"
+      />
     </div>
   </div>
   <div

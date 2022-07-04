@@ -38,4 +38,10 @@ export interface UserBook {
     readingEvents?: Array<ReadingEvent>|null,
     percentRead? : number|null,
   }
-  
+export interface UserBookBulkUpdate {
+    ids: Array<string>,
+    toRead?: boolean,
+    owned?: boolean,
+    removeTags?: Array<string>,
+    addTags?: Array<string>,
+}

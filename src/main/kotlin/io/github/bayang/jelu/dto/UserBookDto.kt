@@ -71,3 +71,10 @@ data class UserBookUpdateDto(
     val toRead: Boolean?,
     val percentRead: Int?
 )
+data class UserBookBulkUpdateDto(
+    val ids: List<UUID>,
+    val toRead: Boolean?,
+    val owned: Boolean?,
+    val removeTags: List<UUID>?,
+    val addTags: List<UUID>?,
+)

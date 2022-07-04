@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { UserBook, Book } from "../model/Book";
+import { UserBook, Book, UserBookBulkUpdate } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
 import { CreateUser, UpdateUser, User, UserAuthentication } from "../model/User";
@@ -1134,6 +1134,26 @@ class DataService {
       }
       console.log("error creating shelf " + (error as AxiosError).code)
       throw new Error("error creating event " + error)
+    }
+  }
+
+  bulkEditUserBooks = async (bulkUpdateDto: UserBookBulkUpdate) => {
+    try {
+      const resp = await this.apiClient.put<number>(this.API_USERBOOK, {
+        ids: bulkUpdateDto.ids,
+        addTags: bulkUpdateDto.addTags,
+        removeTags: bulkUpdateDto.removeTags,
+        owned: bulkUpdateDto.owned,
+        toRead: bulkUpdateDto.toRead,
+      })
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error bulk updating " + error.response.status + " " + error.response.data.error)
+        throw new Error("error bulk updating " + error.response.status + " " + error)
+      }
+      console.log("error bulk updating " + (error as AxiosError).code)
+      throw new Error("error bulk updating " + error)
     }
   }
 

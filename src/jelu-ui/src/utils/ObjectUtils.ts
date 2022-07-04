@@ -29,6 +29,7 @@ export class ObjectUtils {
 
   public static toUserBook = (book: Book): UserBook => {
     const converted = {
+      id: book.userBookId != null ? book.userBookId : null,
       book: book
     } as UserBook
     // console.log('after')

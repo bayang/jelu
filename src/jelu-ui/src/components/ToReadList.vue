@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref, watch } from 'vue'
+import { useThrottleFn, useTitle } from '@vueuse/core';
 import { useRouteQuery } from '@vueuse/router';
-import { UserBook } from '../model/Book'
+import { computed, Ref, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import usePagination from '../composables/pagination';
+import useSort from '../composables/sort';
+import { useRouteQueryArray } from '../composables/useVueRouterArray';
+import useBulkEdition from '../composables/bulkEdition';
+import { UserBook } from '../model/Book';
+import { ReadingEventType } from '../model/ReadingEvent';
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
-import usePagination from '../composables/pagination';
-import useSort from '../composables/sort';
-import { useThrottleFn } from '@vueuse/core'
-import { ReadingEventType } from '../model/ReadingEvent';
-import { useRouteQueryArray } from '../composables/useVueRouterArray';
-import { useTitle } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -25,6 +25,8 @@ const books: Ref<Array<UserBook>> = ref([]);
 const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('creationDate,desc')
+
+const { showSelect, selectAll, checkedCards, cardChecked, toggleEdit } = useBulkEdition(modalClosed)
 
 const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTypes', [])
 
@@ -79,6 +81,11 @@ watch([page, eventTypes, sortQuery, owned], (newVal, oldVal) => {
     throttledGetToRead()
   }
 })
+
+function modalClosed() {
+  console.log("modal closed")
+  throttledGetToRead()
+}
 
 getToRead()
 
@@ -187,16 +194,46 @@ getToRead()
     </template>
   </sort-filter-bar-vue>
   <div class="flex flex-row justify-between">
-    <o-button
-      variant="success"
-      outlined
-      class="order-last sm:order-first"
-      @click="open = !open"
-    >
-      <span class="icon">
-        <i class="mdi mdi-filter-variant" />
-      </span>
-    </o-button>
+    <div class="flex flex-row gap-1 order-last sm:order-first">
+      <o-button
+        variant="success"
+        outlined
+        @click="open = !open"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-filter-variant" />
+        </span>
+      </o-button>
+      <button
+        v-tooltip="t('bulk.toggle')"
+        class="btn btn-outline btn-primary"
+        @click="showSelect = !showSelect"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-pencil" />
+        </span>
+      </button>
+      <button
+        v-if="showSelect"
+        v-tooltip="t('bulk.select_all')"
+        class="btn btn-outline btn-accent"
+        @click="selectAll = !selectAll"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-checkbox-multiple-marked" />
+        </span>
+      </button>
+      <button
+        v-if="showSelect && checkedCards.length > 0"
+        v-tooltip="t('bulk.edit')"
+        class="btn btn-outline btn-info"
+        @click="toggleEdit(checkedCards)"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-book-edit" />
+        </span>
+      </button>
+    </div>
     <h2 class="text-3xl typewriter capitalize">
       {{ t('nav.to_read') }} :
     </h2>
@@ -211,15 +248,14 @@ getToRead()
       :key="book.id"
       class="books-grid-item m-2"
     >
-      <router-link
-        v-if="book.id != undefined"
-        :to="{ name: 'book-detail', params: { bookId: book.id } }"
-      >
-        <book-card
-          :book="book"
-          class="h-full"
-        />
-      </router-link>
+      <book-card
+        :book="book"
+        :force-select="selectAll"
+        :show-select="showSelect"
+        class="h-full"
+        @update:modal-closed="modalClosed"
+        @update:checked="cardChecked"
+      />
     </div>
   </div>
   <div

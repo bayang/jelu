@@ -62,6 +62,14 @@
   @apply btn btn-success;
 }
 
+.o-btn.o-btn--warning.o-btn--outlined-warning {
+  @apply btn btn-warning;
+}
+
+.o-btn.o-btn--info.o-btn--outlined-info {
+  @apply btn btn-info;
+}
+
 .o-side__content.o-side__content--fixed {
   @apply bg-base-100;
 }

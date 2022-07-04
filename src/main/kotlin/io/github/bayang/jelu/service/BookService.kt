@@ -17,6 +17,7 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
@@ -315,6 +316,11 @@ class BookService(
     }
 
     @Transactional
+    fun deleteTagsFromBook(bookId: UUID, tagIds: List<UUID>) {
+        bookRepository.deleteTagsFromBook(bookId, tagIds)
+    }
+
+    @Transactional
     fun deleteTagById(tagId: UUID) {
         val shelves = shelfService.find(null, null, tagId)
         shelves.forEach {
@@ -346,6 +352,16 @@ class BookService(
     @Transactional
     fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
         return bookRepository.findAuthorBooksById(authorId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
+    }
+
+    @Transactional
+    fun bulkEditUserbooks(userBookBulkUpdateDto: UserBookBulkUpdateDto): Int {
+        return bookRepository.bulkEditUserbooks(userBookBulkUpdateDto)
+    }
+
+    @Transactional
+    fun addTagsToBook(bookId: UUID, tagIds: List<UUID>): Int {
+        return bookRepository.addTagsToBook(bookId, tagIds)
     }
 
     @Transactional

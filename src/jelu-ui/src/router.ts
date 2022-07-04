@@ -68,7 +68,6 @@ const router = createRouter({
             path: '/tags/:tagId',
             component: () => import(/* webpackChunkName: "recommend" */ './components/TagBooks.vue'),
             name: 'tag-detail',
-            props: true,
             beforeEnter: [isLogged],
         },
         {

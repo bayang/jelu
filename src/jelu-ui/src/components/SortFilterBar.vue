@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref, watch } from "vue";
-import { useMagicKeys } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
+import { useMagicKeys } from '@vueuse/core';
+import { ref, watch } from "vue";
+import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -37,7 +37,6 @@ watch(shiftF, (v) => {
     emit('update:open', !props.open)
   }
 })
-
 
 </script>
 

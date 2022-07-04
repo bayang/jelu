@@ -1,23 +1,20 @@
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useProgrammatic } from "@oruga-ui/oruga-next"
+import { useTitle } from '@vueuse/core'
+import { computed, Ref, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { UserBook } from '../model/Book'
 import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from '../model/ReadingEvent'
 import dataService from "../services/DataService"
 import { key } from '../store'
-import { StringUtils } from '../utils/StringUtils'
 import BookCard from "./BookCard.vue"
 import QuotesDisplay from './QuotesDisplay.vue'
-import { useProgrammatic } from "@oruga-ui/oruga-next";
 import ReadingEventModalVue from './ReadingEventModal.vue'
-import { useTitle } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
 
 useTitle('Jelu | Home')
 
 const store = useStore(key)
-const router = useRouter()
 const {oruga} = useProgrammatic()
 const { t } = useI18n({
       inheritLocale: true,
@@ -73,7 +70,6 @@ const getMyEvents = async () => {
     console.log("failed get events : " + error)
     recentEventsIsLoading.value = false
   }
-
 };
 
 const eventClass = (type: ReadingEventType) => {
@@ -163,25 +159,22 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
           :key="book.id"
           class="sm:basis-1/6 basis-8/12"
         >
-          <router-link
-            v-if="book.id != undefined"
-            :to="{ name: 'book-detail', params: { bookId: book.id } }"
+          <book-card
+            :book="book"
+            size="xl"
+            :force-select="false"
+            :show-select="false"
           >
-            <book-card
-              :book="book"
-              size="xl"
-            >
-              <template #icon>
-                <span
-                  v-tooltip="t('labels.mark_read_or_drop')"
-                  class="icon text-info"
-                  @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
-                >
-                  <i class="mdi mdi-check-circle mdi-18px" />
-                </span>
-              </template>
-            </book-card>
-          </router-link>
+            <template #icon>
+              <span
+                v-tooltip="t('labels.mark_read_or_drop')"
+                class="icon text-info"
+                @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
+              >
+                <i class="mdi mdi-check-circle mdi-18px" />
+              </span>
+            </template>
+          </book-card>
         </div>
       </div>
     </div>
@@ -231,15 +224,12 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
               :class="eventClass(event.eventType)"
             >{{ eventLabel(event.eventType) }}</span>
           </p>
-          <router-link
-            v-if="event.userBook.id != undefined"
-            :to="{ name: 'book-detail', params: { bookId: event.userBook.id } }"
-          >
-            <book-card
-              :book="event.userBook"
-              class="h-full"
-            />
-          </router-link>
+          <book-card
+            :book="event.userBook"
+            class="h-full"
+            :force-select="false"
+            :show-select="false"
+          />
         </div>
       </div>
     </div>

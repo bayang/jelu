@@ -15,6 +15,7 @@ import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.tagDto
 import io.github.bayang.jelu.tags
 import io.github.bayang.jelu.utils.nowInstant
 import io.github.bayang.jelu.utils.slugify
@@ -68,6 +69,9 @@ class BookServiceTest(
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
+        }
+        bookService.findAllTags(null, Pageable.ofSize(20)).content.forEach {
+            bookService.deleteTagById(it.id!!)
         }
     }
 
@@ -835,6 +839,36 @@ class BookServiceTest(
         Assertions.assertEquals(1, retrieved1.book.tags?.size)
         tagsNb = bookService.findAllTags(null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, tagsNb)
+    }
+
+    @Test
+    fun testAddAndRemoveTagsToBook() {
+        bookService.findAllTags(null, Pageable.ofSize(20)).content.forEach {
+            bookService.deleteTagById(it.id!!)
+        }
+        val createBook = bookDto(withTags = true)
+        val savedBook = bookService.save(createBook, null)
+        Assertions.assertEquals(2, savedBook.tags?.size)
+
+        val tag3 = bookService.save(tagDto("added tag1"))
+        Assertions.assertEquals("added tag1", tag3.name)
+        Assertions.assertNotNull(tag3.id)
+        val tag4 = bookService.save(tagDto("another tag"))
+        Assertions.assertEquals("another tag", tag4.name)
+        Assertions.assertNotNull(tag4.id)
+
+        val tags = bookService.findAllTags(null, Pageable.ofSize(20))
+        Assertions.assertEquals(4, tags.totalElements)
+
+        val nb = bookService.addTagsToBook(savedBook.id!!, listOf(tag3.id!!, tag4.id!!))
+        Assertions.assertEquals(2, nb)
+
+        val after = bookService.findBookById(savedBook.id!!)
+        Assertions.assertEquals(4, after.tags?.size)
+
+        bookService.deleteTagsFromBook(after.id!!, listOf(tag3.id!!, tag4.id!!))
+        val afterDelete = bookService.findBookById(after.id!!)
+        Assertions.assertEquals(2, afterDelete.tags?.size)
     }
 
     @Test

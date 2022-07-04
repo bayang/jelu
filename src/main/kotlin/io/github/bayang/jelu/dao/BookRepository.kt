@@ -8,6 +8,7 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.service.FileManager
@@ -25,12 +26,14 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
+import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.orWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.update
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -577,6 +580,50 @@ class BookRepository(
         )
     }
 
+    // FIXME put a limit on the number of ids that can be passed for modification
+    fun bulkEditUserbooks(userBookBulkUpdateDto: UserBookBulkUpdateDto): Int {
+        var tagAdded = 0
+        // short circuit if no list operations is needed
+        if (!userBookBulkUpdateDto.removeTags.isNullOrEmpty() || ! userBookBulkUpdateDto.addTags.isNullOrEmpty()) {
+            userBookBulkUpdateDto.ids.forEach {
+                val userbook = UserBook[it]
+                if (!userBookBulkUpdateDto.removeTags.isNullOrEmpty()) {
+                    deleteTagsFromBook(userbook.book.id.value, userBookBulkUpdateDto.removeTags)
+                }
+                if (!userBookBulkUpdateDto.addTags.isNullOrEmpty()) {
+                    tagAdded = addTagsToBook(userbook.book.id.value, userBookBulkUpdateDto.addTags)
+                }
+            }
+        }
+        // otherwise : Can't prepare UPDATE statement without fields to update
+        if (userBookBulkUpdateDto.owned == null && userBookBulkUpdateDto.toRead == null) {
+            return tagAdded
+        }
+        // SQLite doesn't support LIMIT in DELETE clause., dialect: sqlite.
+        // UPDATE with a join clause is unsupported, dialect: sqlite.
+        return UserBookTable
+            .update(
+                where = {
+                    UserBookTable.id inList userBookBulkUpdateDto.ids
+                },
+                body = {
+                    val now = nowInstant()
+                    var modified = false
+                    if (userBookBulkUpdateDto.toRead != null) {
+                        it[UserBookTable.toRead] = userBookBulkUpdateDto.toRead
+                        modified = true
+                    }
+                    if (userBookBulkUpdateDto.owned != null) {
+                        it[UserBookTable.owned] = userBookBulkUpdateDto.owned
+                        modified = true
+                    }
+                    if (modified) {
+                        it[UserBookTable.modificationDate] = now
+                    }
+                }
+            )
+    }
+
     fun deleteUserBookById(userbookId: UUID) {
         val entity: UserBook = UserBook[userbookId]
         entity.delete()
@@ -592,6 +639,24 @@ class BookRepository(
         BookTags.deleteWhere {
             BookTags.tag eq tagId and(BookTags.book eq bookId)
         }
+    }
+
+    fun deleteTagsFromBook(bookId: UUID, tagIds: List<UUID>) {
+        BookTags.deleteWhere {
+            BookTags.tag inList tagIds and(BookTags.book eq bookId)
+        }
+    }
+
+    fun addTagsToBook(bookId: UUID, tagIds: List<UUID>): Int {
+        // first remove ids of already existing BookTags to prevent duplicate keys constraints exceptions
+        // val toInsert = tagIds.filter {
+        //     BookTags.select { BookTags.tag eq it and(BookTags.book eq bookId) }.toList().isEmpty()
+        // }
+        val created = BookTags.batchInsert(tagIds, ignore = true) { tagId ->
+            this[BookTags.book] = bookId
+            this[BookTags.tag] = tagId
+        }
+        return created.size
     }
 
     fun deleteTagById(tagId: UUID) {
