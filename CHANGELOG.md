@@ -1,3 +1,16 @@
+## [0.25.0](https://github.com/bayang/jelu/compare/v0.24.2...v0.25.0) (2022-07-04)
+
+
+### Features
+
+* add bulk edition ([893683b](https://github.com/bayang/jelu/commit/893683b1ffedd8a0a36eb8c8353a7dcd150e386c))
+
+
+### Bug Fixes
+
+* not being able to modify a cover [#17](https://github.com/bayang/jelu/issues/17) ([2fa6428](https://github.com/bayang/jelu/commit/2fa6428aa9f363792673f078ec34f3beda051006))
+* some bad requests could be sent on tag page ([3009f8b](https://github.com/bayang/jelu/commit/3009f8b1018000a3d84e08b29d3fe82d40d94a28))
+
 ### [0.24.2](https://github.com/bayang/jelu/compare/v0.24.1...v0.24.2) (2022-06-16)
 
 
