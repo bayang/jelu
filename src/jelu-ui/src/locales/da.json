@@ -14,7 +14,7 @@
         "logout": "log ud",
         "search": "søg",
         "history": "historik",
-        "shelves": "shelves"
+        "shelves": "reoler"
     },
     "labels": {
         "search": "Søg",
@@ -86,7 +86,10 @@
         "preview": "forhåndsvisning",
         "copy_paste_code": "kopiér og indsæt denne kode",
         "get_embed_code": "Hent indlejret kode",
-        "saved": "Gemt"
+        "saved": "Gemt",
+        "yes": "Yes",
+        "no": "No",
+        "do_nothing": "Do nothing"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -107,9 +110,9 @@
         "shortcuts_tooltip": "Tastaturgenveje",
         "messages": "Beskeder",
         "stats": "Statistikker",
-        "shelves": "Shelves",
-        "shelves_max_number_reached": "Maximum number of shelves is reached. Delete existing ones to add more.",
-        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
+        "shelves": "Reoler",
+        "shelves_max_number_reached": "Maksimalt antal hylder er opnået. Slet eksisterende for at tilføje flere.",
+        "shelf_choose_tag": "Vælg et mærkat for at oprette den tilsvarende hylde"
     },
     "user": {
         "log_first": "Log venligst ind først"
@@ -126,7 +129,7 @@
         "descending": "Faldende",
         "ascending": "Stigende",
         "publication_date": "Dato for offentliggørelse",
-        "modification_date": "Modification date"
+        "modification_date": "Ændringsdato"
     },
     "reading_events": {
         "finished": "færdig",
@@ -150,7 +153,7 @@
         "any": "Enhver",
         "only_in_my_list": "Kun bøger på mine lister",
         "only_not_in_my_list": "Kun bøger ikke på mine lister",
-        "owned": "Book is owned"
+        "owned": "Bogen ejes"
     },
     "book": {
         "owned": "ejet",
@@ -262,5 +265,17 @@
     },
     "history": {
         "years": "år"
+    },
+    "bulk": {
+        "bulk_edit_books": "Bulk edit books",
+        "owned": "Mark/unmark all as owned",
+        "toRead": "Mark/unmark all as to read",
+        "toggle": "Toggle bulk edit mode",
+        "select_all": "Select/deselect all",
+        "edit": "Start editing",
+        "add_or_remove": "Add or remove tag",
+        "add": "Add",
+        "remove": "Remove",
+        "choose_tag": "Choose the tag you want to add or remove"
     }
 }

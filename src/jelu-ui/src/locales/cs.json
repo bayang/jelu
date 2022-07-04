@@ -86,7 +86,10 @@
         "preview": "náhled",
         "copy_paste_code": "zkopírovat tento kód",
         "get_embed_code": "Získejte embed kód",
-        "saved": "Uloženo"
+        "saved": "Uloženo",
+        "yes": "Yes",
+        "no": "No",
+        "do_nothing": "Do nothing"
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
@@ -262,5 +265,17 @@
     },
     "history": {
         "years": "roky"
+    },
+    "bulk": {
+        "bulk_edit_books": "Bulk edit books",
+        "owned": "Mark/unmark all as owned",
+        "toRead": "Mark/unmark all as to read",
+        "toggle": "Toggle bulk edit mode",
+        "select_all": "Select/deselect all",
+        "edit": "Start editing",
+        "add_or_remove": "Add or remove tag",
+        "add": "Add",
+        "remove": "Remove",
+        "choose_tag": "Choose the tag you want to add or remove"
     }
 }
