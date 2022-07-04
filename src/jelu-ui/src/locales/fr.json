@@ -87,9 +87,9 @@
         "copy_paste_code": "copier-coller le code",
         "get_embed_code": "Générer aperçu externe",
         "saved": "Sauvegardé",
-        "yes": "Yes",
-        "no": "No",
-        "do_nothing": "Do nothing"
+        "yes": "Oui",
+        "no": "Non",
+        "do_nothing": "Ne rien faire"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -267,15 +267,15 @@
         "years": "années"
     },
     "bulk": {
-        "bulk_edit_books": "Bulk edit books",
-        "owned": "Mark/unmark all as owned",
-        "toRead": "Mark/unmark all as to read",
-        "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
-        "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove"
+        "bulk_edit_books": "Éditer en masse les livres",
+        "owned": "Cocher/décocher tout comme possédé",
+        "toRead": "Ajouter tout/enlever tout de la liste de lecture",
+        "toggle": "Basculer le mode d'édition en masse",
+        "select_all": "Sélectionner/désélectionner tout",
+        "edit": "Commencer l'édition",
+        "add_or_remove": "Ajouter ou supprimer une étiquette",
+        "add": "Ajouter",
+        "remove": "Enlever",
+        "choose_tag": "Choisissez le tag que vous souhaitez ajouter ou retirer"
     }
 }
