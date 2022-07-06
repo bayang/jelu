@@ -900,6 +900,8 @@ let displayDatepicker = computed(() => {
         <div class="field">
           <button
             class="btn btn-success mb-3"
+            :disabled="!StringUtils.isNotBlank(form.title)"
+            :class="{'loading btn-disabled' : progress}"
             @click="importBook"
           >
             {{ t('labels.import_book') }}

@@ -93,9 +93,12 @@ const validateInput = (): boolean => {
 
 const createInitialUser = async () => {
   if (validateInput()) {
+    progress.value = true
     try {
       await store.dispatch('createInitialUser', {"user" : form.login, "password" : form.password})
+      progress.value = false
     } catch (error: any) {
+      progress.value = false
       console.log('failed to create user ' + error)
       console.log(`failed to create user ${error.message}`)
   
@@ -186,6 +189,8 @@ const submit = () => {
         >
           <button
             class="btn btn-warning mt-2"
+            :disabled="progress"
+            :class="{'loading' : progress}"
             @click="createInitialUser"
           >
             {{ t('login.create_first_user') }}
@@ -197,6 +202,8 @@ const submit = () => {
         >
           <button
             class="btn btn-success mt-2"
+            :disabled="progress"
+            :class="{'loading' : progress}"
             @click="logUser"
           >
             {{ t('login.login') }}

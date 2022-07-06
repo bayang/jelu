@@ -626,6 +626,7 @@ function toggleRemoveImage() {
       <div class="column is-centered is-one-fifth flex flex-row justify-center pt-6">
         <button
           class="btn btn-primary"
+          :class="{'loading btn-disabled' : progress}"
           @click="importBook"
         >
           {{ t('labels.save_changes') }}

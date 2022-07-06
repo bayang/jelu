@@ -118,6 +118,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
             <button
               :disabled="!isValid"
               class="btn btn-success"
+              :class="{'loading btn-disabled' : progress}"
               @click="fetchMetadata"
             >
               {{ t('labels.fetch_book') }}
