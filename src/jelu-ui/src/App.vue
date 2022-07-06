@@ -342,6 +342,7 @@ watch(() => route.name, (newVal, oldVal) => {
             </button>
           </div>
         </div>
+        <Transition>
         <button
           v-if="showAdvanced"
           class="btn btn-circle btn-outline border-0 tooltip tooltip-bottom lowercase"
@@ -354,6 +355,7 @@ watch(() => route.name, (newVal, oldVal) => {
             <span class="mdi mdi-magnify-plus-outline mdi-24 text-3xl" />
           </router-link>
         </button>
+        </Transition>
       </div>
       <div class="navbar-end">
         <div
@@ -496,4 +498,16 @@ watch(() => route.name, (newVal, oldVal) => {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.7s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
 </style>

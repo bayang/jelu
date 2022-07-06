@@ -301,20 +301,22 @@ function modalClosed() {
     v-if="books.length > 0"
     class="grid grid-cols-2 sm:grid-cols-8 gap-0 my-3"
   >
-    <div
-      v-for="book in books"
-      :key="book.id"
-      class="m-1"
-    >
-      <book-card
-        :book="book"
-        :force-select="selectAll"
-        :show-select="showSelect"
-        class="h-full"
-        @update:modal-closed="modalClosed"
-        @update:checked="cardChecked"
-      />
-    </div>
+    <TransitionGroup name="list">
+      <div
+        v-for="book in books"
+        :key="book.id"
+        class="m-1"
+      >
+        <book-card
+          :book="book"
+          :force-select="selectAll"
+          :show-select="showSelect"
+          class="h-full"
+          @update:modal-closed="modalClosed"
+          @update:checked="cardChecked"
+        />
+      </div>
+    </TransitionGroup>
   </div>
   <div
     v-else-if="getBookIsLoading"
@@ -370,6 +372,15 @@ label {
 /* fields in side bar slots are shifted to the right and alignment is broken */
 .field {
   margin-left: -8px;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.2s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
 }
 
 </style>
