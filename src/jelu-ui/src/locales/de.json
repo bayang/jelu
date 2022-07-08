@@ -222,7 +222,7 @@
         "export_ko": "Ein Fehler ist aufgetreten und die Exportanfrage wurde wahrscheinlich nicht registriert."
     },
     "login": {
-        "login": "Benutzername",
+        "login": "Anmelden",
         "password": "Passwort",
         "confirm_login": "Benutzernamen bestätigen",
         "confirm_password": "Passwort bestätigen",
