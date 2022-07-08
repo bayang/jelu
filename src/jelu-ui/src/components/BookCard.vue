@@ -183,7 +183,7 @@ watch(checked, (newVal, oldVal) => {
       >
         <h2
           v-tooltip="book.book.title"
-          class="card-title text-base max-h-11 line-clamp-2"
+          class="card-title text-base max-h-11 line-clamp-2 hover:link"
         >
           {{ book.book.title }}
         </h2>
@@ -195,13 +195,20 @@ watch(checked, (newVal, oldVal) => {
       >
         {{ book.book.title }}
       </h2>
-      <p
-        v-if="book.book.authors != null && book.book.authors.length > 0"
-        v-tooltip="authorsText"
-        class="line-clamp-2"
-      >
-        {{ authorsText }}
-      </p>
+      <div v-if="book.book.authors != null && book.book.authors.length > 0">
+        <router-link
+          v-for="author in book.book.authors.slice(0,3)"
+          :key="author.id"
+          class="link hover:underline hover:decoration-4 hover:decoration-secondary line-clamp-2 inline-block"
+          :to="{ name: 'author-detail', params: { authorId: author.id } }"
+        >
+          {{ author.name }}
+        </router-link>
+        <span
+          v-if="book.book.authors.length > 3"
+          v-tooltip="authorsText"
+        >&#8230;</span>
+      </div>
       <div class="card-actions justify-end">
         <span
           v-if="book.lastReadingEvent"
