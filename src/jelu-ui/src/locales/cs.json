@@ -14,7 +14,7 @@
         "logout": "odhlásit",
         "search": "hledat",
         "history": "historie",
-        "shelves": "shelves"
+        "shelves": "police"
     },
     "labels": {
         "search": "Hledat",
@@ -87,9 +87,9 @@
         "copy_paste_code": "zkopírovat tento kód",
         "get_embed_code": "Získejte embed kód",
         "saved": "Uloženo",
-        "yes": "Yes",
-        "no": "No",
-        "do_nothing": "Do nothing"
+        "yes": "Ano",
+        "no": "Ne",
+        "do_nothing": "Nedělat nic"
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
@@ -110,9 +110,9 @@
         "shortcuts_tooltip": "Klávesové zkratky",
         "messages": "Zprávy",
         "stats": "Statistiky",
-        "shelves": "Shelves",
-        "shelves_max_number_reached": "Maximum number of shelves is reached. Delete existing ones to add more.",
-        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
+        "shelves": "Police",
+        "shelves_max_number_reached": "Dosažen maximální počet polic. Chcete-li přidat další, smažte některý ze stávajících.",
+        "shelf_choose_tag": "Vyberte tag pro vytvoření odpovídající police"
     },
     "user": {
         "log_first": "Nejprve se prosím přihlaste"
@@ -129,7 +129,7 @@
         "descending": "Sestupně",
         "ascending": "Vzestupně",
         "publication_date": "Datum publikace",
-        "modification_date": "Modification date"
+        "modification_date": "Datum úpravy"
     },
     "reading_events": {
         "finished": "dokončeno",
@@ -153,7 +153,7 @@
         "any": "Jakýkoliv",
         "only_in_my_list": "Pouze knihy v mých seznamech",
         "only_not_in_my_list": "Pouze knihy, které nejsou v mých seznamech",
-        "owned": "Book is owned"
+        "owned": "Kniha je vlastněná"
     },
     "book": {
         "owned": "vlastněné",
@@ -267,15 +267,15 @@
         "years": "roky"
     },
     "bulk": {
-        "bulk_edit_books": "Bulk edit books",
-        "owned": "Mark/unmark all as owned",
-        "toRead": "Mark/unmark all as to read",
-        "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
-        "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove"
+        "bulk_edit_books": "Hromadná úprava knih",
+        "owned": "Označit/Odznačit vše jako vlastněné",
+        "toRead": "Označit/Odznačit vše jako přečtené",
+        "toggle": "Přepnout režim hromadných úprav",
+        "select_all": "Označit/odznačit vše",
+        "edit": "Začít upravovat",
+        "add_or_remove": "Přidat nebo odebrat tagy",
+        "add": "Přidat",
+        "remove": "Odstranit",
+        "choose_tag": "Vyberte tag, který chcete přidat nebo odebrat"
     }
 }
