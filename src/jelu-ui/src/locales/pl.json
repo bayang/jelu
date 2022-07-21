@@ -112,29 +112,29 @@
         "stats": "Statystyki",
         "shelves": "Półki",
         "shelves_max_number_reached": "Osiągnięto maksymalną liczbę półek. Usuń istniejące, aby dodać więcej.",
-        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
+        "shelf_choose_tag": "Wybierz znacznik do utworzenia odpowiedniej półki"
     },
     "user": {
-        "log_first": "Please log in first"
+        "log_first": "Należy być zalogowanym"
     },
     "sorting": {
-        "sort_by": "Sort by",
-        "sort_order": "Sort order",
+        "sort_by": "Sortuj według",
+        "sort_order": "Kolejność sortowania",
         "last_reading_event_date": "Last reading event date",
         "date_added": "Date added",
         "date_added_to_list": "Date added to list",
-        "title": "Title",
-        "publisher": "Publisher",
-        "series": "Series",
-        "descending": "Descending",
-        "ascending": "Ascending",
-        "publication_date": "Publication date",
-        "modification_date": "Modification date"
+        "title": "Tytuł",
+        "publisher": "Wydawca",
+        "series": "Seria",
+        "descending": "Malejąco",
+        "ascending": "Rosnąco",
+        "publication_date": "Data publikacji",
+        "modification_date": "Data modyfikacji"
     },
     "reading_events": {
-        "finished": "finished",
-        "currently_reading": "Currently reading",
-        "dropped": "dropped",
+        "finished": "ukończone",
+        "currently_reading": "Aktualnie czytane",
+        "dropped": "porzucone",
         "last_event_type": "Last event type",
         "none": "none",
         "reading_events": "reading events",
