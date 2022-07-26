@@ -87,9 +87,11 @@
         "copy_paste_code": "kopiér og indsæt denne kode",
         "get_embed_code": "Hent indlejret kode",
         "saved": "Gemt",
-        "yes": "Yes",
-        "no": "No",
-        "do_nothing": "Do nothing"
+        "yes": "Ja",
+        "no": "Nej",
+        "do_nothing": "Gør ingenting",
+        "add": "Add",
+        "add_to_my_books": "Not yet in your books, click to add it"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -267,15 +269,27 @@
         "years": "år"
     },
     "bulk": {
-        "bulk_edit_books": "Bulk edit books",
-        "owned": "Mark/unmark all as owned",
-        "toRead": "Mark/unmark all as to read",
-        "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
-        "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove"
+        "bulk_edit_books": "Masseredigering af bøger",
+        "owned": "Markér/afmarkér alle som ejede",
+        "toRead": "Markér/afmarkér alle som skal læses",
+        "toggle": "Skift masseredigeringstilstand",
+        "select_all": "Vælg/fravælg alle",
+        "edit": "Begynd at redigere",
+        "add_or_remove": "Tilføj eller fjern mærkat",
+        "add": "Tilføj",
+        "remove": "Fjern",
+        "choose_tag": "Vælg det mærkat du vil tilføje eller fjerne"
+    },
+    "reviews": {
+        "create_review": "Create review",
+        "edit_review": "Edit review",
+        "visibility": "visibility",
+        "private": "private",
+        "public": "public",
+        "review": "review",
+        "rating": "rating",
+        "my_reviews": "My reviews",
+        "all_reviews": "All reviews",
+        "delete_review": "Delete this review ?"
     }
 }

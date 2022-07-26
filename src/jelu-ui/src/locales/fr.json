@@ -89,7 +89,9 @@
         "saved": "Sauvegardé",
         "yes": "Oui",
         "no": "Non",
-        "do_nothing": "Ne rien faire"
+        "do_nothing": "Ne rien faire",
+        "add": "Ajouter",
+        "add_to_my_books": "Pas encore dans vos lives, cliquer pour ajouter"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -277,5 +279,17 @@
         "add": "Ajouter",
         "remove": "Enlever",
         "choose_tag": "Choisissez le tag que vous souhaitez ajouter ou retirer"
+    },
+    "reviews": {
+        "create_review": "écrire une critique",
+        "edit_review": "Modifier la critique",
+        "visibility": "visibilité",
+        "private": "privée",
+        "public": "publique",
+        "review": "critique",
+        "rating": "note",
+        "my_reviews": "Mes critiques",
+        "all_reviews": "Toutes les critiques",
+        "delete_review": "Effacer cette critique ?"
     }
 }
