@@ -189,6 +189,9 @@ You can help with translations : everything is hosted on crowdin https://crowdin
 
 ## Contributions : 
 
-* Czech translation : @filcuk
+* Czech translation : @filcuk, @ondrejk
 * Danish translation : @SirBogner
 * German translation : @puckzuck
+* Polish translation: @Sebastian Jasiński (PrinceNorris)
+
+(if you should be here or want your name modified just contact me)
