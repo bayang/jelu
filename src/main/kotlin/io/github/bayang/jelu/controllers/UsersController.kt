@@ -99,6 +99,9 @@ class UsersController(
     @GetMapping(path = ["/users/{id}"])
     fun userById(@PathVariable("id") userId: UUID): UserDto = repository.findUserById(userId)
 
+    @GetMapping(path = ["/users/{id}/name"])
+    fun usernameById(@PathVariable("id") userId: UUID) = mapOf<String, String>("username" to repository.findUserById(userId).login)
+
     @PutMapping(path = ["/users/{id}"])
     fun updateUser(@PathVariable("id") userId: UUID, @RequestBody @Valid user: UpdateUserDto, principal: Authentication, session: HttpSession): UserDto {
         if (principal.principal is JeluUser) {

@@ -535,6 +535,7 @@ class BookRepository(
 
     fun findUserBookByCriteria(
         userID: UUID,
+        bookId: UUID?,
         eventTypes: List<ReadingEventType>?,
         toRead: Boolean?,
         owned: Boolean?,
@@ -547,6 +548,9 @@ class BookRepository(
             .slice(cols).selectAll()
             .andWhere { UserBookTable.user eq userID }
             .withDistinct(true)
+        if (bookId != null) {
+            query.andWhere { UserBookTable.book eq bookId }
+        }
         if (eventTypes != null && eventTypes.isNotEmpty()) {
             query.andWhere { UserBookTable.lastReadingEvent inList eventTypes }
         }

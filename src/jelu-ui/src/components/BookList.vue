@@ -69,7 +69,7 @@ const ownedAsBool = computed(() => {
 
 const getBooks = () => {
   getBookIsLoading.value = true
-  dataService.findUserBookByCriteria(eventTypes.value, toReadAsBool.value, 
+  dataService.findUserBookByCriteria(eventTypes.value, null, toReadAsBool.value, 
   ownedAsBool.value,
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
@@ -98,11 +98,6 @@ const getBooks = () => {
 const throttledGetBooks = useThrottleFn(() => {
   getBooks()
 }, 100, false)
-
-// const sortOrderUpdated = (newval: string) => {
-//   console.log('sortOrderUpdated ' + newval)
-//   sortOrder.value = newval
-// }
 
 onMounted(() => {
   console.log("Component is mounted!");

@@ -42,7 +42,7 @@ const hasBooks = computed(() => books.value.length > 0)
 const getCurrentlyReading = async () => {
   currentlyReadingIsLoading.value = true
   try {
-    const res = await dataService.findUserBookByCriteria([ReadingEventType.CURRENTLY_READING], null)
+    const res = await dataService.findUserBookByCriteria([ReadingEventType.CURRENTLY_READING], null, null)
     if (res.numberOfElements <= 6) {
       books.value = res.content
     }

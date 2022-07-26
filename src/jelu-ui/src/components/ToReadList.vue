@@ -49,7 +49,7 @@ const getToReadIsLoading: Ref<boolean> = ref(false)
 const getToRead = async () => {
   getToReadIsLoading.value = true
   try {
-    const res = await dataService.findUserBookByCriteria(eventTypes.value, 
+    const res = await dataService.findUserBookByCriteria(eventTypes.value, null,
     true, ownedAsBool.value,
     pageAsNumber.value - 1, perPage.value, sortQuery.value)
     total.value = res.totalElements

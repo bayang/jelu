@@ -169,6 +169,13 @@
   width: min(600px, 90vw);
 }
 
+.review-modal {
+  /* margin: 30px; */
+  @apply m-5 sm:p-5;
+  height: min(600px, 70vh);
+  width: min(600px, 85vw);
+}
+
 .small-cover {
     @apply w-28;
   }

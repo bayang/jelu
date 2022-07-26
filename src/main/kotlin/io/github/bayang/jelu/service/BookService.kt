@@ -281,12 +281,13 @@ class BookService(
     @Transactional
     fun findUserBookByCriteria(
         userId: UUID,
+        bookId: UUID?,
         eventTypes: List<ReadingEventType>?,
         toRead: Boolean?,
         owned: Boolean? = null,
         pageable: Pageable
     ): Page<UserBookWithoutEventsAndUserDto> {
-        return bookRepository.findUserBookByCriteria(userId, eventTypes, toRead, owned, pageable).map { it.toUserBookWthoutEventsAndUserDto() }
+        return bookRepository.findUserBookByCriteria(userId, bookId, eventTypes, toRead, owned, pageable).map { it.toUserBookWthoutEventsAndUserDto() }
     }
 
     @Transactional

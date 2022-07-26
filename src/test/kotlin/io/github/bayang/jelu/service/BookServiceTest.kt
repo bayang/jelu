@@ -65,7 +65,7 @@ class BookServiceTest(
         readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -293,15 +293,15 @@ class BookServiceTest(
         Assertions.assertNull(saved2.book.librarythingId)
         Assertions.assertEquals(createUserBookDto2.owned, saved2.owned)
 
-        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, Pageable.ofSize(30)).totalElements
+        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(3, nb)
 
-        var res = bookService.findUserBookByCriteria(user().id.value, null, null, true, Pageable.ofSize(30))
+        var res = bookService.findUserBookByCriteria(user().id.value, null, null, null, true, Pageable.ofSize(30))
         nb = res.totalElements
         Assertions.assertEquals(1, nb)
         Assertions.assertEquals(createBook.title, res.content[0].book.title)
 
-        res = bookService.findUserBookByCriteria(user().id.value, null, null, false, Pageable.ofSize(30))
+        res = bookService.findUserBookByCriteria(user().id.value, null, null, null, false, Pageable.ofSize(30))
         nb = res.totalElements
         Assertions.assertEquals(2, nb)
         val titles = listOf<String>(createBook1.title, createBook2.title)
@@ -719,12 +719,12 @@ class BookServiceTest(
 
         Assertions.assertNotNull(saved1)
         Assertions.assertNotNull(saved2)
-        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, Pageable.ofSize(30)).totalElements
+        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, nb)
         var eventsNb = readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, eventsNb)
         bookService.deleteUserBookById(saved1.id!!)
-        nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, Pageable.ofSize(30)).totalElements
+        nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, nb)
         eventsNb = readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, eventsNb)
@@ -752,7 +752,7 @@ class BookServiceTest(
 
         Assertions.assertNotNull(saved1)
         Assertions.assertNotNull(saved2)
-        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, Pageable.ofSize(30)).totalElements
+        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, nb)
         var eventsNb = readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, eventsNb)
@@ -762,7 +762,7 @@ class BookServiceTest(
         Assertions.assertEquals(2, tagsNb)
         Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
         bookService.deleteBookById(savedBook.id!!)
-        nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, Pageable.ofSize(30)).totalElements
+        nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, nb)
         authorsNb = bookService.findAllAuthors(null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, authorsNb)

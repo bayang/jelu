@@ -43,6 +43,11 @@ store.dispatch('getUser')
     // }
   })
   .catch(() => {
+    if (store.state.route != null && store.state.route.name === "review-detail") {
+      router.push(store.state.route)
+      initialLoad.value = false
+      return
+    }
     initialLoad.value = false
     console.log("catch in App")
     router.push({ name: 'login' }).then(() => { console.log("ok nav") }).catch(() => { console.log("error nav") })

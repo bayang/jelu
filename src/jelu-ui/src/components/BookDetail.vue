@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, Ref, ref, watch } from 'vue'
+import { computed, ComputedRef, Ref, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { Book, UserBook } from '../model/Book'
 import { useStore } from 'vuex'
@@ -8,6 +8,7 @@ import dataService from "../services/DataService"
 import { ObjectUtils } from '../utils/ObjectUtils'
 import EditBookModal from "./EditBookModal.vue"
 import ReadingEventModalVue from './ReadingEventModal.vue'
+import ReviewModalVue from './ReviewModal.vue'
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import dayjs from 'dayjs'
 import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
@@ -16,8 +17,12 @@ import useDates from '../composables/dates'
 import { useI18n } from 'vue-i18n'
 import { useClipboard } from '@vueuse/core'
 import { usePermission } from '@vueuse/core'
+import { Review } from '../model/Review'
+import { until } from '@vueuse/core'
+import { User } from '../model/User'
+import ReviewCard from "./ReviewCard.vue";
 
-const { t } = useI18n({
+const { t, d } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
@@ -38,6 +43,9 @@ const { formatDate, formatDateString } = useDates()
 const isAdmin = computed(() => {
   return store !== undefined && store.getters.isAdmin
 })
+const user: ComputedRef<User> = computed(() => {
+  return store !== undefined && store.getters.getUser
+})
 
 const book: Ref<UserBook | null> = ref(null)
 const edit: Ref<boolean> = ref(false)
@@ -45,17 +53,34 @@ const showModal: Ref<boolean> = ref(false)
 
 const getBookIsLoading: Ref<boolean> = ref(false)
 
+const userReviews: Ref<Array<Review>> = ref([])
+
 const getBook = async () => {
   try {
     getBookIsLoading.value = true
     book.value = await dataService.getUserBookById(props.bookId)
     getBookIsLoading.value = false
     useTitle('Jelu | ' + book.value.book.title)
+    getUserReviewsForBook()
   } catch (error) {
     console.log("failed get book : " + error);
     getBookIsLoading.value = false
   }
 };
+
+const getUserReviewsForBook = async() => {
+  await until(user.value).not.toBeNull()
+  dataService.findReviews(user.value.id, book.value?.book.id, null, null, null, 0, 20)
+  .then(res => {
+    console.log(res)
+    if (! res.empty) {
+      userReviews.value = res.content
+    }
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
 
 watch(() => props.bookId, (newValue, oldValue) => {
   console.log('The new bookId is: ' + props.bookId)
@@ -79,6 +104,11 @@ const hasExternalLink = computed(() => book.value?.book.amazonId != null
 function modalClosed() {
   console.log("modal closed")
   getBook()
+}
+
+function reviewModalClosed() {
+  console.log("review modal closed")
+  getUserReviewsForBook()
 }
 
 const toggleEdit = () => {
@@ -112,6 +142,24 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
     },
     onClose: modalClosed
   });
+}
+
+function toggleReviewModal(currentBook: Book|undefined, edit: boolean, review: Review|null) {
+  if (currentBook != null && currentBook != undefined) {
+    oruga.modal.open({
+      component: ReviewModalVue,
+      trapFocus: true,
+      active: true,
+      canCancel: ['x', 'button', 'outside'],
+      scroll: 'keep',
+      props: {
+        "book": currentBook,
+        "edit" : edit,
+        "review": review
+      },
+      onClose: reviewModalClosed
+    });
+  }
 }
 
 const deleteBook = async () => {
@@ -255,6 +303,36 @@ function copyToClipboard(content: string) {
 
 }
 
+const deleteReview = async (reviewId: string) => {
+  console.log("delete " + reviewId)
+  let abort = false
+  await ObjectUtils.swalMixin.fire({
+      html: `<p>${t('reviews.delete_review')}</p>`,
+      showCancelButton: true,
+      showConfirmButton: false,
+      showDenyButton: true,
+      confirmButtonText: t('labels.delete'),
+      cancelButtonText: t('labels.dont_delete'),
+      denyButtonText: t('labels.delete'),
+    }).then((result) => {
+      if (result.isDismissed) {
+        abort = true
+        return;
+      }
+    })
+    console.log("abort " + abort)
+    if (abort) {
+      return
+    }
+    dataService.deleteReview(reviewId)
+    .then(res => {
+      getUserReviewsForBook()
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
+
 getBook()
 
 </script>
@@ -311,6 +389,20 @@ getBook()
         >
           <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
         </svg></label>
+        <button
+          v-tooltip="t('reviews.create_review')"
+          class="btn btn-circle btn-outline border-none"
+          @click="toggleReviewModal(book?.book, false, null)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+        </button>
       </div>
     </div>
     <div
@@ -401,7 +493,7 @@ getBook()
     >
       <div
         v-if="book?.book?.summary"
-        class="column is-three-fifths is-offset-one-quarter content jelu-bordered w-11/12 sm:w-9/12 p-2.5"
+        class="jelu-bordered w-11/12 sm:w-9/12 p-2.5"
       >
         <p
           v-if="book?.book?.summary"
@@ -478,6 +570,36 @@ getBook()
       <p v-if="book?.personalNotes">
         {{ book.personalNotes }}
       </p>
+    </div>
+    <div class="mt-2">
+      <router-link
+        class="link text-2xl typewriter"
+        :to="{ name: 'book-reviews', params: { bookId: book?.book.id } }"
+      >
+        {{ t('reviews.all_reviews') }}
+      </router-link>
+    </div>
+    <div
+      v-if="userReviews != null && userReviews.length > 0"
+      class="w-11/12 sm:w-10/12 flex flex-row flex-wrap justify-center mt-4 gap-4"
+    >
+      <p class="typewriter text-2xl mb-3 capitalize sm:w-full">
+        {{ t('reviews.my_reviews') }} :
+      </p>
+      <div
+        v-for="review in userReviews"
+        :key="review.id"
+        class="w-11/12 sm:basis-1/3"
+      >
+        <review-card
+          v-if="review != null"
+          :review="review"
+          :show-delete="true"
+          :show-edit="true"
+          @update:delete="deleteReview($event)"
+          @update:edit="toggleReviewModal(book?.book, true, review)"
+        />
+      </div>
     </div>
     <!-- https://tailwindcomponents.com/component/vertical-timeline -->
     <div

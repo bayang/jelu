@@ -36,6 +36,7 @@ All your data is now located into a single-file database which can be saved anyw
 * Provide some stats about your readings
 * Multi user support
 * provides an API 
+* Write reviews and share them, see the reviews of other users on your instance 
 
 ## Usage
 
@@ -166,6 +167,10 @@ Author page :
 Embed code and preview :
 
 ![](screenshots/embed.png)
+
+Review creation :
+
+![](screenshots/review_modal.jpg)
 
 ## Roadmap
 

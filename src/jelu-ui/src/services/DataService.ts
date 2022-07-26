@@ -18,11 +18,12 @@ import { WikipediaPageResult } from "../model/WikipediaPageResult";
 import { MessageCategory, UpdateUserMessage, UserMessage } from "../model/UserMessage";
 import { MonthStats, YearStats } from "../model/YearStats";
 import { Shelf } from "../model/Shelf";
+import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/Review";
 
 class DataService {
 
   private apiClient: AxiosInstance;
-  
+
   private token?: string = '';
 
   private TOKEN_KEY = 'jelu-token'
@@ -65,10 +66,12 @@ class DataService {
 
   private API_SHELVES = '/shelves';
 
+  private API_REVIEWS = '/reviews';
+
   private MODE: string;
 
   private BASE_URL: string;
-  
+
   constructor() {
     if (import.meta.env.DEV) {
       this.MODE = "dev"
@@ -77,8 +80,8 @@ class DataService {
     else {
       this.MODE = "prod"
       this.BASE_URL = window.location.origin
-      this.BASE_URL.endsWith("/") ? this.BASE_URL = this.BASE_URL + "api/v1" 
-      : this.BASE_URL = this.BASE_URL + "/api/v1"
+      this.BASE_URL.endsWith("/") ? this.BASE_URL = this.BASE_URL + "api/v1"
+        : this.BASE_URL = this.BASE_URL + "/api/v1"
     }
     console.log(`running in ${this.MODE} mode at ${this.BASE_URL}`)
 
@@ -90,7 +93,7 @@ class DataService {
       },
       withCredentials: true,
     });
-    
+
     this.apiClient.interceptors.request.use((config) => {
       const tok = this.getToken()
       if (tok != null) {
@@ -109,18 +112,18 @@ class DataService {
     this.apiClient.interceptors.response.use(
       originalResponse => {
         return originalResponse;
-    },
-    error => {
-      console.log(`response error interceptor ${error.response.status}`)
-      if (error.response.status === 401) {
-        router.push({name: 'login'}).then(() => {console.log("ok nav in interceptor")}).catch(() => {console.log("error nav in interceptor")})
-      } else {
-        throw error
-      }
-    });
+      },
+      error => {
+        console.log(`response error interceptor ${error.response.status}`)
+        if (error.response.status === 401) {
+          router.push({ name: 'login' }).then(() => { console.log("ok nav in interceptor") }).catch(() => { console.log("error nav in interceptor") })
+        } else {
+          throw error
+        }
+      });
   }
 
-  getToken = ():string | null => {
+  getToken = (): string | null => {
     if (this.token != null && this.token.trim().length > 0) {
       console.log('get tok from property')
       localStorage.setItem(this.TOKEN_KEY, this.token)
@@ -214,14 +217,14 @@ class DataService {
   fetchToken = async (login?: string, password?: string) => {
     try {
       let response;
-      if (login != null && password != null 
+      if (login != null && password != null
         && login.trim().length > 0 && password.trim().length > 0) {
-          response = await this.apiClient.get('/token', {
-            auth: {
-              username: login,
-              password: password,
-            },
-          })
+        response = await this.apiClient.get('/token', {
+          auth: {
+            username: login,
+            password: password,
+          },
+        })
       }
       else {
         response = await this.apiClient.get('/token')
@@ -294,16 +297,16 @@ class DataService {
   createInitialUser = async (login: string, password: string) => {
     try {
       const resp = await this.apiClient.post<User>(`${this.API_USER}`, {
-          'login' : login,
-          'password' : password, 
-          'isAdmin' : true
+        'login': login,
+        'password': password,
+        'isAdmin': true
       },
-      {
-        auth: {
-          username: 'setup',
-          password: 'initial',
-        },
-      })
+        {
+          auth: {
+            username: 'setup',
+            password: 'initial',
+          },
+        })
       console.log('create initial user')
       console.log(resp.data)
       return resp.data
@@ -331,7 +334,7 @@ class DataService {
     }
   }
 
-  saveBookImage = async (book: Book, file: File|null, onUploadProgress:any) => {
+  saveBookImage = async (book: Book, file: File | null, onUploadProgress: any) => {
     try {
       const formData = new FormData()
       if (file != null) {
@@ -339,14 +342,15 @@ class DataService {
       }
       formData.append('book', new Blob([JSON.stringify(book)], {
         type: "application/json"
-    }));
+      }));
       const resp = await this.apiClient.post<Book>(this.API_BOOK, formData,
-       { 
-        headers:{
-          'Content-Type':'multipart/form-data',
-          'Accept':'application/json'
-        }, 
-        onUploadProgress: onUploadProgress})
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json'
+          },
+          onUploadProgress: onUploadProgress
+        })
       return resp.data
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -358,7 +362,7 @@ class DataService {
     }
   }
 
-  saveUserBookImage = async (userBook: UserBook, file: File|null, onUploadProgress:any) => {
+  saveUserBookImage = async (userBook: UserBook, file: File | null, onUploadProgress: any) => {
     try {
       const formData = new FormData()
       if (file != null) {
@@ -366,14 +370,15 @@ class DataService {
       }
       formData.append('book', new Blob([JSON.stringify(userBook)], {
         type: "application/json"
-    }));
+      }));
       const resp = await this.apiClient.post<UserBook>(this.API_USERBOOK, formData,
-       { 
-        headers:{
-          'Content-Type':'multipart/form-data',
-          'Accept':'application/json'
-        }, 
-        onUploadProgress: onUploadProgress})
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json'
+          },
+          onUploadProgress: onUploadProgress
+        })
       return resp.data
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -385,7 +390,7 @@ class DataService {
     }
   }
 
-  updateUserBookImage = async (userBook: UserBook, file: File|null, onUploadProgress:any) => {
+  updateUserBookImage = async (userBook: UserBook, file: File | null, onUploadProgress: any) => {
     try {
       const formData = new FormData()
       if (file != null) {
@@ -393,14 +398,15 @@ class DataService {
       }
       formData.append('book', new Blob([JSON.stringify(userBook)], {
         type: "application/json"
-    }));
+      }));
       const resp = await this.apiClient.put<UserBook>(`${this.API_USERBOOK}/${userBook.id}`, formData,
-       { 
-        headers:{
-          'Content-Type':'multipart/form-data',
-          'Accept':'application/json'
-        }, 
-        onUploadProgress: onUploadProgress})
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json'
+          },
+          onUploadProgress: onUploadProgress
+        })
       return resp.data
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -412,21 +418,22 @@ class DataService {
     }
   }
 
-  findUserBookByCriteria = async (lastEventTypes?: Array<ReadingEventType>|null, 
-    toRead?: boolean|null, owned?: boolean|null, page?: number, size?: number, sort?: string) => {
+  findUserBookByCriteria = async (lastEventTypes?: Array<ReadingEventType> | null, bookId?: string|null,
+    toRead?: boolean | null, owned?: boolean | null, page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}`, {
         params: {
           lastEventTypes: lastEventTypes,
+          bookId: bookId,
           toRead: toRead,
           owned: owned,
           page: page,
           size: size,
           sort: sort
         },
-        paramsSerializer: function(params) {
-          return qs.stringify(params, {arrayFormat: 'comma'})
-       },
+        paramsSerializer: function (params) {
+          return qs.stringify(params, { arrayFormat: 'comma' })
+        },
       });
       console.log("called userbook by eventtype")
       console.log(response)
@@ -441,7 +448,7 @@ class DataService {
     }
   }
 
-  findAuthorByCriteria = async (query?: string|null) => {
+  findAuthorByCriteria = async (query?: string | null) => {
     try {
       const response = await this.apiClient.get<Page<Author>>(`${this.API_AUTHOR}`, {
         params: {
@@ -461,7 +468,7 @@ class DataService {
     }
   }
 
-  findTagsByCriteria = async (query?: string|null) => {
+  findTagsByCriteria = async (query?: string | null) => {
     try {
       const response = await this.apiClient.get<Page<Tag>>(`${this.API_TAG}`, {
         params: {
@@ -529,7 +536,7 @@ class DataService {
     return tr
   }
 
-  getTagBooksById = async (tagId: string, 
+  getTagBooksById = async (tagId: string,
     page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_TAG}/${tagId}${this.API_BOOK}`, {
@@ -553,7 +560,7 @@ class DataService {
     }
   }
 
-  getAuthorBooksById = async (authorId: string, 
+  getAuthorBooksById = async (authorId: string,
     page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_AUTHOR}/${authorId}${this.API_BOOK}`, {
@@ -595,7 +602,7 @@ class DataService {
     }
   }
 
-  fetchMetadata = async (isbn?: string, title?:string, authors?: string) => {
+  fetchMetadata = async (isbn?: string, title?: string, authors?: string) => {
     try {
       const response = await this.apiClient.get<Metadata>(`${this.API_METADATA}`, {
         params: {
@@ -617,9 +624,9 @@ class DataService {
     }
   }
 
-  findBooks = async (title?:string, isbn10?: string, isbn13?: string, 
-    series?: string, authors?: Array<string>, tags?: Array<string>,page?: number, size?: number, sort?: string,
-  libraryFilter?: LibraryFilter) => {
+  findBooks = async (title?: string, isbn10?: string, isbn13?: string,
+    series?: string, authors?: Array<string>, tags?: Array<string>, page?: number, size?: number, sort?: string,
+    libraryFilter?: LibraryFilter) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_BOOK}`, {
         params: {
@@ -634,9 +641,9 @@ class DataService {
           sort: sort,
           libraryFilter: libraryFilter
         },
-        paramsSerializer: function(params) {
-          return qs.stringify(params, {arrayFormat: 'comma'})
-       },
+        paramsSerializer: function (params) {
+          return qs.stringify(params, { arrayFormat: 'comma' })
+        },
       });
       console.log("called find books")
       console.log(response)
@@ -699,7 +706,7 @@ class DataService {
     }
   }
 
-  quotes = async (query?:string) => {
+  quotes = async (query?: string) => {
     try {
       const response = await this.apiClient.get<Array<Quote>>(`${this.API_QUOTES}`, {
         params: {
@@ -750,7 +757,7 @@ class DataService {
     return page
   }
 
-  myReadingEvents = async (eventTypes?: Array<ReadingEventType>|null, bookId?: string, 
+  myReadingEvents = async (eventTypes?: Array<ReadingEventType> | null, bookId?: string,
     after?: string, before?: string,
     page?: number, size?: number, sort?: string) => {
     try {
@@ -764,10 +771,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function(params) {
-          return qs.stringify(params, {arrayFormat: 'comma'})
-       },
-       transformResponse: this.transformReadingEvents
+        paramsSerializer: function (params) {
+          return qs.stringify(params, { arrayFormat: 'comma' })
+        },
+        transformResponse: this.transformReadingEvents
       });
       console.log("called my events")
       console.log(response)
@@ -782,7 +789,7 @@ class DataService {
     }
   }
 
-  findReadingEvents = async (eventTypes?: Array<ReadingEventType>|null, userId?: string, bookId?: string, 
+  findReadingEvents = async (eventTypes?: Array<ReadingEventType> | null, userId?: string, bookId?: string,
     after?: string, before?: string,
     page?: number, size?: number, sort?: string) => {
     try {
@@ -797,10 +804,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function(params) {
-          return qs.stringify(params, {arrayFormat: 'comma'})
-       },
-       transformResponse: this.transformReadingEvents
+        paramsSerializer: function (params) {
+          return qs.stringify(params, { arrayFormat: 'comma' })
+        },
+        transformResponse: this.transformReadingEvents
       });
       console.log("called events")
       console.log(response)
@@ -831,20 +838,21 @@ class DataService {
     }
   }
 
-  importCsv = async (importConfig: ImportConfigurationDto, file: File, onUploadProgress:any) => {
+  importCsv = async (importConfig: ImportConfigurationDto, file: File, onUploadProgress: any) => {
     try {
       const formData = new FormData()
       formData.append('file', file);
       formData.append('importConfig', new Blob([JSON.stringify(importConfig)], {
         type: "application/json"
-    }));
+      }));
       await this.apiClient.post(this.API_IMPORTS, formData,
-       { 
-        headers:{
-          'Content-Type':'multipart/form-data',
-          'Accept':'application/json'
-        }, 
-        onUploadProgress: onUploadProgress})
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json'
+          },
+          onUploadProgress: onUploadProgress
+        })
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("error import csv " + error.response.status + " " + error.response.data.error)
@@ -871,8 +879,8 @@ class DataService {
   updateReadingEvent = async (event: ReadingEvent) => {
     try {
       const resp = await this.apiClient.put<ReadingEvent>(`${this.API_READING_EVENTS}/${event.id}`, {
-          eventType : event.eventType,
-          eventDate : event.modificationDate
+        eventType: event.eventType,
+        eventDate: event.modificationDate
       })
       return resp.data
     } catch (error) {
@@ -941,7 +949,7 @@ class DataService {
     }
   }
 
-  updateAuthor = async (author: Author, file: File|null, onUploadProgress:any) => {
+  updateAuthor = async (author: Author, file: File | null, onUploadProgress: any) => {
     try {
       const formData = new FormData()
       if (file != null) {
@@ -949,14 +957,15 @@ class DataService {
       }
       formData.append('author', new Blob([JSON.stringify(author)], {
         type: "application/json"
-    }));
+      }));
       const resp = await this.apiClient.put<Author>(`${this.API_AUTHOR}/${author.id}`, formData,
-       { 
-        headers:{
-          'Content-Type':'multipart/form-data',
-          'Accept':'application/json'
-        }, 
-        onUploadProgress: onUploadProgress})
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json'
+          },
+          onUploadProgress: onUploadProgress
+        })
       return resp.data
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -993,7 +1002,7 @@ class DataService {
     return ev
   }
 
-  messages = async (messageCategories?: Array<MessageCategory>|null, read?: boolean,
+  messages = async (messageCategories?: Array<MessageCategory> | null, read?: boolean,
     page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<UserMessage>>(`${this.API_USER_MESSAGES}`, {
@@ -1004,10 +1013,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function(params) {
-          return qs.stringify(params, {arrayFormat: 'comma'})
-       },
-       transformResponse: this.transformUserMessage
+        paramsSerializer: function (params) {
+          return qs.stringify(params, { arrayFormat: 'comma' })
+        },
+        transformResponse: this.transformUserMessage
       });
       console.log("called userMessages")
       console.log(response)
@@ -1154,6 +1163,167 @@ class DataService {
       }
       console.log("error bulk updating " + (error as AxiosError).code)
       throw new Error("error bulk updating " + error)
+    }
+  }
+
+  saveReview = async (review: CreateReviewDto) => {
+    try {
+      const resp = await this.apiClient.post<Review>(`${this.API_REVIEWS}`, review)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error creating review " + error.response.status + " " + error.response.data.error)
+        throw new Error("error creating review " + error.response.status + " " + error)
+      }
+      console.log("error creating review " + (error as AxiosError).code)
+      throw new Error("error creating review " + error)
+    }
+  }
+
+  /*
+  * Dates are deserialized as strings, convert to Date instead
+  */
+  transformReviews = (data: string) => {
+    const page = JSON.parse(data)
+    if (page.content) {
+      for (const ev of page.content) {
+        if (ev.modificationDate != null) {
+          ev.modificationDate = dayjs(ev.modificationDate).toDate()
+        }
+        if (ev.creationDate != null) {
+          ev.creationDate = dayjs(ev.creationDate).toDate()
+        }
+        if (ev.reviewDate != null) {
+          ev.reviewDate = dayjs(ev.reviewDate).toDate()
+        }
+      }
+    }
+    return page
+  }
+
+  transformReview = (data: string) => {
+    const ev = JSON.parse(data)
+    if (ev.modificationDate != null) {
+      ev.modificationDate = dayjs(ev.modificationDate).toDate()
+    }
+    if (ev.creationDate != null) {
+      ev.creationDate = dayjs(ev.creationDate).toDate()
+    }
+    if (ev.reviewDate != null) {
+      ev.reviewDate = dayjs(ev.reviewDate).toDate()
+    }
+    return ev
+  }
+
+  findReviews = async (userId?: string, bookId?: string, visibility: Visibility | null = null,
+    after: string | null = null, before: string | null = null,
+    page?: number, size?: number, sort: string | null = null) => {
+    try {
+      const response = await this.apiClient.get<Page<Review>>(`${this.API_REVIEWS}`, {
+        params: {
+          userId: userId,
+          bookId: bookId,
+          visibility: visibility,
+          after: after,
+          before: before,
+          page: page,
+          size: size,
+          sort: sort
+        },
+        transformResponse: this.transformReviews
+      });
+      console.log("called reviews")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error reviews " + (error as AxiosError).code)
+      throw new Error("error reviews " + error)
+    }
+  }
+
+  findReviewById = async (reviewId: string) => {
+    try {
+      const response = await this.apiClient.get<Review>(`${this.API_REVIEWS}/${reviewId}`, {
+        transformResponse: this.transformReview
+      });
+      console.log("called review")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error review " + (error as AxiosError).code)
+      throw new Error("error review " + error)
+    }
+  }
+
+  deleteReview = async (reviewId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_REVIEWS}/${reviewId}`);
+      console.log("delete review")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete review " + (error as AxiosError).code)
+      throw new Error("error delete review " + error)
+    }
+  }
+
+  updateReview = async (reviewId: string, updateDto: UpdateReviewDto) => {
+    try {
+      const response = await this.apiClient.put<Review>(`${this.API_REVIEWS}/${reviewId}`, updateDto);
+      console.log("called update review")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error update review " + (error as AxiosError).code)
+      throw new Error("error update review " + error)
+    }
+  }
+
+  findBookById = async (bookId: string) => {
+    try {
+      const response = await this.apiClient.get<Book>(`${this.API_BOOK}/${bookId}`);
+      console.log("called book by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error review " + (error as AxiosError).code)
+      throw new Error("error book by id " + error)
+    }
+  }
+
+  usernameById = async (userId: string) => {
+    try {
+      const response = await this.apiClient.get(`${this.API_USER}/${userId}/name`);
+      console.log("called username by id")
+      console.log(response)
+      return response.data.username;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error review " + (error as AxiosError).code)
+      throw new Error("error username by id " + error)
     }
   }
 

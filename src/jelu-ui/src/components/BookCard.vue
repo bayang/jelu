@@ -145,21 +145,26 @@ watch(checked, (newVal, oldVal) => {
           >
         </figure>
       </router-link>
-      <figure v-else>
-        <img
-          v-if="book.book.image"
-          :src="'/files/' + book.book.image"
-          alt="cover image"
-          class="object-fill"
-          :class="props.size === 'xl' ? 'h-96' : 'h-72'"
-        >
-        <img
-          v-else
-          src="../assets/placeholder_asset.jpg"
-          alt="cover placeholder"
-          class="h-72 object-fill"
-        >
-      </figure>
+      <router-link
+        v-else
+        :to="{ name: 'book-reviews', params: { bookId: book.book.id } }"
+      >
+        <figure>
+          <img
+            v-if="book.book.image"
+            :src="'/files/' + book.book.image"
+            alt="cover image"
+            class="object-fill"
+            :class="props.size === 'xl' ? 'h-96' : 'h-72'"
+          >
+          <img
+            v-else
+            src="../assets/placeholder_asset.jpg"
+            alt="cover placeholder"
+            class="h-72 object-fill"
+          >
+        </figure>
+      </router-link>
       <div
         v-if="showProgressBar(book)"
         class="bg-success absolute h-1.5"
@@ -188,13 +193,17 @@ watch(checked, (newVal, oldVal) => {
           {{ book.book.title }}
         </h2>
       </router-link>
-      <h2
+      <router-link
         v-else
-        v-tooltip="book.book.title"
-        class="card-title text-base max-h-11 line-clamp-2"
+        :to="{ name: 'book-reviews', params: { bookId: book.book.id } }"
       >
-        {{ book.book.title }}
-      </h2>
+        <h2
+          v-tooltip="book.book.title"
+          class="card-title text-base max-h-11 line-clamp-2 hover:link"
+        >
+          {{ book.book.title }}
+        </h2>
+      </router-link>
       <div v-if="book.book.authors != null && book.book.authors.length > 0">
         <router-link
           v-for="author in book.book.authors.slice(0,3)"

@@ -382,4 +382,41 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="add_review" author="byng">
+        <createTable tableName="review">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="review_date" type="timestamp"
+                    remarks="date of the review">
+                <constraints nullable="false" />
+            </column>
+            <column name="user" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_review_user_id" references="user(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="book" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_review_book_id" references="book(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="text" type="varchar(500000)"
+                    remarks="review content">
+                <constraints nullable="false" />
+            </column>
+            <column name="rating" type="double"
+                    remarks="The review rating">
+                <constraints nullable="false" />
+            </column>
+            <column name="visibility" type="varchar(200)"
+                    remarks="the review visibility enum">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

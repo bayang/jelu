@@ -123,6 +123,7 @@ class BooksController(
     fun userbooks(
         principal: Authentication,
         @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventType>?,
+        @RequestParam(name = "bookId", required = false) bookId: UUID?,
         @RequestParam(name = "toRead", required = false) toRead: Boolean?,
         @RequestParam(name = "owned", required = false) owned: Boolean?,
         @RequestParam(name = "user", required = false) userId: UUID?,
@@ -134,7 +135,7 @@ class BooksController(
         } else {
             (principal.principal as JeluUser).user.id.value
         }
-        return repository.findUserBookByCriteria(finalUserId, eventTypes, toRead, owned, pageable)
+        return repository.findUserBookByCriteria(finalUserId, bookId, eventTypes, toRead, owned, pageable)
     }
 
     @GetMapping(path = ["/authors"])

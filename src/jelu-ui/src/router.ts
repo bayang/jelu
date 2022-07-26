@@ -29,6 +29,12 @@ const router = createRouter({
             name: 'home'
         },
         {
+            path: '/books/:bookId/reviews',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/BookReviews.vue'),
+            name: 'book-reviews',
+            beforeEnter: [isLogged],
+        },
+        {
             path: '/books/:bookId',
             component: () => import(/* webpackChunkName: "recommend" */ './components/BookDetail.vue'),
             name: 'book-detail',
@@ -76,6 +82,11 @@ const router = createRouter({
             name: 'author-detail',
             props: true,
             beforeEnter: [isLogged],
+        },
+        {
+            path: '/reviews/:reviewId',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/ReviewDetail.vue'),
+            name: 'review-detail',
         },
         {
             path: '/search',

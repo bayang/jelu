@@ -7,6 +7,7 @@ import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UpdateUserMessageDto
 import io.github.bayang.jelu.dto.UserMessageDto
 import io.github.bayang.jelu.service.UserMessageService
+import io.swagger.v3.oas.annotations.Hidden
 import mu.KotlinLogging
 import org.springdoc.api.annotations.ParameterObject
 import org.springframework.data.domain.Page
@@ -47,8 +48,9 @@ class UserMessagesController(
         return userMessageService.update(messageId, updateDto)
     }
 
+    @Hidden
     @PostMapping(path = ["/user-messages"])
-    fun testMessages(
+    fun createMessage(
         @RequestBody @Valid createUserMessageDto: CreateUserMessageDto,
         principal: Authentication
     ): UserMessageDto {
