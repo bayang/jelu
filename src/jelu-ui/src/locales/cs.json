@@ -89,7 +89,9 @@
         "saved": "Uloženo",
         "yes": "Ano",
         "no": "Ne",
-        "do_nothing": "Nedělat nic"
+        "do_nothing": "Nedělat nic",
+        "add": "Add",
+        "add_to_my_books": "Not yet in your books, click to add it"
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
@@ -277,5 +279,17 @@
         "add": "Přidat",
         "remove": "Odstranit",
         "choose_tag": "Vyberte tag, který chcete přidat nebo odebrat"
+    },
+    "reviews": {
+        "create_review": "Create review",
+        "edit_review": "Edit review",
+        "visibility": "visibility",
+        "private": "private",
+        "public": "public",
+        "review": "review",
+        "rating": "rating",
+        "my_reviews": "My reviews",
+        "all_reviews": "All reviews",
+        "delete_review": "Delete this review ?"
     }
 }
