@@ -1,3 +1,10 @@
+### [0.26.1](https://github.com/bayang/jelu/compare/v0.26.0...v0.26.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* update readme for translations ([5c5b984](https://github.com/bayang/jelu/commit/5c5b984710ba396d2bfe4731644895cac211802c))
+
 ## [0.26.0](https://github.com/bayang/jelu/compare/v0.25.1...v0.26.0) (2022-07-26)
 
 
