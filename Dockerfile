@@ -29,6 +29,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       libxcb-render-util0 \
       libxcb-randr0 \
       qt5-default \
+      libopengl0 \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/* \
       && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin install_dir=/ isolated=y \
