@@ -89,7 +89,9 @@
         "saved": "Gemt",
         "yes": "Ja",
         "no": "Nej",
-        "do_nothing": "Gør ingenting"
+        "do_nothing": "Gør ingenting",
+        "add": "Add",
+        "add_to_my_books": "Not yet in your books, click to add it"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -277,5 +279,17 @@
         "add": "Tilføj",
         "remove": "Fjern",
         "choose_tag": "Vælg det mærkat du vil tilføje eller fjerne"
+    },
+    "reviews": {
+        "create_review": "Create review",
+        "edit_review": "Edit review",
+        "visibility": "visibility",
+        "private": "private",
+        "public": "public",
+        "review": "review",
+        "rating": "rating",
+        "my_reviews": "My reviews",
+        "all_reviews": "All reviews",
+        "delete_review": "Delete this review ?"
     }
 }
