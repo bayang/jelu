@@ -1,3 +1,15 @@
+## [0.26.0](https://github.com/bayang/jelu/compare/v0.25.1...v0.26.0) (2022-07-26)
+
+
+### Features
+
+* add possibility to write reviews ([b9611d1](https://github.com/bayang/jelu/commit/b9611d13fc9449e733add6beb3f996dc7f3281a5))
+
+
+### Bug Fixes
+
+* dockerfile build for amd64 ([a7599e8](https://github.com/bayang/jelu/commit/a7599e804631554685ac28191b2e429491d409f1))
+
 ### [0.25.1](https://github.com/bayang/jelu/compare/v0.25.0...v0.25.1) (2022-07-04)
 
 
