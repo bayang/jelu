@@ -90,8 +90,8 @@
         "yes": "Ja",
         "no": "Nein",
         "do_nothing": "Nichts tun",
-        "add": "Add",
-        "add_to_my_books": "Not yet in your books, click to add it"
+        "add": "Hinzufügen",
+        "add_to_my_books": "Noch nicht in deinen Büchern, klicke um es hinzuzufügen"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -281,15 +281,15 @@
         "choose_tag": "Tag zum hinzufügen/entfernen auswählen "
     },
     "reviews": {
-        "create_review": "Create review",
-        "edit_review": "Edit review",
-        "visibility": "visibility",
-        "private": "private",
-        "public": "public",
-        "review": "review",
-        "rating": "rating",
-        "my_reviews": "My reviews",
-        "all_reviews": "All reviews",
-        "delete_review": "Delete this review ?"
+        "create_review": "Rezension erstellen",
+        "edit_review": "Rezension bearbeiten",
+        "visibility": "Sichtbarkeit",
+        "private": "Privat",
+        "public": "Öffentlich",
+        "review": "Rezensieren",
+        "rating": "Bewertung",
+        "my_reviews": "Meine Rezensionen",
+        "all_reviews": "Alle Rezensionen",
+        "delete_review": "Diese Rezension löschen?"
     }
 }
