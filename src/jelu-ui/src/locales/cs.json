@@ -90,8 +90,8 @@
         "yes": "Ano",
         "no": "Ne",
         "do_nothing": "Nedělat nic",
-        "add": "Add",
-        "add_to_my_books": "Not yet in your books, click to add it"
+        "add": "Přidat",
+        "add_to_my_books": "Zatím není ve vašich knihách, klikněte pro přidání"
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
@@ -281,15 +281,15 @@
         "choose_tag": "Vyberte tag, který chcete přidat nebo odebrat"
     },
     "reviews": {
-        "create_review": "Create review",
-        "edit_review": "Edit review",
-        "visibility": "visibility",
-        "private": "private",
-        "public": "public",
-        "review": "review",
-        "rating": "rating",
-        "my_reviews": "My reviews",
-        "all_reviews": "All reviews",
-        "delete_review": "Delete this review ?"
+        "create_review": "Vytvořit recenzi",
+        "edit_review": "Upravit recenzi",
+        "visibility": "viditelnost",
+        "private": "soukromá",
+        "public": "veřejná",
+        "review": "recenze",
+        "rating": "hodnocení",
+        "my_reviews": "Moje recenze",
+        "all_reviews": "Všechny recenze",
+        "delete_review": "Odstranit tuto recenzi ?"
     }
 }
