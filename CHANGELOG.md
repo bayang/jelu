@@ -1,3 +1,10 @@
+### [0.26.2](https://github.com/bayang/jelu/compare/v0.26.1...v0.26.2) (2022-07-27)
+
+
+### Bug Fixes
+
+* add missing translations ([35d2c82](https://github.com/bayang/jelu/commit/35d2c828b83e54f85e81ffc780b25b0acaffc0b3))
+
 ### [0.26.1](https://github.com/bayang/jelu/compare/v0.26.0...v0.26.1) (2022-07-26)
 
 
