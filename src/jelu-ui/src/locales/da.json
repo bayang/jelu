@@ -90,8 +90,8 @@
         "yes": "Ja",
         "no": "Nej",
         "do_nothing": "Gør ingenting",
-        "add": "Add",
-        "add_to_my_books": "Not yet in your books, click to add it"
+        "add": "Tilføj",
+        "add_to_my_books": "Endnu ikke i dine bøger. Tryk for at tilføje"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -281,15 +281,15 @@
         "choose_tag": "Vælg det mærkat du vil tilføje eller fjerne"
     },
     "reviews": {
-        "create_review": "Create review",
-        "edit_review": "Edit review",
-        "visibility": "visibility",
-        "private": "private",
-        "public": "public",
-        "review": "review",
-        "rating": "rating",
-        "my_reviews": "My reviews",
-        "all_reviews": "All reviews",
-        "delete_review": "Delete this review ?"
+        "create_review": "Opret anmeldelse",
+        "edit_review": "Redigér anmeldelse",
+        "visibility": "synlighed",
+        "private": "privat",
+        "public": "offentlig",
+        "review": "anmeldelse",
+        "rating": "vurdering",
+        "my_reviews": "Mine anmeldelser",
+        "all_reviews": "Alle anmeldelser",
+        "delete_review": "Slet denne anmeldelse?"
     }
 }
