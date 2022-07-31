@@ -106,8 +106,8 @@ The docker image we provide embeds the fetch-ebook-metada executable to automati
 A sample docker compose would look like that : 
 
 ```yaml
-services:
 version: '3.3'
+services:
   jelu:
     image: wabayang/jelu
     container_name: jelu
