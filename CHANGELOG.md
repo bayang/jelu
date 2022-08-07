@@ -1,3 +1,10 @@
+### [0.26.3](https://github.com/bayang/jelu/compare/v0.26.2...v0.26.3) (2022-08-07)
+
+
+### Bug Fixes
+
+* changing YAML order for a working  file. ([#26](https://github.com/bayang/jelu/issues/26)) ([cbd67d7](https://github.com/bayang/jelu/commit/cbd67d7b27cbdb1770cfbbb9c7de85d60aefd9b1))
+
 ### [0.26.2](https://github.com/bayang/jelu/compare/v0.26.1...v0.26.2) (2022-07-27)
 
 
