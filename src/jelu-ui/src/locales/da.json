@@ -128,6 +128,7 @@
         "title": "Titel",
         "publisher": "Udgiver",
         "series": "Serie",
+        "series_number": "Series number",
         "descending": "Faldende",
         "ascending": "Stigende",
         "publication_date": "Dato for offentliggørelse",
