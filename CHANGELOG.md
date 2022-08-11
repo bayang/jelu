@@ -1,3 +1,15 @@
+## [0.27.0](https://github.com/bayang/jelu/compare/v0.26.3...v0.27.0) (2022-08-11)
+
+
+### Features
+
+* add series page [#20](https://github.com/bayang/jelu/issues/20) ([d55010a](https://github.com/bayang/jelu/commit/d55010a038ce22492cd43f252625cb55d482a32d))
+
+
+### Bug Fixes
+
+* breakpoints management [#23](https://github.com/bayang/jelu/issues/23) ([24316cc](https://github.com/bayang/jelu/commit/24316cc03b5d5c5252e1b4a2f122f37b3653c8ed))
+
 ### [0.26.3](https://github.com/bayang/jelu/compare/v0.26.2...v0.26.3) (2022-08-07)
 
 
