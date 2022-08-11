@@ -157,7 +157,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
         <div
           v-for="book in books"
           :key="book.id"
-          class="sm:basis-1/6 basis-8/12"
+          class="sm:basis-5/12 md:basis-1/3 lg:basis-1/4 xl:basis-1/6 basis-8/12"
         >
           <book-card
             :book="book"
@@ -210,7 +210,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
     </h2>
     <div
       v-if="events.length > 0"
-      class="grid grid-cols-2 sm:grid-cols-8 gap-1"
+      class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1"
     >
       <div
         v-for="event in events"

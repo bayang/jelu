@@ -159,7 +159,7 @@ getYears()
             {{ dayjs(`2020-${month}-1`).format('MMMM') }}
           </h2>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-8 gap-2 justify-center justify-items-center justify-self-center">
+        <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-2 justify-center justify-items-center justify-self-center">
           <div
             v-for="event in ev"
             :key="event.id"

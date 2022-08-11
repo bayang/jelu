@@ -315,7 +315,7 @@ if (titleQuery.value != null ||
       </div>
     </div>
   </div>
-  <div class="grid grid-cols-2 sm:grid-cols-8 gap-1 my-4">
+  <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1 my-4">
     <div
       v-for="book in convertedBooks"
       :key="book.book.id"

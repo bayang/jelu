@@ -241,7 +241,7 @@ getToRead()
   </div>
   <div
     v-if="books.length > 0"
-    class="is-flex is-flex-wrap-wrap is-justify-content-center grid grid-cols-2 sm:grid-cols-8 gap-0 my-3"
+    class="is-flex is-flex-wrap-wrap is-justify-content-center grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-0 my-3"
   >
     <div
       v-for="book in books"

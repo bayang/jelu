@@ -294,7 +294,7 @@ function modalClosed() {
   </div>
   <div
     v-if="books.length > 0"
-    class="grid grid-cols-2 sm:grid-cols-8 gap-0 my-3"
+    class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-0 my-3 shrink-0 grow-0"
   >
     <TransitionGroup name="list">
       <div
