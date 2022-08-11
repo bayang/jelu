@@ -128,6 +128,7 @@
         "title": "Tytuł",
         "publisher": "Wydawca",
         "series": "Seria",
+        "series_number": "Series number",
         "descending": "Malejąco",
         "ascending": "Rosnąco",
         "publication_date": "Data publikacji",
