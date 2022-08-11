@@ -128,6 +128,7 @@
         "title": "Titel",
         "publisher": "Verlag",
         "series": "Serie",
+        "series_number": "Series number",
         "descending": "Absteigend",
         "ascending": "Aufsteigend",
         "publication_date": "Veröffentlichungsdatum",
