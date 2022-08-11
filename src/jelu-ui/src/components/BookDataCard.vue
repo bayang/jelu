@@ -187,13 +187,28 @@ function modalClosed() {
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
           {{ formatDateString(props.book.publishedDate) }}
         </p>
-        <p v-if="props.book.series">
-          <span class="font-semibold capitalize">{{ t('book.series') }} :</span>
-          {{ props.book.series }}&nbsp;
-          <span
-            v-if="props.book.numberInSeries"
-          >-&nbsp;{{ props.book.numberInSeries }}</span>
-        </p>
+        <div v-if="props.book.series">
+          <span class="font-semibold capitalize">{{ t('book.series') }} :&nbsp;</span>
+          <router-link
+            v-if="links != null && links === true"
+            class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+            :to="{ name: 'series', query: { series: props.book.series } }"
+          >
+            {{ props.book.series }}&nbsp;
+            <span
+              v-if="props.book.numberInSeries"
+            >-&nbsp;{{ props.book.numberInSeries }}</span>
+          </router-link>
+          <div
+            v-else
+            class="inline-block"
+          >
+            <span>{{ props.book.series }}&nbsp;</span>
+            <span
+              v-if="props.book.numberInSeries"
+            >-&nbsp;{{ props.book.numberInSeries }}</span>
+          </div>
+        </div>
         <p v-if="props.book.language">
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>
           {{ props.book.language }}

@@ -222,8 +222,6 @@ const deleteBook = async () => {
     })
 }
 
-console.log('The id value is: ' + props.bookId)
-
 const eventClass = (event: ReadingEvent) => {
   if (event.eventType === ReadingEventType.FINISHED) {
     return "bg-info";
@@ -465,11 +463,16 @@ getBook()
           {{ formatDateString(book.book.publishedDate) }}
         </p>
         <p v-if="book?.book?.series">
-          <span class="font-semibold capitalize">{{ t('book.series') }} :</span>
-          {{ book.book.series }}&nbsp;
-          <span
-            v-if="book?.book?.numberInSeries"
-          >-&nbsp;{{ book.book.numberInSeries }}</span>
+          <span class="font-semibold capitalize">{{ t('book.series') }} :&nbsp;</span>
+          <router-link
+            class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+            :to="{ name: 'series', query: { series: book?.book.series } }"
+          >
+            {{ book.book.series }}&nbsp;
+            <span
+              v-if="book?.book?.numberInSeries"
+            >-&nbsp;{{ book.book.numberInSeries }}</span>
+          </router-link>
         </p>
         <p v-if="book?.book?.language">
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>

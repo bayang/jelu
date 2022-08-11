@@ -29,7 +29,6 @@ export default function useBulkEdition(onModalClosed: VoidFunc) {
 
     function modalClosed() {
         console.log("modal closed from bulk composable")
-        // emit("update:modalClosed", true)
         onModalClosed()
     }
 

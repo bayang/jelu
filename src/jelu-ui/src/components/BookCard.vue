@@ -84,8 +84,6 @@ const showProgressBar = (book: UserBook) => {
       && book.lastReadingEvent === ReadingEventType.CURRENTLY_READING
 }
 
-// const showSelect = ref(true)
-
 function modalClosed() {
   console.log("modal closed from card")
   emit("update:modalClosed", true)
@@ -224,7 +222,14 @@ watch(checked, (newVal, oldVal) => {
           :class="eventClass"
           class="badge is-capitalized is-family-sans-serif"
         >{{ eventText }}</span>
-        <div>
+        <div class="flex">
+          <span
+            v-if="book.book.numberInSeries"
+            v-tooltip="book.book.series"
+            class="badge is-family-sans-serif mx-1"
+          >
+            #{{ book.book.numberInSeries }}
+          </span>
           <span
             v-if="book.owned"
             v-tooltip="t('book.owned')"

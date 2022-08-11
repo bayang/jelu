@@ -95,6 +95,12 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
+            path: '/series',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/SeriesBooks.vue'),
+            name: 'series',
+            beforeEnter: [isLogged],
+        },
+        {
             path: '/profile',
             component: AdminBaseVue,
             name: 'profile-page',
