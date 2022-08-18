@@ -64,5 +64,6 @@ enum class ProcessingStatus {
 enum class ImportSource {
     GOODREADS,
     STORYGRAPH,
-    LIBRARYTHING
+    LIBRARYTHING,
+    ISBN_LIST
 }

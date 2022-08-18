@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from 'vuex'
 import { key } from '../store'
 import { ImportSource } from "../model/ImportConfiguration";
 import dataService from "../services/DataService";
 import { useTitle } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
+import { ObjectUtils } from '../utils/ObjectUtils'
+import { useProgrammatic } from "@oruga-ui/oruga-next";
 
 const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
+
+const { oruga } = useProgrammatic();
 
 useTitle('Jelu | Imports')
 
@@ -23,9 +27,11 @@ const uploadPercentage = ref(0);
 const errorMessage = ref("");
 const exportErrorMessage = ref("");
 const exportMessage = ref("");
+const noFile = ref(true)
 
 const handleFileUpload = (event: any) => {
   file.value = event.target.files[0];
+  noFile.value = false
 };
 
 const importFile = async () => {
@@ -37,6 +43,10 @@ const importFile = async () => {
     shouldFetchCovers: fetchCovers.value, 
     importSource: importSource.value
     }
+    if (importSource.value == ImportSource.ISBN_LIST) {
+      importConfig.shouldFetchCovers = true
+      importConfig.shouldFetchMetadata = true
+    }
   dataService.importCsv(
     importConfig,
         file.value,
@@ -44,6 +54,12 @@ const importFile = async () => {
           let percent = Math.round((100 * event.loaded) / event.total);
           console.log("percent " + percent);
           uploadPercentage.value = percent;
+        })
+        .then(res => {
+          ObjectUtils.toast(oruga, "success", t('csv_import.import_ok'), 6000);
+        })
+        .catch(err => {
+          console.log(err)
         })
 }
 
@@ -63,15 +79,39 @@ let fetchCoversDisabled = computed(() => {
   } else {
     return !fetchMetadata.value
   }
-}) 
+})
+
+watch(file, (newVal, oldVal) => {
+  console.log("file ")
+  console.log(newVal)
+  console.log(oldVal)
+})
+
 
 </script>
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center">
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
-      {{ t('csv_import.import_csv') }}
-    </h1>
+    <div
+      v-tooltip="t('csv_import.import_help')"
+      class="w-11/12 sm:w-8/12 pb-4 flex justify-center items-center"
+    >
+      <h1 class="text-2xl typewriter capitalize px-2">
+        {{ t('csv_import.import_csv') }}
+      </h1>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
     <div class="w-11/12 sm:w-8/12">
       <div
         v-if="store != null && !store.getters.getMetadataFetchEnabled"
@@ -92,9 +132,19 @@ let fetchCoversDisabled = computed(() => {
           >
             Goodreads
           </o-radio>
+          <o-radio
+            v-model="importSource"
+            name="source"
+            native-value="ISBN_LIST"
+          >
+            List of ISBN in a file
+          </o-radio>
         </o-field>
       </div>
-      <div class="field">
+      <div
+        v-if="importSource != ImportSource.ISBN_LIST"
+        class="field"
+      >
         <o-field
           horizontal
           :label="t('csv_import.auto_fetch_online')"
@@ -108,7 +158,10 @@ let fetchCoversDisabled = computed(() => {
           </o-checkbox>
         </o-field>
       </div>
-      <div class="field">
+      <div
+        v-if="importSource != ImportSource.ISBN_LIST"
+        class="field"
+      >
         <o-field
           horizontal
           :label="t('csv_import.fetch_covers') + ' ?'"
@@ -131,7 +184,7 @@ let fetchCoversDisabled = computed(() => {
         >
           <input
             type="file"
-            accept=".csv,.tsv"
+            accept=".csv,.tsv,.txt"
             class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-primary hover:file:bg-gray-300"
             @change="handleFileUpload($event)"
           >
@@ -150,6 +203,7 @@ let fetchCoversDisabled = computed(() => {
         <p class="control">
           <button
             class="btn btn-success"
+            :disabled="noFile"
             @click="importFile"
           >
             {{ t('csv_import.import_file') }}

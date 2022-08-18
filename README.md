@@ -22,7 +22,7 @@ All your data is now located into a single-file database which can be saved anyw
 
 * track read books so you don't have to remember everything, and view your history (by year and month)
 * manage to-read list
-* Import history (from goodreads for now, via csv export)
+* Import history (from goodreads via csv export or a file with a list of ISBNs, one by line)
 * Export your data in a csv file
 * Import single books manually or automatically via online search (through title, authors or isbn)
 * Mark books as currently reading, finished or dropped

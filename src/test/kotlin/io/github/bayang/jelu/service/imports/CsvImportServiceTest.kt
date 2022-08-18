@@ -94,6 +94,20 @@ class CsvImportServiceTest(
     }
 
     @Test
+    fun testParseIsbnList() {
+        val userId = user().id.value
+        val csv = File(this::class.java.getResource("/csv-import/isbns-import.txt").file)
+        csvImportService.parse(csv, userId, ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = true, ImportSource.ISBN_LIST))
+        val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        Assertions.assertEquals(2, nb)
+        val dtos = importService.getByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        Assertions.assertEquals(2, dtos.size)
+        dtos.forEach {
+            Assertions.assertTrue(it.isbn13 != null || it.isbn10 != null)
+        }
+    }
+
+    @Test
     fun testParseAndImport() {
         val userId = user().id.value
         val csv = File(this::class.java.getResource("/csv-import/goodreads1.csv").file)

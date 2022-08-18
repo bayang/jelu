@@ -30,6 +30,7 @@ import mu.KotlinLogging
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
+import org.apache.commons.validator.routines.ISBNValidator
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.scheduling.annotation.Async
@@ -41,6 +42,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicLong
 import java.util.stream.Collectors
 import kotlin.random.Random
 
@@ -74,11 +76,6 @@ class CsvImportService(
     private val readingEventService: ReadingEventService,
     private val userMessageService: UserMessageService
 ) {
-
-    // /**
-    //  * Works for goodreads and storygraph
-    //  */
-    // val goodreadsDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
     // maybe later : use coroutines ?
     @Async
@@ -149,7 +146,7 @@ class CsvImportService(
 
     @Transactional
     private fun importEntity(importEntity: ImportEntity, user: UUID, importConfig: ImportConfigurationDto): ProcessingStatus {
-        Thread.sleep(Random.nextLong(from = 200, until = 2500))
+        Thread.sleep(Random.nextLong(from = 200, until = 800))
         try {
             importService.updateStatus(importEntity.id.value, ProcessingStatus.PROCESSING)
             var metadata = MetadataDto()
@@ -163,12 +160,36 @@ class CsvImportService(
             }
             val userEntity = userService.findUserEntityById(user)
             val book: BookCreateDto = fillBook(importEntity, metadata)
+            if (book.title.isBlank() && (book.authors == null || book.authors!!.isEmpty())) {
+                logger.error { "no title nor authors on entity ${importEntity.id} ${importEntity.isbn10} ${importEntity.isbn13} , not saving" }
+                importService.updateStatus(importEntity.id.value, ProcessingStatus.IMPORTED)
+                if (importConfig.importSource == ImportSource.ISBN_LIST) {
+                    try {
+                        val isbn10 = if (importEntity.isbn10.isNullOrBlank()) "" else importEntity.isbn10
+                        val isbn13 = if (importEntity.isbn13.isNullOrBlank()) "" else importEntity.isbn13
+                        userMessageService.save(
+                            CreateUserMessageDto(
+                                "no title nor authors for input $isbn10 $isbn13, not saving",
+                                null,
+                                MessageCategory.WARNING
+                            ),
+                            userEntity
+                        )
+                    } catch (e: Exception) {
+                        logger.error(e) { "failed to save message for failed isbn fetch" }
+                    }
+                }
+                return ProcessingStatus.ERROR
+            }
             val tags = mutableListOf<TagDto>()
             val tagNames = mutableSetOf<String>()
             for (t in metadata.tags) {
                 tagNames.add(t)
             }
-            val shelves = importEntity.tags?.split(",")
+            var shelves: List<String>? = null
+            if (!importEntity.tags.isNullOrBlank()) {
+                shelves = importEntity.tags?.split(",")
+            }
             var readStatusFromShelves = ""
             if (shelves != null) {
                 for (t in shelves) {
@@ -467,6 +488,33 @@ class CsvImportService(
      */
 
     fun parse(file: File, user: UUID, importConfig: ImportConfigurationDto) {
+        if (importConfig.importSource == ImportSource.ISBN_LIST) {
+            val validator: ISBNValidator = ISBNValidator.getInstance(false)
+            val counter = AtomicLong()
+            file.useLines { lines ->
+                lines.forEach {
+                    val dto = ImportDto()
+                    dto.importSource = ImportSource.ISBN_LIST
+                    if (validator.isValidISBN13(it)) {
+                        dto.isbn13 = it
+                    } else if (validator.isValidISBN10(it)) {
+                        dto.isbn10 = it
+                    }
+                    if (!dto.isbn13.isNullOrBlank() || !dto.isbn10.isNullOrBlank()) {
+                        importService.save(dto, ProcessingStatus.SAVED, user, importConfig.shouldFetchMetadata)
+                        counter.incrementAndGet()
+                    } else {
+                        logger.info { "input line $it is not a valid ISBN, line is ignored" }
+                    }
+                }
+            }
+            logger.debug { "parsing finished, ${counter.get()} entries recorded" }
+        } else {
+            parseCsv(file, user, importConfig)
+        }
+    }
+
+    fun parseCsv(file: File, user: UUID, importConfig: ImportConfigurationDto) {
         val parser = CSVFormat.DEFAULT
         val reader = file.bufferedReader(Charsets.UTF_8)
 
@@ -499,6 +547,7 @@ class CsvImportService(
             ImportSource.GOODREADS -> parseGoodreadsLine(record)
             ImportSource.STORYGRAPH -> parseStorygraphLine(record)
             ImportSource.LIBRARYTHING -> parseLibrarythingLine(record)
+            ImportSource.ISBN_LIST -> null
         }
     }
 

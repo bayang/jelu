@@ -7,5 +7,6 @@ export interface ImportConfigurationDto{
 export enum ImportSource {
     GOODREADS = 'GOODREADS',
     STORYGRAPH = 'STORYGRAPH',
-    LIBRARYTHING = 'LIBRARYTHING'
+    LIBRARYTHING = 'LIBRARYTHING',
+    ISBN_LIST = 'ISBN_LIST'
 }
