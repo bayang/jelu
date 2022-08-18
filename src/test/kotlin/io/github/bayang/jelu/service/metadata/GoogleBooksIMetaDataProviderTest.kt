@@ -1,6 +1,7 @@
 package io.github.bayang.jelu.service.metadata
 
 import io.github.bayang.jelu.service.metadata.providers.GoogleBooksIMetaDataProvider
+import kotlinx.coroutines.reactor.awaitSingle
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -9,11 +10,10 @@ import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
-
 class GoogleBooksIMetaDataProviderTest {
 
     @Test
-    fun fetchMetadata_fromCorrectIsbn_returnsBookMetaDataDto() {
+    suspend fun fetchMetadata_fromCorrectIsbn_returnsBookMetaDataDto() {
         // Given
         val webClient = WebClient.builder()
             .exchangeFunction { clientRequest: ClientRequest? ->
@@ -107,9 +107,10 @@ class GoogleBooksIMetaDataProviderTest {
             "9781785650406",
             null,
             null
-        );
+        ).awaitSingle();
 
         // Then
+        Assertions.assertEquals("Genesis Fleet - Vanguard", result.title);
         Assertions.assertEquals("0GJOMQAACAAJ", result.googleId);
         Assertions.assertEquals("1785650408", result.isbn10);
         Assertions.assertEquals("9781785650406", result.isbn13);
@@ -120,7 +121,6 @@ class GoogleBooksIMetaDataProviderTest {
         );
         Assertions.assertEquals("en", result.language);
         Assertions.assertEquals("2017-05", result.publishedDate);
-        Assertions.assertEquals("Genesis Fleet - Vanguard", result.title);
         Assertions.assertEquals("Earth is no longer the center of the universe.", result.summary);
     }
 
