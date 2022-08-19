@@ -1,3 +1,10 @@
+## [0.28.0](https://github.com/bayang/jelu/compare/v0.27.0...v0.28.0) (2022-08-19)
+
+
+### Features
+
+* import books from ISBN list ([0bf1c49](https://github.com/bayang/jelu/commit/0bf1c498bb5179bbc21d3f276cc213dbaa3b816b))
+
 ## [0.27.0](https://github.com/bayang/jelu/compare/v0.26.3...v0.27.0) (2022-08-11)
 
 
