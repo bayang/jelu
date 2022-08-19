@@ -223,8 +223,8 @@
         "export_message": "Ein Klick auf den Button unten löst eine Exportanfrage aus. Im Mitteilungsbereich erscheint eine Warnung, sobald der Datenexport abgeschlossen ist.",
         "export_ok": "Die Exportanfrage wurde gespeichert. Diese Seite kann verlassen werden, der Bericht wird im Mitteilungsbereich verfügbar sein.",
         "export_ko": "Ein Fehler ist aufgetreten und die Exportanfrage wurde wahrscheinlich nicht registriert.",
-        "import_help": "First choose the type of file you want to import, then pick a file below and finally click the import button. Once the import is launched you can leave this page and go to the messages section.",
-        "import_ok": "Your import request has been saved. You can leave this page, the import result will be available in the messages section."
+        "import_help": "Wähle zuerst den Dateityp aus, den Du importieren möchtest, dann wähle unten eine Datei aus und klicke auf den Import-Button. Sobald der Import gestartet ist, kannst Du diese Seite verlassen und zum Nachrichten-Abschnitt gehen.",
+        "import_ok": "Deine Importanfrage wurde gespeichert. Du kannst diese Seite verlassen, das Importresultat wird im Nachrichten-Abschnitt verfügbar sein."
     },
     "login": {
         "login": "Anmelden",
