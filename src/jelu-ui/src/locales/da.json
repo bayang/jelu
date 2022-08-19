@@ -222,7 +222,9 @@
         "export_file": "eksportér fil",
         "export_message": "ved at klikke på knappen nedenfor udløses en eksportanmodning, du vil blive informeret i meddelelsesfanen, når din eksport er klar.",
         "export_ok": "Din eksportanmodning er blevet gemt. Du kan forlade denne side. Rapporten vil være tilgængelig i meddelelsesfanen.",
-        "export_ko": "Der opstod en fejl og din eksportanmodning er sandsynligvis ikke blevet registreret."
+        "export_ko": "Der opstod en fejl og din eksportanmodning er sandsynligvis ikke blevet registreret.",
+        "import_help": "First choose the type of file you want to import, then pick a file below and finally click the import button. Once the import is launched you can leave this page and go to the messages section.",
+        "import_ok": "Your import request has been saved. You can leave this page, the import result will be available in the messages section."
     },
     "login": {
         "login": "log ind",
