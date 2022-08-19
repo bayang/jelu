@@ -222,7 +222,9 @@
         "export_file": "exporter fichier",
         "export_message": "Cliquer sur le bouton pour déclencher un export, consulter ensuite la section messages pour savoir quand l'export est prêt.",
         "export_ok": "Votre demande d'export a bien été enregistrée. Vous pouvez quitter cette page, l'export sera disponible dans la section messages.",
-        "export_ko": "Une erreur est survenue, votre demande d'export n'a probablement pas été prise en compte."
+        "export_ko": "Une erreur est survenue, votre demande d'export n'a probablement pas été prise en compte.",
+        "import_help": "First choose the type of file you want to import, then pick a file below and finally click the import button. Once the import is launched you can leave this page and go to the messages section.",
+        "import_ok": "Your import request has been saved. You can leave this page, the import result will be available in the messages section."
     },
     "login": {
         "login": "identifiant",
