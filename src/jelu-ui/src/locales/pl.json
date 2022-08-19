@@ -222,7 +222,9 @@
         "export_file": "eksportuj plik",
         "export_message": "naciśnięcie na poniższy przycisk spowoduje wysłanie żądania eksportu i otrzymasz powiadomienie w sekcji wiadomości, gdy eksport zostanie ukończony.",
         "export_ok": "Twoje żądanie eksportu zostało zapisane. Możesz opuścić tę stronę, a raport będzie dostępny w sekcji wiadomości.",
-        "export_ko": "Wystąpił błąd i Twoje żądanie eksportu prawdopodobnie nie zostało zarejestrowane."
+        "export_ko": "Wystąpił błąd i Twoje żądanie eksportu prawdopodobnie nie zostało zarejestrowane.",
+        "import_help": "First choose the type of file you want to import, then pick a file below and finally click the import button. Once the import is launched you can leave this page and go to the messages section.",
+        "import_ok": "Your import request has been saved. You can leave this page, the import result will be available in the messages section."
     },
     "login": {
         "login": "login",
