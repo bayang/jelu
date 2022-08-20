@@ -14,11 +14,14 @@ jelu:
   auth:
     ldap:
       enabled: false
-      url: "ldap://127.0.0.1:389/dc=home,dc=lab"
-      userDnPatterns:
-        - "uid={0}"
-        - "cn={0},ou=users"
-      userSearchFilter: "(cn={0})"
+#      url: "ldap://127.0.0.1:389/dc=home,dc=lab"
+#      userDnPatterns:
+#        - "uid={0}"
+#        - "cn={0},ou=users"
+#      userSearchFilter: "(cn={0})"
+    proxy:
+      enabled: false
+      adminName: "adminproxy"
 server:
   port: 11111
 spring:

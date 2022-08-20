@@ -15,7 +15,10 @@ data class JeluProperties(
     val session: Session,
     val cors: Cors = Cors(),
     val metadata: Metadata = Metadata(Calibre(null)),
-    val auth: Auth = Auth(Ldap())
+    val auth: Auth = Auth(
+        Ldap(),
+        Proxy()
+    )
 ) {
 
     data class Database(
@@ -45,7 +48,8 @@ data class JeluProperties(
     )
 
     data class Auth(
-        var ldap: Ldap
+        var ldap: Ldap,
+        var proxy: Proxy
     )
 
     data class Ldap(
@@ -54,5 +58,11 @@ data class JeluProperties(
         val userDnPatterns: List<String> = emptyList(),
         val userSearchFilter: String = "",
         val userSearchBase: String = ""
+    )
+
+    data class Proxy(
+        var enabled: Boolean = false,
+        val adminName: String = "",
+        val header: String = "X-Authenticated-User",
     )
 }

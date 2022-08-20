@@ -41,5 +41,6 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
 
 enum class Provider {
     LDAP,
-    JELU_DB
+    JELU_DB,
+    PROXY
 }

@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import { useI18n } from 'vue-i18n'
+import { Provider } from '../model/User'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -22,7 +23,7 @@ const items = ref([{ name:t('settings.profile'), tooltip:t('settings.my_profile'
                 { name:t('settings.stats'), icon:"bxs-chart", href:"/profile/stats", tooltip: t('settings.stats') },
                 ])
 
-if (store.getters.isAdmin) {
+if (store.getters.isAdmin && store.getters.getUser != null && store.getters.getUser.provider !== Provider.PROXY) {
   items.value.push({ name:t('settings.users'), icon:"bxs-user-plus", href:"/profile/admin/users", tooltip: t('settings.users_management') })
 }
 

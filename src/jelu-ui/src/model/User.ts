@@ -23,5 +23,6 @@ export interface UpdateUser {
 }
 export enum Provider {
   LDAP = 'LDAP',
-  JELU_DB = 'JELU_DB'
+  JELU_DB = 'JELU_DB',
+  PROXY = 'PROXY'
 }

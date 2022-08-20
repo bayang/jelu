@@ -113,7 +113,7 @@ const shelves = computed(() => {
           </p>
           <div class="card-actions justify-end">
             <button
-              v-if="user.provider !== Provider.LDAP"
+              v-if="user.provider !== Provider.LDAP && user.provider !== Provider.PROXY"
               v-tooltip="t('profile.edit_user')"
               class="btn btn-circle btn-ghost"
               @click="toggleUserModal"

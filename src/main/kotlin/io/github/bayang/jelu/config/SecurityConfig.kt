@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @EnableWebSecurity
 class SecurityConfig(
@@ -18,6 +19,7 @@ class SecurityConfig(
     private val properties: JeluProperties,
     private val userDetailsService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
+    private val authHeaderFilter: AuthHeaderFilter?,
 ) {
 
     @Bean
@@ -66,6 +68,9 @@ class SecurityConfig(
             dao.setUserDetailsService(userDetailsService)
             dao.setPasswordEncoder(passwordEncoder)
             http.authenticationManager(ProviderManager(authenticationProvider, dao))
+        }
+        if (properties.auth.proxy.enabled) {
+            http.addFilterBefore(authHeaderFilter, UsernamePasswordAuthenticationFilter::class.java)
         }
         return http.build()
     }
