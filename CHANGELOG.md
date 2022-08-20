@@ -1,3 +1,16 @@
+## [0.29.0](https://github.com/bayang/jelu/compare/v0.28.0...v0.29.0) (2022-08-20)
+
+
+### Features
+
+* add proxy authentication ([a2f2554](https://github.com/bayang/jelu/commit/a2f2554eae89bf5e240c15d259bf0cd7b7766b03))
+* also export dropped dates and currently reading [#24](https://github.com/bayang/jelu/issues/24) ([d81afbe](https://github.com/bayang/jelu/commit/d81afbe295fdaeb8e9d40812f7662d2606a42426))
+
+
+### Bug Fixes
+
+* remove useless line in dockerfile ([2277c94](https://github.com/bayang/jelu/commit/2277c9486f73866433914995778c9af8164e0625))
+
 ## [0.28.0](https://github.com/bayang/jelu/compare/v0.27.0...v0.28.0) (2022-08-19)
 
 
