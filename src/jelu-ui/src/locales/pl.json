@@ -128,6 +128,7 @@
         "title": "Tytuł",
         "publisher": "Wydawca",
         "series": "Seria",
+        "series_number": "Numer serii",
         "descending": "Malejąco",
         "ascending": "Rosnąco",
         "publication_date": "Data publikacji",
@@ -221,7 +222,9 @@
         "export_file": "eksportuj plik",
         "export_message": "naciśnięcie na poniższy przycisk spowoduje wysłanie żądania eksportu i otrzymasz powiadomienie w sekcji wiadomości, gdy eksport zostanie ukończony.",
         "export_ok": "Twoje żądanie eksportu zostało zapisane. Możesz opuścić tę stronę, a raport będzie dostępny w sekcji wiadomości.",
-        "export_ko": "Wystąpił błąd i Twoje żądanie eksportu prawdopodobnie nie zostało zarejestrowane."
+        "export_ko": "Wystąpił błąd i Twoje żądanie eksportu prawdopodobnie nie zostało zarejestrowane.",
+        "import_help": "Najpierw wybierz typ pliku, który chcesz zaimportować, a następnie wybierz plik poniżej i naciśnij na przycisk importuj. Po uruchomieniu importowania możesz opuścić tę stronę i przejść do sekcji wiadomości.",
+        "import_ok": "Twoje zlecenie importu zostało zapisane. Możesz opuścić tę stronę, a rezultat importowania będzie dostępny w sekcji wiadomości."
     },
     "login": {
         "login": "login",
