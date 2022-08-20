@@ -17,8 +17,6 @@ ENV JELU_FILES_IMPORTS="/files/imports/"
 ENV JELU_METADATA_CALIBRE_PATH="/calibre/fetch-ebook-metadata"
 ENV LC_ALL=en_US.UTF-8
 
-RUN echo target platform $TARGETPLATFORM
-
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       apt-get update && apt-get install --no-install-recommends --yes wget xz-utils \
       xdg-utils \
