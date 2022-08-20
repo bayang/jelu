@@ -108,7 +108,7 @@ class CsvExportServiceTest(
             percentRead = null,
             book = book1
         )
-        bookService.save(createUserBookDto1, user(), null)
+        val saved1: UserBookLightDto = bookService.save(createUserBookDto1, user(), null)
 
         val book2 = BookCreateDto(
             id = null,
@@ -149,6 +149,31 @@ class CsvExportServiceTest(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
                 date2.toInstant(),
+            ),
+            user()
+        )
+
+        readingEventService.save(
+            CreateReadingEventDto(
+                ReadingEventType.DROPPED,
+                saved1.book.id,
+                date3.toInstant(),
+            ),
+            user()
+        )
+        readingEventService.save(
+            CreateReadingEventDto(
+                ReadingEventType.DROPPED,
+                saved1.book.id,
+                date2.toInstant(),
+            ),
+            user()
+        )
+        readingEventService.save(
+            CreateReadingEventDto(
+                ReadingEventType.CURRENTLY_READING,
+                saved1.book.id,
+                date1.toInstant(),
             ),
             user()
         )

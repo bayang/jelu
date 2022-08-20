@@ -82,7 +82,7 @@ class CsvExportService(
         logger.debug { "target export file at ${destFile.absolutePath}" }
         try {
             CSVPrinter(BufferedWriter(FileWriter(destFile)), format).use { printer ->
-                printer.printRecord("Title", "Author", "ISBN", "Publisher", "Date Read", "Shelves", "Bookshelves", "read_dates", "tags", "authors", "isbn10", "isbn13", "owned")
+                printer.printRecord("Title", "Author", "ISBN", "Publisher", "Date Read", "Shelves", "Bookshelves", "read_dates", "tags", "authors", "isbn10", "isbn13", "owned", "dropped_dates", "currently_reading")
                 do {
                     books = bookService.findUserBookByCriteria(userId, null, null, null, null, PageRequest.of(currentPage, pageSize))
                     currentPage ++
@@ -122,20 +122,22 @@ class CsvExportService(
                 dateRead(it),
                 shelves(it),
                 bookShelves(it),
-                readDates(it, userId),
+                listOfDatesForEvent(it, userId, ReadingEventType.FINISHED),
                 tags(it),
                 authors(it),
                 if (it.book.isbn10.isNullOrBlank()) "" else it.book.isbn10,
                 if (it.book.isbn13.isNullOrBlank()) "" else it.book.isbn13,
                 if (it.owned == true) "true" else "",
+                listOfDatesForEvent(it, userId, ReadingEventType.DROPPED),
+                listOfDatesForEvent(it, userId, ReadingEventType.CURRENTLY_READING),
             )
         }
     }
 
     fun isbn(userbook: UserBookWithoutEventsAndUserDto): String {
-        return if (userbook.book.isbn13 != null && userbook.book.isbn13.isNotBlank()) {
+        return if (!userbook.book.isbn13.isNullOrBlank()) {
             userbook.book.isbn13
-        } else if (userbook.book.isbn10 != null && userbook.book.isbn10.isNotBlank()) {
+        } else if (!userbook.book.isbn10.isNullOrBlank()) {
             userbook.book.isbn10
         } else {
             ""
@@ -178,8 +180,8 @@ class CsvExportService(
         }
     }
 
-    fun readDates(userbook: UserBookWithoutEventsAndUserDto, userId: UUID): String {
-        val reads = readingEventService.findAll(listOf(ReadingEventType.FINISHED), userId, userbook.book.id, null, null, Pageable.ofSize(100))
+    fun listOfDatesForEvent(userbook: UserBookWithoutEventsAndUserDto, userId: UUID, eventType: ReadingEventType): String {
+        val reads = readingEventService.findAll(listOf(eventType), userId, userbook.book.id, null, null, Pageable.ofSize(100))
         if (! reads.isEmpty) {
             return reads.content.stream().map { toDateString(it.modificationDate) }.collect(Collectors.joining(","))
         }
