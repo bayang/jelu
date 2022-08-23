@@ -128,7 +128,7 @@
         "title": "Název",
         "publisher": "Vydavatel",
         "series": "Série",
-        "series_number": "Series number",
+        "series_number": "Číslo série",
         "descending": "Sestupně",
         "ascending": "Vzestupně",
         "publication_date": "Datum publikace",
@@ -223,8 +223,8 @@
         "export_message": "kliknutím na tlačítko níže spustíte požadavek na export; budete upozorněni v sekci zpráv až bude export připraven.",
         "export_ok": "Váš požadavek na export byl uložen. Můžete opustit tuto stránku, report bude k dispozici v sekci zpráv.",
         "export_ko": "Došlo k chybě, požadavek na export pravděpodobně nebyl zaregistrován.",
-        "import_help": "First choose the type of file you want to import, then pick a file below and finally click the import button. Once the import is launched you can leave this page and go to the messages section.",
-        "import_ok": "Your import request has been saved. You can leave this page, the import result will be available in the messages section."
+        "import_help": "Nejprve vyberte typ souboru, který chcete importovat, poté vyberte soubor a nakonec klikněte na tlačítko Importovat. Po spuštění importu můžete opustit tuto stránku a přejít do sekce zpráv.",
+        "import_ok": "Váš požadavek na import byl uložen. Můžete opustit tuto stránku, výsledek importu bude k dispozici v sekci zpráv."
     },
     "login": {
         "login": "přihlášení",
