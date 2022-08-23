@@ -1,8 +1,11 @@
 package io.github.bayang.jelu.service.metadata
 
+import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.service.metadata.providers.GoogleBooksIMetaDataProvider
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.ClientRequest
@@ -13,16 +16,16 @@ import reactor.core.publisher.Mono
 class GoogleBooksIMetaDataProviderTest {
 
     @Test
-    suspend fun fetchMetadata_fromCorrectIsbn_returnsBookMetaDataDto() {
+    fun fetchMetadata_fromCorrectIsbn_returnsBookMetaDataDto() = runBlocking {
         // Given
         val webClient = WebClient.builder()
             .exchangeFunction { clientRequest: ClientRequest? ->
-                Assertions.assertEquals("?q=isbn:9781785650406&key=fake-google-api-key", clientRequest?.url()?.query)
+                Assertions.assertEquals("q=isbn:9781785650406&key=fake-google-api-key", clientRequest?.url()?.query)
                 Mono.just(
                     ClientResponse.create(HttpStatus.OK)
                         .header("content-type", "application/json")
                         .body(
-                            "{{\n" +
+                            "{\n" +
                                     "  \"kind\": \"books#volumes\",\n" +
                                     "  \"totalItems\": 1,\n" +
                                     "  \"items\": [\n" +
@@ -103,13 +106,14 @@ class GoogleBooksIMetaDataProviderTest {
         val service = GoogleBooksIMetaDataProvider(webClient, "fake-google-api-key");
 
         // When
-        val result = service.fetchMetadata(
+        val result: MetadataDto = service.fetchMetadata(
             "9781785650406",
             null,
             null
-        ).awaitSingle();
+        );
 
         // Then
+        Assertions.assertNotNull(result);
         Assertions.assertEquals("Genesis Fleet - Vanguard", result.title);
         Assertions.assertEquals("0GJOMQAACAAJ", result.googleId);
         Assertions.assertEquals("1785650408", result.isbn10);
@@ -121,7 +125,7 @@ class GoogleBooksIMetaDataProviderTest {
         );
         Assertions.assertEquals("en", result.language);
         Assertions.assertEquals("2017-05", result.publishedDate);
-        Assertions.assertEquals("Earth is no longer the center of the universe.", result.summary);
+        Assertions.assertEquals("&quot;Earth is no longer the center of the universe.", result.summary);
     }
 
 }

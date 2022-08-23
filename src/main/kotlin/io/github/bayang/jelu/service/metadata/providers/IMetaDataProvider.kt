@@ -4,9 +4,9 @@ import io.github.bayang.jelu.dto.MetadataDto
 import reactor.core.publisher.Mono
 
 interface IMetaDataProvider {
-    fun fetchMetadata(
+    suspend fun fetchMetadata(
         isbn: String?,
         title: String?,
         authors: String?
-    ): Mono<MetadataDto>
+    ): MetadataDto
 }

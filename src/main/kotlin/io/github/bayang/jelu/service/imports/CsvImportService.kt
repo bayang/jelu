@@ -26,6 +26,7 @@ import io.github.bayang.jelu.service.UserMessageService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import io.github.bayang.jelu.utils.toInstant
+import kotlinx.coroutines.delay
 import mu.KotlinLogging
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -82,7 +83,7 @@ class CsvImportService(
 
     // maybe later : use coroutines ?
     @Async
-    fun import(file: File, user: UUID, importConfig: ImportConfigurationDto) {
+    suspend fun import(file: File, user: UUID, importConfig: ImportConfigurationDto) {
         val start = System.currentTimeMillis()
         val userEntity = userService.findUserEntityById(user)
         val nowString: String = OffsetDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
@@ -126,7 +127,7 @@ class CsvImportService(
         }
     }
 
-    fun importFromDb(user: UUID, importConfig: ImportConfigurationDto): Pair<Long, Long> {
+    suspend fun importFromDb(user: UUID, importConfig: ImportConfigurationDto): Pair<Long, Long> {
         var importEntities: List<ImportEntity>? = mutableListOf()
         var success: Long = 0
         var failures: Long = 0
@@ -148,8 +149,8 @@ class CsvImportService(
     }
 
     @Transactional
-    private fun importEntity(importEntity: ImportEntity, user: UUID, importConfig: ImportConfigurationDto): ProcessingStatus {
-        Thread.sleep(Random.nextLong(from = 200, until = 2500))
+    private suspend fun importEntity(importEntity: ImportEntity, user: UUID, importConfig: ImportConfigurationDto): ProcessingStatus {
+        delay(Random.nextLong(from = 200, until = 2500))
         try {
             importService.updateStatus(importEntity.id.value, ProcessingStatus.PROCESSING)
             var metadata = MetadataDto()

@@ -3,24 +3,26 @@ package io.github.bayang.jelu.service.metadata.providers
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.dto.MetadataDto
-import io.github.bayang.jelu.service.quotes.KEY
+import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
 import org.springframework.web.util.UriBuilder
 import reactor.core.publisher.Mono
-import java.time.LocalDate
 import javax.annotation.Resource
 
+@Service
 class GoogleBooksIMetaDataProvider(
     @Resource(name = "restClient") private val restClient: WebClient,
-    @Value("\${GOOGLE_API_KEY}") private val contentApiKey: String,
+    @Value("#{environment.GOOGLE_API_KEY}") private val googleApiKey: String?,
 ) : IMetaDataProvider {
 
 
-    override fun fetchMetadata(isbn: String?, title: String?, authors: String?): Mono<MetadataDto> {
+    override suspend fun fetchMetadata(isbn: String?, title: String?, authors: String?): MetadataDto {
+        if(googleApiKey == null){
+            return MetadataDto()
+        }
         return restClient.get()
             .uri { uriBuilder: UriBuilder ->
                 uriBuilder
@@ -28,7 +30,7 @@ class GoogleBooksIMetaDataProvider(
                     .host("www.googleapis.com")
                     .path("/books/v1/volumes")
                     .queryParam("q", "isbn:$isbn")
-                    .queryParam("key", contentApiKey)
+                    .queryParam("key", googleApiKey)
                     .build()
             }.exchangeToMono {
                 if (it.statusCode() == HttpStatus.OK) {
@@ -44,7 +46,7 @@ class GoogleBooksIMetaDataProvider(
                 } else {
                     it.createException().flatMap { Mono.error { it } }
                 }
-            }
+            }.awaitSingle()
     }
 
     private fun parseBook(node: JsonNode): MetadataDto {
