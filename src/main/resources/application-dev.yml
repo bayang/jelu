@@ -19,6 +19,8 @@ jelu:
         - "uid={0}"
         - "cn={0},ou=users"
       userSearchFilter: "(cn={0})"
+  google:
+    enable-google-metadata-provider: false
 server:
   port: 11111
 spring:

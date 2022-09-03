@@ -35,7 +35,7 @@ class ImportController(
     @ApiResponse(responseCode = "201", description = "Imported the csv file")
     @Operation(description = "Trigger a csv import")
     @PostMapping(path = ["/imports"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    suspend fun importCsv(
+    fun importCsv(
         principal: Authentication,
         @RequestPart("importConfig") @Valid importConfig: ImportConfigurationDto,
         @RequestPart("file") file: MultipartFile

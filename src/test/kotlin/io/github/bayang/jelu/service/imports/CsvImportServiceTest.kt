@@ -16,7 +16,6 @@ import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import io.mockk.coVerify
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.io.TempDir
 import org.springframework.beans.factory.annotation.Autowired
@@ -110,18 +109,15 @@ class CsvImportServiceTest(
                 Assertions.assertEquals(3, shelves?.size)
             }
         }
-        runBlocking {
-            val (success, failures) = csvImportService.importFromDb(userId, importConfigurationDto())
-            Assertions.assertEquals(10, success)
-            Assertions.assertEquals(0, failures)
-        }
+        val (success, failures) = csvImportService.importFromDb(userId, importConfigurationDto())
+        Assertions.assertEquals(10, success)
+        Assertions.assertEquals(0, failures)
 
         coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
-
     }
 
     @Test
-    fun testNoDuplicates() = runBlocking {
+    fun testNoDuplicates() {
         val userId = user().id.value
         val csv = File(this::class.java.getResource("/csv-import/goodreads-duplicate-events.csv").file)
         csvImportService.parse(csv, userId, importConfigurationDto())

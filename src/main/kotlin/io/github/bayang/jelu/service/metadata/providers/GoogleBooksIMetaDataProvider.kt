@@ -2,8 +2,8 @@ package io.github.bayang.jelu.service.metadata.providers
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
-import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -15,13 +15,12 @@ import javax.annotation.Resource
 @Service
 class GoogleBooksIMetaDataProvider(
     @Resource(name = "restClient") private val restClient: WebClient,
-    @Value("#{environment.GOOGLE_API_KEY}") private val googleApiKey: String?,
+    private val properties: JeluProperties,
 ) : IMetaDataProvider {
 
-
-    override suspend fun fetchMetadata(isbn: String?, title: String?, authors: String?): MetadataDto {
-        if(googleApiKey == null){
-            return MetadataDto()
+    override fun fetchMetadata(isbn: String?, title: String?, authors: String?): Mono<MetadataDto> {
+        if (!properties.google.enableGoogleMetadataProvider || properties.google.googleBooksApiKey == null) {
+            return Mono.just(MetadataDto())
         }
         return restClient.get()
             .uri { uriBuilder: UriBuilder ->
@@ -30,7 +29,7 @@ class GoogleBooksIMetaDataProvider(
                     .host("www.googleapis.com")
                     .path("/books/v1/volumes")
                     .queryParam("q", "isbn:$isbn")
-                    .queryParam("key", googleApiKey)
+                    .queryParam("key", properties.google.googleBooksApiKey)
                     .build()
             }.exchangeToMono {
                 if (it.statusCode() == HttpStatus.OK) {
@@ -41,17 +40,16 @@ class GoogleBooksIMetaDataProvider(
                                 .get("items")
                                 .get(0)
                         )
-
                     }
                 } else {
                     it.createException().flatMap { Mono.error { it } }
                 }
-            }.awaitSingle()
+            }
     }
 
     private fun parseBook(node: JsonNode): MetadataDto {
         val volumeInfo = node.get("volumeInfo")
-        val identifiers = volumeInfo.get("industryIdentifiers").asIterable();
+        val identifiers = volumeInfo.get("industryIdentifiers").asIterable()
         return MetadataDto(
             title = volumeInfo.get("title").asText(),
             googleId = node.get("id").asText(),

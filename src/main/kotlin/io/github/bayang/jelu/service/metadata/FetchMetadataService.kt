@@ -13,6 +13,7 @@ import org.codehaus.staxmate.SMInputFactory
 import org.codehaus.staxmate.`in`.SMHierarchicCursor
 import org.codehaus.staxmate.`in`.SMInputCursor
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Mono
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -29,13 +30,13 @@ class FetchMetadataService(
     val factory: SMInputFactory = SMInputFactory(WstxInputFactory())
     val validator: ISBNValidator = ISBNValidator.getInstance(false)
 
-    suspend fun fetchMetadata(
+    fun fetchMetadata(
         isbn: String?,
         title: String?,
         authors: String?,
         onlyUseCorePlugins: Boolean = false,
         fetchCover: Boolean = true
-    ): MetadataDto {
+    ): Mono<MetadataDto> {
         if (isbn.isNullOrBlank() && title.isNullOrBlank() && authors.isNullOrBlank()) {
             throw JeluException("At least one of isbn, authors or title is required to fetch metadata")
         }
@@ -105,7 +106,7 @@ class FetchMetadataService(
                     parseOpf.image = targetCover.name
                     logger.trace { "fetch metadata image ${targetCover.name}" }
                 }
-                return parseOpf
+                return Mono.just(parseOpf)
             } else {
                 logger.error { "fetch ebookmetadata process exited abnormally with code $exitVal" }
             }
@@ -119,10 +120,10 @@ class FetchMetadataService(
             return provider.fetchMetadata(isbn, title, authors)
             logger.error { "alternate meta data provider did not yield result" }
         } catch (e: Exception) {
-            return MetadataDto()
+            return Mono.just(MetadataDto())
         }
 
-        return MetadataDto()
+        return Mono.just(MetadataDto())
     }
 
     fun removeTrailingAndLeadingChars(output: String): String {
@@ -215,8 +216,9 @@ class FetchMetadataService(
                 META -> {
                     when (childElementCursor.getAttrValue("name")) {
                         "calibre:series" -> dto.series = childElementCursor.getAttrValue("content")
-                        "calibre:series_index" -> dto.numberInSeries =
-                            childElementCursor.getAttrValue("content").toDoubleOrNull()
+                        "calibre:series_index" ->
+                            dto.numberInSeries =
+                                childElementCursor.getAttrValue("content").toDoubleOrNull()
 
                         "calibre:author_link_map" -> logger.trace { "author_link_map ${childElementCursor.getAttrValue("content")}" }
                         else -> logger.trace { "unhandled meta name ${childElementCursor.getAttrValue("name")}" }
