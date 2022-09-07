@@ -68,8 +68,19 @@ class FetchMetadataService(
             commandArray.add("-p")
             commandArray.add("Amazon.com")
         }
-        bookFileName += ".jpg"
+        // add a bit of randomness to prevent images with same names.
+        // Otherwise different files with same names are cached, see issue #41
+        val now = System.currentTimeMillis()
+        bookFileName += "-$now.jpg"
         val targetCover = File(properties.files.images, bookFileName)
+        if (targetCover != null && targetCover.exists()) {
+            try {
+                val deleted = targetCover.delete()
+                logger.trace { "deleted already existing cover temporary image ${targetCover.absolutePath}" }
+            } catch (e: Exception) {
+                logger.error(e) { "failed to delete image ${targetCover.absolutePath}" }
+            }
+        }
         if (fetchCover) {
             commandArray.add("-c")
             commandArray.add(targetCover.absolutePath)
