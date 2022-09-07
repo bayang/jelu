@@ -118,12 +118,10 @@ class FetchMetadataService(
 
         try {
             return provider.fetchMetadata(isbn, title, authors)
-            logger.error { "alternate meta data provider did not yield result" }
         } catch (e: Exception) {
+            logger.error { "alternate meta data provider did not yield result" }
             return Mono.just(MetadataDto())
         }
-
-        return Mono.just(MetadataDto())
     }
 
     fun removeTrailingAndLeadingChars(output: String): String {

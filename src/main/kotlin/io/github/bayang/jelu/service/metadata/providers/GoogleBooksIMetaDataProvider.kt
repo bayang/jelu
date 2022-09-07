@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -19,7 +18,7 @@ class GoogleBooksIMetaDataProvider(
 ) : IMetaDataProvider {
 
     override fun fetchMetadata(isbn: String?, title: String?, authors: String?): Mono<MetadataDto> {
-        if (!properties.google.enableGoogleMetadataProvider || properties.google.googleBooksApiKey == null) {
+        if (googleProviderDisabled() || isbn.isNullOrBlank()) {
             return Mono.just(MetadataDto())
         }
         return restClient.get()
@@ -46,6 +45,8 @@ class GoogleBooksIMetaDataProvider(
                 }
             }
     }
+
+    private fun googleProviderDisabled() = !properties.google.enableGoogleMetadataProvider || properties.google.googleBooksApiKey == null
 
     private fun parseBook(node: JsonNode): MetadataDto {
         val volumeInfo = node.get("volumeInfo")

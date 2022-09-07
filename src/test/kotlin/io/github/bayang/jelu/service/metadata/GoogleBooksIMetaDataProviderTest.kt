@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.service.metadata
 
+import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.service.metadata.providers.GoogleBooksIMetaDataProvider
 import org.junit.jupiter.api.Assertions
@@ -100,7 +101,16 @@ class GoogleBooksIMetaDataProviderTest {
                 )
             }.build()
 
-        val service = GoogleBooksIMetaDataProvider(webClient, "fake-google-api-key")
+        val jeluProperties = JeluProperties(
+            JeluProperties.Database(""),
+            JeluProperties.Files("", "", true),
+            JeluProperties.Session(1),
+            JeluProperties.Cors(),
+            JeluProperties.Metadata(JeluProperties.Calibre("")),
+            JeluProperties.Auth(JeluProperties.Ldap()),
+            JeluProperties.Google(true, "fake-google-api-key")
+        )
+        val service = GoogleBooksIMetaDataProvider(webClient, jeluProperties)
 
         // When
         val result: MetadataDto = service.fetchMetadata(
