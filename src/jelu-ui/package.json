@@ -12,6 +12,7 @@
     "@formkit/i18n": "^1.0.0-beta.7-c3de75f",
     "@formkit/tailwindcss": "^1.0.0-beta.7-c3de75f",
     "@formkit/vue": "^1.0.0-beta.7-c3de75f",
+    "@kangc/v-md-editor": "^2.3.15",
     "@mdi/font": "6.6.96",
     "@oruga-ui/oruga-next": "0.5.5",
     "@saekitominaga/isbn-verify": "^1.4.1",

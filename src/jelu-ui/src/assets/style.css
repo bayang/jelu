@@ -172,8 +172,8 @@
 .review-modal {
   /* margin: 30px; */
   @apply m-5 sm:p-5;
-  height: min(600px, 70vh);
-  width: min(600px, 85vw);
+  height: min(700px, 75vh);
+  width: min(900px, 85vw);
 }
 
 .small-cover {

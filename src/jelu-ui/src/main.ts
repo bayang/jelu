@@ -10,6 +10,8 @@ import { plugin, defaultConfig } from '@formkit/vue'
 import { ar, hr, cs, da, nl, fi, fy, he, id, it, ko, fa, pl, pt, ru, es, tr, vi, de, fr, zh } from '@formkit/i18n'
 import { generateClasses } from '@formkit/tailwindcss'
 import formkitTheme from './formkit-theme'
+import VueMarkdownEditor from '@kangc/v-md-editor';
+import VMdPreview from '@kangc/v-md-editor/lib/preview';
 
 import './assets/style.css'
 
@@ -20,6 +22,15 @@ import 'vuejs-sidebar-menu/dist/vuejs-sidebar-menu.css'
 import '@mdi/font/css/materialdesignicons.min.css'
 import 'floating-vue/dist/style.css'
 import '@splidejs/splide/dist/css/splide.min.css';
+
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';
+VueMarkdownEditor.use(githubTheme)
+import enUS from '@kangc/v-md-editor/lib/lang/en-US';
+VueMarkdownEditor.lang.use('en-US', enUS);
+VMdPreview.use(githubTheme);
+
 
 /*
  * All i18n resources specified in the plugin `include` option can be loaded
@@ -73,4 +84,6 @@ createApp(App)
       // Define the active locale
       locale: storedLanguage.value,
     }))
+    .use(VueMarkdownEditor)
+    .use(VMdPreview)
     .mount('#app')
