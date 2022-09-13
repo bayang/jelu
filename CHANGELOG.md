@@ -1,3 +1,16 @@
+## [0.30.0](https://github.com/bayang/jelu/compare/v0.29.0...v0.30.0) (2022-09-13)
+
+
+### Features
+
+* use markdown to write reviews [#40](https://github.com/bayang/jelu/issues/40) ([0e11bbb](https://github.com/bayang/jelu/commit/0e11bbb5d1c03f8448e44db83d1742c07918036d))
+
+
+### Bug Fixes
+
+* increase password length in login input [#43](https://github.com/bayang/jelu/issues/43) ([7568cc9](https://github.com/bayang/jelu/commit/7568cc99f3741b48d80a468a51926f8172692e46))
+* prevent temporary cover images conflicts in caches [#41](https://github.com/bayang/jelu/issues/41) ([b1482e1](https://github.com/bayang/jelu/commit/b1482e1b3d9f73c4213123614a79c3f0c06a1f32))
+
 ## [0.29.0](https://github.com/bayang/jelu/compare/v0.28.0...v0.29.0) (2022-08-20)
 
 
