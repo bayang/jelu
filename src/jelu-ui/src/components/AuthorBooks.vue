@@ -15,17 +15,20 @@ import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
 import EditAuthorModalVue from "./EditAuthorModal.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
+import { useRoute } from 'vue-router';
 
 const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
 
+const name = "author-detail"
+
+const route = useRoute()
+
 const { formatDate, formatDateString } = useDates()
 
 const {oruga} = useProgrammatic();
-
-const props = defineProps<{ authorId: string }>()
 
 const author: Ref<Author> = ref({name: ""})
 const authorBooks: Ref<Array<Book>> = ref([]);
@@ -41,17 +44,25 @@ const open = ref(false)
 
 const getBooksIsLoading: Ref<boolean> = ref(false)
 
-watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
+watch([() => route.params.authorId, page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(page.value)
   console.log(newVal + " " + oldVal)
-  if (newVal !== oldVal) {
+  console.log(route.name)
+  if (newVal !== oldVal && route.name === name) {
     getBooks()
+  }
+})
+
+watch(() => route.params.authorId, (newVal, oldVal) => {
+  console.log(newVal + " " + oldVal)
+  if (newVal !== oldVal && route.params.authorId !== undefined) {
+    getAuthor()
   }
 })
 
 const getAuthor = async () => {
   try {
-    author.value = await dataService.getAuthorById(props.authorId)
+    author.value = await dataService.getAuthorById(route.params.authorId as string)
     useTitle('Jelu | ' + author.value.name)
   } catch (error) {
     console.log("failed get author : " + error);
@@ -60,7 +71,7 @@ const getAuthor = async () => {
 
 const getBooks = () => {
   getBooksIsLoading.value = true
-  dataService.getAuthorBooksById(props.authorId, 
+  dataService.getAuthorBooksById(route.params.authorId as string, 
     pageAsNumber.value - 1, perPage.value, sortQuery.value, 
     libraryFilter.value)
     .then(res => {

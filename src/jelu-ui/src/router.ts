@@ -80,7 +80,6 @@ const router = createRouter({
             path: '/authors/:authorId',
             component: () => import(/* webpackChunkName: "recommend" */ './components/AuthorBooks.vue'),
             name: 'author-detail',
-            props: true,
             beforeEnter: [isLogged],
         },
         {

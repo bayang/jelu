@@ -101,17 +101,19 @@ const throttledGetBooks = useThrottleFn(() => {
 
 onMounted(() => {
   console.log("Component is mounted!");
-  try {
-    getBooks();
-  } catch (error) {
-    console.log("failed get books : " + error);
-  }
 });
 
 function modalClosed() {
   console.log("modal closed")
   throttledGetBooks()
 }
+
+
+try {
+    getBooks();
+  } catch (error) {
+    console.log("failed get books : " + error);
+  }
 
 </script>
 
