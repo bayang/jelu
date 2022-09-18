@@ -108,7 +108,7 @@ class GoogleBooksIMetaDataProviderTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("")),
             JeluProperties.Auth(JeluProperties.Ldap()),
-            JeluProperties.Google(true, "fake-google-api-key")
+            listOf(JeluProperties.MetaDataProvider("google",true, "fake-google-api-key"))
         )
         val service = GoogleBooksIMetaDataProvider(webClient, jeluProperties)
 

@@ -18,7 +18,8 @@ class GoogleBooksIMetaDataProvider(
 ) : IMetaDataProvider {
 
     override fun fetchMetadata(isbn: String?, title: String?, authors: String?): Mono<MetadataDto> {
-        if (googleProviderDisabled() || isbn.isNullOrBlank()) {
+        val googleProviderApiKey = getGoogleProviderApiKey();
+        if (googleProviderApiKey == null || isbn.isNullOrBlank()) {
             return Mono.just(MetadataDto())
         }
         return restClient.get()
@@ -28,7 +29,7 @@ class GoogleBooksIMetaDataProvider(
                     .host("www.googleapis.com")
                     .path("/books/v1/volumes")
                     .queryParam("q", "isbn:$isbn")
-                    .queryParam("key", properties.google.googleBooksApiKey)
+                    .queryParam("key", googleProviderApiKey)
                     .build()
             }.exchangeToMono {
                 if (it.statusCode() == HttpStatus.OK) {
@@ -46,7 +47,10 @@ class GoogleBooksIMetaDataProvider(
             }
     }
 
-    private fun googleProviderDisabled() = !properties.google.enableGoogleMetadataProvider || properties.google.googleBooksApiKey == null
+    private fun getGoogleProviderApiKey(): String? = properties
+        .metadataProviders
+        ?.find { it.isEnabled && it.name == "google" }
+        ?.apiKey;
 
     private fun parseBook(node: JsonNode): MetadataDto {
         val volumeInfo = node.get("volumeInfo")

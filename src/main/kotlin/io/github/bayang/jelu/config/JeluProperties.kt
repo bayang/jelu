@@ -16,13 +16,15 @@ data class JeluProperties(
     val cors: Cors = Cors(),
     val metadata: Metadata = Metadata(Calibre(null)),
     val auth: Auth = Auth(Ldap()),
-    val google: Google
+    val metadataProviders: List<MetaDataProvider>?
 ) {
 
-    data class Google(
-        var enableGoogleMetadataProvider: Boolean = false,
-        var googleBooksApiKey: String?
+    data class MetaDataProvider (
+        var name: String,
+        var isEnabled: Boolean = false,
+        var apiKey: String?
     )
+
 
     data class Database(
         @get:NotBlank var path: String

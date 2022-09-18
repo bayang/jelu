@@ -5,8 +5,6 @@ jelu:
     images: ${java.io.tmpdir}
     imports: ${java.io.tmpdir}
     resizeImages: false
-  google:
-    enableGoogleMetadataProvider: false
 spring:
   liquibase:
     enabled: true
