@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
+import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriBuilder
 import reactor.core.publisher.Mono
 import javax.annotation.Resource
+
+private val logger = KotlinLogging.logger {}
 
 @Service
 class GoogleBooksIMetaDataProvider(
@@ -42,7 +45,8 @@ class GoogleBooksIMetaDataProvider(
                         )
                     }
                 } else {
-                    it.createException().flatMap { Mono.error { it } }
+                    logger.error { "error fetching metadata from google : ${it.statusCode()}" }
+                    Mono.just(MetadataDto())
                 }
             }
     }
