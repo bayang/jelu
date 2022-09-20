@@ -1,3 +1,15 @@
+## [0.31.0](https://github.com/bayang/jelu/compare/v0.30.0...v0.31.0) (2022-09-20)
+
+
+### Features
+
+* add google metadata provider [#36](https://github.com/bayang/jelu/issues/36) [#37](https://github.com/bayang/jelu/issues/37) ([cb14ee8](https://github.com/bayang/jelu/commit/cb14ee8610cce87acd4e6bc433cf2e4a1192747a))
+
+
+### Bug Fixes
+
+* infinite redirect loop [#44](https://github.com/bayang/jelu/issues/44) ([84ce9fb](https://github.com/bayang/jelu/commit/84ce9fb9374345c7ee503c16e049e1dbe8ef310a))
+* regression in UI after modifying metadata image field ([18a9281](https://github.com/bayang/jelu/commit/18a928191dfce82da3e97210524a3edbb7ef7d61))
 
 ## [0.30.0](https://github.com/bayang/jelu/compare/v0.29.0...v0.30.0) (2022-09-13)
 
