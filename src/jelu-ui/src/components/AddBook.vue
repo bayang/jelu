@@ -835,7 +835,7 @@ let displayDatepicker = computed(() => {
               </span>
               <figure class="small-cover">
                 <img
-                  :src="'/files/' + metadata?.image"
+                  :src="metadata?.image?.startsWith('http') ? metadata?.image : '/files/' + metadata?.image"
                   :class="deleteImage ? 'altered' : ''"
                   alt="cover image"
                 >
