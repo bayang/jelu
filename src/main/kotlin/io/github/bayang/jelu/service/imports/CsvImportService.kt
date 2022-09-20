@@ -153,7 +153,9 @@ class CsvImportService(
             if (importEntity.shouldFetchMetadata && !properties.metadata.calibre.path.isNullOrBlank()) {
                 val isbn: String = getIsbn(importEntity)
                 if (isbn.isNotBlank()) {
-                    metadata = fetchMetadataService.fetchMetadata(isbn, null, null, onlyUseCorePlugins = true, fetchCover = importConfig.shouldFetchCovers)
+                    metadata = fetchMetadataService
+                        .fetchMetadata(isbn, null, null, onlyUseCorePlugins = true, fetchCover = importConfig.shouldFetchCovers)
+                        .block()!!
                 } else {
                     logger.debug { "no isbn on entity ${importEntity.id}, not fetching metadata" }
                 }

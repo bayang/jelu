@@ -4,6 +4,7 @@ import com.ctc.wstx.stax.WstxInputFactory
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.errors.JeluException
+import io.github.bayang.jelu.service.metadata.providers.IMetaDataProvider
 import io.github.bayang.jelu.utils.sanitizeHtml
 import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
@@ -12,6 +13,7 @@ import org.codehaus.staxmate.SMInputFactory
 import org.codehaus.staxmate.`in`.SMHierarchicCursor
 import org.codehaus.staxmate.`in`.SMInputCursor
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Mono
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -22,6 +24,7 @@ const val FILE_PREFIX = "meta-import-"
 @Service
 class FetchMetadataService(
     private val properties: JeluProperties,
+    private val provider: IMetaDataProvider
 ) {
 
     val factory: SMInputFactory = SMInputFactory(WstxInputFactory())
@@ -33,7 +36,7 @@ class FetchMetadataService(
         authors: String?,
         onlyUseCorePlugins: Boolean = false,
         fetchCover: Boolean = true
-    ): MetadataDto {
+    ): Mono<MetadataDto> {
         if (isbn.isNullOrBlank() && title.isNullOrBlank() && authors.isNullOrBlank()) {
             throw JeluException("At least one of isbn, authors or title is required to fetch metadata")
         }
@@ -49,7 +52,7 @@ class FetchMetadataService(
         if (!title.isNullOrBlank()) {
             commandArray.add("-t")
             commandArray.add(title)
-            if (! fileNameComplete) {
+            if (!fileNameComplete) {
                 bookFileName += slugify(title)
                 fileNameComplete = true
             }
@@ -97,7 +100,7 @@ class FetchMetadataService(
                 // on ARM the fetch-ebook-metadata binary outputs a python byte string instead of a regular string
                 // cf test case for a sample string
                 // so we try to clean it ourselves... This is ugly
-                if (! output.startsWith('<')) {
+                if (!output.startsWith('<')) {
                     logger.trace { "fetch metadata output is not regular xml : $output" }
                     output = cleanXml(output)
                 }
@@ -114,14 +117,22 @@ class FetchMetadataService(
                     parseOpf.image = targetCover.name
                     logger.trace { "fetch metadata image ${targetCover.name}" }
                 }
-                return parseOpf
+                return Mono.just(parseOpf)
             } else {
                 logger.error { "fetch ebookmetadata process exited abnormally with code $exitVal" }
             }
         } catch (e: Exception) {
             logger.error(e) { "failure while calling fetch-ebook-metadata process" }
         }
-        return MetadataDto()
+
+        logger.info { "fallback to meta data provider " }
+
+        try {
+            return provider.fetchMetadata(isbn, title, authors)
+        } catch (e: Exception) {
+            logger.error { "alternate meta data provider did not yield result" }
+            return Mono.just(MetadataDto())
+        }
     }
 
     fun removeTrailingAndLeadingChars(output: String): String {
@@ -131,10 +142,10 @@ class FetchMetadataService(
         var startIndex = 0
         var endIndex = output.length - 1
         while (output[startIndex] != '<') {
-            startIndex ++
+            startIndex++
         }
         while (output[endIndex] != '>') {
-            endIndex --
+            endIndex--
         }
         return output.substring(startIndex, endIndex + 1)
     }
@@ -192,9 +203,11 @@ class FetchMetadataService(
                                 dto.isbn10 = isbn
                             }
                         }
+
                         else -> logger.trace { "unhandled identifier scheme ${childElementCursor.getAttrValue("scheme")}" }
                     }
                 }
+
                 TITLE -> dto.title = childElementCursor.elemStringValue
                 CREATOR -> {
                     when (childElementCursor.getAttrValue("role")) {
@@ -203,6 +216,7 @@ class FetchMetadataService(
                         else -> logger.trace { "unhandled creator role ${childElementCursor.getAttrValue("role")}" }
                     }
                 }
+
                 DATE -> dto.publishedDate = childElementCursor.elemStringValue
                 DESCRIPTION -> dto.summary = sanitizeHtml(childElementCursor.elemStringValue)
                 PUBLISHER -> dto.publisher = childElementCursor.elemStringValue
@@ -211,7 +225,10 @@ class FetchMetadataService(
                 META -> {
                     when (childElementCursor.getAttrValue("name")) {
                         "calibre:series" -> dto.series = childElementCursor.getAttrValue("content")
-                        "calibre:series_index" -> dto.numberInSeries = childElementCursor.getAttrValue("content").toDoubleOrNull()
+                        "calibre:series_index" ->
+                            dto.numberInSeries =
+                                childElementCursor.getAttrValue("content").toDoubleOrNull()
+
                         "calibre:author_link_map" -> logger.trace { "author_link_map ${childElementCursor.getAttrValue("content")}" }
                         else -> logger.trace { "unhandled meta name ${childElementCursor.getAttrValue("name")}" }
                     }

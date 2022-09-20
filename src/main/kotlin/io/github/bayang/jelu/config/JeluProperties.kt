@@ -18,8 +18,15 @@ data class JeluProperties(
     val auth: Auth = Auth(
         Ldap(),
         Proxy()
-    )
+    ),
+    val metadataProviders: List<MetaDataProvider>?,
 ) {
+
+    data class MetaDataProvider(
+        var name: String,
+        var isEnabled: Boolean = false,
+        var apiKey: String?
+    )
 
     data class Database(
         @get:NotBlank var path: String
