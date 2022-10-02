@@ -64,7 +64,7 @@ class ReadingEventServiceTest(
         readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -106,7 +106,8 @@ class ReadingEventServiceTest(
             owned = false,
             book = null,
             toRead = null,
-            percentRead = 50
+            percentRead = 50,
+            borrowed = null
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -164,7 +165,8 @@ class ReadingEventServiceTest(
             owned = false,
             book = null,
             toRead = null,
-            percentRead = 50
+            percentRead = 50,
+            borrowed = null
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -178,6 +180,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(updater.owned, updated.owned)
         Assertions.assertEquals(saved.toRead, updated.toRead)
         Assertions.assertEquals(updater.percentRead, updated.percentRead)
+        Assertions.assertEquals(updated.borrowed, saved.borrowed)
         Assertions.assertEquals(updater.personalNotes, updated.personalNotes)
         Assertions.assertNotNull(updated.creationDate)
         Assertions.assertNotNull(updated.modificationDate)
@@ -352,7 +355,7 @@ class ReadingEventServiceTest(
         val nbBooks = bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(1, nbBooks)
 
-        var nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
+        var nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, nbUserBooks)
 
         Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
@@ -367,7 +370,7 @@ class ReadingEventServiceTest(
             user()
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
-        nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
+        nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, nbUserBooks)
 
         Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).totalElements)
@@ -379,7 +382,7 @@ class ReadingEventServiceTest(
         val nbBooks = bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(0, nbBooks)
 
-        val nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
+        val nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, nbUserBooks)
 
         val dateAfter = nowInstant().plus(1, ChronoUnit.DAYS)

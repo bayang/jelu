@@ -44,7 +44,7 @@ const getBooks = () => {
     dataService.findBooks(undefined, 
       undefined, undefined, 
       series.value, undefined,
-      undefined,
+      undefined, undefined,
       pageAsNumber.value - 1, perPage.value, sortQuery.value, LibraryFilter.ONLY_USER_BOOKS)
       .then(res => {
         console.log(res)

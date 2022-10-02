@@ -35,10 +35,11 @@ const getBookIsLoading: Ref<boolean> = ref(false)
 
 const toRead: Ref<string|null> = useRouteQuery('toRead', "null")
 const owned: Ref<string|null> = useRouteQuery('owned', "null")
+const borrowed: Ref<string|null> = useRouteQuery('borrowed', "null")
 
 const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTypes', [])
 
-watch([page, eventTypes, toRead, owned, sortQuery], (newVal, oldVal) => {
+watch([page, eventTypes, toRead, owned, borrowed, sortQuery], (newVal, oldVal) => {
   console.log("all " + newVal + " " + oldVal)
   if (newVal !== oldVal) {
     throttledGetBooks()
@@ -67,10 +68,21 @@ const ownedAsBool = computed(() => {
   }
 )
 
+const borrowedAsBool = computed(() => {
+  if (borrowed.value?.toLowerCase() === "null") {
+    return null
+  } else if (borrowed.value?.toLowerCase() === "true") {
+    return true
+  } else {
+    return false
+  }
+  }
+)
+
 const getBooks = () => {
   getBookIsLoading.value = true
   dataService.findUserBookByCriteria(eventTypes.value, null, toReadAsBool.value, 
-  ownedAsBool.value,
+  ownedAsBool.value, borrowedAsBool.value,
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
         console.log(res)
@@ -237,6 +249,33 @@ try {
         <div class="field">
           <o-radio
             v-model="owned"
+            native-value="true"
+          >
+            {{ t('labels.true') }}
+          </o-radio>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">{{ t('filtering.borrowed') }} : </label>
+        <div class="field">
+          <o-radio
+            v-model="borrowed"
+            native-value="null"
+          >
+            {{ t('filtering.unset') }}
+          </o-radio>
+        </div>
+        <div class="field">
+          <o-radio
+            v-model="borrowed"
+            native-value="false"
+          >
+            {{ t('labels.false') }}
+          </o-radio>
+        </div>
+        <div class="field">
+          <o-radio
+            v-model="borrowed"
             native-value="true"
           >
             {{ t('labels.true') }}

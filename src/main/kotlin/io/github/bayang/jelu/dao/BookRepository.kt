@@ -425,6 +425,9 @@ class BookRepository(
                 )
             )
         }
+        if (book.borrowed != null) {
+            found.borrowed = book.borrowed
+        }
         return found
     }
 
@@ -588,6 +591,7 @@ class BookRepository(
             this.toRead = createUserBookDto.toRead
             this.personalNotes = cleanString(createUserBookDto.personalNotes)
             this.percentRead = createUserBookDto.percentRead
+            this.borrowed = createUserBookDto.borrowed
         }
     }
 
@@ -599,6 +603,7 @@ class BookRepository(
         eventTypes: List<ReadingEventType>?,
         toRead: Boolean?,
         owned: Boolean?,
+        borrowed: Boolean?,
         pageable: Pageable
     ): PageImpl<UserBook> {
         val cols = mutableListOf<Expression<*>>()
@@ -630,6 +635,15 @@ class BookRepository(
                 // default value if checkbox not set is null, so if caller asks explicitly with owned == false,
                 // try to return everything that is not true
                 query.andWhere { UserBookTable.owned eq owned or (UserBookTable.owned.isNull()) }
+            }
+        }
+        if (borrowed != null) {
+            if (borrowed) {
+                query.andWhere { UserBookTable.borrowed eq borrowed }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with borrowed == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.borrowed eq borrowed or (UserBookTable.borrowed.isNull()) }
             }
         }
         val total = query.count()

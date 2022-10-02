@@ -84,7 +84,7 @@ class CsvExportService(
             CSVPrinter(BufferedWriter(FileWriter(destFile)), format).use { printer ->
                 printer.printRecord("Title", "Author", "ISBN", "Publisher", "Date Read", "Shelves", "Bookshelves", "read_dates", "tags", "authors", "isbn10", "isbn13", "owned", "dropped_dates", "currently_reading")
                 do {
-                    books = bookService.findUserBookByCriteria(userId, null, null, null, null, PageRequest.of(currentPage, pageSize))
+                    books = bookService.findUserBookByCriteria(userId, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
                     currentPage ++
                     logger.debug { "current $currentPage" }
                     count += books.content.size

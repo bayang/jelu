@@ -420,7 +420,7 @@ class DataService {
   }
 
   findUserBookByCriteria = async (lastEventTypes?: Array<ReadingEventType> | null, bookId?: string|null,
-    toRead?: boolean | null, owned?: boolean | null, page?: number, size?: number, sort?: string) => {
+    toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null, page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}`, {
         params: {
@@ -428,6 +428,7 @@ class DataService {
           bookId: bookId,
           toRead: toRead,
           owned: owned,
+          borrowed: borrowed,
           page: page,
           size: size,
           sort: sort

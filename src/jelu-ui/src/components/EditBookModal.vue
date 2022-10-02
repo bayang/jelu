@@ -69,6 +69,12 @@ const ownedDisplay = computed(() => {
   }
   return ""
 })
+const borrowedDisplay = computed(() => {
+  if (userbook.value.borrowed) {
+    return t('book.borrowed')
+  }
+  return ""
+})
 const toReadDisplay = computed(() => {
   if (userbook.value.toRead) {
     return t('labels.book_will_be_added')
@@ -551,6 +557,17 @@ function toggleRemoveImage() {
           >
             <o-checkbox v-model="userbook.toRead">
               {{ toReadDisplay }}
+            </o-checkbox>
+          </o-field>
+        </div>
+        <div class="field pb-2">
+          <o-field
+            horizontal
+            :label="t('book.borrowed') + ' ?'"
+            class="capitalize"
+          >
+            <o-checkbox v-model="userbook.borrowed">
+              {{ borrowedDisplay }}
             </o-checkbox>
           </o-field>
         </div>

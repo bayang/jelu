@@ -47,6 +47,7 @@ getReview()
         :book="book"
         :owned="null"
         :to-read="null"
+        :borrowed="null"
         :book-link="false"
         :links="false"
         :add-book="false"

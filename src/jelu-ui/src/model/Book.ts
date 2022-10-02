@@ -34,6 +34,7 @@ export interface UserBook {
     modificationDate?: string,
     personalNotes?: string,
     owned?: boolean|null,
+    borrowed?: boolean|null,
     toRead?: boolean|null,
     book: Book,
     readingEvents?: Array<ReadingEvent>|null,

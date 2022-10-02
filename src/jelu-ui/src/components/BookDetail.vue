@@ -498,15 +498,19 @@ getBook()
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>
           {{ book.book.language }}
         </p>
-        <div v-if="book?.owned || book?.toRead">
+        <div v-if="book?.owned || book?.toRead || book?.borrowed">
           <span
             v-if="book?.owned"
-            class="badge badge-info mx-1"
+            class="badge badge-info"
           >{{ t('book.owned') }}</span>
           <span
             v-if="book?.toRead"
-            class="badge badge-info"
+            class="badge badge-info mx-1"
           >{{ t('book.to_read') }}</span>
+          <span
+            v-if="book?.borrowed"
+            class="badge badge-info"
+          >{{ t('book.borrowed') }}</span>
         </div>
       </div>
     </div>

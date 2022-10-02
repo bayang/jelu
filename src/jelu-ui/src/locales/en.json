@@ -158,7 +158,8 @@
         "only_in_my_list" : "Only books in my lists",
         "only_not_in_my_list" : "Only books not in my lists",
         "owned" : "Book is owned",
-        "role" : "Role"
+        "role" : "Role",
+        "borrowed" : "Book is borrowed"
     },
     "book" : {
         "owned" : "owned",
@@ -186,7 +187,8 @@
         "page" : "page | pages",
         "nb_in_series" : "# in series",
         "in_read_list" : "in read list",
-        "translator" : "translator | translators"
+        "translator" : "translator | translators",
+        "borrowed" : "borrowed"
     },
     "authors_merge" : {
         "authors_merging_utility" : "Authors merging utility",

@@ -430,4 +430,9 @@
             );
         </sql>
     </changeSet>
+    <changeSet id="add_borrowed_column" author="byng">
+        <sql>
+            ALTER TABLE user_book ADD is_borrowed BOOLEAN;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

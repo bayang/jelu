@@ -68,7 +68,7 @@ class CsvExportServiceTest(
         readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -106,7 +106,8 @@ class CsvExportServiceTest(
             owned = false,
             toRead = true,
             percentRead = null,
-            book = book1
+            book = book1,
+            borrowed = null
         )
         val saved1: UserBookLightDto = bookService.save(createUserBookDto1, user(), null)
 
