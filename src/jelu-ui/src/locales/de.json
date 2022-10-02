@@ -92,7 +92,7 @@
         "do_nothing": "Nichts tun",
         "add": "Hinzufügen",
         "add_to_my_books": "Noch nicht in deinen Büchern, klicke um es hinzuzufügen",
-        "add_translator": "Add a translator"
+        "add_translator": "Übersetzer:in hinzufügen"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -158,8 +158,8 @@
         "only_in_my_list": "Nur Bücher in meinen Listen",
         "only_not_in_my_list": "Nur Bücher außerhalb meiner Listen",
         "owned": "Besitze ich",
-        "role": "Role",
-        "borrowed": "Book is borrowed"
+        "role": "Rolle",
+        "borrowed": "Buch ist geliehen"
     },
     "book": {
         "owned": "Besitze ich",
@@ -187,8 +187,8 @@
         "page": "Seite | Seiten",
         "nb_in_series": "# in Serie",
         "in_read_list": "In der Leseliste",
-        "translator": "translator | translators",
-        "borrowed": "borrowed"
+        "translator": "Übersetzer:innen",
+        "borrowed": "Geliehen"
     },
     "authors_merge": {
         "authors_merging_utility": "Autor:innen zusammenführen",
