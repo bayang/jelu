@@ -234,7 +234,7 @@ class BookRepository(
     }
 
     fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
-        logger.debug { "role $role" }
+        logger.trace { "role $role" }
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
             .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
