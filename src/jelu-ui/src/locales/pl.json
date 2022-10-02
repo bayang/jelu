@@ -92,7 +92,7 @@
         "do_nothing": "Nie rób nic",
         "add": "Dodaj",
         "add_to_my_books": "Nie jest jeszcze w Twoich książkach, naciśnij, aby dodać",
-        "add_translator": "Add a translator"
+        "add_translator": "Dodaj tłumacza"
     },
     "settings": {
         "pick_language": "Wybierz język",
@@ -158,8 +158,8 @@
         "only_in_my_list": "Tylko książki na mojej liście",
         "only_not_in_my_list": "Tylko książki nie na mojej liście",
         "owned": "Posiadasz tę książkę",
-        "role": "Role",
-        "borrowed": "Book is borrowed"
+        "role": "Rola",
+        "borrowed": "Książka jest pożyczona"
     },
     "book": {
         "owned": "posiadane",
@@ -187,8 +187,8 @@
         "page": "strona | strony",
         "nb_in_series": "# w serii",
         "in_read_list": "na liście czytania",
-        "translator": "translator | translators",
-        "borrowed": "borrowed"
+        "translator": "tłumacz | tłumaczy",
+        "borrowed": "pożyczona"
     },
     "authors_merge": {
         "authors_merging_utility": "Narzędzie scalania autorów",
