@@ -91,7 +91,8 @@
         "no": "Nee",
         "do_nothing": "Niets doen",
         "add": "Toevoegen",
-        "add_to_my_books": "Nog niet in je boeken, klik om het toe te voegen"
+        "add_to_my_books": "Nog niet in je boeken, klik om het toe te voegen",
+        "add_translator": "Add a translator"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -156,7 +157,9 @@
         "any": "Elke",
         "only_in_my_list": "Alleen boeken in mijn lijsten",
         "only_not_in_my_list": "Alleen boeken die niet in mijn lijsten staan",
-        "owned": "Boek is in eigendom"
+        "owned": "Boek is in eigendom",
+        "role": "Role",
+        "borrowed": "Book is borrowed"
     },
     "book": {
         "owned": "in bezit",
@@ -183,7 +186,9 @@
         "percent_read": "percentage gelezen",
         "page": "pagina | pagina's",
         "nb_in_series": "# in de serie",
-        "in_read_list": "in de te-lezen lijst"
+        "in_read_list": "in de te-lezen lijst",
+        "translator": "translator | translators",
+        "borrowed": "borrowed"
     },
     "authors_merge": {
         "authors_merging_utility": "Hulpprogramma samenvoegen auteurs",
