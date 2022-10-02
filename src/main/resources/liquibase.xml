@@ -419,4 +419,15 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="create_book_translators" author="byng">
+        <sql>CREATE TABLE book_translators
+            (
+            translator BLOB(16) NOT NULL,
+            book BLOB(16) NOT NULL,
+            PRIMARY KEY (translator, book),
+            FOREIGN KEY (translator) REFERENCES author(id) ON DELETE CASCADE,
+            FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
+    </changeSet>
 </databaseChangeLog>

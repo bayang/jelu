@@ -69,7 +69,7 @@ class ReadingEventServiceTest(
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
         }
-        bookService.findAll(null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).forEach {
+        bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).forEach {
             bookService.deleteBookById(it.id!!)
         }
     }
@@ -349,7 +349,7 @@ class ReadingEventServiceTest(
         val user = user()
         val createBook = bookDto()
         val savedBook = bookService.save(createBook, null)
-        val nbBooks = bookService.findAll(null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
+        val nbBooks = bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(1, nbBooks)
 
         var nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, Pageable.ofSize(30)).totalElements
@@ -376,7 +376,7 @@ class ReadingEventServiceTest(
     @Test
     fun newEventWithoutBookIdShouldThrowException() {
         val user = user()
-        val nbBooks = bookService.findAll(null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
+        val nbBooks = bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(0, nbBooks)
 
         val nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, Pageable.ofSize(30)).totalElements

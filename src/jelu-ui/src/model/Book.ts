@@ -15,6 +15,7 @@ export interface Book {
     publishedDate?: string|null,
     modificationDate?: string,
     authors?: Array<Author>,
+    translators?: Array<Author>,
     tags?: Array<Tag>,
     series?: string, 
     numberInSeries? : number|null,

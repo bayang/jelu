@@ -16,6 +16,7 @@ import BookCard from "./BookCard.vue";
 import EditAuthorModalVue from "./EditAuthorModal.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
 import { useRoute } from 'vue-router';
+import { Role } from "../model/Role";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -39,12 +40,13 @@ const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, update
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
 
 const libraryFilter: Ref<LibraryFilter> = useRouteQuery('libraryFilter', 'ANY' as LibraryFilter)
+const roleFilter: Ref<Role> = useRouteQuery('roleFilter', 'ANY' as Role)
 
 const open = ref(false)
 
 const getBooksIsLoading: Ref<boolean> = ref(false)
 
-watch([() => route.params.authorId, page, sortQuery, libraryFilter], (newVal, oldVal) => {
+watch([() => route.params.authorId, page, sortQuery, libraryFilter, roleFilter], (newVal, oldVal) => {
   console.log(page.value)
   console.log(newVal + " " + oldVal)
   console.log(route.name)
@@ -73,7 +75,7 @@ const getBooks = () => {
   getBooksIsLoading.value = true
   dataService.getAuthorBooksById(route.params.authorId as string, 
     pageAsNumber.value - 1, perPage.value, sortQuery.value, 
-    libraryFilter.value)
+    libraryFilter.value, roleFilter.value)
     .then(res => {
         console.log(res)
           total.value = res.totalElements
@@ -190,6 +192,27 @@ getBooks()
           native-value="ONLY_NON_USER_BOOKS"
         >
           {{ t('filtering.only_not_in_my_list') }}
+        </o-radio>
+      </div>
+      <div class="field">
+        <label class="label">{{ t('filtering.role') }} : </label>
+        <o-radio
+          v-model="roleFilter"
+          native-value="ANY"
+        >
+          {{ t('filtering.any') }}
+        </o-radio>
+        <o-radio
+          v-model="roleFilter"
+          native-value="AUTHOR"
+        >
+          {{ t('book.author') }}
+        </o-radio>
+        <o-radio
+          v-model="roleFilter"
+          native-value="TRANSLATOR"
+        >
+          {{ t('book.translator') }}
         </o-radio>
       </div>
     </template>

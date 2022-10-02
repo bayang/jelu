@@ -22,6 +22,7 @@ const emit = defineEmits(['close']);
 
 let filteredAuthors: Ref<Array<Author>> = ref([]);
 let filteredTags: Ref<Array<Tag>> = ref([]);
+let filteredTranslators: Ref<Array<Author>> = ref([]);
 let userbook: Ref<UserBook> = ref(copyInput(props.book))
 let hasImage: Ref<boolean> = ref(userbook.value.book.image != null)
 let deleteImage: Ref<boolean> = ref(false)
@@ -134,6 +135,10 @@ function getFilteredAuthors(text: string) {
   dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
 }
 
+function getFilteredTranslators(text: string) {
+  dataService.findAuthorByCriteria(text).then((data) => filteredTranslators.value = data.content)
+}
+
 function getFilteredTags(text: string) {
   dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
@@ -164,6 +169,29 @@ function beforeAdd(item: Author | string) {
       console.log(`author ${author.name}`)
       if (author.name === item) {
         console.log(`author ${author.name} item ${item}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  return shouldAdd
+}
+
+function beforeAddTranslator(item: Author | string) {
+  let shouldAdd = true
+  if (item instanceof Object) {
+    userbook.value.book?.translators?.forEach(translator => {
+      console.log(`translator ${translator.name}`)
+      if (translator.name === item.name) {
+        console.log(`translator ${translator.name} item ${item.name}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  else {
+    userbook.value.book?.translators?.forEach(translator => {
+      console.log(`translator ${translator.name}`)
+      if (translator.name === item) {
+        console.log(`translator ${translator.name} item ${item}`)
         shouldAdd = false;
       }
     });
@@ -279,6 +307,30 @@ function toggleRemoveImage() {
               field="name"
               :placeholder="t('labels.add_tag')"
               @typing="getFilteredTags"
+            />
+          </o-field>
+        </div>
+        <div class="field jelu-authorinput pb-2">
+          <o-field
+            horizontal
+            :label="t('book.translator', 2)"
+            class="capitalize"
+          >
+            <o-inputitems
+              v-model="userbook.book.translators"
+              :data="filteredTranslators"
+              :autocomplete="true"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="beforeAddTranslator"
+              :create-item="createAuthor"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              :placeholder="t('labels.add_translator')"
+              @typing="getFilteredTranslators"
+              @add="itemAdded"
             />
           </o-field>
         </div>

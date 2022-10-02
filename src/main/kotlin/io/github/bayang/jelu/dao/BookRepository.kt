@@ -7,6 +7,7 @@ import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -24,6 +25,7 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.batchInsert
@@ -75,14 +77,18 @@ class BookRepository(
     val fileManager: FileManager
 ) {
 
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, tags: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
             .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
+        // required to avoir ambiguous column name "author.id" in joins below
+        val translatorsAlias = AuthorTable.alias("trn")
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
             .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
+            .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
+            .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .slice(BookTable.columns)
@@ -101,7 +107,7 @@ class BookRepository(
         if (!series?.trim().isNullOrBlank()) {
             query.andWhere { BookTable.series like "%$series%" }
         }
-        if (authors != null && authors.isNotEmpty()) {
+        if (!authors.isNullOrEmpty()) {
             var first = true
             authors.forEach { author: String ->
                 if (first) {
@@ -112,7 +118,18 @@ class BookRepository(
                 }
             }
         }
-        if (tags != null && tags.isNotEmpty()) {
+        if (!translators.isNullOrEmpty()) {
+            var first = true
+            translators.forEach { translator: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
+                } else {
+                    query.orWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
+                }
+            }
+        }
+        if (!tags.isNullOrEmpty()) {
             var first = true
             tags.forEach { tag: String ->
                 if (first) {
@@ -216,15 +233,23 @@ class BookRepository(
         )
     }
 
-    fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
+        logger.debug { "role $role" }
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
             .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         val query = BookTable.join(BookAuthors, JoinType.LEFT)
+            .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.book, otherColumn = BookTable.id)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .slice(BookTable.columns)
-            .select { BookAuthors.author eq authorId }
+            .select {
+                when (role) {
+                    Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId)
+                    Role.AUTHOR -> BookAuthors.author eq authorId
+                    Role.TRANSLATOR -> BookTranslators.translator eq authorId
+                }
+            }
         if (libaryFilter == LibraryFilter.ONLY_USER_BOOKS) {
             // only books where user has an userbook
             query.andWhere { UserBookTable.user eq user.id }
@@ -326,6 +351,25 @@ class BookRepository(
         }
         if (authorsList.isNotEmpty()) {
             updated.authors = SizedCollection(authorsList)
+        }
+        val translatorsList = mutableListOf<Author>()
+        book.translators?.forEach {
+            // first try to find exact match by id
+            var authorEntity: Author? = if (it.id != null) {
+                findAuthorsById(it.id)
+            }
+            // if no id provided or research by id doesn't return anything try to find by name
+            else {
+                findAuthorsByName(it.name.trim()).firstOrNull()
+            }
+            if (authorEntity != null) {
+                translatorsList.add(authorEntity)
+            } else {
+                translatorsList.add(save(it))
+            }
+        }
+        if (translatorsList.isNotEmpty()) {
+            updated.translators = SizedCollection(translatorsList)
         }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
@@ -439,6 +483,20 @@ class BookRepository(
                 authorsList.add(save(authorDto))
             }
         }
+        val translatorsList = mutableListOf<Author>()
+        book.translators?.forEach { authorDto ->
+            val authorEntity: Author? = findAuthorsByName(authorDto.name.trim()).firstOrNull()
+            if (authorEntity != null) {
+                // we can receive the same author or the same but
+                // with only one letter with a different case
+                // so do not put twice the same entity in the list
+                if (!translatorsList.contains(authorEntity)) {
+                    translatorsList.add(authorEntity)
+                }
+            } else {
+                translatorsList.add(save(authorDto))
+            }
+        }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
             val tagEntity: Tag? = findTagsByName(it.name.trim()).firstOrNull()
@@ -473,8 +531,10 @@ class BookRepository(
 
         created.authors = SizedCollection(authorsList)
         created.tags = SizedCollection(tagsList)
+        created.translators = SizedCollection(translatorsList)
         // eager loading, see if we keep this in the long term
         created.load(Book::authors)
+        created.load(Book::translators)
         created.load(Book::tags)
         return created
     }
@@ -551,7 +611,7 @@ class BookRepository(
         if (bookId != null) {
             query.andWhere { UserBookTable.book eq bookId }
         }
-        if (eventTypes != null && eventTypes.isNotEmpty()) {
+        if (!eventTypes.isNullOrEmpty()) {
             query.andWhere { UserBookTable.lastReadingEvent inList eventTypes }
         }
         if (toRead != null) {
@@ -679,5 +739,15 @@ class BookRepository(
 
     fun deleteAuthorById(authorId: UUID) {
         Author[authorId].delete()
+    }
+
+    /**
+     * Removes a translator from a book without deleting the translator from the database.
+     * Used to clean the composite table
+     */
+    fun deleteTranslatorFromBook(bookId: UUID, translatorId: UUID) {
+        BookTranslators.deleteWhere {
+            BookTranslators.book eq bookId and(BookTranslators.translator eq translatorId)
+        }
     }
 }

@@ -442,6 +442,26 @@ getBook()
             </router-link>
           </li>
         </ul>
+        <p
+          v-if="book != null && book.book != null && book.book.translators != null && book?.book?.translators?.length > 0"
+        >
+          <span class="font-semibold capitalize">{{ t('book.translator', 2) }} :</span>
+        </p>
+        <ul
+          v-if="book != null && book.book != null && book.book.translators != null && book?.book?.translators?.length > 0"
+        >
+          <li
+            v-for="translator in book?.book?.translators"
+            :key="translator.id"
+          >
+            <router-link
+              class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+              :to="{ name: 'author-detail', params: { authorId: translator.id } }"
+            >
+              {{ translator.name }}&nbsp;
+            </router-link>
+          </li>
+        </ul>
         <p v-if="book?.book?.publisher">
           <span class="font-semibold capitalize">{{ t('book.publisher') }} :</span>
           {{ book.book.publisher }}

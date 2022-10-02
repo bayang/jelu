@@ -84,6 +84,9 @@ let authors: Ref<Array<Author>> = ref([]);
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let tags: Ref<Array<Tag>> = ref([]);
 
+let filteredTranslators: Ref<Array<Author>> = ref([]);
+let translators: Ref<Array<Author>> = ref([]);
+
 const showModal: Ref<boolean> = ref(false)
 const metadata: Ref<Metadata | null> = ref(null)
 // let hasImage: Ref<boolean> = ref(metadata?.value?.image != null)
@@ -130,6 +133,7 @@ const importBook = async () => {
     let userBook: UserBook = fillBook(form, publishedDate.value)
     authors.value.forEach((a) => userBook.book.authors?.push(a));
     tags.value.forEach((t) => userBook.book.tags?.push(t));
+    translators.value.forEach((t) => userBook.book.translators?.push(t));
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
     }
@@ -192,7 +196,8 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
       librarythingId: formdata.librarythingId,
       language: formdata.language,
       authors: [],
-      tags: []
+      tags: [],
+      translators: []
     },
     owned: formdata.owned,
     personalNotes: formdata.personalNotes,
@@ -252,6 +257,10 @@ function getFilteredTags(text: string) {
   dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
 
+function getFilteredTranslators(text: string) {
+  dataService.findAuthorByCriteria(text).then((data) => filteredTranslators.value = data.content)
+}
+
 function beforeAdd(item: Author | string) {
   let shouldAdd = true
   if (item instanceof Object) {
@@ -268,6 +277,29 @@ function beforeAdd(item: Author | string) {
       console.log(`author ${author.name}`)
       if (author.name === item) {
         console.log(`author ${author.name} item ${item}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  return shouldAdd
+}
+
+function beforeAddTranslator(item: Author | string) {
+  let shouldAdd = true
+  if (item instanceof Object) {
+    translators.value.forEach(translator => {
+      console.log(`translator ${translator.name}`)
+      if (translator.name === item.name) {
+        console.log(`translator ${translator.name} item ${item.name}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  else {
+    translators.value.forEach(translator => {
+      console.log(`translator ${translator.name}`)
+      if (translator.name === item) {
+        console.log(`translator ${translator.name} item ${item}`)
         shouldAdd = false;
       }
     });
@@ -518,6 +550,29 @@ let displayDatepicker = computed(() => {
               field="name"
               :placeholder="t('labels.add_tag')"
               @typing="getFilteredTags"
+            />
+          </o-field>
+        </div>
+        <div class="field jelu-authorinput mb-3">
+          <o-field 
+            horizontal 
+            :label="t('book.translator', 2)"
+            class="capitalize"
+          >
+            <o-inputitems
+              v-model="translators"
+              :data="filteredTranslators"
+              :autocomplete="true"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="beforeAddTranslator"
+              :create-item="createAuthor"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              :placeholder="t('labels.add_translator')"
+              @typing="getFilteredTranslators"
             />
           </o-field>
         </div>

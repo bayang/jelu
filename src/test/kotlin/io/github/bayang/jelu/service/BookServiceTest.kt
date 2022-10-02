@@ -169,19 +169,6 @@ class BookServiceTest(
     }
 
     @Test
-    fun testInsertBooksWithAuthors() {
-        val res: BookDto = bookService.save(bookDto(), null)
-        Assertions.assertNotNull(res.id)
-        val found = bookService.findBookById(res.id!!)
-        Assertions.assertEquals(found.id, res.id)
-        Assertions.assertEquals(found.authors?.get(0)?.name, res.authors?.get(0)?.name)
-        Assertions.assertEquals(found.title, res.title)
-        Assertions.assertEquals(found.isbn10, res.isbn10)
-        Assertions.assertEquals(found.pageCount, res.pageCount)
-        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
-    }
-
-    @Test
     fun testDeletedAuthorShouldBeRemovedFromBook() {
         val res: BookDto = bookService.save(bookDto(), null)
         Assertions.assertNotNull(res.id)
@@ -190,6 +177,7 @@ class BookServiceTest(
         val found = bookService.findBookById(res.id!!)
         Assertions.assertEquals(found.id, res.id)
         Assertions.assertEquals(found.authors?.get(0)?.name, res.authors?.get(0)?.name)
+        Assertions.assertEquals(0, found.translators?.size)
         Assertions.assertEquals(found.title, res.title)
         Assertions.assertEquals(found.isbn10, res.isbn10)
         Assertions.assertEquals(found.pageCount, res.pageCount)
@@ -199,6 +187,60 @@ class BookServiceTest(
         Assertions.assertEquals(0, foundAfterModification.authors?.size)
         val foundAfterModification2 = bookService.findBookById(res2.id!!)
         Assertions.assertEquals(0, foundAfterModification2.authors?.size)
+    }
+
+    @Test
+    fun testDeletedAuthorShouldBeRemovedFromBookTranslators() {
+        val dto = BookCreateDto(
+            id = null,
+            title = "title",
+            isbn10 = "1566199093",
+            isbn13 = "9781566199094 ",
+            summary = "This is a test summary\nwith a newline",
+            image = "",
+            publisher = "test-publisher",
+            pageCount = 50,
+            publishedDate = "",
+            series = "",
+            authors = mutableListOf(authorDto()),
+            translators = mutableListOf(authorDto()),
+            numberInSeries = null,
+            tags = emptyList(),
+            goodreadsId = "4321abc",
+            googleId = "1234",
+            librarythingId = "",
+            language = "",
+            amazonId = ""
+        )
+        val res: BookDto = bookService.save(bookDto(), null)
+        Assertions.assertNotNull(res.id)
+        val res2: BookDto = bookService.save(bookDto("title2"), null)
+        Assertions.assertNotNull(res2.id)
+        val res3: BookDto = bookService.save(dto, null)
+        Assertions.assertNotNull(res3.id)
+        Assertions.assertEquals(1, res3.translators?.size)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors?.get(0)?.name, res.authors?.get(0)?.name)
+        Assertions.assertEquals(0, found.translators?.size)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        val found1 = bookService.findBookById(res3.id!!)
+        Assertions.assertEquals(found1.id, res3.id)
+        Assertions.assertEquals(found1.authors?.get(0)?.name, res3.authors?.get(0)?.name)
+        Assertions.assertEquals(found1.translators?.get(0)?.name, res3.translators?.get(0)?.name)
+        Assertions.assertEquals(1, found1.translators?.size)
+        Assertions.assertEquals(found1.title, res3.title)
+        bookService.deleteAuthorById(found.authors?.get(0)?.id!!)
+        val foundAfterModification = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(0, foundAfterModification.authors?.size)
+        val foundAfterModification2 = bookService.findBookById(res2.id!!)
+        Assertions.assertEquals(0, foundAfterModification2.authors?.size)
+        val foundAfterModification3 = bookService.findBookById(res3.id!!)
+        Assertions.assertEquals(0, foundAfterModification3.authors?.size)
+        Assertions.assertEquals(0, foundAfterModification3.translators?.size)
     }
 
     @Test
@@ -219,6 +261,54 @@ class BookServiceTest(
         bookService.deleteAuthorFromBook(res.id!!, authorId!!)
         val foundAfterModification = bookService.findBookById(res.id!!)
         Assertions.assertEquals(0, foundAfterModification.authors?.size)
+        val foundAfterModification2 = bookService.findBookById(res2.id!!)
+        Assertions.assertEquals(1, foundAfterModification2.authors?.size)
+        val authorStillInDb = bookService.findAuthorsById(authorId)
+        Assertions.assertEquals(authorName, authorStillInDb.name)
+    }
+
+    @Test
+    fun testDeleteTranslatorOnlyFromOneBookStillExistsInDb() {
+        val dto = BookCreateDto(
+            id = null,
+            title = "title",
+            isbn10 = "1566199093",
+            isbn13 = "9781566199094 ",
+            summary = "This is a test summary\nwith a newline",
+            image = "",
+            publisher = "test-publisher",
+            pageCount = 50,
+            publishedDate = "",
+            series = "",
+            authors = mutableListOf(authorDto()),
+            translators = mutableListOf(authorDto()),
+            numberInSeries = null,
+            tags = emptyList(),
+            goodreadsId = "4321abc",
+            googleId = "1234",
+            librarythingId = "",
+            language = "",
+            amazonId = ""
+        )
+        val res: BookDto = bookService.save(dto, null)
+        Assertions.assertNotNull(res.id)
+        Assertions.assertEquals(1, res.translators?.size)
+        val res2: BookDto = bookService.save(bookDto("title2"), null)
+        Assertions.assertNotNull(res2.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors?.get(0)?.name, res.authors?.get(0)?.name)
+        Assertions.assertEquals(found.translators?.get(0)?.name, res.translators?.get(0)?.name)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        val authorId = res.translators?.get(0)?.id
+        val authorName = res.translators?.get(0)?.name
+        bookService.deleteTranslatorFromBook(res.id!!, authorId!!)
+        val foundAfterModification = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(1, foundAfterModification.authors?.size)
+        Assertions.assertEquals(0, foundAfterModification.translators?.size)
         val foundAfterModification2 = bookService.findBookById(res2.id!!)
         Assertions.assertEquals(1, foundAfterModification2.authors?.size)
         val authorStillInDb = bookService.findAuthorsById(authorId)
@@ -887,6 +977,7 @@ class BookServiceTest(
             publishedDate = "",
             series = "",
             authors = mutableListOf(authorDto1),
+            translators = mutableListOf(authorDto2),
             numberInSeries = null,
             tags = tags(),
             goodreadsId = "4321abc",
@@ -949,7 +1040,7 @@ class BookServiceTest(
         val author1BooksNb = bookService.findAuthorBooksById(authorId1!!, user(), Pageable.ofSize(30), LibraryFilter.ANY).totalElements
         val author2BooksNb = bookService.findAuthorBooksById(authorId2!!, user(), Pageable.ofSize(30), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(2, author1BooksNb)
-        Assertions.assertEquals(2, author2BooksNb)
+        Assertions.assertEquals(3, author2BooksNb)
         var authorsNb = bookService.findAllAuthors(null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, authorsNb)
         val update = AuthorUpdateDto(biography = null, name = "author 3", dateOfBirth = "2000-12-12", dateOfDeath = null, facebookPage = null, goodreadsPage = null, image = null, instagramPage = null, officialPage = null, twitterPage = null, wikipediaPage = null, notes = null, creationDate = null, id = null, modificationDate = null)
@@ -963,6 +1054,9 @@ class BookServiceTest(
         Assertions.assertEquals(3, mergedBooks.totalElements)
         authorsNb = bookService.findAllAuthors(null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, authorsNb)
+        val book1AfterMerge = bookService.findBookById(savedBook1.id!!)
+        Assertions.assertEquals(1, book1AfterMerge.translators?.size)
+        Assertions.assertEquals(1, book1AfterMerge.authors?.size)
     }
 
     fun user(): User {

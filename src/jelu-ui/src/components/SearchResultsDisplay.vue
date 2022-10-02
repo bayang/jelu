@@ -26,6 +26,7 @@ const isbn10Query: Ref<string|undefined> = useRouteQuery('isbn10', undefined)
 const isbn13Query: Ref<string|undefined> = useRouteQuery('isbn13', undefined)
 const seriesQuery: Ref<string|undefined> = useRouteQuery('series', undefined)
 const authorsQuery: Ref<Array<string>> = useRouteQueryArray('authors', [])
+const translatorsQuery: Ref<Array<string>> = useRouteQueryArray('translators', [])
 const tagsQuery: Ref<Array<string>> = useRouteQueryArray('tags', [])
 
 const tagsArrayString: Ref<string> = ref("")
@@ -36,6 +37,11 @@ if (tagsQuery.value.length > 0) {
 const authorsArrayString: Ref<string> = ref("")
 if (authorsQuery.value.length > 0) {
   authorsArrayString.value = authorsQuery.value.join(",")
+}
+
+const translatorsArrayString: Ref<string> = ref("")
+if (translatorsQuery.value.length > 0) {
+  translatorsArrayString.value = translatorsQuery.value.join(",")
 }
 
 const books: Ref<Array<Book>> = ref([]);
@@ -55,11 +61,14 @@ const progress: Ref<boolean> = ref(false)
 const search = () => {
     progress.value = true
     updatePageLoading(true)
-      dataService.findBooks(titleQuery.value, 
+      dataService.findBooks(
+        titleQuery.value, 
       isbn10Query.value, isbn13Query.value, 
       seriesQuery.value, authorsQuery.value,
-      tagsQuery.value,
-      pageAsNumber.value - 1, perPage.value, sortQuery.value, libraryFilter.value)
+      translatorsQuery.value,tagsQuery.value,
+      pageAsNumber.value - 1, perPage.value, 
+      sortQuery.value, libraryFilter.value
+      )
     .then(res => {
       progress.value = false
       updatePageLoading(false)
@@ -96,6 +105,10 @@ watch(authorsArrayString, (newVal, oldVal) => {
   authorsQuery.value = arrayParam(authorsArrayString.value)
 })
 
+watch(translatorsArrayString, (newVal, oldVal) => {
+  translatorsQuery.value = arrayParam(translatorsArrayString.value)
+})
+
 watch(tagsArrayString, (newVal, oldVal) => {
   tagsQuery.value = arrayParam(tagsArrayString.value)
 })
@@ -112,6 +125,7 @@ if (titleQuery.value != null ||
   isbn13Query.value != null ||
   seriesQuery.value != null ||
   authorsQuery.value.length > 0 ||
+  translatorsQuery.value.length > 0 ||
   tagsQuery.value.length > 0) {
     search()
   }
@@ -280,6 +294,18 @@ if (titleQuery.value != null ||
           <o-input
             v-model="authorsArrayString"
             :placeholder="t('book.author', 2)"
+            type="search"
+            icon="magnify" 
+            icon-clickable
+            icon-pack="mdi"
+            class="input focus:input-accent"
+            @keyup.enter="search"
+          />
+        </div>
+        <div class="search-form-extended-input">
+          <o-input
+            v-model="translatorsArrayString"
+            :placeholder="t('book.translator', 2)"
             type="search"
             icon="magnify" 
             icon-clickable
