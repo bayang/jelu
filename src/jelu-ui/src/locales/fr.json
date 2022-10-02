@@ -91,7 +91,8 @@
         "no": "Non",
         "do_nothing": "Ne rien faire",
         "add": "Ajouter",
-        "add_to_my_books": "Pas encore dans vos lives, cliquer pour ajouter"
+        "add_to_my_books": "Pas encore dans vos lives, cliquer pour ajouter",
+        "add_translator": "Add a translator"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -156,7 +157,9 @@
         "any": "Tous",
         "only_in_my_list": "Seulement dans mes listes",
         "only_not_in_my_list": "Seulement absents de mes listes",
-        "owned": "Possédé ?"
+        "owned": "Possédé ?",
+        "role": "Role",
+        "borrowed": "Book is borrowed"
     },
     "book": {
         "owned": "possédé",
@@ -183,7 +186,9 @@
         "percent_read": "pourcentage lu",
         "page": "page | pages",
         "nb_in_series": "n° dans la série",
-        "in_read_list": "dans la liste de lecture"
+        "in_read_list": "dans la liste de lecture",
+        "translator": "translator | translators",
+        "borrowed": "borrowed"
     },
     "authors_merge": {
         "authors_merging_utility": "Outil de fusion d'auteurs",
