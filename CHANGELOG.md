@@ -1,3 +1,11 @@
+## [0.32.0](https://github.com/bayang/jelu/compare/v0.31.0...v0.32.0) (2022-10-02)
+
+
+### Features
+
+* add translators on books [#27](https://github.com/bayang/jelu/issues/27) ([70e2840](https://github.com/bayang/jelu/commit/70e2840671d5e91be22505569b4a2c4b84852d6c))
+* mark book as borrowed [#46](https://github.com/bayang/jelu/issues/46) ([950c6c7](https://github.com/bayang/jelu/commit/950c6c79d09696cdd78e2e793c61cbe81b3ea4ac))
+
 ## [0.31.0](https://github.com/bayang/jelu/compare/v0.30.0...v0.31.0) (2022-09-20)
 
 
