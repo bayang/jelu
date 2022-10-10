@@ -92,7 +92,7 @@
         "do_nothing": "Nedělat nic",
         "add": "Přidat",
         "add_to_my_books": "Zatím není ve vašich knihách, klikněte pro přidání",
-        "add_translator": "Add a translator"
+        "add_translator": "Přidat překladatele"
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
@@ -159,7 +159,7 @@
         "only_not_in_my_list": "Pouze knihy, které nejsou v mých seznamech",
         "owned": "Kniha je vlastněná",
         "role": "Role",
-        "borrowed": "Book is borrowed"
+        "borrowed": "Kniha je vypůjčená"
     },
     "book": {
         "owned": "vlastněné",
@@ -187,8 +187,8 @@
         "page": "stránka | stránky",
         "nb_in_series": "# v sérii",
         "in_read_list": "v listu k přečtení",
-        "translator": "translator | translators",
-        "borrowed": "borrowed"
+        "translator": "překladatel | překladatelé",
+        "borrowed": "zapůjčené"
     },
     "authors_merge": {
         "authors_merging_utility": "Nástroj k sloučení autorů",
