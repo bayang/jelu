@@ -58,7 +58,7 @@ getReview()
         :review="review"
         :show-delete="false"
         :show-edit="false"
-        class="basis-5/12 my-6"
+        class="basis-11/12 sm:basis-2/3 my-6"
       />
     </div>
   </section>

@@ -67,7 +67,7 @@ getReviews()
       <div
         v-for="review in reviews"
         :key="review.id"
-        class="basis-1/2"
+        class="basis-11/12 sm:basis-2/3"
       >
         <review-card
           v-if="review != null"

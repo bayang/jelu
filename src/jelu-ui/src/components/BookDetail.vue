@@ -616,7 +616,7 @@ getBook()
       <div
         v-for="review in userReviews"
         :key="review.id"
-        class="w-11/12 sm:basis-1/3"
+        class="w-11/12 2xl:basis-10/12"
       >
         <review-card
           v-if="review != null"
