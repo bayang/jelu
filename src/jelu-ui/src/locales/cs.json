@@ -148,7 +148,9 @@
         "event_type": "typ události",
         "event_date": "datum události",
         "edit_event": "upravit událost",
-        "reading": "čtu"
+        "reading": "čtu",
+        "start_date": "start date",
+        "end_date": "end date"
     },
     "filtering": {
         "book_in_list": "Kniha je v seznamu k přečtení",
