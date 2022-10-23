@@ -148,7 +148,9 @@
         "event_type": "Ereignis-Typ",
         "event_date": "Ereignis-Datum",
         "edit_event": "Ereignis bearbeiten",
-        "reading": "am lesen"
+        "reading": "am lesen",
+        "start_date": "start date",
+        "end_date": "end date"
     },
     "filtering": {
         "book_in_list": "Buch ist in der Leseliste",
