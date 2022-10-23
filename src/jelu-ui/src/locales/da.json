@@ -148,7 +148,9 @@
         "event_type": "begivenhedstype",
         "event_date": "begivenhedsdato",
         "edit_event": "rediger begivenhed",
-        "reading": "læser"
+        "reading": "læser",
+        "start_date": "start date",
+        "end_date": "end date"
     },
     "filtering": {
         "book_in_list": "Bogen er på læselisten",
