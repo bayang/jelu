@@ -1,3 +1,17 @@
+## [0.33.0](https://github.com/bayang/jelu/compare/v0.32.0...v0.33.0) (2022-10-23)
+
+
+### Features
+
+* add start date and end date on events for better clarity [#39](https://github.com/bayang/jelu/issues/39) ([1bbbea4](https://github.com/bayang/jelu/commit/1bbbea4118e2fc549d615b759d0fa27a5ab127af))
+
+
+### Bug Fixes
+
+* logging level in a method ([e6d32a1](https://github.com/bayang/jelu/commit/e6d32a1cc5ac085ca2a029872bdf2c859ca1cfc2))
+* redirect loop on history page ([43e40ca](https://github.com/bayang/jelu/commit/43e40ca3dc7cf5b0755c80b5056ba037d7285d3e))
+* reviews too narrow ([7090304](https://github.com/bayang/jelu/commit/7090304c40e0ac925c06da760ccd0c968dcbfeb8))
+
 ## [0.32.0](https://github.com/bayang/jelu/compare/v0.31.0...v0.32.0) (2022-10-02)
 
 
