@@ -148,7 +148,9 @@
         "event_type": "event type",
         "event_date": "event date",
         "edit_event": "edit event",
-        "reading": "reading"
+        "reading": "reading",
+        "start_date": "start date",
+        "end_date": "end date"
     },
     "filtering": {
         "book_in_list": "Book is in to-read list",
