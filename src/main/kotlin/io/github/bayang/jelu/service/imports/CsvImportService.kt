@@ -271,7 +271,7 @@ class CsvImportService(
                         // in case of multiple import of the same file
                         // do not create the same finished event twice if possible
                         if (!alreadyHasFinishedEventAtSameDate(savedUserBook, parsedDate)) {
-                            readingEventService.save(CreateReadingEventDto(ReadingEventType.FINISHED, savedUserBook.book.id, toInstant(parsedDate)), userEntity)
+                            readingEventService.save(CreateReadingEventDto(ReadingEventType.FINISHED, savedUserBook.book.id, toInstant(parsedDate), null), userEntity)
                         }
                         readsSaved ++
                     } catch (e: Exception) {
@@ -306,7 +306,8 @@ class CsvImportService(
                             pastDate.plusDays(
                                 idx.toLong()
                             )
-                        )
+                        ),
+                        null
                     ),
                     userEntity
                 )

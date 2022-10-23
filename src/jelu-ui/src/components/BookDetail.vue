@@ -88,7 +88,7 @@ watch(() => props.bookId, (newValue, oldValue) => {
 
 const sortedEvents = computed(() => {
   if (book.value && book.value.readingEvents) {
-    return [...book.value.readingEvents].sort((a, b) => dayjs(a.modificationDate).isAfter(dayjs(b.modificationDate)) ? -1 : 1)
+    return [...book.value.readingEvents].sort((a, b) => dayjs(a.startDate).isAfter(dayjs(b.startDate)) ? -1 : 1)
   }
   else {
     return []
@@ -262,6 +262,7 @@ function defaultCreateEvent(): CreateReadingEvent {
   return {
     eventType: ReadingEventType.CURRENTLY_READING,
     eventDate: new Date(),
+    startDate: new Date(),
     bookId: book.value?.book.id
   }
 }
@@ -654,12 +655,31 @@ getBook()
             v-if="index % 2 === 0"
             class="col-start-1 col-end-5 p-2 my-4 ml-auto shadow-md timeline-item"
           >
-            <h3 class="font-semibold">
-              {{ formatDate(event.modificationDate) }}
-            </h3>
-            <p class="capitalize">
-              {{ eventLabel(event.eventType) }}
-            </p>
+            <div
+              v-if="event.endDate != null"
+              class="sm:flex sm:gap-2"
+            >
+              <h3 class="font-semibold">
+                {{ formatDate(event.endDate) }}
+              </h3>
+              <p class="capitalize">
+                {{ eventLabel(event.eventType) }}&nbsp;-
+              </p>
+              <h3 class="font-semibold">
+                {{ formatDate(event.startDate) }}
+              </h3>
+              <p class="capitalize">
+                started
+              </p>
+            </div>
+            <div v-else>
+              <h3 class="font-semibold">
+                {{ formatDate(event.startDate) }}
+              </h3>
+              <p class="capitalize">
+                {{ eventLabel(event.eventType) }}
+              </p>
+            </div>
             <button
               class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
               @click="toggleReadingEventModal(event, true)"
@@ -709,12 +729,31 @@ getBook()
             v-if="index % 2 !== 0"
             class="col-start-6 col-end-10 p-2 my-4 mr-auto shadow-md timeline-item"
           >
-            <h3 class="font-semibold">
-              {{ formatDate(event.modificationDate) }}
-            </h3>
-            <p class="capitalize">
-              {{ eventLabel(event.eventType) }}
-            </p>
+            <div
+              v-if="event.endDate != null"
+              class="sm:flex sm:gap-2"
+            >
+              <h3 class="font-semibold">
+                {{ formatDate(event.endDate) }}
+              </h3>
+              <p class="capitalize">
+                {{ eventLabel(event.eventType) }}&nbsp;-
+              </p>
+              <h3 class="font-semibold">
+                {{ formatDate(event.startDate) }}
+              </h3>
+              <p class="capitalize">
+                started
+              </p>
+            </div>
+            <div v-else>
+              <h3 class="font-semibold">
+                {{ formatDate(event.startDate) }}
+              </h3>
+              <p class="capitalize">
+                {{ eventLabel(event.eventType) }}
+              </p>
+            </div>
             <button
               class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
               @click="toggleReadingEventModal(event, true)"

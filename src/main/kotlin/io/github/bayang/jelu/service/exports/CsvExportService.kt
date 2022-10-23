@@ -13,6 +13,7 @@ import io.github.bayang.jelu.service.UserMessageService
 import io.github.bayang.jelu.service.imports.CURRENTLY_READING
 import io.github.bayang.jelu.service.imports.TO_READ
 import io.github.bayang.jelu.service.imports.goodreadsDateFormatter
+import io.github.bayang.jelu.utils.lastEventDate
 import mu.KotlinLogging
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
@@ -183,7 +184,7 @@ class CsvExportService(
     fun listOfDatesForEvent(userbook: UserBookWithoutEventsAndUserDto, userId: UUID, eventType: ReadingEventType): String {
         val reads = readingEventService.findAll(listOf(eventType), userId, userbook.book.id, null, null, Pageable.ofSize(100))
         if (! reads.isEmpty) {
-            return reads.content.stream().map { toDateString(it.modificationDate) }.collect(Collectors.joining(","))
+            return reads.content.stream().map { lastEventDate(it) }.sorted().map { toDateString(it) }.collect(Collectors.joining(","))
         }
         return ""
     }

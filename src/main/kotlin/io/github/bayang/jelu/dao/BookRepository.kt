@@ -421,7 +421,8 @@ class BookRepository(
                 CreateReadingEventDto(
                     eventType = book.lastReadingEvent,
                     bookId = null,
-                    eventDate = null
+                    eventDate = null,
+                    startDate = null
                 )
             )
         }

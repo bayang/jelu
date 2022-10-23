@@ -167,6 +167,12 @@ class DataService {
         if (ev.modificationDate != null) {
           ev.modificationDate = dayjs(ev.modificationDate).toDate()
         }
+        if (ev.startDate != null) {
+          ev.startDate = dayjs(ev.startDate).toDate()
+        }
+        if (ev.endDate != null) {
+          ev.endDate = dayjs(ev.endDate).toDate()
+        }
       }
     }
     return tr
@@ -758,6 +764,12 @@ class DataService {
         if (ev.modificationDate != null) {
           ev.modificationDate = dayjs(ev.modificationDate).toDate()
         }
+        if (ev.startDate != null) {
+          ev.startDate = dayjs(ev.startDate).toDate()
+        }
+        if (ev.endDate != null) {
+          ev.endDate = dayjs(ev.endDate).toDate()
+        }
       }
     }
     return page
@@ -886,7 +898,8 @@ class DataService {
     try {
       const resp = await this.apiClient.put<ReadingEvent>(`${this.API_READING_EVENTS}/${event.id}`, {
         eventType: event.eventType,
-        eventDate: event.modificationDate
+        eventDate: event.endDate,
+        startDate: event.startDate
       })
       return resp.data
     } catch (error) {

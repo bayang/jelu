@@ -5,12 +5,15 @@ export interface ReadingEvent {
   creationDate?: string,
   modificationDate?: Date,
   eventType: ReadingEventType,
+  startDate?: Date,
+  endDate?: Date,
 }
 
 export interface CreateReadingEvent {
   eventDate?: Date,
   bookId?: string,
   eventType: ReadingEventType,
+  startDate?: Date,
 }
 
 export interface ReadingEventWithUserBook {
@@ -18,7 +21,9 @@ export interface ReadingEventWithUserBook {
   creationDate?: string,
   modificationDate?: Date,
   eventType: ReadingEventType,
-  userBook: UserBook
+  userBook: UserBook,
+  startDate?: Date,
+  endDate?: Date,
 }
 
 export enum ReadingEventType {

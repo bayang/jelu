@@ -142,6 +142,7 @@ class CsvExportServiceTest(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
                 date3.toInstant(),
+                null
             ),
             user()
         )
@@ -150,6 +151,7 @@ class CsvExportServiceTest(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
                 date2.toInstant(),
+                null
             ),
             user()
         )
@@ -159,6 +161,7 @@ class CsvExportServiceTest(
                 ReadingEventType.DROPPED,
                 saved1.book.id,
                 date3.toInstant(),
+                null
             ),
             user()
         )
@@ -167,6 +170,7 @@ class CsvExportServiceTest(
                 ReadingEventType.DROPPED,
                 saved1.book.id,
                 date2.toInstant(),
+                null
             ),
             user()
         )
@@ -175,6 +179,7 @@ class CsvExportServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved1.book.id,
                 date1.toInstant(),
+                null
             ),
             user()
         )

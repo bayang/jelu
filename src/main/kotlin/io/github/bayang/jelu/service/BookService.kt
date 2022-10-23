@@ -148,7 +148,8 @@ class BookService(
                 CreateReadingEventDto(
                     eventType = userBook.lastReadingEvent,
                     bookId = null,
-                    eventDate = userBook.lastReadingEventDate
+                    eventDate = userBook.lastReadingEventDate,
+                    startDate = null
                 )
             )
         }

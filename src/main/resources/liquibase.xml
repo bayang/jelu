@@ -435,4 +435,12 @@
             ALTER TABLE user_book ADD is_borrowed BOOLEAN;
         </sql>
     </changeSet>
+    <changeSet id="add_start_end_date_reading_event" author="byng">
+        <sql>
+            ALTER TABLE reading_event ADD start_date TIMESTAMP;
+            ALTER TABLE reading_event ADD end_date TIMESTAMP;
+            UPDATE reading_event SET start_date = creation_date where start_date is null;
+            UPDATE reading_event SET end_date = modification_date where end_date is null and event_type != 'CURRENTLY_READING';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
