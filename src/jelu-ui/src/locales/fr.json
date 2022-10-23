@@ -148,7 +148,9 @@
         "event_type": "type d'évènement",
         "event_date": "date de l'évènement",
         "edit_event": "modifier évènement",
-        "reading": "en cours"
+        "reading": "en cours",
+        "start_date": "start date",
+        "end_date": "end date"
     },
     "filtering": {
         "book_in_list": "Le livre est dans la liste de lecture",
