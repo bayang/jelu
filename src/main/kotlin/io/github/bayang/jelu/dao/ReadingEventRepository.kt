@@ -210,17 +210,22 @@ class ReadingEventRepository {
     }
 
     fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEvent {
+        val entity = ReadingEvent[readingEventId]
         if (updateReadingEventDto.startDate != null &&
             updateReadingEventDto.eventDate != null &&
             updateReadingEventDto.eventDate.isBefore(updateReadingEventDto.startDate)
         ) {
             throw JeluException("start date cannot be after event date")
-        }
-        val entity = ReadingEvent[readingEventId]
-        if (updateReadingEventDto.eventDate != null && updateReadingEventDto.eventDate.isBefore(entity.startDate)) {
+        } else if (updateReadingEventDto.eventDate != null &&
+            updateReadingEventDto.startDate == null &&
+            updateReadingEventDto.eventDate.isBefore(entity.startDate)
+        ) {
             throw JeluException("event date cannot be before start date")
-        }
-        if (updateReadingEventDto.startDate != null && entity.endDate != null && updateReadingEventDto.startDate.isAfter(entity.endDate)) {
+        } else if (updateReadingEventDto.startDate != null &&
+            entity.endDate != null &&
+            updateReadingEventDto.eventDate == null &&
+            updateReadingEventDto.startDate.isAfter(entity.endDate)
+        ) {
             throw JeluException("start date cannot be after end date")
         }
         return entity.apply {
