@@ -91,7 +91,8 @@
         "no": "Nee",
         "do_nothing": "Niets doen",
         "add": "Toevoegen",
-        "add_to_my_books": "Nog niet in je boeken, klik om het toe te voegen"
+        "add_to_my_books": "Nog niet in je boeken, klik om het toe te voegen",
+        "add_translator": "Voeg een vertaler toe"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -147,7 +148,9 @@
         "event_type": "type gebeurtenis",
         "event_date": "datum gebeurtenis",
         "edit_event": "bewerk gebeurtenis",
-        "reading": "aan het lezen"
+        "reading": "aan het lezen",
+        "start_date": "begindatum",
+        "end_date": "einddatum"
     },
     "filtering": {
         "book_in_list": "Boek staat in te-lezen lijst",
@@ -156,7 +159,9 @@
         "any": "Elke",
         "only_in_my_list": "Alleen boeken in mijn lijsten",
         "only_not_in_my_list": "Alleen boeken die niet in mijn lijsten staan",
-        "owned": "Boek is in eigendom"
+        "owned": "Boek is in eigendom",
+        "role": "Rol",
+        "borrowed": "Boek is geleend"
     },
     "book": {
         "owned": "in bezit",
@@ -183,7 +188,9 @@
         "percent_read": "percentage gelezen",
         "page": "pagina | pagina's",
         "nb_in_series": "# in de serie",
-        "in_read_list": "in de te-lezen lijst"
+        "in_read_list": "in de te-lezen lijst",
+        "translator": "vertaler | vertalers",
+        "borrowed": "geleend"
     },
     "authors_merge": {
         "authors_merging_utility": "Hulpprogramma samenvoegen auteurs",

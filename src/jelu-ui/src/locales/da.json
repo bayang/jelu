@@ -91,7 +91,8 @@
         "no": "Nej",
         "do_nothing": "Gør ingenting",
         "add": "Tilføj",
-        "add_to_my_books": "Endnu ikke i dine bøger. Tryk for at tilføje"
+        "add_to_my_books": "Endnu ikke i dine bøger. Tryk for at tilføje",
+        "add_translator": "Tilføj en oversætter"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -147,7 +148,9 @@
         "event_type": "begivenhedstype",
         "event_date": "begivenhedsdato",
         "edit_event": "rediger begivenhed",
-        "reading": "læser"
+        "reading": "læser",
+        "start_date": "startdato",
+        "end_date": "end date"
     },
     "filtering": {
         "book_in_list": "Bogen er på læselisten",
@@ -156,7 +159,9 @@
         "any": "Enhver",
         "only_in_my_list": "Kun bøger på mine lister",
         "only_not_in_my_list": "Kun bøger ikke på mine lister",
-        "owned": "Bogen ejes"
+        "owned": "Bogen ejes",
+        "role": "Rolle",
+        "borrowed": "Bogen er lånt"
     },
     "book": {
         "owned": "ejet",
@@ -183,7 +188,9 @@
         "percent_read": "procent læst",
         "page": "side | sider",
         "nb_in_series": "# i serie",
-        "in_read_list": "på læseliste"
+        "in_read_list": "på læseliste",
+        "translator": "oversætter | oversættere",
+        "borrowed": "lånt"
     },
     "authors_merge": {
         "authors_merging_utility": "Forfattersammenfletningsværktøj",

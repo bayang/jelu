@@ -91,7 +91,8 @@
         "no": "Non",
         "do_nothing": "Ne rien faire",
         "add": "Ajouter",
-        "add_to_my_books": "Pas encore dans vos lives, cliquer pour ajouter"
+        "add_to_my_books": "Pas encore dans vos lives, cliquer pour ajouter",
+        "add_translator": "Ajouter un traducteur"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -147,7 +148,9 @@
         "event_type": "type d'évènement",
         "event_date": "date de l'évènement",
         "edit_event": "modifier évènement",
-        "reading": "en cours"
+        "reading": "en cours",
+        "start_date": "date de début ",
+        "end_date": "date de fin"
     },
     "filtering": {
         "book_in_list": "Le livre est dans la liste de lecture",
@@ -156,7 +159,9 @@
         "any": "Tous",
         "only_in_my_list": "Seulement dans mes listes",
         "only_not_in_my_list": "Seulement absents de mes listes",
-        "owned": "Possédé ?"
+        "owned": "Possédé ?",
+        "role": "Rôle",
+        "borrowed": "Le livre est prêté"
     },
     "book": {
         "owned": "possédé",
@@ -183,7 +188,9 @@
         "percent_read": "pourcentage lu",
         "page": "page | pages",
         "nb_in_series": "n° dans la série",
-        "in_read_list": "dans la liste de lecture"
+        "in_read_list": "dans la liste de lecture",
+        "translator": "traducteur | traducteurs",
+        "borrowed": "Emprunté"
     },
     "authors_merge": {
         "authors_merging_utility": "Outil de fusion d'auteurs",

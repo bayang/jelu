@@ -91,7 +91,8 @@
         "no": "Ne",
         "do_nothing": "Nedělat nic",
         "add": "Přidat",
-        "add_to_my_books": "Zatím není ve vašich knihách, klikněte pro přidání"
+        "add_to_my_books": "Zatím není ve vašich knihách, klikněte pro přidání",
+        "add_translator": "Přidat překladatele"
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
@@ -147,7 +148,9 @@
         "event_type": "typ události",
         "event_date": "datum události",
         "edit_event": "upravit událost",
-        "reading": "čtu"
+        "reading": "čtu",
+        "start_date": "start date",
+        "end_date": "end date"
     },
     "filtering": {
         "book_in_list": "Kniha je v seznamu k přečtení",
@@ -156,7 +159,9 @@
         "any": "Jakýkoliv",
         "only_in_my_list": "Pouze knihy v mých seznamech",
         "only_not_in_my_list": "Pouze knihy, které nejsou v mých seznamech",
-        "owned": "Kniha je vlastněná"
+        "owned": "Kniha je vlastněná",
+        "role": "Role",
+        "borrowed": "Kniha je vypůjčená"
     },
     "book": {
         "owned": "vlastněné",
@@ -183,7 +188,9 @@
         "percent_read": "procent přečteno",
         "page": "stránka | stránky",
         "nb_in_series": "# v sérii",
-        "in_read_list": "v listu k přečtení"
+        "in_read_list": "v listu k přečtení",
+        "translator": "překladatel | překladatelé",
+        "borrowed": "zapůjčené"
     },
     "authors_merge": {
         "authors_merging_utility": "Nástroj k sloučení autorů",
