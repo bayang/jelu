@@ -182,7 +182,7 @@ class CsvExportService(
     }
 
     fun listOfDatesForEvent(userbook: UserBookWithoutEventsAndUserDto, userId: UUID, eventType: ReadingEventType): String {
-        val reads = readingEventService.findAll(listOf(eventType), userId, userbook.book.id, null, null, Pageable.ofSize(100))
+        val reads = readingEventService.findAll(listOf(eventType), userId, userbook.book.id, null, null, null, null, Pageable.ofSize(100))
         if (! reads.isEmpty) {
             return reads.content.stream().map { lastEventDate(it) }.sorted().map { toDateString(it) }.collect(Collectors.joining(","))
         }

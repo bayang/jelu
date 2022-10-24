@@ -38,7 +38,7 @@ const getYears = () => {
 const eventsForYear = () => {
   if (currentYear.value !== null) {
     updatePageLoading(true)
-    dataService.myReadingEvents(nonCurrentlyReadingEvents, undefined, `${currentYear.value}-01-01`, `${currentYear.value + 1}-01-01`, pageAsNumber.value - 1, perPage.value)
+    dataService.myReadingEvents(nonCurrentlyReadingEvents, undefined, undefined, undefined, `${currentYear.value}-01-01`, `${currentYear.value + 1}-01-01`, pageAsNumber.value - 1, perPage.value)
     .then(res => {
       total.value = res.totalElements
       yearEvents.value = res.content
@@ -87,7 +87,7 @@ watch(page, (newVal, oldVal) => {
 const eventsByMonth: Ref<Map<number, Array<ReadingEventWithUserBook>>> = computed(() => {
   const monthEvents = new Map();
   yearEvents.value.forEach(ev => {
-    let month = ev.modificationDate?.getMonth()
+    let month = ev.endDate?.getMonth()
     if (month !== undefined) {
       month ++
     }
@@ -171,7 +171,7 @@ getYears()
             >
               <template #date>
                 <div class="badge badge-accent absolute bottom-0 left-1">
-                  {{ d(event.modificationDate!!, 'short') }}
+                  {{ d(event.endDate!!, 'short') }}
                 </div>
               </template>
             </book-card>

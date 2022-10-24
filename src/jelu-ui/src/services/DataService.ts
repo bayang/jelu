@@ -776,15 +776,18 @@ class DataService {
   }
 
   myReadingEvents = async (eventTypes?: Array<ReadingEventType> | null, bookId?: string,
-    after?: string, before?: string,
+    startedAfter?: string, startedBefore?: string,
+    endedAfter?: string, endedBefore?: string,
     page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<ReadingEventWithUserBook>>(`${this.API_READING_EVENTS}/me`, {
         params: {
           eventTypes: eventTypes,
           bookId: bookId,
-          after: after,
-          before: before,
+          startedAfter: startedAfter,
+          startedBefore: startedBefore,
+          endedAfter: endedAfter,
+          endedBefore: endedBefore,
           page: page,
           size: size,
           sort: sort
@@ -808,7 +811,8 @@ class DataService {
   }
 
   findReadingEvents = async (eventTypes?: Array<ReadingEventType> | null, userId?: string, bookId?: string,
-    after?: string, before?: string,
+    startedAfter?: string, startedBefore?: string,
+    endedAfter?: string, endedBefore?: string,
     page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<ReadingEventWithUserBook>>(`${this.API_READING_EVENTS}`, {
@@ -816,8 +820,10 @@ class DataService {
           eventTypes: eventTypes,
           userId: userId,
           bookId: bookId,
-          after: after,
-          before: before,
+          startedAfter: startedAfter,
+          startedBefore: startedBefore,
+          endedAfter: endedAfter,
+          endedBefore: endedBefore,
           page: page,
           size: size,
           sort: sort

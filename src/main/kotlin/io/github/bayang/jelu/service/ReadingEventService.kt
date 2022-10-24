@@ -16,8 +16,17 @@ import java.util.UUID
 class ReadingEventService(private val readingEventRepository: ReadingEventRepository) {
 
     @Transactional
-    fun findAll(eventTypes: List<ReadingEventType>?, userId: UUID?, bookId: UUID?, after: LocalDate?, before: LocalDate?, pageable: Pageable) =
-        readingEventRepository.findAll(eventTypes, userId, bookId, after, before, pageable).map { it.toReadingEventDto() }
+    fun findAll(
+        eventTypes: List<ReadingEventType>?,
+        userId: UUID?,
+        bookId: UUID?,
+        startedAfter: LocalDate?,
+        startedBefore: LocalDate?,
+        endedAfter: LocalDate?,
+        endedBefore: LocalDate?,
+        pageable: Pageable
+    ) =
+        readingEventRepository.findAll(eventTypes, userId, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable).map { it.toReadingEventDto() }
 
     @Transactional
     fun findYears(eventTypes: List<ReadingEventType>?, userId: UUID?, bookId: UUID?) =

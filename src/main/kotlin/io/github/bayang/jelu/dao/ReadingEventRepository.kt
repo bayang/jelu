@@ -11,7 +11,6 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.javatime.year
-import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.selectAll
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -34,8 +33,10 @@ class ReadingEventRepository {
         eventTypes: List<ReadingEventType>?,
         userId: UUID?,
         bookId: UUID?,
-        after: LocalDate?,
-        before: LocalDate?,
+        startedAfter: LocalDate?,
+        startedBefore: LocalDate?,
+        endedAfter: LocalDate?,
+        endedBefore: LocalDate?,
         pageable: Pageable
     ): Page<ReadingEvent> {
         val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
@@ -49,12 +50,20 @@ class ReadingEventRepository {
         if (bookId != null) {
             query.andWhere { UserBookTable.book eq bookId }
         }
-        if (before != null) {
-            val instant = OffsetDateTime.of(before, LocalTime.MAX, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
-            query.andWhere { ReadingEventTable.endDate lessEq instant or(ReadingEventTable.startDate lessEq instant) }
+        if (endedBefore != null) {
+            val instant = OffsetDateTime.of(endedBefore, LocalTime.MAX, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            query.andWhere { ReadingEventTable.endDate lessEq instant }
         }
-        if (after != null) {
-            val instant = OffsetDateTime.of(after, LocalTime.MIN, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+        if (endedAfter != null) {
+            val instant = OffsetDateTime.of(endedAfter, LocalTime.MIN, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            query.andWhere { ReadingEventTable.endDate greaterEq instant }
+        }
+        if (startedBefore != null) {
+            val instant = OffsetDateTime.of(startedBefore, LocalTime.MAX, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            query.andWhere { ReadingEventTable.startDate lessEq instant }
+        }
+        if (startedAfter != null) {
+            val instant = OffsetDateTime.of(startedAfter, LocalTime.MIN, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
             query.andWhere { ReadingEventTable.startDate greaterEq instant }
         }
         val total = query.count()
@@ -74,7 +83,7 @@ class ReadingEventRepository {
         bookId: UUID?,
     ): List<Int> {
         val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
-            .slice(ReadingEventTable.modificationDate.year())
+            .slice(ReadingEventTable.endDate.year())
             .selectAll()
         if (eventTypes != null && eventTypes.isNotEmpty()) {
             query.andWhere { ReadingEventTable.eventType inList eventTypes }
@@ -87,7 +96,7 @@ class ReadingEventRepository {
         }
         query.withDistinct(true)
         // FIXME
-        return query.map { resultRow -> resultRow[ReadingEventTable.modificationDate.year()] }.toList()
+        return query.map { resultRow -> resultRow[ReadingEventTable.endDate.year()] }.toList()
     }
 
     fun save(createReadingEventDto: CreateReadingEventDto, targetUser: User): ReadingEvent {

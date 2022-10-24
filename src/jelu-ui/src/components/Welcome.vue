@@ -62,7 +62,7 @@ const nonCurrentlyReadingEvents: Array<ReadingEventType> = [ReadingEventType.DRO
 const getMyEvents = async () => {
   recentEventsIsLoading.value = true
   try {
-    const res = await dataService.myReadingEvents(nonCurrentlyReadingEvents, undefined, undefined, undefined, 0, 8)
+    const res = await dataService.myReadingEvents(nonCurrentlyReadingEvents, undefined, undefined, undefined, undefined, undefined, 0, 8)
     const notCurrentlyReading = res.content.filter(e => e.eventType !== ReadingEventType.CURRENTLY_READING)
     events.value = notCurrentlyReading
     recentEventsIsLoading.value = false

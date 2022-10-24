@@ -50,22 +50,26 @@ class ReadingEventsController(
         @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @RequestParam(name = "userId", required = false) userId: UUID?,
         @RequestParam(name = "bookId", required = false) bookId: UUID?,
-        @RequestParam(name = "after", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) after: LocalDate?,
-        @RequestParam(name = "before", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) before: LocalDate?,
+        @RequestParam(name = "startedAfter", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startedAfter: LocalDate?,
+        @RequestParam(name = "startedBefore", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startedBefore: LocalDate?,
+        @RequestParam(name = "endedAfter", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) endedAfter: LocalDate?,
+        @RequestParam(name = "endedBefore", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) endedBefore: LocalDate?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
-    ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, bookId, after, before, pageable)
+    ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable)
 
     @GetMapping(path = ["/reading-events/me"])
     fun myReadingEvents(
         @RequestParam(name = "eventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @RequestParam(name = "bookId", required = false) bookId: UUID?,
-        @RequestParam(name = "after", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) after: LocalDate?,
-        @RequestParam(name = "before", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) before: LocalDate?,
+        @RequestParam(name = "startedAfter", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startedAfter: LocalDate?,
+        @RequestParam(name = "startedBefore", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startedBefore: LocalDate?,
+        @RequestParam(name = "endedAfter", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) endedAfter: LocalDate?,
+        @RequestParam(name = "endedBefore", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) endedBefore: LocalDate?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
         principal: Authentication
     ): Page<ReadingEventDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, bookId, after, before, pageable)
+        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable)
     }
 
     @PostMapping(path = ["/reading-events"])
@@ -96,7 +100,7 @@ class ReadingEventsController(
         val pageSize = 200
         val yearStats = mutableMapOf<Int, YearStatsDto>()
         do {
-            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, PageRequest.of(currentPage, pageSize, Sort.by("modificationDate, asc")))
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, null, null, PageRequest.of(currentPage, pageSize, Sort.by("endDate, asc")))
             currentPage ++
             events.forEach {
                 val year = OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault()).year
@@ -128,7 +132,7 @@ class ReadingEventsController(
         val pageSize = 200
         val monthStats = mutableMapOf<Int, MonthStatsDto>()
         do {
-            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, PageRequest.of(currentPage, pageSize))
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
             currentPage ++
             // FIXME use date filtering in repository method now
             events.filter { OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault()).year == year }.forEach {
