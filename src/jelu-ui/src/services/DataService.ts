@@ -19,6 +19,7 @@ import { MessageCategory, UpdateUserMessage, UserMessage } from "../model/UserMe
 import { MonthStats, YearStats } from "../model/YearStats";
 import { Shelf } from "../model/Shelf";
 import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/Review";
+import { Role } from "../model/Role";
 
 class DataService {
 
@@ -165,6 +166,12 @@ class DataService {
       for (const ev of tr.readingEvents) {
         if (ev.modificationDate != null) {
           ev.modificationDate = dayjs(ev.modificationDate).toDate()
+        }
+        if (ev.startDate != null) {
+          ev.startDate = dayjs(ev.startDate).toDate()
+        }
+        if (ev.endDate != null) {
+          ev.endDate = dayjs(ev.endDate).toDate()
         }
       }
     }
@@ -419,7 +426,7 @@ class DataService {
   }
 
   findUserBookByCriteria = async (lastEventTypes?: Array<ReadingEventType> | null, bookId?: string|null,
-    toRead?: boolean | null, owned?: boolean | null, page?: number, size?: number, sort?: string) => {
+    toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null, page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}`, {
         params: {
@@ -427,6 +434,7 @@ class DataService {
           bookId: bookId,
           toRead: toRead,
           owned: owned,
+          borrowed: borrowed,
           page: page,
           size: size,
           sort: sort
@@ -561,14 +569,16 @@ class DataService {
   }
 
   getAuthorBooksById = async (authorId: string,
-    page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
+    page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter,
+    roleFilter?: Role) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_AUTHOR}/${authorId}${this.API_BOOK}`, {
         params: {
           page: page,
           size: size,
           sort: sort,
-          libraryFilter: libraryFilter
+          libraryFilter: libraryFilter,
+          roleFilter: roleFilter
         }
       });
       console.log("called author books by id")
@@ -625,7 +635,8 @@ class DataService {
   }
 
   findBooks = async (title?: string, isbn10?: string, isbn13?: string,
-    series?: string, authors?: Array<string>, tags?: Array<string>, page?: number, size?: number, sort?: string,
+    series?: string, authors?: Array<string>, translators?: Array<string>, 
+    tags?: Array<string>, page?: number, size?: number, sort?: string,
     libraryFilter?: LibraryFilter) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_BOOK}`, {
@@ -635,6 +646,7 @@ class DataService {
           isbn13: isbn13,
           series: series,
           authors: authors,
+          translators: translators,
           tags: tags,
           page: page,
           size: size,
@@ -751,6 +763,12 @@ class DataService {
       for (const ev of page.content) {
         if (ev.modificationDate != null) {
           ev.modificationDate = dayjs(ev.modificationDate).toDate()
+        }
+        if (ev.startDate != null) {
+          ev.startDate = dayjs(ev.startDate).toDate()
+        }
+        if (ev.endDate != null) {
+          ev.endDate = dayjs(ev.endDate).toDate()
         }
       }
     }
@@ -880,7 +898,8 @@ class DataService {
     try {
       const resp = await this.apiClient.put<ReadingEvent>(`${this.API_READING_EVENTS}/${event.id}`, {
         eventType: event.eventType,
-        eventDate: event.modificationDate
+        eventDate: event.endDate,
+        startDate: event.startDate
       })
       return resp.data
     } catch (error) {

@@ -31,7 +31,7 @@ class MetadataController(
         @RequestParam(name = "isbn", required = false) isbn: String?,
         @RequestParam(name = "title", required = false) title: String?,
         @RequestParam(name = "authors", required = false) authors: String?
-    ): MetadataDto =
+    ): Mono<MetadataDto> =
         if (properties.metadata.calibre.path.isNullOrBlank()) {
             throw JeluException("Automatic fetching of metadata is disabled, install calibre first")
         } else {

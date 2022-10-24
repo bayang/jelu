@@ -25,6 +25,7 @@ object UserBookTable : UUIDTable("user_book") {
     val owned: Column<Boolean?> = bool("is_owned").nullable()
     val toRead: Column<Boolean?> = bool("to_read").nullable()
     val percentRead: Column<Int?> = integer(name = "percent_read").nullable()
+    val borrowed: Column<Boolean?> = bool("is_borrowed").nullable()
 }
 
 class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -40,6 +41,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
     var lastReadingEventDate by UserBookTable.lastReadingEventDate
     var lastReadingEvent by UserBookTable.lastReadingEvent
     var percentRead by UserBookTable.percentRead
+    var borrowed by UserBookTable.borrowed
 
     fun toUserBookDto(): UserBookDto =
         UserBookDto(
@@ -54,6 +56,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             toRead = this.toRead,
             personalNotes = this.personalNotes,
             percentRead = this.percentRead,
+            borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
         )
     fun toUserBookLightDto(): UserBookLightDto =
@@ -68,6 +71,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             lastReadingEvent = this.lastReadingEvent,
             lastReadingEventDate = this.lastReadingEventDate,
             percentRead = this.percentRead,
+            borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
         )
     fun toUserBookWthoutEventsAndUserDto(): UserBookWithoutEventsAndUserDto =
@@ -82,6 +86,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             lastReadingEvent = this.lastReadingEvent,
             lastReadingEventDate = this.lastReadingEventDate,
             percentRead = this.percentRead,
+            borrowed = this.borrowed,
         )
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto =
         UserBookWithoutEventsDto(
@@ -94,5 +99,6 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             personalNotes = this.personalNotes,
             user = this.user.toUserDto(),
             percentRead = this.percentRead,
+            borrowed = this.borrowed,
         )
 }

@@ -47,6 +47,7 @@ getReview()
         :book="book"
         :owned="null"
         :to-read="null"
+        :borrowed="null"
         :book-link="false"
         :links="false"
         :add-book="false"
@@ -57,7 +58,7 @@ getReview()
         :review="review"
         :show-delete="false"
         :show-edit="false"
-        class="basis-5/12 my-6"
+        class="basis-11/12 sm:basis-2/3 my-6"
       />
     </div>
   </section>

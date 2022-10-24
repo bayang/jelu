@@ -1,3 +1,52 @@
+## [0.33.0](https://github.com/bayang/jelu/compare/v0.32.0...v0.33.0) (2022-10-23)
+
+
+### Features
+
+* add start date and end date on events for better clarity [#39](https://github.com/bayang/jelu/issues/39) ([1bbbea4](https://github.com/bayang/jelu/commit/1bbbea4118e2fc549d615b759d0fa27a5ab127af))
+
+
+### Bug Fixes
+
+* logging level in a method ([e6d32a1](https://github.com/bayang/jelu/commit/e6d32a1cc5ac085ca2a029872bdf2c859ca1cfc2))
+* redirect loop on history page ([43e40ca](https://github.com/bayang/jelu/commit/43e40ca3dc7cf5b0755c80b5056ba037d7285d3e))
+* reviews too narrow ([7090304](https://github.com/bayang/jelu/commit/7090304c40e0ac925c06da760ccd0c968dcbfeb8))
+
+## [0.32.0](https://github.com/bayang/jelu/compare/v0.31.0...v0.32.0) (2022-10-02)
+
+
+### Features
+
+* add translators on books [#27](https://github.com/bayang/jelu/issues/27) ([70e2840](https://github.com/bayang/jelu/commit/70e2840671d5e91be22505569b4a2c4b84852d6c))
+* mark book as borrowed [#46](https://github.com/bayang/jelu/issues/46) ([950c6c7](https://github.com/bayang/jelu/commit/950c6c79d09696cdd78e2e793c61cbe81b3ea4ac))
+
+## [0.31.0](https://github.com/bayang/jelu/compare/v0.30.0...v0.31.0) (2022-09-20)
+
+
+### Features
+
+* add google metadata provider [#36](https://github.com/bayang/jelu/issues/36) [#37](https://github.com/bayang/jelu/issues/37) ([cb14ee8](https://github.com/bayang/jelu/commit/cb14ee8610cce87acd4e6bc433cf2e4a1192747a))
+
+
+### Bug Fixes
+
+* infinite redirect loop [#44](https://github.com/bayang/jelu/issues/44) ([84ce9fb](https://github.com/bayang/jelu/commit/84ce9fb9374345c7ee503c16e049e1dbe8ef310a))
+* regression in UI after modifying metadata image field ([18a9281](https://github.com/bayang/jelu/commit/18a928191dfce82da3e97210524a3edbb7ef7d61))
+
+## [0.30.0](https://github.com/bayang/jelu/compare/v0.29.0...v0.30.0) (2022-09-13)
+
+
+### Features
+
+* use markdown to write reviews [#40](https://github.com/bayang/jelu/issues/40) ([0e11bbb](https://github.com/bayang/jelu/commit/0e11bbb5d1c03f8448e44db83d1742c07918036d))
+
+
+### Bug Fixes
+
+* increase password length in login input [#43](https://github.com/bayang/jelu/issues/43) ([7568cc9](https://github.com/bayang/jelu/commit/7568cc99f3741b48d80a468a51926f8172692e46))
+* prevent temporary cover images conflicts in caches [#41](https://github.com/bayang/jelu/issues/41) ([b1482e1](https://github.com/bayang/jelu/commit/b1482e1b3d9f73c4213123614a79c3f0c06a1f32))
+
+
 ## [0.29.0](https://github.com/bayang/jelu/compare/v0.28.0...v0.29.0) (2022-08-20)
 
 

@@ -419,4 +419,28 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="create_book_translators" author="byng">
+        <sql>CREATE TABLE book_translators
+            (
+            translator BLOB(16) NOT NULL,
+            book BLOB(16) NOT NULL,
+            PRIMARY KEY (translator, book),
+            FOREIGN KEY (translator) REFERENCES author(id) ON DELETE CASCADE,
+            FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="add_borrowed_column" author="byng">
+        <sql>
+            ALTER TABLE user_book ADD is_borrowed BOOLEAN;
+        </sql>
+    </changeSet>
+    <changeSet id="add_start_end_date_reading_event" author="byng">
+        <sql>
+            ALTER TABLE reading_event ADD start_date TIMESTAMP;
+            ALTER TABLE reading_event ADD end_date TIMESTAMP;
+            UPDATE reading_event SET start_date = creation_date where start_date is null;
+            UPDATE reading_event SET end_date = modification_date where end_date is null and event_type != 'CURRENTLY_READING';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

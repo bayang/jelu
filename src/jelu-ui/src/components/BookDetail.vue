@@ -88,7 +88,7 @@ watch(() => props.bookId, (newValue, oldValue) => {
 
 const sortedEvents = computed(() => {
   if (book.value && book.value.readingEvents) {
-    return [...book.value.readingEvents].sort((a, b) => dayjs(a.modificationDate).isAfter(dayjs(b.modificationDate)) ? -1 : 1)
+    return [...book.value.readingEvents].sort((a, b) => dayjs(a.startDate).isAfter(dayjs(b.startDate)) ? -1 : 1)
   }
   else {
     return []
@@ -262,6 +262,7 @@ function defaultCreateEvent(): CreateReadingEvent {
   return {
     eventType: ReadingEventType.CURRENTLY_READING,
     eventDate: new Date(),
+    startDate: new Date(),
     bookId: book.value?.book.id
   }
 }
@@ -442,6 +443,26 @@ getBook()
             </router-link>
           </li>
         </ul>
+        <p
+          v-if="book != null && book.book != null && book.book.translators != null && book?.book?.translators?.length > 0"
+        >
+          <span class="font-semibold capitalize">{{ t('book.translator', 2) }} :</span>
+        </p>
+        <ul
+          v-if="book != null && book.book != null && book.book.translators != null && book?.book?.translators?.length > 0"
+        >
+          <li
+            v-for="translator in book?.book?.translators"
+            :key="translator.id"
+          >
+            <router-link
+              class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+              :to="{ name: 'author-detail', params: { authorId: translator.id } }"
+            >
+              {{ translator.name }}&nbsp;
+            </router-link>
+          </li>
+        </ul>
         <p v-if="book?.book?.publisher">
           <span class="font-semibold capitalize">{{ t('book.publisher') }} :</span>
           {{ book.book.publisher }}
@@ -478,15 +499,19 @@ getBook()
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>
           {{ book.book.language }}
         </p>
-        <div v-if="book?.owned || book?.toRead">
+        <div v-if="book?.owned || book?.toRead || book?.borrowed">
           <span
             v-if="book?.owned"
-            class="badge badge-info mx-1"
+            class="badge badge-info"
           >{{ t('book.owned') }}</span>
           <span
             v-if="book?.toRead"
-            class="badge badge-info"
+            class="badge badge-info mx-1"
           >{{ t('book.to_read') }}</span>
+          <span
+            v-if="book?.borrowed"
+            class="badge badge-info"
+          >{{ t('book.borrowed') }}</span>
         </div>
       </div>
     </div>
@@ -592,7 +617,7 @@ getBook()
       <div
         v-for="review in userReviews"
         :key="review.id"
-        class="w-11/12 sm:basis-1/3"
+        class="w-11/12 2xl:basis-10/12"
       >
         <review-card
           v-if="review != null"
@@ -630,12 +655,31 @@ getBook()
             v-if="index % 2 === 0"
             class="col-start-1 col-end-5 p-2 my-4 ml-auto shadow-md timeline-item"
           >
-            <h3 class="font-semibold">
-              {{ formatDate(event.modificationDate) }}
-            </h3>
-            <p class="capitalize">
-              {{ eventLabel(event.eventType) }}
-            </p>
+            <div
+              v-if="event.endDate != null"
+              class="sm:flex sm:gap-2"
+            >
+              <h3 class="font-semibold">
+                {{ formatDate(event.endDate) }}
+              </h3>
+              <p class="capitalize">
+                {{ eventLabel(event.eventType) }}&nbsp;-
+              </p>
+              <h3 class="font-semibold">
+                {{ formatDate(event.startDate) }}
+              </h3>
+              <p class="capitalize">
+                started
+              </p>
+            </div>
+            <div v-else>
+              <h3 class="font-semibold">
+                {{ formatDate(event.startDate) }}
+              </h3>
+              <p class="capitalize">
+                {{ eventLabel(event.eventType) }}
+              </p>
+            </div>
             <button
               class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
               @click="toggleReadingEventModal(event, true)"
@@ -685,12 +729,31 @@ getBook()
             v-if="index % 2 !== 0"
             class="col-start-6 col-end-10 p-2 my-4 mr-auto shadow-md timeline-item"
           >
-            <h3 class="font-semibold">
-              {{ formatDate(event.modificationDate) }}
-            </h3>
-            <p class="capitalize">
-              {{ eventLabel(event.eventType) }}
-            </p>
+            <div
+              v-if="event.endDate != null"
+              class="sm:flex sm:gap-2"
+            >
+              <h3 class="font-semibold">
+                {{ formatDate(event.endDate) }}
+              </h3>
+              <p class="capitalize">
+                {{ eventLabel(event.eventType) }}&nbsp;-
+              </p>
+              <h3 class="font-semibold">
+                {{ formatDate(event.startDate) }}
+              </h3>
+              <p class="capitalize">
+                started
+              </p>
+            </div>
+            <div v-else>
+              <h3 class="font-semibold">
+                {{ formatDate(event.startDate) }}
+              </h3>
+              <p class="capitalize">
+                {{ eventLabel(event.eventType) }}
+              </p>
+            </div>
             <button
               class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
               @click="toggleReadingEventModal(event, true)"

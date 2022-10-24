@@ -159,7 +159,7 @@ const submit = () => {
           v-model="form.password"
           value="123"
           type="password"
-          maxlength="30"
+          maxlength="150"
           password-reveal
           class="input focus:input-accent"
           @keyup.enter="submit"
@@ -176,7 +176,7 @@ const submit = () => {
           v-model="passwordValidation"
           value="123"
           type="password"
-          maxlength="30"
+          maxlength="150"
           password-reveal
           class="input focus:input-accent"
           @keyup.enter="submit"

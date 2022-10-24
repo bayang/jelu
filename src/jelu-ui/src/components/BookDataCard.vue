@@ -19,6 +19,7 @@ const props = defineProps<{
   book: Book,
   owned: boolean|null,
   toRead: boolean|null,
+  borrowed: boolean|null,
   links: boolean|null,
   bookLink: boolean|null,
   addBook: boolean
@@ -44,7 +45,7 @@ const getUserbookId = async () => {
   bookCanBeAdded.value = false
   await until(props.book.id).not.toBeNull()
   console.log("book id " + props.book.id)
-  dataService.findUserBookByCriteria(null, props.book.id, null, null, 0, 10)
+  dataService.findUserBookByCriteria(null, props.book.id, null, null, null, 0, 10)
   .then(res => {
     if (!res.empty) {
       if (res.content.length > 0 && res.content[0].id != null) {
@@ -213,15 +214,19 @@ function modalClosed() {
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>
           {{ props.book.language }}
         </p>
-        <div v-if="owned || toRead">
+        <div v-if="owned || toRead || borrowed">
           <span
             v-if="owned"
-            class="badge badge-info mx-1"
-          >{{ t('owned') }}</span>
+            class="badge badge-info"
+          >{{ t('book.owned') }}</span>
           <span
             v-if="toRead"
+            class="badge badge-info mx-1"
+          >{{ t('book.to_read') }}</span>
+          <span
+            v-if="borrowed"
             class="badge badge-info"
-          >{{ t('to_read') }}</span>
+          >{{ t('book.borrowed') }}</span>
         </div>
       </div>
     </div>

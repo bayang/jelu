@@ -43,6 +43,7 @@ const form = reactive({
   numberInSeries: null,
   personalNotes: "",
   owned: null,
+  borrowed: null,
   toRead: null,
   percentRead: null,
   googleId: "",
@@ -72,12 +73,19 @@ const ownedDisplay = computed(() => {
   }
   return ""
 })
+const borrowedDisplay = computed(() => {
+  if (form.borrowed) {
+    return t('book.borrowed')
+  }
+  return ""
+})
 const toReadDisplay = computed(() => {
   if (form.toRead) {
     return t('labels.book_will_be_added')
   }
   return ""
 })
+
 let filteredAuthors: Ref<Array<Author>> = ref([]);
 let authors: Ref<Array<Author>> = ref([]);
 
@@ -197,7 +205,8 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
     owned: formdata.owned,
     personalNotes: formdata.personalNotes,
     toRead: formdata.toRead,
-    percentRead: formdata.percentRead
+    percentRead: formdata.percentRead,
+    borrowed: formdata.borrowed
   }
   return userBook
 }
@@ -780,6 +789,17 @@ let displayDatepicker = computed(() => {
         <div class="field mb-3">
           <o-field
             horizontal
+            :label="t('book.borrowed') + ' ?'"
+            class="capitalize"
+          >
+            <o-checkbox v-model="form.borrowed">
+              {{ borrowedDisplay }}
+            </o-checkbox>
+          </o-field>
+        </div>
+        <div class="field mb-3">
+          <o-field
+            horizontal
             :label="t('book.percent_read')"
             class="capitalize"
           >
@@ -835,7 +855,7 @@ let displayDatepicker = computed(() => {
               </span>
               <figure class="small-cover">
                 <img
-                  :src="'/files/' + metadata?.image"
+                  :src="metadata?.image?.startsWith('http') ? metadata?.image : '/files/' + metadata?.image"
                   :class="deleteImage ? 'altered' : ''"
                   alt="cover image"
                 >

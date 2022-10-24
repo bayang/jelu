@@ -16,6 +16,7 @@ import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
@@ -58,12 +59,13 @@ class BookService(
         isbn13: String?,
         series: String?,
         authors: List<String>?,
+        translators: List<String>?,
         tags: List<String>?,
         pageable: Pageable,
         user: User,
         libraryFilter: LibraryFilter
     ): Page<BookDto> =
-        bookRepository.findAll(title, isbn10, isbn13, series, authors, tags, pageable, user, libraryFilter).map { it.toBookDto() }
+        bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
 
     @Transactional
     fun findAllAuthors(name: String?, pageable: Pageable): Page<AuthorDto> = bookRepository.findAllAuthors(name, pageable).map { it.toAuthorDto() }
@@ -146,7 +148,8 @@ class BookService(
                 CreateReadingEventDto(
                     eventType = userBook.lastReadingEvent,
                     bookId = null,
-                    eventDate = userBook.lastReadingEventDate
+                    eventDate = userBook.lastReadingEventDate,
+                    startDate = null
                 )
             )
         }
@@ -268,7 +271,7 @@ class BookService(
             val savedImage: String? = saveImages(file, updated.name, updated.id.toString(), author.image, properties.files.images)
             updated.image = savedImage
             // we had a previous image and we saved a new one : delete the old one
-            if (backup != null && backup.exists() && savedImage != null && savedImage.isNotBlank()) {
+            if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
                 Files.deleteIfExists(backup.toPath())
             }
         }
@@ -285,9 +288,10 @@ class BookService(
         eventTypes: List<ReadingEventType>?,
         toRead: Boolean?,
         owned: Boolean? = null,
+        borrowed: Boolean? = null,
         pageable: Pageable
     ): Page<UserBookWithoutEventsAndUserDto> {
-        return bookRepository.findUserBookByCriteria(userId, bookId, eventTypes, toRead, owned, pageable).map { it.toUserBookWthoutEventsAndUserDto() }
+        return bookRepository.findUserBookByCriteria(userId, bookId, eventTypes, toRead, owned, borrowed, pageable).map { it.toUserBookWthoutEventsAndUserDto() }
     }
 
     @Transactional
@@ -349,14 +353,23 @@ class BookService(
         bookRepository.deleteAuthorFromBook(bookId, authorId)
     }
 
+    /**
+     * Removes an translator from a book without deleting the translator from the database.
+     * The translator is removed only from that book.
+     */
+    @Transactional
+    fun deleteTranslatorFromBook(bookId: UUID, translatorId: UUID) {
+        bookRepository.deleteTranslatorFromBook(bookId, translatorId)
+    }
+
     @Transactional
     fun deleteAuthorById(authorId: UUID) {
         bookRepository.deleteAuthorById(authorId)
     }
 
     @Transactional
-    fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
-        return bookRepository.findAuthorBooksById(authorId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
+    fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter, role: Role = Role.ANY): Page<BookDto> {
+        return bookRepository.findAuthorBooksById(authorId, user, pageable, libaryFilter, role).map { book -> book.toBookDto() }
     }
 
     @Transactional
@@ -388,6 +401,14 @@ class BookService(
                         filtered.add(authorToKeepDto)
                     }
                     dto.authors = filtered
+                    var filteredTranslators = dto.translators?.filter { authorDto -> authorDto.id != otherId }?.toMutableList()
+                    if (filteredTranslators == null) {
+                        filteredTranslators = mutableListOf()
+                    }
+                    if (!filteredTranslators.contains(authorToKeepDto)) {
+                        filteredTranslators.add(authorToKeepDto)
+                    }
+                    dto.translators = filteredTranslators
                     bookRepository.update(book, dto)
                 }
             }

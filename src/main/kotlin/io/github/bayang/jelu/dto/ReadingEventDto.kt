@@ -9,13 +9,17 @@ data class ReadingEventDto(
     val creationDate: Instant?,
     val modificationDate: Instant?,
     val eventType: ReadingEventType,
-    val userBook: UserBookWithoutEventsDto
+    val userBook: UserBookWithoutEventsDto,
+    val startDate: Instant?,
+    val endDate: Instant?,
 )
 data class ReadingEventWithoutUserBookDto(
     val id: UUID?,
     val creationDate: Instant?,
     val modificationDate: Instant?,
     val eventType: ReadingEventType,
+    val startDate: Instant?,
+    val endDate: Instant?,
 )
 data class CreateReadingEventWithUserInfoDto(
     val eventType: ReadingEventType,
@@ -25,9 +29,11 @@ data class CreateReadingEventWithUserInfoDto(
 data class CreateReadingEventDto(
     val eventType: ReadingEventType,
     val bookId: UUID?,
-    val eventDate: Instant?
+    val eventDate: Instant?,
+    val startDate: Instant?
 )
 data class UpdateReadingEventDto(
     val eventType: ReadingEventType,
-    val eventDate: Instant?
+    val eventDate: Instant?,
+    val startDate: Instant?
 )

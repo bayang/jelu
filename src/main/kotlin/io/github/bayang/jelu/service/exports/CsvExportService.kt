@@ -13,6 +13,7 @@ import io.github.bayang.jelu.service.UserMessageService
 import io.github.bayang.jelu.service.imports.CURRENTLY_READING
 import io.github.bayang.jelu.service.imports.TO_READ
 import io.github.bayang.jelu.service.imports.goodreadsDateFormatter
+import io.github.bayang.jelu.utils.lastEventDate
 import mu.KotlinLogging
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
@@ -84,7 +85,7 @@ class CsvExportService(
             CSVPrinter(BufferedWriter(FileWriter(destFile)), format).use { printer ->
                 printer.printRecord("Title", "Author", "ISBN", "Publisher", "Date Read", "Shelves", "Bookshelves", "read_dates", "tags", "authors", "isbn10", "isbn13", "owned", "dropped_dates", "currently_reading")
                 do {
-                    books = bookService.findUserBookByCriteria(userId, null, null, null, null, PageRequest.of(currentPage, pageSize))
+                    books = bookService.findUserBookByCriteria(userId, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
                     currentPage ++
                     logger.debug { "current $currentPage" }
                     count += books.content.size
@@ -183,7 +184,7 @@ class CsvExportService(
     fun listOfDatesForEvent(userbook: UserBookWithoutEventsAndUserDto, userId: UUID, eventType: ReadingEventType): String {
         val reads = readingEventService.findAll(listOf(eventType), userId, userbook.book.id, null, null, Pageable.ofSize(100))
         if (! reads.isEmpty) {
-            return reads.content.stream().map { toDateString(it.modificationDate) }.collect(Collectors.joining(","))
+            return reads.content.stream().map { lastEventDate(it) }.sorted().map { toDateString(it) }.collect(Collectors.joining(","))
         }
         return ""
     }

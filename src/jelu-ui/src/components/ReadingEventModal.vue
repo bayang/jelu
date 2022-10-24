@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Ref, ref } from "vue";
-import { CreateReadingEvent, ReadingEvent } from "../model/ReadingEvent";
+import { CreateReadingEvent, ReadingEvent, ReadingEventType } from "../model/ReadingEvent";
 import dataService from "../services/DataService";
 import { useI18n } from 'vue-i18n'
 
@@ -39,6 +39,10 @@ const create = () => {
 
 const update = () => {
   progress.value = true
+  // if user changed a finished event to a currently reading -> remove end date
+  if (currentEvent.value.eventType === ReadingEventType.CURRENTLY_READING) {
+    currentEvent.value.endDate = undefined
+  }
   dataService.updateReadingEvent(currentEvent.value)
     .then(res => {
       progress.value = false
@@ -103,11 +107,33 @@ const deleteEvent = () => {
         </div>
         <div class="field">
           <label class="label">
+            <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.start_date') }} : </span>
+          </label>
+          <o-datepicker
+            ref="datepicker"
+            v-model="currentEvent.startDate"
+            :show-week-number="false"
+            :locale="undefined"
+            :placeholder="t('labels.click_to_select')"
+            :expanded="true"
+            icon="calendar"
+            icon-right="close"
+            icon-right-clickable="true"
+            mobile-native="false"
+            mobile-modal="false"
+            trap-focus
+          />
+        </div>
+        <div
+          v-if="currentEvent.eventType !== ReadingEventType.CURRENTLY_READING"
+          class="field"
+        >
+          <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_date') }} : </span>
           </label>
           <o-datepicker
             ref="datepicker"
-            v-model="currentEvent.modificationDate"
+            v-model="currentEvent.endDate"
             :show-week-number="false"
             :locale="undefined"
             :placeholder="t('labels.click_to_select')"
@@ -177,6 +203,28 @@ const deleteEvent = () => {
           </o-radio>
         </div>
         <div class="field">
+          <label class="label">
+            <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.start_date') }} :</span>
+          </label>
+          <o-datepicker
+            ref="datepicker"
+            v-model="currentCreateEvent.startDate"
+            :show-week-number="false"
+            :locale="undefined"
+            :placeholder="t('labels.click_to_select')"
+            :expanded="true"
+            icon="calendar"
+            icon-right="close"
+            icon-right-clickable="true"
+            mobile-native="false"
+            mobile-modal="false"
+            trap-focus
+          />
+        </div>
+        <div
+          v-if="currentCreateEvent.eventType != ReadingEventType.CURRENTLY_READING"
+          class="field"
+        >
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_date') }} :</span>
           </label>

@@ -99,7 +99,7 @@ class ReadingEventsController(
             events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, PageRequest.of(currentPage, pageSize, Sort.by("modificationDate, asc")))
             currentPage ++
             events.forEach {
-                val year = OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault()).year
+                val year = OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault()).year
                 if (yearStats.containsKey(year)) {
                     if (it.eventType == ReadingEventType.DROPPED) {
                         yearStats[year] = yearStats[year]!!.copy(dropped = yearStats[year]!!.dropped + 1)
@@ -131,8 +131,8 @@ class ReadingEventsController(
             events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, PageRequest.of(currentPage, pageSize))
             currentPage ++
             // FIXME use date filtering in repository method now
-            events.filter { OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault()).year == year }.forEach {
-                val toDate = OffsetDateTime.ofInstant(it.modificationDate, ZoneId.systemDefault())
+            events.filter { OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault()).year == year }.forEach {
+                val toDate = OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault())
                 val month = toDate.monthValue
                 if (monthStats.containsKey(month)) {
                     if (it.eventType == ReadingEventType.DROPPED) {

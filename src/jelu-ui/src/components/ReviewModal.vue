@@ -13,7 +13,7 @@ const { t } = useI18n({
 const props = defineProps<{
   book: Book,
   edit: boolean,
-  review: Review|null
+  review: Review | null
 }>()
 
 const emit = defineEmits<{
@@ -24,7 +24,7 @@ const progress: Ref<boolean> = ref(false)
 
 const visibility: Ref<Visibility> = ref(props.edit != null && props.edit === true && props.review?.visibility != null ? props.review?.visibility : Visibility.PRIVATE)
 const rating = ref(props.edit != null && props.edit === true && props.review?.rating != null ? props.review?.rating : 5.0)
-const reviewText = ref(props.edit != null && props.edit === true && props.review?.text != null ? props.review?.text :"")
+const reviewText = ref(props.edit != null && props.edit === true && props.review?.text != null ? props.review?.text : "")
 
 watch(visibility, (newVal, oldVal) => {
   console.log("visibilty " + visibility.value)
@@ -36,7 +36,7 @@ watch(rating, (newVal, oldVal) => {
 
 // https://stackoverflow.com/questions/39924644/es6-generate-an-array-of-numbers
 const range = (start: number, end: number, step: number) => {
-  return Array.from(Array.from(Array(Math.ceil((end-start)/step)).keys()), x => start+ x*step);
+  return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), x => start + x * step);
 }
 
 const classFor = (n: number) => {
@@ -54,12 +54,12 @@ const submit = () => {
   if (props.book.id != null) {
     progress.value = true
     dataService.saveReview({
-      bookId: props.book.id, 
-      rating: rating.value, 
+      bookId: props.book.id,
+      rating: rating.value,
       text: reviewText.value,
       visibility: visibility.value,
       reviewDate: new Date()
-      })
+    })
       .then(res => {
         progress.value = false
         emit('close')
@@ -76,10 +76,10 @@ const editReview = () => {
   if (props.book.id != null && props.review?.id != null) {
     progress.value = true
     dataService.updateReview(props.review.id, {
-      rating: rating.value, 
+      rating: rating.value,
       text: reviewText.value,
       visibility: visibility.value,
-      })
+    })
       .then(res => {
         progress.value = false
         emit('close')
@@ -118,8 +118,9 @@ const editReview = () => {
             <span class="label-text font-semibold capitalize text-lg">{{ t('reviews.review') }} :</span>
           </label>
           <div class="flex gap-1">
-            <textarea
+            <v-md-editor
               v-model="reviewText"
+              :disabled-menus="['image/upload-image', 'toc', 'save']"
               class="textarea textarea-accent w-full"
               rows="6"
             />
@@ -127,9 +128,11 @@ const editReview = () => {
         </div>
         <div class="field">
           <label class="label">
-            <span class="label-text font-semibold capitalize text-lg">{{ t('reviews.visibility') }} :</span>
+            <span
+              class="label-text font-semibold capitalize text-lg"
+            >{{ t('reviews.visibility') }} :</span>
           </label>
-          
+
           <div class="flex gap-3">
             <label>{{ t('reviews.private') }}</label>
             <input
@@ -151,13 +154,11 @@ const editReview = () => {
           <label class="label">
             <span class="label-text font-semibold capitalize text-lg">{{ t('reviews.rating') }} :</span>
           </label>
-          
+
           <div class="flex gap-3">
-            <div
-              class="rating rating-half"
-            >
+            <div class="rating rating-half">
               <input
-                v-for="n in range(0,10.5,0.5)"
+                v-for="n in range(0, 10.5, 0.5)"
                 :key="n"
                 v-model="rating"
                 :value="n"
@@ -169,13 +170,13 @@ const editReview = () => {
             <span>{{ rating }}</span>
           </div>
         </div>
-        
+
         <div class="my-3">
           <button
             v-if="props.edit == null || props.edit === false"
             class="btn btn-secondary mr-2"
             :disabled="progress"
-            :class="{'loading' : progress}"
+            :class="{ 'loading': progress }"
             @click="submit"
           >
             <span class="icon">
@@ -187,7 +188,7 @@ const editReview = () => {
             v-else
             class="btn btn-secondary mr-2"
             :disabled="progress"
-            :class="{'loading' : progress}"
+            :class="{ 'loading': progress }"
             @click="editReview"
           >
             <span class="icon">

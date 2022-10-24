@@ -153,7 +153,9 @@ class CsvImportService(
             if (importEntity.shouldFetchMetadata && !properties.metadata.calibre.path.isNullOrBlank()) {
                 val isbn: String = getIsbn(importEntity)
                 if (isbn.isNotBlank()) {
-                    metadata = fetchMetadataService.fetchMetadata(isbn, null, null, onlyUseCorePlugins = true, fetchCover = importConfig.shouldFetchCovers)
+                    metadata = fetchMetadataService
+                        .fetchMetadata(isbn, null, null, onlyUseCorePlugins = true, fetchCover = importConfig.shouldFetchCovers)
+                        .block()!!
                 } else {
                     logger.debug { "no isbn on entity ${importEntity.id}, not fetching metadata" }
                 }
@@ -206,7 +208,7 @@ class CsvImportService(
             }
             val readStatusEnum: ReadingEventType? = readingStatus(readStatusFromShelves)
             book.tags = tags
-            val booksPage: Page<BookDto> = bookService.findAll(null, importEntity.isbn10, importEntity.isbn13, null, null, null, Pageable.ofSize(20), userEntity, LibraryFilter.ANY)
+            val booksPage: Page<BookDto> = bookService.findAll(null, importEntity.isbn10, importEntity.isbn13, null, null, null, null, Pageable.ofSize(20), userEntity, LibraryFilter.ANY)
             // first case : the book we try to import from csv already exists in DB,
             // try to see if user already has it attached to his account (and only update userbook), or create new userbook if not
             val savedUserBook: UserBookLightDto = if (! booksPage.isEmpty) {
@@ -225,6 +227,7 @@ class CsvImportService(
                             if (userbook.owned == null) importEntity.owned else null,
                             merge(book, bookFromDb),
                             if (readStatusFromShelves.equals(TO_READ, true) && userbook.toRead == null) true else null,
+                            null,
                             null
                         ),
                         null
@@ -238,6 +241,7 @@ class CsvImportService(
                         importEntity.owned,
                         merge(book, bookFromDb),
                         if (readStatusFromShelves.equals(TO_READ, true)) true else null,
+                        null,
                         null
                     )
                     bookService.save(userbook, userEntity, null)
@@ -250,6 +254,7 @@ class CsvImportService(
                     importEntity.owned,
                     book,
                     if (readStatusFromShelves.equals(TO_READ, true)) true else null,
+                    null,
                     null
                 )
                 bookService.save(userbook, userEntity, null)
@@ -266,7 +271,7 @@ class CsvImportService(
                         // in case of multiple import of the same file
                         // do not create the same finished event twice if possible
                         if (!alreadyHasFinishedEventAtSameDate(savedUserBook, parsedDate)) {
-                            readingEventService.save(CreateReadingEventDto(ReadingEventType.FINISHED, savedUserBook.book.id, toInstant(parsedDate)), userEntity)
+                            readingEventService.save(CreateReadingEventDto(ReadingEventType.FINISHED, savedUserBook.book.id, toInstant(parsedDate), null), userEntity)
                         }
                         readsSaved ++
                     } catch (e: Exception) {
@@ -301,7 +306,8 @@ class CsvImportService(
                             pastDate.plusDays(
                                 idx.toLong()
                             )
-                        )
+                        ),
+                        null
                     ),
                     userEntity
                 )

@@ -15,13 +15,8 @@ import io.github.bayang.jelu.service.ImportService
 import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
-import io.mockk.verify
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import io.mockk.coVerify
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.io.TempDir
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -65,7 +60,7 @@ class CsvImportServiceTest(
         readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -112,7 +107,11 @@ class CsvImportServiceTest(
         val userId = user().id.value
         val csv = File(this::class.java.getResource("/csv-import/goodreads1.csv").file)
         // shouldFetchMetadata true but binary path is null so we shouldn't try to call fetchMetadata
-        csvImportService.parse(csv, userId, ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = false, ImportSource.GOODREADS))
+        csvImportService.parse(
+            csv,
+            userId,
+            ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = false, ImportSource.GOODREADS)
+        )
         val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
         Assertions.assertEquals(10, nb)
         val dtos = importService.getByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
@@ -127,7 +126,8 @@ class CsvImportServiceTest(
         val (success, failures) = csvImportService.importFromDb(userId, importConfigurationDto())
         Assertions.assertEquals(10, success)
         Assertions.assertEquals(0, failures)
-        verify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
+
+        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -142,7 +142,8 @@ class CsvImportServiceTest(
         val (success, failures) = csvImportService.importFromDb(userId, importConfigurationDto())
         Assertions.assertEquals(5, success)
         Assertions.assertEquals(0, failures)
-        val userbooksPage: Page<UserBookWithoutEventsAndUserDto> = bookService.findUserBookByCriteria(userId, null, null, null, null, Pageable.ofSize(30))
+        val userbooksPage: Page<UserBookWithoutEventsAndUserDto> =
+            bookService.findUserBookByCriteria(userId, null, null, null, null, null, Pageable.ofSize(30))
         userbooksPage.content.forEach {
             val userbook = bookService.findUserBookById(it.id!!)
             if (userbook.book.title == "The Gulag Archipelago 1918–1956 (Abridged)") {
@@ -151,7 +152,7 @@ class CsvImportServiceTest(
                 Assertions.assertEquals(1, userbook.readingEvents?.size)
             }
         }
-        verify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
     }
 
     fun user(): User {

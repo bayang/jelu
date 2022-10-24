@@ -68,7 +68,7 @@ class CsvExportServiceTest(
         readingEventService.findAll(null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -106,7 +106,8 @@ class CsvExportServiceTest(
             owned = false,
             toRead = true,
             percentRead = null,
-            book = book1
+            book = book1,
+            borrowed = null
         )
         val saved1: UserBookLightDto = bookService.save(createUserBookDto1, user(), null)
 
@@ -141,6 +142,7 @@ class CsvExportServiceTest(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
                 date3.toInstant(),
+                null
             ),
             user()
         )
@@ -149,6 +151,7 @@ class CsvExportServiceTest(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
                 date2.toInstant(),
+                null
             ),
             user()
         )
@@ -158,6 +161,7 @@ class CsvExportServiceTest(
                 ReadingEventType.DROPPED,
                 saved1.book.id,
                 date3.toInstant(),
+                null
             ),
             user()
         )
@@ -166,6 +170,7 @@ class CsvExportServiceTest(
                 ReadingEventType.DROPPED,
                 saved1.book.id,
                 date2.toInstant(),
+                null
             ),
             user()
         )
@@ -174,6 +179,7 @@ class CsvExportServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved1.book.id,
                 date1.toInstant(),
+                null
             ),
             user()
         )

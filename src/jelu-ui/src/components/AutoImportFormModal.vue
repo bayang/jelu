@@ -149,7 +149,7 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
       >
         <figure>
           <img
-            :src="'/files/' + metadata?.image"
+            :src="metadata?.image?.startsWith('http') ? metadata?.image : '/files/' + metadata?.image"
             alt="cover image"
           >
         </figure>

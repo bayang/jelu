@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.javatime.year
+import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.selectAll
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -21,6 +22,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
@@ -49,11 +51,11 @@ class ReadingEventRepository {
         }
         if (before != null) {
             val instant = OffsetDateTime.of(before, LocalTime.MAX, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
-            query.andWhere { ReadingEventTable.modificationDate lessEq instant }
+            query.andWhere { ReadingEventTable.endDate lessEq instant or(ReadingEventTable.startDate lessEq instant) }
         }
         if (after != null) {
             val instant = OffsetDateTime.of(after, LocalTime.MIN, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
-            query.andWhere { ReadingEventTable.modificationDate greaterEq instant }
+            query.andWhere { ReadingEventTable.startDate greaterEq instant }
         }
         val total = query.count()
         query.limit(pageable.pageSize, pageable.offset)
@@ -84,6 +86,7 @@ class ReadingEventRepository {
             query.andWhere { UserBookTable.book eq bookId }
         }
         query.withDistinct(true)
+        // FIXME
         return query.map { resultRow -> resultRow[ReadingEventTable.modificationDate.year()] }.toList()
     }
 
@@ -111,6 +114,12 @@ class ReadingEventRepository {
     }
 
     fun save(userBook: UserBook, createReadingEventDto: CreateReadingEventDto): ReadingEvent {
+        if (createReadingEventDto.startDate != null &&
+            createReadingEventDto.eventDate != null &&
+            createReadingEventDto.eventDate.isBefore(createReadingEventDto.startDate)
+        ) {
+            throw JeluException("start date cannot be after event date")
+        }
         val alreadyReadingEvent: ReadingEvent? =
             userBook.readingEvents.find { it.eventType == ReadingEventType.CURRENTLY_READING }
         val instant: Instant = nowInstant()
@@ -123,15 +132,24 @@ class ReadingEventRepository {
                 userBook.lastReadingEventDate = createReadingEventDto.eventDate
             }
             // no previous event, or the new one does not have a date set lastReadingEvent in any case
+        } else if (userBook.lastReadingEventDate != null && createReadingEventDto.startDate != null) {
+            if (createReadingEventDto.startDate.isAfter(userBook.lastReadingEventDate)) {
+                userBook.lastReadingEvent = createReadingEventDto.eventType
+                userBook.lastReadingEventDate = createReadingEventDto.startDate
+            }
+            // no previous event, or the new one does not have a date set lastReadingEvent in any case
         } else {
             userBook.lastReadingEvent = createReadingEventDto.eventType
             userBook.lastReadingEventDate = createReadingEventDto.eventDate ?: instant
         }
         if (alreadyReadingEvent != null) {
-            if (createReadingEventDto.eventDate == null || createReadingEventDto.eventDate.isAfter(alreadyReadingEvent.creationDate)) {
+            if (createReadingEventDto.eventDate == null || createReadingEventDto.eventDate.isAfter(alreadyReadingEvent.startDate)) {
                 logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_READING state for book ${userBook.book.id}" }
                 alreadyReadingEvent.eventType = createReadingEventDto.eventType
-                alreadyReadingEvent.modificationDate = createReadingEventDto.eventDate ?: instant
+                alreadyReadingEvent.modificationDate = instant
+                if (createReadingEventDto.eventType != ReadingEventType.CURRENTLY_READING) {
+                    alreadyReadingEvent.endDate = createReadingEventDto.eventDate ?: instant
+                }
                 // if we  mark book as read, remove to-read flag from the userbook
                 if (alreadyReadingEvent.userBook.toRead == true) {
                     alreadyReadingEvent.userBook.toRead = null
@@ -142,20 +160,72 @@ class ReadingEventRepository {
             // this could create CURRENTLY_READING events in the past
             // should we allow this ? Let's wait and see for the moment, user can edit events in bookdetail page
         }
+        val startDate = computeStartDate(createReadingEventDto, instant)
+        val endDate = computeEndDate(createReadingEventDto, instant)
         return ReadingEvent.new {
             this.creationDate = instant
-            this.modificationDate = createReadingEventDto.eventDate ?: instant
+            this.startDate = startDate
+            this.endDate = endDate
+            this.modificationDate = instant
             this.eventType = createReadingEventDto.eventType
             this.userBook = userBook
         }
     }
 
+    private fun computeEndDate(createReadingEventDto: CreateReadingEventDto, instant: Instant): Instant? {
+        return if (createReadingEventDto.eventType != ReadingEventType.CURRENTLY_READING) {
+            createReadingEventDto.eventDate ?: instant
+        } else {
+            null
+        }
+    }
+
+    private fun computeStartDate(createReadingEventDto: CreateReadingEventDto, fallback: Instant): Instant {
+        if (createReadingEventDto.startDate != null) {
+            return createReadingEventDto.startDate
+        }
+        // if eventDate is set we cannot use now as startDate because now could be after eventDate
+        // so compute a date just before eventDate if eventDate is set but startdate is not
+        if (createReadingEventDto.eventDate != null) {
+            val startOfDay = createReadingEventDto.eventDate.truncatedTo(ChronoUnit.DAYS)
+            val minusOneHour = createReadingEventDto.eventDate.minus(1, ChronoUnit.HOURS)
+            // if removing one hour takes us to the day before, return same day truncated to start of day
+            return if (minusOneHour.isBefore(startOfDay)) {
+                startOfDay
+            } else {
+                minusOneHour
+            }
+        }
+        // nothing set, return fallback which is probably now
+        return fallback
+    }
+
     fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEvent {
-        return ReadingEvent[readingEventId].apply {
-            this.modificationDate = updateReadingEventDto.eventDate ?: nowInstant()
+        if (updateReadingEventDto.startDate != null &&
+            updateReadingEventDto.eventDate != null &&
+            updateReadingEventDto.eventDate.isBefore(updateReadingEventDto.startDate)
+        ) {
+            throw JeluException("start date cannot be after event date")
+        }
+        val entity = ReadingEvent[readingEventId]
+        if (updateReadingEventDto.eventDate != null && updateReadingEventDto.eventDate.isBefore(entity.startDate)) {
+            throw JeluException("event date cannot be before start date")
+        }
+        if (updateReadingEventDto.startDate != null && entity.endDate != null && updateReadingEventDto.startDate.isAfter(entity.endDate)) {
+            throw JeluException("start date cannot be after end date")
+        }
+        return entity.apply {
+            val instant = nowInstant()
+            this.modificationDate = instant
+            if (updateReadingEventDto.eventDate != null) {
+                this.endDate = updateReadingEventDto.eventDate
+            }
+            if (updateReadingEventDto.startDate != null) {
+                this.startDate = updateReadingEventDto.startDate
+            }
             this.eventType = updateReadingEventDto.eventType
             val lastEvent = this.userBook.readingEvents
-                .maxByOrNull { e -> e.modificationDate }
+                .maxByOrNull { e -> e.lastEventDate }
             if (updateReadingEventDto.eventType == ReadingEventType.FINISHED && this.userBook.toRead == true) {
                 this.userBook.toRead = null
             }
@@ -163,8 +233,12 @@ class ReadingEventRepository {
                 this.userBook.lastReadingEvent = null
                 this.userBook.lastReadingEventDate = null
             } else {
-                this.userBook.lastReadingEventDate = lastEvent.modificationDate
+                this.userBook.lastReadingEventDate = lastEvent.lastEventDate
                 this.userBook.lastReadingEvent = lastEvent.eventType
+            }
+            // edit an event that was finished or dropped and reset it back to currently reading
+            if (updateReadingEventDto.eventType == ReadingEventType.CURRENTLY_READING) {
+                this.endDate = null
             }
         }
     }

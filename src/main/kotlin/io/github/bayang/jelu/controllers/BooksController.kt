@@ -10,6 +10,7 @@ import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
@@ -57,12 +58,13 @@ class BooksController(
         @RequestParam(name = "isbn13", required = false) isbn13: String?,
         @RequestParam(name = "series", required = false) series: String?,
         @RequestParam(name = "authors", required = false) authors: List<String>?,
+        @RequestParam(name = "translators", required = false) translators: List<String>?,
         @RequestParam(name = "tags", required = false) tags: List<String>?,
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
         principal: Authentication
     ): Page<BookDto> {
-        return repository.findAll(title, isbn10, isbn13, series, authors, tags, pageable, (principal.principal as JeluUser).user, libraryFilter ?: LibraryFilter.ANY)
+        return repository.findAll(title, isbn10, isbn13, series, authors, translators, tags, pageable, (principal.principal as JeluUser).user, libraryFilter ?: LibraryFilter.ANY)
     }
 
     @GetMapping(path = ["/books/{id}"])
@@ -112,6 +114,16 @@ class BooksController(
         return ResponseEntity.noContent().build()
     }
 
+    @ApiResponse(responseCode = "204", description = "Deleted the translator from the book")
+    @DeleteMapping(path = ["/books/{bookId}/translators/{translatorId}"])
+    fun deleteTranslatorFromBook(
+        @PathVariable("bookId") bookId: UUID,
+        @PathVariable("translatorId") translatorId: UUID
+    ): ResponseEntity<Unit> {
+        repository.deleteTranslatorFromBook(bookId, translatorId)
+        return ResponseEntity.noContent().build()
+    }
+
     @ApiResponse(responseCode = "204", description = "Deleted the author")
     @DeleteMapping(path = ["/authors/{authorId}"])
     fun deleteAuthorById(@PathVariable("authorId") authorId: UUID): ResponseEntity<Unit> {
@@ -126,6 +138,7 @@ class BooksController(
         @RequestParam(name = "bookId", required = false) bookId: UUID?,
         @RequestParam(name = "toRead", required = false) toRead: Boolean?,
         @RequestParam(name = "owned", required = false) owned: Boolean?,
+        @RequestParam(name = "borrowed", required = false) borrowed: Boolean?,
         @RequestParam(name = "user", required = false) userId: UUID?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
     ): Page<UserBookWithoutEventsAndUserDto> {
@@ -135,7 +148,7 @@ class BooksController(
         } else {
             (principal.principal as JeluUser).user.id.value
         }
-        return repository.findUserBookByCriteria(finalUserId, bookId, eventTypes, toRead, owned, pageable)
+        return repository.findUserBookByCriteria(finalUserId, bookId, eventTypes, toRead, owned, borrowed, pageable)
     }
 
     @GetMapping(path = ["/authors"])
@@ -179,10 +192,11 @@ class BooksController(
     fun authorBooksById(
         @PathVariable("id") authorId: UUID,
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
+        @RequestParam(name = "roleFilter", required = false) roleFilter: Role?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
         principal: Authentication
     ): Page<BookDto> =
-        repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY)
+        repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY, roleFilter ?: Role.ANY)
 
     @PostMapping(path = ["/books"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun saveBook(@RequestBody @Valid book: BookCreateDto): BookDto {

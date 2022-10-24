@@ -50,7 +50,7 @@ const getToRead = async () => {
   getToReadIsLoading.value = true
   try {
     const res = await dataService.findUserBookByCriteria(eventTypes.value, null,
-    true, ownedAsBool.value,
+    true, ownedAsBool.value, null,
     pageAsNumber.value - 1, perPage.value, sortQuery.value)
     total.value = res.totalElements
     books.value = res.content

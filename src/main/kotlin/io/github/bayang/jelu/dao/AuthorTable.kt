@@ -43,6 +43,7 @@ class Author(id: EntityID<UUID>) : UUIDEntity(id) {
     var twitterPage by AuthorTable.twitterPage
     var facebookPage by AuthorTable.facebookPage
     var instagramPage by AuthorTable.instagramPage
+
     fun toAuthorDto(): AuthorDto =
         AuthorDto(
             id = this.id.value,
@@ -59,11 +60,16 @@ class Author(id: EntityID<UUID>) : UUIDEntity(id) {
             goodreadsPage = this.goodreadsPage,
             twitterPage = this.twitterPage,
             facebookPage = this.facebookPage,
-            instagramPage = this.instagramPage
+            instagramPage = this.instagramPage,
         )
 }
 object BookAuthors : Table(name = "book_authors") {
     val book = reference("book", BookTable, fkName = "fk_bookauthors_book_id", onUpdate = ReferenceOption.CASCADE, onDelete = ReferenceOption.CASCADE)
     val author = reference("author", AuthorTable, fkName = "fk_bookauthors_author_id", onUpdate = ReferenceOption.CASCADE)
     override val primaryKey = PrimaryKey(book, author, name = "pk_bookauthor_act")
+}
+object BookTranslators : Table(name = "book_translators") {
+    val book = reference("book", BookTable, fkName = "fk_booktranslators_book_id", onUpdate = ReferenceOption.CASCADE, onDelete = ReferenceOption.CASCADE)
+    val translator = reference("translator", AuthorTable, fkName = "fk_booktranslators_translator_id", onUpdate = ReferenceOption.CASCADE)
+    override val primaryKey = PrimaryKey(book, translator, name = "pk_booktranslator_act")
 }

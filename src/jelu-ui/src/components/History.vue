@@ -66,7 +66,6 @@ const currentYear: Ref<number|null> = ref(null)
 
 watch(currentYear, (newVal, oldVal) => {
   console.log("year " + newVal + " " + oldVal)
-  page.value = "1"
   eventsForYear()
 })
 

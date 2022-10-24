@@ -124,7 +124,7 @@ function modalClosed() {
 function defaultCreateEvent(bookId: string): CreateReadingEvent {
   return {
   eventType: ReadingEventType.FINISHED, 
-  eventDate: new Date(), 
+  eventDate: new Date(),
   bookId: bookId
 }
 }
