@@ -149,8 +149,8 @@
         "event_date": "datum gebeurtenis",
         "edit_event": "bewerk gebeurtenis",
         "reading": "aan het lezen",
-        "start_date": "start date",
-        "end_date": "end date"
+        "start_date": "begindatum",
+        "end_date": "einddatum"
     },
     "filtering": {
         "book_in_list": "Boek staat in te-lezen lijst",
