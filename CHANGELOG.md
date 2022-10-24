@@ -1,3 +1,11 @@
+### [0.33.1](https://github.com/bayang/jelu/compare/v0.33.0...v0.33.1) (2022-10-24)
+
+
+### Bug Fixes
+
+* date handling in history view after events modification ([1d2edd9](https://github.com/bayang/jelu/commit/1d2edd9299c17f3036fb7529ebce6c18e0d9e8ea))
+* impossible to edit an event in some conditions [#49](https://github.com/bayang/jelu/issues/49) ([cfa0ad1](https://github.com/bayang/jelu/commit/cfa0ad1f3b497d31944392dd40f113b4e879f3b9))
+
 ## [0.33.0](https://github.com/bayang/jelu/compare/v0.32.0...v0.33.0) (2022-10-23)
 
 
