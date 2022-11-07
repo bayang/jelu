@@ -116,7 +116,7 @@ class DataService {
       },
       error => {
         console.log(`response error interceptor ${error.response.status}`)
-        if (error.response.status === 401) {
+        if (error != null && error.response != null && error.response.status === 401) {
           router.push({ name: 'login' }).then(() => { console.log("ok nav in interceptor") }).catch(() => { console.log("error nav in interceptor") })
         } else {
           throw error
