@@ -149,8 +149,8 @@
         "event_date": "Ereignis-Datum",
         "edit_event": "Ereignis bearbeiten",
         "reading": "am lesen",
-        "start_date": "start date",
-        "end_date": "end date"
+        "start_date": "Beginn",
+        "end_date": "Ende"
     },
     "filtering": {
         "book_in_list": "Buch ist in der Leseliste",
@@ -189,7 +189,7 @@
         "page": "Seite | Seiten",
         "nb_in_series": "# in Serie",
         "in_read_list": "In der Leseliste",
-        "translator": "Übersetzer:innen",
+        "translator": "Übersetzer:in | Übersetzer:innen",
         "borrowed": "Geliehen"
     },
     "authors_merge": {
