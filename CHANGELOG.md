@@ -1,3 +1,10 @@
+### [0.34.1](https://github.com/bayang/jelu/compare/v0.34.0...v0.34.1) (2022-11-14)
+
+
+### Bug Fixes
+
+* improve date pickers usablility for events ([668593c](https://github.com/bayang/jelu/commit/668593c75d5cfe1f3ac0d89b3b2076a943d17545))
+
 ## [0.34.0](https://github.com/bayang/jelu/compare/v0.33.1...v0.34.0) (2022-11-07)
 
 
