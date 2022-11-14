@@ -54,6 +54,9 @@
 
   --oruga-loading-overlay: theme('colors.jelu_overlay');
 
+  --vdp-bg-color: theme('colors.base-100');
+  --vdp-text-color: theme('colors.base-content');
+
 }
 
 /* oruga customization with daisyui */
@@ -300,4 +303,11 @@
   }
 }
 /* end loader from https://loading.io/css/ */
+
+/* clear button positioning from https://github.com/icehaunter/vue3-datepicker  */
+.v3dp__clearable {
+  left: -25px !important;
+  top: 5px !important;
+}
+/* end clear button */
 
