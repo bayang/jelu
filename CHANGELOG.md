@@ -1,3 +1,10 @@
+### [0.34.2](https://github.com/bayang/jelu/compare/v0.34.1...v0.34.2) (2022-11-14)
+
+
+### Bug Fixes
+
+* New translations ([81baced](https://github.com/bayang/jelu/commit/81bacede6016bec800bacd14994866e1784ed307))
+
 ### [0.34.1](https://github.com/bayang/jelu/compare/v0.34.0...v0.34.1) (2022-11-14)
 
 
