@@ -1,3 +1,11 @@
+### [0.34.3](https://github.com/bayang/jelu/compare/v0.34.2...v0.34.3) (2022-12-08)
+
+
+### Bug Fixes
+
+* modification date not updated on userbook ([98ca115](https://github.com/bayang/jelu/commit/98ca115573c8163c6cf264b6000832a8f51f7341))
+* wrong sort in history view [#51](https://github.com/bayang/jelu/issues/51) ([a6cfa5b](https://github.com/bayang/jelu/commit/a6cfa5ba606583c675350a4fd4fe543ac4a0f0f0))
+
 ### [0.34.2](https://github.com/bayang/jelu/compare/v0.34.1...v0.34.2) (2022-11-14)
 
 
