@@ -429,6 +429,7 @@ class BookRepository(
         if (book.borrowed != null) {
             found.borrowed = book.borrowed
         }
+        found.modificationDate = nowInstant()
         return found
     }
 
