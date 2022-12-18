@@ -1,3 +1,11 @@
+### [0.34.4](https://github.com/bayang/jelu/compare/v0.34.3...v0.34.4) (2022-12-18)
+
+
+### Bug Fixes
+
+* errors caused by upgrades ([25fe2cf](https://github.com/bayang/jelu/commit/25fe2cf8998c5a5e21af4880ec63c2b36cf8adbe))
+* goodreads csv parser ([33f0607](https://github.com/bayang/jelu/commit/33f06077580e3f46247933eeaf9d7899bf7e7b03))
+
 ### [0.34.3](https://github.com/bayang/jelu/compare/v0.34.2...v0.34.3) (2022-12-08)
 
 
