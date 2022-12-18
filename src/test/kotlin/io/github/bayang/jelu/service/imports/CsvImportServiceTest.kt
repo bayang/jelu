@@ -89,6 +89,24 @@ class CsvImportServiceTest(
     }
 
     @Test
+    fun testParseNewColumnNUmber() {
+        val userId = user().id.value
+        val csv = File(this::class.java.getResource("/csv-import/goodreads_library_export-2022.csv").file)
+        csvImportService.parse(csv, userId, importConfigurationDto())
+        val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        Assertions.assertEquals(10, nb)
+        val dtos = importService.getByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        dtos.forEach {
+            if (it.title.equals("La somme de nos folies")) {
+                Assertions.assertEquals("9782843048302", it.isbn13)
+                Assertions.assertEquals("Éditions Zulma", it.publisher)
+                val shelves = it.tags?.split(",")
+                Assertions.assertEquals(3, shelves?.size)
+            }
+        }
+    }
+
+    @Test
     fun testParseIsbnList() {
         val userId = user().id.value
         val csv = File(this::class.java.getResource("/csv-import/isbns-import.txt").file)

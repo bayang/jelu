@@ -615,7 +615,13 @@ class CsvImportService(
             dto.publisher = cleanString(record.get(9))
             dto.readCount = parseNumber(record.get(22))
             dto.readDates = cleanString(record.get(14))
-            val ownedCopies = parseNumber(record.get(25))
+            // goodreads csv export changed columns in 2022 apparently
+            // new exports have only 24 columns, older ones have 31
+            val ownedCopies = if (record.size() > 24 && record.isSet(25)) {
+                parseNumber(record.get(25))
+            } else {
+                parseNumber(record.get(23))
+            }
             if (ownedCopies != null && ownedCopies > 0) {
                 dto.owned = true
             }
