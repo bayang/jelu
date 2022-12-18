@@ -137,7 +137,7 @@ watch(() => locale.value,(newValue, oldValue) => {
       </option>
       <option
         v-for="loc in availableLocales"
-        :key="loc"
+        :key="(loc as string)"
         :value="loc"
       >
         {{ loc }}
