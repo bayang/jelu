@@ -311,3 +311,9 @@
 }
 /* end clear button */
 
+/* vue markdown editor textarea color */
+.v-md-textarea-editor pre, .v-md-textarea-editor textarea {
+  @apply text-base-content !important;
+}
+/* end vue markdown editor */
+

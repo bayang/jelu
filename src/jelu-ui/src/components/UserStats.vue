@@ -92,10 +92,13 @@ const getYearStats = () => {
 const loading = ref(false)
 const chartData = ref<ChartData<'bar'>>({
       datasets: []
-    })
+})
 const yearChartData = ref<ChartData<'bar'>>({
       datasets: []
-    })
+})
+const chartOptions = ref({
+      responsive: true
+})
 
 const years: Ref<Array<number>> = ref([])
 const currentYear: Ref<number|null> = ref(null)
@@ -119,10 +122,11 @@ getYears()
       {{ t('stats.all_time') }}
     </h1>
     <div
-      class=""
+      class="w-11/12 sm:w-8/12"
     >
       <Bar
-        :chart-data="chartData"
+        :data="chartData"
+        :options="chartOptions"
       />
     </div>
     <h1
@@ -133,7 +137,7 @@ getYears()
     </h1>
     <div
       v-if="years != null && years !== undefined && years.length > 0"
-      class=""
+      class="w-11/12 sm:w-8/12"
     >
       <select
         v-model="currentYear"
@@ -154,7 +158,8 @@ getYears()
         </option>
       </select>
       <Bar
-        :chart-data="yearChartData"
+        :data="yearChartData"
+        :options="chartOptions"
       />
     </div>
   </div>

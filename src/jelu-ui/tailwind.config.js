@@ -7,7 +7,7 @@ function withOpacityValue(variable) {
   }
 }
 
-/** @type {import("@types/tailwindcss/tailwind-config").TailwindConfig } */
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
   content: [
@@ -63,6 +63,6 @@ module.exports = {
     require("@tailwindcss/typography"), 
     require('@tailwindcss/line-clamp'), 
     require("daisyui"),
-    require('@formkit/tailwindcss').default
+    require('@formkit/tailwindcss')
   ],
 }

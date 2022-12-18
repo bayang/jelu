@@ -439,9 +439,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
       });
       console.log("called userbook by eventtype")
       console.log(response)
@@ -653,9 +654,10 @@ class DataService {
           sort: sort,
           libraryFilter: libraryFilter
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
       });
       console.log("called find books")
       console.log(response)
@@ -792,9 +794,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
         transformResponse: this.transformReadingEvents
       });
       console.log("called my events")
@@ -828,9 +831,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
         transformResponse: this.transformReadingEvents
       });
       console.log("called events")
@@ -1038,9 +1042,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
         transformResponse: this.transformUserMessage
       });
       console.log("called userMessages")

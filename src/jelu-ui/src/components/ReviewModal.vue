@@ -121,7 +121,7 @@ const editReview = () => {
             <v-md-editor
               v-model="reviewText"
               :disabled-menus="['image/upload-image', 'toc', 'save']"
-              class="textarea textarea-accent w-full"
+              class="w-full"
               rows="6"
             />
           </div>
