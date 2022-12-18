@@ -1,6 +1,6 @@
 # JELU
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bayang/jelu/CI?style=flat-square) ![GitHub](https://img.shields.io/github/license/bayang/jelu?style=flat-square) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/bayang/jelu?style=flat-square) ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/wabayang/jelu/latest?label=docker%20hub&style=flat-square) [![Discord](https://img.shields.io/discord/970383499733381161?label=Discord&style=flat-square)](https://discord.gg/3RZJ4zuMP5) [![Crowdin](https://badges.crowdin.net/jelu/localized.svg)](https://crowdin.com/project/jelu)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bayang/jelu/ci.yml?branch=main&style=flat-square) ![GitHub](https://img.shields.io/github/license/bayang/jelu?style=flat-square) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/bayang/jelu?style=flat-square) ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/wabayang/jelu/latest?label=docker%20hub&style=flat-square) [![Discord](https://img.shields.io/discord/970383499733381161?label=Discord&style=flat-square)](https://discord.gg/3RZJ4zuMP5) [![Crowdin](https://badges.crowdin.net/jelu/localized.svg)](https://crowdin.com/project/jelu)
 
 Check the [Official documentation](https://bayang.github.io/jelu-web/) for more detailed information. 
 
@@ -38,6 +38,7 @@ All your data is now located into a single-file database which can be saved anyw
 * provides an API 
 * Write reviews and share them, see the reviews of other users on your instance 
 * Fallback metadata providers (see [official doc](https://bayang.github.io/jelu-web/configuration/) for configuration)
+* Isbn scanning via camera on mobile
 
 ## Usage
 
@@ -173,16 +174,6 @@ Review creation :
 
 ![](screenshots/review_modal.jpg)
 
-## Roadmap
-
-* Koreader integration (https://koreader.rocks/)
-* Komga integration (https://komga.org/)
-* Calibre integration (A bit less likely, but why not)
-* Isbn scanning via camera on mobile
-* Social features
-  *  possibility to 'follow' another user on another instance ?
-  *  public RSS feed of reading events
-* Storygraph csv import
 
 ## Translations
 
