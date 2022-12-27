@@ -6,13 +6,13 @@
         "not_reading": "Not currently reading anything"
     },
     "nav": {
-        "my_books": "my books",
-        "to_read": "to read list",
-        "add_book": "add book",
+        "my_books": "kitaplarım",
+        "to_read": "okuma listesi",
+        "add_book": "kitap ekle",
         "dashboard": "dashboard",
-        "login": "login",
-        "logout": "logout",
-        "search": "search",
+        "login": "giriş yap",
+        "logout": "çıkış yap",
+        "search": "ara",
         "history": "history",
         "shelves": "shelves"
     },
