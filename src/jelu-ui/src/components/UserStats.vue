@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core';
-import { BarElement, CategoryScale, Chart as ChartJS, ChartData, Legend, LinearScale, Title, Tooltip } from 'chart.js';
+import { BarElement, CategoryScale, Chart as ChartJS, ChartData, Legend, LinearScale, Title, Tooltip, LineController, PointElement, LineElement } from 'chart.js';
 import dayjs from "dayjs";
 import { Ref, ref, watch } from "vue";
 import { Bar } from 'vue-chartjs';
@@ -14,7 +14,7 @@ const { t } = useI18n({
 
 useTitle('Jelu | Stats')
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, LineController, PointElement, LineElement)
 
 const getYears = () => {
   dataService.yearsWithStats()
@@ -36,18 +36,29 @@ const getAllStats = () => {
     const updatedChartData = {
         labels: labels,
         datasets: [
+        {
+            type: 'line',
+            label: 'pages read',
+            backgroundColor: '#3abff8',
+            borderColor: '#3abff8',
+            borderWidth: 2,
+            yAxisID: 'y2',
+            data: res.map(r => r.pageCount)
+          },
           {
             label: 'finished',
+            yAxisID: 'y1',
             backgroundColor: '#bbbbbb',
             data: res.map(r => r.finished)
           },
           {
             label: 'dropped',
+            yAxisID: 'y1',
             backgroundColor: '#f87979',
             data: res.map(r => r.dropped)
           }
         ]
-      }
+      } as any // mixed charts typing is broken
       chartData.value = { ...updatedChartData }
       loading.value = false
   })
@@ -67,18 +78,29 @@ const getYearStats = () => {
       const updatedChartData = {
           labels: labels,
           datasets: [
+          {
+            type: 'line',
+            label: 'pages read',
+            backgroundColor: '#3abff8',
+            borderColor: '#3abff8',
+            borderWidth: 2,
+            yAxisID: 'y2',
+            data: res.map(r => r.pageCount)
+          },
             {
               label: 'finished',
               backgroundColor: '#bbbbbb',
+              yAxisID: 'y1',
               data: res.map(r => r.finished)
             },
             {
               label: 'dropped',
               backgroundColor: '#f87979',
+              yAxisID: 'y1',
               data: res.map(r => r.dropped)
             }
           ]
-        }
+        } as any // mixed charts typing is broken
         yearChartData.value = { ...updatedChartData }
         loading.value = false
     })
@@ -97,7 +119,15 @@ const yearChartData = ref<ChartData<'bar'>>({
       datasets: []
 })
 const chartOptions = ref({
-      responsive: true
+      responsive: true,
+      scales : {
+        y1: {
+          position: 'left'
+        },
+        y2: {
+          position: 'right'
+        }
+      }
 })
 
 const years: Ref<Array<number>> = ref([])
