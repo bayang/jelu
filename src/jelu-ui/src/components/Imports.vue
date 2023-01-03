@@ -44,7 +44,6 @@ const importFile = async () => {
     importSource: importSource.value
     }
     if (importSource.value == ImportSource.ISBN_LIST) {
-      importConfig.shouldFetchCovers = true
       importConfig.shouldFetchMetadata = true
     }
   dataService.importCsv(
@@ -159,7 +158,6 @@ watch(file, (newVal, oldVal) => {
         </o-field>
       </div>
       <div
-        v-if="importSource != ImportSource.ISBN_LIST"
         class="field"
       >
         <o-field
