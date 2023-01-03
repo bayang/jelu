@@ -1,3 +1,11 @@
+## [0.35.0](https://github.com/bayang/jelu/compare/v0.34.4...v0.35.0) (2023-01-03)
+
+
+### Features
+
+* add page count to user stats [#55](https://github.com/bayang/jelu/issues/55) ([f51df40](https://github.com/bayang/jelu/commit/f51df409fce94a7c1f66e47864ee58f3c2372166))
+* allow turning off cover fetching on isbn list import [#57](https://github.com/bayang/jelu/issues/57) ([8348544](https://github.com/bayang/jelu/commit/834854438775e3f87accfc0873774ec43602d969))
+
 ### [0.34.4](https://github.com/bayang/jelu/compare/v0.34.3...v0.34.4) (2022-12-18)
 
 
