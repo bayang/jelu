@@ -37,7 +37,7 @@ module.exports = {
         jelu: {
           primary: "#f7f5d1",
           secondary: "#aaaaaa",
-          accent: "#69ea7d",
+          accent: "#f7f5d1",
           neutral: "#404040",
           "base-100": "#262429",
           "info": "#3ABFF8",
