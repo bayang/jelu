@@ -1,3 +1,10 @@
+### [0.35.1](https://github.com/bayang/jelu/compare/v0.35.0...v0.35.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* jelu accent color ([125cfd4](https://github.com/bayang/jelu/commit/125cfd4e8cfaaac49a7f7b4fc308b7024b8ec9f8))
+
 ## [0.35.0](https://github.com/bayang/jelu/compare/v0.34.4...v0.35.0) (2023-01-03)
 
 
