@@ -386,7 +386,10 @@ class CsvImportService(
             goodreadsId = if (dbBook.goodreadsId.isNullOrBlank()) incoming.goodreadsId else null,
             librarythingId = if (dbBook.librarythingId.isNullOrBlank()) incoming.librarythingId else null,
             language = if (dbBook.language.isNullOrBlank()) incoming.language else null,
-            image = if (dbBook.image.isNullOrBlank()) incoming.image else null,
+            // special case :
+            // if image is null, update in bookservice will erase the existing image,
+            // we must send the currently existing image
+            image = if (dbBook.image.isNullOrBlank()) incoming.image else dbBook.image,
             authors = authors,
             tags = tags
         )

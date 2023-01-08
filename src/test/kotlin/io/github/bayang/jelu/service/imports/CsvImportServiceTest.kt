@@ -5,15 +5,18 @@ import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.ImportSource
 import io.github.bayang.jelu.dao.ProcessingStatus
 import io.github.bayang.jelu.dao.User
+import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.JeluUser
+import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.importConfigurationDto
 import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.service.ImportService
 import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserService
+import io.github.bayang.jelu.service.metadata.FILE_PREFIX
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import io.mockk.coVerify
 import org.junit.jupiter.api.*
@@ -171,6 +174,54 @@ class CsvImportServiceTest(
             }
         }
         coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun testReimportShouldNotOverwriteExisting() {
+        val userId = user().id.value
+        val csv = File(this::class.java.getResource("/csv-import/goodreads_library_export_one_line.csv").file)
+        csvImportService.parse(csv, userId, importConfigurationDto())
+        var nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        Assertions.assertEquals(1, nb)
+
+        val (success, failures) = csvImportService.importFromDb(userId, importConfigurationDto())
+        Assertions.assertEquals(1, success)
+        Assertions.assertEquals(0, failures)
+        var userbooksPage: Page<UserBookWithoutEventsAndUserDto> =
+            bookService.findUserBookByCriteria(userId, null, null, null, null, null, Pageable.ofSize(30))
+        Assertions.assertEquals(1, userbooksPage.content.size)
+        var imported = userbooksPage.content[0]
+        Assertions.assertEquals("2018", imported.book.publishedDate)
+        Assertions.assertNull(imported.book.image)
+        val u = UserBookUpdateDto(
+            null, null, null,
+            BookCreateDto(
+                image = FILE_PREFIX + "test.jpg"
+            ),
+            null,
+            null,
+            null
+        )
+        bookService.update(imported.id!!, u, null)
+        userbooksPage = bookService.findUserBookByCriteria(userId, null, null, null, null, null, Pageable.ofSize(30))
+        Assertions.assertEquals(1, userbooksPage.content.size)
+        imported = userbooksPage.content[0]
+        Assertions.assertTrue(imported.book.image!!.contains("Epidemie", true))
+        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
+
+        val csvModified = File(this::class.java.getResource("/csv-import/goodreads_library_export_one_line_modified.csv").file)
+        csvImportService.parse(csvModified, userId, importConfigurationDto())
+        nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        Assertions.assertEquals(1, nb)
+        val (success1, failures1) = csvImportService.importFromDb(userId, importConfigurationDto())
+        Assertions.assertEquals(1, success1)
+        Assertions.assertEquals(0, failures1)
+        userbooksPage = bookService.findUserBookByCriteria(userId, null, null, null, null, null, Pageable.ofSize(30))
+        Assertions.assertEquals(1, userbooksPage.content.size)
+        imported = userbooksPage.content[0]
+        // publishedDate is different in 2nd csv, first import date should not have been modified
+        Assertions.assertEquals("2018", imported.book.publishedDate)
+        Assertions.assertTrue(imported.book.image!!.contains("Epidemie", true))
     }
 
     fun user(): User {
