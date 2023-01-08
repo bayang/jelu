@@ -1,3 +1,11 @@
+### [0.35.2](https://github.com/bayang/jelu/compare/v0.35.1...v0.35.2) (2023-01-08)
+
+
+### Bug Fixes
+
+* imports should not overwrite existing images [#58](https://github.com/bayang/jelu/issues/58) ([21f96d7](https://github.com/bayang/jelu/commit/21f96d729b46285f9dcf018453ee7841c3724735))
+* jelu theme readability bug ([833e887](https://github.com/bayang/jelu/commit/833e8873c902058f65e7ebade9569b60cf25924c))
+
 ### [0.35.1](https://github.com/bayang/jelu/compare/v0.35.0...v0.35.1) (2023-01-07)
 
 
