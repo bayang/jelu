@@ -143,7 +143,7 @@ getToRead()
       </div>
     </template>
     <template #filters>
-      <div class="field flex flex-col capitalize">
+      <div class="field flex flex-col capitalize gap-1">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
         <o-checkbox
           v-model="eventTypes"

@@ -180,7 +180,7 @@ try {
       </div>
     </template>
     <template #filters>
-      <div class="field capitalize flex flex-col">
+      <div class="field capitalize flex flex-col gap-1">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
         <o-checkbox
           v-model="eventTypes"

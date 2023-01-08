@@ -60,6 +60,13 @@
 }
 
 /* oruga customization with daisyui */
+.o-chk__check {
+  @apply bg-none;
+}
+
+.o-chk .o-chk__check {
+  @apply checkbox checkbox-primary;
+}
 
 .o-btn.o-btn--success.o-btn--outlined-success {
   @apply btn btn-success;
@@ -86,9 +93,6 @@
   @apply radio radio-primary radio-sm bg-none;
 }
 
-.o-chk__check {
-  @apply bg-none;
-}
 
 .o-pag__link {
   @apply btn text-neutral-content !important;
