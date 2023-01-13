@@ -871,12 +871,16 @@ let displayDatepicker = computed(() => {
             horizontal
             :label="t('labels.upload_cover')"
           >
-            <o-switch
-              v-model="uploadFromWeb"
-              position="left"
-            >
-              {{ uploadlabel }}
-            </o-switch>
+            <div class="form-control">
+              <label class="label cursor-pointer justify-center gap-2">
+                <span class="label-text">{{ uploadlabel }}</span> 
+                <input
+                  v-model="uploadFromWeb"
+                  type="checkbox"
+                  class="toggle toggle-primary"
+                >
+              </label>
+            </div>
           </o-field>
           <o-field
             v-if="uploadFromWeb"
