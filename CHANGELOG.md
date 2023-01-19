@@ -1,3 +1,10 @@
+## [0.36.0](https://github.com/bayang/jelu/compare/v0.35.2...v0.36.0) (2023-01-19)
+
+
+### Features
+
+* add possibility to import metadata on existing book ([aefed8a](https://github.com/bayang/jelu/commit/aefed8a1b34ed5b5fdb0e5cae40de1839db5b73e))
+
 ### [0.35.2](https://github.com/bayang/jelu/compare/v0.35.1...v0.35.2) (2023-01-08)
 
 
