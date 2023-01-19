@@ -303,7 +303,7 @@
         "delete_review": "Slet denne anmeldelse?"
     },
     "book_merge": {
-        "merge_books": "Merge books",
-        "fetch_metadata": "Fetch metadata"
+        "merge_books": "Sammenkæd bøger",
+        "fetch_metadata": "Hent metadata"
     }
 }
