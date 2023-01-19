@@ -301,5 +301,9 @@
         "my_reviews": "Mes critiques",
         "all_reviews": "Toutes les critiques",
         "delete_review": "Effacer cette critique ?"
+    },
+    "book_merge": {
+        "merge_books": "Merge books",
+        "fetch_metadata": "Fetch metadata"
     }
 }
