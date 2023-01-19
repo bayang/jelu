@@ -21,6 +21,9 @@ import { Review } from '../model/Review'
 import { until } from '@vueuse/core'
 import { User } from '../model/User'
 import ReviewCard from "./ReviewCard.vue";
+import AutoImportFormModalVue from "./AutoImportFormModal.vue";
+import { Metadata } from "../model/Metadata";
+import MergeBookModal from './MergeBookModal.vue'
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -160,6 +163,44 @@ function toggleReviewModal(currentBook: Book|undefined, edit: boolean, review: R
       onClose: reviewModalClosed
     });
   }
+}
+
+const toggleFetchMetadataModal = (currentBook: Book|undefined) => {
+  oruga.modal.open({
+    parent: this,
+    component: AutoImportFormModalVue,
+    trapFocus: true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    props: {
+        "book": currentBook,
+      },
+    events: {
+      metadataReceived: (modalMetadata: Metadata) => {
+        console.log("received metadata")
+        console.log(modalMetadata)
+        toggleMergeBookModal(currentBook, modalMetadata)
+      }
+    },
+    onClose: modalClosed
+  });
+}
+
+const toggleMergeBookModal = (currentBook: Book|undefined, metadata: Metadata) => {
+  oruga.modal.open({
+    parent: this,
+    component: MergeBookModal,
+    trapFocus: true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    props: {
+        "book": currentBook,
+        "metadata": metadata
+      },
+    onClose: modalClosed
+  });
 }
 
 const deleteBook = async () => {
@@ -340,17 +381,17 @@ getBook()
   <div class="grid grid-cols-1 justify-center justify-items-center">
     <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12">
       <div />
-      <div class>
+      <div>
         <h3 class="typewriter text-3xl">
           {{ book?.book?.title }}
         </h3>
       </div>
       <div
         v-if="book != null"
-        class
+        class="flex items-center flex-wrap"
       >
         <button
-          class="btn btn-primary btn-outline is-light mr-2"
+          class="btn btn-primary btn-outline is-light mr-2 p-2"
           @click="toggleEdit"
         >
           <span class="icon">
@@ -359,7 +400,7 @@ getBook()
           <span>{{ t('labels.edit') }}</span>
         </button>
         <button
-          class="btn btn-error btn-outline mr-2"
+          class="btn btn-error btn-outline mr-2 p-2"
           @click="deleteBook"
         >
           <span class="icon">
@@ -368,7 +409,7 @@ getBook()
           <span>{{ t('labels.delete') }}</span>
         </button>
         <button
-          class="btn btn-info btn-outline"
+          class="btn btn-info btn-outline p-2"
           @click="toggleReadingEventModal(defaultCreateEvent(), false)"
         >
           <span class="icon">
@@ -388,20 +429,70 @@ getBook()
         >
           <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
         </svg></label>
-        <button
-          v-tooltip="t('reviews.create_review')"
-          class="btn btn-circle btn-outline border-none"
-          @click="toggleReviewModal(book?.book, false, null)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+        <div class="dropdown dropdown-hover bg-transparent">
+          <label
+            tabindex="0"
+            class="btn m-1 btn-circle btn-outline border-none"
           >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+              />
+            </svg>
+          </label>
+          <ul
+            tabindex="0"
+            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li>
+              <button
+                v-tooltip="t('reviews.create_review')"
+                class="btn btn-circle btn-outline border-none"
+                @click="toggleReviewModal(book?.book, false, null)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </button>
+            </li>
+            <li>
+              <button
+                v-tooltip="t('book_merge.fetch_metadata')"
+                class="btn btn-circle btn-outline border-none"
+                @click="toggleFetchMetadataModal(book?.book)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+                  />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div
@@ -817,5 +908,10 @@ getBook()
   </label>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
+
+.dropdown-content.menu {
+  width: fit-content !important;
+}
+
 </style>

@@ -54,6 +54,13 @@
 
   --oruga-loading-overlay: theme('colors.jelu_overlay');
 
+  --oruga-inputitems-background-color: theme('colors.base-100');
+  --oruga-inputitems-border-color: theme('colors.base-100');
+  --oruga-inputitems-color: theme('colors.primary');
+  --oruga-inputitems-item-background-color: theme('colors.primary');
+  --oruga-inputitems-item-color: theme('colors.primary-content');
+
+
   --vdp-bg-color: theme('colors.base-100');
   --vdp-text-color: theme('colors.base-content');
 
@@ -119,7 +126,11 @@
 }
 
 .o-input.o-inputit__input {
-  @apply w-fit sm:w-full;
+  @apply w-fit sm:w-full bg-base-100 text-base-content focus:input-accent;
+}
+
+.o-icon.o-input__icon-left {
+  @apply text-base-content;
 }
 
 .o-steps__title {
@@ -321,3 +332,6 @@
 }
 /* end vue markdown editor */
 
+.jelu-cursor-text {
+  @apply cursor-text !important;
+}

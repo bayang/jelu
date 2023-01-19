@@ -7,6 +7,7 @@ import useDates from '../composables/dates'
 import { useI18n } from 'vue-i18n'
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import ScanModal from "./ScanModal.vue";
+import { Book } from "../model/Book";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -17,10 +18,14 @@ const { formatDate, formatDateString } = useDates()
 
 const { oruga } = useProgrammatic();
 
+const props = defineProps<{
+  book: Book|undefined,
+}>()
+
 const form = reactive({
-  title: "",
-  isbn: "",
-  authors: "",
+  title: props.book?.title,
+  isbn: props.book?.isbn10?.length != undefined && props.book?.isbn10?.length > 0 ? props.book?.isbn10 : props.book?.isbn13,
+  authors: props.book?.authors?.map(a => a.name).join(','),
 });
 
 const emit = defineEmits(['close', 'metadataReceived']);

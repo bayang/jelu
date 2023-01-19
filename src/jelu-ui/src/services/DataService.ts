@@ -20,6 +20,7 @@ import { MonthStats, YearStats } from "../model/YearStats";
 import { Shelf } from "../model/Shelf";
 import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/Review";
 import { Role } from "../model/Role";
+import { StringUtils } from "../utils/StringUtils";
 
 class DataService {
 
@@ -1325,6 +1326,22 @@ class DataService {
     }
   }
 
+  updateBook = async (bookId: string, bookUpdateDto: Book) => {
+    try {
+      const response = await this.apiClient.put<Book>(`${this.API_BOOK}/${bookId}`, bookUpdateDto);
+      console.log("called update book")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error update book " + (error as AxiosError).code)
+      throw new Error("error update book " + error)
+    }
+  }
+
   findBookById = async (bookId: string) => {
     try {
       const response = await this.apiClient.get<Book>(`${this.API_BOOK}/${bookId}`);
@@ -1355,6 +1372,26 @@ class DataService {
       console.log("error review " + (error as AxiosError).code)
       throw new Error("error username by id " + error)
     }
+  }
+
+  checkIsbnExists = async (isbn10: string|undefined, isbn13: string|undefined) => {
+    console.log(isbn10 + " " + isbn13)
+    if (StringUtils.isNotBlank(isbn10)) {
+      const res = await this.findBooks(undefined, isbn10, undefined)
+      console.log(res.empty)
+      if (!res.empty) {
+        return res.content[0]
+      }
+    }
+    if (StringUtils.isNotBlank(isbn13)) {
+      console.log(isbn13)
+      const res = await this.findBooks(undefined, undefined, isbn13)
+      console.log(res.empty)
+      if (!res.empty) {
+        return res.content[0]
+      }
+    }
+    return null
   }
 
 }

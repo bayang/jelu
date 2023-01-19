@@ -53,4 +53,9 @@ export class ObjectUtils {
     }
   })
 
+  public static baseSwalMixin = Swal.mixin({
+    background: '#404040',
+    color: '#ffffff',
+  })
+
 }

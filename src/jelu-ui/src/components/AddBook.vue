@@ -104,15 +104,10 @@ function toggleRemoveImage() {
   deleteImage.value = !deleteImage.value
 }
 
-let swalMixin = Swal.mixin({
-  background: '#404040',
-  color: '#ffffff',
-})
-
 const importBook = async () => {
   console.log("import book");
   if (StringUtils.isNotBlank(form.title)) {
-    let alreadyExisting = await checkIsbnExists(form.isbn10, form.isbn13)
+    let alreadyExisting = await dataService.checkIsbnExists(form.isbn10, form.isbn13)
     console.log('already existing')
     console.log(alreadyExisting)
     let saveBook = true
@@ -127,7 +122,7 @@ const importBook = async () => {
         if (result.isConfirmed) {
           saveBook = true
         } else if (result.isDenied) {
-          swalMixin.fire('', t('sorting.sort_by'), 'info')
+          ObjectUtils.baseSwalMixin.fire('', t('labels.changes_not_saved'), 'info')
         }
       })
     }
@@ -334,6 +329,9 @@ const toggleModal = () => {
     active: true,
     canCancel: ['x', 'button', 'outside'],
     scroll: 'keep',
+    props: {
+        "book": null,
+      },
     events: {
       metadataReceived: (modalMetadata: Metadata) => {
         console.log("received metadata")
@@ -412,27 +410,6 @@ const validateIsbn13 = (isbn: string) => {
     isbn13ValidationMessage.value = ""
     isbn13LabelVariant.value = ""
   }
-}
-
-
-async function checkIsbnExists(isbn10: string, isbn13: string) {
-  console.log(isbn10 + " " + isbn13)
-  if (StringUtils.isNotBlank(isbn10)) {
-    let res = await dataService.findBooks(undefined, isbn10, undefined)
-    console.log(res.empty)
-    if (!res.empty) {
-      return res.content[0]
-    }
-  }
-  if (StringUtils.isNotBlank(isbn13)) {
-    console.log(isbn13)
-    let res = await dataService.findBooks(undefined, undefined, isbn13)
-    console.log(res.empty)
-    if (!res.empty) {
-      return res.content[0]
-    }
-  }
-  return null
 }
 
 let autoImportPopupContent = computed(() => {
