@@ -301,5 +301,9 @@
         "my_reviews": "Moje recenze",
         "all_reviews": "Všechny recenze",
         "delete_review": "Odstranit tuto recenzi ?"
+    },
+    "book_merge": {
+        "merge_books": "Merge books",
+        "fetch_metadata": "Fetch metadata"
     }
 }
