@@ -301,5 +301,9 @@
         "my_reviews": "Meine Rezensionen",
         "all_reviews": "Alle Rezensionen",
         "delete_review": "Diese Rezension löschen?"
+    },
+    "book_merge": {
+        "merge_books": "Merge books",
+        "fetch_metadata": "Fetch metadata"
     }
 }
