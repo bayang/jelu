@@ -301,5 +301,9 @@
         "my_reviews": "Mine anmeldelser",
         "all_reviews": "Alle anmeldelser",
         "delete_review": "Slet denne anmeldelse?"
+    },
+    "book_merge": {
+        "merge_books": "Merge books",
+        "fetch_metadata": "Fetch metadata"
     }
 }
