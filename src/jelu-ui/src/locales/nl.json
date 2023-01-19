@@ -301,5 +301,9 @@
         "my_reviews": "Mijn recensies",
         "all_reviews": "Alle recensies",
         "delete_review": "Deze review verwijderen?"
+    },
+    "book_merge": {
+        "merge_books": "Merge books",
+        "fetch_metadata": "Fetch metadata"
     }
 }
