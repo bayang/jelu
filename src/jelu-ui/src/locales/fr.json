@@ -303,7 +303,7 @@
         "delete_review": "Effacer cette critique ?"
     },
     "book_merge": {
-        "merge_books": "Merge books",
-        "fetch_metadata": "Fetch metadata"
+        "merge_books": "Fusionner les livres",
+        "fetch_metadata": "Récupération des métadonnées"
     }
 }
