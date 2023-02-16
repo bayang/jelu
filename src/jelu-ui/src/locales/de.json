@@ -108,6 +108,7 @@
         "username": "Benutzername",
         "role": "Benutzergruppe | Benutzergruppen",
         "users": "Benutzer",
+        "add_users": "Add users",
         "users_management": "Benutzerverwaltung",
         "shortcuts": "Kurzbefehle",
         "shortcuts_tooltip": "Tastaturkürzel",
@@ -300,7 +301,9 @@
         "rating": "Bewertung",
         "my_reviews": "Meine Rezensionen",
         "all_reviews": "Alle Rezensionen",
-        "delete_review": "Diese Rezension löschen?"
+        "delete_review": "Diese Rezension löschen?",
+        "review_detail": "Go to review detail",
+        "book_all_reviews": "All reviews for this book"
     },
     "book_merge": {
         "merge_books": "Merge books",
