@@ -108,6 +108,7 @@
         "username": "username",
         "role": "role | roles",
         "users": "Users",
+        "add_users": "Add users",
         "users_management": "Users management",
         "shortcuts": "Shortcuts",
         "shortcuts_tooltip": "Keyboard shortcuts",
@@ -300,7 +301,9 @@
         "rating": "rating",
         "my_reviews": "My reviews",
         "all_reviews": "All reviews",
-        "delete_review": "Delete this review ?"
+        "delete_review": "Delete this review ?",
+        "review_detail": "Go to review detail",
+        "book_all_reviews": "All reviews for this book"
     },
     "book_merge": {
         "merge_books": "Merge books",
