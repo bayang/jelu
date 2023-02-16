@@ -108,6 +108,7 @@
         "username": "uživatelské jméno",
         "role": "role | role",
         "users": "Uživatelé",
+        "add_users": "Add users",
         "users_management": "Správa uživatelů",
         "shortcuts": "Zkratky",
         "shortcuts_tooltip": "Klávesové zkratky",
@@ -300,7 +301,9 @@
         "rating": "hodnocení",
         "my_reviews": "Moje recenze",
         "all_reviews": "Všechny recenze",
-        "delete_review": "Odstranit tuto recenzi ?"
+        "delete_review": "Odstranit tuto recenzi ?",
+        "review_detail": "Go to review detail",
+        "book_all_reviews": "All reviews for this book"
     },
     "book_merge": {
         "merge_books": "Merge books",
