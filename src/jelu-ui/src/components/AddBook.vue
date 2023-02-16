@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { computed, reactive, Ref, ref } from "vue";
-import { useStore } from 'vuex'
-import { UserBook } from "../model/Book";
-import dataService from "../services/DataService";
-import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
-import { key } from '../store'
-import { Author } from "../model/Author";
-import { Tag } from "../model/Tag";
-import AutoImportFormModalVue from "./AutoImportFormModal.vue";
-import { Metadata } from "../model/Metadata";
-import { ObjectUtils } from "../utils/ObjectUtils";
 import IsbnVerify from '@saekitominaga/isbn-verify';
-import Swal from 'sweetalert2';
-import { useRouter } from 'vue-router'
-import { useTitle } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
+import { useTitle } from '@vueuse/core';
+import { computed, reactive, Ref, ref } from "vue";
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { Author } from "../model/Author";
+import { UserBook } from "../model/Book";
+import { Metadata } from "../model/Metadata";
+import { Tag } from "../model/Tag";
+import dataService from "../services/DataService";
+import { key } from '../store';
+import { ObjectUtils } from "../utils/ObjectUtils";
+import { StringUtils } from "../utils/StringUtils";
+import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -92,6 +91,9 @@ let authors: Ref<Array<Author>> = ref([]);
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let tags: Ref<Array<Tag>> = ref([]);
 
+let translators: Ref<Array<Author>> = ref([]);
+let filteredTranslators: Ref<Array<Author>> = ref([]);
+
 const showModal: Ref<boolean> = ref(false)
 const metadata: Ref<Metadata | null> = ref(null)
 // let hasImage: Ref<boolean> = ref(metadata?.value?.image != null)
@@ -133,6 +135,7 @@ const importBook = async () => {
     let userBook: UserBook = fillBook(form, publishedDate.value)
     authors.value.forEach((a) => userBook.book.authors?.push(a));
     tags.value.forEach((t) => userBook.book.tags?.push(t));
+    translators.value.forEach((tr) => userBook.book.translators?.push(tr));
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
     }
@@ -195,6 +198,7 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
       librarythingId: formdata.librarythingId,
       language: formdata.language,
       authors: [],
+      translators: [],
       tags: []
     },
     owned: formdata.owned,
@@ -213,6 +217,7 @@ const clearForm = () => {
   file.value = null;
   authors.value = [];
   tags.value = [];
+  translators.value = [];
   uploadPercentage.value = 0;
   form.title = "";
   form.summary = "";
@@ -252,6 +257,10 @@ function getFilteredAuthors(text: string) {
   dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
 }
 
+function getFilteredTranslators(text: string) {
+  dataService.findAuthorByCriteria(text).then((data) => filteredTranslators.value = data.content)
+}
+
 function getFilteredTags(text: string) {
   dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
@@ -272,6 +281,29 @@ function beforeAdd(item: Author | string) {
       console.log(`author ${author.name}`)
       if (author.name === item) {
         console.log(`author ${author.name} item ${item}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  return shouldAdd
+}
+
+function beforeAddTranslator(item: Author | string) {
+  let shouldAdd = true
+  if (item instanceof Object) {
+    translators.value.forEach(translator => {
+      console.log(`translator ${translator.name}`)
+      if (translator.name === item.name) {
+        console.log(`translator ${translator.name} item ${item.name}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  else {
+    translators.value.forEach(translator => {
+      console.log(`translator ${translator.name}`)
+      if (translator.name === item) {
+        console.log(`translator ${translator.name} item ${item}`)
         shouldAdd = false;
       }
     });
@@ -504,6 +536,29 @@ let displayDatepicker = computed(() => {
               field="name"
               :placeholder="t('labels.add_tag')"
               @typing="getFilteredTags"
+            />
+          </o-field>
+        </div>
+        <div class="field jelu-authorinput pb-2">
+          <o-field
+            horizontal
+            :label="t('book.translator', 2)"
+            class="capitalize"
+          >
+            <o-inputitems
+              v-model="translators"
+              :data="filteredTranslators"
+              :autocomplete="true"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="beforeAddTranslator"
+              :create-item="createAuthor"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              :placeholder="t('labels.add_translator')"
+              @typing="getFilteredTranslators"
             />
           </o-field>
         </div>
