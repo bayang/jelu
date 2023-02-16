@@ -108,7 +108,7 @@
         "username": "nom d'utilisateur",
         "role": "rôle | rôles",
         "users": "Utilisateurs",
-        "add_users": "Add users",
+        "add_users": "Ajouter des utilisateurs",
         "users_management": "gestion des utilisateurs",
         "shortcuts": "Raccourcis",
         "shortcuts_tooltip": "Raccourcis claviers",
@@ -297,13 +297,13 @@
         "visibility": "visibilité",
         "private": "privée",
         "public": "publique",
-        "review": "critique",
+        "review": "critique | critiques",
         "rating": "note",
         "my_reviews": "Mes critiques",
         "all_reviews": "Toutes les critiques",
         "delete_review": "Effacer cette critique ?",
-        "review_detail": "Go to review detail",
-        "book_all_reviews": "All reviews for this book"
+        "review_detail": "Aller à la critique",
+        "book_all_reviews": "Tous les avis pour ce livre"
     },
     "book_merge": {
         "merge_books": "Fusionner les livres",
