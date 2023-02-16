@@ -108,6 +108,7 @@
         "username": "gebruikersnaam",
         "role": "rol | rollen",
         "users": "Gebruikers",
+        "add_users": "Add users",
         "users_management": "Gebruikersbeheer",
         "shortcuts": "Snelkoppelingen",
         "shortcuts_tooltip": "Sneltoetsen",
@@ -300,7 +301,9 @@
         "rating": "beoordeling",
         "my_reviews": "Mijn recensies",
         "all_reviews": "Alle recensies",
-        "delete_review": "Deze review verwijderen?"
+        "delete_review": "Deze review verwijderen?",
+        "review_detail": "Go to review detail",
+        "book_all_reviews": "All reviews for this book"
     },
     "book_merge": {
         "merge_books": "Merge books",
