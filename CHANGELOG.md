@@ -1,3 +1,16 @@
+## [0.37.0](https://github.com/bayang/jelu/compare/v0.36.0...v0.37.0) (2023-02-16)
+
+
+### Features
+
+* add latest reviews from current instance on home page ([258dcb3](https://github.com/bayang/jelu/commit/258dcb338bbbc84c0bb424f001d2b694aae197a6))
+* add possibility to see others [#61](https://github.com/bayang/jelu/issues/61) ([b2014d6](https://github.com/bayang/jelu/commit/b2014d6aed7267dca5f382394e303b8c212cf77f))
+
+
+### Bug Fixes
+
+* add translators field on add book page ([863342a](https://github.com/bayang/jelu/commit/863342a80f85a6ecb3c7cff54f2379aeeb64090e))
+
 ## [0.36.0](https://github.com/bayang/jelu/compare/v0.35.2...v0.36.0) (2023-01-19)
 
 
