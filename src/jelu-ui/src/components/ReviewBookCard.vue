@@ -12,6 +12,8 @@ const { t, d } = useI18n({
 
 const props = defineProps<{ 
   review: Review,
+  bookReviewsLink: boolean,
+  showUserName: boolean
 }>();
 
 const book: Ref<Book|null> = ref(null)
@@ -24,6 +26,15 @@ const getBook = async () => {
     console.log("failed get book : " + error)
   }
 };
+
+const username = ref("")
+
+const getUsername = async () => {
+  username.value = await dataService.usernameById(props.review.user)
+}
+if (props.showUserName === true) {
+  getUsername()
+}
 
 getBook()
 
@@ -41,8 +52,16 @@ getBook()
       >
     </figure>
     <div class="card-body p-1 m-1">
+      <router-link
+        v-if="props.bookReviewsLink != null && props.bookReviewsLink === true && book != null"
+        v-tooltip="t('reviews.book_all_reviews')"
+        class="card-title line-clamp-2 link hover:underline hover:decoration-4 hover:decoration-secondary"
+        :to="{ name: 'book-reviews', params: { bookId: book.id } }"
+      >
+        {{ book.title }}&nbsp;
+      </router-link>
       <h2
-        v-if="book != null"
+        v-else-if="book != null"
         class="card-title line-clamp-2"
       >
         {{ book?.title }}
@@ -52,7 +71,9 @@ getBook()
         {{ review.text.substring(0, 50) }}
       </p>
       <div class="card-actions justify-end">
+        <span v-if="props.showUserName">by: {{ username }}</span>
         <router-link
+          v-tooltip="t('reviews.review_detail')"
           class="link hover:underline hover:decoration-4 hover:decoration-secondary text-sm italic"
           :to="{ name: 'review-detail', params: { reviewId: props.review.id } }"
         >

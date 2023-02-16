@@ -282,6 +282,8 @@ getUserReviews()
       >
         <ReviewBookCard
           :review="review"
+          :book-reviews-link="false"
+          :show-user-name="false"
         />
       </div>
     </div>

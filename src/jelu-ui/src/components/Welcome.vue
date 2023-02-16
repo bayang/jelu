@@ -7,11 +7,13 @@ import { useStore } from 'vuex'
 import useEvents from "../composables/events"
 import { UserBook } from '../model/Book'
 import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from '../model/ReadingEvent'
+import { Review } from "../model/Review"
 import dataService from "../services/DataService"
 import { key } from '../store'
 import BookCard from "./BookCard.vue"
 import QuotesDisplay from './QuotesDisplay.vue'
 import ReadingEventModalVue from './ReadingEventModal.vue'
+import ReviewBookCard from './ReviewBookCard.vue';
 
 useTitle('Jelu | Home')
 
@@ -40,6 +42,8 @@ const books: Ref<Array<UserBook>> = ref([]);
 const events: Ref<Array<ReadingEventWithUserBook>> = ref([]);
 
 const hasBooks = computed(() => books.value.length > 0)
+
+const userReviews: Ref<Array<Review>> = ref([]);
 
 const getCurrentlyReading = async () => {
   currentlyReadingIsLoading.value = true
@@ -74,10 +78,23 @@ const getMyEvents = async () => {
   }
 };
 
+const getUserReviews = async () => {
+  try {
+    const res = await dataService.findReviews(
+      undefined, undefined, null,
+    null, null,
+    0, 20, null)
+    userReviews.value = res.content
+  } catch (error) {
+    console.log("failed get reviews : " + error);
+  }
+};
+
 if (isLogged.value) {
   try {
       getCurrentlyReading()
       getMyEvents()
+      getUserReviews()
   } catch (error) {
     console.log("failed get books : " + error);
   }
@@ -234,6 +251,28 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
         height="250px"
         :animated="true"
       />
+    </div>
+    <h2
+      v-if="userReviews.length > 0"
+      class="text-3xl typewriter py-4 capitalize"
+    >
+      {{ t('reviews.review', 2) }}
+    </h2>
+    <div
+      v-if="userReviews.length > 0"
+      class="flex flex-nowrap overflow-x-auto mb-10"
+    >
+      <div
+        v-for="review in userReviews"
+        :key="review.id"
+        class="m-1 pb-6 shrink-0 grow-0"
+      >
+        <ReviewBookCard
+          :review="review"
+          :book-reviews-link="true"
+          :show-user-name="true"
+        />
+      </div>
     </div>
     <quotes-display v-if="isLogged" />
   </div>
