@@ -108,6 +108,7 @@
         "username": "nazwa użytkownika",
         "role": "rola | role",
         "users": "Użytkownicy",
+        "add_users": "Add users",
         "users_management": "Zarządzanie użytkownikami",
         "shortcuts": "Skróty",
         "shortcuts_tooltip": "Skróty klawiszowe",
@@ -300,7 +301,9 @@
         "rating": "ocena",
         "my_reviews": "Moje recenzje",
         "all_reviews": "Wszystkie recenzje",
-        "delete_review": "Usunąć tę recenzję?"
+        "delete_review": "Usunąć tę recenzję?",
+        "review_detail": "Go to review detail",
+        "book_all_reviews": "All reviews for this book"
     },
     "book_merge": {
         "merge_books": "Merge books",
