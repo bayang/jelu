@@ -81,8 +81,8 @@ const borrowedAsBool = computed(() => {
 
 const getBooks = () => {
   getBookIsLoading.value = true
-  dataService.findUserBookByCriteria(eventTypes.value, null, toReadAsBool.value, 
-  ownedAsBool.value, borrowedAsBool.value,
+  dataService.findUserBookByCriteria(eventTypes.value, null, null, 
+  toReadAsBool.value, ownedAsBool.value, borrowedAsBool.value,
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
         console.log(res)
@@ -347,6 +347,7 @@ try {
           :book="book"
           :force-select="selectAll"
           :show-select="showSelect"
+          :propose-add="true"
           class="h-full"
           @update:modal-closed="modalClosed"
           @update:checked="cardChecked"

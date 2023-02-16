@@ -203,6 +203,7 @@ getBooks()
         :book="book"
         :force-select="selectAll"
         :show-select="showSelect"
+        :propose-add="true"
         class="h-full"
         @update:modal-closed="modalClosed"
         @update:checked="cardChecked"

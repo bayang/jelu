@@ -195,6 +195,38 @@ class DataService {
     }
   }
 
+  getUsers = async () => {
+    try {
+      const response = await this.apiClient.get<Array<User>>(this.API_USER)
+      console.log("called users")
+      console.log(response.data)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios users " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error users " + (error as AxiosError).code)
+      throw new Error("error users " + error)
+    }
+  }
+
+  getUserById = async (userId: string) => {
+    try {
+      const response = await this.apiClient.get<User>(`${this.API_USER}/${userId}`);
+      console.log("called user by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error user by id " + (error as AxiosError).code)
+      throw new Error("error get user by id " + error)
+    }
+  }
+
   authenticateUser = async (login: string, password: string) => {
     try {
       const response = await this.apiClient.get<UserAuthentication>(`${this.API_USER}/me`, {
@@ -427,12 +459,14 @@ class DataService {
   }
 
   findUserBookByCriteria = async (lastEventTypes?: Array<ReadingEventType> | null, bookId?: string|null,
-    toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null, page?: number, size?: number, sort?: string) => {
+    userId?: string|null, toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null, 
+    page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}`, {
         params: {
           lastEventTypes: lastEventTypes,
           bookId: bookId,
+          userId: userId,
           toRead: toRead,
           owned: owned,
           borrowed: borrowed,

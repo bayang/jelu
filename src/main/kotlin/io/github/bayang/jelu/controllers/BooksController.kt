@@ -139,15 +139,11 @@ class BooksController(
         @RequestParam(name = "toRead", required = false) toRead: Boolean?,
         @RequestParam(name = "owned", required = false) owned: Boolean?,
         @RequestParam(name = "borrowed", required = false) borrowed: Boolean?,
-        @RequestParam(name = "user", required = false) userId: UUID?,
+        @RequestParam(name = "userId", required = false) userId: UUID?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
     ): Page<UserBookWithoutEventsAndUserDto> {
         assertIsJeluUser(principal.principal)
-        val finalUserId = if ((principal.principal as JeluUser).user.isAdmin && userId != null) {
-            userId
-        } else {
-            (principal.principal as JeluUser).user.id.value
-        }
+        val finalUserId = userId ?: (principal.principal as JeluUser).user.id.value
         return repository.findUserBookByCriteria(finalUserId, bookId, eventTypes, toRead, owned, borrowed, pageable)
     }
 

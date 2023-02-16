@@ -49,7 +49,8 @@ const getToReadIsLoading: Ref<boolean> = ref(false)
 const getToRead = async () => {
   getToReadIsLoading.value = true
   try {
-    const res = await dataService.findUserBookByCriteria(eventTypes.value, null,
+    const res = await dataService.findUserBookByCriteria(
+      eventTypes.value, null, null,
     true, ownedAsBool.value, null,
     pageAsNumber.value - 1, perPage.value, sortQuery.value)
     total.value = res.totalElements
@@ -252,6 +253,7 @@ getToRead()
         :book="book"
         :force-select="selectAll"
         :show-select="showSelect"
+        :propose-add="true"
         class="h-full"
         @update:modal-closed="modalClosed"
         @update:checked="cardChecked"

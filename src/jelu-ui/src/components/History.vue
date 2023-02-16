@@ -168,6 +168,7 @@ getYears()
               class="h-full"
               :force-select="false"
               :show-select="false"
+              :propose-add="true"
             >
               <template #date>
                 <div class="badge badge-accent absolute bottom-0 left-1">

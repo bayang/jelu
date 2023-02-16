@@ -4,6 +4,7 @@ import { useTitle } from '@vueuse/core'
 import { computed, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
+import useEvents from "../composables/events"
 import { UserBook } from '../model/Book'
 import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from '../model/ReadingEvent'
 import dataService from "../services/DataService"
@@ -20,6 +21,7 @@ const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
+const { eventClass, eventLabel } = useEvents()
 
 const isLogged = computed(() => {
     return store != null && store != undefined && store.getters.getLogged
@@ -42,7 +44,7 @@ const hasBooks = computed(() => books.value.length > 0)
 const getCurrentlyReading = async () => {
   currentlyReadingIsLoading.value = true
   try {
-    const res = await dataService.findUserBookByCriteria([ReadingEventType.CURRENTLY_READING], null, null)
+    const res = await dataService.findUserBookByCriteria([ReadingEventType.CURRENTLY_READING], null, null, null)
     if (res.numberOfElements <= 6) {
       books.value = res.content
     }
@@ -70,28 +72,6 @@ const getMyEvents = async () => {
     console.log("failed get events : " + error)
     recentEventsIsLoading.value = false
   }
-};
-
-const eventClass = (type: ReadingEventType) => {
-    if (type === ReadingEventType.FINISHED) {
-      return "badge-info";
-    } else if (type === ReadingEventType.DROPPED) {
-      return "badge-error";
-    } else if (
-      type === ReadingEventType.CURRENTLY_READING
-    ) {
-      return "badge-success";
-    } else return "";
-};
-
-const eventLabel = (type: ReadingEventType) => {
-    if (type === ReadingEventType.FINISHED) {
-      return t('reading_events.finished');
-    } else if (type === ReadingEventType.DROPPED) {
-      return t('reading_events.dropped');
-    } else if (type === ReadingEventType.CURRENTLY_READING) {
-      return t('reading_events.reading');
-    } else return "";
 };
 
 if (isLogged.value) {
@@ -164,6 +144,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             size="xl"
             :force-select="false"
             :show-select="false"
+            :propose-add="true"
           >
             <template #icon>
               <span
@@ -229,6 +210,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             class="h-full"
             :force-select="false"
             :show-select="false"
+            :propose-add="true"
           />
         </div>
       </div>

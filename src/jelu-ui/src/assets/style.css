@@ -194,6 +194,11 @@
   width: min(900px, 85vw);
 }
 
+.review-book-card {
+  @apply h-72;
+  width: min(300px, 85vw);
+}
+
 .small-cover {
     @apply w-28;
   }

@@ -100,6 +100,11 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
+            path: '/users/:userId',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/UserDetail.vue'),
+            name: 'user-detail',
+        },
+        {
             path: '/profile',
             component: AdminBaseVue,
             name: 'profile-page',
@@ -109,6 +114,7 @@ const router = createRouter({
                 { path : 'me', component: () => import(/* webpackChunkName: "recommend" */ './components/ProfilePage.vue')},
                 { path : 'admin/authors', component: () => import(/* webpackChunkName: "recommend" */ './components/AdminAuthors.vue')},
                 { path : 'admin/users', beforeEnter: [isAdmin], component: () => import(/* webpackChunkName: "recommend" */ './components/AdminUsers.vue')},
+                { path : 'users', component: () => import(/* webpackChunkName: "recommend" */ './components/UsersList.vue')},
                 { path: 'imports', component: () => import(/* webpackChunkName: "recommend" */ './components/Imports.vue')},
                 { path: 'settings', component: () => import(/* webpackChunkName: "recommend" */ './components/UserSettings.vue')},
                 { path: 'messages', component: () => import(/* webpackChunkName: "recommend" */ './components/UserMessages.vue')},
