@@ -1,6 +1,6 @@
 {
     "home": {
-        "currently_reading": "Aktuální čtení",
+        "currently_reading": "Rozečtené",
         "recent_events": "Nedávné události čtení",
         "quotes": "citace",
         "not_reading": "Momentálně nic ke čtení"
@@ -108,7 +108,7 @@
         "username": "uživatelské jméno",
         "role": "role | role",
         "users": "Uživatelé",
-        "add_users": "Add users",
+        "add_users": "Přidat uživatele",
         "users_management": "Správa uživatelů",
         "shortcuts": "Zkratky",
         "shortcuts_tooltip": "Klávesové zkratky",
@@ -150,8 +150,8 @@
         "event_date": "datum události",
         "edit_event": "upravit událost",
         "reading": "čtu",
-        "start_date": "start date",
-        "end_date": "end date"
+        "start_date": "počáteční datum",
+        "end_date": "datum ukončení"
     },
     "filtering": {
         "book_in_list": "Kniha je v seznamu k přečtení",
@@ -297,16 +297,16 @@
         "visibility": "viditelnost",
         "private": "soukromá",
         "public": "veřejná",
-        "review": "recenze",
+        "review": "recenze | recenze",
         "rating": "hodnocení",
         "my_reviews": "Moje recenze",
         "all_reviews": "Všechny recenze",
         "delete_review": "Odstranit tuto recenzi ?",
-        "review_detail": "Go to review detail",
-        "book_all_reviews": "All reviews for this book"
+        "review_detail": "Přejít na detail recenze",
+        "book_all_reviews": "Všechny recenze této knihy"
     },
     "book_merge": {
-        "merge_books": "Merge books",
-        "fetch_metadata": "Fetch metadata"
+        "merge_books": "Sloučit knihy",
+        "fetch_metadata": "Stáhnout metadata"
     }
 }
