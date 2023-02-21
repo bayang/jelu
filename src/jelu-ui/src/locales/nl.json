@@ -108,7 +108,7 @@
         "username": "gebruikersnaam",
         "role": "rol | rollen",
         "users": "Gebruikers",
-        "add_users": "Add users",
+        "add_users": "Gebruikers toevoegen",
         "users_management": "Gebruikersbeheer",
         "shortcuts": "Snelkoppelingen",
         "shortcuts_tooltip": "Sneltoetsen",
@@ -297,13 +297,13 @@
         "visibility": "zichtbaarheid",
         "private": "privé",
         "public": "openbaar",
-        "review": "recensie",
+        "review": "beoordeling | beoordelingen",
         "rating": "beoordeling",
         "my_reviews": "Mijn recensies",
         "all_reviews": "Alle recensies",
         "delete_review": "Deze review verwijderen?",
-        "review_detail": "Go to review detail",
-        "book_all_reviews": "All reviews for this book"
+        "review_detail": "Ga naar beoordelingsdetails",
+        "book_all_reviews": "Alle beoordelingen van dit boek"
     },
     "book_merge": {
         "merge_books": "Merge books",
