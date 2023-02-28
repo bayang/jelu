@@ -11,7 +11,7 @@
         "add_book": "aggiungi libro",
         "dashboard": "dashboard",
         "login": "accedi",
-        "logout": "logout",
+        "logout": "esci",
         "search": "cerca",
         "history": "history",
         "shelves": "scaffali"
