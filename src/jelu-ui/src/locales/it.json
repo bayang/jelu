@@ -235,7 +235,7 @@
         "import_ok": "Your import request has been saved. You can leave this page, the import result will be available in the messages section."
     },
     "login": {
-        "login": "login",
+        "login": "accedi",
         "password": "password",
         "confirm_login": "confirm login",
         "confirm_password": "confirm password",
