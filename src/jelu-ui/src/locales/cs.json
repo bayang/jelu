@@ -36,7 +36,7 @@
         "invalid_isbn10": "Neplatné isbn10",
         "invalid_isbn13": "Neplatné isbn10",
         "auto_fill_doc": "Zkusit automaticky vyplnit některá pole z webu, podle daného isbn nebo názvu",
-        "auto_import_disabled": "Automatický import vyžaduje instalaci Calibre",
+        "auto_import_disabled": "Auto import requires a metadata plugin to be installed",
         "auto_fill": "automatické vyplnění",
         "add_author": "Přidat autora",
         "add_tag": "Přidat tag",
@@ -308,5 +308,10 @@
     "book_merge": {
         "merge_books": "Sloučit knihy",
         "fetch_metadata": "Stáhnout metadata"
+    },
+    "metadata": {
+        "reorder_plugins": "reorder plugins",
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
+        "default_priority": "default priority"
     }
 }
