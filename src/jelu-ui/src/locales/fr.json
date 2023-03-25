@@ -36,7 +36,7 @@
         "invalid_isbn10": "Isbn10 invalide",
         "invalid_isbn13": "Isbn13 invalide",
         "auto_fill_doc": "Remplissage automatique via le web à partir d'un titre ou isbn",
-        "auto_import_disabled": "Calibre doit être installé pour le remplissage automatique",
+        "auto_import_disabled": "Auto import requires a metadata plugin to be installed",
         "auto_fill": "Remplissage automatique",
         "add_author": "Ajouter un auteur",
         "add_tag": "Ajouter une étiquette",
@@ -308,5 +308,10 @@
     "book_merge": {
         "merge_books": "Fusionner les livres",
         "fetch_metadata": "Récupération des métadonnées"
+    },
+    "metadata": {
+        "reorder_plugins": "reorder plugins",
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
+        "default_priority": "default priority"
     }
 }
