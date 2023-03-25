@@ -46,5 +46,4 @@ class PluginInfoHolder(
         calibreComputed = true
         return _calibreEnabled
     }
-
 }
