@@ -1,3 +1,15 @@
+## [0.38.0](https://github.com/bayang/jelu/compare/v0.37.0...v0.38.0) (2023-03-25)
+
+
+### Features
+
+* plugins refactor ([bd942fe](https://github.com/bayang/jelu/commit/bd942fe20fd202d4639889e80c57a39ab3597eb6))
+
+
+### Bug Fixes
+
+* make linter happy ([5fd65ee](https://github.com/bayang/jelu/commit/5fd65eec5f7353ca76b6914131ea6a98ce0956ce))
+
 ## [0.37.0](https://github.com/bayang/jelu/compare/v0.36.0...v0.37.0) (2023-02-16)
 
 
