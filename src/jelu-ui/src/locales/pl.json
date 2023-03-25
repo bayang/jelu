@@ -36,7 +36,7 @@
         "invalid_isbn10": "Nieprawidłowy numer ISBN10",
         "invalid_isbn13": "Nieprawidłowy numer ISBN13",
         "auto_fill_doc": "Podejmij próbę automatycznego wypełnienia pól z Internetu na podstawie tytułu lub numeru ISBN",
-        "auto_import_disabled": "Autoimportowanie wymaga zainstalowania Calibre",
+        "auto_import_disabled": "Auto import requires a metadata plugin to be installed",
         "auto_fill": "autouzupełnianie",
         "add_author": "Dodaj autora",
         "add_tag": "Dodaj znacznik",
@@ -308,5 +308,10 @@
     "book_merge": {
         "merge_books": "Merge books",
         "fetch_metadata": "Fetch metadata"
+    },
+    "metadata": {
+        "reorder_plugins": "reorder plugins",
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
+        "default_priority": "default priority"
     }
 }
