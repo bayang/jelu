@@ -2,18 +2,23 @@ package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.dto.WikipediaPageResult
 import io.github.bayang.jelu.dto.WikipediaSearchResult
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
+import io.github.bayang.jelu.service.metadata.PluginInfoHolder
 import io.github.bayang.jelu.service.metadata.WikipediaService
 import io.swagger.v3.oas.annotations.Operation
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
+import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
 
@@ -22,7 +27,8 @@ private val logger = KotlinLogging.logger {}
 class MetadataController(
     private val properties: JeluProperties,
     private val metadataService: FetchMetadataService,
-    private val wikipediaService: WikipediaService
+    private val wikipediaService: WikipediaService,
+    private val pluginInfoHolder: PluginInfoHolder,
 ) {
 
     @Operation(description = "fetch metadata from the configured providers")
@@ -32,11 +38,20 @@ class MetadataController(
         @RequestParam(name = "title", required = false) title: String?,
         @RequestParam(name = "authors", required = false) authors: String?
     ): Mono<MetadataDto> =
-        if (properties.metadata.calibre.path.isNullOrBlank()) {
-            throw JeluException("Automatic fetching of metadata is disabled, install calibre first")
+        if (pluginInfoHolder.plugins().isEmpty()) {
+            throw JeluException("Automatic fetching of metadata is disabled, install calibre or configure a metadata plugin")
         } else {
-            metadataService.fetchMetadata(isbn, title, authors)
+            metadataService.fetchMetadata(MetadataRequestDto(isbn, title, authors, listOf()))
         }
+
+    @Operation(description = "fetch metadata from the configured providers")
+    @PostMapping(path = ["/metadata"])
+    fun fetchMetadata(@RequestBody @Valid metadataRequestDto: MetadataRequestDto): Mono<MetadataDto> {
+        if (pluginInfoHolder.plugins().isEmpty()) {
+            throw JeluException("Automatic fetching of metadata is disabled, install calibre or configure a metadata plugin")
+        }
+        return metadataService.fetchMetadata(metadataRequestDto)
+    }
 
     @Operation(description = "search the query in wikipedia")
     @GetMapping(path = ["/wikipedia/search"])

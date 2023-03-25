@@ -16,6 +16,7 @@ import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.ImportDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -25,6 +26,7 @@ import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserMessageService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
+import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.github.bayang.jelu.utils.toInstant
 import mu.KotlinLogging
 import org.apache.commons.csv.CSVFormat
@@ -153,8 +155,11 @@ class CsvImportService(
             if (importEntity.shouldFetchMetadata && !properties.metadata.calibre.path.isNullOrBlank()) {
                 val isbn: String = getIsbn(importEntity)
                 if (isbn.isNotBlank()) {
+                    var config = mutableMapOf<String, String>()
+                    config[CalibreMetadataProvider.onlyUseCorePlugins] = "true"
+                    config[CalibreMetadataProvider.fetchCover] = importConfig.shouldFetchCovers.toString()
                     metadata = fetchMetadataService
-                        .fetchMetadata(isbn, null, null, onlyUseCorePlugins = true, fetchCover = importConfig.shouldFetchCovers)
+                        .fetchMetadata(MetadataRequestDto(isbn), config)
                         .block()!!
                 } else {
                     logger.debug { "no isbn on entity ${importEntity.id}, not fetching metadata" }

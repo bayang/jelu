@@ -1,8 +1,8 @@
-package io.github.bayang.jelu.service.metadata
+package io.github.bayang.jelu.service.metadata.providers
 
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
-import io.github.bayang.jelu.service.metadata.providers.GoogleBooksIMetaDataProvider
+import io.github.bayang.jelu.dto.MetadataRequestDto
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -114,10 +114,9 @@ class GoogleBooksIMetaDataProviderTest {
 
         // When
         val result: MetadataDto = service.fetchMetadata(
-            "9781785650406",
-            null,
-            null
-        ).block()!!
+            MetadataRequestDto("9781785650406"),
+            mapOf()
+        )?.block()!!
 
         // Then
         Assertions.assertNotNull(result)

@@ -21,6 +21,7 @@ import { Shelf } from "../model/Shelf";
 import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/Review";
 import { Role } from "../model/Role";
 import { StringUtils } from "../utils/StringUtils";
+import { MetadataRequest } from "../model/MetadataRequest";
 
 class DataService {
 
@@ -658,6 +659,23 @@ class DataService {
         }
       });
       console.log("called metadata")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error metadata " + (error as AxiosError).code)
+      throw new Error("error metadata " + error)
+    }
+  }
+
+  fetchMetadataWithPlugins = async (metadataRequest: MetadataRequest) => {
+    try {
+      
+      const response = await this.apiClient.post<Metadata>(`${this.API_METADATA}`, metadataRequest)
+      console.log("called metadata with plugins")
       console.log(response)
       return response.data;
     }

@@ -31,7 +31,8 @@ const store = createStore<State>({
         metadataFetchEnabled: false,
         metadataFetchCalibreEnabled: false,
         ldapEnabled: false,
-        appVersion: ""
+        appVersion: "",
+        metadataPlugins: []
       } as ServerSettings,
       shelves: []
     }

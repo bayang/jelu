@@ -16,8 +16,8 @@ import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.service.ImportService
 import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserService
-import io.github.bayang.jelu.service.metadata.FILE_PREFIX
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
+import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.mockk.coVerify
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.io.TempDir
@@ -148,7 +148,7 @@ class CsvImportServiceTest(
         Assertions.assertEquals(10, success)
         Assertions.assertEquals(0, failures)
 
-        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any()) }
     }
 
     @Test
@@ -173,7 +173,7 @@ class CsvImportServiceTest(
                 Assertions.assertEquals(1, userbook.readingEvents?.size)
             }
         }
-        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any()) }
     }
 
     @Test
@@ -196,7 +196,7 @@ class CsvImportServiceTest(
         val u = UserBookUpdateDto(
             null, null, null,
             BookCreateDto(
-                image = FILE_PREFIX + "test.jpg"
+                image = CalibreMetadataProvider.FILE_PREFIX + "test.jpg"
             ),
             null,
             null,
@@ -207,7 +207,7 @@ class CsvImportServiceTest(
         Assertions.assertEquals(1, userbooksPage.content.size)
         imported = userbooksPage.content[0]
         Assertions.assertTrue(imported.book.image!!.contains("Epidemie", true))
-        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { fetchMetadataService.fetchMetadata(any(), any()) }
 
         val csvModified = File(this::class.java.getResource("/csv-import/goodreads_library_export_one_line_modified.csv").file)
         csvImportService.parse(csvModified, userId, importConfigurationDto())

@@ -6,6 +6,11 @@ jelu:
     imports: '${user.home}/.jelu/files/imports/'
   session:
     duration: 604800 #7 days
+  metadataProviders:
+    - is-enabled: false
+      apiKey: ""
+      order: -100000
+      name: "jelu-debug"
   metadata:
     calibre:
       path: /usr/bin/fetch-ebook-metadata

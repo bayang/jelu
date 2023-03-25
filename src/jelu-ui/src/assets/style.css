@@ -194,6 +194,12 @@
   width: min(900px, 85vw);
 }
 
+.metadata-modal {
+  @apply m-5 sm:p-5;
+  height: min(400px, 75vh);
+  width: min(400px, 85vw);
+}
+
 .review-book-card {
   @apply h-72;
   width: min(300px, 85vw);

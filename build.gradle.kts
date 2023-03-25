@@ -58,7 +58,7 @@ dependencies {
 
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.liquibase:liquibase-core")
-    val exposedVersion = "0.40.1"
+    val exposedVersion = "0.41.1"
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")

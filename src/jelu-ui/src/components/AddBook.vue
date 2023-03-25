@@ -444,15 +444,6 @@ const validateIsbn13 = (isbn: string) => {
   }
 }
 
-let autoImportPopupContent = computed(() => {
-  if (store != null && store.getters.getSettings.metadataFetchEnabled) {
-    return t('labels.auto_fill_doc')
-  }
-  else {
-    return t('labels.auto_import_disabled')
-  }
-})
-
 let displayDatepicker = computed(() => {
   return eventType.value !== null && eventType.value !== "NONE"
 })
@@ -467,17 +458,33 @@ let displayDatepicker = computed(() => {
         <h1 class="text-2xl title has-text-weight-normal typewriter capitalize">
           {{ t('nav.add_book') }}
         </h1>
-        <button
-          v-tooltip="autoImportPopupContent"
-          class="btn btn-success button is-success is-light"
-          :disabled="store != null && !store.getters.getMetadataFetchEnabled"
-          @click="toggleModal"
-        >
-          <span class="icon">
-            <i class="mdi mdi-auto-fix mdi-18px" />
-          </span>
-          <span>{{ t('labels.auto_fill') }}</span>
-        </button>
+        <div class="flex">
+          <button
+            v-tooltip="t('labels.auto_fill_doc')"
+            class="btn btn-success button is-success is-light"
+            :disabled="store != null && !store.getters.getMetadataFetchEnabled"
+            @click="toggleModal"
+          >
+            <span class="icon">
+              <i class="mdi mdi-auto-fix mdi-18px" />
+            </span>
+            <span>{{ t('labels.auto_fill') }}</span>
+          </button>
+          <svg
+            v-if="store != null && !store.getters.getMetadataFetchEnabled"
+            v-tooltip="t('labels.auto_import_disabled')"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-warning"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
       </div>
       <div class="form-control sm:w-8/12 justify-center justify-items-center justify-self-center column is-two-thirds">
         <div class="field mb-3">
