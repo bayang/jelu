@@ -19,7 +19,7 @@ import org.springframework.data.domain.Pageable
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserMessageServiceTest(
     @Autowired private val userMessageService: UserMessageService,
-    @Autowired private val userService: UserService,
+    @Autowired private val userService: UserService
 ) {
 
     @BeforeAll

@@ -22,7 +22,7 @@ import java.util.UUID
 class ShelfServiceTest(
     @Autowired private val shelfService: ShelfService,
     @Autowired private val userService: UserService,
-    @Autowired private val bookService: BookService,
+    @Autowired private val bookService: BookService
 ) {
 
     @BeforeAll

@@ -58,7 +58,7 @@ class ReviewServiceTest(
         )
         val saved = reviewService.save(
             createReviewDto,
-            user(),
+            user()
         )
         Assertions.assertNotNull(saved.id)
         Assertions.assertEquals(createReviewDto.visibility, saved.visibility)
@@ -88,7 +88,7 @@ class ReviewServiceTest(
         )
         val saved1 = reviewService.save(
             createReviewDto1,
-            user(),
+            user()
         )
         Assertions.assertEquals(oneYearBefore, saved1.reviewDate)
         found = reviewService.find(null, null, null, null, null, Pageable.ofSize(200))

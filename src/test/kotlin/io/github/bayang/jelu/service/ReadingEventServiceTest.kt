@@ -557,7 +557,7 @@ class ReadingEventServiceTest(
                 UpdateReadingEventDto(
                     ReadingEventType.FINISHED,
                     nowInstant().plus(40, ChronoUnit.DAYS),
-                    nowInstant().plus(41, ChronoUnit.DAYS),
+                    nowInstant().plus(41, ChronoUnit.DAYS)
                 )
             )
         }
@@ -619,7 +619,7 @@ class ReadingEventServiceTest(
                 UpdateReadingEventDto(
                     ReadingEventType.FINISHED,
                     null,
-                    nowInstant().plus(41, ChronoUnit.DAYS),
+                    nowInstant().plus(41, ChronoUnit.DAYS)
                 )
             )
         }
@@ -681,7 +681,7 @@ class ReadingEventServiceTest(
                 UpdateReadingEventDto(
                     ReadingEventType.FINISHED,
                     nowInstant().plus(20, ChronoUnit.DAYS),
-                    null,
+                    null
                 )
             )
         }

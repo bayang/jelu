@@ -40,7 +40,7 @@ class CsvExportServiceTest(
     @Autowired private val userService: UserService,
     @Autowired private val jeluProperties: JeluProperties,
     @Autowired private val readingEventService: ReadingEventService,
-    @Autowired private val userMessageService: UserMessageService,
+    @Autowired private val userMessageService: UserMessageService
 ) {
 
     companion object {
