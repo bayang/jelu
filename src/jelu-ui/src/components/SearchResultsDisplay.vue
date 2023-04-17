@@ -5,7 +5,6 @@ import { computed, Ref, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import usePagination from '../composables/pagination';
 import useSort from '../composables/sort';
-import { useRouteQueryArray } from "../composables/useVueRouterArray";
 import useBulkEdition from '../composables/bulkEdition';
 import { Book } from '../model/Book';
 import { LibraryFilter } from '../model/LibraryFilter';
@@ -25,9 +24,9 @@ const titleQuery: Ref<string|undefined> = useRouteQuery('title', undefined)
 const isbn10Query: Ref<string|undefined> = useRouteQuery('isbn10', undefined)
 const isbn13Query: Ref<string|undefined> = useRouteQuery('isbn13', undefined)
 const seriesQuery: Ref<string|undefined> = useRouteQuery('series', undefined)
-const authorsQuery: Ref<Array<string>> = useRouteQueryArray('authors', [])
-const translatorsQuery: Ref<Array<string>> = useRouteQueryArray('translators', [])
-const tagsQuery: Ref<Array<string>> = useRouteQueryArray('tags', [])
+const authorsQuery: Ref<Array<string>> = useRouteQuery('authors', [])
+const translatorsQuery: Ref<Array<string>> = useRouteQuery('translators', [])
+const tagsQuery: Ref<Array<string>> = useRouteQuery('tags', [])
 
 const tagsArrayString: Ref<string> = ref("")
 if (tagsQuery.value.length > 0) {

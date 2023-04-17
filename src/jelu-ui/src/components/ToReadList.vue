@@ -5,7 +5,6 @@ import { computed, Ref, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import usePagination from '../composables/pagination';
 import useSort from '../composables/sort';
-import { useRouteQueryArray } from '../composables/useVueRouterArray';
 import useBulkEdition from '../composables/bulkEdition';
 import { UserBook } from '../model/Book';
 import { ReadingEventType } from '../model/ReadingEvent';
@@ -28,7 +27,7 @@ const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('creationDate
 
 const { showSelect, selectAll, checkedCards, cardChecked, toggleEdit } = useBulkEdition(modalClosed)
 
-const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTypes', [])
+const eventTypes: Ref<Array<ReadingEventType>> = useRouteQuery('lastEventTypes', [])
 
 const open = ref(false)
 

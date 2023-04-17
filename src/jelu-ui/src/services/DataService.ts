@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosHeaders, AxiosInstance } from "axios";
 import { UserBook, Book, UserBookBulkUpdate } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
@@ -102,7 +102,7 @@ class DataService {
       if (tok != null) {
         console.log('interceptor token ' + tok)
         if (!config.headers) {
-          config.headers = {}
+          config.headers = new AxiosHeaders()
         }
         config.headers["X-Auth-Token"] = tok;
       }

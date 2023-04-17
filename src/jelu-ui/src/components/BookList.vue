@@ -6,7 +6,6 @@ import { UserBook } from "../model/Book";
 import BookCard from "./BookCard.vue";
 import usePagination from '../composables/pagination';
 import { ReadingEventType } from "../model/ReadingEvent";
-import { useRouteQueryArray } from "../composables/useVueRouterArray";
 import useBulkEdition from '../composables/bulkEdition';
 import { useThrottleFn } from '@vueuse/core'
 import useSort from "../composables/sort";
@@ -37,7 +36,7 @@ const toRead: Ref<string|null> = useRouteQuery('toRead', "null")
 const owned: Ref<string|null> = useRouteQuery('owned', "null")
 const borrowed: Ref<string|null> = useRouteQuery('borrowed', "null")
 
-const eventTypes: Ref<Array<ReadingEventType>> = useRouteQueryArray('lastEventTypes', [])
+const eventTypes: Ref<Array<ReadingEventType>> = useRouteQuery('lastEventTypes', [])
 
 watch([page, eventTypes, toRead, owned, borrowed, sortQuery], (newVal, oldVal) => {
   console.log("all " + newVal + " " + oldVal)
