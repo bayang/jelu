@@ -5,14 +5,14 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 plugins {
     id("org.springframework.boot") version "2.7.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    val kotlinVersion = "1.7.21"
+    val kotlinVersion = "1.8.20"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("kapt") version kotlinVersion
-    id("com.github.node-gradle.node") version "3.5.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("com.github.node-gradle.node") version "3.5.1"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
@@ -48,7 +48,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
 
     implementation("com.fasterxml.staxmate:staxmate:2.4.0")
-    implementation("com.fasterxml.woodstox:woodstox-core:6.4.0")
+    implementation("com.fasterxml.woodstox:woodstox-core:6.5.0")
 
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -63,23 +63,23 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
 
-    implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("com.github.slugify:slugify:3.0.2")
     implementation("commons-io:commons-io:2.11.0")
     implementation("commons-validator:commons-validator:1.7")
-    implementation("org.jsoup:jsoup:1.15.3")
-    implementation("net.coobird:thumbnailator:0.4.18")
+    implementation("org.jsoup:jsoup:1.15.4")
+    implementation("net.coobird:thumbnailator:0.4.19")
 
-    implementation("org.apache.commons:commons-csv:1.9.0")
+    implementation("org.apache.commons:commons-csv:1.10.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(module = "mockito-core")
     }
-    testImplementation("io.mockk:mockk:1.13.2")
-    testImplementation("com.ninja-squad:springmockk:3.1.1")
+    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("com.ninja-squad:springmockk:3.1.2")
     testImplementation("io.projectreactor:reactor-test")
 
-    val springdocVersion = "1.6.13"
+    val springdocVersion = "1.7.0"
     implementation("org.springdoc:springdoc-openapi-ui:$springdocVersion")
     implementation("org.springdoc:springdoc-openapi-security:$springdocVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")
