@@ -67,7 +67,8 @@ class FetchMetadataServiceTest {
                 isbn = "1566199093",
                 plugins = listOf(
                     PluginInfo(
-                        name = PluginInfoHolder.jelu_debug, order = 1
+                        name = PluginInfoHolder.jelu_debug,
+                        order = 1
                     )
                 )
             )
@@ -130,10 +131,12 @@ class FetchMetadataServiceTest {
                 isbn = "1566199093",
                 plugins = listOf(
                     PluginInfo(
-                        name = "not-existing", order = 1
+                        name = "not-existing",
+                        order = 1
                     ),
                     PluginInfo(
-                        name = "not-existing2", order = 2
+                        name = "not-existing2",
+                        order = 2
                     )
                 )
             )
@@ -169,10 +172,12 @@ class FetchMetadataServiceTest {
                 isbn = "1566199093",
                 plugins = listOf(
                     PluginInfo(
-                        name = "not-existing", order = 1
+                        name = "not-existing",
+                        order = 1
                     ),
                     PluginInfo(
-                        name = PluginInfoHolder.jelu_debug, order = 2
+                        name = PluginInfoHolder.jelu_debug,
+                        order = 2
                     )
                 )
             )

@@ -18,7 +18,7 @@ plugins {
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     outputToConsole.set(true)
     coloredOutput.set(true)
-    disabledRules.set(setOf("no-wildcard-imports"))
+    disabledRules.set(setOf("no-wildcard-imports", "parameter-list-wrapping"))
 }
 
 allOpen {
