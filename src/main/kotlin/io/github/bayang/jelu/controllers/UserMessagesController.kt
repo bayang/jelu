@@ -44,7 +44,13 @@ class UserMessagesController(
     ): Page<UserMessageDto> = userMessageService.find((principal.principal as JeluUser).user, read, messageCategories, pageable)
 
     @PutMapping(path = ["/user-messages/{id}"])
-    fun updateMessage(@PathVariable("id") messageId: UUID, @RequestBody @Valid updateDto: UpdateUserMessageDto): UserMessageDto {
+    fun updateMessage(
+        @PathVariable("id")
+        messageId: UUID,
+        @RequestBody
+        @Valid
+        updateDto: UpdateUserMessageDto
+    ): UserMessageDto {
         return userMessageService.update(messageId, updateDto)
     }
 

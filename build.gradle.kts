@@ -12,7 +12,7 @@ plugins {
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("com.github.node-gradle.node") version "3.5.1"
-    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {

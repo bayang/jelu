@@ -194,7 +194,9 @@ class CsvImportServiceTest(
         Assertions.assertEquals("2018", imported.book.publishedDate)
         Assertions.assertNull(imported.book.image)
         val u = UserBookUpdateDto(
-            null, null, null,
+            null,
+            null,
+            null,
             BookCreateDto(
                 image = CalibreMetadataProvider.FILE_PREFIX + "test.jpg"
             ),

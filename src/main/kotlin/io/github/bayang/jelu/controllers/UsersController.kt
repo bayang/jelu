@@ -103,7 +103,15 @@ class UsersController(
     fun usernameById(@PathVariable("id") userId: UUID) = mapOf<String, String>("username" to repository.findUserById(userId).login)
 
     @PutMapping(path = ["/users/{id}"])
-    fun updateUser(@PathVariable("id") userId: UUID, @RequestBody @Valid user: UpdateUserDto, principal: Authentication, session: HttpSession): UserDto {
+    fun updateUser(
+        @PathVariable("id")
+        userId: UUID,
+        @RequestBody
+        @Valid
+        user: UpdateUserDto,
+        principal: Authentication,
+        session: HttpSession
+    ): UserDto {
         if (principal.principal is JeluUser) {
             if ((principal.principal as JeluUser).user.isAdmin || (principal.principal as JeluUser).user.id.value == userId) {
                 // only admin user can remove or add admin rights

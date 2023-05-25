@@ -100,13 +100,22 @@ class ReadingEventsController(
     }
 
     @PutMapping(path = ["/reading-events/{id}"])
-    fun updateReadingEvent(@PathVariable("id") readingEventId: UUID, @RequestBody @Valid readingEvent: UpdateReadingEventDto): ReadingEventDto {
+    fun updateReadingEvent(
+        @PathVariable("id")
+        readingEventId: UUID,
+        @RequestBody
+        @Valid
+        readingEvent: UpdateReadingEventDto
+    ): ReadingEventDto {
         return repository.updateReadingEvent(readingEventId, readingEvent)
     }
 
     @ApiResponse(responseCode = "204", description = "Deleted the reading event")
     @DeleteMapping(path = ["/reading-events/{id}"])
-    fun deleteEventById(@PathVariable("id") eventId: UUID): ResponseEntity<Unit> {
+    fun deleteEventById(
+        @PathVariable("id")
+        eventId: UUID
+    ): ResponseEntity<Unit> {
         repository.deleteReadingEventById(eventId)
         return ResponseEntity.noContent().build()
     }
