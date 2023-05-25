@@ -508,7 +508,7 @@ class BookRepository(
         book.tags?.forEach {
             val tagEntity: Tag? = findTagsByName(it.name.trim()).firstOrNull()
             if (tagEntity != null) {
-                if (! tagsList.contains(tagEntity)) {
+                if (!tagsList.contains(tagEntity)) {
                     tagsList.add(tagEntity)
                 }
             } else {
@@ -666,7 +666,7 @@ class BookRepository(
     fun bulkEditUserbooks(userBookBulkUpdateDto: UserBookBulkUpdateDto): Int {
         var tagAdded = 0
         // short circuit if no list operations is needed
-        if (!userBookBulkUpdateDto.removeTags.isNullOrEmpty() || ! userBookBulkUpdateDto.addTags.isNullOrEmpty()) {
+        if (!userBookBulkUpdateDto.removeTags.isNullOrEmpty() || !userBookBulkUpdateDto.addTags.isNullOrEmpty()) {
             userBookBulkUpdateDto.ids.forEach {
                 val userbook = UserBook[it]
                 if (!userBookBulkUpdateDto.removeTags.isNullOrEmpty()) {

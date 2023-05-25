@@ -45,7 +45,7 @@ class GlobalConfig {
                     allowCredentials = true
                     addExposedHeader(HttpHeaders.CONTENT_DISPOSITION)
                     addExposedHeader(sessionHeaderName)
-                },
+                }
             )
         }
 }

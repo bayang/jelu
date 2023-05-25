@@ -19,7 +19,7 @@ data class JeluProperties(
         Ldap(),
         Proxy()
     ),
-    val metadataProviders: List<MetaDataProvider>?,
+    val metadataProviders: List<MetaDataProvider>?
 ) {
 
     data class MetaDataProvider(
@@ -72,6 +72,6 @@ data class JeluProperties(
     data class Proxy(
         var enabled: Boolean = false,
         val adminName: String = "",
-        val header: String = "X-Authenticated-User",
+        val header: String = "X-Authenticated-User"
     )
 }

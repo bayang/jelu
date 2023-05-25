@@ -99,6 +99,6 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             language = this.language,
             authors = this.authors.map { it.toAuthorDto() },
             translators = this.translators.map { it.toAuthorDto() },
-            tags = this.tags.map { it.toTagDto() },
+            tags = this.tags.map { it.toTagDto() }
         )
 }

@@ -86,11 +86,11 @@ class CsvExportService(
                 printer.printRecord("Title", "Author", "ISBN", "Publisher", "Date Read", "Shelves", "Bookshelves", "read_dates", "tags", "authors", "isbn10", "isbn13", "owned", "dropped_dates", "currently_reading")
                 do {
                     books = bookService.findUserBookByCriteria(userId, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
-                    currentPage ++
+                    currentPage++
                     logger.debug { "current $currentPage" }
                     count += books.content.size
                     processBooks(books, printer, userId)
-                } while (! books.isEmpty)
+                } while (!books.isEmpty)
             }
         } catch (ex: Exception) {
             logger.error(ex) { "Error processing block of entries for export at page $currentPage" }
@@ -130,7 +130,7 @@ class CsvExportService(
                 if (it.book.isbn13.isNullOrBlank()) "" else it.book.isbn13,
                 if (it.owned == true) "true" else "",
                 listOfDatesForEvent(it, userId, ReadingEventType.DROPPED),
-                listOfDatesForEvent(it, userId, ReadingEventType.CURRENTLY_READING),
+                listOfDatesForEvent(it, userId, ReadingEventType.CURRENTLY_READING)
             )
         }
     }
@@ -174,7 +174,7 @@ class CsvExportService(
     }
 
     fun bookShelves(userbook: UserBookWithoutEventsAndUserDto): String {
-        return if (! userbook.book.tags.isNullOrEmpty()) {
+        return if (!userbook.book.tags.isNullOrEmpty()) {
             userbook.book.tags.stream().map { it.name.replace(" ", "", true) }.collect(Collectors.joining(" "))
         } else {
             ""
@@ -183,14 +183,14 @@ class CsvExportService(
 
     fun listOfDatesForEvent(userbook: UserBookWithoutEventsAndUserDto, userId: UUID, eventType: ReadingEventType): String {
         val reads = readingEventService.findAll(listOf(eventType), userId, userbook.book.id, null, null, null, null, Pageable.ofSize(100))
-        if (! reads.isEmpty) {
+        if (!reads.isEmpty) {
             return reads.content.stream().map { lastEventDate(it) }.sorted().map { toDateString(it) }.collect(Collectors.joining(","))
         }
         return ""
     }
 
     fun tags(userbook: UserBookWithoutEventsAndUserDto): String {
-        return if (! userbook.book.tags.isNullOrEmpty()) {
+        return if (!userbook.book.tags.isNullOrEmpty()) {
             userbook.book.tags.stream().map { it.name }.collect(Collectors.joining(","))
         } else {
             ""
@@ -198,7 +198,7 @@ class CsvExportService(
     }
 
     fun authors(userbook: UserBookWithoutEventsAndUserDto): String {
-        return if (! userbook.book.authors.isNullOrEmpty()) {
+        return if (!userbook.book.authors.isNullOrEmpty()) {
             userbook.book.authors.stream().map { it.name }.collect(Collectors.joining(","))
         } else {
             return ""

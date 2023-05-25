@@ -11,7 +11,7 @@ import java.util.UUID
 
 @Component
 class ShelfService(
-    private val shelfRepository: ShelfRepository,
+    private val shelfRepository: ShelfRepository
 ) {
 
     @Transactional

@@ -16,7 +16,7 @@ private val logger = KotlinLogging.logger {}
 class UserRepository {
 
     fun findAll(searchTerm: String?): SizedIterable<User> {
-        return if (! searchTerm.isNullOrBlank()) {
+        return if (!searchTerm.isNullOrBlank()) {
             User.find { UserTable.login like searchTerm }
         } else {
             User.all()

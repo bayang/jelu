@@ -30,7 +30,7 @@ class LdapConfig(
         if (properties.auth.ldap.userDnPatterns.isNotEmpty()) {
             authenticator.setUserDnPatterns(properties.auth.ldap.userDnPatterns.toTypedArray())
         }
-        if (! properties.auth.ldap.userSearchFilter.isNullOrBlank()) {
+        if (!properties.auth.ldap.userSearchFilter.isNullOrBlank()) {
             val userSearchBase = if (properties.auth.ldap.userSearchBase.isNullOrBlank()) "" else properties.auth.ldap.userSearchBase
             authenticator.setUserSearch(
                 FilterBasedLdapUserSearch(userSearchBase, properties.auth.ldap.userSearchFilter, contextSource)

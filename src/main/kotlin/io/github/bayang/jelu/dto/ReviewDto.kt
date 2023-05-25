@@ -19,7 +19,7 @@ data class UpdateReviewDto(
     val reviewDate: Instant?,
     val text: String?,
     val rating: Double?,
-    val visibility: Visibility?,
+    val visibility: Visibility?
 )
 data class CreateReviewDto(
     val reviewDate: Instant?,

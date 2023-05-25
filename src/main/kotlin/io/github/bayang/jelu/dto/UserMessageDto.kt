@@ -7,14 +7,14 @@ import java.util.UUID
 data class CreateUserMessageDto(
     val message: String?,
     val link: String?,
-    val category: MessageCategory,
+    val category: MessageCategory
 )
 
 data class UpdateUserMessageDto(
     val message: String?,
     val link: String?,
     val category: MessageCategory?,
-    val read: Boolean?,
+    val read: Boolean?
 )
 
 data class UserMessageDto(
@@ -24,5 +24,5 @@ data class UserMessageDto(
     val category: MessageCategory,
     val read: Boolean,
     val creationDate: Instant?,
-    val modificationDate: Instant?,
+    val modificationDate: Instant?
 )

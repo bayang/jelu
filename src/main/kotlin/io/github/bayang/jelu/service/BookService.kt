@@ -111,7 +111,7 @@ class BookService(
                     fileManager.deleteImage(previousImage)
                 }
             }
-        } else if (file == null && !book.book?.image.isNullOrBlank() && ! previousImage.isNullOrBlank() && previousImage.equals(book.book?.image, false)) {
+        } else if (file == null && !book.book?.image.isNullOrBlank() && !previousImage.isNullOrBlank() && previousImage.equals(book.book?.image, false)) {
             // no multipart file and image field in update dto is the same as in BDD -> no change
             skipSave = true
         }
@@ -205,13 +205,14 @@ class BookService(
             }
         }
 
-        if (! importedFile && ! dtoImage.isNullOrBlank()) {
+        if (!importedFile && !dtoImage.isNullOrBlank()) {
             try {
                 // file already exists in the right folder, just rename it
                 if (dtoImage.startsWith(CalibreMetadataProvider.FILE_PREFIX)) {
                     val targetFilename: String = imageName(
                         slugify(title),
-                        id, FilenameUtils.getExtension(dtoImage)
+                        id,
+                        FilenameUtils.getExtension(dtoImage)
                     )
                     val currentFile = File(targetDir, "$dtoImage.bak")
                     val targetFile = File(currentFile.parent, targetFilename)
@@ -253,12 +254,12 @@ class BookService(
         // no multipart image and url image field is empty in udate dto
         if (file == null && author.image.isNullOrBlank()) {
             skipSave = true
-        } else if (file == null && !author.image.isNullOrBlank() && ! previousImage.isNullOrBlank() && previousImage.equals(author.image, false)) {
+        } else if (file == null && !author.image.isNullOrBlank() && !previousImage.isNullOrBlank() && previousImage.equals(author.image, false)) {
             // no multipart file and image field in update dto is the same as in BDD -> no change
             skipSave = true
         }
         // no new multipartFile and image field in update dto is the same as in bdd -> image has not changed, skip image saving
-        if (! skipSave) {
+        if (!skipSave) {
             var backup: File? = null
             // if we need to update image and there is already one, backup it
             if ((file != null || !author.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {

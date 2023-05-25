@@ -22,19 +22,19 @@ class OpenApiConfig {
                 Info()
                     .title("Jelu API")
                     .version("v1.0")
-                    .license(License().name("MIT").url("https://github.com/bayang/jelu/blob/main/LICENSE")),
+                    .license(License().name("MIT").url("https://github.com/bayang/jelu/blob/main/LICENSE"))
             )
             .externalDocs(
                 ExternalDocumentation()
                     .description("jelu documentation")
-                    .url("https://github.com/bayang/jelu"),
+                    .url("https://github.com/bayang/jelu")
             )
             .components(
                 Components()
                     .addSecuritySchemes(
                         "basicAuth",
-                        SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic"),
-                    ),
+                        SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")
+                    )
             )
             .servers(mutableListOf(server))
     }

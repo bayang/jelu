@@ -80,7 +80,7 @@ class ReadingEventRepository {
     fun findYears(
         eventTypes: List<ReadingEventType>?,
         userId: UUID?,
-        bookId: UUID?,
+        bookId: UUID?
     ): List<Int> {
         val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
             .slice(ReadingEventTable.endDate.year())

@@ -43,7 +43,8 @@ class ShelvesController(
 
     @PostMapping(path = ["/shelves"])
     fun saveShelf(
-        @RequestBody @Valid createShelfDto: CreateShelfDto,
+        @RequestBody @Valid
+        createShelfDto: CreateShelfDto,
         principal: Authentication
     ): ShelfDto {
         return shelvesService.save(createShelfDto, (principal.principal as JeluUser).user)

@@ -51,7 +51,8 @@ class UserMessagesController(
     @Hidden
     @PostMapping(path = ["/user-messages"])
     fun createMessage(
-        @RequestBody @Valid createUserMessageDto: CreateUserMessageDto,
+        @RequestBody @Valid
+        createUserMessageDto: CreateUserMessageDto,
         principal: Authentication
     ): UserMessageDto {
         return userMessageService.save(createUserMessageDto, (principal.principal as JeluUser).user)

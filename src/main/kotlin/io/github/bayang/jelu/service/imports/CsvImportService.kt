@@ -137,8 +137,8 @@ class CsvImportService(
             }
             for (entity in importEntities) {
                 when (importEntity(entity, user, importConfig)) {
-                    ProcessingStatus.IMPORTED -> success ++
-                    ProcessingStatus.ERROR -> failures ++
+                    ProcessingStatus.IMPORTED -> success++
+                    ProcessingStatus.ERROR -> failures++
                     else -> continue
                 }
             }
@@ -200,7 +200,7 @@ class CsvImportService(
             var readStatusFromShelves = ""
             if (shelves != null) {
                 for (t in shelves) {
-                    if (! isreadStatusShelf(t)) {
+                    if (!isreadStatusShelf(t)) {
                         tagNames.add(t)
                     } else {
                         // read status shelves are mutually exclusives
@@ -216,7 +216,7 @@ class CsvImportService(
             val booksPage: Page<BookDto> = bookService.findAll(null, importEntity.isbn10, importEntity.isbn13, null, null, null, null, Pageable.ofSize(20), userEntity, LibraryFilter.ANY)
             // first case : the book we try to import from csv already exists in DB,
             // try to see if user already has it attached to his account (and only update userbook), or create new userbook if not
-            val savedUserBook: UserBookLightDto = if (! booksPage.isEmpty) {
+            val savedUserBook: UserBookLightDto = if (!booksPage.isEmpty) {
                 val bookFromDb: BookDto = booksPage.content[0]
                 // user already have an userbook for this book
                 if (bookFromDb.userBookId != null) {
@@ -268,7 +268,7 @@ class CsvImportService(
             // associated bookshelves or the read number field...
             // so take everything into account and try to avoid duplicates
             var readsSaved = 0
-            if (! importEntity.readDates.isNullOrBlank()) {
+            if (!importEntity.readDates.isNullOrBlank()) {
                 val dates = importEntity.readDates!!.split(";")
                 for (date in dates) {
                     try {
@@ -278,7 +278,7 @@ class CsvImportService(
                         if (!alreadyHasFinishedEventAtSameDate(savedUserBook, parsedDate)) {
                             readingEventService.save(CreateReadingEventDto(ReadingEventType.FINISHED, savedUserBook.book.id, toInstant(parsedDate), null), userEntity)
                         }
-                        readsSaved ++
+                        readsSaved++
                     } catch (e: Exception) {
                         logger.error { "failed to parse date from export $date" }
                     }
@@ -293,7 +293,7 @@ class CsvImportService(
                 remainingToSave == 0 &&
                 readsSaved == 0
             ) {
-                remainingToSave ++
+                remainingToSave++
             }
             // bookService.findUserBookById(savedUserBook.id)
             val nbAlreadyFinishedEvents = if (savedUserBook.readingEvents != null) savedUserBook.readingEvents.stream().filter { it.eventType == ReadingEventType.FINISHED }.count().toInt() else 0
@@ -419,7 +419,7 @@ class CsvImportService(
         book.image = metadata.image
         val authorsStrings = mutableSetOf<String>()
         authorsStrings.addAll(metadata.authors)
-        if (! importEntity.authors.isNullOrBlank()) {
+        if (!importEntity.authors.isNullOrBlank()) {
             val split = importEntity.authors!!.split(",")
             authorsStrings.addAll(split)
         }
@@ -547,7 +547,7 @@ class CsvImportService(
                 if (dto != null) {
                     // save in DB with user info
                     importService.save(dto, ProcessingStatus.SAVED, user, importConfig.shouldFetchMetadata)
-                    count ++
+                    count++
                 }
             } catch (e: Exception) {
                 logger.error { "Failed to process line or save data from file ${file.absolutePath}, line : ${dto?.title}" }

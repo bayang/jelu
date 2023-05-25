@@ -13,7 +13,7 @@ private val logger = KotlinLogging.logger {}
 @Service
 class FetchMetadataService(
     private val providers: List<IMetaDataProvider>,
-    private val pluginInfoHolder: PluginInfoHolder,
+    private val pluginInfoHolder: PluginInfoHolder
 ) {
 
     fun fetchMetadata(

@@ -48,7 +48,7 @@ private val logger = KotlinLogging.logger {}
 @RequestMapping("/api/v1")
 class BooksController(
     private val repository: BookService,
-    private val properties: JeluProperties,
+    private val properties: JeluProperties
 ) {
 
     @GetMapping(path = ["/books"])
@@ -195,7 +195,10 @@ class BooksController(
         repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY, roleFilter ?: Role.ANY)
 
     @PostMapping(path = ["/books"], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun saveBook(@RequestBody @Valid book: BookCreateDto): BookDto {
+    fun saveBook(
+        @RequestBody @Valid
+        book: BookCreateDto
+    ): BookDto {
         return repository.save(book, null)
     }
 
@@ -209,7 +212,8 @@ class BooksController(
 
     @PostMapping(path = ["/userbooks"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun saveUserBook(
-        @RequestBody @Valid book: CreateUserBookDto,
+        @RequestBody @Valid
+        book: CreateUserBookDto,
         principal: Authentication
     ): UserBookLightDto {
         return repository.save(book, (principal.principal as JeluUser).user, null)
@@ -225,17 +229,32 @@ class BooksController(
     }
 
     @PostMapping(path = ["/authors"])
-    fun saveAuthor(@RequestBody @Valid author: AuthorDto): AuthorDto {
+    fun saveAuthor(
+        @RequestBody @Valid
+        author: AuthorDto
+    ): AuthorDto {
         return repository.save(author)
     }
 
     @PutMapping(path = ["/books/{id}"])
-    fun updateBook(@PathVariable("id") bookId: UUID, @RequestBody @Valid book: BookUpdateDto): BookDto {
+    fun updateBook(
+        @PathVariable("id")
+        bookId: UUID,
+        @RequestBody
+        @Valid
+        book: BookUpdateDto
+    ): BookDto {
         return repository.update(bookId, book)
     }
 
     @PutMapping(path = ["/authors/{id}"], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun updateAuthor(@PathVariable("id") authorId: UUID, @RequestBody @Valid author: AuthorUpdateDto): AuthorDto {
+    fun updateAuthor(
+        @PathVariable("id")
+        authorId: UUID,
+        @RequestBody
+        @Valid
+        author: AuthorUpdateDto
+    ): AuthorDto {
         return repository.updateAuthor(authorId, author)
     }
 
@@ -252,14 +271,21 @@ class BooksController(
     fun mergeAuthors(
         @PathVariable("id") authorId: UUID,
         @PathVariable("otherId") otherId: UUID,
-        @RequestBody @Valid author: AuthorUpdateDto,
-        principal: Authentication,
+        @RequestBody @Valid
+        author: AuthorUpdateDto,
+        principal: Authentication
     ): AuthorDto {
         return repository.mergeAuthors(authorId, otherId, author, (principal.principal as JeluUser).user)
     }
 
     @PutMapping(path = ["/userbooks/{id}"], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun updateUserBook(@PathVariable("id") userBookId: UUID, @RequestBody @Valid book: UserBookUpdateDto): UserBookLightDto {
+    fun updateUserBook(
+        @PathVariable("id")
+        userBookId: UUID,
+        @RequestBody
+        @Valid
+        book: UserBookUpdateDto
+    ): UserBookLightDto {
         return repository.update(userBookId, book)
     }
 
@@ -273,7 +299,10 @@ class BooksController(
     }
 
     @PutMapping(path = ["/userbooks"], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun bulkUpdateUserBooks(@RequestBody @Valid bulkUpdateDto: UserBookBulkUpdateDto): Int {
+    fun bulkUpdateUserBooks(
+        @RequestBody @Valid
+        bulkUpdateDto: UserBookBulkUpdateDto
+    ): Int {
         return repository.bulkEditUserbooks(bulkUpdateDto)
     }
 }

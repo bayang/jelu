@@ -28,7 +28,7 @@ class MetadataController(
     private val properties: JeluProperties,
     private val metadataService: FetchMetadataService,
     private val wikipediaService: WikipediaService,
-    private val pluginInfoHolder: PluginInfoHolder,
+    private val pluginInfoHolder: PluginInfoHolder
 ) {
 
     @Operation(description = "fetch metadata from the configured providers")
@@ -46,7 +46,10 @@ class MetadataController(
 
     @Operation(description = "fetch metadata from the configured providers")
     @PostMapping(path = ["/metadata"])
-    fun fetchMetadata(@RequestBody @Valid metadataRequestDto: MetadataRequestDto): Mono<MetadataDto> {
+    fun fetchMetadata(
+        @RequestBody @Valid
+        metadataRequestDto: MetadataRequestDto
+    ): Mono<MetadataDto> {
         if (pluginInfoHolder.plugins().isEmpty()) {
             throw JeluException("Automatic fetching of metadata is disabled, install calibre or configure a metadata plugin")
         }
@@ -57,7 +60,7 @@ class MetadataController(
     @GetMapping(path = ["/wikipedia/search"])
     fun searchWikipedia(
         @RequestParam(name = "query", required = true) query: String,
-        @RequestParam(name = "language", defaultValue = "en") language: String,
+        @RequestParam(name = "language", defaultValue = "en") language: String
     ): Mono<WikipediaSearchResult> {
         return wikipediaService.search(query, language)
     }
@@ -66,7 +69,7 @@ class MetadataController(
     @GetMapping(path = ["/wikipedia/page"])
     fun wikipediaPage(
         @RequestParam(name = "pageTitle", required = true) pageTitle: String,
-        @RequestParam(name = "language", defaultValue = "en") language: String,
+        @RequestParam(name = "language", defaultValue = "en") language: String
     ): Mono<WikipediaPageResult> {
         return wikipediaService.fetchPage(pageTitle, language)
     }

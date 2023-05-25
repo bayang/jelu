@@ -19,7 +19,7 @@ class SecurityConfig(
     private val properties: JeluProperties,
     private val userDetailsService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
-    private val authHeaderFilter: AuthHeaderFilter?,
+    private val authHeaderFilter: AuthHeaderFilter?
 ) {
 
     @Bean
@@ -34,7 +34,10 @@ class SecurityConfig(
             }
             .authorizeRequests {
                 it.antMatchers(
-                    "/api/v1/token", "/api/v1/setup/status", "/api/v1/server-settings", "/api/v1/reviews/**"
+                    "/api/v1/token",
+                    "/api/v1/setup/status",
+                    "/api/v1/server-settings",
+                    "/api/v1/reviews/**"
                 ).permitAll()
                 it.mvcMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
                 it.mvcMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
@@ -43,20 +46,20 @@ class SecurityConfig(
                 it.mvcMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("USER")
                 it.mvcMatchers(
                     HttpMethod.GET,
-                    "/api/v1/users/me",
+                    "/api/v1/users/me"
                 ).hasRole("USER")
                 it.antMatchers(
-                    "/api/v1/users/**",
+                    "/api/v1/users/**"
                 ).hasRole("USER")
                 it.antMatchers(
-                    "/api/v1/users",
+                    "/api/v1/users"
                 ).hasRole("USER")
                 it.mvcMatchers(
                     HttpMethod.POST,
-                    "/api/v1/user-messages",
+                    "/api/v1/user-messages"
                 ).hasRole("ADMIN")
                 it.antMatchers(
-                    "/api/**",
+                    "/api/**"
                 ).hasRole("USER")
             }
             .httpBasic()

@@ -47,7 +47,7 @@ data class BookCreateDto(
     var amazonId: String? = null,
     var goodreadsId: String? = null,
     var librarythingId: String? = null,
-    var language: String? = null,
+    var language: String? = null
 )
 
 data class BookUpdateDto(
@@ -68,7 +68,7 @@ data class BookUpdateDto(
     val amazonId: String?,
     val goodreadsId: String?,
     val librarythingId: String?,
-    val language: String?,
+    val language: String?
 )
 
 data class AuthorDto(
@@ -86,7 +86,7 @@ data class AuthorDto(
     val goodreadsPage: String?,
     val twitterPage: String?,
     val facebookPage: String?,
-    val instagramPage: String?,
+    val instagramPage: String?
 )
 
 data class AuthorUpdateDto(
@@ -104,14 +104,14 @@ data class AuthorUpdateDto(
     val goodreadsPage: String?,
     val twitterPage: String?,
     val facebookPage: String?,
-    val instagramPage: String?,
+    val instagramPage: String?
 )
 
 data class TagDto(
     val id: UUID?,
     val creationDate: Instant?,
     val modificationDate: Instant?,
-    val name: String,
+    val name: String
 )
 
 fun fromBookCreateDto(dto: BookCreateDto): BookUpdateDto {
@@ -133,6 +133,6 @@ fun fromBookCreateDto(dto: BookCreateDto): BookUpdateDto {
         amazonId = dto.amazonId,
         goodreadsId = dto.goodreadsId,
         librarythingId = dto.librarythingId,
-        language = dto.language,
+        language = dto.language
     )
 }

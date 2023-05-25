@@ -33,7 +33,7 @@ private val logger = KotlinLogging.logger {}
 
 @Service
 class CalibreMetadataProvider(
-    private val properties: JeluProperties,
+    private val properties: JeluProperties
 ) : IMetaDataProvider {
 
     companion object {
@@ -55,10 +55,16 @@ class CalibreMetadataProvider(
             logger.error { "At least one of isbn, authors or title is required to fetch metadata" }
             return null
         }
-        val onlyUseCorePlugins: Boolean = if (config.containsKey(CalibreMetadataProvider.onlyUseCorePlugins))
-            config[CalibreMetadataProvider.onlyUseCorePlugins].toBoolean() else false
-        val fetchCover: Boolean = if (config.containsKey(CalibreMetadataProvider.fetchCover))
-            config[CalibreMetadataProvider.fetchCover].toBoolean() else true
+        val onlyUseCorePlugins: Boolean = if (config.containsKey(CalibreMetadataProvider.onlyUseCorePlugins)) {
+            config[CalibreMetadataProvider.onlyUseCorePlugins].toBoolean()
+        } else {
+            false
+        }
+        val fetchCover: Boolean = if (config.containsKey(CalibreMetadataProvider.fetchCover)) {
+            config[CalibreMetadataProvider.fetchCover].toBoolean()
+        } else {
+            true
+        }
         var bookFileName: String = FILE_PREFIX
         val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path!!, "-o", "-d 90")
         var fileNameComplete = false

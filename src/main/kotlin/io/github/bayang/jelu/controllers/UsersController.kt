@@ -31,7 +31,7 @@ private val logger = KotlinLogging.logger {}
 @RestController
 @RequestMapping("/api/v1")
 class UsersController(
-    private val repository: UserService,
+    private val repository: UserService
 ) {
 
     @Operation(description = "get the current session token that the caller should provide in the X-Auth-Token header")
@@ -119,7 +119,10 @@ class UsersController(
     }
 
     @PostMapping(path = ["/users"])
-    fun saveUser(@RequestBody @Valid user: CreateUserDto): UserDto {
+    fun saveUser(
+        @RequestBody @Valid
+        user: CreateUserDto
+    ): UserDto {
         return repository.save(user)
     }
 }

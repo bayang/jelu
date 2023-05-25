@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 @Service
 class GoogleBooksIMetaDataProvider(
     @Resource(name = "restClient") private val restClient: WebClient,
-    private val properties: JeluProperties,
+    private val properties: JeluProperties
 ) : IMetaDataProvider {
 
     private val _name = "google"

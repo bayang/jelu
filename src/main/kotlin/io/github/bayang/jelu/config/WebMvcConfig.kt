@@ -69,6 +69,7 @@ class WebMvcConfig(private val properties: JeluProperties) : WebMvcConfigurer {
         return "file:" + properties.files.imports + suffix
     }
 }
+
 @ControllerAdvice
 class Customizer {
     @ExceptionHandler(NoHandlerFoundException::class)

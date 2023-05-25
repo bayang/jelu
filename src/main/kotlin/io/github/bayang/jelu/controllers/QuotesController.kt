@@ -22,7 +22,8 @@ class QuotesController(
     @ApiResponses(
         value = [
             ApiResponse(
-                responseCode = "200", description = "quotes list",
+                responseCode = "200",
+                description = "quotes list",
                 content = [
                     (
                         Content(
@@ -47,7 +48,8 @@ class QuotesController(
     @ApiResponses(
         value = [
             ApiResponse(
-                responseCode = "200", description = "random quotes list",
+                responseCode = "200",
+                description = "random quotes list",
                 content = [
                     (
                         Content(

@@ -86,7 +86,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             lastReadingEvent = this.lastReadingEvent,
             lastReadingEventDate = this.lastReadingEventDate,
             percentRead = this.percentRead,
-            borrowed = this.borrowed,
+            borrowed = this.borrowed
         )
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto =
         UserBookWithoutEventsDto(
@@ -99,6 +99,6 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             personalNotes = this.personalNotes,
             user = this.user.toUserDto(),
             percentRead = this.percentRead,
-            borrowed = this.borrowed,
+            borrowed = this.borrowed
         )
 }

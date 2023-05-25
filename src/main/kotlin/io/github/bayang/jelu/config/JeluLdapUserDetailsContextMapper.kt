@@ -21,7 +21,7 @@ private val logger = KotlinLogging.logger {}
 @Component
 @ConditionalOnProperty(name = ["jelu.auth.ldap.enabled"], havingValue = "true", matchIfMissing = false)
 class JeluLdapUserDetailsContextMapper(
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepository
 ) : UserDetailsContextMapper {
 
     @Transactional
@@ -56,7 +56,7 @@ class JeluLdapUserDetailsContextMapper(
                         if (att.all != null) {
                             values = att.all.toList().joinToString()
                         }
-                        if (! values.isNullOrBlank() && values.contains("jelu-admin")) {
+                        if (!values.isNullOrBlank() && values.contains("jelu-admin")) {
                             isAdmin = true
                         }
                     }

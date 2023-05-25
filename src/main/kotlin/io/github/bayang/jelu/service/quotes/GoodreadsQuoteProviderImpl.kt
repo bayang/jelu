@@ -58,7 +58,7 @@ class GoodreadsQuoteProviderImpl(
             .exchangeToMono {
                 if (it.statusCode() == HttpStatus.OK) {
                     it.bodyToMono(String::class.java).map {
-                        body ->
+                            body ->
                         parse(body)
                     }
                 } else {
@@ -92,7 +92,7 @@ class GoodreadsQuoteProviderImpl(
             .exchangeToMono {
                 if (it.statusCode() == HttpStatus.OK) {
                     it.bodyToMono(String::class.java).map {
-                        bodyString ->
+                            bodyString ->
                         parse(bodyString).also { quoteDtos -> cache.put(KEY, quoteDtos) }
                     }
                 } else {

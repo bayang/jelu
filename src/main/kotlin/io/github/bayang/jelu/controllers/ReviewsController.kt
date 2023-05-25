@@ -37,7 +37,8 @@ class ReviewsController(
 
     @PostMapping(path = ["/reviews"])
     fun createReview(
-        @RequestBody @Valid createReviewDto: CreateReviewDto,
+        @RequestBody @Valid
+        createReviewDto: CreateReviewDto,
         principal: Authentication
     ): ReviewDto {
         return reviewService.save(createReviewDto, (principal.principal as JeluUser).user)
@@ -48,8 +49,12 @@ class ReviewsController(
         @RequestParam(name = "userId", required = false) userId: UUID?,
         @RequestParam(name = "bookId", required = false) bookId: UUID?,
         @RequestParam(name = "visibility", required = false) visibility: Visibility?,
-        @RequestParam(name = "after", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) after: LocalDate?,
-        @RequestParam(name = "before", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) before: LocalDate?,
+        @RequestParam(name = "after", required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        after: LocalDate?,
+        @RequestParam(name = "before", required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        before: LocalDate?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["reviewDate"]) @ParameterObject pageable: Pageable
     ): Page<ReviewDto> {
         return reviewService.find(userId, bookId, visibility, after, before, pageable)
@@ -58,7 +63,8 @@ class ReviewsController(
     @PutMapping(path = ["/reviews/{id}"])
     fun updateReview(
         @PathVariable("id") reviewId: UUID,
-        @RequestBody @Valid updateReviewDto: UpdateReviewDto
+        @RequestBody @Valid
+        updateReviewDto: UpdateReviewDto
     ): ReviewDto {
         return reviewService.update(reviewId, updateReviewDto)
     }

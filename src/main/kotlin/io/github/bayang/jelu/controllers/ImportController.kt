@@ -29,7 +29,7 @@ private val logger = KotlinLogging.logger {}
 class ImportController(
     val csvImportService: CsvImportService,
     val csvExportService: CsvExportService,
-    private val properties: JeluProperties,
+    private val properties: JeluProperties
 ) {
 
     @ApiResponse(responseCode = "201", description = "Imported the csv file")
@@ -44,7 +44,7 @@ class ImportController(
         val destFile = File(properties.files.imports, destFileName)
         logger.debug { "target import file at ${destFile.absolutePath}" }
         file.transferTo(destFile)
-        if (! destFile.exists()) {
+        if (!destFile.exists()) {
             logger.error { "File ${destFile.absolutePath} not created, csv import aborted" }
         }
         csvImportService.import(destFile, (principal.principal as JeluUser).user.id.value, importConfig)

@@ -38,7 +38,7 @@ class FileManager(
     fun doCleanTemporaryImageFiles() {
         val now = OffsetDateTime.now(ZoneId.systemDefault()).toInstant()
         Files.walk(Paths.get(jeluProperties.files.images)).use {
-            paths ->
+                paths ->
             paths.filter {
                 it.name.endsWith(".bak", true) &&
                     it.getLastModifiedTime() != null &&
@@ -54,7 +54,7 @@ class FileManager(
     fun doCleanMetadataImportFiles() {
         val now = OffsetDateTime.now(ZoneId.systemDefault()).toInstant()
         Files.walk(Paths.get(jeluProperties.files.images)).use {
-            paths ->
+                paths ->
             paths.filter {
                 it.name.startsWith(CalibreMetadataProvider.FILE_PREFIX, true) &&
                     it.getLastModifiedTime() != null &&

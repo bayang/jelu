@@ -66,10 +66,10 @@ class UserMessageRepository {
             if (updateDto.read != null) {
                 this.read = updateDto.read
             }
-            if (! updateDto.message.isNullOrEmpty()) {
+            if (!updateDto.message.isNullOrEmpty()) {
                 this.message = updateDto.message
             }
-            if (! updateDto.link.isNullOrEmpty()) {
+            if (!updateDto.link.isNullOrEmpty()) {
                 this.link = updateDto.link
             }
             if (updateDto.category != null) {
