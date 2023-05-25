@@ -1,3 +1,14 @@
+### [0.38.1](https://github.com/bayang/jelu/compare/v0.38.0...v0.38.1) (2023-05-25)
+
+
+### Bug Fixes
+
+* linting ([763e200](https://github.com/bayang/jelu/commit/763e2008920c401456b11b047e444535539c02d0))
+* linting ([b48372b](https://github.com/bayang/jelu/commit/b48372b301512120469fd96b85974f6d89997a56))
+* linting ([f66d5ce](https://github.com/bayang/jelu/commit/f66d5ce8b6fa609061c8660cc807505f64c0d891))
+* linting ([311b5cc](https://github.com/bayang/jelu/commit/311b5cc4bc432907e3c67326aae88c1a6a04cfa7))
+* try to fix synology [#67](https://github.com/bayang/jelu/issues/67) ([0b3ab86](https://github.com/bayang/jelu/commit/0b3ab8616b315ca5d17fdcaa3c768a9e965f6bb6))
+
 ## [0.38.0](https://github.com/bayang/jelu/compare/v0.37.0...v0.38.0) (2023-03-25)
 
 
