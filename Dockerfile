@@ -29,9 +29,11 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       qt5-default \
       libopengl0 \
       python3 \
+      binutils \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/* \
       && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin install_dir=/ isolated=y \
+      && strip --remove-section=.note.ABI-tag /calibre/lib/libQt6Core.so.6 \
       && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.2/goodreads-v1.7.2.zip \
       && /calibre/calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
