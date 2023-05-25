@@ -355,6 +355,7 @@ getBooks()
         class="h-full"
         :force-select="false"
         :show-select="false"
+        :propose-add="true"
         @update:modal-closed="modalClosed"
       />
     </div>

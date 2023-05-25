@@ -16,6 +16,7 @@ import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.ImportDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -25,6 +26,7 @@ import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserMessageService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
+import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.github.bayang.jelu.utils.toInstant
 import mu.KotlinLogging
 import org.apache.commons.csv.CSVFormat
@@ -153,8 +155,11 @@ class CsvImportService(
             if (importEntity.shouldFetchMetadata && !properties.metadata.calibre.path.isNullOrBlank()) {
                 val isbn: String = getIsbn(importEntity)
                 if (isbn.isNotBlank()) {
+                    var config = mutableMapOf<String, String>()
+                    config[CalibreMetadataProvider.onlyUseCorePlugins] = "true"
+                    config[CalibreMetadataProvider.fetchCover] = importConfig.shouldFetchCovers.toString()
                     metadata = fetchMetadataService
-                        .fetchMetadata(isbn, null, null, onlyUseCorePlugins = true, fetchCover = importConfig.shouldFetchCovers)
+                        .fetchMetadata(MetadataRequestDto(isbn), config)
                         .block()!!
                 } else {
                     logger.debug { "no isbn on entity ${importEntity.id}, not fetching metadata" }
@@ -386,7 +391,10 @@ class CsvImportService(
             goodreadsId = if (dbBook.goodreadsId.isNullOrBlank()) incoming.goodreadsId else null,
             librarythingId = if (dbBook.librarythingId.isNullOrBlank()) incoming.librarythingId else null,
             language = if (dbBook.language.isNullOrBlank()) incoming.language else null,
-            image = if (dbBook.image.isNullOrBlank()) incoming.image else null,
+            // special case :
+            // if image is null, update in bookservice will erase the existing image,
+            // we must send the currently existing image
+            image = if (dbBook.image.isNullOrBlank()) incoming.image else dbBook.image,
             authors = authors,
             tags = tags
         )
@@ -615,7 +623,13 @@ class CsvImportService(
             dto.publisher = cleanString(record.get(9))
             dto.readCount = parseNumber(record.get(22))
             dto.readDates = cleanString(record.get(14))
-            val ownedCopies = parseNumber(record.get(25))
+            // goodreads csv export changed columns in 2022 apparently
+            // new exports have only 24 columns, older ones have 31
+            val ownedCopies = if (record.size() > 24 && record.isSet(25)) {
+                parseNumber(record.get(25))
+            } else {
+                parseNumber(record.get(23))
+            }
             if (ownedCopies != null && ownedCopies > 0) {
                 dto.owned = true
             }

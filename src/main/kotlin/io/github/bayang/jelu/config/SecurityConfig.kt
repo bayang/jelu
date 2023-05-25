@@ -47,10 +47,10 @@ class SecurityConfig(
                 ).hasRole("USER")
                 it.antMatchers(
                     "/api/v1/users/**",
-                ).hasRole("ADMIN")
+                ).hasRole("USER")
                 it.antMatchers(
                     "/api/v1/users",
-                ).hasRole("ADMIN")
+                ).hasRole("USER")
                 it.mvcMatchers(
                     HttpMethod.POST,
                     "/api/v1/user-messages",

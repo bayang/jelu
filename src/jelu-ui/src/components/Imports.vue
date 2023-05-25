@@ -44,7 +44,6 @@ const importFile = async () => {
     importSource: importSource.value
     }
     if (importSource.value == ImportSource.ISBN_LIST) {
-      importConfig.shouldFetchCovers = true
       importConfig.shouldFetchMetadata = true
     }
   dataService.importCsv(
@@ -159,7 +158,6 @@ watch(file, (newVal, oldVal) => {
         </o-field>
       </div>
       <div
-        v-if="importSource != ImportSource.ISBN_LIST"
         class="field"
       >
         <o-field
@@ -185,7 +183,7 @@ watch(file, (newVal, oldVal) => {
           <input
             type="file"
             accept=".csv,.tsv,.txt"
-            class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-primary hover:file:bg-gray-300"
+            class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-accent-content hover:file:bg-gray-300"
             @change="handleFileUpload($event)"
           >
           <br>

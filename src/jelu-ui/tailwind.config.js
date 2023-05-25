@@ -7,7 +7,7 @@ function withOpacityValue(variable) {
   }
 }
 
-/** @type {import("@types/tailwindcss/tailwind-config").TailwindConfig } */
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
   content: [
@@ -37,12 +37,12 @@ module.exports = {
         jelu: {
           primary: "#f7f5d1",
           secondary: "#aaaaaa",
-          accent: "#69ea7d",
+          accent: "#8D795B",
           neutral: "#404040",
           "base-100": "#262429",
-          "info": "#3ABFF8",
-          "success": "#36D399",
-          "warning": "#FBBD23",
+          "info": "#6191c2",
+          "success": "#CEB035",
+          "warning": "#ffad48",
           "error": "#F87272",
           "--rounded-box": "0rem", // border radius rounded-box utility class, used in card and other large boxes
           "--rounded-btn": "0rem", // border radius rounded-btn utility class, used in buttons and similar element
@@ -63,6 +63,6 @@ module.exports = {
     require("@tailwindcss/typography"), 
     require('@tailwindcss/line-clamp'), 
     require("daisyui"),
-    require('@formkit/tailwindcss').default
+    require('@formkit/tailwindcss')
   ],
 }

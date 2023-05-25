@@ -4,13 +4,16 @@ import { useTitle } from '@vueuse/core'
 import { computed, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
+import useEvents from "../composables/events"
 import { UserBook } from '../model/Book'
 import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from '../model/ReadingEvent'
+import { Review } from "../model/Review"
 import dataService from "../services/DataService"
 import { key } from '../store'
 import BookCard from "./BookCard.vue"
 import QuotesDisplay from './QuotesDisplay.vue'
 import ReadingEventModalVue from './ReadingEventModal.vue'
+import ReviewBookCard from './ReviewBookCard.vue';
 
 useTitle('Jelu | Home')
 
@@ -20,6 +23,7 @@ const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
+const { eventClass, eventLabel } = useEvents()
 
 const isLogged = computed(() => {
     return store != null && store != undefined && store.getters.getLogged
@@ -39,10 +43,12 @@ const events: Ref<Array<ReadingEventWithUserBook>> = ref([]);
 
 const hasBooks = computed(() => books.value.length > 0)
 
+const userReviews: Ref<Array<Review>> = ref([]);
+
 const getCurrentlyReading = async () => {
   currentlyReadingIsLoading.value = true
   try {
-    const res = await dataService.findUserBookByCriteria([ReadingEventType.CURRENTLY_READING], null, null)
+    const res = await dataService.findUserBookByCriteria([ReadingEventType.CURRENTLY_READING], null, null, null)
     if (res.numberOfElements <= 6) {
       books.value = res.content
     }
@@ -72,32 +78,23 @@ const getMyEvents = async () => {
   }
 };
 
-const eventClass = (type: ReadingEventType) => {
-    if (type === ReadingEventType.FINISHED) {
-      return "badge-info";
-    } else if (type === ReadingEventType.DROPPED) {
-      return "badge-error";
-    } else if (
-      type === ReadingEventType.CURRENTLY_READING
-    ) {
-      return "badge-success";
-    } else return "";
-};
-
-const eventLabel = (type: ReadingEventType) => {
-    if (type === ReadingEventType.FINISHED) {
-      return t('reading_events.finished');
-    } else if (type === ReadingEventType.DROPPED) {
-      return t('reading_events.dropped');
-    } else if (type === ReadingEventType.CURRENTLY_READING) {
-      return t('reading_events.reading');
-    } else return "";
+const getUserReviews = async () => {
+  try {
+    const res = await dataService.findReviews(
+      undefined, undefined, null,
+    null, null,
+    0, 20, null)
+    userReviews.value = res.content
+  } catch (error) {
+    console.log("failed get reviews : " + error);
+  }
 };
 
 if (isLogged.value) {
   try {
       getCurrentlyReading()
       getMyEvents()
+      getUserReviews()
   } catch (error) {
     console.log("failed get books : " + error);
   }
@@ -164,6 +161,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             size="xl"
             :force-select="false"
             :show-select="false"
+            :propose-add="true"
           >
             <template #icon>
               <span
@@ -229,6 +227,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
             class="h-full"
             :force-select="false"
             :show-select="false"
+            :propose-add="true"
           />
         </div>
       </div>
@@ -252,6 +251,28 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
         height="250px"
         :animated="true"
       />
+    </div>
+    <h2
+      v-if="userReviews.length > 0"
+      class="text-3xl typewriter py-4 capitalize"
+    >
+      {{ t('reviews.review', 2) }}
+    </h2>
+    <div
+      v-if="userReviews.length > 0"
+      class="flex flex-nowrap overflow-x-auto mb-10"
+    >
+      <div
+        v-for="review in userReviews"
+        :key="review.id"
+        class="m-1 pb-6 shrink-0 grow-0"
+      >
+        <ReviewBookCard
+          :review="review"
+          :book-reviews-link="true"
+          :show-user-name="true"
+        />
+      </div>
     </div>
     <quotes-display v-if="isLogged" />
   </div>

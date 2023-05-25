@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Ref, ref } from "vue";
+import { Ref, ref, watch } from "vue";
 import { CreateReadingEvent, ReadingEvent, ReadingEventType } from "../model/ReadingEvent";
 import dataService from "../services/DataService";
 import { useI18n } from 'vue-i18n'
+import Datepicker from 'vue3-datepicker'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -18,6 +19,16 @@ const currentEvent: Ref<ReadingEvent> = ref(props.readingEvent)
 const currentCreateEvent: Ref<CreateReadingEvent> = ref(props.readingEvent)
 console.log(currentEvent.value)
 console.log(currentCreateEvent.value)
+
+watch(() => currentCreateEvent.value.eventType, (newValue, oldValue) => {
+  if (currentCreateEvent.value.eventType == ReadingEventType.CURRENTLY_READING) {
+    currentCreateEvent.value.eventDate = undefined
+    currentCreateEvent.value.startDate = new Date()
+  } else {
+    currentCreateEvent.value.startDate = undefined
+    currentCreateEvent.value.eventDate = new Date()
+  }
+})
 
 const progress: Ref<boolean> = ref(false)
 
@@ -109,20 +120,30 @@ const deleteEvent = () => {
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.start_date') }} : </span>
           </label>
-          <o-datepicker
-            ref="datepicker"
+          <datepicker
             v-model="currentEvent.startDate"
-            :show-week-number="false"
-            :locale="undefined"
-            :placeholder="t('labels.click_to_select')"
-            :expanded="true"
-            icon="calendar"
-            icon-right="close"
-            icon-right-clickable="true"
-            mobile-native="false"
-            mobile-modal="false"
-            trap-focus
-          />
+            class="input input-primary"
+            :clearable="false"
+          >
+            <template #clear="{ onClear }">
+              <button @click="onClear">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z"
+                  />
+                </svg>
+              </button>
+            </template>
+          </datepicker>
         </div>
         <div
           v-if="currentEvent.eventType !== ReadingEventType.CURRENTLY_READING"
@@ -131,20 +152,30 @@ const deleteEvent = () => {
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_date') }} : </span>
           </label>
-          <o-datepicker
-            ref="datepicker"
+          <datepicker
             v-model="currentEvent.endDate"
-            :show-week-number="false"
-            :locale="undefined"
-            :placeholder="t('labels.click_to_select')"
-            :expanded="true"
-            icon="calendar"
-            icon-right="close"
-            icon-right-clickable="true"
-            mobile-native="false"
-            mobile-modal="false"
-            trap-focus
-          />
+            class="input input-primary"
+            :clearable="true"
+          >
+            <template #clear="{ onClear }">
+              <button @click="onClear">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z"
+                  />
+                </svg>
+              </button>
+            </template>
+          </datepicker>
         </div>
         <div class="mt-3">
           <button
@@ -202,24 +233,37 @@ const deleteEvent = () => {
             {{ t('reading_events.dropped') }}
           </o-radio>
         </div>
-        <div class="field">
+        <div
+          v-if="currentEvent.eventType === ReadingEventType.CURRENTLY_READING"
+          class="field"
+        >
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.start_date') }} :</span>
           </label>
-          <o-datepicker
-            ref="datepicker"
+          <datepicker
             v-model="currentCreateEvent.startDate"
-            :show-week-number="false"
-            :locale="undefined"
-            :placeholder="t('labels.click_to_select')"
-            :expanded="true"
-            icon="calendar"
-            icon-right="close"
-            icon-right-clickable="true"
-            mobile-native="false"
-            mobile-modal="false"
-            trap-focus
-          />
+            class="input input-primary"
+            :clearable="true"
+          >
+            <template #clear="{ onClear }">
+              <button @click="onClear">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z"
+                  />
+                </svg>
+              </button>
+            </template>
+          </datepicker>
         </div>
         <div
           v-if="currentCreateEvent.eventType != ReadingEventType.CURRENTLY_READING"
@@ -228,20 +272,30 @@ const deleteEvent = () => {
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_date') }} :</span>
           </label>
-          <o-datepicker
-            ref="datepicker"
+          <datepicker
             v-model="currentCreateEvent.eventDate"
-            :show-week-number="false"
-            :locale="undefined"
-            :placeholder="t('labels.click_to_select')"
-            :expanded="true"
-            icon="calendar"
-            icon-right="close"
-            icon-right-clickable="true"
-            mobile-native="false"
-            mobile-modal="false"
-            trap-focus
-          />
+            class="input input-primary"
+            :clearable="true"
+          >
+            <template #clear="{ onClear }">
+              <button @click="onClear">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z"
+                  />
+                </svg>
+              </button>
+            </template>
+          </datepicker>
         </div>
         <div>
           <button

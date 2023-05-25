@@ -108,13 +108,13 @@ class ReadingEventsController(
                     if (it.eventType == ReadingEventType.DROPPED) {
                         yearStats[year] = yearStats[year]!!.copy(dropped = yearStats[year]!!.dropped + 1)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
-                        yearStats[year] = yearStats[year]!!.copy(finished = yearStats[year]!!.finished + 1)
+                        yearStats[year] = yearStats[year]!!.copy(finished = yearStats[year]!!.finished + 1, pageCount = yearStats[year]!!.pageCount + (it.userBook.book.pageCount ?: 0))
                     }
                 } else {
                     if (it.eventType == ReadingEventType.DROPPED) {
                         yearStats[year] = YearStatsDto(year = year, dropped = 1)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
-                        yearStats[year] = YearStatsDto(year = year, finished = 1)
+                        yearStats[year] = YearStatsDto(year = year, finished = 1, pageCount = it.userBook.book.pageCount ?: 0)
                     }
                 }
             }
@@ -142,13 +142,13 @@ class ReadingEventsController(
                     if (it.eventType == ReadingEventType.DROPPED) {
                         monthStats[month] = monthStats[month]!!.copy(dropped = monthStats[month]!!.dropped + 1)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
-                        monthStats[month] = monthStats[month]!!.copy(finished = monthStats[month]!!.finished + 1)
+                        monthStats[month] = monthStats[month]!!.copy(finished = monthStats[month]!!.finished + 1, pageCount = monthStats[month]!!.pageCount + (it.userBook.book.pageCount ?: 0))
                     }
                 } else {
                     if (it.eventType == ReadingEventType.DROPPED) {
                         monthStats[month] = MonthStatsDto(year = year, dropped = 1, month = month)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
-                        monthStats[month] = MonthStatsDto(year = year, finished = 1, month = month)
+                        monthStats[month] = MonthStatsDto(year = year, finished = 1, month = month, pageCount = it.userBook.book.pageCount ?: 0)
                     }
                 }
             }

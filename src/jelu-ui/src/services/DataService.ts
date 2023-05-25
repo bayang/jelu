@@ -20,6 +20,8 @@ import { MonthStats, YearStats } from "../model/YearStats";
 import { Shelf } from "../model/Shelf";
 import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/Review";
 import { Role } from "../model/Role";
+import { StringUtils } from "../utils/StringUtils";
+import { MetadataRequest } from "../model/MetadataRequest";
 
 class DataService {
 
@@ -116,7 +118,7 @@ class DataService {
       },
       error => {
         console.log(`response error interceptor ${error.response.status}`)
-        if (error.response.status === 401) {
+        if (error != null && error.response != null && error.response.status === 401) {
           router.push({ name: 'login' }).then(() => { console.log("ok nav in interceptor") }).catch(() => { console.log("error nav in interceptor") })
         } else {
           throw error
@@ -191,6 +193,38 @@ class DataService {
       }
       console.log("error user " + (error as AxiosError).code)
       throw new Error("error user " + error)
+    }
+  }
+
+  getUsers = async () => {
+    try {
+      const response = await this.apiClient.get<Array<User>>(this.API_USER)
+      console.log("called users")
+      console.log(response.data)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios users " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error users " + (error as AxiosError).code)
+      throw new Error("error users " + error)
+    }
+  }
+
+  getUserById = async (userId: string) => {
+    try {
+      const response = await this.apiClient.get<User>(`${this.API_USER}/${userId}`);
+      console.log("called user by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error user by id " + (error as AxiosError).code)
+      throw new Error("error get user by id " + error)
     }
   }
 
@@ -426,12 +460,14 @@ class DataService {
   }
 
   findUserBookByCriteria = async (lastEventTypes?: Array<ReadingEventType> | null, bookId?: string|null,
-    toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null, page?: number, size?: number, sort?: string) => {
+    userId?: string|null, toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null, 
+    page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}`, {
         params: {
           lastEventTypes: lastEventTypes,
           bookId: bookId,
+          userId: userId,
           toRead: toRead,
           owned: owned,
           borrowed: borrowed,
@@ -439,9 +475,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
       });
       console.log("called userbook by eventtype")
       console.log(response)
@@ -634,6 +671,23 @@ class DataService {
     }
   }
 
+  fetchMetadataWithPlugins = async (metadataRequest: MetadataRequest) => {
+    try {
+      
+      const response = await this.apiClient.post<Metadata>(`${this.API_METADATA}`, metadataRequest)
+      console.log("called metadata with plugins")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error metadata " + (error as AxiosError).code)
+      throw new Error("error metadata " + error)
+    }
+  }
+
   findBooks = async (title?: string, isbn10?: string, isbn13?: string,
     series?: string, authors?: Array<string>, translators?: Array<string>, 
     tags?: Array<string>, page?: number, size?: number, sort?: string,
@@ -653,9 +707,10 @@ class DataService {
           sort: sort,
           libraryFilter: libraryFilter
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
       });
       console.log("called find books")
       console.log(response)
@@ -792,9 +847,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
         transformResponse: this.transformReadingEvents
       });
       console.log("called my events")
@@ -828,9 +884,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
         transformResponse: this.transformReadingEvents
       });
       console.log("called events")
@@ -1038,9 +1095,10 @@ class DataService {
           size: size,
           sort: sort
         },
-        paramsSerializer: function (params) {
-          return qs.stringify(params, { arrayFormat: 'comma' })
-        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
         transformResponse: this.transformUserMessage
       });
       console.log("called userMessages")
@@ -1320,6 +1378,22 @@ class DataService {
     }
   }
 
+  updateBook = async (bookId: string, bookUpdateDto: Book) => {
+    try {
+      const response = await this.apiClient.put<Book>(`${this.API_BOOK}/${bookId}`, bookUpdateDto);
+      console.log("called update book")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error update book " + (error as AxiosError).code)
+      throw new Error("error update book " + error)
+    }
+  }
+
   findBookById = async (bookId: string) => {
     try {
       const response = await this.apiClient.get<Book>(`${this.API_BOOK}/${bookId}`);
@@ -1350,6 +1424,26 @@ class DataService {
       console.log("error review " + (error as AxiosError).code)
       throw new Error("error username by id " + error)
     }
+  }
+
+  checkIsbnExists = async (isbn10: string|undefined, isbn13: string|undefined) => {
+    console.log(isbn10 + " " + isbn13)
+    if (StringUtils.isNotBlank(isbn10)) {
+      const res = await this.findBooks(undefined, isbn10, undefined)
+      console.log(res.empty)
+      if (!res.empty) {
+        return res.content[0]
+      }
+    }
+    if (StringUtils.isNotBlank(isbn13)) {
+      console.log(isbn13)
+      const res = await this.findBooks(undefined, undefined, isbn13)
+      console.log(res.empty)
+      if (!res.empty) {
+        return res.content[0]
+      }
+    }
+    return null
   }
 
 }

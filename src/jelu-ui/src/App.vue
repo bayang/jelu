@@ -348,18 +348,18 @@ watch(() => route.name, (newVal, oldVal) => {
           </div>
         </div>
         <Transition>
-        <button
-          v-if="showAdvanced"
-          class="btn btn-circle btn-outline border-0 tooltip tooltip-bottom lowercase"
-          :data-tip="t('labels.advanced_search')"
-        >
-          <router-link
-            class="link-hover font-sans"
-            :to="{ name: 'search' }"
+          <button
+            v-if="showAdvanced"
+            class="btn btn-circle btn-outline border-0 tooltip tooltip-bottom lowercase"
+            :data-tip="t('labels.advanced_search')"
           >
-            <span class="mdi mdi-magnify-plus-outline mdi-24 text-3xl" />
-          </router-link>
-        </button>
+            <router-link
+              class="link-hover font-sans"
+              :to="{ name: 'search' }"
+            >
+              <span class="mdi mdi-magnify-plus-outline mdi-24 text-3xl" />
+            </router-link>
+          </button>
         </Transition>
       </div>
       <div class="navbar-end">

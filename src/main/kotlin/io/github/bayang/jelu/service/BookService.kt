@@ -23,7 +23,7 @@ import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.fromBookCreateDto
-import io.github.bayang.jelu.service.metadata.FILE_PREFIX
+import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.github.bayang.jelu.utils.imageName
 import io.github.bayang.jelu.utils.resizeImage
 import io.github.bayang.jelu.utils.slugify
@@ -208,7 +208,7 @@ class BookService(
         if (! importedFile && ! dtoImage.isNullOrBlank()) {
             try {
                 // file already exists in the right folder, just rename it
-                if (dtoImage.startsWith(FILE_PREFIX)) {
+                if (dtoImage.startsWith(CalibreMetadataProvider.FILE_PREFIX)) {
                     val targetFilename: String = imageName(
                         slugify(title),
                         id, FilenameUtils.getExtension(dtoImage)

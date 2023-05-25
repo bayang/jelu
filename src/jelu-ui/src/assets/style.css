@@ -54,9 +54,26 @@
 
   --oruga-loading-overlay: theme('colors.jelu_overlay');
 
+  --oruga-inputitems-background-color: theme('colors.base-100');
+  --oruga-inputitems-border-color: theme('colors.base-100');
+  --oruga-inputitems-color: theme('colors.primary');
+  --oruga-inputitems-item-background-color: theme('colors.primary');
+  --oruga-inputitems-item-color: theme('colors.primary-content');
+
+
+  --vdp-bg-color: theme('colors.base-100');
+  --vdp-text-color: theme('colors.base-content');
+
 }
 
 /* oruga customization with daisyui */
+.o-chk__check {
+  @apply bg-none;
+}
+
+.o-chk .o-chk__check {
+  @apply checkbox checkbox-primary;
+}
 
 .o-btn.o-btn--success.o-btn--outlined-success {
   @apply btn btn-success;
@@ -83,9 +100,6 @@
   @apply radio radio-primary radio-sm bg-none;
 }
 
-.o-chk__check {
-  @apply bg-none;
-}
 
 .o-pag__link {
   @apply btn text-neutral-content !important;
@@ -112,7 +126,11 @@
 }
 
 .o-input.o-inputit__input {
-  @apply w-fit sm:w-full;
+  @apply w-fit sm:w-full bg-base-100 text-base-content focus:input-accent;
+}
+
+.o-icon.o-input__icon-left {
+  @apply text-base-content;
 }
 
 .o-steps__title {
@@ -174,6 +192,17 @@
   @apply m-5 sm:p-5;
   height: min(700px, 75vh);
   width: min(900px, 85vw);
+}
+
+.metadata-modal {
+  @apply m-5 sm:p-5;
+  height: min(400px, 75vh);
+  width: min(400px, 85vw);
+}
+
+.review-book-card {
+  @apply h-72;
+  width: min(300px, 85vw);
 }
 
 .small-cover {
@@ -301,3 +330,19 @@
 }
 /* end loader from https://loading.io/css/ */
 
+/* clear button positioning from https://github.com/icehaunter/vue3-datepicker  */
+.v3dp__clearable {
+  left: -25px !important;
+  top: 5px !important;
+}
+/* end clear button */
+
+/* vue markdown editor textarea color */
+.v-md-textarea-editor pre, .v-md-textarea-editor textarea {
+  @apply text-base-content !important;
+}
+/* end vue markdown editor */
+
+.jelu-cursor-text {
+  @apply cursor-text !important;
+}

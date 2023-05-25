@@ -3,14 +3,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    id("org.springframework.boot") version "2.7.0"
+    id("org.springframework.boot") version "2.7.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.spring") version "1.6.10"
-    kotlin("plugin.jpa") version "1.6.10"
-    kotlin("plugin.allopen") version "1.6.10"
-    kotlin("kapt") version "1.6.10"
-    id("com.github.node-gradle.node") version "3.3.0"
+    val kotlinVersion = "1.7.21"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.jpa") version kotlinVersion
+    kotlin("plugin.allopen") version kotlinVersion
+    kotlin("kapt") version kotlinVersion
+    id("com.github.node-gradle.node") version "3.5.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
@@ -47,7 +48,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
 
     implementation("com.fasterxml.staxmate:staxmate:2.4.0")
-    implementation("com.fasterxml.woodstox:woodstox-core:6.2.8")
+    implementation("com.fasterxml.woodstox:woodstox-core:6.4.0")
 
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -57,28 +58,28 @@ dependencies {
 
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.liquibase:liquibase-core")
-    val exposedVersion = "0.38.2"
+    val exposedVersion = "0.41.1"
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
 
-    implementation("io.github.microutils:kotlin-logging-jvm:2.1.23")
-    implementation("com.github.slugify:slugify:2.5")
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
+    implementation("com.github.slugify:slugify:3.0.2")
     implementation("commons-io:commons-io:2.11.0")
     implementation("commons-validator:commons-validator:1.7")
-    implementation("org.jsoup:jsoup:1.15.1")
-    implementation("net.coobird:thumbnailator:0.4.17")
+    implementation("org.jsoup:jsoup:1.15.3")
+    implementation("net.coobird:thumbnailator:0.4.18")
 
     implementation("org.apache.commons:commons-csv:1.9.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(module = "mockito-core")
     }
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("io.mockk:mockk:1.13.2")
     testImplementation("com.ninja-squad:springmockk:3.1.1")
     testImplementation("io.projectreactor:reactor-test")
 
-    val springdocVersion = "1.6.6"
+    val springdocVersion = "1.6.13"
     implementation("org.springdoc:springdoc-openapi-ui:$springdocVersion")
     implementation("org.springdoc:springdoc-openapi-security:$springdocVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")

@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11.0.13_8-jre-focal
+FROM eclipse-temurin:11.0.17_8-jre-focal
 
 WORKDIR app
 
@@ -28,15 +28,16 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       libxcb-randr0 \
       qt5-default \
       libopengl0 \
+      python3 \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/* \
       && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin install_dir=/ isolated=y \
-      && curl https://www.mobileread.com/forums/attachment.php\?attachmentid\=182200\&d\=1641360812 > goodreads.zip \
+      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.2/goodreads-v1.7.2.zip \
       && /calibre/calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
   else \
       apt-get update && apt-get install --no-install-recommends --yes calibre \
-      && curl https://www.mobileread.com/forums/attachment.php\?attachmentid\=182200\&d\=1641360812 > goodreads.zip \
+      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.2/goodreads-v1.7.2.zip \
       && calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
   fi

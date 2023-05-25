@@ -36,7 +36,7 @@
       "invalid_isbn10" : "Invalid isbn10",
       "invalid_isbn13" : "Invalid isbn13",
       "auto_fill_doc" : "Try to auto fill some fields from the web, given a isbn or a title",
-      "auto_import_disabled" : "Auto import requires Calibre to be installed",
+      "auto_import_disabled" : "Auto import requires a metadata plugin to be installed",
       "auto_fill" : "auto fill",
       "add_author": "Add an author",
       "add_tag" : "Add a tag",
@@ -108,6 +108,7 @@
         "username" : "username",
         "role" : "role | roles",
         "users" : "Users",
+        "add_users" : "Add users",
         "users_management" : "Users management",
         "shortcuts" : "Shortcuts",
         "shortcuts_tooltip" : "Keyboard shortcuts",
@@ -296,10 +297,21 @@
         "visibility" : "visibility",
         "private" : "private",
         "public" : "public",
-        "review" : "review",
+        "review" : "review | reviews",
         "rating" : "rating",
         "my_reviews" : "My reviews",
         "all_reviews" : "All reviews",
-        "delete_review" : "Delete this review ?"
+        "delete_review" : "Delete this review ?",
+        "review_detail" : "Go to review detail",
+        "book_all_reviews" : "All reviews for this book"
+    },
+    "book_merge" : {
+        "merge_books" : "Merge books",
+        "fetch_metadata" : "Fetch metadata"
+    },
+    "metadata" : {
+        "reorder_plugins" : "reorder plugins",
+        "description" : "Plugins will be called from top to bottom, disabled plugins will not be used",
+        "default_priority" : "default priority"
     }
 }

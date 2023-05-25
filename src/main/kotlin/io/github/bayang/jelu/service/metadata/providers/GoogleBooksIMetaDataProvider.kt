@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.dto.MetadataRequestDto
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -20,10 +21,15 @@ class GoogleBooksIMetaDataProvider(
     private val properties: JeluProperties,
 ) : IMetaDataProvider {
 
-    override fun fetchMetadata(isbn: String?, title: String?, authors: String?): Mono<MetadataDto> {
+    private val _name = "google"
+
+    override fun fetchMetadata(
+        metadataRequestDto: MetadataRequestDto,
+        config: Map<String, String>
+    ): Mono<MetadataDto>? {
         val googleProviderApiKey = getGoogleProviderApiKey()
-        if (googleProviderApiKey == null || isbn.isNullOrBlank()) {
-            return Mono.just(MetadataDto())
+        if (googleProviderApiKey.isNullOrBlank() || metadataRequestDto.isbn.isNullOrBlank()) {
+            return null
         }
         return restClient.get()
             .uri { uriBuilder: UriBuilder ->
@@ -31,7 +37,7 @@ class GoogleBooksIMetaDataProvider(
                     .scheme("https")
                     .host("www.googleapis.com")
                     .path("/books/v1/volumes")
-                    .queryParam("q", "isbn:$isbn")
+                    .queryParam("q", "isbn:${metadataRequestDto.isbn}")
                     .queryParam("key", googleProviderApiKey)
                     .build()
             }.exchangeToMono {
@@ -46,14 +52,18 @@ class GoogleBooksIMetaDataProvider(
                     }
                 } else {
                     logger.error { "error fetching metadata from google : ${it.statusCode()}" }
-                    Mono.just(MetadataDto())
+                    null
                 }
             }
     }
 
+    override fun name(): String {
+        return _name
+    }
+
     private fun getGoogleProviderApiKey(): String? = properties
         .metadataProviders
-        ?.find { it.isEnabled && it.name == "google" }
+        ?.find { it.isEnabled && it.name == _name }
         ?.apiKey
 
     private fun parseBook(node: JsonNode): MetadataDto {

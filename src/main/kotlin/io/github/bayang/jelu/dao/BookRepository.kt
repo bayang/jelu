@@ -24,6 +24,8 @@ import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
@@ -429,6 +431,7 @@ class BookRepository(
         if (book.borrowed != null) {
             found.borrowed = book.borrowed
         }
+        found.modificationDate = nowInstant()
         return found
     }
 

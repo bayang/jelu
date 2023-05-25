@@ -37,7 +37,7 @@ VMdPreview.use(githubTheme);
  * at once using the import syntax
  */
 import { createI18n } from 'vue-i18n'
-import messages from '@intlify/vite-plugin-vue-i18n/messages'
+import messages from '@intlify/unplugin-vue-i18n/messages'
 import { datetimeFormats } from './datetimeFormat'
 import { usePreferredLanguages } from '@vueuse/core'
 import { useLocalStorage } from '@vueuse/core'

@@ -1,7 +1,7 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.config.JeluProperties
-import io.github.bayang.jelu.service.metadata.FILE_PREFIX
+import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import mu.KotlinLogging
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -56,7 +56,7 @@ class FileManager(
         Files.walk(Paths.get(jeluProperties.files.images)).use {
             paths ->
             paths.filter {
-                it.name.startsWith(FILE_PREFIX, true) &&
+                it.name.startsWith(CalibreMetadataProvider.FILE_PREFIX, true) &&
                     it.getLastModifiedTime() != null &&
                     it.getLastModifiedTime().toInstant().plus(1, ChronoUnit.HOURS).isBefore(now)
             }

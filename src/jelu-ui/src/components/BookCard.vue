@@ -16,7 +16,8 @@ const props = defineProps<{
   book: UserBook, 
   size?: string, 
   forceSelect: boolean,
-  showSelect: boolean
+  showSelect: boolean,
+  proposeAdd: boolean,
 }>();
 const emit = defineEmits<{
   (e: 'update:modalClosed', open: boolean): void,
@@ -245,7 +246,7 @@ watch(checked, (newVal, oldVal) => {
             <i class="mdi mdi-eye mdi-18px" />
           </span>
           <span
-            v-if="book.id == null"
+            v-if="proposeAdd === true && book.id == null"
             v-tooltip="t('labels.book_not_yet_in_books')"
             class="icon text-error"
           >

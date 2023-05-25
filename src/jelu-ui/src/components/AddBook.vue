@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { computed, reactive, Ref, ref } from "vue";
-import { useStore } from 'vuex'
-import { UserBook } from "../model/Book";
-import dataService from "../services/DataService";
-import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
-import { key } from '../store'
-import { Author } from "../model/Author";
-import { Tag } from "../model/Tag";
-import AutoImportFormModalVue from "./AutoImportFormModal.vue";
-import { Metadata } from "../model/Metadata";
-import { ObjectUtils } from "../utils/ObjectUtils";
 import IsbnVerify from '@saekitominaga/isbn-verify';
-import Swal from 'sweetalert2';
-import { useRouter } from 'vue-router'
-import { useTitle } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
+import { useTitle } from '@vueuse/core';
+import { computed, reactive, Ref, ref } from "vue";
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { Author } from "../model/Author";
+import { UserBook } from "../model/Book";
+import { Metadata } from "../model/Metadata";
+import { Tag } from "../model/Tag";
+import dataService from "../services/DataService";
+import { key } from '../store';
+import { ObjectUtils } from "../utils/ObjectUtils";
+import { StringUtils } from "../utils/StringUtils";
+import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -92,6 +91,9 @@ let authors: Ref<Array<Author>> = ref([]);
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let tags: Ref<Array<Tag>> = ref([]);
 
+let translators: Ref<Array<Author>> = ref([]);
+let filteredTranslators: Ref<Array<Author>> = ref([]);
+
 const showModal: Ref<boolean> = ref(false)
 const metadata: Ref<Metadata | null> = ref(null)
 // let hasImage: Ref<boolean> = ref(metadata?.value?.image != null)
@@ -104,15 +106,10 @@ function toggleRemoveImage() {
   deleteImage.value = !deleteImage.value
 }
 
-let swalMixin = Swal.mixin({
-  background: '#404040',
-  color: '#ffffff',
-})
-
 const importBook = async () => {
   console.log("import book");
   if (StringUtils.isNotBlank(form.title)) {
-    let alreadyExisting = await checkIsbnExists(form.isbn10, form.isbn13)
+    let alreadyExisting = await dataService.checkIsbnExists(form.isbn10, form.isbn13)
     console.log('already existing')
     console.log(alreadyExisting)
     let saveBook = true
@@ -127,7 +124,7 @@ const importBook = async () => {
         if (result.isConfirmed) {
           saveBook = true
         } else if (result.isDenied) {
-          swalMixin.fire('', t('sorting.sort_by'), 'info')
+          ObjectUtils.baseSwalMixin.fire('', t('labels.changes_not_saved'), 'info')
         }
       })
     }
@@ -138,6 +135,7 @@ const importBook = async () => {
     let userBook: UserBook = fillBook(form, publishedDate.value)
     authors.value.forEach((a) => userBook.book.authors?.push(a));
     tags.value.forEach((t) => userBook.book.tags?.push(t));
+    translators.value.forEach((tr) => userBook.book.translators?.push(tr));
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
     }
@@ -200,6 +198,7 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
       librarythingId: formdata.librarythingId,
       language: formdata.language,
       authors: [],
+      translators: [],
       tags: []
     },
     owned: formdata.owned,
@@ -218,6 +217,7 @@ const clearForm = () => {
   file.value = null;
   authors.value = [];
   tags.value = [];
+  translators.value = [];
   uploadPercentage.value = 0;
   form.title = "";
   form.summary = "";
@@ -257,6 +257,10 @@ function getFilteredAuthors(text: string) {
   dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
 }
 
+function getFilteredTranslators(text: string) {
+  dataService.findAuthorByCriteria(text).then((data) => filteredTranslators.value = data.content)
+}
+
 function getFilteredTags(text: string) {
   dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
@@ -277,6 +281,29 @@ function beforeAdd(item: Author | string) {
       console.log(`author ${author.name}`)
       if (author.name === item) {
         console.log(`author ${author.name} item ${item}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  return shouldAdd
+}
+
+function beforeAddTranslator(item: Author | string) {
+  let shouldAdd = true
+  if (item instanceof Object) {
+    translators.value.forEach(translator => {
+      console.log(`translator ${translator.name}`)
+      if (translator.name === item.name) {
+        console.log(`translator ${translator.name} item ${item.name}`)
+        shouldAdd = false;
+      }
+    });
+  }
+  else {
+    translators.value.forEach(translator => {
+      console.log(`translator ${translator.name}`)
+      if (translator.name === item) {
+        console.log(`translator ${translator.name} item ${item}`)
         shouldAdd = false;
       }
     });
@@ -334,6 +361,9 @@ const toggleModal = () => {
     active: true,
     canCancel: ['x', 'button', 'outside'],
     scroll: 'keep',
+    props: {
+        "book": null,
+      },
     events: {
       metadataReceived: (modalMetadata: Metadata) => {
         console.log("received metadata")
@@ -414,36 +444,6 @@ const validateIsbn13 = (isbn: string) => {
   }
 }
 
-
-async function checkIsbnExists(isbn10: string, isbn13: string) {
-  console.log(isbn10 + " " + isbn13)
-  if (StringUtils.isNotBlank(isbn10)) {
-    let res = await dataService.findBooks(undefined, isbn10, undefined)
-    console.log(res.empty)
-    if (!res.empty) {
-      return res.content[0]
-    }
-  }
-  if (StringUtils.isNotBlank(isbn13)) {
-    console.log(isbn13)
-    let res = await dataService.findBooks(undefined, undefined, isbn13)
-    console.log(res.empty)
-    if (!res.empty) {
-      return res.content[0]
-    }
-  }
-  return null
-}
-
-let autoImportPopupContent = computed(() => {
-  if (store != null && store.getters.getSettings.metadataFetchEnabled) {
-    return t('labels.auto_fill_doc')
-  }
-  else {
-    return t('labels.auto_import_disabled')
-  }
-})
-
 let displayDatepicker = computed(() => {
   return eventType.value !== null && eventType.value !== "NONE"
 })
@@ -458,17 +458,33 @@ let displayDatepicker = computed(() => {
         <h1 class="text-2xl title has-text-weight-normal typewriter capitalize">
           {{ t('nav.add_book') }}
         </h1>
-        <button
-          v-tooltip="autoImportPopupContent"
-          class="btn btn-success button is-success is-light"
-          :disabled="store != null && !store.getters.getMetadataFetchEnabled"
-          @click="toggleModal"
-        >
-          <span class="icon">
-            <i class="mdi mdi-auto-fix mdi-18px" />
-          </span>
-          <span>{{ t('labels.auto_fill') }}</span>
-        </button>
+        <div class="flex">
+          <button
+            v-tooltip="t('labels.auto_fill_doc')"
+            class="btn btn-success button is-success is-light"
+            :disabled="store != null && !store.getters.getMetadataFetchEnabled"
+            @click="toggleModal"
+          >
+            <span class="icon">
+              <i class="mdi mdi-auto-fix mdi-18px" />
+            </span>
+            <span>{{ t('labels.auto_fill') }}</span>
+          </button>
+          <svg
+            v-if="store != null && !store.getters.getMetadataFetchEnabled"
+            v-tooltip="t('labels.auto_import_disabled')"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-warning"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </div>
       </div>
       <div class="form-control sm:w-8/12 justify-center justify-items-center justify-self-center column is-two-thirds">
         <div class="field mb-3">
@@ -527,6 +543,29 @@ let displayDatepicker = computed(() => {
               field="name"
               :placeholder="t('labels.add_tag')"
               @typing="getFilteredTags"
+            />
+          </o-field>
+        </div>
+        <div class="field jelu-authorinput pb-2">
+          <o-field
+            horizontal
+            :label="t('book.translator', 2)"
+            class="capitalize"
+          >
+            <o-inputitems
+              v-model="translators"
+              :data="filteredTranslators"
+              :autocomplete="true"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="beforeAddTranslator"
+              :create-item="createAuthor"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              :placeholder="t('labels.add_translator')"
+              @typing="getFilteredTranslators"
             />
           </o-field>
         </div>
@@ -871,12 +910,16 @@ let displayDatepicker = computed(() => {
             horizontal
             :label="t('labels.upload_cover')"
           >
-            <o-switch
-              v-model="uploadFromWeb"
-              position="left"
-            >
-              {{ uploadlabel }}
-            </o-switch>
+            <div class="form-control">
+              <label class="label cursor-pointer justify-center gap-2">
+                <span class="label-text">{{ uploadlabel }}</span> 
+                <input
+                  v-model="uploadFromWeb"
+                  type="checkbox"
+                  class="toggle toggle-primary"
+                >
+              </label>
+            </div>
           </o-field>
           <o-field
             v-if="uploadFromWeb"

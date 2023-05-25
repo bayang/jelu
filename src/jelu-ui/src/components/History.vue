@@ -38,7 +38,7 @@ const getYears = () => {
 const eventsForYear = () => {
   if (currentYear.value !== null) {
     updatePageLoading(true)
-    dataService.myReadingEvents(nonCurrentlyReadingEvents, undefined, undefined, undefined, `${currentYear.value}-01-01`, `${currentYear.value + 1}-01-01`, pageAsNumber.value - 1, perPage.value)
+    dataService.myReadingEvents(nonCurrentlyReadingEvents, undefined, undefined, undefined, `${currentYear.value}-01-01`, `${currentYear.value + 1}-01-01`, pageAsNumber.value - 1, perPage.value, 'endDate,desc')
     .then(res => {
       total.value = res.totalElements
       yearEvents.value = res.content
@@ -168,6 +168,7 @@ getYears()
               class="h-full"
               :force-select="false"
               :show-select="false"
+              :propose-add="true"
             >
               <template #date>
                 <div class="badge badge-accent absolute bottom-0 left-1">

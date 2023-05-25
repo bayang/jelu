@@ -25,7 +25,8 @@ data class JeluProperties(
     data class MetaDataProvider(
         var name: String,
         var isEnabled: Boolean = false,
-        var apiKey: String?
+        var apiKey: String?,
+        var order: Int = -1000
     )
 
     data class Database(
@@ -47,7 +48,8 @@ data class JeluProperties(
     )
 
     data class Calibre(
-        var path: String?
+        var path: String?,
+        var order: Int = 1000
     )
 
     data class Metadata(

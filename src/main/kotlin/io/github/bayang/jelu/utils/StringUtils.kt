@@ -6,7 +6,7 @@ import org.jsoup.safety.Safelist
 
 private val whitelist: Safelist = Safelist.basic().addTags("h1", "h2", "h3", "h4", "h5", "h6")
 
-private val slugifier: Slugify = Slugify()
+private val slugifier: Slugify = Slugify.builder().build()
 
 fun sanitizeHtml(input: String?): String {
     if (input.isNullOrBlank()) {

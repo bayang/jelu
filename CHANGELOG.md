@@ -1,3 +1,95 @@
+## [0.38.0](https://github.com/bayang/jelu/compare/v0.37.0...v0.38.0) (2023-03-25)
+
+
+### Features
+
+* plugins refactor ([bd942fe](https://github.com/bayang/jelu/commit/bd942fe20fd202d4639889e80c57a39ab3597eb6))
+
+
+### Bug Fixes
+
+* make linter happy ([5fd65ee](https://github.com/bayang/jelu/commit/5fd65eec5f7353ca76b6914131ea6a98ce0956ce))
+
+## [0.37.0](https://github.com/bayang/jelu/compare/v0.36.0...v0.37.0) (2023-02-16)
+
+
+### Features
+
+* add latest reviews from current instance on home page ([258dcb3](https://github.com/bayang/jelu/commit/258dcb338bbbc84c0bb424f001d2b694aae197a6))
+* add possibility to see others [#61](https://github.com/bayang/jelu/issues/61) ([b2014d6](https://github.com/bayang/jelu/commit/b2014d6aed7267dca5f382394e303b8c212cf77f))
+
+
+### Bug Fixes
+
+* add translators field on add book page ([863342a](https://github.com/bayang/jelu/commit/863342a80f85a6ecb3c7cff54f2379aeeb64090e))
+
+## [0.36.0](https://github.com/bayang/jelu/compare/v0.35.2...v0.36.0) (2023-01-19)
+
+
+### Features
+
+* add possibility to import metadata on existing book ([aefed8a](https://github.com/bayang/jelu/commit/aefed8a1b34ed5b5fdb0e5cae40de1839db5b73e))
+
+### [0.35.2](https://github.com/bayang/jelu/compare/v0.35.1...v0.35.2) (2023-01-08)
+
+
+### Bug Fixes
+
+* imports should not overwrite existing images [#58](https://github.com/bayang/jelu/issues/58) ([21f96d7](https://github.com/bayang/jelu/commit/21f96d729b46285f9dcf018453ee7841c3724735))
+* jelu theme readability bug ([833e887](https://github.com/bayang/jelu/commit/833e8873c902058f65e7ebade9569b60cf25924c))
+
+### [0.35.1](https://github.com/bayang/jelu/compare/v0.35.0...v0.35.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* jelu accent color ([125cfd4](https://github.com/bayang/jelu/commit/125cfd4e8cfaaac49a7f7b4fc308b7024b8ec9f8))
+
+## [0.35.0](https://github.com/bayang/jelu/compare/v0.34.4...v0.35.0) (2023-01-03)
+
+
+### Features
+
+* add page count to user stats [#55](https://github.com/bayang/jelu/issues/55) ([f51df40](https://github.com/bayang/jelu/commit/f51df409fce94a7c1f66e47864ee58f3c2372166))
+* allow turning off cover fetching on isbn list import [#57](https://github.com/bayang/jelu/issues/57) ([8348544](https://github.com/bayang/jelu/commit/834854438775e3f87accfc0873774ec43602d969))
+
+### [0.34.4](https://github.com/bayang/jelu/compare/v0.34.3...v0.34.4) (2022-12-18)
+
+
+### Bug Fixes
+
+* errors caused by upgrades ([25fe2cf](https://github.com/bayang/jelu/commit/25fe2cf8998c5a5e21af4880ec63c2b36cf8adbe))
+* goodreads csv parser ([33f0607](https://github.com/bayang/jelu/commit/33f06077580e3f46247933eeaf9d7899bf7e7b03))
+
+### [0.34.3](https://github.com/bayang/jelu/compare/v0.34.2...v0.34.3) (2022-12-08)
+
+
+### Bug Fixes
+
+* modification date not updated on userbook ([98ca115](https://github.com/bayang/jelu/commit/98ca115573c8163c6cf264b6000832a8f51f7341))
+* wrong sort in history view [#51](https://github.com/bayang/jelu/issues/51) ([a6cfa5b](https://github.com/bayang/jelu/commit/a6cfa5ba606583c675350a4fd4fe543ac4a0f0f0))
+
+### [0.34.2](https://github.com/bayang/jelu/compare/v0.34.1...v0.34.2) (2022-11-14)
+
+
+### Bug Fixes
+
+* New translations ([81baced](https://github.com/bayang/jelu/commit/81bacede6016bec800bacd14994866e1784ed307))
+
+### [0.34.1](https://github.com/bayang/jelu/compare/v0.34.0...v0.34.1) (2022-11-14)
+
+
+### Bug Fixes
+
+* improve date pickers usablility for events ([668593c](https://github.com/bayang/jelu/commit/668593c75d5cfe1f3ac0d89b3b2076a943d17545))
+
+## [0.34.0](https://github.com/bayang/jelu/compare/v0.33.1...v0.34.0) (2022-11-07)
+
+
+### Features
+
+* add barcode scanning ([63492ca](https://github.com/bayang/jelu/commit/63492ca9a8a65549d8d3dea6fa999f7c48719df3))
+
 ### [0.33.1](https://github.com/bayang/jelu/compare/v0.33.0...v0.33.1) (2022-10-24)
 
 

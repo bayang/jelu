@@ -45,7 +45,7 @@ const getUserbookId = async () => {
   bookCanBeAdded.value = false
   await until(props.book.id).not.toBeNull()
   console.log("book id " + props.book.id)
-  dataService.findUserBookByCriteria(null, props.book.id, null, null, null, 0, 10)
+  dataService.findUserBookByCriteria(null, props.book.id, null, null, null, null, 0, 10)
   .then(res => {
     if (!res.empty) {
       if (res.content.length > 0 && res.content[0].id != null) {

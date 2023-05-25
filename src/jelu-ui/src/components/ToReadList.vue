@@ -49,7 +49,8 @@ const getToReadIsLoading: Ref<boolean> = ref(false)
 const getToRead = async () => {
   getToReadIsLoading.value = true
   try {
-    const res = await dataService.findUserBookByCriteria(eventTypes.value, null,
+    const res = await dataService.findUserBookByCriteria(
+      eventTypes.value, null, null,
     true, ownedAsBool.value, null,
     pageAsNumber.value - 1, perPage.value, sortQuery.value)
     total.value = res.totalElements
@@ -143,7 +144,7 @@ getToRead()
       </div>
     </template>
     <template #filters>
-      <div class="field flex flex-col capitalize">
+      <div class="field flex flex-col capitalize gap-1">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
         <o-checkbox
           v-model="eventTypes"
@@ -252,6 +253,7 @@ getToRead()
         :book="book"
         :force-select="selectAll"
         :show-select="showSelect"
+        :propose-add="true"
         class="h-full"
         @update:modal-closed="modalClosed"
         @update:checked="cardChecked"
