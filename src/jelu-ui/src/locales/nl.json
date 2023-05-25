@@ -36,7 +36,7 @@
         "invalid_isbn10": "Ongeldige isbn10",
         "invalid_isbn13": "Ongeldige isbn13",
         "auto_fill_doc": "Probeer automatisch wat velden van het web in te vullen, een isbn of een titel",
-        "auto_import_disabled": "Automatisch importeren vereist dat Calibre is geïnstalleerd",
+        "auto_import_disabled": "Automatisch importeren vereist dat een metadata plugin wordt geïnstalleerd",
         "auto_fill": "automatisch invullen",
         "add_author": "Een auteur toevoegen",
         "add_tag": "Tag toevoegen",
@@ -108,6 +108,7 @@
         "username": "gebruikersnaam",
         "role": "rol | rollen",
         "users": "Gebruikers",
+        "add_users": "Gebruikers toevoegen",
         "users_management": "Gebruikersbeheer",
         "shortcuts": "Snelkoppelingen",
         "shortcuts_tooltip": "Sneltoetsen",
@@ -296,10 +297,21 @@
         "visibility": "zichtbaarheid",
         "private": "privé",
         "public": "openbaar",
-        "review": "recensie",
+        "review": "beoordeling | beoordelingen",
         "rating": "beoordeling",
         "my_reviews": "Mijn recensies",
         "all_reviews": "Alle recensies",
-        "delete_review": "Deze review verwijderen?"
+        "delete_review": "Deze review verwijderen?",
+        "review_detail": "Ga naar beoordelingsdetails",
+        "book_all_reviews": "Alle beoordelingen van dit boek"
+    },
+    "book_merge": {
+        "merge_books": "Merge books",
+        "fetch_metadata": "Fetch metadata"
+    },
+    "metadata": {
+        "reorder_plugins": "plugins herordenen",
+        "description": "Plugins worden van boven naar beneden aangeroepen, uitgeschakelde plugins zullen niet worden gebruikt",
+        "default_priority": "standaard prioriteit"
     }
 }

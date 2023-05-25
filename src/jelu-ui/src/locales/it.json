@@ -11,7 +11,7 @@
         "add_book": "aggiungi libro",
         "dashboard": "dashboard",
         "login": "accedi",
-        "logout": "logout",
+        "logout": "esci",
         "search": "cerca",
         "history": "history",
         "shelves": "scaffali"
@@ -21,7 +21,7 @@
         "advanced_search": "Ricerca avanzata",
         "true": "Vero",
         "false": "Falso",
-        "library_empty": "library is empty",
+        "library_empty": "la libreria è vuota",
         "nothing_to_read": "Niente da leggere",
         "book_will_be_added": "Il libro verrà aggiunto alla lista da leggere",
         "save": "Salva",
@@ -36,7 +36,7 @@
         "invalid_isbn10": "ISBN10 non valido",
         "invalid_isbn13": "ISBN13 non valido",
         "auto_fill_doc": "Try to auto fill some fields from the web, given a isbn or a title",
-        "auto_import_disabled": "Auto import requires Calibre to be installed",
+        "auto_import_disabled": "Auto import requires a metadata plugin to be installed",
         "auto_fill": "riempimento automatico",
         "add_author": "Aggiungi un autore",
         "add_tag": "Aggiungi un'etichetta",
@@ -108,6 +108,7 @@
         "username": "username",
         "role": "role | roles",
         "users": "Users",
+        "add_users": "Add users",
         "users_management": "Users management",
         "shortcuts": "Shortcuts",
         "shortcuts_tooltip": "Keyboard shortcuts",
@@ -234,7 +235,7 @@
         "import_ok": "Your import request has been saved. You can leave this page, the import result will be available in the messages section."
     },
     "login": {
-        "login": "login",
+        "login": "accedi",
         "password": "password",
         "confirm_login": "confirm login",
         "confirm_password": "confirm password",
@@ -300,6 +301,17 @@
         "rating": "rating",
         "my_reviews": "My reviews",
         "all_reviews": "All reviews",
-        "delete_review": "Delete this review ?"
+        "delete_review": "Delete this review ?",
+        "review_detail": "Go to review detail",
+        "book_all_reviews": "All reviews for this book"
+    },
+    "book_merge": {
+        "merge_books": "Merge books",
+        "fetch_metadata": "Fetch metadata"
+    },
+    "metadata": {
+        "reorder_plugins": "reorder plugins",
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
+        "default_priority": "default priority"
     }
 }
