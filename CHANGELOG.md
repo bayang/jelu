@@ -1,3 +1,10 @@
+## [0.39.0](https://github.com/bayang/jelu/compare/v0.38.1...v0.39.0) (2023-06-07)
+
+
+### Features
+
+* see other users full to-read lists and book lists ([ec71709](https://github.com/bayang/jelu/commit/ec71709d965b62dcd91685921b18ba9916cd31ca))
+
 ### [0.38.1](https://github.com/bayang/jelu/compare/v0.38.0...v0.38.1) (2023-05-25)
 
 
