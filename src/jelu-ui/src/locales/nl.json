@@ -92,7 +92,8 @@
         "do_nothing": "Niets doen",
         "add": "Toevoegen",
         "add_to_my_books": "Nog niet in je boeken, klik om het toe te voegen",
-        "add_translator": "Voeg een vertaler toe"
+        "add_translator": "Voeg een vertaler toe",
+        "reading_list_from_name": "Reading list from {name}"
     },
     "settings": {
         "pick_language": "Kies een taal",
