@@ -173,7 +173,13 @@ getUserReviews()
       v-if="events.length > 0"
       class="text-3xl typewriter py-4"
     >
-      {{ t('home.recent_events') }}
+      <router-link
+
+        class="link text-3xl typewriter py-4"
+        :to="{ name: 'my-books', query: { userId: route.params.userId } }"
+      >
+        {{ t('home.recent_events') }}
+      </router-link>
     </h2>
     <div
       v-if="events.length > 0"
@@ -225,7 +231,13 @@ getUserReviews()
       v-if="toRead.length > 0"
       class="text-3xl typewriter py-4"
     >
-      {{ t('nav.to_read') }}
+      <router-link
+
+        class="link text-3xl typewriter py-4"
+        :to="{ name: 'to-read', query: { userId: route.params.userId } }"
+      >
+        {{ t('nav.to_read') }}
+      </router-link>
     </h2>
     <div
       v-if="toRead.length > 0"

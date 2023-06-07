@@ -36,7 +36,18 @@ const toRead: Ref<string|null> = useRouteQuery('toRead', "null")
 const owned: Ref<string|null> = useRouteQuery('owned', "null")
 const borrowed: Ref<string|null> = useRouteQuery('borrowed', "null")
 
+const userId: Ref<string|null> = useRouteQuery('userId', null)
+
 const eventTypes: Ref<Array<ReadingEventType>> = useRouteQuery('lastEventTypes', [])
+const username = ref("")
+
+const getUsername = async () => {
+  if (userId.value != null) {
+    username.value = await dataService.usernameById(userId.value)
+  }
+}
+
+getUsername()
 
 watch([page, eventTypes, toRead, owned, borrowed, sortQuery], (newVal, oldVal) => {
   console.log("all " + newVal + " " + oldVal)
@@ -44,6 +55,14 @@ watch([page, eventTypes, toRead, owned, borrowed, sortQuery], (newVal, oldVal) =
     throttledGetBooks()
   }
 })
+
+const message = computed(() => {
+  if (userId.value != null) {
+    return t('labels.books_from_name', { name: username.value })
+  } else {
+    return t('nav.my_books')
+  }
+} )
 
 const toReadAsBool = computed(() => {
   if (toRead.value?.toLowerCase() === "null") {
@@ -80,7 +99,7 @@ const borrowedAsBool = computed(() => {
 
 const getBooks = () => {
   getBookIsLoading.value = true
-  dataService.findUserBookByCriteria(eventTypes.value, null, null, 
+  dataService.findUserBookByCriteria(eventTypes.value, null, userId.value, 
   toReadAsBool.value, ownedAsBool.value, borrowedAsBool.value,
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
@@ -121,10 +140,10 @@ function modalClosed() {
 
 
 try {
-    getBooks();
-  } catch (error) {
-    console.log("failed get books : " + error);
-  }
+  getBooks();
+} catch (error) {
+  console.log("failed get books : " + error);
+}
 
 </script>
 
@@ -328,7 +347,7 @@ try {
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
-      &nbsp; {{ t('nav.my_books') }} :
+      &nbsp; {{ message }} :
     </h2>
     <div />
   </div>

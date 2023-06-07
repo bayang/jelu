@@ -29,6 +29,17 @@ const { showSelect, selectAll, checkedCards, cardChecked, toggleEdit } = useBulk
 
 const eventTypes: Ref<Array<ReadingEventType>> = useRouteQuery('lastEventTypes', [])
 
+const userId: Ref<string|null> = useRouteQuery('userId', null)
+const username = ref("")
+
+const getUsername = async () => {
+  if (userId.value != null) {
+    username.value = await dataService.usernameById(userId.value)
+  }
+}
+
+getUsername()
+
 const open = ref(false)
 
 const owned: Ref<string|null> = useRouteQuery('owned', "null")
@@ -49,7 +60,7 @@ const getToRead = async () => {
   getToReadIsLoading.value = true
   try {
     const res = await dataService.findUserBookByCriteria(
-      eventTypes.value, null, null,
+      eventTypes.value, null, userId.value,
     true, ownedAsBool.value, null,
     pageAsNumber.value - 1, perPage.value, sortQuery.value)
     total.value = res.totalElements
@@ -86,6 +97,14 @@ function modalClosed() {
   console.log("modal closed")
   throttledGetToRead()
 }
+
+const message = computed(() => {
+  if (userId.value != null) {
+    return t('labels.reading_list_from_name', { name: username.value })
+  } else {
+    return t('nav.to_read')
+  }
+} )
 
 getToRead()
 
@@ -235,7 +254,7 @@ getToRead()
       </button>
     </div>
     <h2 class="text-3xl typewriter capitalize">
-      {{ t('nav.to_read') }} :
+      {{ message }} :
     </h2>
     <div />
   </div>
