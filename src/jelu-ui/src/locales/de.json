@@ -92,7 +92,8 @@
         "do_nothing": "Nichts tun",
         "add": "Hinzufügen",
         "add_to_my_books": "Noch nicht in deinen Büchern, klicke um es hinzuzufügen",
-        "add_translator": "Übersetzer:in hinzufügen"
+        "add_translator": "Übersetzer:in hinzufügen",
+        "reading_list_from_name": "Reading list from {name}"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
