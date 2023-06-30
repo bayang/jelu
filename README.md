@@ -103,7 +103,7 @@ https://hub.docker.com/repository/docker/wabayang/jelu
 
 This one is the easiest if you are used to it.
 
-The docker image we provide embeds the fetch-ebook-metada executable to automatically import books based on their title, authors or isbn.
+The docker image we provide embeds the fetch-ebook-metadata executable to automatically import books based on their title, authors or isbn.
 
 A sample docker compose would look like that : 
 
