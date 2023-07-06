@@ -21,7 +21,15 @@ class LdapConfig(
 
     @Bean
     fun contextSource(): BaseLdapPathContextSource {
-        return DefaultSpringSecurityContextSource(properties.auth.ldap.url)
+        val context: DefaultSpringSecurityContextSource = DefaultSpringSecurityContextSource(properties.auth.ldap.url)
+
+        if (!properties.auth.ldap.userDn.isNullOrBlank()) {
+            context.setUserDn(properties.auth.ldap.userDn)
+        }
+        if (!properties.auth.ldap.password.isNullOrBlank()) {
+            context.setPassword(properties.auth.ldap.password)
+        }
+        return context
     }
 
     @Bean

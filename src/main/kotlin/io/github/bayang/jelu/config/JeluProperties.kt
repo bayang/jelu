@@ -66,7 +66,9 @@ data class JeluProperties(
         val url: String = "",
         val userDnPatterns: List<String> = emptyList(),
         val userSearchFilter: String = "",
-        val userSearchBase: String = ""
+        val userSearchBase: String = "",
+        val userDn: String = "",
+        val password: String = ""
     )
 
     data class Proxy(
