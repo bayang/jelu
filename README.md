@@ -34,7 +34,7 @@ All your data is now located into a single-file database which can be saved anyw
 * Auto merge authors (to fix duplicates resulting from automatic imports for example)
 * Provide embed code snippets so that books can be tracked in other sites, blogs or even markdown notes/journal
 * Provide some stats about your readings
-* Multi user support
+* Multi user support (ldap login, proxy authentication, see other user libraries)
 * provides an API 
 * Write reviews and share them, see the reviews of other users on your instance 
 * Fallback metadata providers (see [official doc](https://bayang.github.io/jelu-web/configuration/) for configuration)
