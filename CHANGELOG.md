@@ -1,3 +1,10 @@
+## [0.40.0](https://github.com/bayang/jelu/compare/v0.39.0...v0.40.0) (2023-07-07)
+
+
+### Features
+
+* protected ldap login ([7e59159](https://github.com/bayang/jelu/commit/7e5915998b66bcc6cbcbb7565ccb7d5ad2fcd45c))
+
 ## [0.39.0](https://github.com/bayang/jelu/compare/v0.38.1...v0.39.0) (2023-06-07)
 
 
