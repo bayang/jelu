@@ -93,7 +93,8 @@
         "add": "Ajouter",
         "add_to_my_books": "Pas encore dans vos lives, cliquer pour ajouter",
         "add_translator": "Ajouter un traducteur",
-        "reading_list_from_name": "Liste de lecture de {name}"
+        "reading_list_from_name": "Liste de lecture de {name}",
+        "search_query": "Enter search query..."
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
