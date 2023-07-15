@@ -35,7 +35,7 @@ class CsvImportServiceTest(
     @Autowired private val jeluProperties: JeluProperties,
     @Autowired private val readingEventService: ReadingEventService,
     @Autowired private val csvImportService: CsvImportService,
-    @Autowired private val importService: ImportService
+    @Autowired private val importService: ImportService,
 ) {
 
     companion object {
@@ -131,7 +131,7 @@ class CsvImportServiceTest(
         csvImportService.parse(
             csv,
             userId,
-            ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = false, ImportSource.GOODREADS)
+            ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = false, ImportSource.GOODREADS),
         )
         val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
         Assertions.assertEquals(10, nb)
@@ -198,11 +198,11 @@ class CsvImportServiceTest(
             null,
             null,
             BookCreateDto(
-                image = CalibreMetadataProvider.FILE_PREFIX + "test.jpg"
+                image = CalibreMetadataProvider.FILE_PREFIX + "test.jpg",
             ),
             null,
             null,
-            null
+            null,
         )
         bookService.update(imported.id!!, u, null)
         userbooksPage = bookService.findUserBookByCriteria(userId, null, null, null, null, null, Pageable.ofSize(30))

@@ -16,7 +16,7 @@ import java.util.UUID
 @Component
 class ReviewService(
     private val reviewRepository: ReviewRepository,
-    private val bookService: BookService
+    private val bookService: BookService,
 ) {
 
     @Transactional
@@ -34,7 +34,7 @@ class ReviewService(
         visibility: Visibility?,
         after: LocalDate?,
         before: LocalDate?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<ReviewDto> {
         return reviewRepository.find(userId, bookId, visibility, after, before, pageable).map { it.toReviewDto() }
     }

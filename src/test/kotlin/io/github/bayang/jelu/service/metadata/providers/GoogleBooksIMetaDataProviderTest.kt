@@ -95,9 +95,9 @@ class GoogleBooksIMetaDataProviderTest {
                                 "      }\n" +
                                 "    }\n" +
                                 "  ]\n" +
-                                "}\n"
+                                "}\n",
                         )
-                        .build()
+                        .build(),
                 )
             }.build()
 
@@ -108,14 +108,14 @@ class GoogleBooksIMetaDataProviderTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("")),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key"))
+            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key")),
         )
         val service = GoogleBooksIMetaDataProvider(webClient, jeluProperties)
 
         // When
         val result: MetadataDto = service.fetchMetadata(
             MetadataRequestDto("9781785650406"),
-            mapOf()
+            mapOf(),
         )?.block()!!
 
         // Then
@@ -127,7 +127,7 @@ class GoogleBooksIMetaDataProviderTest {
         Assertions.assertEquals(mutableSetOf("Jack Campbell"), result.authors)
         Assertions.assertEquals(
             "http://books.google.com/books/content?id=0GJOMQAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
-            result.image
+            result.image,
         )
         Assertions.assertEquals("en", result.language)
         Assertions.assertEquals("2017-05", result.publishedDate)

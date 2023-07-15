@@ -18,7 +18,7 @@ fun createUserBookDto(bookDto: BookCreateDto, lastReadingEvent: ReadingEventType
         toRead = toRead,
         percentRead = null,
         book = bookDto,
-        borrowed = borrowed
+        borrowed = borrowed,
     )
 }
 
@@ -41,7 +41,7 @@ fun bookDto(title: String = "title1", withTags: Boolean = false): BookCreateDto 
         googleId = "1234",
         librarythingId = "",
         language = "",
-        amazonId = ""
+        amazonId = "",
     )
 }
 

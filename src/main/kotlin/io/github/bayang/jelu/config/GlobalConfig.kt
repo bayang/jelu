@@ -26,8 +26,8 @@ class GlobalConfig {
         }.build()
         return WebClient.builder().exchangeStrategies(exchange).clientConnector(
             ReactorClientHttpConnector(
-                HttpClient.create().compress(true).followRedirect(true)
-            )
+                HttpClient.create().compress(true).followRedirect(true),
+            ),
         ).build()
     }
 
@@ -45,7 +45,7 @@ class GlobalConfig {
                     allowCredentials = true
                     addExposedHeader(HttpHeaders.CONTENT_DISPOSITION)
                     addExposedHeader(sessionHeaderName)
-                }
+                },
             )
         }
 }

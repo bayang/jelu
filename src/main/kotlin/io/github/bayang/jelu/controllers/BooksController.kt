@@ -48,7 +48,7 @@ private val logger = KotlinLogging.logger {}
 @RequestMapping("/api/v1")
 class BooksController(
     private val repository: BookService,
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) {
 
     @GetMapping(path = ["/books"])
@@ -56,13 +56,13 @@ class BooksController(
         @RequestParam(name = "q", required = false) query: String?,
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
-        principal: Authentication
+        principal: Authentication,
     ): Page<BookDto> {
         return repository.findAll(
             query,
             pageable,
             (principal.principal as JeluUser).user,
-            libraryFilter ?: LibraryFilter.ANY
+            libraryFilter ?: LibraryFilter.ANY,
         )
     }
 
@@ -90,7 +90,7 @@ class BooksController(
     @DeleteMapping(path = ["/books/{bookId}/tags/{tagId}"])
     fun deleteTagFromBook(
         @PathVariable("bookId") bookId: UUID,
-        @PathVariable("tagId") tagId: UUID
+        @PathVariable("tagId") tagId: UUID,
     ): ResponseEntity<Unit> {
         repository.deleteTagFromBook(bookId, tagId)
         return ResponseEntity.noContent().build()
@@ -107,7 +107,7 @@ class BooksController(
     @DeleteMapping(path = ["/books/{bookId}/authors/{authorId}"])
     fun deleteAuthorFromBook(
         @PathVariable("bookId") bookId: UUID,
-        @PathVariable("authorId") authorId: UUID
+        @PathVariable("authorId") authorId: UUID,
     ): ResponseEntity<Unit> {
         repository.deleteAuthorFromBook(bookId, authorId)
         return ResponseEntity.noContent().build()
@@ -117,7 +117,7 @@ class BooksController(
     @DeleteMapping(path = ["/books/{bookId}/translators/{translatorId}"])
     fun deleteTranslatorFromBook(
         @PathVariable("bookId") bookId: UUID,
-        @PathVariable("translatorId") translatorId: UUID
+        @PathVariable("translatorId") translatorId: UUID,
     ): ResponseEntity<Unit> {
         repository.deleteTranslatorFromBook(bookId, translatorId)
         return ResponseEntity.noContent().build()
@@ -139,7 +139,7 @@ class BooksController(
         @RequestParam(name = "owned", required = false) owned: Boolean?,
         @RequestParam(name = "borrowed", required = false) borrowed: Boolean?,
         @RequestParam(name = "userId", required = false) userId: UUID?,
-        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
     ): Page<UserBookWithoutEventsAndUserDto> {
         assertIsJeluUser(principal.principal)
         val finalUserId = userId ?: (principal.principal as JeluUser).user.id.value
@@ -149,7 +149,7 @@ class BooksController(
     @GetMapping(path = ["/authors"])
     fun authors(
         @RequestParam(name = "name", required = false) name: String?,
-        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
     ): Page<AuthorDto> {
         return repository.findAllAuthors(name, pageable)
     }
@@ -157,13 +157,13 @@ class BooksController(
     @GetMapping(path = ["/tags"])
     fun tags(
         @RequestParam(name = "name", required = false) name: String?,
-        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
     ): Page<TagDto> = repository.findAllTags(name, pageable)
 
     @GetMapping(path = ["/tags/{id}"])
     fun tagById(
         @PathVariable("id") tagId: UUID,
-        principal: Authentication
+        principal: Authentication,
     ): TagDto {
         assertIsJeluUser(principal.principal)
         return repository.findTagById(tagId, (principal.principal as JeluUser).user)
@@ -174,7 +174,7 @@ class BooksController(
         @PathVariable("id") tagId: UUID,
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
-        principal: Authentication
+        principal: Authentication,
     ): Page<BookDto> {
         assertIsJeluUser(principal.principal)
         return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY)
@@ -189,14 +189,14 @@ class BooksController(
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
         @RequestParam(name = "roleFilter", required = false) roleFilter: Role?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
-        principal: Authentication
+        principal: Authentication,
     ): Page<BookDto> =
         repository.findAuthorBooksById(authorId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY, roleFilter ?: Role.ANY)
 
     @PostMapping(path = ["/books"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun saveBook(
         @RequestBody @Valid
-        book: BookCreateDto
+        book: BookCreateDto,
     ): BookDto {
         return repository.save(book, null)
     }
@@ -204,7 +204,7 @@ class BooksController(
     @PostMapping(path = ["/books"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun saveBook(
         @RequestPart("book") @Valid book: BookCreateDto,
-        @RequestPart("file", required = false) file: MultipartFile?
+        @RequestPart("file", required = false) file: MultipartFile?,
     ): BookDto {
         return repository.save(book, file)
     }
@@ -213,7 +213,7 @@ class BooksController(
     fun saveUserBook(
         @RequestBody @Valid
         book: CreateUserBookDto,
-        principal: Authentication
+        principal: Authentication,
     ): UserBookLightDto {
         return repository.save(book, (principal.principal as JeluUser).user, null)
     }
@@ -222,7 +222,7 @@ class BooksController(
     fun saveUserBook(
         @RequestPart("book") @Valid book: CreateUserBookDto,
         principal: Authentication,
-        @RequestPart("file", required = false) file: MultipartFile?
+        @RequestPart("file", required = false) file: MultipartFile?,
     ): UserBookLightDto {
         return repository.save(book, (principal.principal as JeluUser).user, file)
     }
@@ -230,7 +230,7 @@ class BooksController(
     @PostMapping(path = ["/authors"])
     fun saveAuthor(
         @RequestBody @Valid
-        author: AuthorDto
+        author: AuthorDto,
     ): AuthorDto {
         return repository.save(author)
     }
@@ -241,7 +241,7 @@ class BooksController(
         bookId: UUID,
         @RequestBody
         @Valid
-        book: BookUpdateDto
+        book: BookUpdateDto,
     ): BookDto {
         return repository.update(bookId, book)
     }
@@ -252,7 +252,7 @@ class BooksController(
         authorId: UUID,
         @RequestBody
         @Valid
-        author: AuthorUpdateDto
+        author: AuthorUpdateDto,
     ): AuthorDto {
         return repository.updateAuthor(authorId, author)
     }
@@ -261,7 +261,7 @@ class BooksController(
     fun updateAuthor(
         @PathVariable("id") authorId: UUID,
         @RequestPart("author") @Valid author: AuthorUpdateDto,
-        @RequestPart("file", required = false) file: MultipartFile?
+        @RequestPart("file", required = false) file: MultipartFile?,
     ): AuthorDto {
         return repository.updateAuthor(authorId, author, file)
     }
@@ -272,7 +272,7 @@ class BooksController(
         @PathVariable("otherId") otherId: UUID,
         @RequestBody @Valid
         author: AuthorUpdateDto,
-        principal: Authentication
+        principal: Authentication,
     ): AuthorDto {
         return repository.mergeAuthors(authorId, otherId, author, (principal.principal as JeluUser).user)
     }
@@ -283,7 +283,7 @@ class BooksController(
         userBookId: UUID,
         @RequestBody
         @Valid
-        book: UserBookUpdateDto
+        book: UserBookUpdateDto,
     ): UserBookLightDto {
         return repository.update(userBookId, book)
     }
@@ -292,7 +292,7 @@ class BooksController(
     fun updateUserBook(
         @PathVariable("id") userBookId: UUID,
         @RequestPart("book") @Valid book: UserBookUpdateDto,
-        @RequestPart("file", required = false) file: MultipartFile?
+        @RequestPart("file", required = false) file: MultipartFile?,
     ): UserBookLightDto {
         return repository.update(userBookId, book, file)
     }
@@ -300,7 +300,7 @@ class BooksController(
     @PutMapping(path = ["/userbooks"], consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun bulkUpdateUserBooks(
         @RequestBody @Valid
-        bulkUpdateDto: UserBookBulkUpdateDto
+        bulkUpdateDto: UserBookBulkUpdateDto,
     ): Int {
         return repository.bulkEditUserbooks(bulkUpdateDto)
     }

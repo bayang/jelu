@@ -29,7 +29,7 @@ const val KEY: String = "quotes"
 @Service
 class GoodreadsQuoteProviderImpl(
     val bookService: BookService,
-    @Resource(name = "restClient") val restClient: WebClient
+    @Resource(name = "restClient") val restClient: WebClient,
 ) : IQuoteProvider {
 
     var cache: Cache<String, List<QuoteDto>> = Caffeine.newBuilder()
@@ -125,7 +125,7 @@ class GoodreadsQuoteProviderImpl(
             content = element.ownText(),
             author = element.select("span.authorOrTitle").text(),
             origin = element.select("a.authorOrTitle").text(),
-            link = if (url.isBlank()) "" else BASE_URL + url
+            link = if (url.isBlank()) "" else BASE_URL + url,
         )
     }
 }

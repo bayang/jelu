@@ -40,7 +40,7 @@ class CsvExportServiceTest(
     @Autowired private val userService: UserService,
     @Autowired private val jeluProperties: JeluProperties,
     @Autowired private val readingEventService: ReadingEventService,
-    @Autowired private val userMessageService: UserMessageService
+    @Autowired private val userMessageService: UserMessageService,
 ) {
 
     companion object {
@@ -97,7 +97,7 @@ class CsvExportServiceTest(
             googleId = "1234",
             librarythingId = "",
             language = "",
-            amazonId = ""
+            amazonId = "",
         )
         val createUserBookDto1 = CreateUserBookDto(
             personalNotes = "test personal notes\nwith a newline",
@@ -107,7 +107,7 @@ class CsvExportServiceTest(
             toRead = true,
             percentRead = null,
             book = book1,
-            borrowed = null
+            borrowed = null,
         )
         val saved1: UserBookLightDto = bookService.save(createUserBookDto1, user(), null)
 
@@ -129,7 +129,7 @@ class CsvExportServiceTest(
             googleId = "1234",
             librarythingId = "",
             language = "",
-            amazonId = ""
+            amazonId = "",
         )
         val offset = OffsetDateTime.now(ZoneId.systemDefault()).offset
         val date1 = OffsetDateTime.of(2022, 2, 10, 6, 30, 0, 0, offset)
@@ -142,18 +142,18 @@ class CsvExportServiceTest(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
                 date3.toInstant(),
-                null
+                null,
             ),
-            user()
+            user(),
         )
         readingEventService.save(
             CreateReadingEventDto(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
                 date2.toInstant(),
-                null
+                null,
             ),
-            user()
+            user(),
         )
 
         readingEventService.save(
@@ -161,27 +161,27 @@ class CsvExportServiceTest(
                 ReadingEventType.DROPPED,
                 saved1.book.id,
                 date3.toInstant(),
-                null
+                null,
             ),
-            user()
+            user(),
         )
         readingEventService.save(
             CreateReadingEventDto(
                 ReadingEventType.DROPPED,
                 saved1.book.id,
                 date2.toInstant(),
-                null
+                null,
             ),
-            user()
+            user(),
         )
         readingEventService.save(
             CreateReadingEventDto(
                 ReadingEventType.CURRENTLY_READING,
                 saved1.book.id,
                 date1.toInstant(),
-                null
+                null,
             ),
-            user()
+            user(),
         )
         csvExportService.export(user(), Locale.ENGLISH)
         val csv = File(jeluProperties.files.imports).listFiles()[0]

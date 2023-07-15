@@ -11,7 +11,7 @@ data class WikipediaSearchResultElement(
     val description: String?,
     @JsonAlias("matched_title")
     val matchedTitle: String?,
-    val thumbnail: Thumbnail?
+    val thumbnail: Thumbnail?,
 )
 
 data class Thumbnail(
@@ -20,9 +20,9 @@ data class Thumbnail(
     val width: Int,
     val height: Int,
     val duration: Int,
-    val url: String
+    val url: String,
 )
 
 data class WikipediaSearchResult(
-    val pages: List<WikipediaSearchResultElement>
+    val pages: List<WikipediaSearchResultElement>,
 )

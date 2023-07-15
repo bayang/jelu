@@ -32,14 +32,14 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/v1")
 class ReviewsController(
-    private val reviewService: ReviewService
+    private val reviewService: ReviewService,
 ) {
 
     @PostMapping(path = ["/reviews"])
     fun createReview(
         @RequestBody @Valid
         createReviewDto: CreateReviewDto,
-        principal: Authentication
+        principal: Authentication,
     ): ReviewDto {
         return reviewService.save(createReviewDto, (principal.principal as JeluUser).user)
     }
@@ -55,7 +55,7 @@ class ReviewsController(
         @RequestParam(name = "before", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         before: LocalDate?,
-        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["reviewDate"]) @ParameterObject pageable: Pageable
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["reviewDate"]) @ParameterObject pageable: Pageable,
     ): Page<ReviewDto> {
         return reviewService.find(userId, bookId, visibility, after, before, pageable)
     }
@@ -64,7 +64,7 @@ class ReviewsController(
     fun updateReview(
         @PathVariable("id") reviewId: UUID,
         @RequestBody @Valid
-        updateReviewDto: UpdateReviewDto
+        updateReviewDto: UpdateReviewDto,
     ): ReviewDto {
         return reviewService.update(reviewId, updateReviewDto)
     }
@@ -72,7 +72,7 @@ class ReviewsController(
     @GetMapping(path = ["/reviews/{id}"])
     fun getReview(
         @PathVariable("id") reviewId: UUID,
-        principal: Authentication?
+        principal: Authentication?,
     ): ReviewDto {
         val review = reviewService.findById(reviewId)
         if (review.visibility == Visibility.PRIVATE && principal == null) {

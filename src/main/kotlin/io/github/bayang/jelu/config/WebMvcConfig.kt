@@ -41,7 +41,7 @@ class WebMvcConfig(private val properties: JeluProperties) : WebMvcConfigurer {
                 "/android-chrome-192x192.png",
                 "/android-chrome-512x512.png",
                 "/manifest.json",
-                "/site.webmanifest"
+                "/site.webmanifest",
             )
             .addResourceLocations(
                 "classpath:public/index.html",
@@ -54,7 +54,7 @@ class WebMvcConfig(private val properties: JeluProperties) : WebMvcConfigurer {
                 "classpath:public/android-chrome-192x192.png",
                 "classpath:public/android-chrome-512x512.png",
                 "classpath:public/manifest.json",
-                "classpath:public/site.webmanifest"
+                "classpath:public/site.webmanifest",
             )
             .setCacheControl(CacheControl.noStore())
     }

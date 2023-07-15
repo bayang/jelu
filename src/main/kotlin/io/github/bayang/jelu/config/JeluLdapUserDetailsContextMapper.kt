@@ -21,14 +21,14 @@ private val logger = KotlinLogging.logger {}
 @Component
 @ConditionalOnProperty(name = ["jelu.auth.ldap.enabled"], havingValue = "true", matchIfMissing = false)
 class JeluLdapUserDetailsContextMapper(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : UserDetailsContextMapper {
 
     @Transactional
     override fun mapUserFromContext(
         ctx: DirContextOperations?,
         username: String?,
-        authorities: MutableCollection<out GrantedAuthority>?
+        authorities: MutableCollection<out GrantedAuthority>?,
     ): UserDetails {
         dumpAttributesForDebug(ctx?.attributes)
         val isAdmin = findAdminMembership(ctx?.attributes)

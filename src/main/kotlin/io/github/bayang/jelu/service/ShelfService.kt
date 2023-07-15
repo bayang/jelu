@@ -11,7 +11,7 @@ import java.util.UUID
 
 @Component
 class ShelfService(
-    private val shelfRepository: ShelfRepository
+    private val shelfRepository: ShelfRepository,
 ) {
 
     @Transactional
@@ -27,14 +27,14 @@ class ShelfService(
     fun find(
         user: User?,
         name: String?,
-        targetId: UUID?
+        targetId: UUID?,
     ): List<ShelfDto> {
         return shelfRepository.find(user, name, targetId).map { it.toShelfDto() }
     }
 
     @Transactional
     fun findById(
-        id: UUID
+        id: UUID,
     ): ShelfDto = shelfRepository.findById(id).toShelfDto()
 
     @Transactional

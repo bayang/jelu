@@ -23,5 +23,5 @@ class ImportDto {
 data class ImportConfigurationDto(
     var shouldFetchMetadata: Boolean,
     var shouldFetchCovers: Boolean,
-    var importSource: ImportSource
+    var importSource: ImportSource,
 )

@@ -31,7 +31,7 @@ private val logger = KotlinLogging.logger {}
 @RestController
 @RequestMapping("/api/v1")
 class UsersController(
-    private val repository: UserService
+    private val repository: UserService,
 ) {
 
     @Operation(description = "get the current session token that the caller should provide in the X-Auth-Token header")
@@ -55,9 +55,9 @@ class UsersController(
                         password = "****",
                         modificationDate = null,
                         creationDate = null,
-                        provider = Provider.JELU_DB
+                        provider = Provider.JELU_DB,
                     ),
-                    token = session.id
+                    token = session.id,
                 )
             }
             is JeluUser -> {
@@ -71,9 +71,9 @@ class UsersController(
                         password = "****",
                         modificationDate = null,
                         creationDate = null,
-                        provider = (principal.principal as JeluUser).user.provider
+                        provider = (principal.principal as JeluUser).user.provider,
                     ),
-                    token = session.id
+                    token = session.id,
                 )
             }
             else -> {
@@ -85,9 +85,9 @@ class UsersController(
                         id = null,
                         password = "****",
                         modificationDate = null,
-                        creationDate = null
+                        creationDate = null,
                     ),
-                    token = session.id
+                    token = session.id,
                 )
             }
         }
@@ -110,7 +110,7 @@ class UsersController(
         @Valid
         user: UpdateUserDto,
         principal: Authentication,
-        session: HttpSession
+        session: HttpSession,
     ): UserDto {
         if (principal.principal is JeluUser) {
             if ((principal.principal as JeluUser).user.isAdmin || (principal.principal as JeluUser).user.id.value == userId) {
@@ -129,7 +129,7 @@ class UsersController(
     @PostMapping(path = ["/users"])
     fun saveUser(
         @RequestBody @Valid
-        user: CreateUserDto
+        user: CreateUserDto,
     ): UserDto {
         return repository.save(user)
     }

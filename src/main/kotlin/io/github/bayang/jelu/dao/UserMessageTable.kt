@@ -36,12 +36,12 @@ class UserMessage(id: EntityID<UUID>) : UUIDEntity(id) {
         modificationDate = this.modificationDate,
         link = this.link,
         read = this.read,
-        category = this.messageCategory
+        category = this.messageCategory,
     )
 }
 enum class MessageCategory {
     SUCCESS,
     INFO,
     WARNING,
-    ERROR
+    ERROR,
 }

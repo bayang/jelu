@@ -43,7 +43,7 @@ class BookServiceTest(
     @Autowired private val userService: UserService,
     @Autowired private val jeluProperties: JeluProperties,
     @Autowired private val readingEventService: ReadingEventService,
-    @Autowired private val luceneHelper: LuceneHelper
+    @Autowired private val luceneHelper: LuceneHelper,
 ) {
 
     companion object {
@@ -167,9 +167,9 @@ class BookServiceTest(
                 googleId = "",
                 librarythingId = "",
                 language = "",
-                amazonId = ""
+                amazonId = "",
             ),
-            null
+            null,
         )
         Assertions.assertNotNull(res.id)
         val found = bookService.findBookById(res.id!!)
@@ -232,7 +232,7 @@ class BookServiceTest(
             googleId = "1234",
             librarythingId = "",
             language = "",
-            amazonId = ""
+            amazonId = "",
         )
         val res: BookDto = bookService.save(bookDto(), null)
         Assertions.assertNotNull(res.id)
@@ -322,7 +322,7 @@ class BookServiceTest(
             googleId = "1234",
             librarythingId = "",
             language = "",
-            amazonId = ""
+            amazonId = "",
         )
         val res: BookDto = bookService.save(dto, null)
         Assertions.assertNotNull(res.id)
@@ -493,7 +493,7 @@ class BookServiceTest(
             savedBook.id,
             title = "modified title",
             isbn10 = savedBook.isbn10,
-            isbn13 = savedBook.isbn13
+            isbn13 = savedBook.isbn13,
         )
         val createUserBookDto = createUserBookDto(modified)
         val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), null)
@@ -539,7 +539,7 @@ class BookServiceTest(
             savedBook.id,
             title = "modified title",
             isbn10 = savedBook.isbn10,
-            isbn13 = savedBook.isbn13
+            isbn13 = savedBook.isbn13,
         )
         val createUserBookDto = createUserBookDto(modified)
         val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), null)
@@ -583,7 +583,7 @@ class BookServiceTest(
             savedBook.id,
             title = "modified title",
             isbn10 = savedBook.isbn10,
-            isbn13 = savedBook.isbn13
+            isbn13 = savedBook.isbn13,
         )
         val createUserBookDto = createUserBookDto(modified)
         val replacementFile = MockMultipartFile("test-replace-cover.jpg", "test-replace-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
@@ -651,7 +651,7 @@ class BookServiceTest(
             book = null,
             toRead = null,
             percentRead = 50,
-            borrowed = null
+            borrowed = null,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -719,7 +719,7 @@ class BookServiceTest(
             book = null,
             toRead = null,
             percentRead = 50,
-            borrowed = true
+            borrowed = true,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -788,7 +788,7 @@ class BookServiceTest(
             book = createBook.copy(image = null),
             toRead = null,
             percentRead = 50,
-            borrowed = false
+            borrowed = false,
         )
         // val replacementFile = MockMultipartFile("test-replace-cover.jpg", "test-replace-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
         val updated = bookService.update(saved.id!!, updater, null)
@@ -858,7 +858,7 @@ class BookServiceTest(
             book = null,
             toRead = null,
             percentRead = 50,
-            borrowed = null
+            borrowed = null,
         )
         val replacementFile = MockMultipartFile("test-replace-cover.jpg", "test-replace-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
         val updated = bookService.update(saved.id!!, updater, replacementFile)
@@ -905,7 +905,7 @@ class BookServiceTest(
             savedBook.id,
             title = "modified title",
             isbn10 = savedBook.isbn10,
-            isbn13 = savedBook.isbn13
+            isbn13 = savedBook.isbn13,
         )
         val createUserBookDto = createUserBookDto(modified, ReadingEventType.FINISHED)
         val saved1: UserBookLightDto = bookService.save(createUserBookDto, user(), null)
@@ -946,7 +946,7 @@ class BookServiceTest(
             savedBook.id,
             title = "modified title",
             isbn10 = savedBook.isbn10,
-            isbn13 = savedBook.isbn13
+            isbn13 = savedBook.isbn13,
         )
         val createUserBookDto = createUserBookDto(modified, ReadingEventType.FINISHED)
         val saved1: UserBookLightDto = bookService.save(createUserBookDto, user(), null)
@@ -1001,7 +1001,7 @@ class BookServiceTest(
             savedBook.id,
             title = "modified title",
             isbn10 = savedBook.isbn10,
-            isbn13 = savedBook.isbn13
+            isbn13 = savedBook.isbn13,
         )
         val createUserBookDto = createUserBookDto(modified, ReadingEventType.FINISHED)
         val saved1: UserBookLightDto = bookService.save(createUserBookDto, user(), null)
@@ -1053,7 +1053,7 @@ class BookServiceTest(
             savedBook.id,
             title = "modified title",
             isbn10 = savedBook.isbn10,
-            isbn13 = savedBook.isbn13
+            isbn13 = savedBook.isbn13,
         )
         val createUserBookDto = createUserBookDto(modified, ReadingEventType.FINISHED)
         val saved1: UserBookLightDto = bookService.save(createUserBookDto, user(), null)
@@ -1187,7 +1187,7 @@ class BookServiceTest(
             googleId = "1234",
             librarythingId = "",
             language = "",
-            amazonId = ""
+            amazonId = "",
         )
         val book2 = BookCreateDto(
             id = null,
@@ -1207,7 +1207,7 @@ class BookServiceTest(
             googleId = "1234",
             librarythingId = "",
             language = "",
-            amazonId = ""
+            amazonId = "",
         )
         val book3 = BookCreateDto(
             id = null,
@@ -1227,7 +1227,7 @@ class BookServiceTest(
             googleId = "1234",
             librarythingId = "",
             language = "",
-            amazonId = ""
+            amazonId = "",
         )
         val savedBook1 = bookService.save(book1, null)
         Assertions.assertNotNull(savedBook1)

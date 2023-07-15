@@ -26,7 +26,7 @@ class Tag(id: EntityID<UUID>) : UUIDEntity(id) {
             id = this.id.value,
             creationDate = this.creationDate,
             modificationDate = this.modificationDate,
-            name = this.name
+            name = this.name,
         )
 }
 object BookTags : Table(name = "book_tags") {

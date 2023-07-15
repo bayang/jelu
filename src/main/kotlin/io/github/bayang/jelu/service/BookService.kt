@@ -54,7 +54,7 @@ class BookService(
     private val fileManager: FileManager,
     private val shelfService: ShelfService,
     private val searchIndexService: SearchIndexService,
-    private val luceneHelper: LuceneHelper
+    private val luceneHelper: LuceneHelper,
 ) {
 
     @Transactional
@@ -62,7 +62,7 @@ class BookService(
         query: String?,
         pageable: Pageable,
         user: User,
-        libraryFilter: LibraryFilter
+        libraryFilter: LibraryFilter,
     ): Page<BookDto> {
         val entitiesIds = luceneHelper.searchEntitiesIds(query, LuceneEntity.Book)
         // we had a query but nothing matched, so don't return anything
@@ -72,7 +72,7 @@ class BookService(
             return PageImpl(
                 listOf(),
                 pageable,
-                0
+                0,
             )
         } else {
             return bookRepository.findAll(entitiesIds, pageable, user, libraryFilter).map { it.toBookDto() }
@@ -90,7 +90,7 @@ class BookService(
         tags: List<String>?,
         pageable: Pageable,
         user: User,
-        libraryFilter: LibraryFilter
+        libraryFilter: LibraryFilter,
     ): Page<BookDto> =
         bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
 
@@ -186,8 +186,8 @@ class BookService(
                     eventType = userBook.lastReadingEvent,
                     bookId = null,
                     eventDate = userBook.lastReadingEventDate,
-                    startDate = null
-                )
+                    startDate = null,
+                ),
             )
         }
         var backup: File? = null
@@ -255,7 +255,7 @@ class BookService(
                     val targetFilename: String = imageName(
                         slugify(title),
                         id,
-                        FilenameUtils.getExtension(dtoImage)
+                        FilenameUtils.getExtension(dtoImage),
                     )
                     val currentFile = File(targetDir, "$dtoImage.bak")
                     val targetFile = File(currentFile.parent, targetFilename)
@@ -267,7 +267,7 @@ class BookService(
                         dtoImage,
                         slugify(title),
                         id,
-                        targetDir
+                        targetDir,
                     )
                     savedImage = destFileName
                 }
@@ -337,7 +337,7 @@ class BookService(
         toRead: Boolean?,
         owned: Boolean? = null,
         borrowed: Boolean? = null,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<UserBookWithoutEventsAndUserDto> {
         return bookRepository.findUserBookByCriteria(userId, bookId, eventTypes, toRead, owned, borrowed, pageable).map { it.toUserBookWthoutEventsAndUserDto() }
     }

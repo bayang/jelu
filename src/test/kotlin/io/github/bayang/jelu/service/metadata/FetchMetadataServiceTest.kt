@@ -22,7 +22,7 @@ class FetchMetadataServiceTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10))
+            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
         )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
@@ -49,7 +49,7 @@ class FetchMetadataServiceTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10))
+            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
         )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
@@ -68,10 +68,10 @@ class FetchMetadataServiceTest {
                 plugins = listOf(
                     PluginInfo(
                         name = PluginInfoHolder.jelu_debug,
-                        order = 1
-                    )
-                )
-            )
+                        order = 1,
+                    ),
+                ),
+            ),
         )
         verify { jeluDebug.fetchMetadata(any(), any()) }
         verify(exactly = 0) { calibre.fetchMetadata(any(), any()) }
@@ -86,7 +86,7 @@ class FetchMetadataServiceTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10))
+            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
         )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
@@ -113,7 +113,7 @@ class FetchMetadataServiceTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10))
+            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
         )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
@@ -132,14 +132,14 @@ class FetchMetadataServiceTest {
                 plugins = listOf(
                     PluginInfo(
                         name = "not-existing",
-                        order = 1
+                        order = 1,
                     ),
                     PluginInfo(
                         name = "not-existing2",
-                        order = 2
-                    )
-                )
-            )
+                        order = 2,
+                    ),
+                ),
+            ),
         )
         verify(exactly = 0) { jeluDebug.fetchMetadata(any(), any()) }
         verify(exactly = 0) { calibre.fetchMetadata(any(), any()) }
@@ -154,7 +154,7 @@ class FetchMetadataServiceTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10))
+            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
         )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
@@ -173,14 +173,14 @@ class FetchMetadataServiceTest {
                 plugins = listOf(
                     PluginInfo(
                         name = "not-existing",
-                        order = 1
+                        order = 1,
                     ),
                     PluginInfo(
                         name = PluginInfoHolder.jelu_debug,
-                        order = 2
-                    )
-                )
-            )
+                        order = 2,
+                    ),
+                ),
+            ),
         )
         verify { jeluDebug.fetchMetadata(any(), any()) }
         verify(exactly = 0) { calibre.fetchMetadata(any(), any()) }

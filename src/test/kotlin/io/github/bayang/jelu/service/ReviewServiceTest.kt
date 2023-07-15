@@ -25,7 +25,7 @@ import java.time.ZoneId
 class ReviewServiceTest(
     @Autowired private val userService: UserService,
     @Autowired private val bookService: BookService,
-    @Autowired private val reviewService: ReviewService
+    @Autowired private val reviewService: ReviewService,
 ) {
 
     val reviewText = """
@@ -54,11 +54,11 @@ class ReviewServiceTest(
             reviewText,
             8.5,
             Visibility.PUBLIC,
-            bookDto.id!!
+            bookDto.id!!,
         )
         val saved = reviewService.save(
             createReviewDto,
-            user()
+            user(),
         )
         Assertions.assertNotNull(saved.id)
         Assertions.assertEquals(createReviewDto.visibility, saved.visibility)
@@ -69,7 +69,7 @@ class ReviewServiceTest(
             text = "new text",
             rating = 5.0,
             reviewDate = null,
-            visibility = null
+            visibility = null,
         )
         val updated = reviewService.update(saved.id!!, update)
         Assertions.assertEquals(update.rating, updated.rating)
@@ -84,11 +84,11 @@ class ReviewServiceTest(
             reviewText,
             8.5,
             Visibility.PUBLIC,
-            bookDto.id!!
+            bookDto.id!!,
         )
         val saved1 = reviewService.save(
             createReviewDto1,
-            user()
+            user(),
         )
         Assertions.assertEquals(oneYearBefore, saved1.reviewDate)
         found = reviewService.find(null, null, null, null, null, Pageable.ofSize(200))

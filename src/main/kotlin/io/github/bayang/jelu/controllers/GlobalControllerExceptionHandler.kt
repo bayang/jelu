@@ -20,29 +20,29 @@ class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleConstraintValidationException(
-        e: ConstraintViolationException
+        e: ConstraintViolationException,
     ): ApiError =
         ApiError(
             "Constraint violation",
-            e.constraintViolations.map { ApiValidationErrorItem(it.propertyPath.toString(), it.message) }
+            e.constraintViolations.map { ApiValidationErrorItem(it.propertyPath.toString(), it.message) },
         )
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleMethodArgumentNotValidException(
-        e: MethodArgumentNotValidException
+        e: MethodArgumentNotValidException,
     ): ApiError =
         ApiError(
             "Validation error(s)",
-            e.bindingResult.fieldErrors.map { ApiValidationErrorItem(it.field, it.defaultMessage) }
+            e.bindingResult.fieldErrors.map { ApiValidationErrorItem(it.field, it.defaultMessage) },
         )
 
     @ExceptionHandler(EntityNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     fun handleNonExistingEntityException(
-        e: EntityNotFoundException
+        e: EntityNotFoundException,
     ): ApiError =
         ApiError(e.message)
 
@@ -50,7 +50,7 @@ class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleHttpMessageNotReadableException(
-        e: HttpMessageNotReadableException
+        e: HttpMessageNotReadableException,
     ): ApiError =
         ApiError(e.message)
 
@@ -58,7 +58,7 @@ class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     fun handleJeluException(
-        e: JeluException
+        e: JeluException,
     ): ApiError =
         ApiError(e.message)
 
@@ -66,7 +66,7 @@ class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     fun handleJeluAuthenticationException(
-        e: JeluAuthenticationException
+        e: JeluAuthenticationException,
     ): ApiError =
         ApiError(e.message)
 
@@ -74,17 +74,17 @@ class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleJeluValidationException(
-        e: JeluValidationException
+        e: JeluValidationException,
     ): ApiError =
         ApiError(e.message)
 }
 
 data class ApiError(
     val message: String? = null,
-    val violations: List<ApiValidationErrorItem> = emptyList()
+    val violations: List<ApiValidationErrorItem> = emptyList(),
 )
 
 data class ApiValidationErrorItem(
     val field: String? = null,
-    val error: String? = null
+    val error: String? = null,
 )

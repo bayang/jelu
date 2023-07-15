@@ -14,7 +14,7 @@ class DebugMetadataProvider : IMetaDataProvider {
 
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
-        config: Map<String, String>
+        config: Map<String, String>,
     ): Mono<MetadataDto>? {
         logger.debug {
             "debug plugin called with isbn ${metadataRequestDto.isbn}, title ${metadataRequestDto.title}, " +

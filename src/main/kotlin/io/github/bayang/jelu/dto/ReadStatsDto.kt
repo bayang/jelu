@@ -4,7 +4,7 @@ data class YearStatsDto(
     val dropped: Int = 0,
     val finished: Int = 0,
     val year: Int,
-    val pageCount: Int = 0
+    val pageCount: Int = 0,
 )
 
 data class MonthStatsDto(
@@ -12,5 +12,5 @@ data class MonthStatsDto(
     val finished: Int = 0,
     val year: Int,
     val month: Int,
-    val pageCount: Int = 0
+    val pageCount: Int = 0,
 )

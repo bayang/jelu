@@ -25,7 +25,7 @@ private val logger = KotlinLogging.logger {}
 class UserService(
     private val userRepository: UserRepository,
     private val sessionRegistry: SessionRegistry,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
 ) : UserDetailsService {
 
     @Transactional

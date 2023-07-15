@@ -60,7 +60,7 @@ class Author(id: EntityID<UUID>) : UUIDEntity(id) {
             goodreadsPage = this.goodreadsPage,
             twitterPage = this.twitterPage,
             facebookPage = this.facebookPage,
-            instagramPage = this.instagramPage
+            instagramPage = this.instagramPage,
         )
 }
 object BookAuthors : Table(name = "book_authors") {

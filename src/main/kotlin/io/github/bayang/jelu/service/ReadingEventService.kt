@@ -24,7 +24,7 @@ class ReadingEventService(private val readingEventRepository: ReadingEventReposi
         startedBefore: LocalDate?,
         endedAfter: LocalDate?,
         endedBefore: LocalDate?,
-        pageable: Pageable
+        pageable: Pageable,
     ) =
         readingEventRepository.findAll(eventTypes, userId, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable).map { it.toReadingEventDto() }
 

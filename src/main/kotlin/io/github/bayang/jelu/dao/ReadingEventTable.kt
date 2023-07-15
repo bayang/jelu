@@ -42,7 +42,7 @@ class ReadingEvent(id: EntityID<UUID>) : UUIDEntity(id) {
         userBook = this.userBook.toUserBookWithoutEventsDto(),
         eventType = this.eventType,
         startDate = this.startDate,
-        endDate = this.endDate
+        endDate = this.endDate,
     )
     fun toReadingEventWithoutUserBookDto(): ReadingEventWithoutUserBookDto = ReadingEventWithoutUserBookDto(
         id = this.id.value,
@@ -50,11 +50,11 @@ class ReadingEvent(id: EntityID<UUID>) : UUIDEntity(id) {
         modificationDate = this.modificationDate,
         eventType = this.eventType,
         startDate = this.startDate,
-        endDate = this.endDate
+        endDate = this.endDate,
     )
 }
 enum class ReadingEventType {
     FINISHED,
     DROPPED,
-    CURRENTLY_READING
+    CURRENTLY_READING,
 }

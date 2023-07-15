@@ -25,7 +25,7 @@ class UserMessageService(private val userMessageRepository: UserMessageRepositor
         user: User,
         read: Boolean?,
         messageCategories: List<MessageCategory>?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<UserMessageDto> {
         return userMessageRepository.find(user, read, messageCategories, pageable).map { it.toUserMessageDto() }
     }

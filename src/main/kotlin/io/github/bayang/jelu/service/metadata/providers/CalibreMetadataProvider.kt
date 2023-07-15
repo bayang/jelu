@@ -33,7 +33,7 @@ private val logger = KotlinLogging.logger {}
 
 @Service
 class CalibreMetadataProvider(
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) : IMetaDataProvider {
 
     companion object {
@@ -47,7 +47,7 @@ class CalibreMetadataProvider(
 
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
-        config: Map<String, String>
+        config: Map<String, String>,
     ): Mono<MetadataDto>? {
         if (metadataRequestDto.isbn.isNullOrBlank() && metadataRequestDto.title.isNullOrBlank() &&
             metadataRequestDto.authors.isNullOrBlank()

@@ -21,14 +21,14 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/v1")
 class ShelvesController(
-    private val shelvesService: ShelfService
+    private val shelvesService: ShelfService,
 ) {
 
     @GetMapping(path = ["/shelves"])
     fun shelves(
         @RequestParam(name = "name", required = false) name: String?,
         @RequestParam(name = "targetId", required = false) targetId: UUID?,
-        principal: Authentication
+        principal: Authentication,
     ): List<ShelfDto> {
         return shelvesService.find((principal.principal as JeluUser).user, name, targetId)
     }
@@ -36,7 +36,7 @@ class ShelvesController(
     @GetMapping(path = ["/shelves/{id}"])
     fun shelfById(
         @PathVariable("id") shelfId: UUID,
-        principal: Authentication
+        principal: Authentication,
     ): ShelfDto {
         return shelvesService.findById(shelfId)
     }
@@ -45,7 +45,7 @@ class ShelvesController(
     fun saveShelf(
         @RequestBody @Valid
         createShelfDto: CreateShelfDto,
-        principal: Authentication
+        principal: Authentication,
     ): ShelfDto {
         return shelvesService.save(createShelfDto, (principal.principal as JeluUser).user)
     }

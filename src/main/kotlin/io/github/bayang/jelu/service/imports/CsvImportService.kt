@@ -76,7 +76,7 @@ class CsvImportService(
     private val bookService: BookService,
     private val userService: UserService,
     private val readingEventService: ReadingEventService,
-    private val userMessageService: UserMessageService
+    private val userMessageService: UserMessageService,
 ) {
 
     // maybe later : use coroutines ?
@@ -90,9 +90,9 @@ class CsvImportService(
                 CreateUserMessageDto(
                     "Import started at $nowString",
                     null,
-                    MessageCategory.INFO
+                    MessageCategory.INFO,
                 ),
-                userEntity
+                userEntity,
             )
         } catch (e: Exception) {
             logger.error(e) { "failed to save message for ${file.absolutePath} import" }
@@ -116,9 +116,9 @@ class CsvImportService(
                 CreateUserMessageDto(
                     "Import for ${file.absolutePath} ended after : $deltaInSec seconds, with $success imports and $failures failures",
                     null,
-                    MessageCategory.SUCCESS
+                    MessageCategory.SUCCESS,
                 ),
-                userEntity
+                userEntity,
             )
         } catch (e: Exception) {
             logger.error(e) { "failed to save message for ${file.absolutePath} import" }
@@ -178,9 +178,9 @@ class CsvImportService(
                             CreateUserMessageDto(
                                 "no title nor authors for input $isbn10 $isbn13, not saving",
                                 null,
-                                MessageCategory.WARNING
+                                MessageCategory.WARNING,
                             ),
-                            userEntity
+                            userEntity,
                         )
                     } catch (e: Exception) {
                         logger.error(e) { "failed to save message for failed isbn fetch" }
@@ -233,9 +233,9 @@ class CsvImportService(
                             merge(book, bookFromDb),
                             if (readStatusFromShelves.equals(TO_READ, true) && userbook.toRead == null) true else null,
                             null,
-                            null
+                            null,
                         ),
-                        null
+                        null,
                     )
                 } else {
                     // update book only and create userbook
@@ -247,7 +247,7 @@ class CsvImportService(
                         merge(book, bookFromDb),
                         if (readStatusFromShelves.equals(TO_READ, true)) true else null,
                         null,
-                        null
+                        null,
                     )
                     bookService.save(userbook, userEntity, null)
                 }
@@ -260,7 +260,7 @@ class CsvImportService(
                     book,
                     if (readStatusFromShelves.equals(TO_READ, true)) true else null,
                     null,
-                    null
+                    null,
                 )
                 bookService.save(userbook, userEntity, null)
             }
@@ -309,12 +309,12 @@ class CsvImportService(
                         savedUserBook.book.id,
                         toInstant(
                             pastDate.plusDays(
-                                idx.toLong()
-                            )
+                                idx.toLong(),
+                            ),
                         ),
-                        null
+                        null,
                     ),
-                    userEntity
+                    userEntity,
                 )
             }
             importService.updateStatus(importEntity.id.value, ProcessingStatus.IMPORTED)
@@ -396,7 +396,7 @@ class CsvImportService(
             // we must send the currently existing image
             image = if (dbBook.image.isNullOrBlank()) incoming.image else dbBook.image,
             authors = authors,
-            tags = tags
+            tags = tags,
         )
     }
 

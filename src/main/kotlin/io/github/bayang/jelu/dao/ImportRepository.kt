@@ -19,7 +19,7 @@ class ImportRepository {
 
     fun deleteByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
-        userId: UUID
+        userId: UUID,
     ): Int {
         // FIXME SQLite doesn't support LIMIT in DELETE clause., dialect: sqlite.
         return ImportEntityTable.deleteWhere {
@@ -29,7 +29,7 @@ class ImportRepository {
 
     fun getByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
-        userId: UUID
+        userId: UUID,
     ): List<ImportEntity> {
         return ImportEntity.find { ImportEntityTable.processingStatus eq processingStatus and (ImportEntityTable.userId eq userId) }
             .limit(DEFAULT_BLOCK_SIZE)
@@ -38,14 +38,14 @@ class ImportRepository {
 
     fun countByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
-        userId: UUID
+        userId: UUID,
     ): Long = ImportEntity.count(ImportEntityTable.processingStatus eq processingStatus and(ImportEntityTable.userId eq userId))
 
     fun save(
         entity: ImportDto,
         processingStatus: ProcessingStatus,
         userId: UUID,
-        shouldFetchMetadata: Boolean
+        shouldFetchMetadata: Boolean,
     ): ImportEntity {
         return ImportEntity.new {
             this.processingStatus = processingStatus
@@ -75,7 +75,7 @@ class ImportRepository {
     fun updateStatus(
         oldStatus: ProcessingStatus,
         newStatus: ProcessingStatus,
-        userId: UUID
+        userId: UUID,
     ): Int {
         return ImportEntityTable.update({ ImportEntityTable.processingStatus eq oldStatus and (ImportEntityTable.userId eq userId) }) {
             it[processingStatus] = newStatus

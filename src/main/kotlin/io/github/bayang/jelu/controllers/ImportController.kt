@@ -29,7 +29,7 @@ private val logger = KotlinLogging.logger {}
 class ImportController(
     val csvImportService: CsvImportService,
     val csvExportService: CsvExportService,
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) {
 
     @ApiResponse(responseCode = "201", description = "Imported the csv file")
@@ -38,7 +38,7 @@ class ImportController(
     fun importCsv(
         principal: Authentication,
         @RequestPart("importConfig") @Valid importConfig: ImportConfigurationDto,
-        @RequestPart("file") file: MultipartFile
+        @RequestPart("file") file: MultipartFile,
     ): ResponseEntity<Nothing> {
         val destFileName = FilenameUtils.getName(file.originalFilename)
         val destFile = File(properties.files.imports, destFileName)
@@ -56,7 +56,7 @@ class ImportController(
     @PostMapping(path = ["/exports"])
     fun exportCsv(
         principal: Authentication,
-        locale: Locale
+        locale: Locale,
     ): ResponseEntity<Nothing> {
         csvExportService.export((principal.principal as JeluUser).user, locale)
         return ResponseEntity.status(HttpStatus.CREATED).build()

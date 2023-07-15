@@ -16,11 +16,11 @@ data class MetadataDto(
     var language: String? = null,
     var googleId: String? = null,
     var amazonId: String? = null,
-    var goodreadsId: String? = null
+    var goodreadsId: String? = null,
 )
 data class MetadataRequestDto(
     val isbn: String? = null,
     val title: String? = null,
     val authors: String? = null,
-    val plugins: List<PluginInfo>? = null
+    val plugins: List<PluginInfo>? = null,
 )

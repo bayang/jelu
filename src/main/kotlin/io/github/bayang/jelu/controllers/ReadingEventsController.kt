@@ -42,7 +42,7 @@ private val logger = KotlinLogging.logger {}
 @RequestMapping("/api/v1")
 class ReadingEventsController(
     private val repository: ReadingEventService,
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) {
 
     @GetMapping(path = ["/reading-events"])
@@ -62,7 +62,7 @@ class ReadingEventsController(
         @RequestParam(name = "endedBefore", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         endedBefore: LocalDate?,
-        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
     ): Page<ReadingEventDto> = repository.findAll(eventTypes, userId, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable)
 
     @GetMapping(path = ["/reading-events/me"])
@@ -82,7 +82,7 @@ class ReadingEventsController(
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         endedBefore: LocalDate?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
-        principal: Authentication
+        principal: Authentication,
     ): Page<ReadingEventDto> {
         assertIsJeluUser(principal.principal)
         return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable)
@@ -92,7 +92,7 @@ class ReadingEventsController(
     fun saveReadingEvent(
         @RequestBody @Valid
         event: CreateReadingEventDto,
-        principal: Authentication
+        principal: Authentication,
     ): ReadingEventDto {
         logger.debug { "event creation request for ${principal.name}" }
         assertIsJeluUser(principal.principal)
@@ -105,7 +105,7 @@ class ReadingEventsController(
         readingEventId: UUID,
         @RequestBody
         @Valid
-        readingEvent: UpdateReadingEventDto
+        readingEvent: UpdateReadingEventDto,
     ): ReadingEventDto {
         return repository.updateReadingEvent(readingEventId, readingEvent)
     }
@@ -114,7 +114,7 @@ class ReadingEventsController(
     @DeleteMapping(path = ["/reading-events/{id}"])
     fun deleteEventById(
         @PathVariable("id")
-        eventId: UUID
+        eventId: UUID,
     ): ResponseEntity<Unit> {
         repository.deleteReadingEventById(eventId)
         return ResponseEntity.noContent().build()
@@ -122,7 +122,7 @@ class ReadingEventsController(
 
     @GetMapping(path = ["/stats"])
     fun stats(
-        principal: Authentication
+        principal: Authentication,
     ): ResponseEntity<List<YearStatsDto>> {
         var events: Page<ReadingEventDto>
         var currentPage = 0
@@ -154,7 +154,7 @@ class ReadingEventsController(
     @GetMapping(path = ["/stats/{year}"])
     fun statsForYear(
         @PathVariable("year") year: Int,
-        principal: Authentication
+        principal: Authentication,
     ): ResponseEntity<List<MonthStatsDto>> {
         var events: Page<ReadingEventDto>
         var currentPage = 0
@@ -188,7 +188,7 @@ class ReadingEventsController(
     @ApiResponse(description = "Return a list of years for which there are reading events")
     @GetMapping(path = ["/stats/years"])
     fun years(
-        principal: Authentication
+        principal: Authentication,
     ): ResponseEntity<List<Int>> {
         val years = repository.findYears(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null)
         return if (years != null && years.isNotEmpty()) {

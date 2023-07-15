@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 class ServerSettingsController(
     private val pluginInfoHolder: PluginInfoHolder,
     private val properties: JeluProperties,
-    private val buildProperties: BuildProperties
+    private val buildProperties: BuildProperties,
 ) {
 
     @Operation(description = "Get the capabilities configured for this server, eg : is the metadata binary installed etc...")
@@ -26,7 +26,7 @@ class ServerSettingsController(
             metadataFetchCalibreEnabled = pluginInfoHolder.calibreEnabled(),
             buildProperties.version,
             ldapEnabled = properties.auth.ldap.enabled,
-            metadataPlugins = plugins
+            metadataPlugins = plugins,
         )
     }
 }

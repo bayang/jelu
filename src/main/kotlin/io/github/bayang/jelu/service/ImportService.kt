@@ -16,7 +16,7 @@ class ImportService(private val importRepository: ImportRepository) {
         entity: ImportDto,
         processingStatus: ProcessingStatus,
         userId: UUID,
-        shouldFetchMetadata: Boolean
+        shouldFetchMetadata: Boolean,
     ) {
         importRepository.save(entity, processingStatus, userId, shouldFetchMetadata)
     }
@@ -25,13 +25,13 @@ class ImportService(private val importRepository: ImportRepository) {
     fun updateStatus(
         oldStatus: ProcessingStatus,
         newStatus: ProcessingStatus,
-        userId: UUID
+        userId: UUID,
     ): Int = importRepository.updateStatus(oldStatus, newStatus, userId)
 
     @Transactional
     fun getByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
-        userId: UUID
+        userId: UUID,
     ): List<ImportEntity> = importRepository.getByprocessingStatusAndUser(processingStatus, userId)
 
     @Transactional
@@ -40,12 +40,12 @@ class ImportService(private val importRepository: ImportRepository) {
     @Transactional
     fun countByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
-        userId: UUID
+        userId: UUID,
     ): Long = importRepository.countByprocessingStatusAndUser(processingStatus, userId)
 
     @Transactional
     fun deleteByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
-        userId: UUID
+        userId: UUID,
     ): Int = importRepository.deleteByprocessingStatusAndUser(processingStatus, userId)
 }

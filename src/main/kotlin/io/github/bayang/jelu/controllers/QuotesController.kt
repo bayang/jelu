@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono
 @RestController
 @RequestMapping("/api/v1")
 class QuotesController(
-    private val quotesProvider: IQuoteProvider
+    private val quotesProvider: IQuoteProvider,
 ) {
 
     @ApiResponses(
@@ -31,15 +31,15 @@ class QuotesController(
                             array = (
                                 ArraySchema(
                                     schema = Schema(
-                                        implementation = QuoteDto::class
-                                    )
+                                        implementation = QuoteDto::class,
+                                    ),
                                 )
-                                )
+                                ),
                         )
-                        )
-                ]
-            )
-        ]
+                        ),
+                ],
+            ),
+        ],
     )
     @GetMapping(path = ["/quotes"])
     fun quotes(@RequestParam(name = "query", required = false) query: String?): Mono<List<QuoteDto>> =
@@ -57,15 +57,15 @@ class QuotesController(
                             array = (
                                 ArraySchema(
                                     schema = Schema(
-                                        implementation = QuoteDto::class
-                                    )
+                                        implementation = QuoteDto::class,
+                                    ),
                                 )
-                                )
+                                ),
                         )
-                        )
-                ]
-            )
-        ]
+                        ),
+                ],
+            ),
+        ],
     )
     @GetMapping(path = ["/quotes/random"])
     fun quotes(): Mono<List<QuoteDto>> = quotesProvider.random()

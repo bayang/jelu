@@ -14,14 +14,14 @@ import org.apache.lucene.analysis.standard.StandardTokenizer
  * for all the lucene related stuff
  */
 class MultiLingualNGramAnalyzer(private val minGram: Int, private val maxGram: Int, private val preserveOriginal: Boolean) : MultiLingualAnalyzer() {
-  override fun createComponents(fieldName: String): TokenStreamComponents {
-    val source: Tokenizer = StandardTokenizer()
-    // run the widthfilter first before bigramming, it sometimes combines characters.
-    var filter: TokenStream = CJKWidthFilter(source)
-    filter = LowerCaseFilter(filter)
-    filter = CJKBigramFilter(filter)
-    filter = NGramTokenFilter(filter, minGram, maxGram, preserveOriginal)
-    filter = ASCIIFoldingFilter(filter)
-    return TokenStreamComponents(source, filter)
-  }
+    override fun createComponents(fieldName: String): TokenStreamComponents {
+        val source: Tokenizer = StandardTokenizer()
+        // run the widthfilter first before bigramming, it sometimes combines characters.
+        var filter: TokenStream = CJKWidthFilter(source)
+        filter = LowerCaseFilter(filter)
+        filter = CJKBigramFilter(filter)
+        filter = NGramTokenFilter(filter, minGram, maxGram, preserveOriginal)
+        filter = ASCIIFoldingFilter(filter)
+        return TokenStreamComponents(source, filter)
+    }
 }

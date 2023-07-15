@@ -15,7 +15,7 @@ class PluginInfoHolderTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("")),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key"))
+            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key")),
         )
         var info = PluginInfoHolder(jeluProperties)
         var plugins = info.plugins()
@@ -31,7 +31,7 @@ class PluginInfoHolderTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("/path")),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key"))
+            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key")),
         )
         info = PluginInfoHolder(jeluProperties)
         plugins = info.plugins()
@@ -47,7 +47,7 @@ class PluginInfoHolderTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key", order = 2))
+            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key", order = 2)),
         )
         info = PluginInfoHolder(jeluProperties)
         plugins = info.plugins()
@@ -63,7 +63,7 @@ class PluginInfoHolderTest {
             JeluProperties.Cors(),
             JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key", order = 1))
+            listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key", order = 1)),
         )
         info = PluginInfoHolder(jeluProperties)
         plugins = info.plugins()

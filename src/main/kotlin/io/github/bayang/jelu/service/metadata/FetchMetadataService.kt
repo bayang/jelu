@@ -13,12 +13,12 @@ private val logger = KotlinLogging.logger {}
 @Service
 class FetchMetadataService(
     private val providers: List<IMetaDataProvider>,
-    private val pluginInfoHolder: PluginInfoHolder
+    private val pluginInfoHolder: PluginInfoHolder,
 ) {
 
     fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
-        config: Map<String, String> = mapOf()
+        config: Map<String, String> = mapOf(),
     ): Mono<MetadataDto> {
         var pluginsToUse = if (metadataRequestDto.plugins.isNullOrEmpty()) pluginInfoHolder.plugins() else metadataRequestDto.plugins
         pluginsToUse = pluginsToUse.toMutableList()

@@ -16,7 +16,7 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper
 @ConditionalOnProperty(name = ["jelu.auth.ldap.enabled"], havingValue = "true", matchIfMissing = false)
 class LdapConfig(
     private val userDetailsContextMapper: UserDetailsContextMapper,
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) {
 
     @Bean
@@ -41,7 +41,7 @@ class LdapConfig(
         if (!properties.auth.ldap.userSearchFilter.isNullOrBlank()) {
             val userSearchBase = if (properties.auth.ldap.userSearchBase.isNullOrBlank()) "" else properties.auth.ldap.userSearchBase
             authenticator.setUserSearch(
-                FilterBasedLdapUserSearch(userSearchBase, properties.auth.ldap.userSearchFilter, contextSource)
+                FilterBasedLdapUserSearch(userSearchBase, properties.auth.ldap.userSearchFilter, contextSource),
             )
         }
         authenticator.afterPropertiesSet()

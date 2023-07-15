@@ -11,5 +11,5 @@ data class ServerSettingsDto(
     val metadataFetchCalibreEnabled: Boolean,
     val appVersion: String,
     val ldapEnabled: Boolean,
-    val metadataPlugins: List<PluginInfo> = listOf()
+    val metadataPlugins: List<PluginInfo> = listOf(),
 )

@@ -40,10 +40,10 @@ class Review(id: EntityID<UUID>) : UUIDEntity(id) {
         visibility = this.visibility,
         rating = this.rating,
         user = this.user.id.value,
-        book = this.book.id.value
+        book = this.book.id.value,
     )
 }
 enum class Visibility {
     PUBLIC,
-    PRIVATE
+    PRIVATE,
 }

@@ -8,9 +8,9 @@ data class ShelfDto(
     val creationDate: Instant?,
     val modificationDate: Instant?,
     val name: String,
-    val targetId: UUID
+    val targetId: UUID,
 )
 data class CreateShelfDto(
     val name: String,
-    val targetId: UUID
+    val targetId: UUID,
 )

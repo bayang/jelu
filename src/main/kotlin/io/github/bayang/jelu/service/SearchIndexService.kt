@@ -22,100 +22,104 @@ private val logger = KotlinLogging.logger {}
 
 @Component
 class SearchIndexService(
-  private val luceneHelper: LuceneHelper,
-  private val bookRepository: BookRepository,
+    private val luceneHelper: LuceneHelper,
+    private val bookRepository: BookRepository,
 ) {
 
-  fun upgradeIndex() {
-    luceneHelper.upgradeIndex()
-    luceneHelper.setIndexVersion(INDEX_VERSION)
-  }
-
-  @Transactional
-  fun rebuildIndex(entities: Set<LuceneEntity>? = null) {
-    val targetEntities = entities ?: LuceneEntity.values().toSet()
-    logger.info { "Rebuild index for: ${targetEntities.map { it.type }}" }
-    targetEntities.forEach {
-      when (it) {
-        LuceneEntity.Book -> rebuildIndex(it, {
-          p: Pageable -> bookRepository.findAllNoFilters(null, null, null, null, null, null, null, p) },
-          { e: Book -> e.toDocument() })
-        LuceneEntity.Author -> logger.debug { "no authors index yet" }
-      }
+    fun upgradeIndex() {
+        luceneHelper.upgradeIndex()
+        luceneHelper.setIndexVersion(INDEX_VERSION)
     }
-    luceneHelper.setIndexVersion(INDEX_VERSION)
-  }
 
-  private fun <T> rebuildIndex(entity: LuceneEntity, provider: (Pageable) -> Page<out T>, toDoc: (T) -> Document) {
-    logger.info { "Rebuilding index for ${entity.name}" }
-
-    val count = provider(Pageable.ofSize(1)).totalElements
-    val batchSize = 5_000
-    val pages = ceil(count.toDouble() / batchSize).toInt()
-    logger.info { "Number of entities: $count and pages : $pages" }
-
-    luceneHelper.getIndexWriter().use { indexWriter ->
-      measureTime {
-        indexWriter.deleteDocuments(Term(LuceneEntity.TYPE, entity.type))
-
-        (0 until pages).forEach { page ->
-          logger.info { "Processing page ${page + 1} of $pages ($batchSize elements)" }
-          val entityDocs = provider(PageRequest.of(page, batchSize)).content
-            .map { toDoc(it) }
-          indexWriter.addDocuments(entityDocs)
+    @Transactional
+    fun rebuildIndex(entities: Set<LuceneEntity>? = null) {
+        val targetEntities = entities ?: LuceneEntity.values().toSet()
+        logger.info { "Rebuild index for: ${targetEntities.map { it.type }}" }
+        targetEntities.forEach {
+            when (it) {
+                LuceneEntity.Book -> rebuildIndex(
+                    it,
+                    {
+                            p: Pageable ->
+                        bookRepository.findAllNoFilters(null, null, null, null, null, null, null, p)
+                    },
+                    { e: Book -> e.toDocument() },
+                )
+                LuceneEntity.Author -> logger.debug { "no authors index yet" }
+            }
         }
-      }.also { duration ->
-        logger.info { "Wrote ${entity.name} index in $duration" }
-      }
+        luceneHelper.setIndexVersion(INDEX_VERSION)
     }
-  }
 
-  fun bookAdded(book: Book) {
-    addEntity(book.toDocument())
-  }
+    private fun <T> rebuildIndex(entity: LuceneEntity, provider: (Pageable) -> Page<out T>, toDoc: (T) -> Document) {
+        logger.info { "Rebuilding index for ${entity.name}" }
 
-  fun bookUpdated(book: Book) {
-    updateEntity(LuceneEntity.Book, book.id.value.toString(), book.toDocument())
-  }
+        val count = provider(Pageable.ofSize(1)).totalElements
+        val batchSize = 5_000
+        val pages = ceil(count.toDouble() / batchSize).toInt()
+        logger.info { "Number of entities: $count and pages : $pages" }
 
-  fun bookUpdated(bookId: UUID) {
-    bookUpdated(bookRepository.findBookById(bookId))
-  }
+        luceneHelper.getIndexWriter().use { indexWriter ->
+            measureTime {
+                indexWriter.deleteDocuments(Term(LuceneEntity.TYPE, entity.type))
 
-  fun booksUpdated(bookIds: List<UUID>) {
-    bookIds.forEach { bookUpdated(bookRepository.findBookById(it)) }
-  }
-
-  fun bookDeleted(bookId: UUID) {
-    deleteEntity(LuceneEntity.Book, bookId.toString())
-  }
-
-  fun authorUpdated(authorId: UUID) {
-    var books: Page<Book>
-    do {
-      books = bookRepository.findAuthorBooksByIdNoFilters(authorId, Pageable.ofSize(30))
-      books.forEach { deleteEntity(LuceneEntity.Book, it.id.value.toString()) }
-      books.forEach { addEntity(it.toDocument()) }
+                (0 until pages).forEach { page ->
+                    logger.info { "Processing page ${page + 1} of $pages ($batchSize elements)" }
+                    val entityDocs = provider(PageRequest.of(page, batchSize)).content
+                        .map { toDoc(it) }
+                    indexWriter.addDocuments(entityDocs)
+                }
+            }.also { duration ->
+                logger.info { "Wrote ${entity.name} index in $duration" }
+            }
+        }
     }
-    while (books.hasNext())
-  }
 
-  private fun addEntity(doc: Document) {
-    luceneHelper.getIndexWriter().use { indexWriter ->
-      indexWriter.addDocument(doc)
+    fun bookAdded(book: Book) {
+        addEntity(book.toDocument())
     }
-  }
 
-  private fun updateEntity(entity: LuceneEntity, entityId: String, newDoc: Document) {
-    luceneHelper.getIndexWriter().use { indexWriter ->
-      indexWriter.updateDocument(Term(entity.id, entityId), newDoc)
+    fun bookUpdated(book: Book) {
+        updateEntity(LuceneEntity.Book, book.id.value.toString(), book.toDocument())
     }
-  }
 
-  private fun deleteEntity(entity: LuceneEntity, entityId: String) {
-    luceneHelper.getIndexWriter().use { indexWriter ->
-      indexWriter.deleteDocuments(Term(entity.id, entityId))
+    fun bookUpdated(bookId: UUID) {
+        bookUpdated(bookRepository.findBookById(bookId))
     }
-  }
 
+    fun booksUpdated(bookIds: List<UUID>) {
+        bookIds.forEach { bookUpdated(bookRepository.findBookById(it)) }
+    }
+
+    fun bookDeleted(bookId: UUID) {
+        deleteEntity(LuceneEntity.Book, bookId.toString())
+    }
+
+    fun authorUpdated(authorId: UUID) {
+        var books: Page<Book>
+        do {
+            books = bookRepository.findAuthorBooksByIdNoFilters(authorId, Pageable.ofSize(30))
+            books.forEach { deleteEntity(LuceneEntity.Book, it.id.value.toString()) }
+            books.forEach { addEntity(it.toDocument()) }
+        }
+        while (books.hasNext())
+    }
+
+    private fun addEntity(doc: Document) {
+        luceneHelper.getIndexWriter().use { indexWriter ->
+            indexWriter.addDocument(doc)
+        }
+    }
+
+    private fun updateEntity(entity: LuceneEntity, entityId: String, newDoc: Document) {
+        luceneHelper.getIndexWriter().use { indexWriter ->
+            indexWriter.updateDocument(Term(entity.id, entityId), newDoc)
+        }
+    }
+
+    private fun deleteEntity(entity: LuceneEntity, entityId: String) {
+        luceneHelper.getIndexWriter().use { indexWriter ->
+            indexWriter.deleteDocuments(Term(entity.id, entityId))
+        }
+    }
 }

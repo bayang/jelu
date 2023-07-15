@@ -76,7 +76,7 @@ fun formatLike(input: String): String {
 @Repository
 class BookRepository(
     val readingEventRepository: ReadingEventRepository,
-    val fileManager: FileManager
+    val fileManager: FileManager,
 ) {
 
     fun findAll(bookIds: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
@@ -115,7 +115,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow, user.id.value) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -185,7 +185,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -267,7 +267,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow, user.id.value) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -283,7 +283,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> Author.wrapRow(resultRow) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -299,7 +299,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> Tag.wrapRow(resultRow) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -341,7 +341,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow, user.id.value) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -359,7 +359,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -395,7 +395,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow, user.id.value) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -420,7 +420,7 @@ class BookRepository(
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow) },
             pageable,
-            total
+            total,
         )
     }
 
@@ -581,8 +581,8 @@ class BookRepository(
                     eventType = book.lastReadingEvent,
                     bookId = null,
                     eventDate = null,
-                    startDate = null
-                )
+                    startDate = null,
+                ),
             )
         }
         if (book.borrowed != null) {
@@ -765,7 +765,7 @@ class BookRepository(
         toRead: Boolean?,
         owned: Boolean?,
         borrowed: Boolean?,
-        pageable: Pageable
+        pageable: Pageable,
     ): PageImpl<UserBook> {
         val cols = mutableListOf<Expression<*>>()
         cols.addAll(UserBookTable.columns)
@@ -815,7 +815,7 @@ class BookRepository(
         return PageImpl(
             res,
             pageable,
-            total
+            total,
         )
     }
 
@@ -859,7 +859,7 @@ class BookRepository(
                     if (modified) {
                         it[UserBookTable.modificationDate] = now
                     }
-                }
+                },
             )
     }
 

@@ -59,11 +59,11 @@ enum class ProcessingStatus {
     SAVED,
     PROCESSING,
     IMPORTED,
-    ERROR
+    ERROR,
 }
 enum class ImportSource {
     GOODREADS,
     STORYGRAPH,
     LIBRARYTHING,
-    ISBN_LIST
+    ISBN_LIST,
 }

@@ -37,7 +37,7 @@ class ReadingEventRepository {
         startedBefore: LocalDate?,
         endedAfter: LocalDate?,
         endedBefore: LocalDate?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<ReadingEvent> {
         val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
             .selectAll()
@@ -73,14 +73,14 @@ class ReadingEventRepository {
         return PageImpl(
             ReadingEvent.wrapRows(query).toList(),
             pageable,
-            total
+            total,
         )
     }
 
     fun findYears(
         eventTypes: List<ReadingEventType>?,
         userId: UUID?,
-        bookId: UUID?
+        bookId: UUID?,
     ): List<Int> {
         val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
             .slice(ReadingEventTable.endDate.year())

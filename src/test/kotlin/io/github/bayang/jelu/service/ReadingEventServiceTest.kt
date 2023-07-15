@@ -37,7 +37,7 @@ class ReadingEventServiceTest(
     @Autowired private val bookService: BookService,
     @Autowired private val userService: UserService,
     @Autowired private val jeluProperties: JeluProperties,
-    @Autowired private val readingEventService: ReadingEventService
+    @Autowired private val readingEventService: ReadingEventService,
 ) {
 
     companion object {
@@ -107,7 +107,7 @@ class ReadingEventServiceTest(
             book = null,
             toRead = null,
             percentRead = 50,
-            borrowed = null
+            borrowed = null,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -166,7 +166,7 @@ class ReadingEventServiceTest(
             book = null,
             toRead = null,
             percentRead = 50,
-            borrowed = null
+            borrowed = null,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -225,9 +225,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved.book.id,
                 thirtyDaysBefore,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
 
@@ -278,9 +278,9 @@ class ReadingEventServiceTest(
                     ReadingEventType.CURRENTLY_READING,
                     saved.book.id,
                     thirtyDaysBefore,
-                    thirtyDaysBefore.plus(1, ChronoUnit.DAYS)
+                    thirtyDaysBefore.plus(1, ChronoUnit.DAYS),
                 ),
-                user()
+                user(),
             )
         }
     }
@@ -317,9 +317,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved.book.id,
                 thirtyDaysAfter,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
 
@@ -369,9 +369,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.FINISHED,
                 saved.book.id,
                 thirtyDaysAfter,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.FINISHED, newEvent.eventType)
 
@@ -409,9 +409,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 savedBook.id,
                 dateAfter,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
         nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
@@ -436,9 +436,9 @@ class ReadingEventServiceTest(
                     ReadingEventType.CURRENTLY_READING,
                     null,
                     dateAfter,
-                    null
+                    null,
                 ),
-                user()
+                user(),
             )
         }
         Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
@@ -476,9 +476,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved.book.id,
                 thirtyDaysAfter,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
 
@@ -494,8 +494,8 @@ class ReadingEventServiceTest(
             UpdateReadingEventDto(
                 ReadingEventType.FINISHED,
                 nowInstant().plus(40, ChronoUnit.DAYS),
-                null
-            )
+                null,
+            ),
         )
         Assertions.assertEquals(ReadingEventType.FINISHED, updated.eventType)
         Assertions.assertFalse(updated.creationDate?.isAfter(nowInstant().plus(2, ChronoUnit.HOURS))!!)
@@ -538,9 +538,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved.book.id,
                 thirtyDaysAfter,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
 
@@ -557,8 +557,8 @@ class ReadingEventServiceTest(
                 UpdateReadingEventDto(
                     ReadingEventType.FINISHED,
                     nowInstant().plus(40, ChronoUnit.DAYS),
-                    nowInstant().plus(41, ChronoUnit.DAYS)
-                )
+                    nowInstant().plus(41, ChronoUnit.DAYS),
+                ),
             )
         }
         userbook = bookService.findUserBookById(saved.id!!)
@@ -600,9 +600,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.FINISHED,
                 saved.book.id,
                 thirtyDaysAfter,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.FINISHED, newEvent.eventType)
 
@@ -619,8 +619,8 @@ class ReadingEventServiceTest(
                 UpdateReadingEventDto(
                     ReadingEventType.FINISHED,
                     null,
-                    nowInstant().plus(41, ChronoUnit.DAYS)
-                )
+                    nowInstant().plus(41, ChronoUnit.DAYS),
+                ),
             )
         }
         userbook = bookService.findUserBookById(saved.id!!)
@@ -662,9 +662,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved.book.id,
                 thirtyDaysAfter,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
 
@@ -681,8 +681,8 @@ class ReadingEventServiceTest(
                 UpdateReadingEventDto(
                     ReadingEventType.FINISHED,
                     nowInstant().plus(20, ChronoUnit.DAYS),
-                    null
-                )
+                    null,
+                ),
             )
         }
         userbook = bookService.findUserBookById(saved.id!!)
@@ -724,9 +724,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved.book.id,
                 thirtyDaysAfter,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
 
@@ -743,9 +743,9 @@ class ReadingEventServiceTest(
                 ReadingEventType.CURRENTLY_READING,
                 saved.book.id,
                 threeYearsBefore,
-                null
+                null,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEventBefore.eventType)
 

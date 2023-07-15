@@ -20,23 +20,23 @@ data class WikipediaPageResult(
     val contentUrls: ContentUrlList,
     val thumbnail: PageThumbnail?,
     @JsonAlias("originalimage")
-    val originalImage: PageThumbnail?
+    val originalImage: PageThumbnail?,
 )
 
 data class PageThumbnail(
     val source: String,
     val width: Int,
-    val height: Int
+    val height: Int,
 )
 
 data class ContentUrlList(
     val desktop: ContentUrl,
-    val mobile: ContentUrl
+    val mobile: ContentUrl,
 )
 
 data class ContentUrl(
     val page: String,
     val revisions: String,
     val edit: String,
-    val talk: String
+    val talk: String,
 )

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class PluginInfoHolder(
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) {
 
     companion object {

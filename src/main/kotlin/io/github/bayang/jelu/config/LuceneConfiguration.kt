@@ -12,7 +12,7 @@ import java.nio.file.Paths
 
 @Configuration
 class LuceneConfiguration(
-    private val jeluProperties: JeluProperties
+    private val jeluProperties: JeluProperties,
 ) {
 
     @Bean

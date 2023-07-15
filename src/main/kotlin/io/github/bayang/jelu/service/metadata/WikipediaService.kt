@@ -11,7 +11,7 @@ import javax.annotation.Resource
 
 @Service
 class WikipediaService(
-    @Resource(name = "restClient") val restClient: WebClient
+    @Resource(name = "restClient") val restClient: WebClient,
 ) {
 
     // curl https://fr.wikipedia.org/w/rest.php/v1/search/title\?q\=stefan%20platteau\&limit\=5

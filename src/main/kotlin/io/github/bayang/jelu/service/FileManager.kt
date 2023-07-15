@@ -19,7 +19,7 @@ private val logger = KotlinLogging.logger {}
 
 @Component
 class FileManager(
-    private val jeluProperties: JeluProperties
+    private val jeluProperties: JeluProperties,
 ) {
 
     @Scheduled(cron = "\${files.metadataImportCleanCron:0 0 */6 * * *}")

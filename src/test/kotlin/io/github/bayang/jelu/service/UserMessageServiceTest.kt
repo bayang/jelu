@@ -19,7 +19,7 @@ import org.springframework.data.domain.Pageable
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserMessageServiceTest(
     @Autowired private val userMessageService: UserMessageService,
-    @Autowired private val userService: UserService
+    @Autowired private val userService: UserService,
 ) {
 
     @BeforeAll
@@ -40,9 +40,9 @@ class UserMessageServiceTest(
             CreateUserMessageDto(
                 "this is a message",
                 "/test/myfile.csv",
-                MessageCategory.INFO
+                MessageCategory.INFO,
             ),
-            user()
+            user(),
         )
         Assertions.assertEquals("this is a message", saved.message)
         Assertions.assertEquals(MessageCategory.INFO, saved.category)

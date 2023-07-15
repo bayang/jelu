@@ -50,7 +50,7 @@ class ReviewRepository {
         visibility: Visibility?,
         after: LocalDate?,
         before: LocalDate?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<Review> {
         val query = ReviewTable.selectAll()
         if (userId != null) {
@@ -77,7 +77,7 @@ class ReviewRepository {
         return PageImpl(
             Review.wrapRows(query).toList(),
             pageable,
-            total
+            total,
         )
     }
 

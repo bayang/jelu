@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono
 interface IMetaDataProvider {
     fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
-        config: Map<String, String> = mapOf()
+        config: Map<String, String> = mapOf(),
     ): Mono<MetadataDto>?
 
     fun name(): String

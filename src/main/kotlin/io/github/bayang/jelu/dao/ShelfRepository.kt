@@ -28,7 +28,7 @@ class ShelfRepository {
     fun find(
         user: User?,
         name: String?,
-        targetId: UUID?
+        targetId: UUID?,
     ): List<Shelf> {
         val query = ShelfTable.selectAll()
         user?.let {
@@ -44,7 +44,7 @@ class ShelfRepository {
     }
 
     fun findById(
-        id: UUID
+        id: UUID,
     ): Shelf = Shelf[id]
 
     fun delete(shelfId: UUID) {

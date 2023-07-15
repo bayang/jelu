@@ -14,7 +14,7 @@ private val logger = KotlinLogging.logger {}
 class AppLifecycleAware(
     private val properties: JeluProperties,
     private val luceneHelper: LuceneHelper,
-    private val searchIndexService: SearchIndexService
+    private val searchIndexService: SearchIndexService,
 ) {
 
     @EventListener

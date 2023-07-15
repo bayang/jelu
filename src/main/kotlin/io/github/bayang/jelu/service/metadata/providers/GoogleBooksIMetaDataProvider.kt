@@ -18,14 +18,14 @@ private val logger = KotlinLogging.logger {}
 @Service
 class GoogleBooksIMetaDataProvider(
     @Resource(name = "restClient") private val restClient: WebClient,
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) : IMetaDataProvider {
 
     private val _name = "google"
 
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
-        config: Map<String, String>
+        config: Map<String, String>,
     ): Mono<MetadataDto>? {
         val googleProviderApiKey = getGoogleProviderApiKey()
         if (googleProviderApiKey.isNullOrBlank() || metadataRequestDto.isbn.isNullOrBlank()) {
@@ -47,7 +47,7 @@ class GoogleBooksIMetaDataProvider(
                             ObjectMapper()
                                 .readTree(bodyString)
                                 .get("items")
-                                .get(0)
+                                .get(0),
                         )
                     }
                 } else {
@@ -78,7 +78,7 @@ class GoogleBooksIMetaDataProvider(
             image = volumeInfo.get("imageLinks").get("thumbnail").asText(),
             language = volumeInfo.get("language").asText(),
             publishedDate = volumeInfo.get("publishedDate").asText(),
-            summary = node.get("searchInfo").get("textSnippet").asText()
+            summary = node.get("searchInfo").get("textSnippet").asText(),
         )
     }
 }

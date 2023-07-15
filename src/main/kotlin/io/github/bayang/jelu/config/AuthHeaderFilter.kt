@@ -21,13 +21,13 @@ private val LOGGER = KotlinLogging.logger {}
 @ConditionalOnProperty(name = ["jelu.auth.proxy.enabled"], havingValue = "true", matchIfMissing = false)
 class AuthHeaderFilter(
     private val userService: UserService,
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val headerName = properties.auth.proxy.header
         val headerAuth: String? = request.getHeader(headerName)
@@ -44,7 +44,7 @@ class AuthHeaderFilter(
             val authentication = UsernamePasswordAuthenticationToken(
                 user,
                 null,
-                user.authorities
+                user.authorities,
             )
             authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
             SecurityContextHolder.getContext().authentication = authentication

@@ -43,7 +43,7 @@ class CsvExportService(
     private val bookService: BookService,
     private val properties: JeluProperties,
     private val readingEventService: ReadingEventService,
-    private val userMessageService: UserMessageService
+    private val userMessageService: UserMessageService,
 ) {
 
     /**
@@ -68,9 +68,9 @@ class CsvExportService(
                 CreateUserMessageDto(
                     "Export started at $nowPretty",
                     null,
-                    MessageCategory.INFO
+                    MessageCategory.INFO,
                 ),
-                user
+                user,
             )
         } catch (e: Exception) {
             logger.error(e) { "failed to save message for $destFileName export" }
@@ -103,9 +103,9 @@ class CsvExportService(
                 CreateUserMessageDto(
                     "Export completed : $msg",
                     "$EXPORTS_PREFIX/$destFileName",
-                    MessageCategory.SUCCESS
+                    MessageCategory.SUCCESS,
                 ),
-                user
+                user,
             )
         } catch (e: Exception) {
             logger.error(e) { "failed to save message for $destFileName export" }
@@ -130,7 +130,7 @@ class CsvExportService(
                 if (it.book.isbn13.isNullOrBlank()) "" else it.book.isbn13,
                 if (it.owned == true) "true" else "",
                 listOfDatesForEvent(it, userId, ReadingEventType.DROPPED),
-                listOfDatesForEvent(it, userId, ReadingEventType.CURRENTLY_READING)
+                listOfDatesForEvent(it, userId, ReadingEventType.CURRENTLY_READING),
             )
         }
     }
@@ -156,7 +156,7 @@ class CsvExportService(
     fun toDateString(instant: Instant?): String {
         return if (instant != null) {
             LocalDate.ofInstant(instant, ZoneId.systemDefault()).format(
-                goodreadsDateFormatter
+                goodreadsDateFormatter,
             )
         } else {
             ""

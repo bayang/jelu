@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 class DummyUser(private val startupPassword: String) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> = mutableSetOf(
-        SimpleGrantedAuthority(ROLE_INITIAL_SETUP)
+        SimpleGrantedAuthority(ROLE_INITIAL_SETUP),
     )
 
     override fun getPassword(): String = startupPassword

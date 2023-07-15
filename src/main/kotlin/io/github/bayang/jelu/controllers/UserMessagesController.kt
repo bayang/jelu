@@ -32,7 +32,7 @@ private val logger = KotlinLogging.logger {}
 @RequestMapping("/api/v1")
 class UserMessagesController(
     private val userMessageService: UserMessageService,
-    private val properties: JeluProperties
+    private val properties: JeluProperties,
 ) {
 
     @GetMapping(path = ["/user-messages"])
@@ -40,7 +40,7 @@ class UserMessagesController(
         @RequestParam(name = "messageCategories", required = false) messageCategories: List<MessageCategory>?,
         @RequestParam(name = "read", required = false) read: Boolean?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
-        principal: Authentication
+        principal: Authentication,
     ): Page<UserMessageDto> = userMessageService.find((principal.principal as JeluUser).user, read, messageCategories, pageable)
 
     @PutMapping(path = ["/user-messages/{id}"])
@@ -49,7 +49,7 @@ class UserMessagesController(
         messageId: UUID,
         @RequestBody
         @Valid
-        updateDto: UpdateUserMessageDto
+        updateDto: UpdateUserMessageDto,
     ): UserMessageDto {
         return userMessageService.update(messageId, updateDto)
     }
@@ -59,7 +59,7 @@ class UserMessagesController(
     fun createMessage(
         @RequestBody @Valid
         createUserMessageDto: CreateUserMessageDto,
-        principal: Authentication
+        principal: Authentication,
     ): UserMessageDto {
         return userMessageService.save(createUserMessageDto, (principal.principal as JeluUser).user)
     }

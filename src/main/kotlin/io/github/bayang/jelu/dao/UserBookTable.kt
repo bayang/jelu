@@ -57,7 +57,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             personalNotes = this.personalNotes,
             percentRead = this.percentRead,
             borrowed = this.borrowed,
-            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
+            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
         )
     fun toUserBookLightDto(): UserBookLightDto =
         UserBookLightDto(
@@ -72,7 +72,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             lastReadingEventDate = this.lastReadingEventDate,
             percentRead = this.percentRead,
             borrowed = this.borrowed,
-            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() }
+            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
         )
     fun toUserBookWthoutEventsAndUserDto(): UserBookWithoutEventsAndUserDto =
         UserBookWithoutEventsAndUserDto(
@@ -86,7 +86,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             lastReadingEvent = this.lastReadingEvent,
             lastReadingEventDate = this.lastReadingEventDate,
             percentRead = this.percentRead,
-            borrowed = this.borrowed
+            borrowed = this.borrowed,
         )
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto =
         UserBookWithoutEventsDto(
@@ -99,6 +99,6 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             personalNotes = this.personalNotes,
             user = this.user.toUserDto(),
             percentRead = this.percentRead,
-            borrowed = this.borrowed
+            borrowed = this.borrowed,
         )
 }

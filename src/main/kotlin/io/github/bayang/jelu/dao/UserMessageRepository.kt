@@ -38,7 +38,7 @@ class UserMessageRepository {
         user: User,
         read: Boolean?,
         messageCategories: List<MessageCategory>?,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<UserMessage> {
         val query = UserMessageTable.join(UserTable, JoinType.LEFT)
             .select { UserMessageTable.user eq user.id }
@@ -56,7 +56,7 @@ class UserMessageRepository {
         return PageImpl(
             res,
             pageable,
-            total
+            total,
         )
     }
 

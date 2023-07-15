@@ -26,7 +26,7 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
         login = this.login,
         password = "****",
         isAdmin = this.isAdmin,
-        provider = this.provider
+        provider = this.provider,
     )
 
     companion object : UUIDEntityClass<User>(UserTable)
@@ -42,5 +42,5 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
 enum class Provider {
     LDAP,
     JELU_DB,
-    PROXY
+    PROXY,
 }

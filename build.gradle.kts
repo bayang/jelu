@@ -12,10 +12,11 @@ plugins {
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("com.github.node-gradle.node") version "3.5.1"
-    id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    version.set("0.50.0")
     outputToConsole.set(true)
     coloredOutput.set(true)
     disabledRules.set(setOf("no-wildcard-imports", "parameter-list-wrapping"))
@@ -101,7 +102,7 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf(
             "-Xjsr305=strict",
-            "-opt-in=kotlin.time.ExperimentalTime"
+            "-opt-in=kotlin.time.ExperimentalTime",
         )
         jvmTarget = "11"
     }

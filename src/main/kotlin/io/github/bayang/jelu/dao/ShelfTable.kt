@@ -30,6 +30,6 @@ class Shelf(id: EntityID<UUID>) : UUIDEntity(id) {
         name = this.name,
         creationDate = this.creationDate,
         modificationDate = this.modificationDate,
-        targetId = this.targetId
+        targetId = this.targetId,
     )
 }
