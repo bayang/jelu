@@ -23,6 +23,8 @@ import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.fromBookCreateDto
+import io.github.bayang.jelu.search.LuceneEntity
+import io.github.bayang.jelu.search.LuceneHelper
 import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.github.bayang.jelu.utils.imageName
 import io.github.bayang.jelu.utils.resizeImage
@@ -30,6 +32,7 @@ import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -49,8 +52,32 @@ class BookService(
     private val properties: JeluProperties,
     private val downloadService: DownloadService,
     private val fileManager: FileManager,
-    private val shelfService: ShelfService
+    private val shelfService: ShelfService,
+    private val searchIndexService: SearchIndexService,
+    private val luceneHelper: LuceneHelper
 ) {
+
+    @Transactional
+    fun findAll(
+        query: String?,
+        pageable: Pageable,
+        user: User,
+        libraryFilter: LibraryFilter
+    ): Page<BookDto> {
+        val entitiesIds = luceneHelper.searchEntitiesIds(query, LuceneEntity.Book)
+        // we had a query but nothing matched, so don't return anything
+        // for empty queries however, even if entitiesIds is empty, just return everything
+        // and use other filters to narrow the results
+        if (!query.isNullOrBlank() && entitiesIds.isNullOrEmpty()) {
+            return PageImpl(
+                listOf(),
+                pageable,
+                0
+            )
+        } else {
+            return bookRepository.findAll(entitiesIds, pageable, user, libraryFilter).map { it.toBookDto() }
+        }
+    }
 
     @Transactional
     fun findAll(
@@ -83,14 +110,22 @@ class BookService(
      * Image not updated, to add or update an image call the variant which accepts a MultiPartFile
      */
     @Transactional
-    fun update(bookId: UUID, book: BookUpdateDto): BookDto = bookRepository.update(bookId, book).toBookDto()
+    fun update(bookId: UUID, book: BookUpdateDto): BookDto {
+        val res = bookRepository.update(bookId, book)
+        searchIndexService.bookUpdated(res)
+        return res.toBookDto()
+    }
 
     // call saveImages in case image url is set ?
     /**
      * Image not updated, to add or update an image call the variant which accepts a MultiPartFile
      */
     @Transactional
-    fun update(userBookId: UUID, book: UserBookUpdateDto): UserBookLightDto = bookRepository.update(userBookId, book).toUserBookLightDto()
+    fun update(userBookId: UUID, book: UserBookUpdateDto): UserBookLightDto {
+        val res = bookRepository.update(userBookId, book)
+        searchIndexService.bookUpdated(res.book)
+        return res.toUserBookLightDto()
+    }
 
     @Transactional
     fun update(userBookId: UUID, book: UserBookUpdateDto, file: MultipartFile?): UserBookLightDto {
@@ -131,15 +166,17 @@ class BookService(
                 Files.deleteIfExists(backup.toPath())
             }
         }
+        searchIndexService.bookUpdated(updated.book)
         return updated.toUserBookLightDto()
     }
 
     @Transactional
     fun save(userBook: CreateUserBookDto, user: User, file: MultipartFile?): UserBookLightDto {
+        var newBook = false
         val book: Book = if (userBook.book.id != null) {
             bookRepository.update(userBook.book.id, fromBookCreateDto(userBook.book))
         } else {
-            bookRepository.save(userBook.book)
+            bookRepository.save(userBook.book).also { newBook = true }
         }
         val created: UserBook = bookRepository.save(book, user, userBook)
         if (userBook.lastReadingEvent != null) {
@@ -179,6 +216,11 @@ class BookService(
                 }
             }
         }
+        if (newBook) {
+            searchIndexService.bookAdded(book)
+        } else {
+            searchIndexService.bookUpdated(book)
+        }
         return created.toUserBookLightDto()
     }
 
@@ -186,6 +228,7 @@ class BookService(
     fun save(book: BookCreateDto, file: MultipartFile?): BookDto {
         val saved: Book = bookRepository.save(book)
         saved.image = saveImages(file, saved.title, saved.id.toString(), book.image, properties.files.images)
+        searchIndexService.bookAdded(saved)
         return saved.toBookDto()
     }
 
@@ -243,12 +286,15 @@ class BookService(
 
     // call saveImages in case image url is set
     @Transactional
-    fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto = bookRepository.updateAuthor(authorId, author).toAuthorDto()
+    fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto {
+        val res = bookRepository.updateAuthor(authorId, author)
+        searchIndexService.authorUpdated(authorId)
+        return res.toAuthorDto()
+    }
 
     @Transactional
     fun updateAuthor(authorId: UUID, author: AuthorUpdateDto, file: MultipartFile?): AuthorDto {
         var updated: Author = bookRepository.updateAuthor(authorId, author)
-        // val updated: UserBook = bookRepository.update(userBookId, book)
         val previousImage: String? = updated.image
         var skipSave = false
         // no multipart image and url image field is empty in udate dto
@@ -276,6 +322,7 @@ class BookService(
                 Files.deleteIfExists(backup.toPath())
             }
         }
+        searchIndexService.authorUpdated(authorId)
         return updated.toAuthorDto()
     }
 
@@ -318,16 +365,19 @@ class BookService(
     @Transactional
     fun deleteBookById(bookId: UUID) {
         bookRepository.deleteBookById(bookId)
+        searchIndexService.bookDeleted(bookId)
     }
 
     @Transactional
     fun deleteTagFromBook(bookId: UUID, tagId: UUID) {
         bookRepository.deleteTagFromBook(bookId, tagId)
+        searchIndexService.bookUpdated(bookId)
     }
 
     @Transactional
     fun deleteTagsFromBook(bookId: UUID, tagIds: List<UUID>) {
         bookRepository.deleteTagsFromBook(bookId, tagIds)
+        searchIndexService.bookUpdated(bookId)
     }
 
     @Transactional
@@ -342,7 +392,15 @@ class BookService(
                 }
             }
         }
+        var books: Page<Book>
+        val bookIds: MutableList<UUID> = mutableListOf()
+        do {
+            books = bookRepository.findTagBooksByIdNoFilters(tagId, Pageable.ofSize(30))
+            books.forEach { bookIds.add(it.id.value) }
+        }
+        while (books.hasNext())
         bookRepository.deleteTagById(tagId)
+        searchIndexService.booksUpdated(bookIds)
     }
 
     /**
@@ -352,6 +410,7 @@ class BookService(
     @Transactional
     fun deleteAuthorFromBook(bookId: UUID, authorId: UUID) {
         bookRepository.deleteAuthorFromBook(bookId, authorId)
+        searchIndexService.bookUpdated(bookId)
     }
 
     /**
@@ -361,11 +420,20 @@ class BookService(
     @Transactional
     fun deleteTranslatorFromBook(bookId: UUID, translatorId: UUID) {
         bookRepository.deleteTranslatorFromBook(bookId, translatorId)
+        searchIndexService.bookUpdated(bookId)
     }
 
     @Transactional
     fun deleteAuthorById(authorId: UUID) {
+        var books: Page<Book>
+        val bookIds: MutableList<UUID> = mutableListOf()
+        do {
+            books = bookRepository.findAuthorBooksByIdNoFilters(authorId, Pageable.ofSize(30))
+            books.forEach { bookIds.add(it.id.value) }
+        }
+        while (books.hasNext())
         bookRepository.deleteAuthorById(authorId)
+        searchIndexService.booksUpdated(bookIds)
     }
 
     @Transactional
@@ -375,12 +443,18 @@ class BookService(
 
     @Transactional
     fun bulkEditUserbooks(userBookBulkUpdateDto: UserBookBulkUpdateDto): Int {
-        return bookRepository.bulkEditUserbooks(userBookBulkUpdateDto)
+        val res = bookRepository.bulkEditUserbooks(userBookBulkUpdateDto)
+        if (!userBookBulkUpdateDto.removeTags.isNullOrEmpty() || !userBookBulkUpdateDto.addTags.isNullOrEmpty()) {
+            searchIndexService.booksUpdated(userBookBulkUpdateDto.ids)
+        }
+        return res
     }
 
     @Transactional
     fun addTagsToBook(bookId: UUID, tagIds: List<UUID>): Int {
-        return bookRepository.addTagsToBook(bookId, tagIds)
+        val res = bookRepository.addTagsToBook(bookId, tagIds)
+        searchIndexService.bookUpdated(bookId)
+        return res
     }
 
     @Transactional
@@ -389,6 +463,7 @@ class BookService(
         val size = 30
         val author = bookRepository.findAuthorsById(authorId)
         val authorToKeepDto = author.toAuthorDto()
+        val otherAuthorBooksIds: MutableList<UUID> = mutableListOf()
         do {
             val booksPage: Page<Book> = bookRepository.findAuthorBooksById(otherId, user, PageRequest.of(pageNum, size))
             if (booksPage.hasContent()) {
@@ -411,10 +486,14 @@ class BookService(
                     }
                     dto.translators = filteredTranslators
                     bookRepository.update(book, dto)
+                    otherAuthorBooksIds.add(book.id.value)
                 }
             }
         } while (booksPage.hasNext())
         bookRepository.deleteAuthorById(otherId)
-        return bookRepository.updateAuthor(authorId, authorUpdateDto).toAuthorDto()
+        searchIndexService.booksUpdated(otherAuthorBooksIds)
+        val res = bookRepository.updateAuthor(authorId, authorUpdateDto)
+        searchIndexService.authorUpdated(res.id.value)
+        return res.toAuthorDto()
     }
 }

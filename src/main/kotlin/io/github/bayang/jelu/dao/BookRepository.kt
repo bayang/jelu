@@ -79,6 +79,116 @@ class BookRepository(
     val fileManager: FileManager
 ) {
 
+    fun findAll(bookIds: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+        val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
+            .slice(BookTable.id)
+            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .withDistinct()
+        // required to avoir ambiguous column name "author.id" in joins below
+        val translatorsAlias = AuthorTable.alias("trn")
+        val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
+            .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
+            .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
+            .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
+            .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
+            .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
+            .slice(BookTable.columns)
+            .selectAll()
+            .withDistinct()
+        if (!bookIds.isNullOrEmpty()) {
+            val uuids = bookIds.map { UUID.fromString(it) }
+            query.andWhere { BookTable.id inList uuids }
+        }
+        if (filter == LibraryFilter.ONLY_USER_BOOKS) {
+            // only books where user has an userbook
+            query.andWhere { UserBookTable.user eq user.id }
+        } else if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
+            // only books where there are no userbooks or only other users have userbooks
+            query.andWhere { BookTable.id notInSubQuery booksWithSameIdAndUserHasUserbook }
+        }
+
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            pageable,
+            total
+        )
+    }
+
+    fun findAllNoFilters(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable): Page<Book> {
+        // required to avoir ambiguous column name "author.id" in joins below
+        val translatorsAlias = AuthorTable.alias("trn")
+        val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
+            .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
+            .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
+            .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
+            .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
+            .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
+            .slice(BookTable.columns)
+            .selectAll()
+            .withDistinct()
+
+        if (!title?.trim().isNullOrBlank()) {
+            query.andWhere { BookTable.title like "%$title%" }
+        }
+        if (!isbn10?.trim().isNullOrBlank()) {
+            query.andWhere { BookTable.isbn10 eq isbn10 }
+        }
+        if (!isbn13?.trim().isNullOrBlank()) {
+            query.andWhere { BookTable.isbn13 eq isbn13 }
+        }
+        if (!series?.trim().isNullOrBlank()) {
+            query.andWhere { BookTable.series like "%$series%" }
+        }
+        if (!authors.isNullOrEmpty()) {
+            var first = true
+            authors.forEach { author: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { AuthorTable.name like(formatLike(author)) }
+                } else {
+                    query.orWhere { AuthorTable.name like(formatLike(author)) }
+                }
+            }
+        }
+        if (!translators.isNullOrEmpty()) {
+            var first = true
+            translators.forEach { translator: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
+                } else {
+                    query.orWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
+                }
+            }
+        }
+        if (!tags.isNullOrEmpty()) {
+            var first = true
+            tags.forEach { tag: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { TagTable.name like (formatLike(tag)) }
+                } else {
+                    query.orWhere { TagTable.name like (formatLike(tag)) }
+                }
+            }
+        }
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapRow(resultRow) },
+            pageable,
+            total
+        )
+    }
+
     fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
@@ -235,6 +345,24 @@ class BookRepository(
         )
     }
 
+    fun findTagBooksByIdNoFilters(tagId: UUID, pageable: Pageable): Page<Book> {
+        val query = BookTable.join(BookTags, JoinType.LEFT)
+            .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .slice(BookTable.columns)
+            .select { BookTags.tag eq tagId }
+
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapRow(resultRow) },
+            pageable,
+            total
+        )
+    }
+
     fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
         logger.trace { "role $role" }
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
@@ -271,6 +399,31 @@ class BookRepository(
         )
     }
 
+    fun findAuthorBooksByIdNoFilters(authorId: UUID, pageable: Pageable, role: Role = Role.ANY): Page<Book> {
+        logger.trace { "role $role" }
+        val query = BookTable.join(BookAuthors, JoinType.LEFT)
+            .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.book, otherColumn = BookTable.id)
+            .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .slice(BookTable.columns)
+            .select {
+                when (role) {
+                    Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId)
+                    Role.AUTHOR -> BookAuthors.author eq authorId
+                    Role.TRANSLATOR -> BookTranslators.translator eq authorId
+                }
+            }
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapRow(resultRow) },
+            pageable,
+            total
+        )
+    }
+
     fun wrapRow(resultRow: ResultRow, userId: UUID): Book {
         val e = Book.wrapRow(resultRow)
         val userbook = e.userBooks.firstOrNull { u -> u.user.id.value == userId }
@@ -278,6 +431,10 @@ class BookRepository(
             e.userBookId = userbook.id.value
         }
         return e
+    }
+
+    fun wrapRow(resultRow: ResultRow): Book {
+        return Book.wrapRow(resultRow)
     }
 
     fun filterRow(resultRow: ResultRow): Boolean {

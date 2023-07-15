@@ -89,7 +89,7 @@ const search = () => {
   console.log(searchQuery.value)
   if (StringUtils.isNotBlank(searchQuery.value)) {
     showAdvanced.value = false
-    router.push({ path: '/search', query: { title: searchQuery.value } })
+    router.push({ path: '/search', query: { q: searchQuery.value } })
   }
 }
 

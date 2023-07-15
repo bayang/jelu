@@ -688,7 +688,7 @@ class DataService {
     }
   }
 
-  findBooks = async (title?: string, isbn10?: string, isbn13?: string,
+  findBooksDetailed = async (title?: string, isbn10?: string, isbn13?: string,
     series?: string, authors?: Array<string>, translators?: Array<string>, 
     tags?: Array<string>, page?: number, size?: number, sort?: string,
     libraryFilter?: LibraryFilter) => {
@@ -702,6 +702,35 @@ class DataService {
           authors: authors,
           translators: translators,
           tags: tags,
+          page: page,
+          size: size,
+          sort: sort,
+          libraryFilter: libraryFilter
+        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
+      });
+      console.log("called find books")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error find books " + (error as AxiosError).code)
+      throw new Error("error find books " + error)
+    }
+  }
+
+  findBooks = async (query?: string, page?: number, size?: number, sort?: string,
+    libraryFilter?: LibraryFilter) => {
+    try {
+      const response = await this.apiClient.get<Page<Book>>(`${this.API_BOOK}`, {
+        params: {
+          q: query,
           page: page,
           size: size,
           sort: sort,
@@ -1429,7 +1458,7 @@ class DataService {
   checkIsbnExists = async (isbn10: string|undefined, isbn13: string|undefined) => {
     console.log(isbn10 + " " + isbn13)
     if (StringUtils.isNotBlank(isbn10)) {
-      const res = await this.findBooks(undefined, isbn10, undefined)
+      const res = await this.findBooks(`isbn:${isbn10}`)
       console.log(res.empty)
       if (!res.empty) {
         return res.content[0]
@@ -1437,7 +1466,7 @@ class DataService {
     }
     if (StringUtils.isNotBlank(isbn13)) {
       console.log(isbn13)
-      const res = await this.findBooks(undefined, undefined, isbn13)
+      const res = await this.findBooks(`isbn:${isbn13}`)
       console.log(res.empty)
       if (!res.empty) {
         return res.content[0]

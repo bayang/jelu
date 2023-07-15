@@ -19,7 +19,8 @@ data class JeluProperties(
         Ldap(),
         Proxy()
     ),
-    val metadataProviders: List<MetaDataProvider>?
+    val metadataProviders: List<MetaDataProvider>?,
+    val lucene: Lucene = Lucene(indexAnalyzer = IndexAnalyzer())
 ) {
 
     data class MetaDataProvider(
@@ -75,5 +76,21 @@ data class JeluProperties(
         var enabled: Boolean = false,
         val adminName: String = "",
         val header: String = "X-Authenticated-User"
+    )
+
+    data class IndexAnalyzer(
+        @get:Positive
+        var minGram: Int = 3,
+        @get:Positive
+        var maxGram: Int = 10,
+        var preserveOriginal: Boolean = true
+    )
+
+    data class Lucene(
+        @get:NotBlank
+        var dataDirectory: String = "",
+
+        var indexAnalyzer: IndexAnalyzer
+
     )
 }

@@ -20,28 +20,7 @@ const { t } = useI18n({
 
 useTitle('Jelu | Search')
 
-const titleQuery: Ref<string|undefined> = useRouteQuery('title', undefined)
-const isbn10Query: Ref<string|undefined> = useRouteQuery('isbn10', undefined)
-const isbn13Query: Ref<string|undefined> = useRouteQuery('isbn13', undefined)
-const seriesQuery: Ref<string|undefined> = useRouteQuery('series', undefined)
-const authorsQuery: Ref<Array<string>> = useRouteQuery('authors', [])
-const translatorsQuery: Ref<Array<string>> = useRouteQuery('translators', [])
-const tagsQuery: Ref<Array<string>> = useRouteQuery('tags', [])
-
-const tagsArrayString: Ref<string> = ref("")
-if (tagsQuery.value.length > 0) {
-  tagsArrayString.value = tagsQuery.value.join(",")
-}
-
-const authorsArrayString: Ref<string> = ref("")
-if (authorsQuery.value.length > 0) {
-  authorsArrayString.value = authorsQuery.value.join(",")
-}
-
-const translatorsArrayString: Ref<string> = ref("")
-if (translatorsQuery.value.length > 0) {
-  translatorsArrayString.value = translatorsQuery.value.join(",")
-}
+const searchQuery: Ref<string|undefined> = useRouteQuery('q', undefined)
 
 const books: Ref<Array<Book>> = ref([]);
 
@@ -61,10 +40,7 @@ const search = () => {
     progress.value = true
     updatePageLoading(true)
       dataService.findBooks(
-        titleQuery.value, 
-      isbn10Query.value, isbn13Query.value, 
-      seriesQuery.value, authorsQuery.value,
-      translatorsQuery.value,tagsQuery.value,
+        searchQuery.value, 
       pageAsNumber.value - 1, perPage.value, 
       sortQuery.value, libraryFilter.value
       )
@@ -88,28 +64,12 @@ const search = () => {
     })
 }
 
-const arrayParam = (input: string) => {
-  return input.split(",")
-}
-
 watch([page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(page.value)
   console.log(newVal + " " + oldVal)
   if (newVal !== oldVal) {
     search()
   }
-})
-
-watch(authorsArrayString, (newVal, oldVal) => {
-  authorsQuery.value = arrayParam(authorsArrayString.value)
-})
-
-watch(translatorsArrayString, (newVal, oldVal) => {
-  translatorsQuery.value = arrayParam(translatorsArrayString.value)
-})
-
-watch(tagsArrayString, (newVal, oldVal) => {
-  tagsQuery.value = arrayParam(tagsArrayString.value)
 })
 
 const convertedBooks = computed(() => books.value?.map(b => ObjectUtils.toUserBook(b)))
@@ -119,13 +79,7 @@ function modalClosed() {
   search()
 }
 
-if (titleQuery.value != null || 
-  isbn10Query.value != null || 
-  isbn13Query.value != null ||
-  seriesQuery.value != null ||
-  authorsQuery.value.length > 0 ||
-  translatorsQuery.value.length > 0 ||
-  tagsQuery.value.length > 0) {
+if (searchQuery.value != null) {
     search()
   }
 
@@ -246,8 +200,8 @@ if (titleQuery.value != null ||
       <div class="basis-full">
         <o-field class="title-input">
           <o-input
-            v-model="titleQuery"
-            :placeholder="t('labels.search_title')" 
+            v-model="searchQuery"
+            :placeholder="t('labels.search_query')" 
             type="search"
             icon="magnify" 
             icon-clickable
@@ -264,82 +218,8 @@ if (titleQuery.value != null ||
           />
         </o-field>
       </div>
-      <div class="flex flex-wrap justify-center justify-items-center search-form-extended">
-        <div class="search-form-extended-input">
-          <o-input
-            v-model="isbn10Query"
-            :placeholder="t('book.isbn10')"
-            type="search"
-            icon="magnify"
-            icon-clickable
-            icon-pack="mdi"
-            class="input focus:input-accent"
-            @keyup.enter="search"
-          />
-        </div>
-        <div class="search-form-extended-input">
-          <o-input
-            v-model="isbn13Query"
-            :placeholder="t('book.isbn13')"
-            type="search"
-            icon="magnify" 
-            icon-clickable
-            icon-pack="mdi"
-            class="input focus:input-accent"
-            @keyup.enter="search"
-          />
-        </div>
-        <div class="search-form-extended-input">
-          <o-input
-            v-model="authorsArrayString"
-            :placeholder="t('book.author', 2)"
-            type="search"
-            icon="magnify" 
-            icon-clickable
-            icon-pack="mdi"
-            class="input focus:input-accent"
-            @keyup.enter="search"
-          />
-        </div>
-        <div class="search-form-extended-input">
-          <o-input
-            v-model="translatorsArrayString"
-            :placeholder="t('book.translator', 2)"
-            type="search"
-            icon="magnify" 
-            icon-clickable
-            icon-pack="mdi"
-            class="input focus:input-accent"
-            @keyup.enter="search"
-          />
-        </div>
-        <div class="search-form-extended-input">
-          <o-input
-            v-model="tagsArrayString"
-            :placeholder="t('book.tag', 2)"
-            type="search"
-            icon="magnify" 
-            icon-clickable
-            icon-pack="mdi"
-            class="input focus:input-accent"
-            @keyup.enter="search"
-          />
-        </div>
-        <div class="search-form-extended-input">
-          <o-input
-            v-model="seriesQuery"
-            :placeholder="t('book.series')"
-            type="search"
-            icon="magnify" 
-            icon-clickable
-            icon-pack="mdi"
-            class="input focus:input-accent"
-            @keyup.enter="search"
-          />
-        </div>
       </div>
     </div>
-  </div>
   <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1 my-4">
     <div
       v-for="book in convertedBooks"

@@ -84,6 +84,12 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-security:$springdocVersion")
     implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")
     implementation("org.springdoc:springdoc-openapi-data-rest:$springdocVersion")
+
+    val luceneVersion = "9.7.0"
+    implementation("org.apache.lucene:lucene-core:$luceneVersion")
+    implementation("org.apache.lucene:lucene-analysis-common:$luceneVersion")
+    implementation("org.apache.lucene:lucene-queryparser:$luceneVersion")
+    implementation("org.apache.lucene:lucene-backward-codecs:$luceneVersion")
 }
 
 tasks.withType<Test> {
@@ -93,7 +99,10 @@ tasks.withType<Test> {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+        freeCompilerArgs = listOf(
+            "-Xjsr305=strict",
+            "-opt-in=kotlin.time.ExperimentalTime"
+        )
         jvmTarget = "11"
     }
 }
