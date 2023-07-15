@@ -93,7 +93,8 @@
         "add": "Přidat",
         "add_to_my_books": "Zatím není ve vašich knihách, klikněte pro přidání",
         "add_translator": "Přidat překladatele",
-        "reading_list_from_name": "Reading list from {name}"
+        "reading_list_from_name": "Reading list from {name}",
+        "search_query": "Enter search query..."
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
