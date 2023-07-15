@@ -93,7 +93,9 @@
         "add": "Dodaj",
         "add_to_my_books": "Nie jest jeszcze w Twoich książkach, naciśnij, aby dodać",
         "add_translator": "Dodaj tłumacza",
-        "reading_list_from_name": "Reading list from {name}"
+        "reading_list_from_name": "Reading list from {name}",
+        "search_query": "Enter search query...",
+        "search_documentation": "Go to search documentation"
     },
     "settings": {
         "pick_language": "Wybierz język",

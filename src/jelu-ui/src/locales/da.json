@@ -93,7 +93,9 @@
         "add": "Tilføj",
         "add_to_my_books": "Endnu ikke i dine bøger. Tryk for at tilføje",
         "add_translator": "Tilføj en oversætter",
-        "reading_list_from_name": "Reading list from {name}"
+        "reading_list_from_name": "Reading list from {name}",
+        "search_query": "Enter search query...",
+        "search_documentation": "Go to search documentation"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -298,7 +300,7 @@
         "visibility": "synlighed",
         "private": "privat",
         "public": "offentlig",
-        "review": "anmeldelse",
+        "review": "anmeldelse | anmeldelser",
         "rating": "vurdering",
         "my_reviews": "Mine anmeldelser",
         "all_reviews": "Alle anmeldelser",
