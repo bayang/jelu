@@ -1,3 +1,15 @@
+## [0.41.0](https://github.com/bayang/jelu/compare/v0.40.0...v0.41.0) (2023-07-15)
+
+
+### Features
+
+* add full text search ([ec9f714](https://github.com/bayang/jelu/commit/ec9f714cab15ea80426c9b7ca556e9ac03537a27))
+
+
+### Bug Fixes
+
+* ktlint upgrade ([5430a7e](https://github.com/bayang/jelu/commit/5430a7e84552ab23dbf59bec368c93ae81566f23))
+
 ## [0.40.0](https://github.com/bayang/jelu/compare/v0.39.0...v0.40.0) (2023-07-07)
 
 
