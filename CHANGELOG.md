@@ -1,3 +1,10 @@
+### [0.41.1](https://github.com/bayang/jelu/compare/v0.41.0...v0.41.1) (2023-07-15)
+
+
+### Bug Fixes
+
+* add link to search docs ([1545fe3](https://github.com/bayang/jelu/commit/1545fe3154a21b9ab804682c8158c8d8f54b6ca3))
+
 ## [0.41.0](https://github.com/bayang/jelu/compare/v0.40.0...v0.41.0) (2023-07-15)
 
 
