@@ -200,33 +200,33 @@
         "authors_merging_utility": "Authors merging utility",
         "author_nb": "Author {nb}",
         "author_left_subtitle": "Author to keep",
-        "author_left_description": "Choose first the author that will be modified and kept in database.",
-        "author_right_subtitle": "Author to merge in 1",
-        "author_right_description": "Choose next the author you want to merge with the other.",
-        "authors_merge_subtitle": "Merge",
+        "author_left_description": "Scegli per primo l'autore che verrà modificato e mantenuto nel database.",
+        "author_right_subtitle": "Autore da unire ad 1",
+        "author_right_description": "Scegli ora l'autore che vuoi unire con l'altro.",
+        "authors_merge_subtitle": "Unisci",
         "authors_merge_description": "Use fields on the right author to complete the author on the left one, then merge.",
-        "search_message": "Search authors to merge"
+        "search_message": "Cerca autori da unire"
     },
     "author": {
-        "name": "name",
-        "date_of_birth": "date of birth",
-        "date_of_death": "date of death",
-        "biography": "biography",
-        "official_page": "official page",
-        "wikipedia_page": "wikipedia page",
-        "goodreads_page": "goodreads page",
-        "twitter_page": "twitter page",
-        "facebook_page": "facebook page",
-        "instagram_page": "instagram page",
-        "personal_notes": "personal notes",
-        "merge_changes": "merge changes",
-        "additional_notes": "additional notes"
+        "name": "nome",
+        "date_of_birth": "data di nascita",
+        "date_of_death": "data di morte",
+        "biography": "biografia",
+        "official_page": "pagina ufficiale",
+        "wikipedia_page": "pagina wikipedia",
+        "goodreads_page": "pagina goodreads",
+        "twitter_page": "pagina twitter",
+        "facebook_page": "pagina facebook",
+        "instagram_page": "pagina instagram",
+        "personal_notes": "note personali",
+        "merge_changes": "unisci le modifiche",
+        "additional_notes": "note aggiuntive"
     },
     "csv_import": {
-        "import_csv": "import csv file",
+        "import_csv": "importa file csv",
         "import_source": "import source",
-        "auto_fetch_online": "Automatically fetch metadata online",
-        "fetch_covers": "Also fetch covers",
+        "auto_fetch_online": "Recupera automaticamente i metadati online",
+        "fetch_covers": "Recupera anche le copertine",
         "choose_file": "Choose file to import",
         "import_file": "import file",
         "export": "export your data",
@@ -263,15 +263,15 @@
     },
     "shortcuts": {
         "toggle_bar": "Toggle filters bar",
-        "page_previous": "Go to previous page",
-        "page_next": "Go to next page"
+        "page_previous": "Vai alla pagina precedente",
+        "page_next": "Vai alla prossima successiva"
     },
     "profile": {
         "edit_user": "Edit user"
     },
     "user-messages": {
         "link": "link",
-        "mark_read": "mark as read",
+        "mark_read": "segna come letto",
         "no_messages": "no messages here"
     },
     "stats": {
@@ -280,26 +280,26 @@
         "choose_year": "Choose a year"
     },
     "history": {
-        "years": "years"
+        "years": "anni"
     },
     "bulk": {
         "bulk_edit_books": "Bulk edit books",
         "owned": "Mark/unmark all as owned",
         "toRead": "Mark/unmark all as to read",
         "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
+        "select_all": "Seleziona/deseleziona tutto",
         "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove"
+        "add_or_remove": "Aggiungi o rimuovi un'etichetta",
+        "add": "Aggiungi",
+        "remove": "Rimuovi",
+        "choose_tag": "Scegli l'etichetta che vuoi aggiungere o rimuovere"
     },
     "reviews": {
         "create_review": "Create review",
         "edit_review": "Edit review",
         "visibility": "visibility",
-        "private": "private",
-        "public": "public",
+        "private": "privato",
+        "public": "pubblico",
         "review": "review",
         "rating": "rating",
         "my_reviews": "My reviews",
