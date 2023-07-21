@@ -9,7 +9,7 @@
         "my_books": "i miei libri",
         "to_read": "da leggere",
         "add_book": "aggiungi libro",
-        "dashboard": "dashboard",
+        "dashboard": "pannello di controllo",
         "login": "accedi",
         "logout": "esci",
         "search": "cerca",
@@ -55,7 +55,7 @@
         "refresh_to_restore": "Premi l'icona di aggiornamento per ripristinare la copertina precedente",
         "book_not_yet_in_books": "Questo libro non è ancora nei tuoi libri, fai doppio click per aggiungerlo",
         "not_in_your_books": "non nei tuoi libri",
-        "books_from_name": "Books from {name}",
+        "books_from_name": "Libri scritti da {name}",
         "delete_for_all_or_only_you": "Eliminare il libro per tutti gli utenti o solo per te?",
         "only_me": "Solo per me",
         "all_users": "Tutti gli utenti",
@@ -69,7 +69,7 @@
         "edit_author": "modifica autore",
         "upload_image": "carica immagine",
         "save_changes": "salva modifiche",
-        "short_language_code": "Short language code",
+        "short_language_code": "Codice di lingua (es. it, en, fr)",
         "back": "indietro",
         "author_import_help1": "Scegli in quale lingua effettuare la ricerca.",
         "author_import_help2": "Se il risultato è vuoto, prova un'altra lingua.",
@@ -77,24 +77,24 @@
         "create": "crea",
         "submit": "invia",
         "search_title": "Cerca titolo...",
-        "search_selected": "Search selected query",
+        "search_selected": "Cerca i termini inseriti",
         "books_tagged_name": "Libri etichettati #{tag}",
         "upload_from_web": "Carica da internet",
         "upload_from_file": "Carica da file",
         "double_click_to_edit": "Premi due volte per modificare",
-        "mark_read_or_drop": "Mark read or drop",
+        "mark_read_or_drop": "Segna come letto o abbandonato",
         "preview": "anteprima",
         "copy_paste_code": "copia e incolla questo codice",
         "get_embed_code": "Ottieni codice di incorporamento",
         "saved": "Salvato",
         "yes": "Sì",
         "no": "No",
-        "do_nothing": "Do nothing",
+        "do_nothing": "Non fare nulla",
         "add": "Aggiungi",
         "add_to_my_books": "Non ancora nei tuoi libri, clicca per aggiungerlo",
         "add_translator": "Aggiungi un traduttore",
         "reading_list_from_name": "Lista di lettura da {name}",
-        "search_query": "Inserisci criteri di ricerca...",
+        "search_query": "Inserisci i termini da cercare...",
         "search_documentation": "Apri la documentazione riguardo la ricerca"
     },
     "settings": {
@@ -164,7 +164,7 @@
         "only_in_my_list": "Solo i libri nelle mie liste",
         "only_not_in_my_list": "Solo i libri non nelle mie liste",
         "owned": "Il libro è di proprietà",
-        "role": "Role",
+        "role": "Ruolo",
         "borrowed": "Il libro è preso in prestito"
     },
     "book": {
@@ -190,10 +190,10 @@
         "personal_notes": "note personali",
         "to_read": "da leggere",
         "percent_read": "letto (in percentuale)",
-        "page": "page | pages",
+        "page": "pagina | pagine",
         "nb_in_series": "# nella collana",
         "in_read_list": "nella lista da leggere",
-        "translator": "translator | translators",
+        "translator": "traduttore | traduttori",
         "borrowed": "preso in prestito"
     },
     "authors_merge": {
@@ -240,14 +240,14 @@
     "login": {
         "login": "accedi",
         "password": "password",
-        "confirm_login": "confirm login",
+        "confirm_login": "conferma il nome utente",
         "confirm_password": "conferma la password",
         "create_first_user": "crea il primo utente",
-        "login_not_empty": "login cannot be empty",
+        "login_not_empty": "il nome utente non può essere vuoto",
         "password_not_empty": "la password non può essere vuota",
-        "login_not_match": "login fields do not match",
+        "login_not_match": "i campi nome utente non corrispondono",
         "password_not_match": "le password non coincidono",
-        "login_length": "login must be 3 chars long minimum",
+        "login_length": "il nome utente deve essere lungo almeno 3 caratteri",
         "password_length": "la password deve essere di almeno 3 caratteri"
     },
     "admin_user": {
@@ -258,11 +258,11 @@
         "admin_help": "l'utente dovrebbe avere i diritti di amministratore?",
         "user_saved": "Utente salvato: {name}",
         "user_updated": "Utente aggiornato: {name}",
-        "login": "login",
+        "login": "accedi",
         "edit_user": "Modifica utente {name}"
     },
     "shortcuts": {
-        "toggle_bar": "Toggle filters bar",
+        "toggle_bar": "Attiva/disattiva la barra dei filtri",
         "page_previous": "Vai alla pagina precedente",
         "page_next": "Vai alla prossima successiva"
     },
@@ -275,7 +275,7 @@
         "no_messages": "nessun messaggio qui"
     },
     "stats": {
-        "all_time": "All time stats",
+        "all_time": "Statistiche globali",
         "yearly_stats": "Statistiche annuali",
         "choose_year": "Seleziona un anno"
     },
@@ -300,7 +300,7 @@
         "visibility": "visibilità",
         "private": "privato",
         "public": "pubblico",
-        "review": "review",
+        "review": "recensione | recensioni",
         "rating": "valutazione",
         "my_reviews": "Le mie recensioni",
         "all_reviews": "Tutte le recensioni",
