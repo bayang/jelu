@@ -310,7 +310,7 @@
     },
     "book_merge": {
         "merge_books": "Boeken samenvoegen",
-        "fetch_metadata": "Fetch metadata"
+        "fetch_metadata": "Metadata ophalen"
     },
     "metadata": {
         "reorder_plugins": "plugins herordenen",
