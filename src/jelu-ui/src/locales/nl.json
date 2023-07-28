@@ -309,7 +309,7 @@
         "book_all_reviews": "Alle beoordelingen van dit boek"
     },
     "book_merge": {
-        "merge_books": "Merge books",
+        "merge_books": "Boeken samenvoegen",
         "fetch_metadata": "Fetch metadata"
     },
     "metadata": {
