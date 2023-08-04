@@ -1,8 +1,8 @@
 {
     "home": {
-        "currently_reading": "Currently reading",
-        "recent_events": "Recent reading events",
-        "quotes": "quotes",
+        "currently_reading": "Atualmente lendo",
+        "recent_events": "Eventos recentes de leitura",
+        "quotes": "citações",
         "not_reading": "Not currently reading anything"
     },
     "nav": {
@@ -45,7 +45,7 @@
         "upload_cover": "Upload book cover",
         "enter_image_address": "Enter image address",
         "url_must_start": "Url must start with http or https",
-        "choose_file": "Choose file",
+        "choose_file": "Escolher Arquivo",
         "import_book": "import book",
         "fetch_book": "fetch book",
         "import": "import",
