@@ -300,7 +300,7 @@
         "visibility": "visibility",
         "private": "private",
         "public": "public",
-        "review": "review",
+        "review": "review | reviews",
         "rating": "rating",
         "my_reviews": "My reviews",
         "all_reviews": "All reviews",
