@@ -1,3 +1,10 @@
+### [0.41.3](https://github.com/bayang/jelu/compare/v0.41.2...v0.41.3) (2023-08-28)
+
+
+### Bug Fixes
+
+* Crowdin updates ([932e205](https://github.com/bayang/jelu/commit/932e20531a7846e2124a74a92e53350fc401cc30))
+
 ### [0.41.2](https://github.com/bayang/jelu/compare/v0.41.1...v0.41.2) (2023-07-15)
 
 
