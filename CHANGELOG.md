@@ -1,3 +1,5 @@
+### [0.41.4](https://github.com/bayang/jelu/compare/v0.41.3...v0.41.4) (2023-09-01)
+
 ### [0.41.3](https://github.com/bayang/jelu/compare/v0.41.2...v0.41.3) (2023-08-28)
 
 
