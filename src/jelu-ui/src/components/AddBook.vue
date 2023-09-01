@@ -509,6 +509,7 @@ let displayDatepicker = computed(() => {
             <o-inputitems
               v-model="authors"
               :data="filteredAuthors"
+              :allow-autocomplete="true"
               :autocomplete="true"
               :allow-new="true"
               :allow-duplicates="false"
@@ -532,6 +533,7 @@ let displayDatepicker = computed(() => {
             <o-inputitems
               v-model="tags"
               :data="filteredTags"
+              :allow-autocomplete="true"
               :autocomplete="true"
               :allow-new="true"
               :allow-duplicates="false"
@@ -555,6 +557,7 @@ let displayDatepicker = computed(() => {
             <o-inputitems
               v-model="translators"
               :data="filteredTranslators"
+              :allow-autocomplete="true"
               :autocomplete="true"
               :allow-new="true"
               :allow-duplicates="false"
@@ -964,14 +967,18 @@ let displayDatepicker = computed(() => {
           <button
             class="btn btn-success mb-3"
             :disabled="!StringUtils.isNotBlank(form.title)"
-            :class="{'loading btn-disabled' : progress}"
+            :class="{'btn-disabled' : progress}"
             @click="importBook"
           >
+            <span
+              v-if="progress"
+              class="loading loading-spinner"
+            />
             {{ t('labels.import_book') }}
           </button>
           <progress
             v-if="progress"
-            class="animate-pulse progress progress-success mt-5"
+            class="progress progress-success mt-5"
             max="100"
           />
           <p

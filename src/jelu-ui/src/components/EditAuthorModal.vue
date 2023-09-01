@@ -390,9 +390,13 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         <div class="mt-2 flex flex-row justify-center space-x-8">
           <button
             class="btn btn-primary button btn-outline"
-            :class="{'loading btn-disabled' : progress}"
+            :class="{'btn-disabled' : progress}"
             @click="update"
           >
+            <span
+              v-if="progress"
+              class="loading loading-spinner"
+            />
             <span class="icon">
               <i class="mdi mdi-content-save mdi-18px" />
             </span>

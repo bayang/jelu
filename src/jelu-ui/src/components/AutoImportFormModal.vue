@@ -186,9 +186,13 @@ function pluginsModalClosed() {
             <button
               :disabled="!isValid"
               class="btn btn-success"
-              :class="{'loading btn-disabled' : progress}"
+              :class="{'btn-disabled' : progress}"
               @click="fetchMetadata"
             >
+              <span
+                v-if="progress"
+                class="loading loading-spinner"
+              />
               {{ t('labels.fetch_book') }}
             </button>
             <button

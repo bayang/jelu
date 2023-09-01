@@ -197,9 +197,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.title = props.metadata.title != null ? props.metadata.title : ''"
             >
               <svg
@@ -219,7 +219,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.title"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -230,6 +230,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <o-inputitems
             v-model="book.authors"
             :data="filteredAuthors"
+            :allow-autocomplete="true"
             :autocomplete="true"
             :allow-new="true"
             :allow-duplicates="false"
@@ -257,6 +258,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <o-inputitems
             v-model="book.tags"
             :data="filteredTags"
+            :allow-autocomplete="true"
             :autocomplete="true"
             :allow-new="true"
             :allow-duplicates="false"
@@ -288,9 +290,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.isbn10 = props.metadata.isbn10"
             >
               <svg
@@ -310,7 +312,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.isbn10"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -325,9 +327,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.isbn13 = props.metadata.isbn13"
             >
               <svg
@@ -347,7 +349,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.isbn13"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -362,9 +364,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.publisher = props.metadata.publisher"
             >
               <svg
@@ -384,7 +386,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.publisher"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -399,9 +401,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.pageCount = props.metadata.pageCount"
             >
               <svg
@@ -421,7 +423,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.pageCount"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -436,9 +438,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.publishedDate = props.metadata.publishedDate"
             >
               <svg
@@ -458,7 +460,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.publishedDate"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -473,9 +475,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.series = props.metadata.series"
             >
               <svg
@@ -495,7 +497,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.series"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -512,9 +514,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.numberInSeries = props.metadata.numberInSeries"
             >
               <svg
@@ -534,7 +536,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.numberInSeries"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -549,9 +551,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.language = props.metadata.language"
             >
               <svg
@@ -571,7 +573,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.language"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -586,9 +588,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.googleId = props.metadata.googleId"
             >
               <svg
@@ -608,7 +610,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.googleId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -623,9 +625,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.goodreadsId = props.metadata.goodreadsId"
             >
               <svg
@@ -645,7 +647,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.goodreadsId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -660,9 +662,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           >
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.amazonId = props.metadata.amazonId"
             >
               <svg
@@ -682,7 +684,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.amazonId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs"
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -696,9 +698,9 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           />
         </div>
         <div class="form-control w-full max-w-xs">
-          <div class="input-group">
+          <div class="join">
             <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary"
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.summary = props.metadata.summary"
             >
               <svg
@@ -717,7 +719,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
             <textarea
               :value="props.metadata.summary"
               disabled
-              class="jelu-cursor-text textarea textarea-bordered textarea-secondary w-full max-w-xs"
+              class="jelu-cursor-text textarea textarea-bordered textarea-secondary w-full max-w-xs join-item"
             />
           </div>
         </div>
@@ -728,9 +730,12 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         <button
           class="btn btn-primary"
           :disabled="progress"
-          :class="{ 'loading': progress }"
           @click="importData"
         >
+          <span
+            v-if="progress"
+            class="loading loading-spinner"
+          />
           <span class="icon">
             <i class="mdi mdi-check mdi-18px" />
           </span><span>{{ t('labels.import') }}</span>
@@ -738,9 +743,12 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         <button
           class="btn btn-warning"
           :disabled="progress"
-          :class="{ 'loading': progress }"
           @click="discard"
         >
+          <span
+            v-if="progress"
+            class="loading loading-spinner"
+          />
           <span class="icon">
             <i class="mdi mdi-cancel mdi-18px" />
           </span><span>{{ t('labels.discard') }}</span>

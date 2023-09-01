@@ -278,6 +278,7 @@ function toggleRemoveImage() {
             <o-inputitems
               v-model="userbook.book.authors"
               :data="filteredAuthors"
+              :allow-autocomplete="true"
               :autocomplete="true"
               :allow-new="true"
               :allow-duplicates="false"
@@ -302,6 +303,7 @@ function toggleRemoveImage() {
             <o-inputitems
               v-model="userbook.book.tags"
               :data="filteredTags"
+              :allow-autocomplete="true"
               :autocomplete="true"
               :allow-new="true"
               :allow-duplicates="false"
@@ -325,6 +327,7 @@ function toggleRemoveImage() {
             <o-inputitems
               v-model="userbook.book.translators"
               :data="filteredTranslators"
+              :allow-autocomplete="true"
               :autocomplete="true"
               :allow-new="true"
               :allow-duplicates="false"
@@ -695,9 +698,13 @@ function toggleRemoveImage() {
       <div class="column is-centered is-one-fifth flex flex-row justify-center pt-6">
         <button
           class="btn btn-primary"
-          :class="{'loading btn-disabled' : progress}"
+          :class="{'btn-disabled' : progress}"
           @click="importBook"
         >
+          <span
+            v-if="progress"
+            class="loading loading-spinner"
+          />
           {{ t('labels.save_changes') }}
         </button>
         <p

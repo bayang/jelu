@@ -130,7 +130,7 @@ watch(() => route.name, (newVal, oldVal) => {
           </label>
           <ul
             tabindex="0"
-            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            class="menu menu-compact dropdown-content z-[1] mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
               <router-link
@@ -214,18 +214,18 @@ watch(() => route.name, (newVal, oldVal) => {
             <div
               class="form-control w-2"
             >
-              <div class="input-group">
+              <div class="join">
                 <input
                   v-model="searchQuery"
                   type="text"
                   placeholder="Search…"
-                  class="input input-accent"
+                  class="input input-accent join-item"
                   @focus="showAdvanced = true"
                   @blur="hideAdvanced"
                   @keyup.enter="search"
                 >
                 <button
-                  class="btn btn-square btn-outline"
+                  class="btn btn-square btn-outline join-item"
                   @click="search"
                 >
                   <svg
@@ -289,47 +289,44 @@ watch(() => route.name, (newVal, oldVal) => {
             tabindex="0"
             class="mr-1"
           >
-            <a class="font-sans text-xl capitalize">
-              {{ t('nav.shelves') }}
-              <svg
-                class="fill-current"
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-              ><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
-            </a>
-            <ul class="p-2 bg-base-100 z-50">
-              <li
-                v-for="shelf in shelves"
-                :key="shelf"
-              >
-                <router-link
-                  v-if="isLogged"
-                  :to="{ name: 'tag-detail', params: { tagId: shelf.targetId }, query: {sort: 'modificationDate,desc'} }"
+            <details>
+              <summary>
+                <a class="font-sans text-xl capitalize">
+                  {{ t('nav.shelves') }}
+                </a>
+              </summary>
+              <ul class="p-2 bg-base-100 z-50">
+                <li
+                  v-for="shelf in shelves"
+                  :key="shelf"
                 >
-                  {{ shelf.name }}
-                </router-link>
-              </li>
-            </ul>
+                  <router-link
+                    v-if="isLogged"
+                    :to="{ name: 'tag-detail', params: { tagId: shelf.targetId }, query: {sort: 'modificationDate,desc'} }"
+                  >
+                    {{ shelf.name }}
+                  </router-link>
+                </li>
+              </ul>
+            </details>
           </li>
         </ul>
         <div
           v-if="isLogged && showSearchInput"
           class="form-control"
         >
-          <div class="input-group">
+          <div class="join">
             <input
               v-model="searchQuery"
               type="text"
               placeholder="Search…"
-              class="input input-accent"
+              class="input input-accent join-item"
               @focus="showAdvanced = true"
               @blur="hideAdvanced"
               @keyup.enter="search"
             >
             <button
-              class="btn btn-square btn-outline"
+              class="btn btn-square btn-outline join-item"
               @click="search"
             >
               <svg
@@ -375,11 +372,11 @@ watch(() => route.name, (newVal, oldVal) => {
           </label>
           <div
             tabindex="0"
-            class="dropdown-content mt-2 -left-20"
+            class="dropdown-content z-[1] mt-2 -left-20"
           >
             <ul
               tabindex="0"
-              class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+              class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li
                 v-for="shelf in shelves"
@@ -408,7 +405,7 @@ watch(() => route.name, (newVal, oldVal) => {
           </label>
           <ul
             tabindex="0"
-            class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+            class="mt-3 p-2 shadow menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-52"
           >
             <li v-if="isLogged">
               <router-link

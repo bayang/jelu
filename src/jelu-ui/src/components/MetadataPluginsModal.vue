@@ -111,9 +111,12 @@ function checkMove(evt: any){
           <button
             class="btn btn-primary mr-2"
             :disabled="progress"
-            :class="{ 'loading': progress }"
             @click="submit"
           >
+            <span
+              v-if="progress"
+              class="loading loading-spinner"
+            />
             <span class="icon">
               <i class="mdi mdi-pencil mdi-18px" />
             </span>
@@ -122,9 +125,12 @@ function checkMove(evt: any){
           <button
             class="btn btn-secondary mr-2"
             :disabled="progress"
-            :class="{ 'loading': progress }"
             @click="dismiss"
           >
+            <span
+              v-if="progress"
+              class="loading loading-spinner"
+            />
             <span class="icon">
               <i class="mdi mdi-cancel mdi-18px" />
             </span>

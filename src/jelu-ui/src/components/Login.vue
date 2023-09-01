@@ -190,9 +190,12 @@ const submit = () => {
           <button
             class="btn btn-warning mt-2"
             :disabled="progress"
-            :class="{'loading' : progress}"
             @click="createInitialUser"
           >
+            <span
+              v-if="progress"
+              class="loading loading-spinner"
+            />
             {{ t('login.create_first_user') }}
           </button>
         </p>
@@ -203,9 +206,12 @@ const submit = () => {
           <button
             class="btn btn-success mt-2"
             :disabled="progress"
-            :class="{'loading' : progress}"
             @click="logUser"
           >
+            <span
+              v-if="progress"
+              class="loading loading-spinner"
+            />
             {{ t('login.login') }}
           </button>
         </p>

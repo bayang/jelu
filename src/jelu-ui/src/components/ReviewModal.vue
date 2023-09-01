@@ -176,9 +176,12 @@ const editReview = () => {
             v-if="props.edit == null || props.edit === false"
             class="btn btn-secondary mr-2"
             :disabled="progress"
-            :class="{ 'loading': progress }"
             @click="submit"
           >
+            <span
+              v-if="progress"
+              class="loading loading-spinner"
+            />
             <span class="icon">
               <i class="mdi mdi-pencil mdi-18px" />
             </span>
@@ -188,9 +191,12 @@ const editReview = () => {
             v-else
             class="btn btn-secondary mr-2"
             :disabled="progress"
-            :class="{ 'loading': progress }"
             @click="editReview"
           >
+            <span
+              v-if="progress"
+              class="loading loading-spinner"
+            />
             <span class="icon">
               <i class="mdi mdi-pencil mdi-18px" />
             </span>
