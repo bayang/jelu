@@ -2,7 +2,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bayang/jelu/ci.yml?branch=main&style=flat-square) ![GitHub](https://img.shields.io/github/license/bayang/jelu?style=flat-square) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/bayang/jelu?style=flat-square) ![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/wabayang/jelu/latest?label=docker%20hub&style=flat-square) [![Discord](https://img.shields.io/discord/970383499733381161?label=Discord&style=flat-square)](https://discord.gg/3RZJ4zuMP5) [![Crowdin](https://badges.crowdin.net/jelu/localized.svg)](https://crowdin.com/project/jelu)
 
-Check the [Official documentation](https://bayang.github.io/jelu-web/) for more detailed information. 
+Check the [Official documentation](https://bayang.github.io/jelu-web/) for more detailed information.
 
 Like Jelu or find it useful ? Offer me a [coffee ☕](https://ko-fi.com/bayang)
 
@@ -35,8 +35,8 @@ All your data is now located into a single-file database which can be saved anyw
 * Provide embed code snippets so that books can be tracked in other sites, blogs or even markdown notes/journal
 * Provide some stats about your readings
 * Multi user support (ldap login, proxy authentication, see other user libraries)
-* provides an API 
-* Write reviews and share them, see the reviews of other users on your instance 
+* provides an API
+* Write reviews and share them, see the reviews of other users on your instance
 * Fallback metadata providers (see [official doc](https://bayang.github.io/jelu-web/configuration/) for configuration)
 * Isbn scanning via camera on mobile
 
@@ -55,7 +55,7 @@ All your data is now located into a single-file database which can be saved anyw
 * go to this folder
 * start the jar (it is a spring fat jar so dependencies are included) : eg `java -jar jelu-0.13.0.jar`
 * If you want to tweak the default config (see `src/main/resources/application.yml`), just create a yaml file called application.yml in the same foler as the jar.
- 
+
 For example if you want the database to be located next to the jar file (instead of being located in the default `${user.home}/.jelu/database/` folder) :
 
 ```yaml
@@ -66,7 +66,7 @@ jelu:
 
 The automatic metadata online search is provided for the moment through a calibre tool called fetch-ebook-metadata (whether you like it or not).
 
-So if you want to use it with the java install, provide the path to the executable in the config, like so : 
+So if you want to use it with the java install, provide the path to the executable in the config, like so :
 
 ```yaml
 jelu:
@@ -75,7 +75,7 @@ jelu:
       path: /usr/bin/fetch-ebook-metadata
 ```
 
-If you run into a cors issue, update the config with the desired origins like so : 
+If you run into a cors issue, update the config with the desired origins like so :
 
 ```yaml
 jelu:
@@ -87,7 +87,7 @@ Then open the web UI in your web browser at `localhost:11111`
 
 Concerning Cors, the default is to accept everything, which you might not not want to do.
 
-No config in the config file is equivalent to : 
+No config in the config file is equivalent to :
 
 ```yaml
 jelu:
@@ -97,7 +97,7 @@ jelu:
 
 ### Docker
 
-An image is available here : 
+An image is available here :
 
 https://hub.docker.com/repository/docker/wabayang/jelu
 
@@ -105,7 +105,7 @@ This one is the easiest if you are used to it.
 
 The docker image we provide embeds the fetch-ebook-metadata executable to automatically import books based on their title, authors or isbn.
 
-A sample docker compose would look like that : 
+A sample docker compose would look like that :
 
 ```yaml
 version: '3.3'
@@ -128,13 +128,19 @@ services:
 !!!! WARNING : ARM versions must add this environment variable for automatic metadata fetching :
 `JELU_METADATA_CALIBRE_PATH=/usr/bin/fetch-ebook-metadata`
 
+### Kubernetes (Helm)
+
+An unofficial Helm-Chart to deploy Jelu to Kubernetes is available here:
+
+https://artifacthub.io/packages/helm/tibuntu/jelu
+
 ## Screenshots
 
-Home page : 
+Home page :
 
 ![home page](screenshots/home-page.png)
 
-Auto import form (empty) : 
+Auto import form (empty) :
 
 ![](screenshots/auto-import-empty.png)
 
@@ -150,7 +156,7 @@ Auto import form (edit pre-filled results before importing to your account, eg :
 
 ![](screenshots/auto-import-edit-result.png)
 
-Books list : 
+Books list :
 
 ![](screenshots/book-list.png)
 
@@ -162,7 +168,7 @@ Book detail, events part :
 
 ![](screenshots/book-detail-events.png)
 
-Author page : 
+Author page :
 
 ![](screenshots/author-page.png)
 
@@ -179,7 +185,7 @@ Review creation :
 
 You can help with translations : everything is hosted on crowdin https://crowdin.com/project/jelu
 
-## Contributions : 
+## Contributions :
 
 * Czech translation : @filcuk, @ondrejk
 * Danish translation : @SirBogner
