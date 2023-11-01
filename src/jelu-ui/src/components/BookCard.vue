@@ -111,7 +111,6 @@ const toggleEdit = (book: UserBook) => {
 
 watch(checked, (newVal, oldVal) => {
   console.log(props.book.id + " " + checked.value)
-  // console.log(newVal + " " + oldVal)
   emit("update:checked", props.book.id != null ? props.book.id : null , checked.value)
 })
 
@@ -225,11 +224,11 @@ watch(checked, (newVal, oldVal) => {
         >{{ eventText }}</span>
         <div class="flex">
           <span
-            v-if="book.book.numberInSeries"
-            v-tooltip="book.book.series"
+            v-if="book.book.series && book.book.series.length > 0"
+            v-tooltip="book.book.series[0].name"
             class="badge is-family-sans-serif mx-1"
           >
-            #{{ book.book.numberInSeries }}
+            #{{ book.book.series[0].numberInSeries }}
           </span>
           <span
             v-if="book.owned"

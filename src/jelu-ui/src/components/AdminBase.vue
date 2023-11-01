@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import { useI18n } from 'vue-i18n'

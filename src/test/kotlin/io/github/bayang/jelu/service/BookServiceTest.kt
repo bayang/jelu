@@ -13,8 +13,11 @@ import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.SeriesOrderDto
+import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.search.LuceneEntity
 import io.github.bayang.jelu.search.LuceneHelper
 import io.github.bayang.jelu.tagDto
@@ -22,6 +25,7 @@ import io.github.bayang.jelu.tags
 import io.github.bayang.jelu.utils.nowInstant
 import io.github.bayang.jelu.utils.slugify
 import org.apache.lucene.index.Term
+import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -68,7 +72,7 @@ class BookServiceTest(
 
     @AfterEach
     fun cleanTest() {
-        tempDir.listFiles().forEach {
+        tempDir.listFiles()?.forEach {
             it.deleteRecursively()
         }
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
@@ -81,6 +85,9 @@ class BookServiceTest(
         }
         bookService.findAllTags(null, Pageable.ofSize(20)).content.forEach {
             bookService.deleteTagById(it.id!!)
+        }
+        bookService.findAllSeries(null, Pageable.ofSize(20)).content.forEach {
+            bookService.deleteSeriesById(it.id!!)
         }
         luceneHelper.getIndexWriter().use { indexWriter ->
             indexWriter.deleteDocuments(Term(LuceneEntity.TYPE, LuceneEntity.Book.type))
@@ -147,6 +154,787 @@ class BookServiceTest(
     }
 
     @Test
+    fun testInsertBooksSeries() {
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0, seriesId = null)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0, seriesId = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            Assertions.assertEquals(1.0, it.numberInSeries)
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testInsertBooksSeriesNoPosition() {
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = null)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            if (it.name == "series 1") {
+                Assertions.assertNull(it.numberInSeries)
+            } else {
+                Assertions.assertEquals(1.0, it.numberInSeries)
+            }
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testInsertBooksSeriesBothNoPosition() {
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = null)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            Assertions.assertNull(it.numberInSeries)
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testInsertBooksSeriesBothNoPositionDuplicateSeries() {
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = null)
+        val s2 = SeriesOrderDto(name = "series 1", numberInSeries = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(1, res.series?.size)
+        Assertions.assertNull(res.series?.get(0)?.numberInSeries)
+        Assertions.assertEquals("series 1", res.series?.get(0)?.name)
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testInsertBooksSeriesBothNoPositionDuplicateExistingSeries() {
+        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        Assertions.assertEquals("series 1", saved.name)
+        Assertions.assertNotNull(saved.id)
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = null)
+        val s2 = SeriesOrderDto(name = "series 1", numberInSeries = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(1, res.series?.size)
+        Assertions.assertNull(res.series?.get(0)?.numberInSeries)
+        Assertions.assertEquals("series 1", res.series?.get(0)?.name)
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testInsertBooksSeriesBothNoPositionExistingSeries() {
+        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        Assertions.assertEquals("series 1", saved.name)
+        Assertions.assertNotNull(saved.id)
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = null)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            Assertions.assertNull(it.numberInSeries)
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testInsertBooksExistingSeries() {
+        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        Assertions.assertEquals("series 1", saved.name)
+        Assertions.assertNotNull(saved.id)
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            Assertions.assertEquals(1.0, it.numberInSeries)
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testUpdateBooksSeries() {
+        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        Assertions.assertEquals("series 1", saved.name)
+        Assertions.assertNotNull(saved.id)
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0)
+        val bookCreateDto = BookCreateDto(
+            id = null,
+            title = "title1",
+            isbn10 = "",
+            isbn13 = "",
+            summary = "",
+            image = "",
+            publisher = "",
+            pageCount = 50,
+            publishedDate = "",
+            // seriesBak = "",
+            authors = emptyList(),
+            // numberInSeries = null,
+            tags = emptyList(),
+            goodreadsId = "",
+            googleId = "",
+            librarythingId = "",
+            language = "",
+            amazonId = "",
+            series = listOf(s1, s2),
+        )
+        var res: BookDto = bookService.save(
+            bookCreateDto,
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        var names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            Assertions.assertEquals(1.0, it.numberInSeries)
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        val series2Id = res.series?.get(1)?.seriesId
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        var updateDto = fromBookCreateDto(bookCreateDto)
+        val list = listOf(res.series?.get(0)!!, SeriesOrderDto(name = "series 3", numberInSeries = 1.0))
+        updateDto.series = list
+        // change series 1 position, remove series 2 and add a new third series
+        updateDto.series?.get(0)?.numberInSeries = 2.2
+        res = bookService.update(res.id!!, updateDto)
+        Assertions.assertEquals(2, res.series?.size)
+        Assertions.assertEquals("series 1", res.series?.get(0)?.name)
+        Assertions.assertEquals(2.2, res.series?.get(0)?.numberInSeries)
+
+        Assertions.assertEquals("series 3", res.series?.get(1)?.name)
+        Assertions.assertEquals(1.0, res.series?.get(1)?.numberInSeries)
+
+        // series still exists, without books
+        val series = bookService.findAllSeries(name = "series2", Pageable.ofSize(5))
+        Assertions.assertEquals("series2", series.content[0].name)
+
+        val booksById1 =
+            bookService.findSeriesBooksById(saved.id!!, user(), Pageable.ofSize(10), LibraryFilter.ANY)
+        Assertions.assertEquals(1, booksById1.totalElements)
+
+        val booksById2 =
+            bookService.findSeriesBooksById(series2Id!!, user(), Pageable.ofSize(10), LibraryFilter.ANY)
+        Assertions.assertEquals(0, booksById2.totalElements)
+    }
+
+    @Test
+    fun testInsertBooksExistingSeriesDifferentPosition() {
+        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        Assertions.assertEquals("series 1", saved.name)
+        Assertions.assertNotNull(saved.id)
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
+        val s2 = SeriesOrderDto(name = "series 1", numberInSeries = 1.5)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val positions = listOf(s1.numberInSeries, s2.numberInSeries)
+        res.series?.forEach {
+            Assertions.assertEquals("series 1", it.name)
+            Assertions.assertTrue(positions.contains(it.numberInSeries))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testInsertBooksExistingDuplicateSeries() {
+        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        Assertions.assertEquals("series 1", saved.name)
+        Assertions.assertNotNull(saved.id)
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
+        val s2 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(1, res.series?.size)
+        Assertions.assertEquals(1.0, res.series?.get(0)?.numberInSeries)
+        Assertions.assertEquals("series 1", res.series?.get(0)?.name)
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testDeleteSeriesFromBook() {
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0, seriesId = null)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0, seriesId = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            Assertions.assertEquals(1.0, it.numberInSeries)
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        val series1Id = res.series?.get(0)?.seriesId
+
+        bookService.deleteSeriesFromBook(res.id!!, res.series?.get(0)?.seriesId!!)
+        val afterDelete = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(1, afterDelete.series?.size)
+        Assertions.assertEquals("series2", afterDelete.series?.get(0)?.name)
+        Assertions.assertEquals(1.0, afterDelete.series?.get(0)?.numberInSeries)
+
+        val seriesById = bookService.findSeriesById(series1Id!!)
+        Assertions.assertEquals("series 1", seriesById.name)
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+    }
+
+    @Test
+    fun testDeleteSeriesFromDbCascadesToBook() {
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0, seriesId = null)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0, seriesId = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            Assertions.assertEquals(1.0, it.numberInSeries)
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        val series1Id = res.series?.get(0)?.seriesId
+
+        bookService.deleteSeriesById(series1Id!!)
+        val afterDelete = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(1, afterDelete.series?.size)
+        Assertions.assertEquals("series2", afterDelete.series?.get(0)?.name)
+        Assertions.assertEquals(1.0, afterDelete.series?.get(0)?.numberInSeries)
+
+        Assertions.assertThrows(EntityNotFoundException::class.java) {
+            bookService.findSeriesById(series1Id)
+        }
+        entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+    }
+
+    @Test
+    fun testUpdateSeriesRebuildsIndex() {
+        val saved = bookService.saveSeries(SeriesUpdateDto("series1"))
+        Assertions.assertEquals("series1", saved.name)
+        Assertions.assertNotNull(saved.id)
+        val s1 = SeriesOrderDto(name = "series1", numberInSeries = 1.0)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val names = listOf(s1.name, s2.name)
+        res.series?.forEach {
+            Assertions.assertEquals(1.0, it.numberInSeries)
+            Assertions.assertTrue(names.contains(it.name))
+        }
+        var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+
+        val updateSeries = bookService.updateSeries(saved.id!!, SeriesUpdateDto(name = "series3"))
+        Assertions.assertEquals("series3", updateSeries.name)
+
+        val search = bookService.findSeriesById(saved.id!!)
+        Assertions.assertEquals("series3", search.name)
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+
+        entitiesIds = luceneHelper.searchEntitiesIds("series:series3", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
     fun testInsertBooks() {
         val res: BookDto = bookService.save(
             BookCreateDto(
@@ -159,9 +947,9 @@ class BookServiceTest(
                 publisher = "",
                 pageCount = 50,
                 publishedDate = "",
-                series = "",
+                // seriesBak = "",
                 authors = emptyList(),
-                numberInSeries = null,
+                // numberInSeries = null,
                 tags = emptyList(),
                 goodreadsId = "",
                 googleId = "",
@@ -223,10 +1011,10 @@ class BookServiceTest(
             publisher = "test-publisher",
             pageCount = 50,
             publishedDate = "",
-            series = "",
+            // seriesBak = "",
             authors = mutableListOf(authorDto()),
             translators = mutableListOf(authorDto()),
-            numberInSeries = null,
+            // numberInSeries = null,
             tags = emptyList(),
             goodreadsId = "4321abc",
             googleId = "1234",
@@ -313,10 +1101,10 @@ class BookServiceTest(
             publisher = "test-publisher",
             pageCount = 50,
             publishedDate = "",
-            series = "",
+            // seriesBak = "",
             authors = mutableListOf(authorDto()),
             translators = mutableListOf(authorDto()),
-            numberInSeries = null,
+            // numberInSeries = null,
             tags = emptyList(),
             goodreadsId = "4321abc",
             googleId = "1234",
@@ -1178,10 +1966,10 @@ class BookServiceTest(
             publisher = "test-publisher",
             pageCount = 50,
             publishedDate = "",
-            series = "",
+            // seriesBak = "",
             authors = mutableListOf(authorDto1),
             translators = mutableListOf(authorDto2),
-            numberInSeries = null,
+            // numberInSeries = null,
             tags = tags(),
             goodreadsId = "4321abc",
             googleId = "1234",
@@ -1199,9 +1987,9 @@ class BookServiceTest(
             publisher = "test-publisher",
             pageCount = 50,
             publishedDate = "",
-            series = "",
+            // seriesBak = "",
             authors = mutableListOf(authorDto2),
-            numberInSeries = null,
+            // numberInSeries = null,
             tags = tags(),
             goodreadsId = "4321abc",
             googleId = "1234",
@@ -1219,9 +2007,9 @@ class BookServiceTest(
             publisher = "test-publisher",
             pageCount = 50,
             publishedDate = "",
-            series = "",
+            // seriesBak = "",
             authors = mutableListOf(authorDto2, authorDto1),
-            numberInSeries = null,
+            // numberInSeries = null,
             tags = tags(),
             goodreadsId = "4321abc",
             googleId = "1234",

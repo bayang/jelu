@@ -10,6 +10,8 @@ import { StringUtils } from "../utils/StringUtils";
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import { Tag } from "../model/Tag";
 import { useI18n } from 'vue-i18n'
+import { SeriesOrder } from "../model/Series";
+import SeriesInput from "./SeriesInput.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -82,7 +84,10 @@ const toReadDisplay = computed(() => {
   return ""
 })
 
+const seriesCopy: Array<SeriesOrder> = userbook.value.book.series ?? []
+
 const importBook = () => {
+  userbook.value.book.series = seriesCopy.filter(s => s.name != null && s.name.trim().length > 0)
   console.log("import")
   console.log(userbook)
   if (!props.canAddEvent || userbook.value.lastReadingEvent === ReadingEventType.NONE) {
@@ -279,7 +284,7 @@ function toggleRemoveImage() {
               v-model="userbook.book.authors"
               :data="filteredAuthors"
               :allow-autocomplete="true"
-              :autocomplete="true"
+              autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
@@ -304,7 +309,7 @@ function toggleRemoveImage() {
               v-model="userbook.book.tags"
               :data="filteredTags"
               :allow-autocomplete="true"
-              :autocomplete="true"
+              autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
@@ -328,7 +333,7 @@ function toggleRemoveImage() {
               v-model="userbook.book.translators"
               :data="filteredTranslators"
               :allow-autocomplete="true"
-              :autocomplete="true"
+              autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
@@ -436,7 +441,7 @@ function toggleRemoveImage() {
               :placeholder="t('labels.click_to_select')"
               icon="calendar"
               icon-right="close"
-              icon-right-clickable="true"
+              :icon-right-clickable="true"
               trap-focus
               class="input focus:input-accent"
               @icon-right-click="clearDatePicker"
@@ -469,23 +474,49 @@ function toggleRemoveImage() {
             />
           </o-field>
         </div>
-        <div class="field">
+        <div class="field pb-2">
           <o-field
-            horizontal
             :label="t('book.series')"
+            horizontal
             class="capitalize"
           >
-            <o-input 
-              v-model="userbook.book.series" 
-              class="input focus:input-accent"
-            />
-            <o-input
-              v-model="userbook.book.numberInSeries"
-              type="number"
-              min="0"
-              step="0.1"
-              class="input focus:input-accent"
-            />
+            <div class="flex flex-col grow w-full">
+              <div
+                v-for="seriesItem,idx in seriesCopy"
+                :key="seriesItem.seriesId"
+                class="flex items-center grow w-full pb-2"
+              >
+                <SeriesInput
+                  :series="seriesItem"
+                  :parent-series="seriesCopy"
+                  @update-series="(series: SeriesOrder) => seriesCopy[idx] = series"
+                />
+                <button
+                  class="btn btn-error btn-outline sm:btn-sm px-1 sm:border-none"
+                  @click="seriesCopy.splice(idx, 1)"
+                >
+                  <span class="icon">
+                    <i class="mdi mdi-delete mdi-18px" />
+                  </span>
+                </button>
+              </div>
+            </div>
+          </o-field>
+        </div>
+        <div class="field pb-2">
+          <o-field
+            label=""
+            horizontal
+            class="capitalize"
+          >
+            <button
+              class="btn btn-primary btn-circle p-2 btn-sm"
+              @click="seriesCopy.push({'name' : ''})"
+            >
+              <span class="icon">
+                <i class="mdi mdi-plus mdi-18px" />
+              </span>
+            </button>
           </o-field>
         </div>
         <div

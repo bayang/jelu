@@ -443,4 +443,67 @@
             UPDATE reading_event SET end_date = modification_date where end_date is null and event_type != 'CURRENTLY_READING';
         </sql>
     </changeSet>
+    <changeSet id="refactor-series" author="byng">
+        <sql>
+            ALTER TABLE book RENAME COLUMN "series" TO "series_bak";
+        </sql>
+        <createTable tableName="series">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(1000)"
+                    remarks="The series name ">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="book_series">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="series" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_bookseries_series_id" references="series(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="book" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_bookseries_book_id" references="book(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="number_in_series" type="double"
+                    remarks="The book's number in series ">
+            </column>
+        </createTable>
+        <createIndex indexName="idx_book_series_position" tableName="book_series" unique="true">
+            <column name="series"/>
+            <column name="book"/>
+            <column name="number_in_series"/>
+        </createIndex>
+        <createTable tableName="lifecycle">
+            <column name="id" type="bigint" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="series_migrated" type="boolean"
+                    remarks="The series have been migrated from old format or not "
+            defaultValueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <sql>
+            INSERT INTO lifecycle("id", "creation_date", "modification_date", "series_migrated")
+            VALUES (1000, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

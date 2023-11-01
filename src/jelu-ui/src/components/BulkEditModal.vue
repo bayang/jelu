@@ -63,10 +63,6 @@ watch(toRead, (newVal, oldVal) => {
   console.log("toRead " + toRead.value)
 })
 
-// watch(add, (newVal, oldVal) => {
-//   console.log("add " + add.value)
-// })
-
 const addTags: Ref<Array<Tag>> = ref([])
 const removeTags: Ref<Array<Tag>> = ref([])
 

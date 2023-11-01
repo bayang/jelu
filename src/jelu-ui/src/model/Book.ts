@@ -1,5 +1,6 @@
 import {Author} from "./Author";
 import { ReadingEvent, ReadingEventType } from "./ReadingEvent";
+import { SeriesOrder } from "./Series";
 import { Tag } from "./Tag";
 
 export interface Book {
@@ -17,8 +18,7 @@ export interface Book {
     authors?: Array<Author>,
     translators?: Array<Author>,
     tags?: Array<Tag>,
-    series?: string, 
-    numberInSeries? : number|null,
+    series?: Array<SeriesOrder>, 
     googleId?: string,
     amazonId?: string,
     goodreadsId?: string,

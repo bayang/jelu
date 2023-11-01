@@ -1,29 +1,26 @@
 <script setup lang="ts">
-import { computed, ComputedRef, Ref, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { Book, UserBook } from '../model/Book'
-import { useStore } from 'vuex'
-import { key } from '../store'
-import dataService from "../services/DataService"
-import { ObjectUtils } from '../utils/ObjectUtils'
-import EditBookModal from "./EditBookModal.vue"
-import ReadingEventModalVue from './ReadingEventModal.vue'
-import ReviewModalVue from './ReviewModal.vue'
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useProgrammatic } from "@oruga-ui/oruga-next"
+import { until, useClipboard, usePermission, useTitle } from '@vueuse/core'
 import dayjs from 'dayjs'
-import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
-import { useTitle } from '@vueuse/core'
-import useDates from '../composables/dates'
+import { computed, ComputedRef, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useClipboard } from '@vueuse/core'
-import { usePermission } from '@vueuse/core'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import useDates from '../composables/dates'
+import { Book, UserBook } from '../model/Book'
+import { Metadata } from "../model/Metadata"
+import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
 import { Review } from '../model/Review'
-import { until } from '@vueuse/core'
 import { User } from '../model/User'
-import ReviewCard from "./ReviewCard.vue";
-import AutoImportFormModalVue from "./AutoImportFormModal.vue";
-import { Metadata } from "../model/Metadata";
+import dataService from "../services/DataService"
+import { key } from '../store'
+import { ObjectUtils } from '../utils/ObjectUtils'
+import AutoImportFormModalVue from "./AutoImportFormModal.vue"
+import EditBookModal from "./EditBookModal.vue"
 import MergeBookModal from './MergeBookModal.vue'
+import ReadingEventModalVue from './ReadingEventModal.vue'
+import ReviewCard from "./ReviewCard.vue"
+import ReviewModalVue from './ReviewModal.vue'
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -574,17 +571,24 @@ getBook()
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
           {{ formatDateString(book.book.publishedDate) }}
         </p>
-        <p v-if="book?.book?.series">
+        <p v-if="book?.book?.series && book?.book?.series != null && book?.book?.series.length > 0">
           <span class="font-semibold capitalize">{{ t('book.series') }} :&nbsp;</span>
-          <router-link
-            class="link hover:underline hover:decoration-4 hover:decoration-secondary"
-            :to="{ name: 'series', query: { series: book?.book.series } }"
-          >
-            {{ book.book.series }}&nbsp;
-            <span
-              v-if="book?.book?.numberInSeries"
-            >-&nbsp;{{ book.book.numberInSeries }}</span>
-          </router-link>
+          <ul>
+            <li
+              v-for="seriesItem in book?.book?.series"
+              :key="seriesItem.seriesId"
+            >
+              <router-link
+                class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+                :to="{ name: 'series', params: { seriesId: seriesItem.seriesId } }"
+              >
+                {{ seriesItem.name }}&nbsp;
+                <span
+                  v-if="seriesItem.numberInSeries"
+                >-&nbsp;{{ seriesItem.numberInSeries }}</span>
+              </router-link>
+            </li>
+          </ul>
         </p>
         <p v-if="book?.book?.language">
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>

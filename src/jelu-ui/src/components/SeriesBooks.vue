@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useThrottleFn } from '@vueuse/core';
+import { useThrottleFn, useTitle } from '@vueuse/core';
 import { useRouteQuery } from "@vueuse/router";
 import { computed, Ref, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import useBulkEdition from '../composables/bulkEdition';
 import usePagination from '../composables/pagination';
 import useSort from "../composables/sort";
@@ -12,38 +13,58 @@ import dataService from "../services/DataService";
 import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
+import { Series } from '../model/Series';
 
 const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
 
+const route = useRoute()
+
 const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('numberInSeries,asc')
 
-const series: Ref<string> = useRouteQuery('series') as Ref<string>
+const libraryFilter: Ref<LibraryFilter> = useRouteQuery('libraryFilter', 'ANY' as LibraryFilter)
 
 const { showSelect, selectAll, checkedCards, cardChecked, toggleEdit } = useBulkEdition(modalClosed)
 
 const open = ref(false)
 
+const series: Ref<Series> = ref({name: ""})
 const books: Ref<Array<Book>> = ref([]);
 
 const getBooksIsLoading: Ref<boolean> = ref(false)
 
-watch([() => series.value, page, sortQuery], (newVal, oldVal) => {
+watch([() => route.params.seriesId, page, sortQuery, libraryFilter], (newVal, oldVal) => {
   console.log(newVal + " " + oldVal)
-  if (newVal !== oldVal && series.value !== undefined) {
+  if (newVal !== oldVal && route.params.seriesId !== undefined) {
     throttledGetBooks()
   }
 })
 
+watch(() => route.params.seriesId, (newVal, oldVal) => {
+  console.log(newVal + " " + oldVal)
+  if (newVal !== oldVal && route.params.seriesId !== undefined) {
+    getSeries()
+  }
+})
+
+const getSeries = async () => {
+  try {
+    series.value = await dataService.getSeriesById(route.params.seriesId as string)
+    useTitle('Jelu | ' + series.value.name)
+  } catch (error) {
+    console.log("failed get series : " + error);
+  }
+};
+
 const getBooks = () => {
     getBooksIsLoading.value = true
-    dataService.findBooks(
-      `series:"${series.value}"`,
-      pageAsNumber.value - 1, perPage.value, sortQuery.value, LibraryFilter.ONLY_USER_BOOKS)
+    dataService.getSeriesBooksById(route.params.seriesId as string, 
+      pageAsNumber.value - 1, perPage.value, sortQuery.value, 
+      libraryFilter.value)
       .then(res => {
         console.log(res)
             total.value = res.totalElements
@@ -75,6 +96,7 @@ function modalClosed() {
   throttledGetBooks()
 }
 
+getSeries()
 getBooks()
 
 </script>
@@ -126,6 +148,29 @@ getBooks()
         </o-radio>
       </div>
     </template>
+    <template #filters>
+      <div class="field">
+        <label class="label">{{ t('filtering.books_type') }} : </label>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ANY"
+        >
+          {{ t('filtering.any') }}
+        </o-radio>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ONLY_USER_BOOKS"
+        >
+          {{ t('filtering.only_in_my_list') }}
+        </o-radio>
+        <o-radio
+          v-model="libraryFilter"
+          native-value="ONLY_NON_USER_BOOKS"
+        >
+          {{ t('filtering.only_not_in_my_list') }}
+        </o-radio>
+      </div>
+    </template>
   </sort-filter-bar-vue>
   <div class="flex flex-row justify-between">
     <div class="flex flex-row gap-1 order-last sm:order-first">
@@ -172,7 +217,7 @@ getBooks()
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
-      {{ series }} :
+      {{ series.name }} :
     </h2>
     <div />
   </div>

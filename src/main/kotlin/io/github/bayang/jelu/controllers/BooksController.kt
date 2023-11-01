@@ -11,6 +11,7 @@ import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.Role
+import io.github.bayang.jelu.dto.SeriesDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
@@ -130,6 +131,16 @@ class BooksController(
         return ResponseEntity.noContent().build()
     }
 
+    @ApiResponse(responseCode = "204", description = "Deleted the series from the book")
+    @DeleteMapping(path = ["/books/{bookId}/series/{seriesId}"])
+    fun deleteSeriesFromBook(
+        @PathVariable("bookId") bookId: UUID,
+        @PathVariable("seriesId") seriesId: UUID,
+    ): ResponseEntity<Unit> {
+        repository.deleteSeriesFromBook(bookId, seriesId)
+        return ResponseEntity.noContent().build()
+    }
+
     @GetMapping(path = ["/userbooks"])
     fun userbooks(
         principal: Authentication,
@@ -178,6 +189,32 @@ class BooksController(
     ): Page<BookDto> {
         assertIsJeluUser(principal.principal)
         return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY)
+    }
+
+    @GetMapping(path = ["/series"])
+    fun series(
+        @RequestParam(name = "name", required = false) name: String?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
+    ): Page<SeriesDto> = repository.findAllSeries(name, pageable)
+
+    @GetMapping(path = ["/series/{id}"])
+    fun seriesById(
+        @PathVariable("id") seriesId: UUID,
+        principal: Authentication,
+    ): SeriesDto {
+        assertIsJeluUser(principal.principal)
+        return repository.findSeriesById(seriesId)
+    }
+
+    @GetMapping(path = ["/series/{id}/books"])
+    fun seriesBooksById(
+        @PathVariable("id") seriesId: UUID,
+        @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
+        principal: Authentication,
+    ): Page<BookDto> {
+        assertIsJeluUser(principal.principal)
+        return repository.findSeriesBooksById(seriesId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY)
     }
 
     @GetMapping(path = ["/authors/{id}"])

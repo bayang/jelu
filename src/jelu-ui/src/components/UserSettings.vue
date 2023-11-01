@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { useTitle } from '@vueuse/core'
-import { inject, onMounted, watch } from 'vue'
-import { useStore } from 'vuex'
-import { key } from '../store'
+import { useLocalStorage, useTitle } from '@vueuse/core'
 import { themeChange } from 'theme-change'
+import { inject, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useLocalStorage } from '@vueuse/core'
 
 useTitle('Jelu | User settings')
 
-const store = useStore(key)
 const { t, locale, availableLocales } = useI18n({
       inheritLocale: true,
       useScope: 'global'

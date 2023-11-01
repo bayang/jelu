@@ -7,6 +7,8 @@ import { Metadata } from "../model/Metadata";
 import { Tag } from "../model/Tag";
 import dataService from "../services/DataService";
 import { ObjectUtils } from "../utils/ObjectUtils";
+import { SeriesOrder } from "../model/Series";
+import SeriesInput from "./SeriesInput.vue";
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -21,6 +23,7 @@ const props = defineProps<{
 const book: Ref<Book> = ref(props.book)
 const initialIsbn10: Ref<string|undefined> = ref(book.value.isbn10)
 const initialIsbn13: Ref<string|undefined> = ref(book.value.isbn13)
+const seriesCopy: Array<SeriesOrder> = book.value.series ?? []
 
 const emit = defineEmits<{
   (e: 'close'): void
@@ -71,6 +74,16 @@ const importData = async () => {
     if (!saveBook) {
       progress.value = false
       return
+    }
+    if (seriesCopy.length > 0) {
+      if (book.value.series == null) {
+        book.value.series = []
+      }
+      seriesCopy.forEach(s => {
+        if (s.name.trim().length > 0){
+          book.value.series?.push(s)
+        }
+      })
     }
     dataService.updateBook(book.value.id, {...book.value})
     .then(res => {
@@ -468,76 +481,42 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <label class="label">
             <span class="label-text">{{ t('book.series') }}</span>
           </label>
-          <input
-            v-model="book.series"
-            type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+          <div
+            v-for="seriesItem,idx in seriesCopy"
+            :key="seriesItem.seriesId"
+            class="flex flex-col sm:flex-row items-center grow w-full pb-2"
           >
-        </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
-            <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
-              @click="book.series = props.metadata.series"
+            <SeriesInput
+              class="jl-formkit"
+              :series="seriesItem"
+              :parent-series="seriesCopy"
+              @update-series="(series: SeriesOrder) => seriesCopy[idx] = series"
+            />
+            <button
+              class="btn btn-error btn-outline sm:btn-sm px-1 sm:border-none"
+              @click="seriesCopy.splice(idx, 1)"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="w-6 h-6"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              <span class="icon">
+                <i class="mdi mdi-delete mdi-18px" />
+              </span>
             </button>
-            <input
-              type="text"
-              :value="props.metadata.series"
-              disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+          </div>
+          <div class="field pb-2">
+            <button
+              class="btn btn-primary btn-circle p-2 btn-sm"
+              @click="seriesCopy.push({'name' : ''})"
             >
+              <span class="icon">
+                <i class="mdi mdi-plus mdi-18px" />
+              </span>
+            </button>
           </div>
         </div>
         <div class="form-control w-full max-w-xs">
-          <label class="label">
-            <span class="label-text">{{ t('book.nb_in_series') }}</span>
-          </label>
-          <input
-            v-model="book.numberInSeries"
-            type="number"
-            min="0"
-            step="0.1"
-            class="input input-bordered input-primary w-full max-w-xs"
-          >
-        </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
-            <button 
-              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
-              @click="book.numberInSeries = props.metadata.numberInSeries"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="w-6 h-6"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-            <input
-              type="text"
-              :value="props.metadata.numberInSeries"
-              disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
-            >
+          <div class="flex">
+            <div class="m-2">
+              {{ props.metadata.series }} <span v-if="props.metadata.numberInSeries">#{{ props.metadata.numberInSeries }}</span>
+            </div>
           </div>
         </div>
         <div class="form-control w-full max-w-xs">

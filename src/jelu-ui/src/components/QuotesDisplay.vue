@@ -30,14 +30,12 @@ onMounted(() => {
 
 });
 
-// if (isLogged.value) {
 try {
   getQuotes()
 }
 catch (err) {
   console.log("failed get quotes : " + err);
 }
-// }
 
 </script>
 

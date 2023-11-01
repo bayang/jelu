@@ -221,7 +221,7 @@ getBooks()
     <div class="grid items-center justify-center justify-items-center justify-self-center sm:grid-cols-3 mb-4 sm:w-10/12 column is-full">
       <div />
       <div class="level-item">
-        <h2 class="text-2xl inline mr-2 title has-text-weight-normal typewriter">
+        <h2 class="text-2xl inline mr-2 typewriter">
           {{ author.name }}
         </h2>
         <button

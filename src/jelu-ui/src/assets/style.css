@@ -100,7 +100,6 @@
   @apply radio radio-primary radio-sm bg-none;
 }
 
-
 .o-pag__link {
   @apply btn text-neutral-content !important;
 }
@@ -139,6 +138,18 @@
 
 .o-icon.o-icon--spin.o-icon--medium.o-load__icon {
   @apply text-gray-700;
+}
+
+.o-ctrl-input > input[type="number"] {
+  @apply w-24;
+}
+
+.o-acp .o-ctrl-input .o-input {
+  @apply w-fit sm:w-full bg-base-100 text-base-content border-base-200 focus:input-accent grow;
+}
+
+.o-acp {
+  @apply grow !important;
 }
 
 /* end oruga customization with daisyui */
@@ -345,4 +356,8 @@
 
 .jelu-cursor-text {
   @apply cursor-text !important;
+}
+
+.jl-formkit .o-input {
+  @apply w-fit sm:w-full bg-base-100 text-base-content border-primary focus:input-accent;
 }

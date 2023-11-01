@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core';
 import { Ref, ref, watch } from "vue";
-import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { Book } from "../model/Book";
 import { Review } from "../model/Review";
@@ -10,11 +9,6 @@ import BookDataCard from "./BookDataCard.vue";
 import ReviewCard from "./ReviewCard.vue";
 
 const route = useRoute()
-
-const { t } = useI18n({
-  inheritLocale: true,
-  useScope: 'global'
-})
 
 const review: Ref<Review|null> = ref(null)
 const book: Ref<Book|null> = ref(null)

@@ -94,7 +94,7 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
-            path: '/series',
+            path: '/series/:seriesId',
             component: () => import(/* webpackChunkName: "recommend" */ './components/SeriesBooks.vue'),
             name: 'series',
             beforeEnter: [isLogged],

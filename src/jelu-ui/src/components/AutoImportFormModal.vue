@@ -130,7 +130,7 @@ function pluginsModalClosed() {
   <section class="edit-modal">
     <div class="grid justify-center justify-items-center columns is-centered is-multiline">
       <div class="mb-2">
-        <h1 class="text-2xl title has-text-weight-normal typewriter capitalize">
+        <h1 class="text-2xl typewriter capitalize">
           {{ t('labels.import_book') }}
         </h1>
       </div>

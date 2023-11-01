@@ -105,6 +105,16 @@ class SearchIndexService(
         while (books.hasNext())
     }
 
+    fun seriesUpdated(seriesId: UUID) {
+        var books: Page<Book>
+        do {
+            books = bookRepository.findSeriesBooksByIdNoFilters(seriesId, Pageable.ofSize(30))
+            books.forEach { deleteEntity(LuceneEntity.Book, it.id.value.toString()) }
+            books.forEach { addEntity(it.toDocument()) }
+        }
+        while (books.hasNext())
+    }
+
     private fun addEntity(doc: Document) {
         luceneHelper.getIndexWriter().use { indexWriter ->
             indexWriter.addDocument(doc)

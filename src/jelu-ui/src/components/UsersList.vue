@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core'
-import { inject, onMounted, watch, ref, Ref, computed } from 'vue'
-import { useStore } from 'vuex'
-import { key } from '../store'
-import { themeChange } from 'theme-change'
-import { useI18n } from 'vue-i18n'
-import { useLocalStorage } from '@vueuse/core'
-import { User } from '../model/User'
-import dataService from "../services/DataService";
+import { Ref, computed, ref } from 'vue'
 import Avatar from 'vue-avatar-sdh'
+import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
+import { User } from '../model/User'
+import dataService from "../services/DataService"
+import { key } from '../store'
 
 useTitle('Jelu | Users')
 

@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { useProgrammatic } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
-import { computed, onMounted, Ref, ref } from 'vue'
+import { computed, Ref, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import { Author } from "../model/Author"
 import dataService from "../services/DataService"
-import { key } from '../store'
 import { StringUtils } from "../utils/StringUtils"
 import dayjs from "dayjs";
 import useDates from '../composables/dates'
@@ -20,7 +18,6 @@ const { t, locale, availableLocales } = useI18n({
       useScope: 'global'
     })
 
-const store = useStore(key)
 const router = useRouter()
 const { oruga } = useProgrammatic();
 
@@ -179,7 +176,6 @@ const rightDoD = computed(() => {
         </o-field>
       </div>
     </div>
-    <!-- <div class=""> -->
     <div class="justify-self-center col-span-2 sm:col-span-1 w-11/12 sm:w-8/12">
       <div class="field">
         <o-field

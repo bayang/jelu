@@ -86,7 +86,6 @@ watch(file, (newVal, oldVal) => {
   console.log(oldVal)
 })
 
-
 </script>
 
 <template>
@@ -249,6 +248,5 @@ watch(file, (newVal, oldVal) => {
 </template>
 
 <style scoped>
-
 
 </style>

@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref, watch } from "vue";
+import { useThrottleFn, useTitle } from '@vueuse/core';
 import { useRouteQuery } from '@vueuse/router';
-import dataService from "../services/DataService";
-import { UserBook } from "../model/Book";
-import BookCard from "./BookCard.vue";
-import usePagination from '../composables/pagination';
-import { ReadingEventType } from "../model/ReadingEvent";
+import { computed, onMounted, Ref, ref, watch } from "vue";
+import { useI18n } from 'vue-i18n';
 import useBulkEdition from '../composables/bulkEdition';
-import { useThrottleFn } from '@vueuse/core'
+import usePagination from '../composables/pagination';
 import useSort from "../composables/sort";
+import { UserBook } from "../model/Book";
+import { ReadingEventType } from "../model/ReadingEvent";
+import dataService from "../services/DataService";
+import BookCard from "./BookCard.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
-import { useTitle } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
 
 useTitle('Jelu | My books')
 
@@ -394,7 +393,7 @@ try {
     />
   </div>
   <div v-else>
-    <h2 class="title has-text-weight-normal typewriter capitalize">
+    <h2 class="text-3xl typewriter capitalize">
       {{ t('labels.library_empty') }}
     </h2>
     <span class="icon is-large">

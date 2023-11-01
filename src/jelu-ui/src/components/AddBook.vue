@@ -15,6 +15,8 @@ import { key } from '../store';
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
 import AutoImportFormModalVue from "./AutoImportFormModal.vue";
+import { SeriesOrder } from "../model/Series";
+import SeriesInput from "./SeriesInput.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -37,9 +39,6 @@ const form = reactive({
   isbn13: "",
   publisher: "",
   pageCount: null,
-  // publishedDate: <Date> null,
-  series: "",
-  numberInSeries: null,
   personalNotes: "",
   owned: null,
   borrowed: null,
@@ -94,9 +93,11 @@ let tags: Ref<Array<Tag>> = ref([]);
 let translators: Ref<Array<Author>> = ref([]);
 let filteredTranslators: Ref<Array<Author>> = ref([]);
 
+let seriesCopy: Ref<Array<SeriesOrder>> = ref([])
+
 const showModal: Ref<boolean> = ref(false)
 const metadata: Ref<Metadata | null> = ref(null)
-// let hasImage: Ref<boolean> = ref(metadata?.value?.image != null)
+
 let hasImage = computed(() => {
   return StringUtils.isNotBlank(metadata.value?.image)
 })
@@ -136,10 +137,16 @@ const importBook = async () => {
     authors.value.forEach((a) => userBook.book.authors?.push(a));
     tags.value.forEach((t) => userBook.book.tags?.push(t));
     translators.value.forEach((tr) => userBook.book.translators?.push(tr));
+    seriesCopy.value.forEach((s) => {
+      if (s.name.trim().length > 0) {
+        userBook.book.series?.push(s)
+      }
+    })
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
     }
     else if (!deleteImage.value
+      && metadata.value != null
       && metadata.value?.image != null
       && StringUtils.isNotBlank(metadata.value.image)) {
       userBook.book.image = metadata.value.image
@@ -171,7 +178,6 @@ const importBook = async () => {
       await router.push({name: 'my-books'})
     } catch (error: any) {
       progress.value = false
-      // errorMessage.value = error.message
       ObjectUtils.toast(oruga, "danger", t('labels.error_message', {msg : error.message}), 4000)
     }
   } else {
@@ -190,8 +196,7 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
       image: formdata.image,
       pageCount: formdata.pageCount,
       publishedDate: publishedDate?.toISOString(),
-      series: formdata.series,
-      numberInSeries: formdata.numberInSeries,
+      series: [],
       googleId: formdata.googleId,
       amazonId: formdata.amazonId,
       goodreadsId: formdata.goodreadsId,
@@ -225,11 +230,9 @@ const clearForm = () => {
   form.isbn13 = "";
   form.publisher = "";
   form.pageCount = null;
-  // form.publishedDate = null;
   publishedDate.value = null
-  form.series = ""
+  seriesCopy.value = []
   form.language = ""
-  form.numberInSeries = null
   form.owned = null
   form.personalNotes = ""
   form.amazonId = ""
@@ -241,7 +244,6 @@ const clearForm = () => {
 
 const clearDatePicker = () => {
   // close datepicker on reset
-  // form.publishedDate = null;
   publishedDate.value = null
 };
 
@@ -382,6 +384,8 @@ function modalClosed() {
 
 const mergeMetadata = () => {
   for (let key in metadata.value) {
+    console.log("key")
+    console.log(key)
     if (key in form) {
       let castKey = key as (keyof typeof metadata.value & keyof typeof form);
       (form[castKey] as any) = metadata.value[castKey];
@@ -399,6 +403,12 @@ const mergeMetadata = () => {
   }
   if (metadata.value?.publishedDate && StringUtils.isNotBlank(metadata.value?.publishedDate)) {
     publishedDate.value = new Date(metadata.value?.publishedDate)
+  }
+  if (metadata.value?.series != null && metadata.value?.series?.length > 0) {
+    seriesCopy.value.push({
+      "name": metadata.value?.series,
+      "numberInSeries" : metadata.value.numberInSeries
+    })
   }
 }
 
@@ -452,10 +462,10 @@ let displayDatepicker = computed(() => {
 
 <template>
   <section>
-    <div class="grid columns is-multiline is-centered">
-      <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12 justify-center justify-items-center justify-self-center column is-centered is-offset-one-fifth is-three-fifths">
+    <div class="grid columns is-multiline">
+      <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12 justify-center justify-items-center justify-self-center column is-offset-one-fifth is-three-fifths">
         <div />
-        <h1 class="text-2xl title has-text-weight-normal typewriter capitalize">
+        <h1 class="text-2xl typewriter capitalize">
           {{ t('nav.add_book') }}
         </h1>
         <div class="flex">
@@ -486,7 +496,7 @@ let displayDatepicker = computed(() => {
           </svg>
         </div>
       </div>
-      <div class="form-control sm:w-8/12 justify-center justify-items-center justify-self-center column is-two-thirds">
+      <div class="form-control sm:w-8/12 justify-self-center column is-two-thirds">
         <div class="field mb-3">
           <o-field
             horizontal
@@ -510,7 +520,7 @@ let displayDatepicker = computed(() => {
               v-model="authors"
               :data="filteredAuthors"
               :allow-autocomplete="true"
-              :autocomplete="true"
+              autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
@@ -534,7 +544,7 @@ let displayDatepicker = computed(() => {
               v-model="tags"
               :data="filteredTags"
               :allow-autocomplete="true"
-              :autocomplete="true"
+              autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
@@ -558,7 +568,7 @@ let displayDatepicker = computed(() => {
               v-model="translators"
               :data="filteredTranslators"
               :allow-autocomplete="true"
-              :autocomplete="true"
+              autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
@@ -714,21 +724,45 @@ let displayDatepicker = computed(() => {
         </div>
         <div class="field mb-3">
           <o-field
-            horizontal
             :label="t('book.series')"
+            horizontal
             class="capitalize"
           >
-            <o-input
-              v-model="form.series"
-              class="input focus:input-accent"
-            />
-            <o-input
-              v-model="form.numberInSeries"
-              type="number"
-              min="0"
-              step="0.1"
-              class="input focus:input-accent"
-            />
+            <div
+              v-for="seriesItem,idx in seriesCopy"
+              :key="seriesItem.seriesId"
+              class="flex flex-col sm:flex-row items-center grow w-full pb-2"
+            >
+              <SeriesInput
+                :series="seriesItem"
+                :parent-series="seriesCopy"
+                @update-series="(series: SeriesOrder) => seriesCopy[idx] = series"
+              />
+              <button
+                class="btn btn-error btn-outline sm:btn-sm px-1 sm:border-none"
+                @click="seriesCopy.splice(idx, 1)"
+              >
+                <span class="icon">
+                  <i class="mdi mdi-delete mdi-18px" />
+                </span>
+              </button>
+            </div>
+          </o-field>
+        </div>
+        <div class="field mb-3">
+          <o-field
+            label=""
+            horizontal
+            class="capitalize"
+          >
+            <button
+              class="btn btn-primary btn-circle p-2 btn-sm"
+              @click="seriesCopy.push({'name' : ''})"
+            >
+              <span class="icon">
+                <i class="mdi mdi-plus mdi-18px" />
+              </span>
+            </button>
           </o-field>
         </div>
         <div class="block">

@@ -72,7 +72,6 @@ const getReadEvents = async () => {
   }
 };
 
-
 const getToRead = async () => {
   getToReadIsLoading.value = true
   try {

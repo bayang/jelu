@@ -22,6 +22,7 @@ import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/R
 import { Role } from "../model/Role";
 import { StringUtils } from "../utils/StringUtils";
 import { MetadataRequest } from "../model/MetadataRequest";
+import { Series } from "../model/Series";
 
 class DataService {
 
@@ -40,6 +41,8 @@ class DataService {
   private API_AUTHOR = '/authors';
 
   private API_TAG = '/tags';
+
+  private API_SERIES = '/series';
 
   private API_LOGOUT = '/logout';
 
@@ -533,6 +536,26 @@ class DataService {
     }
   }
 
+  findSeriesByCriteria = async (query?: string | null) => {
+    try {
+      const response = await this.apiClient.get<Page<Series>>(`${this.API_SERIES}`, {
+        params: {
+          name: query
+        }
+      });
+      console.log("called series by criteria")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error series by criteria " + (error as AxiosError).code)
+      throw new Error("error get series by criteria " + error)
+    }
+  }
+
   getTagById = async (tagId: string) => {
     try {
       const response = await this.apiClient.get<Tag>(`${this.API_TAG}/${tagId}`);
@@ -546,6 +569,22 @@ class DataService {
       }
       console.log("error tag by id " + (error as AxiosError).code)
       throw new Error("error get tag by id " + error)
+    }
+  }
+
+  getSeriesById = async (seriesId: string) => {
+    try {
+      const response = await this.apiClient.get<Series>(`${this.API_SERIES}/${seriesId}`);
+      console.log("called series by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error series by id " + (error as AxiosError).code)
+      throw new Error("error get series by id " + error)
     }
   }
 
@@ -602,6 +641,30 @@ class DataService {
       }
       console.log("error tag books by id " + (error as AxiosError).code)
       throw new Error("error get tag books by id " + error)
+    }
+  }
+
+  getSeriesBooksById = async (seriesId: string,
+    page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
+    try {
+      const response = await this.apiClient.get<Page<Book>>(`${this.API_SERIES}/${seriesId}${this.API_BOOK}`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort,
+          libraryFilter: libraryFilter
+        }
+      });
+      console.log("called series books by id")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error series books by id " + (error as AxiosError).code)
+      throw new Error("error get series books by id " + error)
     }
   }
 

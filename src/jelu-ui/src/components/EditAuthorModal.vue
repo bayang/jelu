@@ -88,13 +88,6 @@ const search = () => {
   })
 }
 
-const toHtmlLink = (link: string) => {
-  if (link != null) {
-    return `<a href="${link}" target="_blank">${link}</a>`
-  }
-  return ''
-}
-
 const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
   progress.value = true
   dataService.wikipediaPage(entry.title, searchlanguage.value)

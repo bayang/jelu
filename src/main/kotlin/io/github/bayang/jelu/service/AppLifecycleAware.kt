@@ -7,6 +7,9 @@ import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.io.File
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 private val logger = KotlinLogging.logger {}
 
@@ -15,6 +18,8 @@ class AppLifecycleAware(
     private val properties: JeluProperties,
     private val luceneHelper: LuceneHelper,
     private val searchIndexService: SearchIndexService,
+    private val lifeCycleService: LifeCycleService,
+    private val bookService: BookService,
 ) {
 
     @EventListener
@@ -39,6 +44,18 @@ class AppLifecycleAware(
                 searchIndexService.upgradeIndex()
                 searchIndexService.rebuildIndex()
             }
+        }
+        val lifeCycle = lifeCycleService.getLifeCycle()
+        if (!lifeCycle.seriesMigrated) {
+            val start = System.currentTimeMillis()
+            val nowString: String = OffsetDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
+            logger.info { "Series data not migrated, starting migration at at $nowString" }
+            bookService.migrateSeries()
+            var end = System.currentTimeMillis()
+            var deltaInSec = (end - start) / 1000
+            logger.info { "Series data migration completed after : $deltaInSec seconds, check your data" }
+            val seriesMigrated = lifeCycleService.setSeriesMigrated()
+            logger.debug { "lifeCycled updated to ${seriesMigrated.seriesMigrated}" }
         }
     }
 }

@@ -17,6 +17,8 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.Role
+import io.github.bayang.jelu.dto.SeriesDto
+import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
@@ -99,6 +101,9 @@ class BookService(
 
     @Transactional
     fun findAllTags(name: String?, pageable: Pageable): Page<TagDto> = bookRepository.findAllTags(name, pageable).map { it.toTagDto() }
+
+    @Transactional
+    fun findAllSeries(name: String?, pageable: Pageable): Page<SeriesDto> = bookRepository.findAllSeries(name, pageable).map { it.toSeriesDto() }
 
     @Transactional
     fun findBookById(bookId: UUID): BookDto = bookRepository.findBookById(bookId).toBookDto()
@@ -327,6 +332,13 @@ class BookService(
     }
 
     @Transactional
+    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto): SeriesDto {
+        val res = bookRepository.updateSeries(seriesId, series)
+        searchIndexService.seriesUpdated(seriesId)
+        return res.toSeriesDto()
+    }
+
+    @Transactional
     fun findUserBookById(userbookId: UUID): UserBookLightDto = bookRepository.findUserBookById(userbookId).toUserBookLightDto()
 
     @Transactional
@@ -353,8 +365,23 @@ class BookService(
     }
 
     @Transactional
+    fun findSeriesBooksById(seriesId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
+        return bookRepository.findSeriesBooksById(seriesId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
+    }
+
+    @Transactional
+    fun findSeriesById(seriesId: UUID): SeriesDto {
+        return bookRepository.findSeriesById(seriesId).toSeriesDto()
+    }
+
+    @Transactional
     fun save(tag: TagDto): TagDto {
         return bookRepository.save(tag).toTagDto()
+    }
+
+    @Transactional
+    fun saveSeries(series: SeriesUpdateDto): SeriesDto {
+        return bookRepository.saveSeries(series).toSeriesDto()
     }
 
     @Transactional
@@ -401,6 +428,25 @@ class BookService(
         while (books.hasNext())
         bookRepository.deleteTagById(tagId)
         searchIndexService.booksUpdated(bookIds)
+    }
+
+    @Transactional
+    fun deleteSeriesById(seriesId: UUID) {
+        var books: Page<Book>
+        val bookIds: MutableList<UUID> = mutableListOf()
+        do {
+            books = bookRepository.findSeriesBooksByIdNoFilters(seriesId, Pageable.ofSize(30))
+            books.forEach { bookIds.add(it.id.value) }
+        }
+        while (books.hasNext())
+        bookRepository.deleteSeriesById(seriesId)
+        searchIndexService.booksUpdated(bookIds)
+    }
+
+    @Transactional
+    fun deleteSeriesFromBook(bookId: UUID, seriesId: UUID) {
+        bookRepository.deleteSeriesFromBook(bookId, seriesId)
+        searchIndexService.bookUpdated(bookId)
     }
 
     /**
@@ -495,5 +541,20 @@ class BookService(
         val res = bookRepository.updateAuthor(authorId, authorUpdateDto)
         searchIndexService.authorUpdated(res.id.value)
         return res.toAuthorDto()
+    }
+
+    @Transactional
+    fun migrateSeries() {
+        var pageNum = 0
+        val size = 30
+        do {
+            val booksPage: Page<Book> = bookRepository.booksWithSeries(PageRequest.of(pageNum, size))
+            if (booksPage.hasContent()) {
+                for (book in booksPage.content) {
+                    bookRepository.updateSeriesFromStringToDedicatedTable(book)
+                }
+                pageNum++
+            }
+        } while (booksPage.hasNext())
     }
 }

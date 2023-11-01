@@ -286,5 +286,4 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
 
 <style lang="scss" scoped>
 
-
 </style>

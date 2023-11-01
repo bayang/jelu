@@ -21,7 +21,7 @@ object BookTable : UUIDTable("book") {
     val summary: Column<String?> = varchar("summary", 50000).nullable()
     val pageCount: Column<Int?> = integer(name = "page_count").nullable()
     val image: Column<String?> = varchar("image", 1000).nullable()
-    val series: Column<String?> = varchar("series", 500).nullable()
+    val seriesBak: Column<String?> = varchar("series_bak", 500).nullable()
     val numberInSeries: Column<Double?> = double(name = "number_in_series").nullable()
     val googleId: Column<String?> = varchar("google_id", 30).nullable()
     val goodreadsId: Column<String?> = varchar("goodreads_id", 30).nullable()
@@ -44,7 +44,8 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
     var translators by Author via BookTranslators
     var tags by Tag via BookTags
     var image by BookTable.image
-    var series by BookTable.series
+    var seriesBak by BookTable.seriesBak
+    val seriesAndOrder by BookSeriesItem.referrersOn(BookSeries.book)
     var language by BookTable.language
     var numberInSeries by BookTable.numberInSeries
     var googleId by BookTable.googleId
@@ -67,8 +68,8 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             publishedDate = this.publishedDate,
             pageCount = this.pageCount,
             modificationDate = this.modificationDate,
-            series = this.series,
-            numberInSeries = this.numberInSeries,
+            // seriesBak = this.seriesBak,
+            // numberInSeries = this.numberInSeries,
             goodreadsId = this.goodreadsId,
             googleId = this.googleId,
             amazonId = this.amazonId,
@@ -78,6 +79,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             translators = this.translators.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() },
             userBookId = this.userBookId,
+            series = this.seriesAndOrder.map { it.toSeriesOrderDto() },
         )
 
     fun toBookUpdateDto(): BookUpdateDto =
@@ -90,8 +92,8 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             publisher = this.publisher,
             publishedDate = this.publishedDate,
             pageCount = this.pageCount,
-            series = this.series,
-            numberInSeries = this.numberInSeries,
+            // seriesBak = this.seriesBak,
+            // numberInSeries = this.numberInSeries,
             goodreadsId = this.goodreadsId,
             googleId = this.googleId,
             amazonId = this.amazonId,
@@ -100,5 +102,6 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             authors = this.authors.map { it.toAuthorDto() },
             translators = this.translators.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() },
+            series = this.seriesAndOrder.map { it.toSeriesOrderDto() },
         )
 }

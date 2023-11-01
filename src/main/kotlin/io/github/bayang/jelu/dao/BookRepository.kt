@@ -8,6 +8,8 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.Role
+import io.github.bayang.jelu.dto.SeriesOrderDto
+import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -93,6 +95,8 @@ class BookRepository(
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
+            .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
+            .join(SeriesTable, JoinType.LEFT, onColumn = SeriesTable.id, otherColumn = BookSeries.series)
             .slice(BookTable.columns)
             .selectAll()
             .withDistinct()
@@ -129,6 +133,8 @@ class BookRepository(
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
+            .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
+            .join(SeriesTable, JoinType.LEFT, onColumn = SeriesTable.id, otherColumn = BookSeries.series)
             .slice(BookTable.columns)
             .selectAll()
             .withDistinct()
@@ -143,7 +149,7 @@ class BookRepository(
             query.andWhere { BookTable.isbn13 eq isbn13 }
         }
         if (!series?.trim().isNullOrBlank()) {
-            query.andWhere { BookTable.series like "%$series%" }
+            query.andWhere { SeriesTable.name like "%$series%" }
         }
         if (!authors.isNullOrEmpty()) {
             var first = true
@@ -203,6 +209,8 @@ class BookRepository(
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
+            .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
+            .join(SeriesTable, JoinType.LEFT, onColumn = SeriesTable.id, otherColumn = BookSeries.series)
             .slice(BookTable.columns)
             .selectAll()
             .withDistinct()
@@ -217,7 +225,7 @@ class BookRepository(
             query.andWhere { BookTable.isbn13 eq isbn13 }
         }
         if (!series?.trim().isNullOrBlank()) {
-            query.andWhere { BookTable.series like "%$series%" }
+            query.andWhere { SeriesTable.name like "%$series%" }
         }
         if (!authors.isNullOrEmpty()) {
             var first = true
@@ -303,6 +311,22 @@ class BookRepository(
         )
     }
 
+    fun findAllSeries(name: String?, pageable: Pageable): Page<Series> {
+        val query: Query = SeriesTable.selectAll()
+        name?.let {
+            query.andWhere { SeriesTable.name like "%$name%" }
+        }
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(SeriesTable.name, SortOrder.ASC_NULLS_LAST), SeriesTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> Series.wrapRow(resultRow) },
+            pageable,
+            total,
+        )
+    }
+
     fun findAuthorsByName(name: String): List<Author> {
         return Author.find { AuthorTable.name like "%$name%" }.toList()
     }
@@ -311,11 +335,17 @@ class BookRepository(
         return Tag.find { TagTable.name.lowerCase() eq name.lowercase() }.toList()
     }
 
+    fun findSeriesByName(name: String): List<Series> {
+        return Series.find { SeriesTable.name.lowerCase() eq name.lowercase() }.toList()
+    }
+
     fun findBookById(bookId: UUID): Book = Book[bookId]
 
     fun findAuthorsById(authorId: UUID): Author = Author[authorId]
 
     fun findTagById(tagId: UUID): Tag = Tag[tagId]
+
+    fun findSeriesById(seriesId: UUID): Series = Series[seriesId]
 
     fun findTagBooksById(tagId: UUID, user: User, pageable: Pageable, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
@@ -326,6 +356,34 @@ class BookRepository(
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .slice(BookTable.columns)
             .select { BookTags.tag eq tagId }
+        if (filter == LibraryFilter.ONLY_USER_BOOKS) {
+            // only books where user has an userbook
+            query.andWhere { UserBookTable.user eq user.id }
+        } else if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
+            // only books where there are no userbooks or only other users have userbooks
+            query.andWhere { BookTable.id notInSubQuery booksWithSameIdAndUserHasUserbook }
+        }
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            pageable,
+            total,
+        )
+    }
+
+    fun findSeriesBooksById(seriesId: UUID, user: User, pageable: Pageable, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+        val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
+            .slice(BookTable.id)
+            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .withDistinct()
+        val query = BookTable.join(BookSeries, JoinType.LEFT)
+            .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .slice(BookTable.columns)
+            .select { BookSeries.series eq seriesId }
         if (filter == LibraryFilter.ONLY_USER_BOOKS) {
             // only books where user has an userbook
             query.andWhere { UserBookTable.user eq user.id }
@@ -424,6 +482,25 @@ class BookRepository(
         )
     }
 
+    fun findSeriesBooksByIdNoFilters(seriesId: UUID, pageable: Pageable): Page<Book> {
+        val query = BookTable.join(BookSeries, JoinType.LEFT)
+            .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
+            .slice(BookTable.columns)
+            .select {
+                BookSeries.series eq seriesId
+            }
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapRow(resultRow) },
+            pageable,
+            total,
+        )
+    }
+
     fun wrapRow(resultRow: ResultRow, userId: UUID): Book {
         val e = Book.wrapRow(resultRow)
         val userbook = e.userBooks.firstOrNull { u -> u.user.id.value == userId }
@@ -469,12 +546,6 @@ class BookRepository(
         // image must be set when saving file succeeds
         book.publishedDate?.let {
             updated.publishedDate = book.publishedDate.trim()
-        }
-        book.series?.let {
-            updated.series = book.series.trim()
-        }
-        book.numberInSeries?.let {
-            updated.numberInSeries = book.numberInSeries
         }
         book.amazonId?.let {
             updated.amazonId = book.amazonId.trim()
@@ -548,6 +619,36 @@ class BookRepository(
         }
         if (tagsList.isNotEmpty()) {
             updated.tags = SizedCollection(tagsList)
+        }
+        book.series?.forEach {
+            // first try to find exact match by id
+            var seriesEntity: Series? = if (it.seriesId != null) {
+                findSeriesById(it.seriesId)
+            }
+            // if no id provided or research by id doesn't return anything try to find by name
+            else {
+                findSeriesByName(it.name.trim()).firstOrNull()
+            }
+            if (seriesEntity != null) {
+                val alreadyExistingOnBook = updated.seriesAndOrder.find { s -> s.series.id == seriesEntity.id }
+                // this series is not yet on the book, save a new BookSeriesItem
+                if (alreadyExistingOnBook == null) {
+                    save(it, seriesEntity, updated)
+                } else {
+                    // juste update the already exsting BookSeriesItem to avoid duplicates
+                    update(it, seriesEntity, updated)
+                }
+            } else {
+                save(it, updated)
+            }
+        }
+        // remove preexisting series which are not in the update dto series
+        // which means they are no longer wanted
+        updated.seriesAndOrder.forEach { bsi ->
+            if (book.series?.find { s -> s.name == bsi.series.name } == null) {
+                logger.trace { "delete previously existing series not in updated list ${bsi.series.name}" }
+                BookSeries.deleteWhere { BookSeries.series eq(bsi.series.id) }
+            }
         }
         return updated
     }
@@ -632,6 +733,15 @@ class BookRepository(
         return found
     }
 
+    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto): Series {
+        val found: Series = Series[seriesId]
+        if (series.name.isNotBlank()) {
+            found.name = series.name.trim()
+        }
+        found.modificationDate = nowInstant()
+        return found
+    }
+
     fun save(book: BookCreateDto): Book {
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach { authorDto ->
@@ -672,6 +782,7 @@ class BookRepository(
                 tagsList.add(save(it))
             }
         }
+
         val created = Book.new(UUID.randomUUID()) {
             this.title = book.title.trim()
             val instant: Instant = nowInstant()
@@ -684,18 +795,25 @@ class BookRepository(
             this.publishedDate = cleanString(book.publishedDate)
             this.publisher = cleanString(book.publisher)
             this.image = cleanString(book.image)
-            this.series = cleanString(book.series)
-            this.numberInSeries = book.numberInSeries
             this.amazonId = cleanString(book.amazonId)
             this.goodreadsId = cleanString(book.goodreadsId)
             this.googleId = cleanString(book.googleId)
             this.librarythingId = cleanString(book.librarythingId)
             this.language = cleanString(book.language)
         }
+        book.series?.forEach {
+            val seriesEntity: Series? = findSeriesByName(it.name.trim()).firstOrNull()
+            if (seriesEntity != null) {
+                save(it, seriesEntity, created)
+            } else {
+                save(it, created)
+            }
+        }
 
         created.authors = SizedCollection(authorsList)
         created.tags = SizedCollection(tagsList)
         created.translators = SizedCollection(translatorsList)
+
         // eager loading, see if we keep this in the long term
         created.load(Book::authors)
         created.load(Book::translators)
@@ -739,6 +857,58 @@ class BookRepository(
             modificationDate = instant
         }
         return created
+    }
+
+    fun saveSeries(series: SeriesUpdateDto): Series {
+        val created = Series.new(UUID.randomUUID()) {
+            this.name = series.name.trim()
+            val instant: Instant = nowInstant()
+            creationDate = instant
+            modificationDate = instant
+        }
+        return created
+    }
+
+    fun save(series: SeriesOrderDto, book: Book): BookSeriesItem {
+        val created = Series.new(UUID.randomUUID()) {
+            name = series.name.trim()
+            val instant: Instant = nowInstant()
+            creationDate = instant
+            modificationDate = instant
+        }
+        val withPosition = BookSeriesItem.new(UUID.randomUUID()) {
+            this.series = created
+            this.book = book
+            this.numberInSeries = series.numberInSeries
+        }
+        return withPosition
+    }
+
+    fun save(series: SeriesOrderDto, seriesEntity: Series, book: Book): BookSeriesItem? {
+        val existing =
+            BookSeriesItem.find { BookSeries.book eq book.id and (BookSeries.series eq seriesEntity.id) and (BookSeries.numberInSeries eq series.numberInSeries) }
+        if (existing.empty()) {
+            val withPosition = BookSeriesItem.new(UUID.randomUUID()) {
+                this.series = seriesEntity
+                this.book = book
+                this.numberInSeries = series.numberInSeries
+            }
+            return withPosition
+        }
+        return null
+    }
+
+    fun update(series: SeriesOrderDto, seriesEntity: Series, book: Book): BookSeriesItem? {
+        val existing =
+            BookSeriesItem.find { BookSeries.book eq book.id and (BookSeries.series eq seriesEntity.id) }
+        if (!existing.empty()) {
+            val item = existing.firstOrNull()
+            if (item != null) {
+                item.numberInSeries = series.numberInSeries
+            }
+            return item
+        }
+        return null
     }
 
     fun save(book: Book, user: User, createUserBookDto: CreateUserBookDto): UserBook {
@@ -880,6 +1050,12 @@ class BookRepository(
         }
     }
 
+    fun deleteSeriesFromBook(bookId: UUID, seriesId: UUID) {
+        BookSeries.deleteWhere {
+            series eq seriesId and(book eq bookId)
+        }
+    }
+
     fun deleteTagsFromBook(bookId: UUID, tagIds: List<UUID>) {
         BookTags.deleteWhere {
             BookTags.tag inList tagIds and(BookTags.book eq bookId)
@@ -900,6 +1076,10 @@ class BookRepository(
 
     fun deleteTagById(tagId: UUID) {
         Tag[tagId].delete()
+    }
+
+    fun deleteSeriesById(seriesId: UUID) {
+        Series[seriesId].delete()
     }
 
     /**
@@ -923,6 +1103,48 @@ class BookRepository(
     fun deleteTranslatorFromBook(bookId: UUID, translatorId: UUID) {
         BookTranslators.deleteWhere {
             BookTranslators.book eq bookId and(BookTranslators.translator eq translatorId)
+        }
+    }
+
+    fun booksWithSeries(pageable: Pageable): Page<Book> {
+        val query = BookTable
+            .slice(BookTable.columns)
+            .select { BookTable.seriesBak.isNotNull() }
+            .withDistinct()
+
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapRow(resultRow) },
+            pageable,
+            total,
+        )
+    }
+
+    fun updateSeriesFromStringToDedicatedTable(book: Book) {
+        val seriesBak = book.seriesBak?.trim()
+        if (!seriesBak.isNullOrBlank()) {
+            val seriesEntity: Series? = findSeriesByName(seriesBak).firstOrNull()
+            if (seriesEntity != null) {
+                save(
+                    SeriesOrderDto(
+                        name = seriesBak,
+                        numberInSeries = book.numberInSeries,
+                    ),
+                    seriesEntity,
+                    book,
+                )
+            } else {
+                save(
+                    SeriesOrderDto(
+                        name = seriesBak,
+                        numberInSeries = book.numberInSeries,
+                    ),
+                    book,
+                )
+            }
         }
     }
 }

@@ -188,27 +188,34 @@ function modalClosed() {
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
           {{ formatDateString(props.book.publishedDate) }}
         </p>
-        <div v-if="props.book.series">
+        <div v-if="props.book.series && props.book.series.length > 0">
           <span class="font-semibold capitalize">{{ t('book.series') }} :&nbsp;</span>
-          <router-link
-            v-if="links != null && links === true"
-            class="link hover:underline hover:decoration-4 hover:decoration-secondary"
-            :to="{ name: 'series', query: { series: props.book.series } }"
-          >
-            {{ props.book.series }}&nbsp;
-            <span
-              v-if="props.book.numberInSeries"
-            >-&nbsp;{{ props.book.numberInSeries }}</span>
-          </router-link>
-          <div
-            v-else
-            class="inline-block"
-          >
-            <span>{{ props.book.series }}&nbsp;</span>
-            <span
-              v-if="props.book.numberInSeries"
-            >-&nbsp;{{ props.book.numberInSeries }}</span>
-          </div>
+          <ul>
+            <li
+              v-for="seriesItem in props.book.series"
+              :key="seriesItem.seriesId"
+            >
+              <router-link
+                v-if="links != null && links === true"
+                class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+                :to="{ name: 'series', params: { seriesId: seriesItem.seriesId } }"
+              >
+                {{ seriesItem.name }}&nbsp;
+                <span
+                  v-if="seriesItem.numberInSeries"
+                >-&nbsp;{{ seriesItem.numberInSeries }}</span>
+              </router-link>
+              <div
+                v-else
+                class="inline-block"
+              >
+                <span>{{ seriesItem.name }}&nbsp;</span>
+                <span
+                  v-if="seriesItem.numberInSeries"
+                >-&nbsp;{{ seriesItem.numberInSeries }}</span>
+              </div>
+            </li>
+          </ul>
         </div>
         <p v-if="props.book.language">
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>

@@ -17,6 +17,7 @@ import io.github.bayang.jelu.dto.ImportDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
+import io.github.bayang.jelu.dto.SeriesOrderDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -375,6 +376,16 @@ class CsvImportService(
             }
             incoming.tags!!.filter { tagDto -> !existingTagsNames.contains(tagDto.name.lowercase()) }.forEach { tagDto -> tags.add(tagDto) }
         }
+        val series = mutableListOf<SeriesOrderDto>()
+        // only save series not already in db
+        if (incoming.series != null) {
+            val existingSeriesNames: Set<String> = if (dbBook.series != null) {
+                dbBook.series.stream().map { it.name }.map { it.lowercase() }.collect(Collectors.toSet())
+            } else {
+                setOf()
+            }
+            incoming.series!!.filter { seriesDto -> !existingSeriesNames.contains(seriesDto.name.lowercase()) }.forEach { seriesDto -> series.add(seriesDto) }
+        }
         return incoming.copy(
             id = dbBook.id,
             title = dbBook.title.ifBlank { incoming.title },
@@ -384,8 +395,8 @@ class CsvImportService(
             publisher = if (dbBook.publisher.isNullOrBlank()) incoming.publisher else null,
             pageCount = if (dbBook.pageCount == null) incoming.pageCount else null,
             publishedDate = if (dbBook.publishedDate.isNullOrBlank()) incoming.publishedDate else null,
-            series = if (dbBook.series.isNullOrBlank()) incoming.series else null,
-            numberInSeries = if (dbBook.numberInSeries == null) incoming.numberInSeries else null,
+            series = series,
+            // numberInSeries = if (dbBook.numberInSeries == null) incoming.numberInSeries else null,
             googleId = if (dbBook.googleId.isNullOrBlank()) incoming.googleId else null,
             amazonId = if (dbBook.amazonId.isNullOrBlank()) incoming.amazonId else null,
             goodreadsId = if (dbBook.goodreadsId.isNullOrBlank()) incoming.goodreadsId else null,
@@ -410,12 +421,12 @@ class CsvImportService(
         book.librarythingId = importEntity.librarythingId
         book.isbn10 = testValues(importEntity.isbn10, metadata.isbn10)
         book.isbn13 = testValues(importEntity.isbn13, metadata.isbn13)
-        book.numberInSeries = metadata.numberInSeries
+        // book.numberInSeries = metadata.numberInSeries
         book.pageCount = importEntity.numberOfPages ?: metadata.pageCount
         book.publishedDate = testValues(importEntity.publishedDate, metadata.publishedDate)
         book.publisher = testValues(importEntity.publisher, metadata.publisher)
         book.summary = metadata.summary
-        book.series = metadata.series
+        // book.seriesBak = metadata.series
         book.image = metadata.image
         val authorsStrings = mutableSetOf<String>()
         authorsStrings.addAll(metadata.authors)
@@ -426,6 +437,10 @@ class CsvImportService(
         val authors = mutableListOf<AuthorDto>()
         for (authorString in authorsStrings) {
             authors.add(AuthorDto(null, null, null, authorString, null, null, null, null, null, null, null, null, null, null, null))
+        }
+        val seriesString = metadata.series
+        if (!seriesString.isNullOrBlank()) {
+            book.series = listOf(SeriesOrderDto(name = seriesString, numberInSeries = metadata.numberInSeries))
         }
         book.authors = authors
         return book
