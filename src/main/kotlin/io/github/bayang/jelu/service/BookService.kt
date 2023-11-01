@@ -421,9 +421,12 @@ class BookService(
         }
         var books: Page<Book>
         val bookIds: MutableList<UUID> = mutableListOf()
+        val pageSize = 30
+        var pageNumber = 0
         do {
-            books = bookRepository.findTagBooksByIdNoFilters(tagId, Pageable.ofSize(30))
+            books = bookRepository.findTagBooksByIdNoFilters(tagId, PageRequest.of(pageNumber, pageSize))
             books.forEach { bookIds.add(it.id.value) }
+            pageNumber++
         }
         while (books.hasNext())
         bookRepository.deleteTagById(tagId)
@@ -434,9 +437,12 @@ class BookService(
     fun deleteSeriesById(seriesId: UUID) {
         var books: Page<Book>
         val bookIds: MutableList<UUID> = mutableListOf()
+        val pageSize = 30
+        var pageNumber = 0
         do {
-            books = bookRepository.findSeriesBooksByIdNoFilters(seriesId, Pageable.ofSize(30))
+            books = bookRepository.findSeriesBooksByIdNoFilters(seriesId, PageRequest.of(pageNumber, pageSize))
             books.forEach { bookIds.add(it.id.value) }
+            pageNumber++
         }
         while (books.hasNext())
         bookRepository.deleteSeriesById(seriesId)
@@ -473,9 +479,12 @@ class BookService(
     fun deleteAuthorById(authorId: UUID) {
         var books: Page<Book>
         val bookIds: MutableList<UUID> = mutableListOf()
+        val pageSize = 30
+        var pageNumber = 0
         do {
-            books = bookRepository.findAuthorBooksByIdNoFilters(authorId, Pageable.ofSize(30))
+            books = bookRepository.findAuthorBooksByIdNoFilters(authorId, PageRequest.of(pageNumber, pageSize))
             books.forEach { bookIds.add(it.id.value) }
+            pageNumber++
         }
         while (books.hasNext())
         bookRepository.deleteAuthorById(authorId)
