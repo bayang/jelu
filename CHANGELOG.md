@@ -1,3 +1,10 @@
+## [0.42.0](https://github.com/bayang/jelu/compare/v0.41.4...v0.42.0) (2023-11-01)
+
+
+### Features
+
+* allow multiple series per book ([a9c5979](https://github.com/bayang/jelu/commit/a9c5979e93c5bcb48b324fe942d9708d8de67021))
+
 ### [0.41.4](https://github.com/bayang/jelu/compare/v0.41.3...v0.41.4) (2023-09-01)
 
 ### [0.41.3](https://github.com/bayang/jelu/compare/v0.41.2...v0.41.3) (2023-08-28)
