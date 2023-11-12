@@ -25,6 +25,7 @@ const items = ref([{ name:t('settings.profile'), tooltip:t('settings.my_profile'
                 ])
 
 if (store.getters.isAdmin && store.getters.getUser != null && store.getters.getUser.provider !== Provider.PROXY) {
+  items.value.push({ name:t('nav.tags-admin'), icon:"bxs-purchase-tag", href:"/profile/tags", tooltip: t('nav.tags-admin') })
   items.value.push({ name:t('settings.add_users'), icon:"bxs-user-plus", href:"/profile/admin/users", tooltip: t('settings.users_management') })
 }
 

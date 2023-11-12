@@ -35,6 +35,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.io.TempDir
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.mock.web.MockMultipartFile
 import java.io.File
@@ -1918,6 +1919,8 @@ class BookServiceTest(
 
         val tags = bookService.findAllTags(null, Pageable.ofSize(20))
         Assertions.assertEquals(4, tags.totalElements)
+        var orphanTags = bookService.findOrphanTags(PageRequest.of(0, 20))
+        Assertions.assertEquals(2, orphanTags.totalElements)
 
         val nb = bookService.addTagsToBook(savedBook.id!!, listOf(tag3.id!!, tag4.id!!))
         Assertions.assertEquals(2, nb)
@@ -1929,6 +1932,9 @@ class BookServiceTest(
         Assertions.assertEquals(1, entitiesIds?.size)
         entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(1, entitiesIds?.size)
+
+        orphanTags = bookService.findOrphanTags(PageRequest.of(0, 20))
+        Assertions.assertEquals(0, orphanTags.totalElements)
 
         val after = bookService.findBookById(savedBook.id!!)
         Assertions.assertEquals(4, after.tags?.size)
@@ -1944,6 +1950,57 @@ class BookServiceTest(
         Assertions.assertEquals(0, entitiesIds?.size)
         entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(1, entitiesIds?.size)
+        orphanTags = bookService.findOrphanTags(PageRequest.of(0, 20))
+        Assertions.assertEquals(2, orphanTags.totalElements)
+    }
+
+    @Test
+    fun testFindOrphanTags() {
+        bookService.findAllTags(null, Pageable.ofSize(20)).content.forEach {
+            bookService.deleteTagById(it.id!!)
+        }
+        val createBook = bookDto(withTags = true)
+        val savedBook = bookService.save(createBook, null)
+        Assertions.assertEquals(2, savedBook.tags?.size)
+        var entitiesIds = luceneHelper.searchEntitiesIds("tag:fantasy", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("tag:tag1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("tag:another", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+
+        val tag3 = bookService.save(tagDto("added tag1"))
+        Assertions.assertEquals("added tag1", tag3.name)
+        Assertions.assertNotNull(tag3.id)
+        entitiesIds = luceneHelper.searchEntitiesIds("tag:fantasy", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("tag:tag1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("tag:another", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+
+        val tag4 = bookService.save(tagDto("another tag"))
+        Assertions.assertEquals("another tag", tag4.name)
+        Assertions.assertNotNull(tag4.id)
+        entitiesIds = luceneHelper.searchEntitiesIds("tag:fantasy", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("tag:tag1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("tag:another", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+
+        val tags = bookService.findAllTags(null, Pageable.ofSize(20))
+        Assertions.assertEquals(4, tags.totalElements)
+
+        val orphanTags = bookService.findOrphanTags(PageRequest.of(0, 20))
+        Assertions.assertEquals(2, orphanTags.totalElements)
+        orphanTags.content.forEach { t -> Assertions.assertTrue(t.name == tag3.name || t.name == tag4.name) }
     }
 
     @Test

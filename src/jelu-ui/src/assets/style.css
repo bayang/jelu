@@ -258,6 +258,9 @@
   @apply bg-base-100 rounded-lg text-base-content hover:bg-accent/50 !important;
 }
 
+.sidebar-content ul li span {
+  @apply capitalize truncate;
+}
 /* end dashboard sidebar */
 
 

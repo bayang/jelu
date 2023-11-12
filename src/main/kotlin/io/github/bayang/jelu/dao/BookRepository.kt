@@ -33,6 +33,7 @@ import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.batchInsert
+import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
@@ -421,6 +422,24 @@ class BookRepository(
         )
     }
 
+    fun findOrphanTags(pageable: Pageable): Page<Tag> {
+        val query = TagTable.join(BookTags, JoinType.LEFT)
+            .selectAll()
+            .groupBy(TagTable.name)
+            .having { BookTags.tag.count() eq(0) }
+
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(TagTable.name, SortOrder.ASC_NULLS_LAST), TagTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> wrapTagRow(resultRow) },
+            pageable,
+            total,
+        )
+    }
+
     fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
         logger.trace { "role $role" }
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
@@ -512,6 +531,10 @@ class BookRepository(
 
     fun wrapRow(resultRow: ResultRow): Book {
         return Book.wrapRow(resultRow)
+    }
+
+    fun wrapTagRow(resultRow: ResultRow): Tag {
+        return Tag.wrapRow(resultRow)
     }
 
     fun filterRow(resultRow: ResultRow): Boolean {

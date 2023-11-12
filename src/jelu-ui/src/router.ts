@@ -119,6 +119,7 @@ const router = createRouter({
                 { path: 'settings', component: () => import(/* webpackChunkName: "recommend" */ './components/UserSettings.vue')},
                 { path: 'messages', component: () => import(/* webpackChunkName: "recommend" */ './components/UserMessages.vue')},
                 { path: 'stats', component: () => import(/* webpackChunkName: "recommend" */ './components/UserStats.vue')},
+                { path: 'tags', component: () => import(/* webpackChunkName: "recommend" */ './components/TagsAdmin.vue')},
             ]
         },
     ],

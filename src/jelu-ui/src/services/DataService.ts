@@ -644,6 +644,28 @@ class DataService {
     }
   }
 
+  getOrphanTags = async (page?: number, size?: number, sort?: string) => {
+    try {
+      const response = await this.apiClient.get<Page<Tag>>(`${this.API_TAG}/orphans`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort,
+        }
+      });
+      console.log("called tag orphans")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error tag orphans " + (error as AxiosError).code)
+      throw new Error("error get tag orphans " + error)
+    }
+  }
+
   getSeriesBooksById = async (seriesId: string,
     page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
     try {
@@ -862,6 +884,22 @@ class DataService {
       }
       console.log("error delete event " + (error as AxiosError).code)
       throw new Error("error delete event " + error)
+    }
+  }
+
+  deleteTag = async (tagId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_TAG}/${tagId}`);
+      console.log("delete tag")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete tag " + (error as AxiosError).code)
+      throw new Error("error delete tag " + error)
     }
   }
 

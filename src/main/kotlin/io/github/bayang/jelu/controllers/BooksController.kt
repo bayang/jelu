@@ -191,6 +191,11 @@ class BooksController(
         return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY)
     }
 
+    @GetMapping(path = ["/tags/orphans"])
+    fun orphanTags(
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
+    ): Page<TagDto> = repository.findOrphanTags(pageable)
+
     @GetMapping(path = ["/series"])
     fun series(
         @RequestParam(name = "name", required = false) name: String?,

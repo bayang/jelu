@@ -355,6 +355,11 @@ class BookService(
     }
 
     @Transactional
+    fun findOrphanTags(pageable: Pageable): Page<TagDto> {
+        return bookRepository.findOrphanTags(pageable).map { tag -> tag.toTagDto() }
+    }
+
+    @Transactional
     fun findTagById(tagId: UUID, user: User): TagDto {
         return bookRepository.findTagById(tagId).toTagDto()
     }
