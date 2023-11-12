@@ -14,7 +14,8 @@
         "logout": "cerrar sesión",
         "search": "buscar",
         "history": "historial",
-        "shelves": "estantes"
+        "shelves": "estantes",
+        "tags-admin": "tags management"
     },
     "labels": {
         "search": "Buscar",
@@ -95,7 +96,12 @@
         "add_translator": "Añadir un traductor",
         "reading_list_from_name": "Reading list from {name}",
         "search_query": "Enter search query...",
-        "search_documentation": "Go to search documentation"
+        "search_documentation": "Go to search documentation",
+        "orphan-tags": "orphan tags",
+        "find-tag": "find a tag",
+        "associated-books": "associated book(s)",
+        "operation-success": "operation successful",
+        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?"
     },
     "settings": {
         "pick_language": "Elige un idioma",
