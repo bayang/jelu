@@ -1,3 +1,16 @@
+## [0.43.0](https://github.com/bayang/jelu/compare/v0.42.0...v0.43.0) (2023-11-12)
+
+
+### Features
+
+* allow tags management page ([a5e4af0](https://github.com/bayang/jelu/commit/a5e4af00ffd7c506e28eab2f2ffce958816cfac0))
+
+
+### Bug Fixes
+
+* bugfix ([aee0f33](https://github.com/bayang/jelu/commit/aee0f335b1d4ff7c2a45a64f7f8f71b293d0d6ca))
+* delete label ([722f749](https://github.com/bayang/jelu/commit/722f749401a1ec8c763171371b939c616ed82899))
+
 ## [0.42.0](https://github.com/bayang/jelu/compare/v0.41.4...v0.42.0) (2023-11-01)
 
 
