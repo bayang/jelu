@@ -306,7 +306,7 @@
         "visibility": "widoczność",
         "private": "prywatne",
         "public": "publiczne",
-        "review": "recenzja",
+        "review": "recenzja|recenzji",
         "rating": "ocena",
         "my_reviews": "Moje recenzje",
         "all_reviews": "Wszystkie recenzje",
