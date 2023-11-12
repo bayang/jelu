@@ -256,7 +256,7 @@ const deleteBook = async () => {
     router.push({ name: 'home' })
   })
     .catch(err => {
-      ObjectUtils.toast(oruga, "danger", t('labels.delete_for_all_or_only_you', {msg : err.message}), 4000);
+      ObjectUtils.toast(oruga, "danger", t('labels.error_deleting', {msg : err.message}), 4000);
     })
 }
 
