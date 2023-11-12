@@ -14,7 +14,8 @@
         "logout": "wyloguj",
         "search": "szukaj",
         "history": "historia",
-        "shelves": "półki"
+        "shelves": "półki",
+        "tags-admin": "tags management"
     },
     "labels": {
         "search": "Szukaj",
@@ -95,7 +96,12 @@
         "add_translator": "Dodaj tłumacza",
         "reading_list_from_name": "Reading list from {name}",
         "search_query": "Enter search query...",
-        "search_documentation": "Go to search documentation"
+        "search_documentation": "Go to search documentation",
+        "orphan-tags": "orphan tags",
+        "find-tag": "find a tag",
+        "associated-books": "associated book(s)",
+        "operation-success": "operation successful",
+        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?"
     },
     "settings": {
         "pick_language": "Wybierz język",
@@ -300,7 +306,7 @@
         "visibility": "widoczność",
         "private": "prywatne",
         "public": "publiczne",
-        "review": "recenzja",
+        "review": "recenzja|recenzji",
         "rating": "ocena",
         "my_reviews": "Moje recenzje",
         "all_reviews": "Wszystkie recenzje",
