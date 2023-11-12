@@ -14,7 +14,8 @@
         "logout": "esci",
         "search": "cerca",
         "history": "cronologia",
-        "shelves": "scaffali"
+        "shelves": "scaffali",
+        "tags-admin": "tags management"
     },
     "labels": {
         "search": "Cerca",
@@ -95,7 +96,12 @@
         "add_translator": "Aggiungi un traduttore",
         "reading_list_from_name": "Lista di lettura da {name}",
         "search_query": "Inserisci i termini da cercare...",
-        "search_documentation": "Apri la documentazione riguardo la ricerca"
+        "search_documentation": "Apri la documentazione riguardo la ricerca",
+        "orphan-tags": "orphan tags",
+        "find-tag": "find a tag",
+        "associated-books": "associated book(s)",
+        "operation-success": "operation successful",
+        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
