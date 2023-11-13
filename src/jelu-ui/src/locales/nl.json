@@ -98,8 +98,8 @@
         "search_query": "Voer zoekterm in...",
         "search_documentation": "Documentatie doorzoeken",
         "orphan-tags": "orphan tags",
-        "find-tag": "find a tag",
-        "associated-books": "associated book(s)",
+        "find-tag": "vind een label",
+        "associated-books": "geassocieerde boek(en)",
         "operation-success": "operation successful",
         "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?"
     },

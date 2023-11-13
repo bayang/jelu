@@ -15,7 +15,7 @@
         "search": "cerca",
         "history": "cronologia",
         "shelves": "scaffali",
-        "tags-admin": "tags management"
+        "tags-admin": "gestione dei tag"
     },
     "labels": {
         "search": "Cerca",
@@ -97,11 +97,11 @@
         "reading_list_from_name": "Lista di lettura da {name}",
         "search_query": "Inserisci i termini da cercare...",
         "search_documentation": "Apri la documentazione riguardo la ricerca",
-        "orphan-tags": "orphan tags",
-        "find-tag": "find a tag",
-        "associated-books": "associated book(s)",
-        "operation-success": "operation successful",
-        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?"
+        "orphan-tags": "tag orfani",
+        "find-tag": "trova un tag",
+        "associated-books": "libro/i associati",
+        "operation-success": "operazione riuscita",
+        "delete_this_tag": "Cancellare questo tag da {nb} libro/i e dal database ?"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
