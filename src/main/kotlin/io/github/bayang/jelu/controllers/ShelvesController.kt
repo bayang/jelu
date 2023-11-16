@@ -5,6 +5,7 @@ import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.ShelfDto
 import io.github.bayang.jelu.service.ShelfService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
-import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/v1")

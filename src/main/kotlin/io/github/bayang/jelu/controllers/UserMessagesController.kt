@@ -8,6 +8,7 @@ import io.github.bayang.jelu.dto.UpdateUserMessageDto
 import io.github.bayang.jelu.dto.UserMessageDto
 import io.github.bayang.jelu.service.UserMessageService
 import io.swagger.v3.oas.annotations.Hidden
+import jakarta.validation.Valid
 import mu.KotlinLogging
 import org.springdoc.api.annotations.ParameterObject
 import org.springframework.data.domain.Page
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
-import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
 

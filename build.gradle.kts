@@ -3,16 +3,20 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    id("org.springframework.boot") version "2.7.6"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    val kotlinVersion = "1.8.20"
+    id("org.springframework.boot") version "3.1.5"
+    id("io.spring.dependency-management") version "1.1.4"
+    val kotlinVersion = "1.8.22"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("kapt") version kotlinVersion
-    id("com.github.node-gradle.node") version "3.5.1"
+    id("com.github.node-gradle.node") version "6.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
@@ -29,7 +33,6 @@ allOpen {
 }
 
 group = "io.github.bayang"
-java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
@@ -59,7 +62,7 @@ dependencies {
 
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.liquibase:liquibase-core")
-    val exposedVersion = "0.43.0"
+    val exposedVersion = "0.44.1"
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
@@ -104,7 +107,7 @@ tasks.withType<KotlinCompile> {
             "-Xjsr305=strict",
             "-opt-in=kotlin.time.ExperimentalTime",
         )
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
@@ -127,9 +130,9 @@ tasks.register<JavaExec>("unpack") {
     dependsOn(tasks.bootJar)
     classpath = files(tasks.bootJar)
     jvmArgs = listOf("-Djarmode=layertools")
-    args = "extract --destination $buildDir/dependency".split(" ")
+    args = "extract --destination ${layout.buildDirectory.get()}/dependency".split(" ")
     doFirst {
-        delete("$buildDir/dependency")
+        delete("${layout.buildDirectory.get()}/dependency")
     }
 }
 
@@ -142,13 +145,13 @@ node {
 val buildTaskUsingNpm = tasks.register<NpmTask>("npmBuild") {
     dependsOn(tasks.npmInstall)
     npmCommand.set(listOf("run", "build"))
-    args.set(listOf("--", "--out-dir", "$buildDir/npm-output"))
+    args.set(listOf("--", "--out-dir", "${layout.buildDirectory.get()}/npm-output"))
     inputs.dir("src")
-    outputs.dir("$buildDir/npm-output")
+    outputs.dir("${layout.buildDirectory.get()}/npm-output")
 }
 
 tasks.register<Sync>("copyWebDist") {
     dependsOn("npmBuild")
-    from("$buildDir/npm-output")
+    from("${layout.buildDirectory.get()}/npm-output")
     into("$projectDir/src/main/resources/public/")
 }

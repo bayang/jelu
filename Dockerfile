@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11.0.17_8-jre-focal
+FROM eclipse-temurin:17-jre
 
 WORKDIR app
 
@@ -19,27 +19,32 @@ ENV LC_ALL=en_US.UTF-8
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       apt-get update && apt-get install --no-install-recommends --yes wget xz-utils \
-      xdg-utils \
       libxcb-xinerama0 \
       libxcb-icccm4 \
       libxcb-image0 \
       libxcb-keysyms1 \
       libxcb-render-util0 \
       libxcb-randr0 \
-      qt5-default \
       libopengl0 \
+      libegl1 \
+      libglx0 \
+      libxkbcommon-x11-0 \
       python3 \
+      python3-xdg \
       binutils \
+      poppler-utils \
+      libqpdf28 \
+      libnss3 \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/* \
       && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin install_dir=/ isolated=y \
       && strip --remove-section=.note.ABI-tag /calibre/lib/libQt6Core.so.6 \
-      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.2/goodreads-v1.7.2.zip \
+      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.9/goodreads-v1.7.9.zip \
       && /calibre/calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
   else \
       apt-get update && apt-get install --no-install-recommends --yes calibre \
-      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.2/goodreads-v1.7.2.zip \
+      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.9/goodreads-v1.7.9.zip \
       && calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
   fi

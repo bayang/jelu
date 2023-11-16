@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 11, 17, 18 ]
+        java: [ 17, 18, 21 ]
     name: Test JDK ${{ matrix.java }}
     steps:
       - uses: actions/checkout@v3
@@ -56,7 +56,7 @@ jobs:
             src/jelu-ui/package-lock.json
       - uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '17'
           java-package: 'jdk'
           distribution: 'temurin'
           cache: 'gradle'

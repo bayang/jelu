@@ -1,6 +1,7 @@
 package io.github.bayang.jelu.config
 
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.ProviderManager
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
+@Configuration
 @EnableWebSecurity
 class SecurityConfig(
     private val authenticationProvider: AuthenticationProvider?,
@@ -28,44 +30,50 @@ class SecurityConfig(
         http
             .cors { }
             .csrf { it.disable() }
-            .logout { it ->
+            .logout {
                 it.logoutUrl("/api/v1/logout")
                     .invalidateHttpSession(true)
             }
-            .authorizeRequests {
-                it.antMatchers(
+            .securityMatchers {
+                // only apply security to those endpoints
+                it.requestMatchers(
+                    "/api/**",
+                )
+            }
+            .authorizeHttpRequests {
+                it.requestMatchers(
                     "/api/v1/token",
                     "/api/v1/setup/status",
                     "/api/v1/server-settings",
                     "/api/v1/reviews/**",
                 ).permitAll()
-                it.mvcMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
-                it.mvcMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
-                it.regexMatchers(HttpMethod.GET, "/api\\/v1\\/users\\/([a-zA-Z0-9-]*)\\/name$").permitAll()
-                it.mvcMatchers(HttpMethod.POST, "/api/v1/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
-                it.mvcMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("USER")
-                it.mvcMatchers(
+                it.requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
+                it.requestMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
+                it.requestMatchers(HttpMethod.GET, "/api\\/v1\\/users\\/([a-zA-Z0-9-]*)\\/name$").permitAll()
+                it.requestMatchers(HttpMethod.POST, "/api/v1/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
+                it.requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("USER")
+                it.requestMatchers(
                     HttpMethod.GET,
                     "/api/v1/users/me",
                 ).hasRole("USER")
-                it.antMatchers(
+                it.requestMatchers(
                     "/api/v1/users/**",
                 ).hasRole("USER")
-                it.antMatchers(
+                it.requestMatchers(
                     "/api/v1/users",
                 ).hasRole("USER")
-                it.mvcMatchers(
+                it.requestMatchers(
                     HttpMethod.POST,
                     "/api/v1/user-messages",
                 ).hasRole("ADMIN")
-                it.antMatchers(
+                it.requestMatchers(
                     "/api/**",
                 ).hasRole("USER")
             }
-            .httpBasic()
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .httpBasic { }
+            .sessionManagement {
+                it.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            }
         if (properties.auth.ldap.enabled) {
             val dao = DaoAuthenticationProvider()
             dao.setUserDetailsService(userDetailsService)

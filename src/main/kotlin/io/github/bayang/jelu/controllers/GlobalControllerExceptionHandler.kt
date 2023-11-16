@@ -3,6 +3,7 @@ package io.github.bayang.jelu.controllers
 import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.errors.JeluValidationException
+import jakarta.validation.ConstraintViolationException
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
-import javax.validation.ConstraintViolationException
 
 @ControllerAdvice
 class GlobalControllerExceptionHandler {

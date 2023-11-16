@@ -11,6 +11,8 @@ import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.service.UserService
 import io.swagger.v3.oas.annotations.Operation
+import jakarta.servlet.http.HttpSession
+import jakarta.validation.Valid
 import mu.KotlinLogging
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -23,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
-import javax.servlet.http.HttpSession
-import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
 

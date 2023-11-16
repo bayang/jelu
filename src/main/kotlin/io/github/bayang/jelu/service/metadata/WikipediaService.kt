@@ -2,12 +2,12 @@ package io.github.bayang.jelu.service.metadata
 
 import io.github.bayang.jelu.dto.WikipediaPageResult
 import io.github.bayang.jelu.dto.WikipediaSearchResult
+import jakarta.annotation.Resource
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriBuilder
 import reactor.core.publisher.Mono
-import javax.annotation.Resource
 
 @Service
 class WikipediaService(

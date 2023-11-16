@@ -7,6 +7,7 @@ import io.github.bayang.jelu.service.exports.CsvExportService
 import io.github.bayang.jelu.service.imports.CsvImportService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import jakarta.validation.Valid
 import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.springframework.http.HttpStatus
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.util.Locale
-import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
 

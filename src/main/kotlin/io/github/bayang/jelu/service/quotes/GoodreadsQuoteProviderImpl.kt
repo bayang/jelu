@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.github.bayang.jelu.dto.QuoteDto
 import io.github.bayang.jelu.service.BookService
+import jakarta.annotation.Resource
 import mu.KotlinLogging
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -16,7 +17,6 @@ import org.springframework.web.util.UriBuilder
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import java.util.concurrent.TimeUnit
-import javax.annotation.Resource
 import kotlin.random.Random
 
 private val logger = KotlinLogging.logger {}

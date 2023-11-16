@@ -20,6 +20,7 @@ import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.BookService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import jakarta.validation.Valid
 import mu.KotlinLogging
 import org.springdoc.api.annotations.ParameterObject
 import org.springframework.data.domain.Page
@@ -41,7 +42,6 @@ import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
-import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
 

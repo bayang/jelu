@@ -11,6 +11,7 @@ import io.github.bayang.jelu.dto.YearStatsDto
 import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.ReadingEventService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import jakarta.validation.Valid
 import mu.KotlinLogging
 import org.springdoc.api.annotations.ParameterObject
 import org.springframework.data.domain.Page
@@ -34,7 +35,6 @@ import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.util.UUID
-import javax.validation.Valid
 
 private val logger = KotlinLogging.logger {}
 
