@@ -191,5 +191,6 @@ You can help with translations : everything is hosted on crowdin https://crowdin
 * Danish translation : @SirBogner
 * German translation : @puckzuck
 * Polish translation: @Sebastian Jasiński (PrinceNorris)
+* Italian translation : @AleCornella
 
 (if you should be here or want your name modified just contact me)
