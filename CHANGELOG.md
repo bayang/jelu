@@ -1,3 +1,16 @@
+## [0.44.0](https://github.com/bayang/jelu/compare/v0.43.0...v0.44.0) (2023-11-16)
+
+
+### Features
+
+* technical upgrades ([6e9b768](https://github.com/bayang/jelu/commit/6e9b7683be9b4a3415e4df864472aa74bee33b31))
+
+
+### Bug Fixes
+
+* ci ([8685a47](https://github.com/bayang/jelu/commit/8685a471eb4fa3a5aca3b3189aab89e3b275648f))
+* ci upgrade ([23741c7](https://github.com/bayang/jelu/commit/23741c759f65af7d00369a5c0df00a342658f11d))
+
 ## [0.43.0](https://github.com/bayang/jelu/compare/v0.42.0...v0.43.0) (2023-11-12)
 
 
