@@ -1,3 +1,15 @@
+## [0.45.0](https://github.com/bayang/jelu/compare/v0.44.0...v0.45.0) (2023-11-24)
+
+
+### Features
+
+* import metadata from files ([ee36d57](https://github.com/bayang/jelu/commit/ee36d57e5b9742c3e472d31ba6f96477048417fe))
+
+
+### Bug Fixes
+
+* test ([1408ba9](https://github.com/bayang/jelu/commit/1408ba941cb4cdd15adecc5f281693230658dbef))
+
 ## [0.44.0](https://github.com/bayang/jelu/compare/v0.43.0...v0.44.0) (2023-11-16)
 
 
