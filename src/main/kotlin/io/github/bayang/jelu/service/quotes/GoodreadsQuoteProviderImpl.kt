@@ -110,12 +110,6 @@ class GoodreadsQuoteProviderImpl(
         for (elem in quotesElements) {
             quotes.add(quote(elem))
         }
-//        val el: Element? = quotesElements[0]
-//        val c = el?.child(0)
-//        logger.debug { "el ${el?.ownText()}" }
-//        logger.debug { "el ${el?.select("span.authorOrTitle")?.text()}" }
-//        logger.debug { "el ${el?.select("a.authorOrTitle")?.text()}" }
-//        logger.debug { "el ${el?.select("a.authorOrTitle")?.attr("href")}" }
         return quotes
     }
 

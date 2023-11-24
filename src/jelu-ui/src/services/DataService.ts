@@ -23,6 +23,7 @@ import { Role } from "../model/Role";
 import { StringUtils } from "../utils/StringUtils";
 import { MetadataRequest } from "../model/MetadataRequest";
 import { Series } from "../model/Series";
+import { DirectoryListing } from "../model/DirectoryListing";
 
 class DataService {
 
@@ -1574,6 +1575,67 @@ class DataService {
       }
     }
     return null
+  }
+
+  getDirectoryListing = async (path: string, reason = "metadata") => {
+    try {
+      const response = await this.apiClient.post<DirectoryListing>('/filesystem', {'reason' : reason, 'path' : path});
+      console.log("called directory " + path)
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error directory " + (error as AxiosError).code)
+      throw new Error("error directory " + path + " " + error)
+    }
+  }
+  
+  getMetadataFromUploadedFile = async (file: File | null, onUploadProgress: any) => {
+    try {
+      const formData = new FormData()
+      if (file != null) {
+        formData.append('file', file);
+      }
+      const resp = await this.apiClient.post<Metadata>(`${this.API_METADATA}/file`, formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json'
+          },
+          onUploadProgress: onUploadProgress
+        })
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error uploading file " + error.response.status + " " + error.response.data.error)
+        throw new Error("error uploading file " + error.response.status + " " + error)
+      }
+      console.log("error uploading file " + (error as AxiosError).code)
+      throw new Error("error uploading file " + error)
+    }
+  }
+
+  getMetadataFromFile = async (filePath: string) => {
+    try {
+      const response = await this.apiClient.get<Metadata>(`${this.API_METADATA}/file`, {
+        params: {
+          filepath: filePath,
+        }
+      });
+      console.log("called get metadata from file")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error metadat from path " + (error as AxiosError).code)
+      throw new Error("error metadata from path " + error)
+    }
   }
 
 }

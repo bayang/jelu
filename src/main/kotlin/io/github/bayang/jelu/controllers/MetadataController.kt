@@ -7,6 +7,7 @@ import io.github.bayang.jelu.dto.WikipediaPageResult
 import io.github.bayang.jelu.dto.WikipediaSearchResult
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
+import io.github.bayang.jelu.service.metadata.FileMetadataService
 import io.github.bayang.jelu.service.metadata.PluginInfoHolder
 import io.github.bayang.jelu.service.metadata.WikipediaService
 import io.swagger.v3.oas.annotations.Operation
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 import reactor.core.publisher.Mono
 
 private val logger = KotlinLogging.logger {}
@@ -29,6 +32,7 @@ class MetadataController(
     private val metadataService: FetchMetadataService,
     private val wikipediaService: WikipediaService,
     private val pluginInfoHolder: PluginInfoHolder,
+    private val fileMetadataService: FileMetadataService,
 ) {
 
     @Operation(description = "fetch metadata from the configured providers")
@@ -43,6 +47,24 @@ class MetadataController(
         } else {
             metadataService.fetchMetadata(MetadataRequestDto(isbn, title, authors, listOf()))
         }
+
+    @Operation(description = "fetch metadata from a file on the server")
+    @GetMapping(path = ["/metadata/file"])
+    fun fetchMetadataFromFile(
+        @RequestParam(name = "filepath", required = true) path: String,
+    ): Mono<MetadataDto> {
+        val metadata = fileMetadataService.extractMetadata(path)
+        return Mono.justOrEmpty(metadata)
+    }
+
+    @Operation(description = "fetch metadata from a file on the server")
+    @PostMapping(path = ["/metadata/file"])
+    fun fetchMetadataFromUploadedFile(
+        @RequestPart("file", required = false) file: MultipartFile,
+    ): Mono<MetadataDto> {
+        val metadata = fileMetadataService.extractMetadata(file)
+        return Mono.justOrEmpty(metadata)
+    }
 
     @Operation(description = "fetch metadata from the configured providers")
     @PostMapping(path = ["/metadata"])

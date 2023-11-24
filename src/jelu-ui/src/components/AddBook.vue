@@ -15,6 +15,7 @@ import { key } from '../store';
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
 import AutoImportFormModalVue from "./AutoImportFormModal.vue";
+import AutoImportFileModalVue from "./AutoImportFileModal.vue";
 import { SeriesOrder } from "../model/Series";
 import SeriesInput from "./SeriesInput.vue";
 
@@ -354,11 +355,11 @@ function createTag(item: Tag | string) {
   }
 }
 
-const toggleModal = () => {
+const toggleModal = (file: boolean) => {
   showModal.value = !showModal.value
   oruga.modal.open({
     parent: this,
-    component: AutoImportFormModalVue,
+    component: file ? AutoImportFileModalVue : AutoImportFormModalVue,
     trapFocus: true,
     active: true,
     canCancel: ['x', 'button', 'outside'],
@@ -468,15 +469,25 @@ let displayDatepicker = computed(() => {
         <h1 class="text-2xl typewriter capitalize">
           {{ t('nav.add_book') }}
         </h1>
-        <div class="flex">
+        <div class="flex gap-2">
           <button
             v-tooltip="t('labels.auto_fill_doc')"
-            class="btn btn-success button is-success is-light"
+            class="btn btn-success button"
             :disabled="store != null && !store.getters.getMetadataFetchEnabled"
-            @click="toggleModal"
+            @click="toggleModal(false)"
           >
             <span class="icon">
               <i class="mdi mdi-auto-fix mdi-18px" />
+            </span>
+            <span>{{ t('labels.auto_fill') }}</span>
+          </button>
+          <button
+            v-tooltip="t('labels.auto_fill_book')"
+            class="btn btn-primary button"
+            @click="toggleModal(true)"
+          >
+            <span class="icon">
+              <i class="mdi mdi-file-question mdi-18px" />
             </span>
             <span>{{ t('labels.auto_fill') }}</span>
           </button>

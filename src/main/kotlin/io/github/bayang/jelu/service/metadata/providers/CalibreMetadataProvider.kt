@@ -4,29 +4,15 @@ import com.ctc.wstx.stax.WstxInputFactory
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
-import io.github.bayang.jelu.service.metadata.CREATOR
-import io.github.bayang.jelu.service.metadata.DATE
-import io.github.bayang.jelu.service.metadata.DESCRIPTION
-import io.github.bayang.jelu.service.metadata.GUIDE
-import io.github.bayang.jelu.service.metadata.IDENTIFIER
-import io.github.bayang.jelu.service.metadata.LANGUAGE
-import io.github.bayang.jelu.service.metadata.META
-import io.github.bayang.jelu.service.metadata.METADATA
-import io.github.bayang.jelu.service.metadata.PUBLISHER
+import io.github.bayang.jelu.service.metadata.OpfParser
 import io.github.bayang.jelu.service.metadata.PluginInfoHolder
-import io.github.bayang.jelu.service.metadata.SUBJECT
-import io.github.bayang.jelu.service.metadata.TITLE
-import io.github.bayang.jelu.utils.sanitizeHtml
 import io.github.bayang.jelu.utils.slugify
 import mu.KotlinLogging
 import org.apache.commons.validator.routines.ISBNValidator
 import org.codehaus.staxmate.SMInputFactory
-import org.codehaus.staxmate.`in`.SMHierarchicCursor
-import org.codehaus.staxmate.`in`.SMInputCursor
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
-import java.io.BufferedInputStream
-import java.io.ByteArrayInputStream
+import java.io.BufferedReader
 import java.io.File
 
 private val logger = KotlinLogging.logger {}
@@ -34,6 +20,7 @@ private val logger = KotlinLogging.logger {}
 @Service
 class CalibreMetadataProvider(
     private val properties: JeluProperties,
+    private val opfParser: OpfParser,
 ) : IMetaDataProvider {
 
     companion object {
@@ -121,7 +108,7 @@ class CalibreMetadataProvider(
             val process: Process = builder.start()
             val exitVal = process.waitFor()
             if (exitVal == 0) {
-                var output: String = process.inputStream.bufferedReader().readText()
+                var output: String = process.inputStream.bufferedReader().use(BufferedReader::readText)
                 // on ARM the fetch-ebook-metadata binary outputs a python byte string instead of a regular string
                 // cf test case for a sample string
                 // so we try to clean it ourselves... This is ugly
@@ -130,7 +117,7 @@ class CalibreMetadataProvider(
                     output = cleanXml(output)
                 }
                 logger.trace { "fetch metadata output $output" }
-                val parseOpf: MetadataDto = parseOpf(output)
+                val parseOpf: MetadataDto = opfParser.parseOpf(output)
                 if (!metadataRequestDto.isbn.isNullOrBlank()) {
                     if (validator.isValidISBN13(metadataRequestDto.isbn) && parseOpf.isbn13.isNullOrBlank()) {
                         parseOpf.isbn13 = metadataRequestDto.isbn
@@ -181,99 +168,5 @@ class CalibreMetadataProvider(
             trimmed = trimmed.replace("\\n", "")
         }
         return trimmed
-    }
-
-    internal fun parseOpf(input: String): MetadataDto {
-        val stream = BufferedInputStream(ByteArrayInputStream(input.toByteArray(Charsets.UTF_8)))
-        val root: SMHierarchicCursor = factory.rootElementCursor(stream)
-        val dto = MetadataDto()
-        try {
-            root.advance()
-            val rootChildrenCursor = root.childElementCursor()
-            while (rootChildrenCursor.next != null) {
-                when (rootChildrenCursor.localName) {
-                    METADATA -> metadata(rootChildrenCursor.childElementCursor(), dto)
-                    GUIDE -> logPart(rootChildrenCursor.childElementCursor())
-                    else -> {
-                        logger.trace { "rootChildren name ${rootChildrenCursor.localName} qname ${rootChildrenCursor.qName}" }
-                        logPart(rootChildrenCursor.childElementCursor())
-                    }
-                }
-            }
-            logger.debug { "parsed dto $dto" }
-        } catch (e: Exception) {
-            logger.error(e) { "failure while parsing opf metadata from calibre" }
-        } finally {
-            root.streamReader.closeCompletely()
-        }
-        return dto
-    }
-
-    private fun metadata(childElementCursor: SMInputCursor, dto: MetadataDto) {
-        while (childElementCursor.next != null) {
-            when (childElementCursor.localName) {
-                IDENTIFIER -> {
-                    when (childElementCursor.getAttrValue("scheme")) {
-                        "GOODREADS" -> dto.goodreadsId = childElementCursor.elemStringValue
-                        "GOOGLE" -> dto.googleId = childElementCursor.elemStringValue
-                        "AMAZON" -> dto.amazonId = childElementCursor.elemStringValue
-                        "ISBN" -> {
-                            val isbn = childElementCursor.elemStringValue
-                            if (validator.isValidISBN13(isbn)) {
-                                dto.isbn13 = isbn
-                            } else if (validator.isValidISBN10(isbn)) {
-                                dto.isbn10 = isbn
-                            }
-                        }
-
-                        else -> logger.trace { "unhandled identifier scheme ${childElementCursor.getAttrValue("scheme")}" }
-                    }
-                }
-
-                TITLE -> dto.title = childElementCursor.elemStringValue
-                CREATOR -> {
-                    when (childElementCursor.getAttrValue("role")) {
-                        // sometimes we receive mutliple authors on one line, separated by ;
-                        "aut" -> dto.authors.addAll(splitValues(childElementCursor.elemStringValue))
-                        else -> logger.trace { "unhandled creator role ${childElementCursor.getAttrValue("role")}" }
-                    }
-                }
-
-                DATE -> dto.publishedDate = childElementCursor.elemStringValue
-                DESCRIPTION -> dto.summary = sanitizeHtml(childElementCursor.elemStringValue)
-                PUBLISHER -> dto.publisher = childElementCursor.elemStringValue
-                LANGUAGE -> dto.language = childElementCursor.elemStringValue
-                SUBJECT -> dto.tags.add(childElementCursor.elemStringValue)
-                META -> {
-                    when (childElementCursor.getAttrValue("name")) {
-                        "calibre:series" -> dto.series = childElementCursor.getAttrValue("content")
-                        "calibre:series_index" ->
-                            dto.numberInSeries =
-                                childElementCursor.getAttrValue("content").toDoubleOrNull()
-
-                        "calibre:author_link_map" -> logger.trace { "author_link_map ${childElementCursor.getAttrValue("content")}" }
-                        else -> logger.trace { "unhandled meta name ${childElementCursor.getAttrValue("name")}" }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun splitValues(elemStringValue: String?): Collection<String> {
-        return if (elemStringValue.isNullOrBlank()) {
-            emptySet()
-        } else {
-            if (elemStringValue.contains(";")) {
-                elemStringValue.split(";").filter { !it.isNullOrBlank() }.map { it.trim() }.toSet()
-            } else {
-                setOf(elemStringValue.trim())
-            }
-        }
-    }
-
-    private fun logPart(childElementCursor: SMInputCursor) {
-        while (childElementCursor.next != null) {
-            logger.trace { "child cursor ${childElementCursor.localName}" }
-        }
     }
 }

@@ -186,6 +186,7 @@
 
 .edit-modal {
     margin: 30px;
+    width: min(600px, 90vw);
 }
 
 .event-modal {

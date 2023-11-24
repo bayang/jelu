@@ -1,12 +1,17 @@
 package io.github.bayang.jelu.service.metadata.providers
 
+import io.github.bayang.jelu.service.metadata.OpfParser
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.io.File
 
 @SpringBootTest
-class CalibreMetadataProviderTest(@Autowired private val calibreMetadataProvider: CalibreMetadataProvider) {
+class CalibreMetadataProviderTest(
+    @Autowired private val calibreMetadataProvider: CalibreMetadataProvider,
+    @Autowired private val opfParser: OpfParser,
+) {
 
     @Test
     fun testParseOpf() {
@@ -33,7 +38,7 @@ class CalibreMetadataProviderTest(@Autowired private val calibreMetadataProvider
             "        <reference type=\"cover\" title=\"Couverture\" href=\"manesh.jpg\"/>\n" +
             "    </guide>\n" +
             "</package>"
-        val metadata = calibreMetadataProvider.parseOpf(input)
+        val metadata = opfParser.parseOpf(input)
         Assertions.assertEquals("5vKyDwAAQBAJ", metadata.googleId)
         Assertions.assertEquals("9782361831523", metadata.isbn13)
         Assertions.assertEquals(1, metadata.authors.size)
@@ -65,10 +70,54 @@ class CalibreMetadataProviderTest(@Autowired private val calibreMetadataProvider
             "        <reference type=\"cover\" title=\"Couverture\" href=\"manesh.jpg\"/>\n" +
             "    </guide>\n" +
             "</package>"
-        val metadata = calibreMetadataProvider.parseOpf(input)
+        val metadata = opfParser.parseOpf(input)
         Assertions.assertEquals("5vKyDwAAQBAJ", metadata.googleId)
         Assertions.assertEquals("9782361831523", metadata.isbn13)
         Assertions.assertEquals(2, metadata.authors.size)
+    }
+
+    @Test
+    fun testParseOpfNoRole() {
+        val input = File(this::class.java.getResource("/metadata/content.opf").file).readText(Charsets.UTF_8)
+        val metadata = opfParser.parseOpf(input)
+        Assertions.assertNull(metadata.googleId)
+        Assertions.assertEquals("9782370491190", metadata.isbn13)
+        Assertions.assertNull(metadata.isbn10)
+        Assertions.assertEquals(1, metadata.authors.size)
+        Assertions.assertEquals(1, metadata.tags.size)
+    }
+
+    @Test
+    fun testParseOpfSeriesInBelongTo() {
+        val input = File(this::class.java.getResource("/metadata/Panik-im-Paradies.opf").file).readText(Charsets.UTF_8)
+        val metadata = opfParser.parseOpf(input)
+        Assertions.assertNull(metadata.googleId)
+        Assertions.assertEquals("9783440077894", metadata.isbn13)
+        Assertions.assertEquals("222735", metadata.goodreadsId)
+        Assertions.assertEquals("Panik im Paradies", metadata.title)
+        Assertions.assertEquals("Kosmos", metadata.publisher)
+        Assertions.assertEquals("Die drei ??? Kids", metadata.series)
+        Assertions.assertEquals(1.0, metadata.numberInSeries)
+        Assertions.assertNull(metadata.isbn10)
+        Assertions.assertEquals(2, metadata.authors.size)
+        Assertions.assertEquals(1, metadata.tags.size)
+    }
+
+    @Test
+    fun testParseOpfSeriesInBelongToExternalIds() {
+        val input = File(this::class.java.getResource("/metadata/Die-Drei-3.opf").file).readText(Charsets.UTF_8)
+        val metadata = opfParser.parseOpf(input)
+        Assertions.assertEquals("9783440077931", metadata.isbn13)
+        Assertions.assertEquals("71348", metadata.goodreadsId)
+        Assertions.assertEquals("3440077934", metadata.amazonId)
+        Assertions.assertEquals("pPamZwEACAAJ", metadata.googleId)
+        Assertions.assertEquals("Die Drei Fragezeichen-Kids, Bd.3, Invasion Der Fliegen", metadata.title)
+        Assertions.assertEquals("Franckh-Kosmos Verlag", metadata.publisher)
+        Assertions.assertEquals("Die drei ??? Kids", metadata.series)
+        Assertions.assertEquals(3.0, metadata.numberInSeries)
+        Assertions.assertNull(metadata.isbn10)
+        Assertions.assertEquals(2, metadata.authors.size)
+        Assertions.assertEquals(3, metadata.tags.size)
     }
 
     @Test
@@ -79,7 +128,7 @@ class CalibreMetadataProviderTest(@Autowired private val calibreMetadataProvider
         if (!input.startsWith('<')) {
             input = calibreMetadataProvider.cleanXml(input)
         }
-        val metadata = calibreMetadataProvider.parseOpf(input)
+        val metadata = opfParser.parseOpf(input)
         Assertions.assertEquals("3flBjgEACAAJ", metadata.googleId)
         Assertions.assertEquals("0345339703", metadata.amazonId)
         Assertions.assertNull(metadata.goodreadsId)

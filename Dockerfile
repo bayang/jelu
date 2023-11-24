@@ -29,6 +29,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       libegl1 \
       libglx0 \
       libxkbcommon-x11-0 \
+      libxcb-cursor0 \
       python3 \
       python3-xdg \
       binutils \

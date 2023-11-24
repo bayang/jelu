@@ -1,0 +1,95 @@
+<package xmlns="http://www.idpf.org/2007/opf" prefix="ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ calibre: https://calibre-ebook.com" unique-identifier="ean" version="3.0">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:title id="tit01">book title</dc:title>
+    <dc:creator id="id">St Author</dc:creator>
+    <dc:source>urn:isbn:9782370491190</dc:source>
+    <dc:rights>© Éditions 2021</dc:rights>
+    <dc:identifier>calibre:3310</dc:identifier>
+    <dc:identifier>uuid:82c2d5a4-3cd6-4274-9a41-df4e38317aaa</dc:identifier>
+    <dc:identifier id="ean">urn:uuid:a043b361-5bf1-1234-913b-cc34d3bceaaa</dc:identifier>
+    <dc:language>fr</dc:language>
+    <dc:date>2021-10-15T00:00:00+00:00</dc:date>
+    <dc:description>huge description</dc:description>
+    <dc:publisher>publisher</dc:publisher>
+    <dc:subject>SF</dc:subject>
+    <meta refines="#tit01" property="title-type">main</meta>
+    <meta refines="#tit01" property="file-as">book title</meta>
+    <meta property="schema:accessMode">textual</meta>
+    <meta property="schema:accessMode">visual</meta>
+    <meta property="schema:accessModeSufficient">textual,Visual</meta>
+    <meta property="schema:accessibilityFeature">alternativeText</meta>
+    <meta property="schema:accessibilitySummary">Dans cette publication, il n'y a pas d'image nécessitant de description textuelle.</meta>
+    <meta property="schema:accessibilityFeature">printPageNumbers</meta>
+    <meta property="schema:accessibilityFeature">readingOrder</meta>
+    <meta property="schema:accessibilityFeature">structuralNavigation</meta>
+    <meta property="schema:accessibilityFeature">tableOfContents</meta>
+    <meta property="schema:accessibilityFeature">displayTransformability</meta>
+    <meta property="schema:accessibilityHazard">noFlashingHazard</meta>
+    <meta property="schema:accessibilityHazard">noMotionSimulationHazard</meta>
+    <meta property="schema:accessibilityHazard">noSoundHazard</meta>
+    <meta property="schema:accessibilityControl">fullKeyboardControl</meta>
+    <meta property="schema:accessibilityControl">fullMouseControl</meta>
+    <meta property="schema:accessibilityControl">fullTouchControl</meta>
+    <meta property="rendition:layout">reflowable</meta>
+    <meta property="dcterms:modified">2021-10-31T10:56:09Z</meta>
+    <meta property="ibooks:specified-fonts">true</meta>
+    <meta property="rendition:spread">auto</meta>
+    <meta property="calibre:timestamp" scheme="dcterms:W3CDTF">2021-10-24T08:06:54Z</meta>
+    <meta refines="#id" property="role" scheme="marc:relators">aut</meta>
+    <meta refines="#id" property="file-as">author, St</meta>
+    <meta property="calibre:author_link_map">{"St Author": ""}</meta>
+  </metadata>
+  <manifest>
+    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+    <item href="pres001.xhtml" id="pres001-xhtml" media-type="application/xhtml+xml"/>
+    <item href="images/log1.jpg" id="images-pres001_img001-jpg" media-type="image/jpeg"/>
+    <item href="titl001.xhtml" id="titl001-xhtml" media-type="application/xhtml+xml"/>
+    <item href="images/log2.jpg" id="images-titl001_img002-jpg" media-type="image/jpeg"/>
+    <item href="chap001.xhtml" id="chap001-xhtml" media-type="application/xhtml+xml"/>
+    <item href="epig001.xhtml" id="epig001-xhtml" media-type="application/xhtml+xml"/>
+    <item href="chap002.xhtml" id="chap002-xhtml" media-type="application/xhtml+xml"/>
+    <item href="chap003.xhtml" id="chap003-xhtml" media-type="application/xhtml+xml"/>
+    <item href="chap004.xhtml" id="chap004-xhtml" media-type="application/xhtml+xml"/>
+    <item href="chap005.xhtml" id="chap005-xhtml" media-type="application/xhtml+xml"/>
+    <item href="chap006.xhtml" id="chap006-xhtml" media-type="application/xhtml+xml"/>
+    <item href="chap007.xhtml" id="chap007-xhtml" media-type="application/xhtml+xml"/>
+    <item href="chap008.xhtml" id="chap008-xhtml" media-type="application/xhtml+xml"/>
+    <item href="chap009.xhtml" id="chap009-xhtml" media-type="application/xhtml+xml"/>
+    <item href="same001.xhtml" id="same001-xhtml" media-type="application/xhtml+xml"/>
+    <item href="bibl001.xhtml" id="bibl001-xhtml" media-type="application/xhtml+xml"/>
+    <item href="same002.xhtml" id="same002-xhtml" media-type="application/xhtml+xml"/>
+    <item href="info001.xhtml" id="info001-xhtml" media-type="application/xhtml+xml"/>
+    <!--from_template-->
+    <item href="content.css" id="content-css" media-type="text/css"/>
+    <!--from_template-->
+    <!--from_template-->
+    <item href="title.css" id="title-css" media-type="text/css"/>
+    <!--from_template-->
+    <!--from_template-->
+    <!--from_template-->
+    <item id="cover" href="images/cover.jpg" media-type="image/jpeg" properties="cover-image"/>
+    <item id="titlepage" href="titlepage.xhtml" media-type="application/xhtml+xml" properties="calibre:title-page svg"/>
+  </manifest>
+  <spine page-progression-direction="ltr" toc="ncx">
+    <itemref idref="titlepage"/>
+    <itemref idref="pres001-xhtml"/>
+    <itemref idref="titl001-xhtml"/>
+    <itemref idref="info001-xhtml"/>
+    <itemref idref="chap001-xhtml"/>
+    <itemref idref="epig001-xhtml"/>
+    <itemref idref="chap002-xhtml"/>
+    <itemref idref="chap003-xhtml"/>
+    <itemref idref="chap004-xhtml"/>
+    <itemref idref="chap005-xhtml"/>
+    <itemref idref="chap006-xhtml"/>
+    <itemref idref="chap007-xhtml"/>
+    <itemref idref="chap008-xhtml"/>
+    <itemref idref="chap009-xhtml"/>
+    <itemref idref="same001-xhtml"/>
+    <itemref idref="bibl001-xhtml"/>
+    <itemref idref="same002-xhtml"/>
+  </spine>
+  <guide>
+    <reference href="chap002.xhtml" title="Premier matin" type="text"/>
+  </guide>
+</package>
