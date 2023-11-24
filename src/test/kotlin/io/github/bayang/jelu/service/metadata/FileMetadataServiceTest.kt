@@ -1,7 +1,9 @@
 package io.github.bayang.jelu.service.metadata
 
+import io.github.bayang.jelu.errors.JeluValidationException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
@@ -41,7 +43,6 @@ class FileMetadataServiceTest(@Autowired private val fileMetadataService: FileMe
 
     @Test
     fun testParseUnknownExtension() {
-        val metadata = fileMetadataService.extractMetadata("unknown.txt")
-        Assertions.assertNull(metadata)
+        assertThrows<JeluValidationException> { fileMetadataService.extractMetadata("unknown.txt") }
     }
 }
