@@ -37,7 +37,7 @@
         "invalid_isbn10": "Ongeldige isbn10",
         "invalid_isbn13": "Ongeldige isbn13",
         "auto_fill_doc": "Probeer automatisch wat velden van het web in te vullen, een isbn of een titel",
-        "auto_fill_book": "Try to auto fill some fields from an epub or opf file",
+        "auto_fill_book": "Probeer automatisch enkele velden uit een epub of opf bestand in te vullen",
         "auto_import_disabled": "Automatisch importeren vereist dat een metadata plugin wordt geïnstalleerd",
         "auto_fill": "automatisch invullen",
         "add_author": "Een auteur toevoegen",
