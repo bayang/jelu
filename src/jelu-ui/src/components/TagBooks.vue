@@ -236,7 +236,7 @@ getBooks()
       :animated="true"
     />
   </div>
-  <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1 is-flex is-flex-wrap-wrap is-justify-content-space-evenly my-3">
+  <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1 my-3">
     <div
       v-for="book in convertedBooks"
       :key="book.book.id"

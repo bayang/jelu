@@ -220,13 +220,13 @@ watch(checked, (newVal, oldVal) => {
         <span
           v-if="book.lastReadingEvent"
           :class="eventClass"
-          class="badge is-capitalized is-family-sans-serif"
+          class="badge"
         >{{ eventText }}</span>
         <div class="flex">
           <span
             v-if="book.book.series && book.book.series.length > 0"
             v-tooltip="book.book.series[0].name"
-            class="badge is-family-sans-serif mx-1"
+            class="badge mx-1"
           >
             #{{ book.book.series[0].numberInSeries }}
           </span>

@@ -59,7 +59,7 @@ const sideBarWidth = ref(175)
     </div>
   </div>
   <footer class="footer footer-center my-10">
-    <div class="content has-text-centered">
+    <div>
       <p>
         <strong>Jelu</strong> <a
           href="https://github.com/bayang/jelu"

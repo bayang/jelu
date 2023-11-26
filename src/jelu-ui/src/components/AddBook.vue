@@ -463,8 +463,8 @@ let displayDatepicker = computed(() => {
 
 <template>
   <section>
-    <div class="grid columns is-multiline">
-      <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12 justify-center justify-items-center justify-self-center column is-offset-one-fifth is-three-fifths">
+    <div class="grid">
+      <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12 justify-center justify-items-center justify-self-center">
         <div />
         <h1 class="text-2xl typewriter capitalize">
           {{ t('nav.add_book') }}
@@ -507,7 +507,7 @@ let displayDatepicker = computed(() => {
           </svg>
         </div>
       </div>
-      <div class="form-control sm:w-8/12 justify-self-center column is-two-thirds">
+      <div class="form-control sm:w-8/12 justify-self-center">
         <div class="field mb-3">
           <o-field
             horizontal
@@ -990,7 +990,7 @@ let displayDatepicker = computed(() => {
             v-else
             horizontal
             :label="t('labels.choose_file')"
-            class="file is-primary has-name"
+            class="file"
           >
             <input
               type="file"

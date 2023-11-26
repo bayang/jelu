@@ -363,7 +363,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
           <o-field
             v-else
             :label="t('labels.choose_file')"
-            class="file is-primary has-name"
+            class="file"
           >
             <input
               type="file"
@@ -460,7 +460,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             v-for="res in searchResult.pages"
             :key="res.id"
             v-tooltip="t('labels.click_to_import')"
-            class="card card-side box mb-2 shadow-lg shadow-base-300 hover:shadow-2xl hover:border-2 hover:border-accent"
+            class="card card-side mb-2 shadow-lg shadow-base-300 hover:shadow-2xl hover:border-2 hover:border-accent"
             @click="fillFormWithEntry(res)"
           >
             <figure

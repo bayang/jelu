@@ -196,7 +196,7 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
       <h2 class="text-3xl typewriter">
         {{ t('home.not_reading') }}
       </h2>
-      <span class="icon is-large">
+      <span class="icon">
         <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
       </span>
     </div>

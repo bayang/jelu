@@ -388,7 +388,7 @@ getBook()
         class="flex items-center flex-wrap"
       >
         <button
-          class="btn btn-primary btn-outline is-light mr-2 p-2"
+          class="btn btn-primary btn-outline mr-2 p-2"
           @click="toggleEdit"
         >
           <span class="icon">

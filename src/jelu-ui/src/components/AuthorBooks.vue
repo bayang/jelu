@@ -217,8 +217,8 @@ getBooks()
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="grid columns is-multiline box">
-    <div class="grid items-center justify-center justify-items-center justify-self-center sm:grid-cols-3 mb-4 sm:w-10/12 column is-full">
+  <div class="grid">
+    <div class="grid items-center justify-center justify-items-center justify-self-center sm:grid-cols-3 mb-4 sm:w-10/12">
       <div />
       <div class="level-item">
         <h2 class="text-2xl inline mr-2 typewriter">
@@ -270,7 +270,7 @@ getBooks()
         ><i class="mdi mdi-24px mdi-instagram" /></a>
       </div>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-10 column is-one-fifth is-offset-one-fifth">
+    <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-10">
       <div class="justify-self-center sm:justify-self-end">
         <figure class="image">
           <img
@@ -287,39 +287,37 @@ getBooks()
         </figure>
       </div>
     
-      <div class="column is-three-fifths content text-left w-11/12 sm:w-full justify-self-center sm:justify-self-start">
+      <div class="text-left w-11/12 sm:w-full justify-self-center sm:justify-self-start">
         <p
           v-if=" author.biography != null"
-          class="has-text-left"
         >
           <span class="font-semibold">{{ t('author.biography') }} :</span>
         </p>
         <p
-          class="has-text-left prose-base"
+          class="prose-base"
           v-html="author.biography"
         />
         <p
           v-if="author.dateOfBirth"
-          class="has-text-left block"
+          class="block"
         >
           <span class="font-semibold">{{ t('author.date_of_birth') }} :</span>
           {{ formatDate(author.dateOfBirth) }}
         </p>
         <p
           v-if="author.dateOfDeath"
-          class="has-text-left block"
+          class="block"
         >
           <span class="font-semibold">{{ t('author.date_of_death') }} :</span>
           {{ formatDate(author.dateOfDeath) }}
         </p>
         <p
           v-if=" author.notes != null"
-          class="has-text-left"
         >
           <span class="font-semibold">{{ t('author.additional_notes') }} :</span>
         </p>
         <p
-          class="has-text-left prose-base"
+          class="prose-base"
           v-html="author.notes"
         />
       </div>

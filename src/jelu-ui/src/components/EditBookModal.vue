@@ -708,7 +708,7 @@ function toggleRemoveImage() {
             v-else
             horizontal
             :label="t('labels.choose_file')"
-            class="file is-primary has-name"
+            class="file"
           >
             <input
               type="file"
@@ -726,7 +726,7 @@ function toggleRemoveImage() {
           </o-field>
         </div>
       </div>
-      <div class="column is-centered is-one-fifth flex flex-row justify-center pt-6">
+      <div class="flex flex-row justify-center pt-6">
         <button
           class="btn btn-primary"
           :class="{'btn-disabled' : progress}"

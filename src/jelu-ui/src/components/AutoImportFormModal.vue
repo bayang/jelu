@@ -127,7 +127,7 @@ function pluginsModalClosed() {
 
 <template>
   <section class="edit-modal">
-    <div class="grid justify-center justify-items-center columns is-centered is-multiline">
+    <div class="grid justify-center justify-items-center">
       <div class="mb-2">
         <h1 class="text-2xl typewriter capitalize">
           {{ t('labels.import_book') }}
@@ -135,7 +135,7 @@ function pluginsModalClosed() {
       </div>
       <div
         v-if="displayForm"
-        class="column is-centered is-full"
+        class="column"
       >
         <div class="field mb-2">
           <o-field

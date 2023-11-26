@@ -49,7 +49,7 @@ catch (err) {
       :key="quote.content"
     >
       <div class="mb-8">
-        <p class="is-size-7">
+        <p>
           {{ quote.content }}
         </p>
         <br>

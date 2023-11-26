@@ -177,7 +177,7 @@ watch(file, (newVal, oldVal) => {
         <o-field
           horizontal
           :label="t('csv_import.choose_file')"
-          class="file is-primary has-name"
+          class="file"
         >
           <input
             type="file"

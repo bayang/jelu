@@ -133,7 +133,7 @@ const rightDoD = computed(() => {
           :clickable="false"
           variant="success"
         >
-          <h1 class="text-xl title has-text-centered">
+          <h1 class="text-xl">
             {{ t('authors_merge.author_left_subtitle') }}
           </h1>{{ t('authors_merge.author_left_description') }}
         </o-step-item>
@@ -145,7 +145,7 @@ const rightDoD = computed(() => {
           :clickable="false"
           variant="success"
         >
-          <h1 class="text-xl title has-text-centered">
+          <h1 class="text-xl">
             {{ t('authors_merge.author_right_subtitle') }}
           </h1>{{ t('authors_merge.author_right_description') }}
         </o-step-item>
@@ -157,7 +157,7 @@ const rightDoD = computed(() => {
           :clickable="false"
           variant="success"
         >
-          <h1 class="text-xl title has-text-centered">
+          <h1 class="text-xl">
             {{ t('authors_merge.authors_merge_subtitle') }}
           </h1>{{ t('authors_merge.authors_merge_description') }}
         </o-step-item>
@@ -548,7 +548,7 @@ const rightDoD = computed(() => {
     </div>
     <div class="mt-2 col-span-2">
       <button
-        class="btn btn-primary button is-primary is-light mb-4"
+        class="btn btn-primary mb-4"
         :disabled="activeStep !== 'merge'"
         @click="save"
       >

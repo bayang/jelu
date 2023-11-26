@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from './store'
 import AdminBaseVue from './components/AdminBase.vue'
-// import ProfilePageVue from './components/ProfilePage.vue'
-// import AdminAuthorsVue from './components/AdminAuthors.vue'
 
 const isLogged = () => {
     if (!store.getters.getLogged) {

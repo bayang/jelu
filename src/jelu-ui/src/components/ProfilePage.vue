@@ -105,10 +105,10 @@ const shelves = computed(() => {
             <strong>{{ store.getters.getUsername }}</strong>
             <br>
             <span class="capitalize">{{ t('settings.role', 2) }}</span> :
-            <span class="badge badge-info tag is-info">USER</span> &nbsp;
+            <span class="badge badge-info tag">USER</span> &nbsp;
             <span
               v-if="store.getters.isAdmin"
-              class="badge badge-warning tag is-warning"
+              class="badge badge-warning tag"
             >ADMIN</span>
           </p>
           <div class="card-actions justify-end">

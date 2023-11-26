@@ -396,7 +396,7 @@ try {
     <h2 class="text-3xl typewriter capitalize">
       {{ t('labels.library_empty') }}
     </h2>
-    <span class="icon is-large">
+    <span class="icon">
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
     </span>
   </div>

@@ -260,7 +260,7 @@ getToRead()
   </div>
   <div
     v-if="books.length > 0"
-    class="is-flex is-flex-wrap-wrap is-justify-content-center grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-0 my-3"
+    class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-0 my-3"
   >
     <div
       v-for="book in books"
@@ -302,7 +302,7 @@ getToRead()
     <h2 class="text-3xl typewriter">
       {{ t('labels.nothing_to_read') }}
     </h2>
-    <span class="icon is-large">
+    <span class="icon">
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
     </span>
   </div>
