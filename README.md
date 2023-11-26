@@ -38,6 +38,7 @@ All your data is now located into a single-file database which can be saved anyw
 * provides an API
 * Write reviews and share them, see the reviews of other users on your instance
 * Fallback metadata providers (see [official doc](https://bayang.github.io/jelu-web/configuration/) for configuration)
+* Metadata import from epub or opf files
 * Isbn scanning via camera on mobile
 
 ## Usage
