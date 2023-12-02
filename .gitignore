@@ -39,3 +39,10 @@ out/
 memory:myDb
 
 src/main/resources/public/**
+
+segments_p
+write.lock
+*.cfe
+*.cfs
+*.si
+*.liv
