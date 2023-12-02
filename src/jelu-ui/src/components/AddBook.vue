@@ -2,7 +2,7 @@
 import { useProgrammatic } from "@oruga-ui/oruga-next";
 import IsbnVerify from '@saekitominaga/isbn-verify';
 import { useTitle } from '@vueuse/core';
-import { computed, reactive, Ref, ref } from "vue";
+import { computed, reactive, Ref, ref, watch } from "vue";
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -18,6 +18,8 @@ import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 import AutoImportFileModalVue from "./AutoImportFileModal.vue";
 import { SeriesOrder } from "../model/Series";
 import SeriesInput from "./SeriesInput.vue";
+import ImagePickerModal from "./ImagePickerModal.vue";
+import { Path } from "../model/DirectoryListing";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -54,15 +56,9 @@ const form = reactive({
 const eventType = ref(null);
 const eventDate = ref(new Date());
 const imageUrl = ref<string | null>(null);
+const imagePath = ref<string | null>(null);
 const file = ref(null);
-const uploadFromWeb = ref(true);
-let uploadlabel = computed(() => {
-  if (uploadFromWeb.value) {
-    return t('labels.upload_from_web')
-  } else {
-    return t('labels.upload_from_file')
-  }
-}) 
+const uploadType = ref('web');
 
 const uploadPercentage = ref(0);
 const errorMessage = ref("");
@@ -98,6 +94,8 @@ let seriesCopy: Ref<Array<SeriesOrder>> = ref([])
 
 const showModal: Ref<boolean> = ref(false)
 const metadata: Ref<Metadata | null> = ref(null)
+
+const showImagePickerModal: Ref<boolean> = ref(false)
 
 let hasImage = computed(() => {
   return StringUtils.isNotBlank(metadata.value?.image)
@@ -145,6 +143,9 @@ const importBook = async () => {
     })
     if (StringUtils.isNotBlank(imageUrl.value)) {
       userBook.book.image = imageUrl.value;
+    }
+    else if (imagePath.value != null && StringUtils.isNotBlank(imagePath.value)) {
+      userBook.book.image = imagePath.value
     }
     else if (!deleteImage.value
       && metadata.value != null
@@ -373,6 +374,26 @@ const toggleModal = (file: boolean) => {
         console.log(modalMetadata)
         metadata.value = modalMetadata
         mergeMetadata()
+      }
+    },
+    onClose: modalClosed
+  });
+}
+
+const toggleImagePickerModal = () => {
+  showImagePickerModal.value = !showImagePickerModal.value
+  oruga.modal.open({
+    parent: this,
+    component: ImagePickerModal,
+    trapFocus: true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    events: {
+      choose: (path: Path) => {
+        console.log("received path")
+        console.log(path)
+        imagePath.value = path.path
       }
     },
     onClose: modalClosed
@@ -960,17 +981,35 @@ let displayDatepicker = computed(() => {
           >
             <div class="form-control">
               <label class="label cursor-pointer justify-center gap-2">
-                <span class="label-text">{{ uploadlabel }}</span> 
+                <span class="label-text">From web</span> 
                 <input
-                  v-model="uploadFromWeb"
-                  type="checkbox"
-                  class="toggle toggle-primary"
+                  v-model="uploadType"
+                  type="radio"
+                  name="radio-10"
+                  class="radio radio-primary"
+                  value="web"
+                >
+                <span class="label-text">From computer</span> 
+                <input
+                  v-model="uploadType"
+                  type="radio"
+                  name="radio-10"
+                  class="radio radio-primary"
+                  value="computer"
+                >
+                <span class="label-text">From Jelu server</span> 
+                <input
+                  v-model="uploadType"
+                  type="radio"
+                  name="radio-10"
+                  class="radio radio-primary"
+                  value="server"
                 >
               </label>
             </div>
           </o-field>
           <o-field
-            v-if="uploadFromWeb"
+            v-if="uploadType == 'web'"
             horizontal
             :label="t('labels.enter_image_address')"
           >
@@ -987,7 +1026,7 @@ let displayDatepicker = computed(() => {
             />
           </o-field>
           <o-field
-            v-else
+            v-else-if="uploadType == 'computer'"
             horizontal
             :label="t('labels.choose_file')"
             class="file"
@@ -1005,6 +1044,23 @@ let displayDatepicker = computed(() => {
               class="progress progress-primary"
             />
             <br>
+          </o-field>
+          <o-field
+            v-else
+            horizontal
+            :label="t('labels.choose_file')"
+            class="file"
+          >
+            <button
+              class="btn btn-primary button"
+              @click="toggleImagePickerModal()"
+            >
+              <span class="icon">
+                <i class="mdi mdi-file-question mdi-18px" />
+              </span>
+              <span>{{ t('labels.choose_file') }}</span>
+            </button>
+            <span>{{ imagePath }}</span>
           </o-field>
         </div>
 

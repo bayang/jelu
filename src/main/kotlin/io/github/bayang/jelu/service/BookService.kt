@@ -267,7 +267,8 @@ class BookService(
                     val succeeded = currentFile.renameTo(targetFile)
                     logger.debug { "renaming of metadata imported file $dtoImage was successful: $succeeded" }
                     savedImage = targetFilename
-                } else {
+                } else if (dtoImage.startsWith("http://, true") || dtoImage.startsWith("https://, true")) {
+                    // file is from the internet
                     val destFileName: String = downloadService.download(
                         dtoImage,
                         slugify(title),
@@ -275,6 +276,21 @@ class BookService(
                         targetDir,
                     )
                     savedImage = destFileName
+                } else {
+                    // file was picked on the server
+                    val file = File(dtoImage)
+                    if (!file.exists() || !file.isAbsolute || file.isDirectory) {
+                        logger.debug { "invalid file $dtoImage" }
+                        return null
+                    }
+                    val targetFilename: String = imageName(
+                        slugify(title),
+                        id,
+                        FilenameUtils.getExtension(dtoImage),
+                    )
+                    val targetFile = File(targetDir, targetFilename)
+                    file.copyTo(targetFile)
+                    savedImage = targetFilename
                 }
             } catch (e: Exception) {
                 logger.error { "failed to save remote file ${file?.originalFilename}" }

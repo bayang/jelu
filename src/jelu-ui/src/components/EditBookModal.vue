@@ -12,6 +12,8 @@ import { Tag } from "../model/Tag";
 import { useI18n } from 'vue-i18n'
 import { SeriesOrder } from "../model/Series";
 import SeriesInput from "./SeriesInput.vue";
+import { Path } from "../model/DirectoryListing";
+import ImagePickerModal from "./ImagePickerModal.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -19,7 +21,7 @@ const { t } = useI18n({
     })
 
 const props = defineProps<{ bookId: string, book: UserBook | null, canAddEvent: boolean }>()
-const oruga = useProgrammatic();
+const { oruga } = useProgrammatic()
 const emit = defineEmits(['close']);
 
 let filteredAuthors: Ref<Array<Author>> = ref([]);
@@ -48,20 +50,17 @@ const handleFileUpload = (event: any) => {
 };
 
 const imageUrl = ref<string | null>(null);
+const imagePath = ref<string | null>(null);
+const uploadType = ref('web');
 
 const clearImageField = () => {
   imageUrl.value = "";
 };
 
+const showImagePickerModal: Ref<boolean> = ref(false)
+
 const file = ref(null);
-const uploadFromWeb = ref(true);
-let uploadlabel = computed(() => {
-  if (uploadFromWeb.value) {
-    return t('labels.upload_from_web')
-  } else {
-    return t('labels.upload_from_file')
-  }
-})
+
 const uploadPercentage = ref(0);
 const errorMessage = ref("");
 const datepicker = ref(null)
@@ -95,6 +94,8 @@ const importBook = () => {
   }
   if (StringUtils.isNotBlank(imageUrl.value)) {
     userbook.value.book.image = imageUrl.value
+  } else if (imagePath.value != null && StringUtils.isNotBlank(imagePath.value)) {
+      userbook.value.book.image = imagePath.value
   } else if (deleteImage.value) {
     userbook.value.book.image = null
   }
@@ -131,12 +132,12 @@ const importBook = () => {
     .then(res => {
       console.log(`update book ${res.book.title}`);
       progress.value = false
-      ObjectUtils.toast(oruga.oruga, "success", t('labels.book_title_updated', { title : res.book.title}), 4000);
+      ObjectUtils.toast(oruga, "success", t('labels.book_title_updated', { title : res.book.title}), 4000);
       emit('close')
     })
     .catch(err => {
       progress.value = false
-      ObjectUtils.toast(oruga.oruga, "danger", t('labels.error_message', {msg : err.message}), 4000);
+      ObjectUtils.toast(oruga, "danger", t('labels.error_message', {msg : err.message}), 4000);
     })
 
 }
@@ -249,6 +250,30 @@ function createTag(item: Tag | string) {
   return {
     "name": item
   }
+}
+
+const toggleImagePickerModal = () => {
+  showImagePickerModal.value = !showImagePickerModal.value
+  oruga.modal.open({
+    parent: this,
+    component: ImagePickerModal,
+    trapFocus: true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    events: {
+      choose: (path: Path) => {
+        console.log("received path")
+        console.log(path)
+        imagePath.value = path.path
+      }
+    },
+    onClose: modalClosed
+  });
+}
+
+function modalClosed() {
+  console.log("modal closed")
 }
 
 function toggleRemoveImage() {
@@ -679,15 +704,37 @@ function toggleRemoveImage() {
             horizontal
             :label="t('labels.upload_cover')"
           >
-            <o-switch
-              v-model="uploadFromWeb"
-              position="left"
-            >
-              {{ uploadlabel }}
-            </o-switch>
+            <div class="form-control">
+              <label class="label cursor-pointer justify-center gap-2">
+                <span class="label-text">From web</span> 
+                <input
+                  v-model="uploadType"
+                  type="radio"
+                  name="radio-10"
+                  class="radio radio-primary"
+                  value="web"
+                >
+                <span class="label-text">From computer</span> 
+                <input
+                  v-model="uploadType"
+                  type="radio"
+                  name="radio-10"
+                  class="radio radio-primary"
+                  value="computer"
+                >
+                <span class="label-text">From Jelu server</span> 
+                <input
+                  v-model="uploadType"
+                  type="radio"
+                  name="radio-10"
+                  class="radio radio-primary"
+                  value="server"
+                >
+              </label>
+            </div>
           </o-field>
           <o-field
-            v-if="uploadFromWeb"
+            v-if="uploadType == 'web'"
             horizontal
             :label="t('labels.enter_image_address')"
             class="pb-2"
@@ -705,7 +752,7 @@ function toggleRemoveImage() {
             />
           </o-field>
           <o-field
-            v-else
+            v-else-if="uploadType == 'computer'"
             horizontal
             :label="t('labels.choose_file')"
             class="file"
@@ -723,6 +770,23 @@ function toggleRemoveImage() {
               class="progress progress-primary"
             />
             <br>
+          </o-field>
+          <o-field
+            v-else
+            horizontal
+            :label="t('labels.choose_file')"
+            class="file"
+          >
+            <button
+              class="btn btn-primary button"
+              @click="toggleImagePickerModal()"
+            >
+              <span class="icon">
+                <i class="mdi mdi-file-question mdi-18px" />
+              </span>
+              <span>{{ t('labels.choose_file') }}</span>
+            </button>
+            <span>{{ imagePath }}</span>
           </o-field>
         </div>
       </div>

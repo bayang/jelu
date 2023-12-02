@@ -2,9 +2,7 @@
 import { Ref, ref } from "vue";
 import { useI18n } from 'vue-i18n';
 import { DirectoryListing, Path } from "../model/DirectoryListing";
-import { Metadata } from "../model/Metadata";
 import dataService from "../services/DataService";
-import MetadataDetail from "./MetadataDetail.vue";
 import FilePickerElement from "./FilePickerElement.vue";
 
 const { t } = useI18n({
@@ -12,29 +10,11 @@ const { t } = useI18n({
       useScope: 'global'
     })
 
-const file = ref(null);
-const uploadPercentage = ref(0);
-
-const handleFileUpload = (event: any) => {
-  file.value = event.target.files[0];
-  dataService.getMetadataFromUploadedFile(file.value,
-  (event: { loaded: number; total: number }) => {
-          let percent = Math.round((100 * event.loaded) / event.total);
-          uploadPercentage.value = percent;
-        }).then(res => {
-          metadata.value = res
-          displayMetadata.value = true
-        })
-        .catch(e => console.log(e))
-};
-
-const fromServer = ref(false);
-
 const directoryListing:Ref<DirectoryListing|null> = ref(null)
 
 const directories = (root: string|undefined) => {
   if (root != null) {
-    dataService.getDirectoryListing(root)
+    dataService.getDirectoryListing(root, 'pictures')
     .then(res => {
       directoryListing.value = res
     })
@@ -42,36 +22,19 @@ const directories = (root: string|undefined) => {
   }
 }
 
-const emit = defineEmits(['close', 'metadataReceived']);
-
-const displayMetadata: Ref<boolean> = ref(false)
-const metadata: Ref<Metadata|null> = ref(null)
-
-const displayForm: Ref<boolean> = ref(true)
-
-const discard = () => {
-    displayForm.value = true
-    metadata.value = null
-    displayMetadata.value = false
-}
-
-const importData = () => {
-    emit('metadataReceived', metadata.value)
-    emit('close')
-}
-
 const selectPath = (elem: Path) => {
   if (elem.type == 'directory') {
     directories(elem.path)
   } else {
-    dataService.getMetadataFromFile(elem.path)
-      .then(res => {
-        metadata.value = res
-        displayMetadata.value = true
-      })
-      .catch(err => console.log(err))
+    emit('choose', elem)
+    emit('close')
   }
 }
+
+const emit = defineEmits<{
+  (e: 'choose', targetElement: Path): void,
+  (e: 'close'): void
+}>();
 
 directories('/')
 
@@ -85,43 +48,8 @@ directories('/')
           {{ t('labels.import_book') }}
         </h1>
       </div>
-      <div
-        v-if="displayMetadata && metadata != null"
-        class="flex flex-col items-center"
-      >
-        <MetadataDetail :metadata="metadata" />
+      <div>
         <div
-          class="col-span-5 space-x-5 mt-3"
-        >
-          <button
-            class="btn btn-primary"
-            @click="importData"
-          >
-            <span class="icon">
-              <i class="mdi mdi-check mdi-18px" />
-            </span><span>{{ t('labels.import') }}</span>
-          </button>
-          <button
-            class="btn btn-warning"
-            @click="discard"
-          >
-            <span class="icon">
-              <i class="mdi mdi-cancel mdi-18px" />
-            </span><span>{{ t('labels.discard') }}</span>
-          </button>
-        </div>
-      </div>
-      <div v-else>
-        <div class="field">
-          <input
-            v-model="fromServer"
-            type="checkbox"
-            class="toggle toggle-primary"
-          >
-          <span class="mx-2">{{ fromServer == true ? t('labels.upload_from_server') : t('labels.upload_from_computer') }}</span>
-        </div>
-        <div
-          v-if="fromServer"
           class="mt-3"
         >
           <div
@@ -166,7 +94,7 @@ directories('/')
             v-for="elem of directoryListing?.directories"
             :key="elem.path"
             :elem="elem"
-            @choose="selectPath"
+            @choose="elem => selectPath(elem)"
           />
           <div
             v-if="directoryListing?.directories && 
@@ -189,21 +117,6 @@ directories('/')
               </svg> <span>No supported file here</span>
             </div>
           </div>
-        </div>
-        <div v-else>
-          <input
-            type="file"
-            accept="image/*,.opf,.epub,.OPF,.EPUB"
-            class="block file-input w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold hover:file:bg-gray-300"
-            @change="handleFileUpload($event)"
-          >
-          <br>
-          <progress
-            max="100"
-            :value.prop="uploadPercentage"
-            class="progress progress-primary"
-          />
-          <br>
         </div>
       </div>
     </div>
