@@ -1,3 +1,15 @@
+## [0.46.0](https://github.com/bayang/jelu/compare/v0.45.0...v0.46.0) (2023-12-04)
+
+
+### Features
+
+* allow image upload from server ([361bca6](https://github.com/bayang/jelu/commit/361bca61e3f29270963cd2d16c42a7c494f6647a))
+
+
+### Bug Fixes
+
+* remove old bulma css ([277eaf9](https://github.com/bayang/jelu/commit/277eaf959eb99cecaa183c9ba473d83c12b52de5))
+
 ## [0.45.0](https://github.com/bayang/jelu/compare/v0.44.0...v0.45.0) (2023-11-24)
 
 
