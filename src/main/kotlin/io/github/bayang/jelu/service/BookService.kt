@@ -267,7 +267,7 @@ class BookService(
                     val succeeded = currentFile.renameTo(targetFile)
                     logger.debug { "renaming of metadata imported file $dtoImage was successful: $succeeded" }
                     savedImage = targetFilename
-                } else if (dtoImage.startsWith("http://, true") || dtoImage.startsWith("https://, true")) {
+                } else if (dtoImage.startsWith("http://", true) || dtoImage.startsWith("https://", true)) {
                     // file is from the internet
                     val destFileName: String = downloadService.download(
                         dtoImage,
