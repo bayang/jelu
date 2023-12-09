@@ -1,3 +1,10 @@
+### [0.46.1](https://github.com/bayang/jelu/compare/v0.46.0...v0.46.1) (2023-12-09)
+
+
+### Bug Fixes
+
+* bug in network image saving ([9d81fd9](https://github.com/bayang/jelu/commit/9d81fd9c046328a1e2b3ece4f222bb17e544ec9b))
+
 ## [0.46.0](https://github.com/bayang/jelu/compare/v0.45.0...v0.46.0) (2023-12-04)
 
 
