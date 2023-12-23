@@ -146,7 +146,8 @@
         "descending": "Decrescente",
         "ascending": "Crescente",
         "publication_date": "Data di pubblicazione",
-        "modification_date": "Data di modifica"
+        "modification_date": "Data di modifica",
+        "page_count": "Page count"
     },
     "reading_events": {
         "finished": "terminato",
