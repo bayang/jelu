@@ -1,3 +1,10 @@
+## [0.47.0](https://github.com/bayang/jelu/compare/v0.46.1...v0.47.0) (2023-12-23)
+
+
+### Features
+
+* add sorting by page count [#89](https://github.com/bayang/jelu/issues/89) ([0a58a5a](https://github.com/bayang/jelu/commit/0a58a5a36aea7dc5cdbcc19ebc226b9c57fd6898))
+
 ### [0.46.1](https://github.com/bayang/jelu/compare/v0.46.0...v0.46.1) (2023-12-09)
 
 
