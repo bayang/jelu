@@ -171,6 +171,14 @@ getBooks()
           {{ t('sorting.publication_date') }}
         </o-radio>
       </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="pageCount"
+        >
+          {{ t('sorting.page_count') }}
+        </o-radio>
+      </div>
     </template>
     <template #filters>
       <div class="field">

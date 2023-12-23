@@ -160,6 +160,14 @@ getToRead()
           {{ t('sorting.series') }}
         </o-radio>
       </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="pageCount"
+        >
+          {{ t('sorting.page_count') }}
+        </o-radio>
+      </div>
     </template>
     <template #filters>
       <div class="field flex flex-col capitalize gap-1">
