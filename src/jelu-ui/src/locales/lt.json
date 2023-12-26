@@ -1,12 +1,12 @@
 {
     "home": {
-        "currently_reading": "Currently reading",
-        "recent_events": "Recent reading events",
-        "quotes": "quotes",
-        "not_reading": "Not currently reading anything"
+        "currently_reading": "Šiuo metu skaitote",
+        "recent_events": "Naujausi skaitymo renginiai",
+        "quotes": "citatos",
+        "not_reading": "Šiuo metu nieko neskaitau"
     },
     "nav": {
-        "my_books": "my books",
+        "my_books": "mano knygos",
         "to_read": "to read list",
         "add_book": "add book",
         "dashboard": "dashboard",
