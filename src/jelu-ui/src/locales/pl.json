@@ -146,7 +146,8 @@
         "descending": "Malejąco",
         "ascending": "Rosnąco",
         "publication_date": "Data publikacji",
-        "modification_date": "Data modyfikacji"
+        "modification_date": "Data modyfikacji",
+        "page_count": "Page count"
     },
     "reading_events": {
         "finished": "ukończone",

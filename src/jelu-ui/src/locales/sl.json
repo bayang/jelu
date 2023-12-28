@@ -146,7 +146,8 @@
         "descending": "Padajoče",
         "ascending": "Naraščajoče",
         "publication_date": "Datum objave",
-        "modification_date": "Datum spremembe"
+        "modification_date": "Datum spremembe",
+        "page_count": "Page count"
     },
     "reading_events": {
         "finished": "končano",

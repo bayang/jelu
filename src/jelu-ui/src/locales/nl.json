@@ -146,7 +146,8 @@
         "descending": "Aflopend",
         "ascending": "Oplopend",
         "publication_date": "Publicatiedatum",
-        "modification_date": "Bewerkingsdatum"
+        "modification_date": "Bewerkingsdatum",
+        "page_count": "Aantal pagina's"
     },
     "reading_events": {
         "finished": "voltooid",
