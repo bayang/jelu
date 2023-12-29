@@ -102,6 +102,12 @@ watch(() => route.name, (newVal, oldVal) => {
   }
 })
 
+const collapseDropdown = () => {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+}
+
 </script>
 
 <template>
@@ -132,7 +138,7 @@ watch(() => route.name, (newVal, oldVal) => {
             tabindex="0"
             class="menu menu-compact dropdown-content z-[1] mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
-            <li>
+            <li @click="collapseDropdown()">
               <router-link
                 v-if="isLogged"
                 class="font-sans text-base capitalize"
@@ -141,7 +147,7 @@ watch(() => route.name, (newVal, oldVal) => {
                 {{ t('nav.my_books') }}
               </router-link>
             </li>
-            <li>
+            <li @click="collapseDropdown()">
               <router-link
                 v-if="isLogged"
                 class="font-sans text-base capitalize"
@@ -150,7 +156,7 @@ watch(() => route.name, (newVal, oldVal) => {
                 {{ t('nav.to_read') }}
               </router-link>
             </li>
-            <li>
+            <li @click="collapseDropdown()">
               <router-link
                 v-if="isLogged"
                 :to="{ name: 'add-book' }"
@@ -159,7 +165,7 @@ watch(() => route.name, (newVal, oldVal) => {
                 {{ t('nav.add_book') }}
               </router-link>
             </li>
-            <li>
+            <li @click="collapseDropdown()">
               <router-link
                 v-if="isLogged"
                 :to="{ name: 'history' }"
@@ -168,7 +174,7 @@ watch(() => route.name, (newVal, oldVal) => {
                 {{ t('nav.history') }}
               </router-link>
             </li>
-            <li>
+            <li @click="collapseDropdown()">
               <router-link
                 v-if="isLogged"
                 :to="{ name: 'search' }"
@@ -286,19 +292,40 @@ watch(() => route.name, (newVal, oldVal) => {
           </li>
           <li
             v-if="shelves !== null && shelves.length > 0 && isLogged"
-            tabindex="0"
             class="mr-1"
           >
-            <details>
-              <summary>
-                <a class="font-sans text-xl capitalize">
-                  {{ t('nav.shelves') }}
-                </a>
-              </summary>
-              <ul class="p-2 bg-base-100 z-50">
+            <div class="dropdown dropdown-bottom">
+              <label
+                tabindex="0"
+              >
+                <div class="flex items-center">
+                  <a class="font-sans text-xl capitalize">
+                    {{ t('nav.shelves') }}
+                  </a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6 swap-on"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </div>
+              </label>
+              <ul
+                tabindex="0"
+                class="mt-3 p-2 dropdown-content z-[1] bg-base-100 rounded-box w-52"
+              >
                 <li
                   v-for="shelf in shelves"
                   :key="shelf"
+                  @click="collapseDropdown()"
                 >
                   <router-link
                     v-if="isLogged"
@@ -308,7 +335,7 @@ watch(() => route.name, (newVal, oldVal) => {
                   </router-link>
                 </li>
               </ul>
-            </details>
+            </div>
           </li>
         </ul>
         <div
@@ -381,6 +408,7 @@ watch(() => route.name, (newVal, oldVal) => {
               <li
                 v-for="shelf in shelves"
                 :key="shelf"
+                @click="collapseDropdown()"
               >
                 <router-link
                   v-if="isLogged"
@@ -407,7 +435,10 @@ watch(() => route.name, (newVal, oldVal) => {
             tabindex="0"
             class="mt-3 p-2 shadow menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-52"
           >
-            <li v-if="isLogged">
+            <li
+              v-if="isLogged"
+              @click="collapseDropdown()"
+            >
               <router-link
                 class="font-sans text-base capitalize"
                 :to="{ name: 'profile-page' }"
@@ -415,7 +446,10 @@ watch(() => route.name, (newVal, oldVal) => {
                 {{ t('nav.dashboard') }}
               </router-link>
             </li>
-            <li v-if="!isLogged">
+            <li
+              v-if="!isLogged"
+              @click="collapseDropdown()"
+            >
               <router-link
                 class="font-sans text-base"
                 :to="{ name: 'login' }"
@@ -423,7 +457,10 @@ watch(() => route.name, (newVal, oldVal) => {
                 {{ t('nav.login') }}
               </router-link>
             </li>
-            <li v-if="isLogged">
+            <li
+              v-if="isLogged"
+              @click="collapseDropdown()"
+            >
               <a
                 class="font-sans text-base capitalize"
                 @click="logout()"
@@ -431,7 +468,7 @@ watch(() => route.name, (newVal, oldVal) => {
                 {{ t('nav.logout') }}
               </a>
             </li>
-            <li>
+            <li @click="collapseDropdown()">
               <label
                 for="shortcuts-modal"
                 class="font-sans text-base modal-button"
