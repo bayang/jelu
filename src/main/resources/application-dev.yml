@@ -29,6 +29,10 @@ jelu:
     proxy:
       enabled: false
       adminName: "adminproxy"
+  lucene:
+    indexAnalyzer:
+      minGram: 3
+
 server:
   port: 11111
 spring:

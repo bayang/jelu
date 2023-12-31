@@ -19,6 +19,7 @@ fun createUserBookDto(bookDto: BookCreateDto, lastReadingEvent: ReadingEventType
         percentRead = null,
         book = bookDto,
         borrowed = borrowed,
+        currentPageNumber = null,
     )
 }
 

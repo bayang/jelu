@@ -695,6 +695,18 @@ class BookRepository(
         if (book.percentRead != null) {
             found.percentRead = book.percentRead
         }
+        if (book.currentPageNumber != null) {
+            found.currentPageNumber = book.currentPageNumber
+            val current = book.currentPageNumber
+            val total = found.book.pageCount
+            if (total != null) {
+                if (current >= total) {
+                    found.percentRead = 100
+                } else {
+                    found.percentRead = current.times(100).div(total)
+                }
+            }
+        }
         if (book.book != null) {
             update(found.book, fromBookCreateDto(book.book))
         }

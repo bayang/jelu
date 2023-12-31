@@ -108,6 +108,7 @@ class ReadingEventServiceTest(
             toRead = null,
             percentRead = 50,
             borrowed = null,
+            currentPageNumber = null,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -167,6 +168,7 @@ class ReadingEventServiceTest(
             toRead = null,
             percentRead = 50,
             borrowed = null,
+            currentPageNumber = null,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)

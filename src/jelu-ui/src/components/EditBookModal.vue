@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, Ref, ref } from "vue";
+import { computed, Ref, ref, watch } from "vue";
 import { Author } from "../model/Author";
 import { UserBook } from "../model/Book";
 import { ReadingEventType } from "../model/ReadingEvent";
@@ -279,6 +279,12 @@ function modalClosed() {
 function toggleRemoveImage() {
   deleteImage.value = !deleteImage.value
 }
+
+watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userbook.value.book.pageCount],(newVal, oldVal) => {
+  if (userbook.value.book.pageCount != null) {
+    ObjectUtils.computePages(newVal, oldVal, userbook.value, userbook.value.book.pageCount)
+  }
+})
 
 </script>
 
@@ -628,6 +634,20 @@ function toggleRemoveImage() {
             <o-checkbox v-model="userbook.borrowed">
               {{ borrowedDisplay }}
             </o-checkbox>
+          </o-field>
+        </div>
+        <div class="field pb-2">
+          <o-field
+            horizontal
+            :label="t('book.current_page_number')"
+            class="capitalize"
+          >
+            <o-input
+              v-model="userbook.currentPageNumber"
+              type="number"
+              min="0"
+              class="input focus:input-accent"
+            />
           </o-field>
         </div>
         <div class="field pb-2">

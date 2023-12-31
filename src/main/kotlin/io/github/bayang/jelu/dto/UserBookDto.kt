@@ -17,6 +17,7 @@ data class UserBookDto(
     val owned: Boolean?,
     val toRead: Boolean?,
     val percentRead: Int?,
+    val currentPageNumber: Int?,
     val borrowed: Boolean?,
 )
 data class UserBookLightDto(
@@ -31,6 +32,7 @@ data class UserBookLightDto(
     val owned: Boolean?,
     val toRead: Boolean?,
     val percentRead: Int?,
+    val currentPageNumber: Int?,
     val borrowed: Boolean?,
 )
 data class UserBookWithoutEventsAndUserDto(
@@ -44,6 +46,7 @@ data class UserBookWithoutEventsAndUserDto(
     val owned: Boolean?,
     val toRead: Boolean?,
     val percentRead: Int?,
+    val currentPageNumber: Int?,
     val borrowed: Boolean?,
 )
 data class UserBookWithoutEventsDto(
@@ -56,6 +59,7 @@ data class UserBookWithoutEventsDto(
     val owned: Boolean?,
     val toRead: Boolean?,
     val percentRead: Int?,
+    val currentPageNumber: Int?,
     val borrowed: Boolean?,
 )
 data class CreateUserBookDto(
@@ -66,6 +70,7 @@ data class CreateUserBookDto(
     val book: BookCreateDto,
     val toRead: Boolean?,
     val percentRead: Int?,
+    val currentPageNumber: Int?,
     val borrowed: Boolean?,
 )
 data class UserBookUpdateDto(
@@ -75,6 +80,7 @@ data class UserBookUpdateDto(
     val book: BookCreateDto?,
     val toRead: Boolean?,
     val percentRead: Int?,
+    val currentPageNumber: Int?,
     val borrowed: Boolean?,
 )
 data class UserBookBulkUpdateDto(

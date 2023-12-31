@@ -235,6 +235,7 @@ class CsvImportService(
                             if (readStatusFromShelves.equals(TO_READ, true) && userbook.toRead == null) true else null,
                             null,
                             null,
+                            null,
                         ),
                         null,
                     )
@@ -249,6 +250,7 @@ class CsvImportService(
                         if (readStatusFromShelves.equals(TO_READ, true)) true else null,
                         null,
                         null,
+                        null,
                     )
                     bookService.save(userbook, userEntity, null)
                 }
@@ -260,6 +262,7 @@ class CsvImportService(
                     importEntity.owned,
                     book,
                     if (readStatusFromShelves.equals(TO_READ, true)) true else null,
+                    null,
                     null,
                     null,
                 )

@@ -19,6 +19,7 @@ import AutoImportFormModalVue from "./AutoImportFormModal.vue"
 import EditBookModal from "./EditBookModal.vue"
 import MergeBookModal from './MergeBookModal.vue'
 import ReadingEventModalVue from './ReadingEventModal.vue'
+import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewCard from "./ReviewCard.vue"
 import ReviewModalVue from './ReviewModal.vue'
 
@@ -196,6 +197,23 @@ const toggleMergeBookModal = (currentBook: Book|undefined, metadata: Metadata) =
         "book": currentBook,
         "metadata": metadata
       },
+    onClose: modalClosed
+  });
+}
+
+const toggleReadProgressModal = (userBookId: string, pageCount: number|null, currentProgress: number|null, currentPage: number|null) => {
+  oruga.modal.open({
+    component: ReadProgressModal,
+    trapFocus: true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    props: {
+      "userBookId": userBookId,
+      "pageCount": pageCount,
+      "currentProgress": currentProgress,
+      "currentPage": currentPage,
+    },
     onClose: modalClosed
   });
 }
@@ -488,6 +506,28 @@ getBook()
                 </svg>
               </button>
             </li>
+            <li>
+              <button
+                v-tooltip="t('labels.set_progress')"
+                class="btn btn-circle btn-outline border-none"
+                @click="toggleReadProgressModal(book?.id!!, book?.book.pageCount ?? null, book?.percentRead ?? null, book?.currentPageNumber ?? null)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                  />
+                </svg>
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -563,9 +603,12 @@ getBook()
           <span class="font-semibold uppercase">{{ t('book.isbn13') }} :</span>
           {{ book.book.isbn13 }}
         </p>
-        <p v-if="book?.book?.pageCount">
-          <span class="font-semibold capitalize">{{ t('book.page', 2) }} :</span>
-          {{ book.book.pageCount }}
+        <p v-if="book?.book?.pageCount || book?.currentPageNumber">
+          <span v-if="book?.book?.pageCount">
+            <span class="font-semibold capitalize">{{ t('book.page', 2) }} :</span>
+            {{ book.book.pageCount }}
+          </span>
+          <span v-if="book?.currentPageNumber">&nbsp;(<span class="font-semibold capitalize">{{ t('labels.current') }}</span> : {{ book.currentPageNumber }})</span>
         </p>
         <p v-if="book?.book?.publishedDate">
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>

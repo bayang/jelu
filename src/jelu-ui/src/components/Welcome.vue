@@ -13,6 +13,7 @@ import { key } from '../store'
 import BookCard from "./BookCard.vue"
 import QuotesDisplay from './QuotesDisplay.vue'
 import ReadingEventModalVue from './ReadingEventModal.vue'
+import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewBookCard from './ReviewBookCard.vue';
 
 useTitle('Jelu | Home')
@@ -142,6 +143,24 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
   });
 }
 
+function toggleReadProgressModal(userBookId: string, pageCount: number|null, currentProgress: number|null, currentPage: number|null) {
+  showModal.value = !showModal.value
+  oruga.modal.open({
+    component: ReadProgressModal,
+    trapFocus: true,
+    active: true,
+    canCancel: ['x', 'button', 'outside'],
+    scroll: 'keep',
+    props: {
+      "userBookId": userBookId,
+      "pageCount": pageCount,
+      "currentProgress": currentProgress,
+      "currentPage": currentPage,
+    },
+    onClose: modalClosed
+  });
+}
+
 </script>
 
 <template>
@@ -170,6 +189,26 @@ function toggleReadingEventModal(currentEvent: ReadingEvent, edit: boolean) {
                 @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
               >
                 <i class="mdi mdi-check-circle mdi-18px" />
+              </span>
+              <span
+                v-tooltip="t('labels.set_progress')"
+                class="icon text-info"
+                @click.prevent="toggleReadProgressModal(book.id!!, book.book.pageCount ?? null, book.percentRead ?? null, book.currentPageNumber ?? null)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                  />
+                </svg>
               </span>
             </template>
           </book-card>

@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosHeaders, AxiosInstance } from "axios";
-import { UserBook, Book, UserBookBulkUpdate } from "../model/Book";
+import { UserBook, Book, UserBookBulkUpdate, UserBookUpdate } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
 import { CreateUser, UpdateUser, User, UserAuthentication } from "../model/User";
@@ -452,6 +452,20 @@ class DataService {
           },
           onUploadProgress: onUploadProgress
         })
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error updating book " + error.response.status + " " + error.response.data.error)
+        throw new Error("error updating book " + error.response.status + " " + error)
+      }
+      console.log("error updating book " + (error as AxiosError).code)
+      throw new Error("error updating book " + error)
+    }
+  }
+
+  updateUserBook = async (userBook: UserBookUpdate) => {
+    try {
+      const resp = await this.apiClient.put<UserBook>(`${this.API_USERBOOK}/${userBook.id}`, userBook)
       return resp.data
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

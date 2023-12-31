@@ -108,6 +108,7 @@ class CsvExportServiceTest(
             percentRead = null,
             book = book1,
             borrowed = null,
+            currentPageNumber = null,
         )
         val saved1: UserBookLightDto = bookService.save(createUserBookDto1, user(), null)
 

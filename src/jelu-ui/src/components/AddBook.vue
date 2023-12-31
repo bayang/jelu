@@ -47,6 +47,7 @@ const form = reactive({
   borrowed: null,
   toRead: null,
   percentRead: null,
+  currentPageNumber: null,
   googleId: "",
   amazonId: "",
   goodreadsId: "",
@@ -79,6 +80,12 @@ const toReadDisplay = computed(() => {
     return t('labels.book_will_be_added')
   }
   return ""
+})
+
+watch(() => [form.currentPageNumber, form.percentRead, form.pageCount],(newVal, oldVal) => {
+  if (form.pageCount != null) {
+    ObjectUtils.computePages(newVal, oldVal, form, form.pageCount)
+  }
 })
 
 let filteredAuthors: Ref<Array<Author>> = ref([]);
@@ -212,6 +219,7 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
     personalNotes: formdata.personalNotes,
     toRead: formdata.toRead,
     percentRead: formdata.percentRead,
+    currentPageNumber: formdata.currentPageNumber,
     borrowed: formdata.borrowed
   }
   return userBook
@@ -241,7 +249,8 @@ const clearForm = () => {
   form.googleId = ""
   form.goodreadsId = ""
   form.librarythingId = ""
-
+  form.percentRead = null
+  form.currentPageNumber = null
 };
 
 const clearDatePicker = () => {
@@ -903,6 +912,20 @@ let displayDatepicker = computed(() => {
             <o-checkbox v-model="form.borrowed">
               {{ borrowedDisplay }}
             </o-checkbox>
+          </o-field>
+        </div>
+        <div class="field mb-3">
+          <o-field
+            horizontal
+            :label="t('book.current_page_number')"
+            class="capitalize"
+          >
+            <o-input
+              v-model="form.currentPageNumber"
+              type="number"
+              min="0"
+              class="input focus:input-accent"
+            />
           </o-field>
         </div>
         <div class="field mb-3">

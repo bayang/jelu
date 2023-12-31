@@ -506,4 +506,9 @@
             VALUES (1000, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
         </sql>
     </changeSet>
+    <changeSet id="add_current_page_nb" author="byng">
+        <sql>
+            ALTER TABLE user_book ADD current_page_number INTEGER;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
