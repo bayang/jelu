@@ -104,7 +104,9 @@
         "find-tag": "find a tag",
         "associated-books": "associated book(s)",
         "operation-success": "operation successful",
-        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?"
+        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
+        "current": "current",
+        "set_progress": "set your current progress"
     },
     "settings": {
         "pick_language": "Wybierz język",
@@ -204,7 +206,8 @@
         "nb_in_series": "# w serii",
         "in_read_list": "na liście czytania",
         "translator": "tłumacz | tłumaczy",
-        "borrowed": "pożyczona"
+        "borrowed": "pożyczona",
+        "current_page_number": "current page number"
     },
     "authors_merge": {
         "authors_merging_utility": "Narzędzie scalania autorów",
