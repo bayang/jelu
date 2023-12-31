@@ -1,3 +1,15 @@
+## [0.48.0](https://github.com/bayang/jelu/compare/v0.47.0...v0.48.0) (2023-12-31)
+
+
+### Features
+
+* edit current progress and page ([e4402c6](https://github.com/bayang/jelu/commit/e4402c6a822673d54ea43dc8f3eb8fbdb13c7a52))
+
+
+### Bug Fixes
+
+* collapse dropdown menus after click [#92](https://github.com/bayang/jelu/issues/92) ([6cadfc9](https://github.com/bayang/jelu/commit/6cadfc946fce1688f849b8bdec7e3848153978ab))
+
 ## [0.47.0](https://github.com/bayang/jelu/compare/v0.46.1...v0.47.0) (2023-12-23)
 
 
