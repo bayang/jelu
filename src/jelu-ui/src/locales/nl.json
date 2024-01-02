@@ -104,7 +104,9 @@
         "find-tag": "vind een label",
         "associated-books": "geassocieerde boek(en)",
         "operation-success": "bewerking geslaagd",
-        "delete_this_tag": "Verwijder dit label uit {nb} boek(en) en uit de database ?"
+        "delete_this_tag": "Verwijder dit label uit {nb} boek(en) en uit de database ?",
+        "current": "huidige",
+        "set_progress": "je huidige voortgang instellen"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -204,7 +206,8 @@
         "nb_in_series": "# in de serie",
         "in_read_list": "in de te-lezen lijst",
         "translator": "vertaler | vertalers",
-        "borrowed": "geleend"
+        "borrowed": "geleend",
+        "current_page_number": "huidige pagina nummer"
     },
     "authors_merge": {
         "authors_merging_utility": "Hulpprogramma samenvoegen auteurs",

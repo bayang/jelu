@@ -104,7 +104,9 @@
         "find-tag": "trova un tag",
         "associated-books": "libro/i associati",
         "operation-success": "operazione riuscita",
-        "delete_this_tag": "Cancellare questo tag da {nb} libro/i e dal database ?"
+        "delete_this_tag": "Cancellare questo tag da {nb} libro/i e dal database ?",
+        "current": "attuale",
+        "set_progress": "imposta il tuo progresso attuale"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
@@ -147,7 +149,7 @@
         "ascending": "Crescente",
         "publication_date": "Data di pubblicazione",
         "modification_date": "Data di modifica",
-        "page_count": "Page count"
+        "page_count": "Numero di pagine"
     },
     "reading_events": {
         "finished": "terminato",
@@ -204,7 +206,8 @@
         "nb_in_series": "# nella collana",
         "in_read_list": "nella lista da leggere",
         "translator": "traduttore | traduttori",
-        "borrowed": "preso in prestito"
+        "borrowed": "preso in prestito",
+        "current_page_number": "numero di pagina attuale"
     },
     "authors_merge": {
         "authors_merging_utility": "Utilità per l'unione di due autori",

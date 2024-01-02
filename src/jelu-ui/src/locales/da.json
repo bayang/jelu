@@ -104,7 +104,9 @@
         "find-tag": "find a tag",
         "associated-books": "associated book(s)",
         "operation-success": "operation successful",
-        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?"
+        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
+        "current": "current",
+        "set_progress": "set your current progress"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -204,7 +206,8 @@
         "nb_in_series": "# i serie",
         "in_read_list": "på læseliste",
         "translator": "oversætter | oversættere",
-        "borrowed": "lånt"
+        "borrowed": "lånt",
+        "current_page_number": "current page number"
     },
     "authors_merge": {
         "authors_merging_utility": "Forfattersammenfletningsværktøj",

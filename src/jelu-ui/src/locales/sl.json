@@ -104,7 +104,9 @@
         "find-tag": "poišči oznako",
         "associated-books": "povezane knjige",
         "operation-success": "opravilo je bilo uspešno",
-        "delete_this_tag": "Izbriši to oznako iz {nb} knjige in podatkovne baze?"
+        "delete_this_tag": "Izbriši to oznako iz {nb} knjige in podatkovne baze?",
+        "current": "current",
+        "set_progress": "set your current progress"
     },
     "settings": {
         "pick_language": "Izberite svoj jezik",
@@ -204,7 +206,8 @@
         "nb_in_series": "# v seriji",
         "in_read_list": "za prebrati",
         "translator": "prevajalec | prevajalci",
-        "borrowed": "izposojeno"
+        "borrowed": "izposojeno",
+        "current_page_number": "current page number"
     },
     "authors_merge": {
         "authors_merging_utility": "Združevanje avtorjev",
