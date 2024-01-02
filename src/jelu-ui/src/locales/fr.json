@@ -105,8 +105,8 @@
         "associated-books": "livre(s) associé(s)",
         "operation-success": "Opération réussie",
         "delete_this_tag": "Supprimer ce tag de {nb} livre(s) et de la base de données ?",
-        "current": "current",
-        "set_progress": "set your current progress"
+        "current": "actuel",
+        "set_progress": "définir votre progression"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -207,7 +207,7 @@
         "in_read_list": "dans la liste de lecture",
         "translator": "traducteur | traducteurs",
         "borrowed": "Emprunté",
-        "current_page_number": "current page number"
+        "current_page_number": "Numéro de page actuel"
     },
     "authors_merge": {
         "authors_merging_utility": "Outil de fusion d'auteurs",
