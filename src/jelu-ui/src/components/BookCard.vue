@@ -85,6 +85,10 @@ const showProgressBar = (book: UserBook) => {
       && book.lastReadingEvent === ReadingEventType.CURRENTLY_READING
 }
 
+const progressBarTooltip = computed(() => {
+  return props.book.currentPageNumber != null ? `p. ${props.book.currentPageNumber}` : `${props.book.percentRead} %`
+})
+
 function modalClosed() {
   console.log("modal closed from card")
   emit("update:modalClosed", true)
@@ -165,6 +169,7 @@ watch(checked, (newVal, oldVal) => {
       </router-link>
       <div
         v-if="showProgressBar(book)"
+        v-tooltip="progressBarTooltip"
         class="bg-success absolute h-1.5"
         :style="{ width: book.percentRead + '%' }"
       />
