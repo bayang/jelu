@@ -203,14 +203,18 @@ watch(checked, (newVal, oldVal) => {
         </h2>
       </router-link>
       <div v-if="book.book.authors != null && book.book.authors.length > 0">
-        <router-link
+        <span
           v-for="author in book.book.authors.slice(0,3)"
           :key="author.id"
-          class="link hover:underline hover:decoration-4 hover:decoration-secondary line-clamp-2 inline-block"
-          :to="{ name: 'author-detail', params: { authorId: author.id } }"
         >
-          {{ author.name }}
-        </router-link>
+          <router-link
+            class="link hover:underline hover:decoration-4 hover:decoration-secondary line-clamp-2 inline-block"
+            :to="{ name: 'author-detail', params: { authorId: author.id } }"
+          >
+            {{ author.name }}
+          </router-link>
+          <span>&nbsp;</span>
+        </span>
         <span
           v-if="book.book.authors.length > 3"
           v-tooltip="authorsText"
