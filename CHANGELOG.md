@@ -1,3 +1,16 @@
+## [0.49.0](https://github.com/bayang/jelu/compare/v0.48.0...v0.49.0) (2024-01-14)
+
+
+### Features
+
+* display and sort by ratings [#94](https://github.com/bayang/jelu/issues/94) ([8e591d6](https://github.com/bayang/jelu/commit/8e591d68447d45c34e150cb875d6f577f119ab88))
+
+
+### Bug Fixes
+
+* authors spacing on cards [#95](https://github.com/bayang/jelu/issues/95) ([9634299](https://github.com/bayang/jelu/commit/9634299b706df469b184f3a8d037850000b8b66d))
+* display page number or percentage on progress bar hovering ([d19570b](https://github.com/bayang/jelu/commit/d19570bcc4f7e2b6f41a136b676bf4aed59fa008))
+
 ## [0.48.0](https://github.com/bayang/jelu/compare/v0.47.0...v0.48.0) (2023-12-31)
 
 
