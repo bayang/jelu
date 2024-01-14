@@ -106,7 +106,9 @@
         "operation-success": "opravilo je bilo uspešno",
         "delete_this_tag": "Izbriši to oznako iz {nb} knjige in podatkovne baze?",
         "current": "current",
-        "set_progress": "set your current progress"
+        "set_progress": "set your current progress",
+        "user_avg_rating": "my average rating : {rating}",
+        "avg_rating": "average rating : {rating}"
     },
     "settings": {
         "pick_language": "Izberite svoj jezik",
@@ -149,7 +151,9 @@
         "ascending": "Naraščajoče",
         "publication_date": "Datum objave",
         "modification_date": "Datum spremembe",
-        "page_count": "Page count"
+        "page_count": "Page count",
+        "user_avg_rating": "my average rating",
+        "avg_rating": "average rating"
     },
     "reading_events": {
         "finished": "končano",
