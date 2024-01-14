@@ -106,7 +106,9 @@
         "operation-success": "operation successful",
         "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
         "current": "current",
-        "set_progress": "set your current progress"
+        "set_progress": "set your current progress",
+        "user_avg_rating": "my average rating : {rating}",
+        "avg_rating": "average rating : {rating}"
     },
     "settings": {
         "pick_language": "Pick your language",
@@ -149,7 +151,9 @@
         "ascending": "Ascending",
         "publication_date": "Publikavimo data",
         "modification_date": "Modifikacijos data",
-        "page_count": "Puslapių skaičius"
+        "page_count": "Puslapių skaičius",
+        "user_avg_rating": "my average rating",
+        "avg_rating": "average rating"
     },
     "reading_events": {
         "finished": "finished",
