@@ -48,6 +48,8 @@ data class UserBookWithoutEventsAndUserDto(
     val percentRead: Int?,
     val currentPageNumber: Int?,
     val borrowed: Boolean?,
+    val avgRating: Double? = null,
+    val userAvgRating: Double? = null,
 )
 data class UserBookWithoutEventsDto(
     val id: UUID?,

@@ -44,6 +44,8 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
     var percentRead by UserBookTable.percentRead
     var currentPageNumber by UserBookTable.currentPageNumber
     var borrowed by UserBookTable.borrowed
+    var avgRating: Double? = null
+    var userAvgRating: Double? = null
 
     fun toUserBookDto(): UserBookDto =
         UserBookDto(
@@ -92,6 +94,8 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             percentRead = this.percentRead,
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
+            avgRating = this.avgRating,
+            userAvgRating = this.userAvgRating,
         )
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto =
         UserBookWithoutEventsDto(

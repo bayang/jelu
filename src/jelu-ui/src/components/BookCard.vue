@@ -240,6 +240,22 @@ watch(checked, (newVal, oldVal) => {
             #{{ book.book.series[0].numberInSeries }}
           </span>
           <span
+            v-if="book.userAvgRating"
+            v-tooltip="t('labels.user_avg_rating', {rating : book.userAvgRating})"
+            class="icon text-info"
+          >
+            <i class="mdi mdi-star mdi-18px" />
+            {{ book.userAvgRating }}
+          </span>
+          <span
+            v-if="book.avgRating"
+            v-tooltip="t('labels.avg_rating', {rating : book.avgRating})"
+            class="icon text-info"
+          >
+            <i class="mdi mdi-star-outline mdi-18px" />
+            {{ book.avgRating }}
+          </span>
+          <span
             v-if="book.owned"
             v-tooltip="t('book.owned')"
             class="icon text-info"

@@ -21,6 +21,7 @@ import mu.KotlinLogging
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Expression
+import org.jetbrains.exposed.sql.ExpressionAlias
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.ResultRow
@@ -32,6 +33,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
+import org.jetbrains.exposed.sql.avg
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.count
 import org.jetbrains.exposed.sql.deleteWhere
@@ -46,22 +48,26 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
 
-fun parseSorts(sort: Sort, defaultSort: Pair<Expression<*>, SortOrder>, vararg tables: Table): Array<Pair<Expression<*>, SortOrder>> {
+fun parseSorts(sort: Sort, defaultSort: Pair<Expression<*>, SortOrder>, columns: List<Expression<*>>): Array<Pair<Expression<*>, SortOrder>> {
     val orders = mutableListOf<Pair<Expression<*>, SortOrder>>()
-    val columns = mutableListOf<Column<*>>()
-    for (table in tables) {
-        columns.addAll(table.columns)
-    }
     // will fail for common names in multiple tables like creationDate, so
     // put most important table first
     // eg if sort by creationDate should be applied on BookTable rather than UserBookTable put it first
     for (o in sort) {
-        val found = columns.find { column -> column.name.replace("_", "", true).equals(o.property, true) }
+        // val found = columns.find { column -> column.name.replace("_", "", true).equals(o.property, true) }
+        val found = columns.find { column ->
+            when (column) {
+                is Column -> column.name.replace("_", "", true).equals(o.property, true)
+                is ExpressionAlias -> column.alias.replace("_", "", true).equals(o.property, true)
+                else -> false
+            }
+        }
         if (found != null) {
             orders.add(Pair(found, if (o.isAscending) SortOrder.ASC_NULLS_LAST else SortOrder.DESC_NULLS_LAST))
         }
@@ -70,6 +76,14 @@ fun parseSorts(sort: Sort, defaultSort: Pair<Expression<*>, SortOrder>, vararg t
         orders.add(defaultSort)
     }
     return orders.toTypedArray()
+}
+
+fun parseSorts(sort: Sort, defaultSort: Pair<Expression<*>, SortOrder>, vararg tables: Table): Array<Pair<Expression<*>, SortOrder>> {
+    val columns = mutableListOf<Column<*>>()
+    for (table in tables) {
+        columns.addAll(table.columns)
+    }
+    return parseSorts(sort, defaultSort, columns)
 }
 
 fun formatLike(input: String): String {
@@ -975,9 +989,19 @@ class BookRepository(
         val cols = mutableListOf<Expression<*>>()
         cols.addAll(UserBookTable.columns)
         cols.addAll(BookTable.columns)
+        // avg for all reviews
+        val reviewAlias = ReviewTable.alias("rvt")
+        val ratingAlias = reviewAlias[ReviewTable.rating].avg().alias("avgRating")
+        // avg for current user reviews (thanks to additionalConstraint in JOIN below)
+        val userRatingAlias = ReviewTable.rating.avg().alias("usrAvgRating")
+        cols.add(ratingAlias)
+        cols.add(userRatingAlias)
         val query: Query = UserBookTable.join(BookTable, JoinType.LEFT)
+            .join(ReviewTable, JoinType.LEFT, additionalConstraint = { ReviewTable.book eq BookTable.id and(ReviewTable.user eq userID) })
+            .join(reviewAlias, JoinType.LEFT, onColumn = reviewAlias[ReviewTable.book], otherColumn = BookTable.id)
             .slice(cols).selectAll()
             .andWhere { UserBookTable.user eq userID }
+            .groupBy(UserBookTable.id)
             .withDistinct(true)
         if (bookId != null) {
             query.andWhere { UserBookTable.book eq bookId }
@@ -1014,14 +1038,26 @@ class BookRepository(
         }
         val total = query.count()
         query.limit(pageable.pageSize, pageable.offset)
-        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST), UserBookTable, BookTable)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST), cols)
         query.orderBy(*orders)
-        val res = UserBook.wrapRows(query).toList()
+        val res = query.map { resultRow -> wrapUserBookRow(resultRow, ratingAlias, userRatingAlias) }
         return PageImpl(
             res,
             pageable,
             total,
         )
+    }
+
+    private fun wrapUserBookRow(
+        resultRow: ResultRow,
+        ratingAlias: ExpressionAlias<BigDecimal?>,
+        userRatingAlias: ExpressionAlias<BigDecimal?>,
+    ): UserBook {
+        val r = UserBook.wrapRow(resultRow)
+        val rating = resultRow[ratingAlias]
+        r.avgRating = rating?.toDouble()
+        r.userAvgRating = resultRow[userRatingAlias]?.toDouble()
+        return r
     }
 
     // FIXME put a limit on the number of ids that can be passed for modification

@@ -168,6 +168,22 @@ getToRead()
           {{ t('sorting.page_count') }}
         </o-radio>
       </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="usrAvgRating"
+        >
+          {{ t('sorting.user_avg_rating') }}
+        </o-radio>
+      </div>
+      <div class="field">
+        <o-radio
+          v-model="sortBy"
+          native-value="avgRating"
+        >
+          {{ t('sorting.avg_rating') }}
+        </o-radio>
+      </div>
     </template>
     <template #filters>
       <div class="field flex flex-col capitalize gap-1">

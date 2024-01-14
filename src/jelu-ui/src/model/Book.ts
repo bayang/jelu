@@ -40,6 +40,8 @@ export interface UserBook {
     readingEvents?: Array<ReadingEvent>|null,
     percentRead? : number|null,
     currentPageNumber?: number|null,
+    avgRating?: number|null,
+    userAvgRating?: number|null,
   }
 export interface UserBookBulkUpdate {
     ids: Array<string>,
