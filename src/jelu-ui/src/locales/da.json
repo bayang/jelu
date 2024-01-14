@@ -106,7 +106,9 @@
         "operation-success": "operation successful",
         "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
         "current": "current",
-        "set_progress": "set your current progress"
+        "set_progress": "set your current progress",
+        "user_avg_rating": "my average rating : {rating}",
+        "avg_rating": "average rating : {rating}"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -149,7 +151,9 @@
         "ascending": "Stigende",
         "publication_date": "Dato for offentliggørelse",
         "modification_date": "Ændringsdato",
-        "page_count": "Page count"
+        "page_count": "Page count",
+        "user_avg_rating": "my average rating",
+        "avg_rating": "average rating"
     },
     "reading_events": {
         "finished": "færdig",
