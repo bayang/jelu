@@ -107,8 +107,8 @@
         "delete_this_tag": "Verwijder dit label uit {nb} boek(en) en uit de database ?",
         "current": "huidige",
         "set_progress": "je huidige voortgang instellen",
-        "user_avg_rating": "my average rating : {rating}",
-        "avg_rating": "average rating : {rating}"
+        "user_avg_rating": "mijn gemiddelde beoordeling: {rating}",
+        "avg_rating": "gemiddelde beoordeling : {rating}"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -152,8 +152,8 @@
         "publication_date": "Publicatiedatum",
         "modification_date": "Bewerkingsdatum",
         "page_count": "Aantal pagina's",
-        "user_avg_rating": "my average rating",
-        "avg_rating": "average rating"
+        "user_avg_rating": "mijn gemiddelde beoordeling",
+        "avg_rating": "gemiddelde beoordeling"
     },
     "reading_events": {
         "finished": "voltooid",
