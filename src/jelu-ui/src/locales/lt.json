@@ -169,7 +169,7 @@
         "event_date": "įvykio data",
         "edit_event": "redaguoti įvykį",
         "reading": "skaitymas",
-        "start_date": "start date",
+        "start_date": "pradžios data",
         "end_date": "end date"
     },
     "filtering": {
@@ -198,10 +198,10 @@
         "amazon_id": "Amazon Id",
         "librarything_id": "Librarything Id",
         "publisher": "leidėjas",
-        "published_date": "published date",
+        "published_date": "publikavimo data",
         "page_count": "puslapių skaičius",
         "language": "kalba",
-        "series": "series",
+        "series": "serijos",
         "status": "statusas",
         "personal_notes": "asmeninės pastabos",
         "to_read": "to read",
