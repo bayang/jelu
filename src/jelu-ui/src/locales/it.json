@@ -107,8 +107,8 @@
         "delete_this_tag": "Cancellare questo tag da {nb} libro/i e dal database ?",
         "current": "attuale",
         "set_progress": "imposta il tuo progresso attuale",
-        "user_avg_rating": "my average rating : {rating}",
-        "avg_rating": "average rating : {rating}"
+        "user_avg_rating": "la mia valutazione media : {rating}",
+        "avg_rating": "valutazione media : {rating}"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
@@ -152,8 +152,8 @@
         "publication_date": "Data di pubblicazione",
         "modification_date": "Data di modifica",
         "page_count": "Numero di pagine",
-        "user_avg_rating": "my average rating",
-        "avg_rating": "average rating"
+        "user_avg_rating": "la mia valutazione media",
+        "avg_rating": "valutazione media"
     },
     "reading_events": {
         "finished": "terminato",
