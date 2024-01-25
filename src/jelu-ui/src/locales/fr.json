@@ -106,7 +106,9 @@
         "operation-success": "Opération réussie",
         "delete_this_tag": "Supprimer ce tag de {nb} livre(s) et de la base de données ?",
         "current": "actuel",
-        "set_progress": "définir votre progression"
+        "set_progress": "définir votre progression",
+        "user_avg_rating": "ma note moyenne : {rating}",
+        "avg_rating": "note moyenne : {rating}"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -149,7 +151,9 @@
         "ascending": "Ascendant",
         "publication_date": "Date de publication",
         "modification_date": "Date de modification",
-        "page_count": "Nombre de pages"
+        "page_count": "Nombre de pages",
+        "user_avg_rating": "ma note moyenne",
+        "avg_rating": "note moyenne"
     },
     "reading_events": {
         "finished": "lu",
