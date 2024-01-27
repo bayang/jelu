@@ -56,7 +56,7 @@
         "click_bin_to_remove": "Spustelėkite šiukšliadėžę, kad pašalintumėte dabartinį viršelį ir įkeltumėte kitą",
         "refresh_to_restore": "Paspauskite atnaujinti, kad atkurtumėte viršelį",
         "book_not_yet_in_books": "Šios knygos dar nėra jūsų knygose, dukart spustelėkite, kad ją pridėtumėte",
-        "not_in_your_books": "not in your books",
+        "not_in_your_books": "ne jūsų knygose",
         "books_from_name": "Knygos iš {name}",
         "delete_for_all_or_only_you": "Ištrinti knygą visiems naudotojams ar tik jums ?",
         "only_me": "Tik man",
@@ -220,7 +220,7 @@
         "author_left_description": "Pirmiausia pasirinkite autorių, kuris bus keičiamas ir saugomas duomenų bazėje.",
         "author_right_subtitle": "Sujungti autorius",
         "author_right_description": "Pirmiausia pasirinkite autorių, kuris bus keičiamas ir saugomas duomenų bazėje.",
-        "authors_merge_subtitle": "Merge",
+        "authors_merge_subtitle": "Sujungti",
         "authors_merge_description": "Naudokite dešiniojo autoriaus laukus, kad užpildytumėte kairiojo autoriaus laukus, tada suliekite.",
         "search_message": "Ieškoti autorius, kuriuos reikia sujungti"
     },
@@ -272,65 +272,65 @@
         "password_confirm": "patvirtinti slaptažodį",
         "password": "slaptažodis",
         "admin": "admin",
-        "admin_help": "user should have admin rights ?",
+        "admin_help": "naudotojas turėtų turėti administratoriaus teises ?",
         "user_saved": "User saved : {name}",
         "user_updated": "User updated : {name}",
         "login": "login",
-        "edit_user": "Edit user {name}"
+        "edit_user": "Redaguoti naudotoją {name}"
     },
     "shortcuts": {
         "toggle_bar": "Toggle filters bar",
-        "page_previous": "Go to previous page",
-        "page_next": "Go to next page"
+        "page_previous": "Grįžti į ankstesnį puslapį",
+        "page_next": "Eiti į kitą puslapį"
     },
     "profile": {
-        "edit_user": "Edit user"
+        "edit_user": "Redaguoti naudotoją"
     },
     "user-messages": {
-        "link": "link",
-        "mark_read": "mark as read",
-        "no_messages": "no messages here"
+        "link": "nuoroda",
+        "mark_read": "pažymėti kaip perskaitytą",
+        "no_messages": "jokių pranešimų čia nėra"
     },
     "stats": {
-        "all_time": "All time stats",
-        "yearly_stats": "Yearly stats",
-        "choose_year": "Choose a year"
+        "all_time": "Visų laikų statistika",
+        "yearly_stats": "Metinė statistika",
+        "choose_year": "Pasirinkite metus"
     },
     "history": {
         "years": "years"
     },
     "bulk": {
-        "bulk_edit_books": "Bulk edit books",
+        "bulk_edit_books": "Masinis knygų redagavimas",
         "owned": "Mark/unmark all as owned",
         "toRead": "Mark/unmark all as to read",
-        "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
-        "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove"
+        "toggle": "Masinio redagavimo režimo perjungimas",
+        "select_all": "Pasirinkti visus/panaikinti pasirinkimą visiems",
+        "edit": "Pradėkite redaguoti",
+        "add_or_remove": "Pradėkite redaguoti",
+        "add": "Pridėti",
+        "remove": "Pašalinti",
+        "choose_tag": "Pasirinkite žymą, kurią norite pridėti arba pašalinti"
     },
     "reviews": {
-        "create_review": "Create review",
-        "edit_review": "Edit review",
-        "visibility": "visibility",
-        "private": "private",
-        "public": "public",
+        "create_review": "Sukurti apžvalgą",
+        "edit_review": "Redaguoti apžvalgą",
+        "visibility": "matomumas",
+        "private": "privatus",
+        "public": "vieša",
         "review": "review",
-        "rating": "rating",
-        "my_reviews": "My reviews",
-        "all_reviews": "All reviews",
-        "delete_review": "Delete this review ?",
+        "rating": "įvertinimas",
+        "my_reviews": "Mano apžvalgos",
+        "all_reviews": "Visos apžvalgos",
+        "delete_review": "Ištrinti šią apžvalgą ?",
         "review_detail": "Go to review detail",
-        "book_all_reviews": "All reviews for this book"
+        "book_all_reviews": "Visos šios knygos apžvalgos"
     },
     "book_merge": {
-        "merge_books": "Merge books",
-        "fetch_metadata": "Fetch metadata"
+        "merge_books": "Sujungti knygas",
+        "fetch_metadata": "Atrinkti metaduomenis"
     },
     "metadata": {
-        "reorder_plugins": "reorder plugins",
+        "reorder_plugins": "pertvarkyti įskiepius",
         "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
         "default_priority": "default priority"
     }
