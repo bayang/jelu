@@ -331,7 +331,7 @@
     },
     "metadata": {
         "reorder_plugins": "pertvarkyti įskiepius",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
-        "default_priority": "default priority"
+        "description": "Įskiepiai bus iškviesti iš viršaus į apačią, išjungti įskiepiai nebus naudojami",
+        "default_priority": "numatytasis prioritetas"
     }
 }
