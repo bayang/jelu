@@ -52,7 +52,7 @@
         "fetch_book": "atnešti knygą",
         "import": "importuoti",
         "discard": "atmesti",
-        "actual_cover": "actual cover",
+        "actual_cover": "tikras viršelis",
         "click_bin_to_remove": "Spustelėkite šiukšliadėžę, kad pašalintumėte dabartinį viršelį ir įkeltumėte kitą",
         "refresh_to_restore": "Paspauskite atnaujinti, kad atkurtumėte viršelį",
         "book_not_yet_in_books": "Šios knygos dar nėra jūsų knygose, dukart spustelėkite, kad ją pridėtumėte",
@@ -100,7 +100,7 @@
         "reading_list_from_name": "Skaitymo sąrašas iš {name}",
         "search_query": "Įveskite paieškos užklausą...",
         "search_documentation": "Eiti į paieškos dokumentaciją",
-        "orphan-tags": "orphan tags",
+        "orphan-tags": "nepriskirtos žymos",
         "find-tag": "rasti žymą",
         "associated-books": "susijusios knyga (-os)",
         "operation-success": "operacija sėkminga",
@@ -170,7 +170,7 @@
         "edit_event": "redaguoti įvykį",
         "reading": "skaitymas",
         "start_date": "pradžios data",
-        "end_date": "end date"
+        "end_date": "pabaigos data"
     },
     "filtering": {
         "book_in_list": "Knyga įtraukta į skaitomų knygų sąrašą",
@@ -231,7 +231,7 @@
         "biography": "biografija",
         "official_page": "oficialus puslapis",
         "wikipedia_page": "vikipedijos puslapis",
-        "goodreads_page": "goodreads page",
+        "goodreads_page": "\"goodreads\" puslapis",
         "twitter_page": "\"Twitter\" puslapis",
         "facebook_page": "\"Facebook\" puslapis",
         "instagram_page": "instagram puslapis",
@@ -260,7 +260,7 @@
         "confirm_login": "patvirtinti prisijungimą",
         "confirm_password": "patvirtinti slaptažodį",
         "create_first_user": "sukurti pirmąjį naudotoją",
-        "login_not_empty": "login cannot be empty",
+        "login_not_empty": "prisijungimas negali būti tuščias",
         "password_not_empty": "slaptažodžio laukelis negali būti tuščias",
         "login_not_match": "prisijungimo laukai nesutampa",
         "password_not_match": "slaptažodžio laukai nesutampa",
@@ -271,15 +271,15 @@
         "create_user": "sukurti naudotoją",
         "password_confirm": "patvirtinti slaptažodį",
         "password": "slaptažodis",
-        "admin": "admin",
+        "admin": "administratorius",
         "admin_help": "naudotojas turėtų turėti administratoriaus teises ?",
-        "user_saved": "User saved : {name}",
-        "user_updated": "User updated : {name}",
-        "login": "login",
+        "user_saved": "Vartotojas išsaugotas: {name}",
+        "user_updated": "Vartotojas atnaujintas: {name}",
+        "login": "prisijungti",
         "edit_user": "Redaguoti naudotoją {name}"
     },
     "shortcuts": {
-        "toggle_bar": "Toggle filters bar",
+        "toggle_bar": "Perjungti filtrų meniu",
         "page_previous": "Grįžti į ankstesnį puslapį",
         "page_next": "Eiti į kitą puslapį"
     },
@@ -297,12 +297,12 @@
         "choose_year": "Pasirinkite metus"
     },
     "history": {
-        "years": "years"
+        "years": "metai"
     },
     "bulk": {
         "bulk_edit_books": "Masinis knygų redagavimas",
-        "owned": "Mark/unmark all as owned",
-        "toRead": "Mark/unmark all as to read",
+        "owned": "Pažymėti/atžymėti visus kaip turimus",
+        "toRead": "Pažymėti/atžymėti visus kaip perskaitytus",
         "toggle": "Masinio redagavimo režimo perjungimas",
         "select_all": "Pasirinkti visus/panaikinti pasirinkimą visiems",
         "edit": "Pradėkite redaguoti",
@@ -322,7 +322,7 @@
         "my_reviews": "Mano apžvalgos",
         "all_reviews": "Visos apžvalgos",
         "delete_review": "Ištrinti šią apžvalgą ?",
-        "review_detail": "Go to review detail",
+        "review_detail": "Eiti į apžvalgos detales",
         "book_all_reviews": "Visos šios knygos apžvalgos"
     },
     "book_merge": {
