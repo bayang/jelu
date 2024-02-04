@@ -1,3 +1,10 @@
+### [0.49.1](https://github.com/bayang/jelu/compare/v0.49.0...v0.49.1) (2024-02-04)
+
+
+### Bug Fixes
+
+* personal notes maxLength in edit book form ([9514973](https://github.com/bayang/jelu/commit/9514973bc8aa24ddec929811e9e4fc53c6f2d5b2))
+
 ## [0.49.0](https://github.com/bayang/jelu/compare/v0.48.0...v0.49.0) (2024-01-14)
 
 
