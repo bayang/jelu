@@ -597,7 +597,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
           >
             <o-input
               v-model="userbook.personalNotes"
-              maxlength="200"
+              maxlength="5000"
               type="textarea"
               class="textarea focus:textarea-accent"
             />
