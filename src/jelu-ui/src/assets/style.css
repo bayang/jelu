@@ -291,7 +291,11 @@
 
 [data-theme="jelu"] .alert .btn {
     @apply bg-base-100;
-  }
+}
+
+[data-theme="jelu"] .card-body .btn {
+    @apply bg-base-100;
+}
 
 [data-theme="jelu"] .card.card-compact {
   @apply rounded-none;
