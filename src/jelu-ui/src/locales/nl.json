@@ -276,7 +276,8 @@
         "user_saved": "Gebruiker opgeslagen: {name}",
         "user_updated": "Gebruiker bijgewerkt: {name}",
         "login": "inloggen",
-        "edit_user": "Gebruiker {name} bewerken"
+        "edit_user": "Gebruiker {name} bewerken",
+        "delete_user": "delete user"
     },
     "shortcuts": {
         "toggle_bar": "Filterbalk in-/uitschakelen",
