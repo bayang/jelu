@@ -323,16 +323,16 @@
         "my_reviews": "Moje recenzje",
         "all_reviews": "Wszystkie recenzje",
         "delete_review": "Usunąć tę recenzję?",
-        "review_detail": "Go to review detail",
-        "book_all_reviews": "All reviews for this book"
+        "review_detail": "Przejdź do szczegółów recenzji",
+        "book_all_reviews": "Wszystkie recenzje tej książki"
     },
     "book_merge": {
-        "merge_books": "Merge books",
-        "fetch_metadata": "Fetch metadata"
+        "merge_books": "Scal książki",
+        "fetch_metadata": "Wczytaj metadane"
     },
     "metadata": {
-        "reorder_plugins": "reorder plugins",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
-        "default_priority": "default priority"
+        "reorder_plugins": "zmień kolejność wtyczek",
+        "description": "Wtyczki zostaną wczytane od góry do dołu, a wyłączone wtyczki nie zostaną użyte",
+        "default_priority": "domyślny priorytet"
     }
 }
