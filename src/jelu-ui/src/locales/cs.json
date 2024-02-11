@@ -276,7 +276,8 @@
         "user_saved": "Uživatel uložen: {name}",
         "user_updated": "Uživatel aktualizován: {name}",
         "login": "přihlásit",
-        "edit_user": "Upravit uživatele {name}"
+        "edit_user": "Upravit uživatele {name}",
+        "delete_user": "delete user"
     },
     "shortcuts": {
         "toggle_bar": "Přepnout lištu filtrů",
