@@ -276,7 +276,8 @@
         "user_saved": "Użytkownik zapisany: {name}",
         "user_updated": "Użytkownik zaktualizowany: {name}",
         "login": "login",
-        "edit_user": "Edytuj użytkownika {name}"
+        "edit_user": "Edytuj użytkownika {name}",
+        "delete_user": "delete user"
     },
     "shortcuts": {
         "toggle_bar": "Przełącz pasek filtrów",
