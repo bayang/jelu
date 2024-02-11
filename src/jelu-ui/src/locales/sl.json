@@ -276,7 +276,8 @@
         "user_saved": "Uporabnik shranjen: {name}",
         "user_updated": "Uporabnik posodobljen: {name}",
         "login": "prijava",
-        "edit_user": "Uredi uporabnika {name}"
+        "edit_user": "Uredi uporabnika {name}",
+        "delete_user": "delete user"
     },
     "shortcuts": {
         "toggle_bar": "Preklopite vrstico filtrov",

@@ -276,7 +276,8 @@
         "user_saved": "User saved : {name}",
         "user_updated": "User updated : {name}",
         "login": "login",
-        "edit_user": "Edit user {name}"
+        "edit_user": "Edit user {name}",
+        "delete_user": "delete user"
     },
     "shortcuts": {
         "toggle_bar": "Toggle filters bar",
