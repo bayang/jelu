@@ -276,7 +276,8 @@
         "user_saved": "Bruger gemt: {name}",
         "user_updated": "Bruger opdateret : {name}",
         "login": "log ind",
-        "edit_user": "Rediger bruger {name}"
+        "edit_user": "Rediger bruger {name}",
+        "delete_user": "delete user"
     },
     "shortcuts": {
         "toggle_bar": "Slå filterbjælke til/fra",
