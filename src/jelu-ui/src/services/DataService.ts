@@ -288,6 +288,22 @@ class DataService {
     }
   }
 
+  deleteUser = async (userId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_USER}/${userId}`);
+      console.log("called delete user")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete user " + (error as AxiosError).code)
+      throw new Error("error delete user " + error)
+    }
+  }
+
   setupStatus = async () => {
     try {
       const response = await this.apiClient.get('/setup/status')

@@ -9,13 +9,17 @@ import io.github.bayang.jelu.dto.ROLE_ADMIN
 import io.github.bayang.jelu.dto.UpdateUserDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluAuthenticationException
+import io.github.bayang.jelu.errors.JeluValidationException
 import io.github.bayang.jelu.service.UserService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.servlet.http.HttpSession
 import jakarta.validation.Valid
 import mu.KotlinLogging
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -124,6 +128,24 @@ class UsersController(
             }
         }
         throw JeluAuthenticationException("principal ${principal.name} not allowed to edit user $userId")
+    }
+
+    @ApiResponse(responseCode = "204", description = "Deleted the user")
+    @DeleteMapping(path = ["/users/{id}"])
+    fun deleteUser(
+        @PathVariable("id")
+        userId: UUID,
+        principal: Authentication,
+    ): ResponseEntity<Unit> {
+        if (principal.principal is JeluUser && (principal.principal as JeluUser).user.isAdmin) {
+            if ((principal.principal as JeluUser).user.id.value == userId) {
+                // prevent admin from trying to delete itself
+                throw JeluValidationException("Principal ${principal.name} is deleting itself")
+            }
+            repository.deleteUser(userId)
+            return ResponseEntity.noContent().build()
+        }
+        throw JeluAuthenticationException("Only user with admin rights can delete users")
     }
 
     @PostMapping(path = ["/users"])
