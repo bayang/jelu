@@ -15,7 +15,7 @@
         "search": "szukaj",
         "history": "historia",
         "shelves": "półki",
-        "tags-admin": "tags management"
+        "tags-admin": "zarządzanie znacznikami"
     },
     "labels": {
         "search": "Szukaj",
@@ -37,8 +37,8 @@
         "invalid_isbn10": "Nieprawidłowy numer ISBN10",
         "invalid_isbn13": "Nieprawidłowy numer ISBN13",
         "auto_fill_doc": "Podejmij próbę automatycznego wypełnienia pól z Internetu na podstawie tytułu lub numeru ISBN",
-        "auto_fill_book": "Try to auto fill some fields from an epub or opf file",
-        "auto_import_disabled": "Auto import requires a metadata plugin to be installed",
+        "auto_fill_book": "Wczytaj niektóre informacje z pliku epub lub opf",
+        "auto_import_disabled": "Do automatycznego importowania należy zainstalować wtyczkę metadanych",
         "auto_fill": "autouzupełnianie",
         "add_author": "Dodaj autora",
         "add_tag": "Dodaj znacznik",
@@ -83,8 +83,8 @@
         "books_tagged_name": "Książki oznaczone #{tag}",
         "upload_from_web": "Prześlij z Internetu",
         "upload_from_file": "Prześlij z pliku",
-        "upload_from_computer": "Upload from your computer",
-        "upload_from_server": "From Jelu server",
+        "upload_from_computer": "Prześlij z komputera",
+        "upload_from_server": "Z serwera Jelu",
         "double_click_to_edit": "Naciśnij dwa razy, aby edytować",
         "mark_read_or_drop": "Oznacz jako przeczytane lub porzucone",
         "preview": "podgląd",
@@ -97,18 +97,18 @@
         "add": "Dodaj",
         "add_to_my_books": "Nie jest jeszcze w Twoich książkach, naciśnij, aby dodać",
         "add_translator": "Dodaj tłumacza",
-        "reading_list_from_name": "Reading list from {name}",
-        "search_query": "Enter search query...",
-        "search_documentation": "Go to search documentation",
-        "orphan-tags": "orphan tags",
-        "find-tag": "find a tag",
-        "associated-books": "associated book(s)",
-        "operation-success": "operation successful",
-        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
-        "current": "current",
-        "set_progress": "set your current progress",
-        "user_avg_rating": "my average rating : {rating}",
-        "avg_rating": "average rating : {rating}"
+        "reading_list_from_name": "Wczytywanie listy od {name}",
+        "search_query": "Wpisz szukaną frazę...",
+        "search_documentation": "Przejdź do dokumentacji wyszukiwania",
+        "orphan-tags": "znaczniki-sieroty",
+        "find-tag": "znajdź znacznik",
+        "associated-books": "powiązane książki",
+        "operation-success": "operacja pomyślna",
+        "delete_this_tag": "Usunąć ten znacznik z {nb} książek i z bazy danych?",
+        "current": "bieżące",
+        "set_progress": "ustaw swój aktualny postęp",
+        "user_avg_rating": "moja średnia ocena: {rating}",
+        "avg_rating": "średnia ocena: {rating}"
     },
     "settings": {
         "pick_language": "Wybierz język",
@@ -124,7 +124,7 @@
         "username": "nazwa użytkownika",
         "role": "rola | role",
         "users": "Użytkownicy",
-        "add_users": "Add users",
+        "add_users": "Dodaj użytkowników",
         "users_management": "Zarządzanie użytkownikami",
         "shortcuts": "Skróty",
         "shortcuts_tooltip": "Skróty klawiszowe",
@@ -151,9 +151,9 @@
         "ascending": "Rosnąco",
         "publication_date": "Data publikacji",
         "modification_date": "Data modyfikacji",
-        "page_count": "Page count",
-        "user_avg_rating": "my average rating",
-        "avg_rating": "average rating"
+        "page_count": "Liczba stron",
+        "user_avg_rating": "moja średnia ocena",
+        "avg_rating": "średnia ocena"
     },
     "reading_events": {
         "finished": "ukończone",
@@ -169,8 +169,8 @@
         "event_date": "data zdarzenia",
         "edit_event": "edytuj zdarzenie",
         "reading": "czytane",
-        "start_date": "start date",
-        "end_date": "end date"
+        "start_date": "data rozpoczęcia",
+        "end_date": "data zakończenia"
     },
     "filtering": {
         "book_in_list": "Książka jest na liście do przeczytania",
@@ -211,7 +211,7 @@
         "in_read_list": "na liście czytania",
         "translator": "tłumacz | tłumaczy",
         "borrowed": "pożyczona",
-        "current_page_number": "current page number"
+        "current_page_number": "numer bieżącej strony"
     },
     "authors_merge": {
         "authors_merging_utility": "Narzędzie scalania autorów",
@@ -277,7 +277,7 @@
         "user_updated": "Użytkownik zaktualizowany: {name}",
         "login": "login",
         "edit_user": "Edytuj użytkownika {name}",
-        "delete_user": "delete user"
+        "delete_user": "usuń użytkownika"
     },
     "shortcuts": {
         "toggle_bar": "Przełącz pasek filtrów",
