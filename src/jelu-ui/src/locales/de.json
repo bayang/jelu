@@ -276,7 +276,8 @@
         "user_saved": "Benutzer gespeichert: {name}",
         "user_updated": "Benutzer aktualisiert: {name}",
         "login": "Anmelden",
-        "edit_user": "Benutzer {name} bearbeiten"
+        "edit_user": "Benutzer {name} bearbeiten",
+        "delete_user": "delete user"
     },
     "shortcuts": {
         "toggle_bar": "Filterleiste umschalten",
