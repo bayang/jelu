@@ -1,3 +1,16 @@
+## [0.50.0](https://github.com/bayang/jelu/compare/v0.49.1...v0.50.0) (2024-02-11)
+
+
+### Features
+
+* allow user deletion [#102](https://github.com/bayang/jelu/issues/102) ([74c59e7](https://github.com/bayang/jelu/commit/74c59e7e011d51bad88280db8f65160b7e020842))
+
+
+### Bug Fixes
+
+* jelu theme cards ([5bf057d](https://github.com/bayang/jelu/commit/5bf057df25af92575f5abadb3fd2622ebf04148f))
+* swagger not showing [#103](https://github.com/bayang/jelu/issues/103) ([f769593](https://github.com/bayang/jelu/commit/f769593ad4c950ac6a9ccda5a5a7f314f606d610))
+
 ### [0.49.1](https://github.com/bayang/jelu/compare/v0.49.0...v0.49.1) (2024-02-04)
 
 
