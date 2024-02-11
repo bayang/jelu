@@ -285,6 +285,14 @@
 
 /* end search form */
 
+[data-theme="jelu"] .card, .alert {
+  @apply bg-base-100 border-0;
+}
+
+[data-theme="jelu"] .alert .btn {
+    @apply bg-base-100;
+  }
+
 [data-theme="jelu"] .card.card-compact {
   @apply rounded-none;
 }
