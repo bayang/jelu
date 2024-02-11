@@ -9,7 +9,7 @@ import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.service.ReviewService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.validation.Valid
-import org.springdoc.api.annotations.ParameterObject
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort

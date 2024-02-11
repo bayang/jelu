@@ -13,7 +13,7 @@ import io.github.bayang.jelu.service.ReadingEventService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.validation.Valid
 import mu.KotlinLogging
-import org.springdoc.api.annotations.ParameterObject
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable

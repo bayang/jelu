@@ -83,11 +83,8 @@ dependencies {
     testImplementation("com.ninja-squad:springmockk:3.1.2")
     testImplementation("io.projectreactor:reactor-test")
 
-    val springdocVersion = "1.7.0"
-    implementation("org.springdoc:springdoc-openapi-ui:$springdocVersion")
-    implementation("org.springdoc:springdoc-openapi-security:$springdocVersion")
-    implementation("org.springdoc:springdoc-openapi-kotlin:$springdocVersion")
-    implementation("org.springdoc:springdoc-openapi-data-rest:$springdocVersion")
+    val springdocVersion = "2.3.0"
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
 
     val luceneVersion = "9.7.0"
     implementation("org.apache.lucene:lucene-core:$luceneVersion")
