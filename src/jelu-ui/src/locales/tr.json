@@ -1,21 +1,21 @@
 {
     "home": {
-        "currently_reading": "Currently reading",
-        "recent_events": "Recent reading events",
+        "currently_reading": "Şu anda okunuyor",
+        "recent_events": "Son okuma etkinlikleri",
         "quotes": "alıntılar",
-        "not_reading": "Not currently reading anything"
+        "not_reading": "Şu anda hiçbir şey okunmuyor"
     },
     "nav": {
         "my_books": "kitaplarım",
         "to_read": "okuma listesi",
         "add_book": "kitap ekle",
-        "dashboard": "dashboard",
+        "dashboard": "gösterge paneli",
         "login": "giriş yap",
         "logout": "çıkış yap",
         "search": "ara",
         "history": "geçmiş",
         "shelves": "raflar",
-        "tags-admin": "tags management"
+        "tags-admin": "etiket yönetimi"
     },
     "labels": {
         "search": "Ara",
@@ -23,13 +23,13 @@
         "true": "Doğru",
         "false": "Yanlış",
         "library_empty": "kitaplık boş",
-        "nothing_to_read": "Nothing to read",
+        "nothing_to_read": "Okunacak bir şey yok",
         "book_will_be_added": "Kitap, okuma listesine eklenecek",
         "save": "Kaydet",
         "dont_save": "Kaydetme",
         "book_with_same_isbn_already_exists": "Aynı isbn'ye sahip kitap zaten mevcut",
-        "save_new_anyway": "Do you want to save a new one anyway ?",
-        "changes_not_saved": "Changes are not saved",
+        "save_new_anyway": "Yine de yeni bir tane kaydetmek istiyor musun?",
+        "changes_not_saved": "Değişiklikler kaydedilmedi",
         "book_title_saved": "Book {title} imported !",
         "book_title_updated": "Book {title} updated !",
         "error_message": "Hata {msg}",
