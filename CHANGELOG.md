@@ -1,3 +1,10 @@
+## [0.51.0](https://github.com/bayang/jelu/compare/v0.50.0...v0.51.0) (2024-02-28)
+
+
+### Features
+
+* add a working PWA ([204af0b](https://github.com/bayang/jelu/commit/204af0b708f2798023f396051a29084a76406b71))
+
 ## [0.50.0](https://github.com/bayang/jelu/compare/v0.49.1...v0.50.0) (2024-02-11)
 
 
