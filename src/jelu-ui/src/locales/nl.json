@@ -277,7 +277,7 @@
         "user_updated": "Gebruiker bijgewerkt: {name}",
         "login": "inloggen",
         "edit_user": "Gebruiker {name} bewerken",
-        "delete_user": "delete user"
+        "delete_user": "gebruiker verwijderen"
     },
     "shortcuts": {
         "toggle_bar": "Filterbalk in-/uitschakelen",

@@ -277,7 +277,7 @@
         "user_updated": "Utente aggiornato: {name}",
         "login": "accedi",
         "edit_user": "Modifica utente {name}",
-        "delete_user": "delete user"
+        "delete_user": "elimina l'utente"
     },
     "shortcuts": {
         "toggle_bar": "Attiva/disattiva la barra dei filtri",
