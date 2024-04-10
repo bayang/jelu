@@ -15,7 +15,7 @@
         "search": "søg",
         "history": "historik",
         "shelves": "reoler",
-        "tags-admin": "tags management"
+        "tags-admin": "tags håndtering"
     },
     "labels": {
         "search": "Søg",
@@ -37,7 +37,7 @@
         "invalid_isbn10": "Ugyldig isbn10",
         "invalid_isbn13": "Ugyldig isbn10",
         "auto_fill_doc": "Prøv at autoudfylde nogle felter fra nettet, givet en isbn eller en titel",
-        "auto_fill_book": "Try to auto fill some fields from an epub or opf file",
+        "auto_fill_book": "Prøv at auto udfylde nogle felter fra en epub- eller opf-fil",
         "auto_import_disabled": "Auto import requires a metadata plugin to be installed",
         "auto_fill": "autoudfyld",
         "add_author": "Tilføj en forfatter",
