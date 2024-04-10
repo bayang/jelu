@@ -38,7 +38,7 @@
         "invalid_isbn13": "Ugyldig isbn10",
         "auto_fill_doc": "Prøv at autoudfylde nogle felter fra nettet, givet en isbn eller en titel",
         "auto_fill_book": "Prøv at auto udfylde nogle felter fra en epub- eller opf-fil",
-        "auto_import_disabled": "Auto import requires a metadata plugin to be installed",
+        "auto_import_disabled": "Automatisk import kræver at pluginet Calibre er installeret",
         "auto_fill": "autoudfyld",
         "add_author": "Tilføj en forfatter",
         "add_tag": "Tilføj en etiket",
@@ -83,8 +83,8 @@
         "books_tagged_name": "Bøger markeret med #{tag}",
         "upload_from_web": "Upload fra internettet",
         "upload_from_file": "Upload fra en fil",
-        "upload_from_computer": "Upload from your computer",
-        "upload_from_server": "From Jelu server",
+        "upload_from_computer": "Upload fra din computer",
+        "upload_from_server": "Fra Jelu server",
         "double_click_to_edit": "Dobbeltklik for at redigere",
         "mark_read_or_drop": "Markér som læst eller drop",
         "preview": "forhåndsvisning",
@@ -97,18 +97,18 @@
         "add": "Tilføj",
         "add_to_my_books": "Endnu ikke i dine bøger. Tryk for at tilføje",
         "add_translator": "Tilføj en oversætter",
-        "reading_list_from_name": "Reading list from {name}",
-        "search_query": "Enter search query...",
-        "search_documentation": "Go to search documentation",
-        "orphan-tags": "orphan tags",
-        "find-tag": "find a tag",
-        "associated-books": "associated book(s)",
-        "operation-success": "operation successful",
-        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
-        "current": "current",
-        "set_progress": "set your current progress",
-        "user_avg_rating": "my average rating : {rating}",
-        "avg_rating": "average rating : {rating}"
+        "reading_list_from_name": "Læseliste fra {name}",
+        "search_query": "Indtast søgeforespørgsel...",
+        "search_documentation": "Gå til søge dokumentation",
+        "orphan-tags": "forældreløse tags",
+        "find-tag": "find et tag",
+        "associated-books": "tilknyttede bog(er)",
+        "operation-success": "handlingen er gennemført",
+        "delete_this_tag": "Slet dette tag fra {nb} bøger og fra databasen?",
+        "current": "nuværende",
+        "set_progress": "sæt dine aktuelle fremskridt",
+        "user_avg_rating": "min gennemsnitlige bedømmelse : {rating}",
+        "avg_rating": "gennemsnitlig bedømmelse : {rating}"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -124,7 +124,7 @@
         "username": "brugernavn",
         "role": "rolle | roller",
         "users": "Brugere",
-        "add_users": "Add users",
+        "add_users": "Tilføj brugere",
         "users_management": "Brugerhåndtering",
         "shortcuts": "Genveje",
         "shortcuts_tooltip": "Tastaturgenveje",
@@ -151,9 +151,9 @@
         "ascending": "Stigende",
         "publication_date": "Dato for offentliggørelse",
         "modification_date": "Ændringsdato",
-        "page_count": "Page count",
-        "user_avg_rating": "my average rating",
-        "avg_rating": "average rating"
+        "page_count": "Sideantal",
+        "user_avg_rating": "min gennemsnitlige bedømmelse",
+        "avg_rating": "gennemsnitlig bedømmelse"
     },
     "reading_events": {
         "finished": "færdig",
@@ -170,7 +170,7 @@
         "edit_event": "rediger begivenhed",
         "reading": "læser",
         "start_date": "startdato",
-        "end_date": "end date"
+        "end_date": "slutdato"
     },
     "filtering": {
         "book_in_list": "Bogen er på læselisten",
@@ -211,7 +211,7 @@
         "in_read_list": "på læseliste",
         "translator": "oversætter | oversættere",
         "borrowed": "lånt",
-        "current_page_number": "current page number"
+        "current_page_number": "nuværende sidenummer"
     },
     "authors_merge": {
         "authors_merging_utility": "Forfattersammenfletningsværktøj",
@@ -277,7 +277,7 @@
         "user_updated": "Bruger opdateret : {name}",
         "login": "log ind",
         "edit_user": "Rediger bruger {name}",
-        "delete_user": "delete user"
+        "delete_user": "slet bruger"
     },
     "shortcuts": {
         "toggle_bar": "Slå filterbjælke til/fra",
@@ -323,16 +323,16 @@
         "my_reviews": "Mine anmeldelser",
         "all_reviews": "Alle anmeldelser",
         "delete_review": "Slet denne anmeldelse?",
-        "review_detail": "Go to review detail",
-        "book_all_reviews": "All reviews for this book"
+        "review_detail": "Gå til gennemgangsdetaljer",
+        "book_all_reviews": "Alle anmeldelser for denne bog"
     },
     "book_merge": {
         "merge_books": "Sammenkæd bøger",
         "fetch_metadata": "Hent metadata"
     },
     "metadata": {
-        "reorder_plugins": "reorder plugins",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
-        "default_priority": "default priority"
+        "reorder_plugins": "omarranger plugins",
+        "description": "Plugins vil blive kaldt fra toppen til bunden, deaktiverede plugins vil ikke blive brugt",
+        "default_priority": "standard prioritet"
     }
 }
