@@ -8,6 +8,7 @@
     "nav": {
       "my_books": "my books",
       "to_read": "to read list",
+      "random": "random",
       "add_book" : "add book",
       "dashboard" : "dashboard",
       "login" : "login",
@@ -144,6 +145,7 @@
         "date_added" : "Date added",
         "date_added_to_list" : "Date added to list",
         "title" : "Title",
+        "random": "Random",
         "publisher" : "Publisher",
         "series" : "Series",
         "series_number" : "Series number",

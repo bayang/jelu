@@ -63,6 +63,12 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
+            path: '/random',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/RandomList.vue'),
+            name: 'random',
+            beforeEnter: [isLogged],
+        },
+        {
             path: '/history',
             component: () => import(/* webpackChunkName: "recommend" */ './components/History.vue'),
             name: 'history',

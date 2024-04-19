@@ -17,13 +17,13 @@ const { t } = useI18n({
       useScope: 'global'
     })
 
-useTitle('Jelu | To read')
+useTitle('Jelu | Random')
 
 const books: Ref<Array<UserBook>> = ref([]);
 
 const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
-const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('creationDate,desc')
+const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('random,desc')
 
 const { showSelect, selectAll, checkedCards, cardChecked, toggleEdit } = useBulkEdition(modalClosed)
 
@@ -54,14 +54,14 @@ const ownedAsBool = computed(() => {
   }
 )
 
-const getToReadIsLoading: Ref<boolean> = ref(false)
+const getRandomIsLoading: Ref<boolean> = ref(false)
 
-const getToRead = async () => {
-  getToReadIsLoading.value = true
+const getRandom = async () => {
+  getRandomIsLoading.value = true
   try {
     const res = await dataService.findUserBookByCriteria(
       eventTypes.value, null, userId.value,
-    true, ownedAsBool.value, null,
+    null, ownedAsBool.value, null,
     pageAsNumber.value - 1, perPage.value, sortQuery.value)
     total.value = res.totalElements
     books.value = res.content
@@ -71,42 +71,42 @@ const getToRead = async () => {
     else {
       page.value = "1"
     }
-    getToReadIsLoading.value = false
+    getRandomIsLoading.value = false
     updatePageLoading(false)
   } catch (error) {
     console.log("failed get books : " + error);
-    getToReadIsLoading.value = false
+    getRandomIsLoading.value = false
     updatePageLoading(false)
   }
 };
 
 // watches set above sometimes called twice
 // so getBooks was sometimes called twice at the same instant
-const throttledGetToRead = useThrottleFn(() => {
-  getToRead()
+const throttledGetRandom = useThrottleFn(() => {
+  getRandom()
 }, 100, false)
 
 watch([page, eventTypes, sortQuery, owned], (newVal, oldVal) => {
   console.log("all " + newVal + " " + oldVal)
   if (newVal !== oldVal) {
-    throttledGetToRead()
+    throttledGetRandom()
   }
 })
 
 function modalClosed() {
   console.log("modal closed")
-  throttledGetToRead()
+  throttledGetRandom()
 }
 
 const message = computed(() => {
   if (userId.value != null) {
     return t('labels.reading_list_from_name', { name: username.value })
   } else {
-    return t('nav.to_read')
+    return "Random"
   }
 } )
 
-getToRead()
+getRandom()
 
 </script>
 
@@ -118,79 +118,6 @@ getToRead()
     @update:open="open = $event"
     @update:sort-order="sortOrderUpdated"
   >
-    <template #sort-fields>
-      <div class="field">
-        <label class="label">{{ t('sorting.sort_by') }} : </label>
-        <o-radio
-          v-model="sortBy"
-          native-value="creationDate"
-        >
-          {{ t('sorting.date_added_to_list') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="lastReadingEventDate"
-        >
-          {{ t('sorting.last_reading_event_date') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="title"
-        >
-          {{ t('sorting.title') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="publisher"
-        >
-          {{ t('sorting.publisher') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="series"
-        >
-          {{ t('sorting.series') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="pageCount"
-        >
-          {{ t('sorting.page_count') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="usrAvgRating"
-        >
-          {{ t('sorting.user_avg_rating') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="avgRating"
-        >
-          {{ t('sorting.avg_rating') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="random"
-        >
-          {{ t('sorting.random') }}
-        </o-radio>
-      </div>
-    </template>
     <template #filters>
       <div class="field flex flex-col capitalize gap-1">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
@@ -309,7 +236,7 @@ getToRead()
     </div>
   </div>
   <div
-    v-else-if="getToReadIsLoading"
+    v-else-if="getRandomIsLoading"
     class="flex flex-row justify-center justify-items-center gap-3"
   >
     <o-skeleton
@@ -330,7 +257,7 @@ getToRead()
   </div>
   <div v-else>
     <h2 class="text-3xl typewriter">
-      {{ t('labels.nothing_to_read') }}
+      "Random"
     </h2>
     <span class="icon">
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />

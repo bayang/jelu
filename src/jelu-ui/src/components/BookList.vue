@@ -218,6 +218,12 @@ try {
         >
           {{ t('sorting.avg_rating') }}
         </o-radio>
+        <o-radio
+          v-model="sortBy"
+          native-value="random"
+        >
+          {{ t('sorting.random') }}
+        </o-radio>
       </div>
     </template>
     <template #filters>
