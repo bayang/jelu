@@ -263,14 +263,6 @@ getRandom()
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
     </span>
   </div>
-  <o-pagination
-    v-if="books.length > 0"
-    v-model:current="pageAsNumber"
-    :total="total"
-    order="centered"
-    :per-page="perPage"
-    @change="updatePage"
-  />
   <o-loading
     v-model:active="getPageIsLoading"
     :full-page="true"
