@@ -232,13 +232,14 @@ watch(checked, (newVal, oldVal) => {
           class="badge"
         >{{ eventText }}</span>
         <div class="flex">
-          <span
+          <router-link
             v-if="book.book.series && book.book.series.length > 0"
             v-tooltip="book.book.series[0].name"
             class="badge mx-1"
+            :to="{ name: 'series', params: { seriesId: book.book.series[0].seriesId } }"
           >
             #{{ book.book.series[0].numberInSeries }}
-          </span>
+          </router-link>
           <span
             v-if="book.userAvgRating"
             v-tooltip="t('labels.user_avg_rating', {rating : book.userAvgRating})"
