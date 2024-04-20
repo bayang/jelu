@@ -50,5 +50,5 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       && rm goodreads.zip; \
   fi
 
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher", "--spring.config.additional-location=optional:file:/config/"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher", "--spring.config.additional-location=optional:file:/config/"]
 EXPOSE 11111
