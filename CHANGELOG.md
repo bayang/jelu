@@ -1,3 +1,10 @@
+### [0.52.2](https://github.com/bayang/jelu/compare/v0.52.1...v0.52.2) (2024-04-20)
+
+
+### Bug Fixes
+
+* fix docker packaging ([ae5e316](https://github.com/bayang/jelu/commit/ae5e316334e3a313921ccd76a84d99f4d9ab69c9))
+
 ### [0.52.1](https://github.com/bayang/jelu/compare/v0.52.0...v0.52.1) (2024-04-20)
 
 
