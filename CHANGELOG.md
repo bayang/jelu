@@ -1,3 +1,10 @@
+## [0.52.0](https://github.com/bayang/jelu/compare/v0.51.0...v0.52.0) (2024-04-20)
+
+
+### Features
+
+* link Series # tag on Book Cards ([#110](https://github.com/bayang/jelu/issues/110)) ([cb8acac](https://github.com/bayang/jelu/commit/cb8acac178527f6b1a4639516364f7353ad7263c))
+
 ## [0.51.0](https://github.com/bayang/jelu/compare/v0.50.0...v0.51.0) (2024-02-28)
 
 
