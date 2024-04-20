@@ -5,9 +5,6 @@
 
 source "$(dirname "$0")/docker-common.sh" $1 $2
 
-# Unpack fat jar
-./gradlew unpack
-
 # Build docker images (no push)
 docker buildx build \
     --platform $PLATFORMS \

@@ -122,17 +122,6 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
-// unpack Spring Boot's fat jar for better Docker image layering
-tasks.register<JavaExec>("unpack") {
-    dependsOn(tasks.bootJar)
-    classpath = files(tasks.bootJar)
-    jvmArgs = listOf("-Djarmode=layertools")
-    args = "extract --destination ${layout.buildDirectory.get()}/dependency".split(" ")
-    doFirst {
-        delete("${layout.buildDirectory.get()}/dependency")
-    }
-}
-
 node {
     nodeProjectDir.set(file("${project.projectDir}/src/jelu-ui"))
     version.set("18.18.2")
