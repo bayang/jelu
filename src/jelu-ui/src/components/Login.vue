@@ -131,7 +131,6 @@ const submit = () => {
         <o-input
           v-model="form.login"
           type="text"
-          value="john"
           maxlength="50"
           class="input focus:input-accent"
         />
@@ -146,7 +145,6 @@ const submit = () => {
         <o-input
           v-model="loginValidation"
           type="text"
-          value="john"
           maxlength="50"
           class="input focus:input-accent"
         />
@@ -157,7 +155,6 @@ const submit = () => {
         </label>
         <o-input
           v-model="form.password"
-          value="123"
           type="password"
           maxlength="150"
           password-reveal
@@ -174,7 +171,6 @@ const submit = () => {
         </label>
         <o-input
           v-model="passwordValidation"
-          value="123"
           type="password"
           maxlength="150"
           password-reveal
