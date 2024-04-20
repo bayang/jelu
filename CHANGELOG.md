@@ -1,3 +1,10 @@
+### [0.52.1](https://github.com/bayang/jelu/compare/v0.52.0...v0.52.1) (2024-04-20)
+
+
+### Bug Fixes
+
+* frontend dependencies upgrade issue ([78cf03b](https://github.com/bayang/jelu/commit/78cf03b2220cba64d25f2f33bf1a21ba02b2f701))
+
 ## [0.52.0](https://github.com/bayang/jelu/compare/v0.51.0...v0.52.0) (2024-04-20)
 
 
