@@ -28,6 +28,7 @@ const getYears = () => {
   dataService.yearsWithStats()
   .then(res => {
     years.value = res
+    currentYear.value = res[res.length - 1]
     })
   .catch(e => {
     console.log(e)
