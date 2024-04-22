@@ -58,8 +58,13 @@ class CalibreMetadataProvider(
         if (!metadataRequestDto.isbn.isNullOrBlank()) {
             bookFileName += metadataRequestDto.isbn
             fileNameComplete = true
-            commandArray.add("-i")
-            commandArray.add(metadataRequestDto.isbn)
+            if (determineCodeType(metadataRequestDto.isbn) == "ASIN") {
+                commandArray.add("-I")
+                commandArray.add("asin:" + metadataRequestDto.isbn)
+            } else {
+                commandArray.add("-i")
+                commandArray.add(metadataRequestDto.isbn)
+            }
         }
         if (!metadataRequestDto.title.isNullOrBlank()) {
             commandArray.add("-t")
@@ -168,5 +173,24 @@ class CalibreMetadataProvider(
             trimmed = trimmed.replace("\\n", "")
         }
         return trimmed
+    }
+
+    internal fun determineCodeType(code: String): String {
+        // Regex for ISBN-10: Either 10 digits, or 9 digits followed by 'X'
+        val isbn10Regex = Regex("^(?=[0-9X]{10}\$)([0-9]{9}[X]|[0-9]{10})\$")
+    
+        // Regex for ISBN-13: Starts with 978 or 979 followed by 10 digits
+        val isbn13Regex = Regex("^(978|979)[0-9]{10}\$")
+    
+        // Regex for ASIN: 10 alphanumeric characters
+        val asinRegex = Regex("^[A-Z0-9]{10}\$")
+    
+        return when {
+            // Strip all hyphens and spaces from the code before matching
+            isbn10Regex.matches(code.replace("-", "").replace(" ", "")) -> "ISBN-10"
+            isbn13Regex.matches(code.replace("-", "").replace(" ", "")) -> "ISBN-13"
+            asinRegex.matches(code) -> "ASIN"
+            else -> "Unknown format"
+        }
     }
 }
