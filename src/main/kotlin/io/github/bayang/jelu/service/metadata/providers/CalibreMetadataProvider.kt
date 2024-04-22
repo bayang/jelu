@@ -178,13 +178,13 @@ class CalibreMetadataProvider(
     internal fun determineCodeType(code: String): String {
         // Regex for ISBN-10: Either 10 digits, or 9 digits followed by 'X'
         val isbn10Regex = Regex("^(?=[0-9X]{10}\$)([0-9]{9}[X]|[0-9]{10})\$")
-    
+
         // Regex for ISBN-13: Starts with 978 or 979 followed by 10 digits
         val isbn13Regex = Regex("^(978|979)[0-9]{10}\$")
-    
+
         // Regex for ASIN: 10 alphanumeric characters
         val asinRegex = Regex("^[A-Z0-9]{10}\$")
-    
+
         return when {
             // Strip all hyphens and spaces from the code before matching
             isbn10Regex.matches(code.replace("-", "").replace(" ", "")) -> "ISBN-10"
