@@ -123,6 +123,7 @@ const deleteEvent = () => {
           <datepicker
             v-model="currentEvent.startDate"
             class="input input-primary"
+            :typeable="true"
             :clearable="false"
           >
             <template #clear="{ onClear }">
@@ -155,6 +156,7 @@ const deleteEvent = () => {
           <datepicker
             v-model="currentEvent.endDate"
             class="input input-primary"
+            :typeable="true"
             :clearable="true"
           >
             <template #clear="{ onClear }">
@@ -244,6 +246,7 @@ const deleteEvent = () => {
             v-model="currentCreateEvent.startDate"
             class="input input-primary"
             :clearable="true"
+            :typeable="true"
           >
             <template #clear="{ onClear }">
               <button @click="onClear">
@@ -276,6 +279,7 @@ const deleteEvent = () => {
             v-model="currentCreateEvent.eventDate"
             class="input input-primary"
             :clearable="true"
+            :typeable="true"
           >
             <template #clear="{ onClear }">
               <button @click="onClear">
