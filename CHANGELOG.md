@@ -1,3 +1,10 @@
+## [0.53.0](https://github.com/bayang/jelu/compare/v0.52.2...v0.53.0) (2024-04-22)
+
+
+### Features
+
+* Allow typing into date input fields during book event editing. ([#112](https://github.com/bayang/jelu/issues/112)) ([c951a49](https://github.com/bayang/jelu/commit/c951a491ab8356b6ac1af9f735769e7534763aa9))
+
 ### [0.52.2](https://github.com/bayang/jelu/compare/v0.52.1...v0.52.2) (2024-04-20)
 
 
