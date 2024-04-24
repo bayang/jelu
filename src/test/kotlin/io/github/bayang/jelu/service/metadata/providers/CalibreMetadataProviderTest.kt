@@ -137,4 +137,31 @@ class CalibreMetadataProviderTest(
         Assertions.assertEquals(1, metadata.authors.size)
         Assertions.assertEquals("J. R. R. Tolkien", metadata.authors.first())
     }
+
+    @Test
+    fun testASINMatch() {
+        // https://www.amazon.com/Fellowship-Ring-Being-First-Rings-ebook/dp/B007978NPG -- Kindle Edition
+        var input = "B007978NPG"
+        val resultingCodeType = calibreMetadataProvider.determineCodeType(input)
+        Assertions.assertEquals("ASIN", resultingCodeType)
+    }
+
+    @Test
+    fun testISBN10Match() {
+        // https://www.amazon.com/Fellowship-Ring-Being-First-Rings/dp/0547928211 -- Paperback ISBN 10
+        var input = "0547928211"
+        val resultingCodeType = calibreMetadataProvider.determineCodeType(input)
+        Assertions.assertEquals("ISBN-10", resultingCodeType)
+    }
+
+    @Test
+    fun testISB13match() {
+        // // https://www.amazon.com/Fellowship-Ring-Being-First-Rings/dp/0547928211 -- Paperback ISBN 13
+        var plainInput = "978-0547928210"
+        val plainResultingCodeType = calibreMetadataProvider.determineCodeType(plainInput)
+        var dashedInput = "978-0547928210"
+        val dashedResultingCodeType = calibreMetadataProvider.determineCodeType(dashedInput)
+        Assertions.assertEquals("ISBN-13", plainResultingCodeType)
+        Assertions.assertEquals("ISBN-13", dashedResultingCodeType)
+    }
 }
