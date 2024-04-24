@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { StreamBarcodeReader } from "vue-barcode-reader";
+import { StreamBarcodeReader } from "@teckel/vue-barcode-reader";
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n({
@@ -42,6 +42,8 @@ const onDecode = (text: string) => {
       <div>
         <div class="field mb-2">
           <StreamBarcodeReader
+            torch
+            no-front-cameras
             @decode="onDecode"
             @loaded="onLoaded"
           />
