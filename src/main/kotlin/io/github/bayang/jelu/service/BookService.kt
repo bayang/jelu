@@ -381,8 +381,8 @@ class BookService(
     }
 
     @Transactional
-    fun findTagBooksById(tagId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
-        return bookRepository.findTagBooksById(tagId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
+    fun findTagBooksById(tagId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter, eventTypes: List<ReadingEventType>?): Page<BookDto> {
+        return bookRepository.findTagBooksById(tagId, user, pageable, libaryFilter, eventTypes).map { book -> book.toBookDto() }
     }
 
     @Transactional

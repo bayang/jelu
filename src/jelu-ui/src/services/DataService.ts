@@ -652,15 +652,20 @@ class DataService {
   }
 
   getTagBooksById = async (tagId: string,
-    page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
+    page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter, lastEventTypes?: Array<ReadingEventType> | null) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_TAG}/${tagId}${this.API_BOOK}`, {
         params: {
           page: page,
           size: size,
           sort: sort,
-          libraryFilter: libraryFilter
-        }
+          libraryFilter: libraryFilter,
+          lastEventTypes: lastEventTypes,
+        },
+        paramsSerializer: {
+          serialize : (params) => {
+            return qs.stringify(params, { arrayFormat: 'comma' })
+        }},
       });
       console.log("called tag books by id")
       console.log(response)

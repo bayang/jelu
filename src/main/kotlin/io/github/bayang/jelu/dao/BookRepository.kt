@@ -362,7 +362,13 @@ class BookRepository(
 
     fun findSeriesById(seriesId: UUID): Series = Series[seriesId]
 
-    fun findTagBooksById(tagId: UUID, user: User, pageable: Pageable, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findTagBooksById(
+        tagId: UUID,
+        user: User,
+        pageable: Pageable,
+        filter: LibraryFilter = LibraryFilter.ANY,
+        eventTypes: List<ReadingEventType>?,
+    ): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .slice(BookTable.id)
             .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
@@ -374,9 +380,12 @@ class BookRepository(
         if (filter == LibraryFilter.ONLY_USER_BOOKS) {
             // only books where user has an userbook
             query.andWhere { UserBookTable.user eq user.id }
-        } else if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
+        } else if (filter == LibraryFilter.ONLY_NON_USER_BOOKS && eventTypes.isNullOrEmpty()) {
             // only books where there are no userbooks or only other users have userbooks
             query.andWhere { BookTable.id notInSubQuery booksWithSameIdAndUserHasUserbook }
+        }
+        if (!eventTypes.isNullOrEmpty()) {
+            query.andWhere { UserBookTable.user eq user.id and(UserBookTable.lastReadingEvent inList eventTypes) }
         }
         query.withDistinct(true)
         val total = query.count()
@@ -539,6 +548,7 @@ class BookRepository(
         val userbook = e.userBooks.firstOrNull { u -> u.user.id.value == userId }
         if (userbook != null) {
             e.userBookId = userbook.id.value
+            e.userBook = userbook
         }
         return e
     }

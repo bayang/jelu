@@ -25,6 +25,7 @@ data class BookDto(
     val librarythingId: String?,
     val language: String?,
     val userBookId: UUID?,
+    val userbook: UserBookLightWithoutBookDto?,
 )
 
 data class BookCreateDto(
