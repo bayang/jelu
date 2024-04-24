@@ -157,7 +157,7 @@ class CalibreMetadataProviderTest(
     @Test
     fun testISB13match() {
         // // https://www.amazon.com/Fellowship-Ring-Being-First-Rings/dp/0547928211 -- Paperback ISBN 13
-        var plainInput = "978-0547928210"
+        var plainInput = "9780547928210"
         val plainResultingCodeType = calibreMetadataProvider.determineCodeType(plainInput)
         var dashedInput = "978-0547928210"
         val dashedResultingCodeType = calibreMetadataProvider.determineCodeType(dashedInput)
