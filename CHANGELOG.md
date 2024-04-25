@@ -1,3 +1,18 @@
+## [0.54.0](https://github.com/bayang/jelu/compare/v0.53.0...v0.54.0) (2024-04-25)
+
+
+### Features
+
+* auto select latest year in stats views ([47a5526](https://github.com/bayang/jelu/commit/47a55263a647d8663ea5d42bb5929dcf00000d6b))
+* sort last events on homepage by event end date [#115](https://github.com/bayang/jelu/issues/115) ([36e483e](https://github.com/bayang/jelu/commit/36e483e1f71dfd39b382c7e9cb252404e87d0253))
+
+
+### Bug Fixes
+
+* use a better maintained barcode reader lib ([dbd45d8](https://github.com/bayang/jelu/commit/dbd45d89b5c5ca3c6e7e9579cb8269e6d2af9158))
+* use a better maintained barcode reader lib ([4ca9983](https://github.com/bayang/jelu/commit/4ca99831dc67b4e97005d4015fc1ff5eeb042892))
+* use a better maintained barcode reader lib ([c923a30](https://github.com/bayang/jelu/commit/c923a30631298c9c37e0f142f9cb0af0d3c0c351))
+
 ## [0.53.0](https://github.com/bayang/jelu/compare/v0.52.2...v0.53.0) (2024-04-22)
 
 
