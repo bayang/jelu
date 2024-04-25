@@ -54,6 +54,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
     var librarythingId by BookTable.librarythingId
     val userBooks by UserBook referrersOn UserBookTable.book
     var userBookId: UUID? = null
+    var userBook: UserBook? = null
 
     fun toBookDto(): BookDto =
         BookDto(
@@ -80,6 +81,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             tags = this.tags.map { it.toTagDto() },
             userBookId = this.userBookId,
             series = this.seriesAndOrder.map { it.toSeriesOrderDto() },
+            userbook = this.userBook?.toUserBookLightWithoutBookDto(),
         )
 
     fun toBookUpdateDto(): BookUpdateDto =

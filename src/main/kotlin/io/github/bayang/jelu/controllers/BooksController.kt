@@ -184,11 +184,12 @@ class BooksController(
     fun tagBooksById(
         @PathVariable("id") tagId: UUID,
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
+        @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventType>?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
         principal: Authentication,
     ): Page<BookDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY)
+        return repository.findTagBooksById(tagId, (principal.principal as JeluUser).user, pageable, libraryFilter ?: LibraryFilter.ANY, eventTypes)
     }
 
     @GetMapping(path = ["/tags/orphans"])

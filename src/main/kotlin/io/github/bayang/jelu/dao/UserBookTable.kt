@@ -2,6 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.UserBookDto
 import io.github.bayang.jelu.dto.UserBookLightDto
+import io.github.bayang.jelu.dto.UserBookLightWithoutBookDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsDto
 import org.jetbrains.exposed.dao.UUIDEntity
@@ -70,6 +71,21 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             creationDate = this.creationDate,
             modificationDate = this.modificationDate,
             book = this.book.toBookDto(),
+            owned = this.owned,
+            toRead = this.toRead,
+            personalNotes = this.personalNotes,
+            lastReadingEvent = this.lastReadingEvent,
+            lastReadingEventDate = this.lastReadingEventDate,
+            percentRead = this.percentRead,
+            currentPageNumber = this.currentPageNumber,
+            borrowed = this.borrowed,
+            readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
+        )
+    fun toUserBookLightWithoutBookDto(): UserBookLightWithoutBookDto =
+        UserBookLightWithoutBookDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
             owned = this.owned,
             toRead = this.toRead,
             personalNotes = this.personalNotes,

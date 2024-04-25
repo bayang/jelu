@@ -37,6 +37,24 @@ export class ObjectUtils {
     return converted
   }
 
+  public static unwrapUserBook = (book: Book): UserBook => {
+    const userbook = book.userbook
+    if (userbook != undefined) {
+        userbook.book = {
+            ...book,
+            userbook: undefined
+        }
+        console.log('ub')
+        console.log(userbook)
+        return userbook
+    } else {
+        const converted = {
+          id: undefined,
+          book: book
+        } as UserBook
+        return converted
+    }
+  }
   public static swalMixin = Swal.mixin({
     background: '#404040',
     color: '#ffffff',

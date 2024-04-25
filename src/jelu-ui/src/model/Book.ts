@@ -23,8 +23,9 @@ export interface Book {
     amazonId?: string,
     goodreadsId?: string,
     librarythingId?: string,
-    language?: string
-    userBookId?: string
+    language?: string,
+    userBookId?: string,
+    userbook?: UserBook,
   }
 export interface UserBook {
     id?: string,
