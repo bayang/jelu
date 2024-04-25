@@ -395,7 +395,7 @@ class BookRepository(
         val total = query.count()
         if (checkIfRandomSorting(pageable)) {
             query.limit(pageable.pageSize)
-            query.orderBy(Random())  // Use the custom random function
+            query.orderBy(Random())
         } else {
             query.limit(pageable.pageSize, pageable.offset)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
@@ -1057,11 +1057,11 @@ class BookRepository(
         val total = query.count()
         if (checkIfRandomSorting(pageable)) {
             query.limit(pageable.pageSize)
-            query.orderBy(Random())  // Use the custom random function
+            query.orderBy(Random())
         } else {
             query.limit(pageable.pageSize, pageable.offset)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST), cols)
-            query.orderBy(*orders)    
+            query.orderBy(*orders)
         }
         val res = query.map { resultRow -> wrapUserBookRow(resultRow, ratingAlias, userRatingAlias) }
         return PageImpl(
