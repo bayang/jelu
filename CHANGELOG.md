@@ -1,3 +1,17 @@
+## [0.55.0](https://github.com/bayang/jelu/compare/v0.54.0...v0.55.0) (2024-04-25)
+
+
+### Features
+
+* allow filtering by event on tags pages ([e2aba9a](https://github.com/bayang/jelu/commit/e2aba9a061e4aa07713fc40da0ab0f7d6a57c2ec))
+* Allow typing into date input fields during book event editing. ([#112](https://github.com/bayang/jelu/issues/112)) ([0557fb4](https://github.com/bayang/jelu/commit/0557fb41be4b36f7a627934e6e824a16419eb669))
+* detect if isbn field contains ASIN for metadata search [#113](https://github.com/bayang/jelu/issues/113) ([41d80f1](https://github.com/bayang/jelu/commit/41d80f1c614172262df48a87d9712810c6ab7e9c))
+
+
+### Bug Fixes
+
+* use a better maintained barcode reader lib ([39f7835](https://github.com/bayang/jelu/commit/39f78356c7e09ea8a30cc408d834df7c24fa7555))
+
 ## [0.54.0](https://github.com/bayang/jelu/compare/v0.53.0...v0.54.0) (2024-04-25)
 
 
