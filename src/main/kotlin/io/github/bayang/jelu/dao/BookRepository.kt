@@ -46,7 +46,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
@@ -147,8 +146,7 @@ class BookRepository(
         }
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow, user.id.value) },
-            // Return a single page result if random sort is selected
-            if (checkIfRandomSorting(pageable)) PageRequest.of(0, pageable.pageSize) else pageable,
+            pageable,
             total,
         )
     }
@@ -405,8 +403,7 @@ class BookRepository(
         }
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow, user.id.value) },
-            // Return a single page result if random sort is selected
-            if (checkIfRandomSorting(pageable)) PageRequest.of(0, pageable.pageSize) else pageable,
+            pageable,
             total,
         )
     }
@@ -1069,8 +1066,7 @@ class BookRepository(
         val res = query.map { resultRow -> wrapUserBookRow(resultRow, ratingAlias, userRatingAlias) }
         return PageImpl(
             res,
-            // Return a single page result if random sort is selected
-            if (checkIfRandomSorting(pageable)) PageRequest.of(0, pageable.pageSize) else pageable,
+            pageable,
             total,
         )
     }
