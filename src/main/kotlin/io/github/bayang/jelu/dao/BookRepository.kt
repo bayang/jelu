@@ -22,11 +22,9 @@ import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.ExpressionAlias
-import org.jetbrains.exposed.sql.Function
 import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.LongColumnType
 import org.jetbrains.exposed.sql.Query
-import org.jetbrains.exposed.sql.QueryBuilder
+import org.jetbrains.exposed.sql.Random
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SortOrder
@@ -94,11 +92,6 @@ fun formatLike(input: String): String {
     return "%$input%"
 }
 
-// Implement function for SQL RANDOM()
-object RandomOrder : Function<Long>(LongColumnType()) {
-    override fun toQueryBuilder(queryBuilder: QueryBuilder) = queryBuilder { append("RANDOM()") }
-}
-
 // Convenience checker for whether sort is "random" vs column name
 fun checkIfRandomSorting(pageable: Pageable): Boolean {
     // Check if sorting is specified and includes 'random'
@@ -146,7 +139,7 @@ class BookRepository(
         val total = query.count()
         if (checkIfRandomSorting(pageable)) {
             query.limit(pageable.pageSize)
-            query.orderBy(RandomOrder)
+            query.orderBy(Random())
         } else {
             query.limit(pageable.pageSize, pageable.offset)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
@@ -404,7 +397,7 @@ class BookRepository(
         val total = query.count()
         if (checkIfRandomSorting(pageable)) {
             query.limit(pageable.pageSize)
-            query.orderBy(RandomOrder)  // Use the custom random function
+            query.orderBy(Random())  // Use the custom random function
         } else {
             query.limit(pageable.pageSize, pageable.offset)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
@@ -1067,7 +1060,7 @@ class BookRepository(
         val total = query.count()
         if (checkIfRandomSorting(pageable)) {
             query.limit(pageable.pageSize)
-            query.orderBy(RandomOrder)  // Use the custom random function
+            query.orderBy(Random())  // Use the custom random function
         } else {
             query.limit(pageable.pageSize, pageable.offset)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST), cols)
