@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.mock.web.MockMultipartFile
 import java.io.File
 import java.util.UUID
@@ -1307,6 +1308,29 @@ class BookServiceTest(
         res.content.forEach {
             Assertions.assertTrue(titles.contains(it.book.title))
         }
+    }
+
+    @Test
+    fun testQueryWithRandomOrder() {
+        // Create three books to validate response
+        val targetPageableSize = 24
+        val booksToCreate = targetPageableSize + 4
+        for (bookNumber in 1..booksToCreate) {
+            val createBook = bookDto("title $bookNumber")
+            val createUserBookDto = createUserBookDto(createBook)
+            bookService.save(createUserBookDto, user(), null)
+        }
+    
+        val totalCheckRes = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(booksToCreate))
+        // Check total number of books created -- cast to Int for assert
+        val totalNumberOfBooks = totalCheckRes.totalElements.toInt()
+        Assertions.assertEquals(booksToCreate, totalNumberOfBooks)
+
+        val pageable = PageRequest.of(0, targetPageableSize, Sort.by("random").descending());
+        val randomCheckRes = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, pageable)
+        // Check number of randomly returned books (pageSize, not total)
+        val randomNumberOfBooks = randomCheckRes.numberOfElements.toInt()
+        Assertions.assertEquals(targetPageableSize, randomNumberOfBooks)
     }
 
     @Test
