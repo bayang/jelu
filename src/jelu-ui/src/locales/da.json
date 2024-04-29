@@ -8,6 +8,7 @@
     "nav": {
         "my_books": "mine bøger",
         "to_read": "læseliste",
+        "random": "random",
         "add_book": "tilføj bog",
         "dashboard": "kontrolpanel",
         "login": "log ind",
@@ -144,6 +145,7 @@
         "date_added": "Dato tilføjet",
         "date_added_to_list": "Dato tilføjet til listen",
         "title": "Titel",
+        "random": "Random",
         "publisher": "Udgiver",
         "series": "Serie",
         "series_number": "Serienummer",
