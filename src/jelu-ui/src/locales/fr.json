@@ -8,6 +8,7 @@
     "nav": {
         "my_books": "mes livres",
         "to_read": "liste de lecture",
+        "random": "random",
         "add_book": "ajouter un livre",
         "dashboard": "tableau de bord",
         "login": "connexion",
@@ -144,6 +145,7 @@
         "date_added": "Date d'ajout",
         "date_added_to_list": "Date d'ajout à la liste",
         "title": "Titre",
+        "random": "Random",
         "publisher": "Éditeur",
         "series": "Série",
         "series_number": "Ordre dans la série",
