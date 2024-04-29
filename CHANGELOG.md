@@ -1,3 +1,10 @@
+## [0.56.0](https://github.com/bayang/jelu/compare/v0.55.0...v0.56.0) (2024-04-29)
+
+
+### Features
+
+* add Random page and random sorting option ([#109](https://github.com/bayang/jelu/issues/109)) ([186f8f0](https://github.com/bayang/jelu/commit/186f8f050db3eb63b64aa20d63faee768bc4b109))
+
 ## [0.55.0](https://github.com/bayang/jelu/compare/v0.54.0...v0.55.0) (2024-04-25)
 
 
