@@ -8,6 +8,7 @@
     "nav": {
         "my_books": "kitaplarım",
         "to_read": "okuma listesi",
+        "random": "random",
         "add_book": "kitap ekle",
         "dashboard": "gösterge paneli",
         "login": "giriş yap",
@@ -144,6 +145,7 @@
         "date_added": "Date added",
         "date_added_to_list": "Date added to list",
         "title": "Title",
+        "random": "Random",
         "publisher": "Publisher",
         "series": "Series",
         "series_number": "Series number",
