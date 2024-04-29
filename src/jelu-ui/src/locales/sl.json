@@ -8,6 +8,7 @@
     "nav": {
         "my_books": "moje knjige",
         "to_read": "za prebrati",
+        "random": "random",
         "add_book": "dodaj knjigo",
         "dashboard": "pregledna plošča",
         "login": "prijava",
@@ -144,6 +145,7 @@
         "date_added": "Datum dodan",
         "date_added_to_list": "Datum dodan seznamu",
         "title": "Naslov",
+        "random": "Random",
         "publisher": "Založnik",
         "series": "Serija",
         "series_number": "Serijska številka",
