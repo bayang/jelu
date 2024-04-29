@@ -149,6 +149,12 @@ getBooks()
         >
           {{ t('sorting.modification_date') }}
         </o-radio>
+        <o-radio
+          v-model="sortBy"
+          native-value="random"
+        >
+          {{ t('sorting.random') }}
+        </o-radio>
       </div>
       <div class="field">
         <o-radio

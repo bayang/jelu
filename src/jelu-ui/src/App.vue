@@ -194,6 +194,15 @@ const collapseDropdown = () => {
             <li @click="collapseDropdown()">
               <router-link
                 v-if="isLogged"
+                class="font-sans text-base capitalize"
+                :to="{ name: 'random' }"
+              >
+                {{ t('nav.random') }}
+              </router-link>
+            </li>
+            <li @click="collapseDropdown()">
+              <router-link
+                v-if="isLogged"
                 :to="{ name: 'add-book' }"
                 class="font-sans text-base capitalize"
               >
@@ -305,6 +314,15 @@ const collapseDropdown = () => {
               :to="{ name: 'to-read' }"
             >
               {{ t('nav.to_read') }}
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              v-if="isLogged"
+              class="font-sans text-xl capitalize"
+              :to="{ name: 'random' }"
+            >
+              {{ "Random" }}
             </router-link>
           </li>
           <li>
