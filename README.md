@@ -57,7 +57,7 @@ All your data is now located into a single-file database which can be saved anyw
 * download the java Jar from the releases section in a dedicated folder
 * go to this folder
 * start the jar (it is a spring fat jar so dependencies are included) : eg `java -jar jelu-0.13.0.jar`
-* If you want to tweak the default config (see `src/main/resources/application.yml`), just create a yaml file called application.yml in the same foler as the jar.
+* If you want to tweak the default config (see `src/main/resources/application.yml`), just create a yaml file called application.yml in the same folder as the jar.
 
 For example if you want the database to be located next to the jar file (instead of being located in the default `${user.home}/.jelu/database/` folder) :
 
