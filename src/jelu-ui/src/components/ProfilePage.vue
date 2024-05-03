@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next"
+import { useOruga } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
 import { computed, ref, Ref } from 'vue'
 import Avatar from 'vue-avatar-sdh'
@@ -12,7 +12,7 @@ import { Shelf } from "../model/Shelf"
 import dataService from "../services/DataService";
 import { Tag } from "../model/Tag"
 
-const { oruga } = useProgrammatic()
+const oruga = useOruga()
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -145,7 +145,7 @@ const shelves = computed(() => {
             :key="shelf"
             class="my-2"
           >
-            <div class="alert shadow-lg w-full">
+            <div class="alert shadow-lg w-full jl-card">
               <i class="mdi mdi-bookshelf mdi-24px" />
               <h3 class="font-bold">
                 {{ shelf.name }}
@@ -183,12 +183,13 @@ const shelves = computed(() => {
         <div class="field">
           <o-field :label="t('settings.shelf_choose_tag')">
             <o-autocomplete
+              :input-classes="{rootClass:'border-2 border-accent'}"
               :data="filteredTags"
               :clear-on-select="true"
               field="name"
               :loading="isFetching"
-              :debounce-typing="100"
-              @typing="getFilteredTags"
+              :debounce="100"
+              @input="getFilteredTags"
               @select="createShelfFromTag"
             />
           </o-field>

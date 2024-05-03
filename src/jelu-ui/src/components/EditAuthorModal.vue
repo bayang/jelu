@@ -382,7 +382,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="mt-2 flex flex-row justify-center space-x-8">
           <button
-            class="btn btn-primary button btn-outline"
+            class="btn btn-primary button btn-outline uppercase"
             :class="{'btn-disabled' : progress}"
             @click="update"
           >
@@ -396,7 +396,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <span>{{ t('labels.save_changes') }}</span>
           </button>
           <button
-            class="btn btn-info btn-outline"
+            class="btn btn-info btn-outline uppercase"
             @click="currentPhase = SEARCH"
           >
             <span class="icon">
@@ -437,7 +437,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="mb-2 flex flex-row justify-center space-x-8 my-4">
           <button
-            class="btn btn-info btn-outline"
+            class="btn btn-info btn-outline uppercase"
             @click="search"
           >
             <span class="icon">
@@ -446,7 +446,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <span>{{ t('labels.search') }}</span>
           </button>
           <button
-            class="btn btn-warning btn-outline"
+            class="btn btn-warning btn-outline uppercase"
             @click="currentPhase = FORM"
           >
             <span class="icon">

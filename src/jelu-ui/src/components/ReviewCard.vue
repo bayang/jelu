@@ -45,7 +45,7 @@ const editReview = async (reviewId: string) => {
     <div class="card-body">
       <div class="card-title">
         <div class="avatar placeholder">
-          <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
+          <div class="bg-[color-mix(in_oklab,oklch(var(--n)),black_7%)] text-neutral-content rounded-full w-12">
             <span class="uppercase">{{ username.slice(0,2) }}</span>
           </div>
         </div>

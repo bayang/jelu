@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next"
+import { useOruga } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
 import { ref, Ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -12,7 +12,7 @@ import { Tag } from "../model/Tag"
 import dataService from "../services/DataService"
 import { ObjectUtils } from "../utils/ObjectUtils"
 
-const { oruga } = useProgrammatic()
+const oruga = useOruga()
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -190,15 +190,15 @@ getOrphanTags()
       <h1 class="typewriter text-2xl mb-3 capitalize">
         {{ t('labels.find-tag') }} :
       </h1>
-      <div class="field">
+      <div class="field border-2 border-accent">
         <o-field>
           <o-autocomplete
             :data="filteredTags"
             :clear-on-select="true"
             field="name"
             :loading="isFetching"
-            :debounce-typing="100"
-            @typing="getFilteredTags"
+            :debounce="100"
+            @input="getFilteredTags"
             @select="selectTag"
           />
         </o-field>

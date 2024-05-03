@@ -7,13 +7,15 @@ import { ReadingEventType } from "../model/ReadingEvent";
 import dataService from "../services/DataService";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useOruga } from "@oruga-ui/oruga-next";
 import { Tag } from "../model/Tag";
 import { useI18n } from 'vue-i18n'
 import { SeriesOrder } from "../model/Series";
 import SeriesInput from "./SeriesInput.vue";
 import { Path } from "../model/DirectoryListing";
 import ImagePickerModal from "./ImagePickerModal.vue";
+import Datepicker from 'vue3-datepicker'
+import dayjs from "dayjs";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -21,7 +23,7 @@ const { t } = useI18n({
     })
 
 const props = defineProps<{ bookId: string, book: UserBook | null, canAddEvent: boolean }>()
-const { oruga } = useProgrammatic()
+const oruga = useOruga()
 const emit = defineEmits(['close']);
 
 let filteredAuthors: Ref<Array<Author>> = ref([]);
@@ -33,7 +35,7 @@ let deleteImage: Ref<boolean> = ref(false)
 
 const progress: Ref<boolean> = ref(false)
 
-const publishedDate = ref(new Date(userbook.value.book.publishedDate ? userbook.value.book.publishedDate : ""))
+const publishedDate = ref(userbook.value.book.publishedDate ? new Date(userbook.value.book.publishedDate) : null)
 
 function copyInput(book: UserBook | null): any {
   if (book == null) {
@@ -63,7 +65,6 @@ const file = ref(null);
 
 const uploadPercentage = ref(0);
 const errorMessage = ref("");
-const datepicker = ref(null)
 const ownedDisplay = computed(() => {
   if (userbook.value.owned) {
     return t('book.owned')
@@ -154,11 +155,6 @@ function getFilteredTranslators(text: string) {
 function getFilteredTags(text: string) {
   dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
-
-const clearDatePicker = () => {
-  // close datepicker on reset
-  userbook.value.book.publishedDate = null;
-};
 
 function itemAdded() {
   console.log("added")
@@ -286,6 +282,15 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
   }
 })
 
+watch(() => publishedDate.value, (newVal, oldVal) => {
+    if (newVal == null) {
+        userbook.value.book.publishedDate = null
+    } else {
+        let formatted = dayjs(newVal).format('YYYY-MM-DD')
+        userbook.value.book.publishedDate = formatted
+    }
+})
+
 </script>
 
 <template>
@@ -311,7 +316,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
             :label="t('book.author', 2)"
             class="capitalize"
           >
-            <o-inputitems
+            <o-taginput
               v-model="userbook.book.authors"
               :data="filteredAuthors"
               :allow-autocomplete="true"
@@ -325,7 +330,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_author')"
-              @typing="getFilteredAuthors"
+              @input="getFilteredAuthors"
               @add="itemAdded"
             />
           </o-field>
@@ -336,7 +341,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
             :label="t('book.tag', 2)"
             class="capitalize"
           >
-            <o-inputitems
+            <o-taginput
               v-model="userbook.book.tags"
               :data="filteredTags"
               :allow-autocomplete="true"
@@ -350,7 +355,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
               icon="tag-plus"
               field="name"
               :placeholder="t('labels.add_tag')"
-              @typing="getFilteredTags"
+              @input="getFilteredTags"
             />
           </o-field>
         </div>
@@ -360,7 +365,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
             :label="t('book.translator', 2)"
             class="capitalize"
           >
-            <o-inputitems
+            <o-taginput
               v-model="userbook.book.translators"
               :data="filteredTranslators"
               :allow-autocomplete="true"
@@ -374,7 +379,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_translator')"
-              @typing="getFilteredTranslators"
+              @input="getFilteredTranslators"
               @add="itemAdded"
             />
           </o-field>
@@ -463,20 +468,32 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
             :label="t('book.published_date')"
             class="capitalize"
           >
-            <o-datepicker
-              v-show="true"
-              ref="datepicker"
-              v-model="publishedDate"
-              :show-week-number="false"
-              :locale="undefined"
-              :placeholder="t('labels.click_to_select')"
-              icon="calendar"
-              icon-right="close"
-              :icon-right-clickable="true"
-              trap-focus
-              class="input focus:input-accent"
-              @icon-right-click="clearDatePicker"
-            />
+            <!-- eslint-disable -->
+            <datepicker v-model="publishedDate as Date"
+              class="input input-primary"
+              :typeable="true"
+              :clearable="true"
+            >
+            <!-- eslint-enable -->
+              <template #clear="{ onClear }">
+                <button @click="onClear">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z"
+                    />
+                  </svg>
+                </button>
+              </template>
+            </datepicker>
           </o-field>
         </div>
         <div class="field pb-2">
@@ -535,20 +552,14 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
           </o-field>
         </div>
         <div class="field pb-2">
-          <o-field
-            label=""
-            horizontal
-            class="capitalize"
+          <button
+            class="btn btn-primary btn-circle p-2 btn-sm"
+            @click="seriesCopy.push({'name' : ''})"
           >
-            <button
-              class="btn btn-primary btn-circle p-2 btn-sm"
-              @click="seriesCopy.push({'name' : ''})"
-            >
-              <span class="icon">
-                <i class="mdi mdi-plus mdi-18px" />
-              </span>
-            </button>
-          </o-field>
+            <span class="icon">
+              <i class="mdi mdi-plus mdi-18px" />
+            </span>
+          </button>
         </div>
         <div
           v-if="props.canAddEvent"
@@ -798,7 +809,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
             class="file"
           >
             <button
-              class="btn btn-primary button"
+              class="btn btn-primary button uppercase"
               @click="toggleImagePickerModal()"
             >
               <span class="icon">
@@ -812,7 +823,7 @@ watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userb
       </div>
       <div class="flex flex-row justify-center pt-6">
         <button
-          class="btn btn-primary"
+          class="btn btn-primary uppercase"
           :class="{'btn-disabled' : progress}"
           @click="importBook"
         >

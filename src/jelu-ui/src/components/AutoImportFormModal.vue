@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useOruga } from "@oruga-ui/oruga-next";
 import { ComputedRef, Ref, computed, reactive, ref } from "vue";
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -20,7 +20,7 @@ const { t } = useI18n({
     })
 const store = useStore(key)
 
-const { oruga } = useProgrammatic();
+const oruga = useOruga();
 
 const props = defineProps<{
   book: Book|undefined,
@@ -184,7 +184,7 @@ function pluginsModalClosed() {
           <div class="flex gap-1">
             <button
               :disabled="!isValid"
-              class="btn btn-success"
+              class="btn btn-success uppercase"
               :class="{'btn-disabled' : progress}"
               @click="fetchMetadata"
             >
@@ -265,7 +265,7 @@ function pluginsModalClosed() {
         class="col-span-5 space-x-5 mt-3"
       >
         <button
-          class="btn btn-primary"
+          class="btn btn-primary uppercase"
           @click="importData"
         >
           <span class="icon">
@@ -273,7 +273,7 @@ function pluginsModalClosed() {
           </span><span>{{ t('labels.import') }}</span>
         </button>
         <button
-          class="btn btn-warning"
+          class="btn btn-warning uppercase"
           @click="discard"
         >
           <span class="icon">

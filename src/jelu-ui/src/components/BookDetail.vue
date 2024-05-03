@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next"
+import { useOruga } from "@oruga-ui/oruga-next"
 import { until, useClipboard, usePermission, useTitle } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { computed, ComputedRef, Ref, ref, watch } from 'vue'
@@ -36,8 +36,7 @@ const props = defineProps<{ bookId: string }>()
 
 const store = useStore(key)
 const router = useRouter()
-const { oruga } = useProgrammatic();
-console.log(oruga)
+const oruga = useOruga();
 
 const { formatDate, formatDateString } = useDates()
 
@@ -406,7 +405,7 @@ getBook()
         class="flex items-center flex-wrap"
       >
         <button
-          class="btn btn-primary btn-outline mr-2 p-2"
+          class="btn btn-primary btn-outline mr-2 p-2 uppercase"
           @click="toggleEdit"
         >
           <span class="icon">
@@ -415,7 +414,7 @@ getBook()
           <span>{{ t('labels.edit') }}</span>
         </button>
         <button
-          class="btn btn-error btn-outline mr-2 p-2"
+          class="btn btn-error btn-outline mr-2 p-2 uppercase"
           @click="deleteBook"
         >
           <span class="icon">
@@ -424,7 +423,7 @@ getBook()
           <span>{{ t('labels.delete') }}</span>
         </button>
         <button
-          class="btn btn-info btn-outline p-2"
+          class="btn btn-info btn-outline p-2 uppercase"
           @click="toggleReadingEventModal(defaultCreateEvent(), false)"
         >
           <span class="icon">
@@ -909,7 +908,7 @@ getBook()
   <o-loading
     v-model:active="getBookIsLoading"
     :full-page="true"
-    :can-cancel="true"
+    :cancelable="true"
   />
   <input
     id="my-modal-4"

@@ -54,11 +54,13 @@
 
   --oruga-loading-overlay: theme('colors.jelu_overlay');
 
-  --oruga-inputitems-background-color: theme('colors.base-100');
-  --oruga-inputitems-border-color: theme('colors.base-100');
-  --oruga-inputitems-color: theme('colors.primary');
-  --oruga-inputitems-item-background-color: theme('colors.primary');
-  --oruga-inputitems-item-color: theme('colors.primary-content');
+  --oruga-taginput-background-color: theme('colors.base-100');
+  --oruga-taginput-border-color: theme('colors.base-100');
+  --oruga-taginput-color: theme('colors.primary');
+  --oruga-taginput-item-background-color: theme('colors.primary');
+  --oruga-taginput-item-color: theme('colors.primary-content');
+  
+  --oruga-autocomplete-item-color: theme('colors.primary-content');
 
 
   --vdp-bg-color: theme('colors.base-100');
@@ -67,11 +69,11 @@
 }
 
 /* oruga customization with daisyui */
-.o-chk__check {
+.o-chk__input {
   @apply bg-none;
 }
 
-.o-chk .o-chk__check {
+.o-chk .o-chk__input {
   @apply checkbox checkbox-primary;
 }
 
@@ -87,17 +89,13 @@
   @apply btn btn-info;
 }
 
-.o-side__content.o-side__content--fixed {
-  @apply bg-base-100;
+.o-side__content.o-side__content--left {
+  @apply bg-base-100 w-fit;
 }
 
-.o-radio .o-radio__check{
+.o-radio .o-radio__input{
   @apply radio radio-sm radio-primary bg-none;
   
-}
-
-.o-radio__check--checked {
-  @apply radio radio-primary radio-sm bg-none;
 }
 
 .o-pag__link {
@@ -128,6 +126,14 @@
   @apply w-fit sm:w-full bg-base-100 text-base-content focus:input-accent;
 }
 
+.o-input__wrapper {
+  @apply w-fit sm:w-full;
+}
+
+.o-input__wrapper .o-input {
+  @apply w-fit sm:w-full focus:input-accent;
+}
+
 .o-icon.o-input__icon-left {
   @apply text-base-content;
 }
@@ -144,7 +150,7 @@
   @apply w-24;
 }
 
-.o-acp .o-ctrl-input .o-input {
+.o-acp .o-input {
   @apply w-fit sm:w-full bg-base-100 text-base-content border-base-200 focus:input-accent grow;
 }
 
@@ -152,6 +158,9 @@
   @apply grow !important;
 }
 
+.o-drop__menu {
+  @apply w-full grow;  
+}
 /* end oruga customization with daisyui */
 
 .swal2-container {
@@ -200,7 +209,6 @@
 }
 
 .review-modal {
-  /* margin: 30px; */
   @apply m-5 sm:p-5;
   height: min(700px, 75vh);
   width: min(900px, 85vw);
@@ -221,24 +229,23 @@
     @apply w-28;
   }
   
-  .small-cover img {
-    @apply w-28 relative;
-  }
+.small-cover img {
+  @apply w-28 relative;
+}
 
-  .altered {
-    filter: blur(4px) invert(38%);
-    -webkit-filter: blur(4px) invert(38%);
-    -moz-filter: blur(4px) invert(38%);
-  }
-
+.altered {
+  filter: blur(4px) invert(38%);
+  -webkit-filter: blur(4px) invert(38%);
+  -moz-filter: blur(4px) invert(38%);
+}
 
 /* // book detail */
 
 .jelu-bordered {
   @apply border-2 rounded-none border-accent;
-    -webkit-box-shadow: 10px 10px 10px 0px var(--jelu_background); 
-    box-shadow: 10px 10px 10px 0px var(--jelu_background);
-  }
+  -webkit-box-shadow: 10px 10px 10px 0px var(--jelu_background); 
+  box-shadow: 10px 10px 10px 0px var(--jelu_background);
+}
 
 
 /* dashboard sidebar customizing */
@@ -265,27 +272,19 @@
 /* end dashboard sidebar */
 
 
-.jelu-authorinput .o-inputit__item {
+.jelu-authorinput .o-taginput__item {
   @apply bg-success rounded my-1;
 }
 
-.jelu-taginput .o-inputit__item {
+.jelu-taginput .o-taginput__item {
   @apply bg-warning rounded text-warning-content my-1;
 }
 
-/* search form */
-
-.search-form-extended-input {
-  @apply basis-1/2 p-1;
+[data-theme="jelu"] .card {
+  @apply bg-base-100 border-0;
 }
 
-.collapse-title .o-field .o-field__body .o-field.o-field--addons .o-ctrl-input {
-  @apply basis-full;
-}
-
-/* end search form */
-
-[data-theme="jelu"] .card, .alert {
+[data-theme="jelu"] .jl-card {
   @apply bg-base-100 border-0;
 }
 

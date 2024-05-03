@@ -109,7 +109,7 @@ function checkMove(evt: any){
         </draggable>
         <div class="my-3">
           <button
-            class="btn btn-primary mr-2"
+            class="btn btn-primary mr-2 uppercase"
             :disabled="progress"
             @click="submit"
           >
@@ -123,7 +123,7 @@ function checkMove(evt: any){
             <span>{{ t('labels.submit') }}</span>
           </button>
           <button
-            class="btn btn-secondary mr-2"
+            class="btn btn-secondary mr-2 uppercase"
             :disabled="progress"
             @click="dismiss"
           >

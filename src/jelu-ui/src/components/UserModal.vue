@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { setErrors } from '@formkit/vue';
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useOruga } from "@oruga-ui/oruga-next";
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
@@ -14,7 +14,7 @@ const { t } = useI18n({
       useScope: 'global'
     })
 
-const { oruga } = useProgrammatic()
+const oruga = useOruga()
 const store = useStore(key)
 
 const props = defineProps<{

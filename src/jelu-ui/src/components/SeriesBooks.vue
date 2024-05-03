@@ -105,12 +105,11 @@ getBooks()
   <sort-filter-bar-vue
     :open="open"
     :order="sortOrder"
-    class="sort-filter-bar"
     @update:open="open = $event"
     @update:sort-order="sortOrderUpdated"
   >
     <template #sort-fields>
-      <div class="field">
+      <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('sorting.sort_by') }} : </label>
         <o-radio
           v-model="sortBy"
@@ -118,16 +117,12 @@ getBooks()
         >
           {{ t('sorting.title') }}
         </o-radio>
-      </div>
-      <div class="field">
         <o-radio
           v-model="sortBy"
           native-value="publisher"
         >
           {{ t('sorting.publisher') }}
         </o-radio>
-      </div>
-      <div class="field">
         <o-radio
           v-model="sortBy"
           native-value="numberInSeries"
@@ -146,8 +141,6 @@ getBooks()
         >
           {{ t('sorting.modification_date') }}
         </o-radio>
-      </div>
-      <div class="field">
         <o-radio
           v-model="sortBy"
           native-value="pageCount"
@@ -157,7 +150,7 @@ getBooks()
       </div>
     </template>
     <template #filters>
-      <div class="field">
+      <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('filtering.books_type') }} : </label>
         <o-radio
           v-model="libraryFilter"
@@ -271,20 +264,13 @@ getBooks()
   <o-loading
     v-model:active="getPageIsLoading"
     :full-page="true"
-    :can-cancel="true"
+    :cancelable="true"
   />
 </template>
 
 <style scoped>
 
-label {
-  margin: 0 0.5em;
+label.label {
   font-weight: bold;
 }
-
-/* fields in side bar slots are shifted to the right and alignment is broken */
-.field {
-  margin-left: -8px;
-}
-
 </style>

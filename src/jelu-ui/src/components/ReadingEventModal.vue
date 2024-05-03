@@ -181,7 +181,7 @@ const deleteEvent = () => {
         </div>
         <div class="mt-3">
           <button
-            class="btn btn-secondary mr-2"
+            class="btn btn-secondary mr-2 uppercase"
             @click="update"
           >
             <span class="icon">
@@ -190,7 +190,7 @@ const deleteEvent = () => {
             <span>{{ t('labels.submit') }}</span>
           </button>
           <button
-            class="btn btn-error"
+            class="btn btn-error uppercase"
             @click="deleteEvent"
           >
             <span class="icon">
@@ -303,7 +303,7 @@ const deleteEvent = () => {
         </div>
         <div>
           <button
-            class="btn btn-secondary btn-outline mt-3"
+            class="btn btn-secondary btn-outline mt-3 uppercase"
             @click="create"
           >
             <span class="icon">

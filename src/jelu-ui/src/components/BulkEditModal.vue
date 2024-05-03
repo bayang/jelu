@@ -4,8 +4,9 @@ import dataService from "../services/DataService";
 import { useI18n } from 'vue-i18n'
 import { Tag } from "../model/Tag";
 import { ObjectUtils } from "../utils/ObjectUtils";
-import { useProgrammatic } from "@oruga-ui/oruga-next";
-const { oruga } = useProgrammatic()
+import { useOruga } from "@oruga-ui/oruga-next";
+
+const oruga = useOruga()
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -173,8 +174,8 @@ const submit = () => {
               :clear-on-select="true"
               field="name"
               :loading="isFetching"
-              :debounce-typing="100"
-              @typing="getFilteredTags"
+              :debounce="100"
+              @input="getFilteredTags"
               @select="manageTag"
             />
           </o-field>
@@ -237,7 +238,7 @@ const submit = () => {
         </div>
         <div class="my-3">
           <button
-            class="btn btn-secondary mr-2"
+            class="btn btn-secondary mr-2 uppercase"
             @click="submit"
           >
             <span class="icon">

@@ -7,14 +7,14 @@ import dataService from "../services/DataService";
 import { useTitle } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { ObjectUtils } from '../utils/ObjectUtils'
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useOruga } from "@oruga-ui/oruga-next";
 
 const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
 
-const { oruga } = useProgrammatic();
+const oruga = useOruga();
 
 useTitle('Jelu | Imports')
 
@@ -199,7 +199,7 @@ watch(file, (newVal, oldVal) => {
       <div class="field">
         <p class="control">
           <button
-            class="btn btn-success"
+            class="btn btn-success uppercase"
             :disabled="noFile"
             @click="importFile"
           >
@@ -224,7 +224,7 @@ watch(file, (newVal, oldVal) => {
       <div class="field">
         <p class="control">
           <button
-            class="btn btn-info"
+            class="btn btn-info uppercase"
             @click="exportFile"
           >
             {{ t('csv_import.export_file') }}

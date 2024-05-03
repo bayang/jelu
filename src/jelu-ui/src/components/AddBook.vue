@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useOruga } from "@oruga-ui/oruga-next";
 import IsbnVerify from '@saekitominaga/isbn-verify';
 import { useTitle } from '@vueuse/core';
 import { computed, reactive, Ref, ref, watch } from "vue";
@@ -30,7 +30,7 @@ useTitle('Jelu | Add book')
 
 const store = useStore(key)
 const router = useRouter()
-const { oruga } = useProgrammatic()
+const oruga = useOruga()
 
 const datepicker = ref(null);
 const publishedDate: Ref<Date | null> = ref(null)
@@ -502,7 +502,7 @@ let displayDatepicker = computed(() => {
         <div class="flex gap-2">
           <button
             v-tooltip="t('labels.auto_fill_doc')"
-            class="btn btn-success button"
+            class="btn btn-success button uppercase"
             :disabled="store != null && !store.getters.getMetadataFetchEnabled"
             @click="toggleModal(false)"
           >
@@ -513,7 +513,7 @@ let displayDatepicker = computed(() => {
           </button>
           <button
             v-tooltip="t('labels.auto_fill_book')"
-            class="btn btn-primary button"
+            class="btn btn-primary button uppercase"
             @click="toggleModal(true)"
           >
             <span class="icon">
@@ -557,7 +557,7 @@ let displayDatepicker = computed(() => {
             :label="t('book.author', 2)"
             class="capitalize"
           >
-            <o-inputitems
+            <o-taginput
               v-model="authors"
               :data="filteredAuthors"
               :allow-autocomplete="true"
@@ -571,7 +571,7 @@ let displayDatepicker = computed(() => {
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_author')"
-              @typing="getFilteredAuthors"
+              @input="getFilteredAuthors"
             />
           </o-field>
         </div>
@@ -581,7 +581,7 @@ let displayDatepicker = computed(() => {
             :label="t('book.tag', 2)"
             class="capitalize"
           >
-            <o-inputitems
+            <o-taginput
               v-model="tags"
               :data="filteredTags"
               :allow-autocomplete="true"
@@ -595,7 +595,7 @@ let displayDatepicker = computed(() => {
               icon="tag-plus"
               field="name"
               :placeholder="t('labels.add_tag')"
-              @typing="getFilteredTags"
+              @input="getFilteredTags"
             />
           </o-field>
         </div>
@@ -605,7 +605,7 @@ let displayDatepicker = computed(() => {
             :label="t('book.translator', 2)"
             class="capitalize"
           >
-            <o-inputitems
+            <o-taginput
               v-model="translators"
               :data="filteredTranslators"
               :allow-autocomplete="true"
@@ -619,7 +619,7 @@ let displayDatepicker = computed(() => {
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_translator')"
-              @typing="getFilteredTranslators"
+              @input="getFilteredTranslators"
             />
           </o-field>
         </div>
@@ -791,20 +791,14 @@ let displayDatepicker = computed(() => {
           </o-field>
         </div>
         <div class="field mb-3">
-          <o-field
-            label=""
-            horizontal
-            class="capitalize"
+          <button
+            class="btn btn-primary btn-circle p-2 btn-sm"
+            @click="seriesCopy.push({'name' : ''})"
           >
-            <button
-              class="btn btn-primary btn-circle p-2 btn-sm"
-              @click="seriesCopy.push({'name' : ''})"
-            >
-              <span class="icon">
-                <i class="mdi mdi-plus mdi-18px" />
-              </span>
-            </button>
-          </o-field>
+            <span class="icon">
+              <i class="mdi mdi-plus mdi-18px" />
+            </span>
+          </button>
         </div>
         <div class="block">
           <o-field
@@ -1089,7 +1083,7 @@ let displayDatepicker = computed(() => {
 
         <div class="field">
           <button
-            class="btn btn-success mb-3"
+            class="btn btn-success mb-3 uppercase"
             :disabled="!StringUtils.isNotBlank(form.title)"
             :class="{'btn-disabled' : progress}"
             @click="importBook"

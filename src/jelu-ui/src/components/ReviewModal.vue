@@ -174,7 +174,7 @@ const editReview = () => {
         <div class="my-3">
           <button
             v-if="props.edit == null || props.edit === false"
-            class="btn btn-secondary mr-2"
+            class="btn btn-secondary mr-2 uppercase"
             :disabled="progress"
             @click="submit"
           >
@@ -189,7 +189,7 @@ const editReview = () => {
           </button>
           <button
             v-else
-            class="btn btn-secondary mr-2"
+            class="btn btn-secondary mr-2 uppercase"
             :disabled="progress"
             @click="editReview"
           >

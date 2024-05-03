@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { setErrors } from '@formkit/vue'
-import { useProgrammatic } from "@oruga-ui/oruga-next"
+import { useOruga } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -14,7 +14,7 @@ const { t } = useI18n({
 
 useTitle('Jelu | Users admin')
 
-const { oruga } = useProgrammatic()
+const oruga = useOruga()
 
 const form = ref({'login' : '', 'password' : '', 'admin': false})
 

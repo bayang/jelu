@@ -79,7 +79,7 @@ watch(() => [userBookUpdate.value.currentPageNumber, userBookUpdate.value.percen
         </div>
         <div class="mt-3 place-self-center">
           <button
-            class="btn btn-success mr-2"
+            class="btn btn-success mr-2 uppercase"
             @click="update"
           >
             <span class="icon">

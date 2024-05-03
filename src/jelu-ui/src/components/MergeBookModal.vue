@@ -240,7 +240,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <label class="label">
             <span class="label-text">{{ t('book.author', 2) }}</span>
           </label>
-          <o-inputitems
+          <o-taginput
             v-model="book.authors"
             :data="filteredAuthors"
             :allow-autocomplete="true"
@@ -254,7 +254,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
             icon="account-plus"
             field="name"
             :placeholder="t('labels.add_author')"
-            @typing="getFilteredAuthors"
+            @input="getFilteredAuthors"
           />
         </div>
         <div class="form-control w-full max-w-xs">
@@ -268,7 +268,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <label class="label">
             <span class="label-text">{{ t('book.tag', 2) }}</span>
           </label>
-          <o-inputitems
+          <o-taginput
             v-model="book.tags"
             :data="filteredTags"
             :allow-autocomplete="true"
@@ -282,7 +282,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
             icon="tag-plus"
             field="name"
             :placeholder="t('labels.add_tag')"
-            @typing="getFilteredTags"
+            @input="getFilteredTags"
           />
         </div>
         <div class="form-control w-full max-w-xs">
@@ -707,7 +707,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         class="flex space-x-5 mt-4 justify-center"
       >
         <button
-          class="btn btn-primary"
+          class="btn btn-primary uppercase"
           :disabled="progress"
           @click="importData"
         >
@@ -720,7 +720,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           </span><span>{{ t('labels.import') }}</span>
         </button>
         <button
-          class="btn btn-warning"
+          class="btn btn-warning uppercase"
           :disabled="progress"
           @click="discard"
         >

@@ -218,12 +218,14 @@ try {
         >
           {{ t('sorting.avg_rating') }}
         </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="random"
-        >
-          {{ t('sorting.random') }}
-        </o-radio>
+        <div class="field">
+          <o-radio
+            v-model="sortBy"
+            native-value="random"
+          >
+            {{ t('sorting.random') }}
+          </o-radio>
+        </div>
       </div>
     </template>
     <template #filters>
@@ -248,7 +250,7 @@ try {
           {{ t('reading_events.dropped') }}
         </o-checkbox>
       </div>
-      <div class="field">
+      <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.book_in_list') }} : </label>
         <div class="field">
           <o-radio
@@ -275,7 +277,7 @@ try {
           </o-radio>
         </div>
       </div>
-      <div class="field">
+      <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.owned') }} : </label>
         <div class="field">
           <o-radio
@@ -302,7 +304,7 @@ try {
           </o-radio>
         </div>
       </div>
-      <div class="field">
+      <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.borrowed') }} : </label>
         <div class="field">
           <o-radio
@@ -442,20 +444,14 @@ try {
   <o-loading
     v-model:active="getPageIsLoading"
     :full-page="true"
-    :can-cancel="true"
+    :cancelable="true"
   />
 </template>
 
 <style scoped>
 
-label {
-  margin: 0 0.5em;
+label.label {
   font-weight: bold;
-}
-
-/* fields in side bar slots are shifted to the right and alignment is broken */
-.field {
-  margin-left: -8px;
 }
 
 .list-enter-active,

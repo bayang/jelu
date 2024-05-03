@@ -114,7 +114,6 @@ getToRead()
   <sort-filter-bar-vue
     :open="open"
     :order="sortOrder"
-    class="sort-filter-bar"
     @update:open="open = $event"
     @update:sort-order="sortOrderUpdated"
   >
@@ -183,16 +182,18 @@ getToRead()
         >
           {{ t('sorting.avg_rating') }}
         </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="random"
-        >
-          {{ t('sorting.random') }}
-        </o-radio>
+        <div class="field">
+          <o-radio
+            v-model="sortBy"
+            native-value="random"
+          >
+            {{ t('sorting.random') }}
+          </o-radio>
+        </div>
       </div>
     </template>
     <template #filters>
-      <div class="field flex flex-col capitalize gap-1">
+      <div class="field flex flex-col gap-1">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
         <o-checkbox
           v-model="eventTypes"
@@ -213,7 +214,7 @@ getToRead()
           {{ t('reading_events.dropped') }}
         </o-checkbox>
       </div>
-      <div class="field">
+      <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.owned') }} : </label>
         <div class="field">
           <o-radio
@@ -347,20 +348,13 @@ getToRead()
   <o-loading
     v-model:active="getPageIsLoading"
     :full-page="true"
-    :can-cancel="true"
+    :cancelable="true"
   />
 </template>
 
 <style scoped>
 
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
+label.label {
+    font-weight: bold;
 }
-
-/* fields in side bar slots are shifted to the right and alignment is broken */
-.field {
-  margin-left: -8px;
-}
-
 </style>

@@ -572,7 +572,7 @@ const collapseDropdown = () => {
     <o-loading
       v-model:active="initialLoad"
       :full-page="true"
-      :can-cancel="false"
+      :cancelable="false"
     >
       <!-- loader from https://loading.io/css/ -->
       <div class="lds-facebook">

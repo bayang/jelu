@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useOruga } from "@oruga-ui/oruga-next";
 import { computed, Ref, ref, watch } from "vue";
 import { useI18n } from 'vue-i18n';
 import { UserBook } from "../model/Book";
@@ -10,7 +10,7 @@ const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
-const {oruga} = useProgrammatic();
+const oruga = useOruga();
 
 const props = defineProps<{ 
   book: UserBook, 

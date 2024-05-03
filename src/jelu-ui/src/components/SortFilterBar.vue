@@ -11,6 +11,8 @@ const { t } = useI18n({
 const keys = useMagicKeys()
 const shiftF = keys['Shift+F']
 
+const scroll = ref('clip')
+
 const props = defineProps<{
   order: string
   open: boolean
@@ -42,16 +44,17 @@ watch(shiftF, (v) => {
 
 <template>
   <o-sidebar
-    :open="props.open"
+    :active="props.open"
     :fullheight="true"
     :fullwidth="false"
     :overlay="false"
-    :right="false"
+    :scroll="scroll"
+    :teleport="true"
     @close="emit('update:open', false)"
   >
-    <div class="p-5">
+    <div class="p-5 flex flex-col items-start">
       <div class="field">
-        <label class="label">{{ t('sorting.sort_order') }} : </label>
+        <label class="label font-bold">{{ t('sorting.sort_order') }} : </label>
         <o-radio
           v-model="sortOrder"
           native-value="desc"
@@ -74,9 +77,5 @@ watch(shiftF, (v) => {
 </template>
 
 <style scoped>
-
-label {
-  font-weight: bold;
-}
 
 </style>

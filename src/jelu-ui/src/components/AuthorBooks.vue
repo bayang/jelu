@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useOruga } from "@oruga-ui/oruga-next";
 import { useTitle } from '@vueuse/core';
 import { useRouteQuery } from "@vueuse/router";
 import { computed, Ref, ref, watch } from 'vue';
@@ -29,7 +29,7 @@ const route = useRoute()
 
 const { formatDate, formatDateString } = useDates()
 
-const {oruga} = useProgrammatic();
+const oruga = useOruga();
 
 const author: Ref<Author> = ref({name: ""})
 const authorBooks: Ref<Array<Book>> = ref([]);
@@ -135,7 +135,6 @@ getBooks()
   <sort-filter-bar-vue
     :open="open"
     :order="sortOrder"
-    class="sort-filter-bar"
     @update:open="open = $event"
     @update:sort-order="sortOrderUpdated"
   >
@@ -164,6 +163,8 @@ getBooks()
         >
           {{ t('sorting.series') }}
         </o-radio>
+    </div>
+    <div class="field">
         <o-radio
           v-model="sortBy"
           native-value="publishedDate"
@@ -181,7 +182,7 @@ getBooks()
       </div>
     </template>
     <template #filters>
-      <div class="field">
+      <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('filtering.books_type') }} : </label>
         <o-radio
           v-model="libraryFilter"
@@ -202,7 +203,7 @@ getBooks()
           {{ t('filtering.only_not_in_my_list') }}
         </o-radio>
       </div>
-      <div class="field">
+      <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('filtering.role') }} : </label>
         <o-radio
           v-model="roleFilter"
@@ -396,21 +397,14 @@ getBooks()
   <o-loading
     v-model:active="getPageIsLoading"
     :full-page="true"
-    :can-cancel="true"
+    :cancelable="true"
   />
 </template>
 
 <style scoped>
 
-label {
-  margin: 0 0.5em;
+label.label {
   font-weight: bold;
 }
-
-/* fields in side bar slots are shifted to the right and alignment is broken */
-.field {
-  margin-left: -8px;
-}
-
 
 </style>

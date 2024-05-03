@@ -94,7 +94,7 @@ directories('/')
           class="col-span-5 space-x-5 mt-3"
         >
           <button
-            class="btn btn-primary"
+            class="btn btn-primary uppercase"
             @click="importData"
           >
             <span class="icon">
@@ -102,7 +102,7 @@ directories('/')
             </span><span>{{ t('labels.import') }}</span>
           </button>
           <button
-            class="btn btn-warning"
+            class="btn btn-warning uppercase"
             @click="discard"
           >
             <span class="icon">

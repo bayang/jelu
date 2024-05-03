@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProgrammatic } from "@oruga-ui/oruga-next"
+import { useOruga } from "@oruga-ui/oruga-next"
 import { until } from '@vueuse/core'
 import { computed, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -26,7 +26,7 @@ const props = defineProps<{
 }>()
 
 const router = useRouter()
-const { oruga } = useProgrammatic();
+const oruga = useOruga();
 console.log(oruga)
 
 const { formatDate, formatDateString } = useDates()
@@ -115,7 +115,7 @@ function modalClosed() {
         <button
           v-if="props.addBook && bookCanBeAdded"
           v-tooltip="t('labels.add_to_my_books')"
-          class="btn btn-info btn-outline"
+          class="btn btn-info btn-outline uppercase"
           @click="toggleEdit(ObjectUtils.toUserBook(props.book))"
         >
           <span class="icon">
@@ -316,7 +316,7 @@ function modalClosed() {
   <o-loading
     v-model:active="getBookIsLoading"
     :full-page="true"
-    :can-cancel="true"
+    :cancelable="true"
   />
 </template>
 

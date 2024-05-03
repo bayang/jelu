@@ -1,4 +1,4 @@
-import { useProgrammatic } from "@oruga-ui/oruga-next";
+import { useOruga } from "@oruga-ui/oruga-next";
 import { Ref, ref } from 'vue';
 import BulkEditModal from "../components/BulkEditModal.vue";
 
@@ -6,7 +6,7 @@ type VoidFunc = () => void;
 
 export default function useBulkEdition(onModalClosed: VoidFunc) {
 
-    const {oruga} = useProgrammatic();
+    const oruga = useOruga();
     const showSelect = ref(false)
     const selectAll = ref(false)
     const checkedCards: Ref<Array<string>> = ref([])

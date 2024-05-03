@@ -194,7 +194,7 @@ getYears()
   <o-loading
     v-model:active="getPageIsLoading"
     :full-page="true"
-    :can-cancel="true"
+    :cancelable="true"
     :overlay="loaderFullPage"
   />
 </template>

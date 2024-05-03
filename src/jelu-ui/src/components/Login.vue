@@ -184,7 +184,7 @@ const submit = () => {
           class="control"
         >
           <button
-            class="btn btn-warning mt-2"
+            class="btn btn-warning mt-2 uppercase"
             :disabled="progress"
             @click="createInitialUser"
           >
@@ -200,7 +200,7 @@ const submit = () => {
           class="control"
         >
           <button
-            class="btn btn-success mt-2"
+            class="btn btn-success mt-2 uppercase"
             :disabled="progress"
             @click="logUser"
           >
