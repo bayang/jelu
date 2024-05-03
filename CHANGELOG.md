@@ -1,3 +1,10 @@
+### [0.56.1](https://github.com/bayang/jelu/compare/v0.56.0...v0.56.1) (2024-05-03)
+
+
+### Bug Fixes
+
+* New Crowdin updates ([#119](https://github.com/bayang/jelu/issues/119)) ([e2f1ee3](https://github.com/bayang/jelu/commit/e2f1ee3a5efbae91585fef20c7aca9f37753670f))
+
 ## [0.56.0](https://github.com/bayang/jelu/compare/v0.55.0...v0.56.0) (2024-04-29)
 
 
