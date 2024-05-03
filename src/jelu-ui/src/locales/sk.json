@@ -8,6 +8,7 @@
     "nav": {
         "my_books": "moje knihy",
         "to_read": "prečítať",
+        "random": "random",
         "add_book": "pridať knihu",
         "dashboard": "konzola",
         "login": "prihlásiť",
@@ -144,6 +145,7 @@
         "date_added": "Date added",
         "date_added_to_list": "Date added to list",
         "title": "Title",
+        "random": "Random",
         "publisher": "Publisher",
         "series": "Series",
         "series_number": "Series number",

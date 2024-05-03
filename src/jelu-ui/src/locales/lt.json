@@ -8,6 +8,7 @@
     "nav": {
         "my_books": "mano knygos",
         "to_read": "skaityti sąrašą",
+        "random": "random",
         "add_book": "pridėti knygą",
         "dashboard": "prietaisų skydelis",
         "login": "prisijungti",
@@ -144,6 +145,7 @@
         "date_added": "Pridėjimo data",
         "date_added_to_list": "Įtraukimo į sąrašą data",
         "title": "Pavadinimas",
+        "random": "Random",
         "publisher": "Leidėjas",
         "series": "Serijos",
         "series_number": "Serijos numeris",

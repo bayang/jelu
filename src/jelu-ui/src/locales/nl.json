@@ -8,6 +8,7 @@
     "nav": {
         "my_books": "mijn boeken",
         "to_read": "te-lezen lijst",
+        "random": "willekeurig",
         "add_book": "voeg boek toe",
         "dashboard": "dashboard",
         "login": "inloggen",
@@ -144,6 +145,7 @@
         "date_added": "Datum toegevoegd",
         "date_added_to_list": "Datum toegevoegd aan de lijst",
         "title": "Titel",
+        "random": "Willekeurig",
         "publisher": "Uitgever",
         "series": "Reeks",
         "series_number": "Reeksnummer",

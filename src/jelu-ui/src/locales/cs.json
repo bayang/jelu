@@ -8,6 +8,7 @@
     "nav": {
         "my_books": "moje knihy",
         "to_read": "k přečtení",
+        "random": "random",
         "add_book": "přidat knihu",
         "dashboard": "nástěnka",
         "login": "přihlásit",
@@ -144,6 +145,7 @@
         "date_added": "Datum přidání",
         "date_added_to_list": "Datum přidání do seznamu",
         "title": "Název",
+        "random": "Random",
         "publisher": "Vydavatel",
         "series": "Série",
         "series_number": "Číslo série",
