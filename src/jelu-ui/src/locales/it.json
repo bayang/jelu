@@ -8,7 +8,7 @@
     "nav": {
         "my_books": "i miei libri",
         "to_read": "da leggere",
-        "random": "random",
+        "random": "casuale",
         "add_book": "aggiungi libro",
         "dashboard": "pannello di controllo",
         "login": "accedi",
@@ -145,7 +145,7 @@
         "date_added": "Data di aggiunta",
         "date_added_to_list": "Data aggiunta alla lista",
         "title": "Titolo",
-        "random": "Random",
+        "random": "Casualmente",
         "publisher": "Editore",
         "series": "Collana",
         "series_number": "Numero collana",
