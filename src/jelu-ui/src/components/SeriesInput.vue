@@ -43,6 +43,7 @@ function onSelect(series: Series, event: UIEvent) {
     localData.value.seriesId = series.id
     previousSelected.value.name = series.name
     previousSelected.value.seriesId = series.id
+    emit('update-series', localData.value)
   }
 }
 
@@ -55,7 +56,6 @@ const onUpdate = (inp: string) => {
     }
     console.log('after')
     console.log(localData.value)
-    emit('update-series', localData.value)
 }
 </script>
 

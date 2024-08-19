@@ -126,16 +126,17 @@
   @apply w-fit sm:w-full bg-base-100 text-base-content focus:input-accent;
 }
 
+
 .o-input__wrapper {
-  @apply w-fit sm:w-full;
+    @apply w-fit sm:w-full;
 }
 
 .o-input__wrapper .o-input {
-  @apply w-fit sm:w-full focus:input-accent;
+    @apply w-fit sm:w-full focus:input-accent;
 }
 
 .o-icon.o-input__icon-left {
-  @apply text-base-content;
+    @apply text-base-content;
 }
 
 .o-steps__title {
@@ -143,11 +144,11 @@
 }
 
 .o-icon.o-icon--spin.o-icon--medium.o-load__icon {
-  @apply text-gray-700;
+    @apply text-gray-700;
 }
 
 .o-ctrl-input > input[type="number"] {
-  @apply w-24;
+    @apply w-24;
 }
 
 .o-acp .o-input {
@@ -155,16 +156,20 @@
 }
 
 .o-acp {
-  @apply grow !important;
+    @apply grow !important;
 }
 
 .o-drop__menu {
-  @apply w-full grow;  
+    @apply w-full grow;  
+}
+
+.o-taginput .o-taginput__container {
+    @apply w-fit sm:w-full;
 }
 /* end oruga customization with daisyui */
 
 .swal2-container {
-  @apply flex justify-center;
+    @apply flex justify-center;
 }
 
 .swal2-container .swal2-popup.swal2-modal {

@@ -15,7 +15,7 @@ import VMdPreview from '@kangc/v-md-editor/lib/preview';
 
 import './assets/style.css'
 
-import '@oruga-ui/theme-oruga/dist/oruga-full.css'
+import '@oruga-ui/theme-oruga/dist/oruga.css'
 
 import 'vuejs-sidebar-menu/dist/vuejs-sidebar-menu.css'
 import '@mdi/font/css/materialdesignicons.min.css'
