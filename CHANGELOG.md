@@ -1,3 +1,14 @@
+### [0.56.2](https://github.com/bayang/jelu/compare/v0.56.1...v0.56.2) (2024-08-19)
+
+
+### Bug Fixes
+
+* autocomplete loses focus, upgrade oruga [#133](https://github.com/bayang/jelu/issues/133) ([f623512](https://github.com/bayang/jelu/commit/f623512085636a1cb4cf9b426e51da5d57f087bd))
+* barcode reader issues [#126](https://github.com/bayang/jelu/issues/126) [#118](https://github.com/bayang/jelu/issues/118) ([ff6090b](https://github.com/bayang/jelu/commit/ff6090bb2251a516ea2a58a049625175e550696a))
+* docker build issue ([34533af](https://github.com/bayang/jelu/commit/34533affd31fe337752a505000c08f226467819f))
+* oruga css path ([6cabe7f](https://github.com/bayang/jelu/commit/6cabe7f29f84685962409d8fdaf49db0c1d5d4e8))
+* ts compilation ([d8705c1](https://github.com/bayang/jelu/commit/d8705c1e5d8f4b026ab072109476216fb20835b5))
+
 ### [0.56.1](https://github.com/bayang/jelu/compare/v0.56.0...v0.56.1) (2024-05-03)
 
 
