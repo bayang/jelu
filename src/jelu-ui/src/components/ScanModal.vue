@@ -10,10 +10,12 @@ const { t } = useI18n({
 
 const emit = defineEmits<{
   (e: 'close'): void,
-  (e: 'decoded', barcode: string|null): void
+  (e: 'decoded', barcode: string|null): void,
+  (e: 'barcodeLoaded', reader: any): void
 }>()
 
 const decodedText = ref("");
+const barcodeReader = ref()
 
 const acceptBarcode = () => {
     emit('decoded', decodedText.value)
@@ -22,6 +24,7 @@ const acceptBarcode = () => {
 
 const onLoaded = () => {
   console.log("barcode modal loaded");
+  emit('barcodeLoaded', barcodeReader.value)
 };
 const onDecode = (text: string) => {
   console.log("barcode " + text);
@@ -42,6 +45,7 @@ const onDecode = (text: string) => {
       <div>
         <div class="field mb-2">
           <StreamBarcodeReader
+            ref="barcodeReader"
             torch
             no-front-cameras
             @decode="onDecode"

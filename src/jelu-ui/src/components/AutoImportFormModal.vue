@@ -75,6 +75,8 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
 || StringUtils.isNotBlank(form.isbn)
 || StringUtils.isNotBlank(form.authors))
 
+let barcodeReader: any = null
+
 function toggleScanModal() {
     oruga.modal.open({
       component: ScanModal,
@@ -90,6 +92,9 @@ function toggleScanModal() {
           if (barcode != null) {
             form.isbn = barcode
           }
+      },
+      barcodeLoaded: (reader) => {
+        barcodeReader = reader
       }
     },
       onClose: scanModalClosed
@@ -118,7 +123,13 @@ function togglePluginsModal() {
 
 function scanModalClosed() {
   console.log("scan modal closed")
+    barcodeReader.codeReader.stream
+        .getTracks()
+        .forEach(function (track) {
+            track.stop();
+        });
 }
+
 function pluginsModalClosed() {
   console.log("plugins modal closed")
 }

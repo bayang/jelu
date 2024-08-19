@@ -19,7 +19,7 @@
     "@saekitominaga/isbn-verify": "2.0.1",
     "@splidejs/splide": "4.1.4",
     "@splidejs/vue-splide": "0.6.12",
-    "@teckel/vue-barcode-reader": "^1.1.6",
+    "@teckel/vue-barcode-reader": "^1.1.7",
     "@vueuse/core": "10.9.0",
     "@vueuse/router": "10.9.0",
     "axios": "1.6.8",
