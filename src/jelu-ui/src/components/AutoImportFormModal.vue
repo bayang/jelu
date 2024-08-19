@@ -93,7 +93,7 @@ function toggleScanModal() {
             form.isbn = barcode
           }
       },
-      barcodeLoaded: (reader) => {
+      barcodeLoaded: (reader: any) => {
         barcodeReader = reader
       }
     },
@@ -125,7 +125,7 @@ function scanModalClosed() {
   console.log("scan modal closed")
     barcodeReader.codeReader.stream
         .getTracks()
-        .forEach(function (track) {
+        .forEach(function (track: any) {
             track.stop();
         });
 }
