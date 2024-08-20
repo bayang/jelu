@@ -40,12 +40,12 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       && rm -rf /var/lib/apt/lists/* \
       && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin install_dir=/ isolated=y \
       && strip --remove-section=.note.ABI-tag /calibre/lib/libQt6Core.so.6 \
-      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.9/goodreads-v1.7.9.zip \
+      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.8.2/goodreads-v1.8.2.zip \
       && /calibre/calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
   else \
       apt-get update && apt-get install --no-install-recommends --yes calibre \
-      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.7.9/goodreads-v1.7.9.zip \
+      && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.8.2/goodreads-v1.8.2.zip \
       && calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
   fi
