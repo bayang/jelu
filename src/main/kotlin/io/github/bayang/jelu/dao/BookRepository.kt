@@ -436,7 +436,7 @@ class BookRepository(
         query.withDistinct(true)
         val total = query.count()
         query.limit(pageable.pageSize, pageable.offset)
-        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookSeries, BookTable)
         query.orderBy(*orders)
         return PageImpl(
             query.map { resultRow -> wrapRow(resultRow, user.id.value) },
