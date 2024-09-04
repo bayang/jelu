@@ -1,3 +1,10 @@
+### [0.56.3](https://github.com/bayang/jelu/compare/v0.56.2...v0.56.3) (2024-09-04)
+
+
+### Bug Fixes
+
+* series sort [#135](https://github.com/bayang/jelu/issues/135) ([2b52709](https://github.com/bayang/jelu/commit/2b527091f0ebe056c4b0aa7fe020c13ba84594e2))
+
 ### [0.56.2](https://github.com/bayang/jelu/compare/v0.56.1...v0.56.2) (2024-08-19)
 
 
