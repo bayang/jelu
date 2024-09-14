@@ -109,7 +109,8 @@
         "current": "nuværende",
         "set_progress": "sæt dine aktuelle fremskridt",
         "user_avg_rating": "min gennemsnitlige bedømmelse : {rating}",
-        "avg_rating": "gennemsnitlig bedømmelse : {rating}"
+        "avg_rating": "gennemsnitlig bedømmelse : {rating}",
+        "add_quote": "add book quote"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -336,5 +337,12 @@
         "reorder_plugins": "omarranger plugins",
         "description": "Plugins vil blive kaldt fra toppen til bunden, deaktiverede plugins vil ikke blive brugt",
         "default_priority": "standard prioritet"
+    },
+    "book_quotes": {
+        "edit_quote": "Edit book quote",
+        "create": "Post a quote",
+        "quote": "quote | quotes",
+        "position": "position",
+        "delete_quote": "delete this quote ?"
     }
 }
