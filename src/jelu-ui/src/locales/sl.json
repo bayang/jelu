@@ -109,7 +109,8 @@
         "current": "current",
         "set_progress": "set your current progress",
         "user_avg_rating": "my average rating : {rating}",
-        "avg_rating": "average rating : {rating}"
+        "avg_rating": "average rating : {rating}",
+        "add_quote": "add book quote"
     },
     "settings": {
         "pick_language": "Izberite svoj jezik",
@@ -336,5 +337,12 @@
         "reorder_plugins": "prerazporedi vtičnike",
         "description": "Vtičniki bodo uporabljeni od zgoraj navzdol, onemogočeni vtičniki ne bodo uporabljeni",
         "default_priority": "privzeta prioriteta"
+    },
+    "book_quotes": {
+        "edit_quote": "Edit book quote",
+        "create": "Post a quote",
+        "quote": "quote | quotes",
+        "position": "position",
+        "delete_quote": "delete this quote ?"
     }
 }
