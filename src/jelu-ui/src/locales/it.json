@@ -109,7 +109,8 @@
         "current": "attuale",
         "set_progress": "imposta il tuo progresso attuale",
         "user_avg_rating": "la mia valutazione media : {rating}",
-        "avg_rating": "valutazione media : {rating}"
+        "avg_rating": "valutazione media : {rating}",
+        "add_quote": "add book quote"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
@@ -336,5 +337,12 @@
         "reorder_plugins": "riordina i plugin",
         "description": "I plugin saranno utilizzati dall'alto in basso, i plugin disabilitati non saranno utilizzati",
         "default_priority": "priorità predefinita"
+    },
+    "book_quotes": {
+        "edit_quote": "Edit book quote",
+        "create": "Post a quote",
+        "quote": "quote | quotes",
+        "position": "position",
+        "delete_quote": "delete this quote ?"
     }
 }
