@@ -109,7 +109,8 @@
         "current": "atual",
         "set_progress": "definir o seu progresso atual",
         "user_avg_rating": "minha classificação média: {rating}",
-        "avg_rating": "classificação média : {rating}"
+        "avg_rating": "classificação média : {rating}",
+        "add_quote": "adicionar citação de livro"
     },
     "settings": {
         "pick_language": "Escolha o seu idioma",
@@ -336,5 +337,12 @@
         "reorder_plugins": "reordenar extensões",
         "description": "As extensões serão chamadas de cima para baixo, as extensões desativadas não serão usadas",
         "default_priority": "prioridade padrão"
+    },
+    "book_quotes": {
+        "edit_quote": "Editar citação do livro",
+        "create": "Publicar uma citação",
+        "quote": "citação | citações",
+        "position": "posição",
+        "delete_quote": "apagar esta citação?"
     }
 }
