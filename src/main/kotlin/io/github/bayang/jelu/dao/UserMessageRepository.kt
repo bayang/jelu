@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.andWhere
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -41,7 +41,7 @@ class UserMessageRepository {
         pageable: Pageable,
     ): Page<UserMessage> {
         val query = UserMessageTable.join(UserTable, JoinType.LEFT)
-            .select { UserMessageTable.user eq user.id }
+            .selectAll().where { UserMessageTable.user eq user.id }
         if (read != null) {
             query.andWhere { UserMessageTable.read eq read }
         }

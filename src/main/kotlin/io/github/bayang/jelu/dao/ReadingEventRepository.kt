@@ -83,8 +83,7 @@ class ReadingEventRepository {
         bookId: UUID?,
     ): List<Int> {
         val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
-            .slice(ReadingEventTable.endDate.year())
-            .selectAll()
+            .select(ReadingEventTable.endDate.year())
         if (eventTypes != null && eventTypes.isNotEmpty()) {
             query.andWhere { ReadingEventTable.eventType inList eventTypes }
         }

@@ -106,8 +106,8 @@ class BookRepository(
 
     fun findAll(bookIds: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
-            .slice(BookTable.id)
-            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .select(BookTable.id)
+            .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         // required to avoir ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
@@ -163,8 +163,8 @@ class BookRepository(
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
             .join(SeriesTable, JoinType.LEFT, onColumn = SeriesTable.id, otherColumn = BookSeries.series)
-            .slice(BookTable.columns)
-            .selectAll()
+            .select(BookTable.columns)
+            // .selectAll()
             .withDistinct()
 
         if (!title?.trim().isNullOrBlank()) {
@@ -225,8 +225,8 @@ class BookRepository(
 
     fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
-            .slice(BookTable.id)
-            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .select(BookTable.id)
+            .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         // required to avoir ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
@@ -239,8 +239,8 @@ class BookRepository(
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
             .join(SeriesTable, JoinType.LEFT, onColumn = SeriesTable.id, otherColumn = BookSeries.series)
-            .slice(BookTable.columns)
-            .selectAll()
+            .select(BookTable.columns)
+            // .selectAll()
             .withDistinct()
 
         if (!title?.trim().isNullOrBlank()) {
@@ -383,13 +383,13 @@ class BookRepository(
         eventTypes: List<ReadingEventType>?,
     ): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
-            .slice(BookTable.id)
-            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .select(BookTable.id)
+            .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         val query = BookTable.join(BookTags, JoinType.LEFT)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
-            .slice(BookTable.columns)
-            .select { BookTags.tag eq tagId }
+            .select(BookTable.columns)
+            .where { BookTags.tag eq tagId }
         if (filter == LibraryFilter.ONLY_USER_BOOKS) {
             // only books where user has an userbook
             query.andWhere { UserBookTable.user eq user.id }
@@ -419,13 +419,13 @@ class BookRepository(
 
     fun findSeriesBooksById(seriesId: UUID, user: User, pageable: Pageable, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
-            .slice(BookTable.id)
-            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .select(BookTable.id)
+            .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         val query = BookTable.join(BookSeries, JoinType.LEFT)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
-            .slice(BookTable.columns)
-            .select { BookSeries.series eq seriesId }
+            .select(BookTable.columns)
+            .where { BookSeries.series eq seriesId }
         if (filter == LibraryFilter.ONLY_USER_BOOKS) {
             // only books where user has an userbook
             query.andWhere { UserBookTable.user eq user.id }
@@ -448,8 +448,8 @@ class BookRepository(
     fun findTagBooksByIdNoFilters(tagId: UUID, pageable: Pageable): Page<Book> {
         val query = BookTable.join(BookTags, JoinType.LEFT)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
-            .slice(BookTable.columns)
-            .select { BookTags.tag eq tagId }
+            .select(BookTable.columns)
+            .where { BookTags.tag eq tagId }
 
         query.withDistinct(true)
         val total = query.count()
@@ -484,14 +484,14 @@ class BookRepository(
     fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
         logger.trace { "role $role" }
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
-            .slice(BookTable.id)
-            .select { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
+            .select(BookTable.id)
+            .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         val query = BookTable.join(BookAuthors, JoinType.LEFT)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.book, otherColumn = BookTable.id)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
-            .slice(BookTable.columns)
-            .select {
+            .select(BookTable.columns)
+            .where {
                 when (role) {
                     Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId)
                     Role.AUTHOR -> BookAuthors.author eq authorId
@@ -522,8 +522,8 @@ class BookRepository(
         val query = BookTable.join(BookAuthors, JoinType.LEFT)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.book, otherColumn = BookTable.id)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
-            .slice(BookTable.columns)
-            .select {
+            .select(BookTable.columns)
+            .where {
                 when (role) {
                     Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId)
                     Role.AUTHOR -> BookAuthors.author eq authorId
@@ -545,8 +545,8 @@ class BookRepository(
     fun findSeriesBooksByIdNoFilters(seriesId: UUID, pageable: Pageable): Page<Book> {
         val query = BookTable.join(BookSeries, JoinType.LEFT)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
-            .slice(BookTable.columns)
-            .select {
+            .select(BookTable.columns)
+            .where {
                 BookSeries.series eq seriesId
             }
         query.withDistinct(true)
@@ -1027,7 +1027,7 @@ class BookRepository(
         val query: Query = UserBookTable.join(BookTable, JoinType.LEFT)
             .join(ReviewTable, JoinType.LEFT, additionalConstraint = { ReviewTable.book eq BookTable.id and(ReviewTable.user eq userID) })
             .join(reviewAlias, JoinType.LEFT, onColumn = reviewAlias[ReviewTable.book], otherColumn = BookTable.id)
-            .slice(cols).selectAll()
+            .select(cols)
             .andWhere { UserBookTable.user eq userID }
             .groupBy(UserBookTable.id)
             .withDistinct(true)
@@ -1212,8 +1212,8 @@ class BookRepository(
 
     fun booksWithSeries(pageable: Pageable): Page<Book> {
         val query = BookTable
-            .slice(BookTable.columns)
-            .select { BookTable.seriesBak.isNotNull() }
+            .select(BookTable.columns)
+            .where { BookTable.seriesBak.isNotNull() }
             .withDistinct()
 
         val total = query.count()
