@@ -1,3 +1,10 @@
+## [0.57.0](https://github.com/bayang/jelu/compare/v0.56.3...v0.57.0) (2024-09-14)
+
+
+### Features
+
+* add book quotes [#124](https://github.com/bayang/jelu/issues/124) ([3dbb33d](https://github.com/bayang/jelu/commit/3dbb33d14c0352e19d9b9cfe66ec61ece647bc23))
+
 ### [0.56.3](https://github.com/bayang/jelu/compare/v0.56.2...v0.56.3) (2024-09-04)
 
 
