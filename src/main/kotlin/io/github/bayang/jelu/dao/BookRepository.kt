@@ -41,7 +41,6 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.orWhere
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.data.domain.Page
@@ -120,8 +119,7 @@ class BookRepository(
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
             .join(SeriesTable, JoinType.LEFT, onColumn = SeriesTable.id, otherColumn = BookSeries.series)
-            .slice(BookTable.columns)
-            .selectAll()
+            .select(BookTable.columns)
             .withDistinct()
         if (!bookIds.isNullOrEmpty()) {
             val uuids = bookIds.map { UUID.fromString(it) }
