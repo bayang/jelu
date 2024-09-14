@@ -109,7 +109,8 @@
         "current": "dabartinis",
         "set_progress": "nustatyti esamą pažangą",
         "user_avg_rating": "mano vidutinis įvertinimas : {rating}",
-        "avg_rating": "vidutinis įvertinimas : {rating}"
+        "avg_rating": "vidutinis įvertinimas : {rating}",
+        "add_quote": "add book quote"
     },
     "settings": {
         "pick_language": "Pasirinkite kalbą",
@@ -336,5 +337,12 @@
         "reorder_plugins": "pertvarkyti įskiepius",
         "description": "Įskiepiai bus iškviesti iš viršaus į apačią, išjungti įskiepiai nebus naudojami",
         "default_priority": "numatytasis prioritetas"
+    },
+    "book_quotes": {
+        "edit_quote": "Edit book quote",
+        "create": "Post a quote",
+        "quote": "quote | quotes",
+        "position": "position",
+        "delete_quote": "delete this quote ?"
     }
 }
