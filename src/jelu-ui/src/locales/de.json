@@ -16,7 +16,7 @@
         "search": "Suche",
         "history": "Verlauf",
         "shelves": "Regale",
-        "tags-admin": "tags management"
+        "tags-admin": "tag Verwaltung"
     },
     "labels": {
         "search": "Suche",
@@ -84,8 +84,8 @@
         "books_tagged_name": "Bücher mit #{tag} getaggt",
         "upload_from_web": "Aus dem Web hochladen",
         "upload_from_file": "Aus Datei hochladen",
-        "upload_from_computer": "Upload from your computer",
-        "upload_from_server": "From Jelu server",
+        "upload_from_computer": "Von Ihrem Computer hochladen",
+        "upload_from_server": "Vom Jelu Server",
         "double_click_to_edit": "Zum Bearbeiten doppelklicken",
         "mark_read_or_drop": "Als gelesen markieren oder aufgeben",
         "preview": "Vorschau",
@@ -98,15 +98,15 @@
         "add": "Hinzufügen",
         "add_to_my_books": "Noch nicht in deinen Büchern, klicke um es hinzuzufügen",
         "add_translator": "Übersetzer:in hinzufügen",
-        "reading_list_from_name": "Reading list from {name}",
-        "search_query": "Enter search query...",
+        "reading_list_from_name": "Leseliste von {name}",
+        "search_query": "Suchanfrage eingeben...",
         "search_documentation": "Go to search documentation",
-        "orphan-tags": "orphan tags",
-        "find-tag": "find a tag",
-        "associated-books": "associated book(s)",
-        "operation-success": "operation successful",
+        "orphan-tags": "verwaiste Tags",
+        "find-tag": "tag finden",
+        "associated-books": "assoziiertes Buch/Bücher",
+        "operation-success": "Operation erfolgreich",
         "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
-        "current": "current",
+        "current": "aktuell",
         "set_progress": "set your current progress",
         "user_avg_rating": "my average rating : {rating}",
         "avg_rating": "average rating : {rating}"
@@ -125,7 +125,7 @@
         "username": "Benutzername",
         "role": "Benutzergruppe | Benutzergruppen",
         "users": "Benutzer",
-        "add_users": "Add users",
+        "add_users": "Benutzer hinzufügen",
         "users_management": "Benutzerverwaltung",
         "shortcuts": "Kurzbefehle",
         "shortcuts_tooltip": "Tastaturkürzel",
@@ -153,7 +153,7 @@
         "ascending": "Aufsteigend",
         "publication_date": "Veröffentlichungsdatum",
         "modification_date": "Änderungsdatum",
-        "page_count": "Page count",
+        "page_count": "Anzahl der Seiten",
         "user_avg_rating": "my average rating",
         "avg_rating": "average rating"
     },
@@ -213,7 +213,7 @@
         "in_read_list": "In der Leseliste",
         "translator": "Übersetzer:in | Übersetzer:innen",
         "borrowed": "Geliehen",
-        "current_page_number": "current page number"
+        "current_page_number": "aktuelle Seitenzahl"
     },
     "authors_merge": {
         "authors_merging_utility": "Autor:innen zusammenführen",
@@ -279,7 +279,7 @@
         "user_updated": "Benutzer aktualisiert: {name}",
         "login": "Anmelden",
         "edit_user": "Benutzer {name} bearbeiten",
-        "delete_user": "delete user"
+        "delete_user": "Benutzer löschen"
     },
     "shortcuts": {
         "toggle_bar": "Filterleiste umschalten",
@@ -326,15 +326,15 @@
         "all_reviews": "Alle Rezensionen",
         "delete_review": "Diese Rezension löschen?",
         "review_detail": "Go to review detail",
-        "book_all_reviews": "All reviews for this book"
+        "book_all_reviews": "Alle Bewertungen für dieses Buch"
     },
     "book_merge": {
-        "merge_books": "Merge books",
-        "fetch_metadata": "Fetch metadata"
+        "merge_books": "Bücher zusammenführen",
+        "fetch_metadata": "Metadaten abrufen"
     },
     "metadata": {
-        "reorder_plugins": "reorder plugins",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used",
-        "default_priority": "default priority"
+        "reorder_plugins": "Plugins neu sortieren",
+        "description": "Plugins werden von oben nach unten ausgeführt, deaktivierte Plugins werden nicht verwendet",
+        "default_priority": "Standardpriorität"
     }
 }
