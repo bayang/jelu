@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    id("org.springframework.boot") version "3.2.5"
-    id("io.spring.dependency-management") version "1.1.4"
-    val kotlinVersion = "1.8.22"
+    id("org.springframework.boot") version "3.3.3"
+    id("io.spring.dependency-management") version "1.1.6"
+    val kotlinVersion = "1.9.21"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
@@ -43,6 +43,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.data:spring-data-jdbc") // required since exposed 0.51.0
     implementation("org.springframework.session:spring-session-core")
     implementation("com.github.gotson:spring-session-caffeine:2.0.0")
     implementation("org.springframework.security:spring-security-ldap")
@@ -52,7 +53,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
 
     implementation("com.fasterxml.staxmate:staxmate:2.4.1")
-    implementation("com.fasterxml.woodstox:woodstox-core:6.6.2")
+    implementation("com.fasterxml.woodstox:woodstox-core:7.0.0")
 
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -62,16 +63,16 @@ dependencies {
 
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.liquibase:liquibase-core")
-    val exposedVersion = "0.49.0"
+    val exposedVersion = "0.53.0"
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
 
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-    implementation("com.github.slugify:slugify:3.0.6")
+    implementation("com.github.slugify:slugify:3.0.7")
     implementation("commons-io:commons-io:2.16.1")
     implementation("commons-validator:commons-validator:1.7")
-    implementation("org.jsoup:jsoup:1.17.2")
+    implementation("org.jsoup:jsoup:1.18.1")
     implementation("net.coobird:thumbnailator:0.4.20")
 
     implementation("org.apache.commons:commons-csv:1.10.0")
@@ -79,14 +80,14 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(module = "mockito-core")
     }
-    testImplementation("io.mockk:mockk:1.13.10")
+    testImplementation("io.mockk:mockk:1.13.12")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("io.projectreactor:reactor-test")
 
     val springdocVersion = "2.5.0"
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
 
-    val luceneVersion = "9.10.0"
+    val luceneVersion = "9.11.1"
     implementation("org.apache.lucene:lucene-core:$luceneVersion")
     implementation("org.apache.lucene:lucene-analysis-common:$luceneVersion")
     implementation("org.apache.lucene:lucene-queryparser:$luceneVersion")
