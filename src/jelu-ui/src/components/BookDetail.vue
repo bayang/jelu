@@ -22,6 +22,9 @@ import ReadingEventModalVue from './ReadingEventModal.vue'
 import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewCard from "./ReviewCard.vue"
 import ReviewModalVue from './ReviewModal.vue'
+import BookQuoteModalVue from './BookQuoteModal.vue'
+import { BookQuote } from "../model/BookQuote"
+import BookQuoteCard from "./BookQuoteCard.vue"
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -55,6 +58,8 @@ const getBookIsLoading: Ref<boolean> = ref(false)
 
 const userReviews: Ref<Array<Review>> = ref([])
 
+const bookQuotes: Ref<Array<BookQuote>> = ref([])
+
 const getBook = async () => {
   try {
     getBookIsLoading.value = true
@@ -62,6 +67,7 @@ const getBook = async () => {
     getBookIsLoading.value = false
     useTitle('Jelu | ' + book.value.book.title)
     getUserReviewsForBook()
+    getBookQuotesForBook()
   } catch (error) {
     console.log("failed get book : " + error);
     getBookIsLoading.value = false
@@ -75,6 +81,20 @@ const getUserReviewsForBook = async() => {
     console.log(res)
     if (! res.empty) {
       userReviews.value = res.content
+    }
+  })
+  .catch(err => {
+    console.log(err)
+  })
+}
+
+const getBookQuotesForBook = async() => {
+  await until(user.value).not.toBeNull()
+  dataService.findBookQuotes(user.value.id, book.value?.book.id, null, 0, 20)
+  .then(res => {
+    console.log(res)
+    if (! res.empty) {
+      bookQuotes.value = res.content
     }
   })
   .catch(err => {
@@ -109,6 +129,11 @@ function modalClosed() {
 function reviewModalClosed() {
   console.log("review modal closed")
   getUserReviewsForBook()
+}
+
+function bookQuoteModalClosed() {
+  console.log("book quote modal closed")
+    getBookQuotesForBook()
 }
 
 const toggleEdit = () => {
@@ -158,6 +183,24 @@ function toggleReviewModal(currentBook: Book|undefined, edit: boolean, review: R
         "review": review
       },
       onClose: reviewModalClosed
+    });
+  }
+}
+
+function toggleBookQuoteModal(currentBook: Book|undefined, edit: boolean, bookQuote: BookQuote|null) {
+  if (currentBook != null && currentBook != undefined) {
+    oruga.modal.open({
+      component: BookQuoteModalVue,
+      trapFocus: true,
+      active: true,
+      canCancel: ['x', 'button', 'outside'],
+      scroll: 'keep',
+      props: {
+        "book": currentBook,
+        "edit" : edit,
+        "bookQuote": bookQuote
+      },
+      onClose: bookQuoteModalClosed
     });
   }
 }
@@ -387,6 +430,36 @@ const deleteReview = async (reviewId: string) => {
     })
 }
 
+const deleteBookQuote = async (bookQuoteId: string) => {
+  console.log("delete " + bookQuoteId)
+  let abort = false
+  await ObjectUtils.swalMixin.fire({
+      html: `<p>${t('book_quotes.delete_quote')}</p>`,
+      showCancelButton: true,
+      showConfirmButton: false,
+      showDenyButton: true,
+      confirmButtonText: t('labels.delete'),
+      cancelButtonText: t('labels.dont_delete'),
+      denyButtonText: t('labels.delete'),
+    }).then((result) => {
+      if (result.isDismissed) {
+        abort = true
+        return;
+      }
+    })
+    console.log("abort " + abort)
+    if (abort) {
+      return
+    }
+    dataService.deleteBookQuote(bookQuoteId)
+    .then(res => {
+      getBookQuotesForBook()
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
+
 getBook()
 
 </script>
@@ -523,6 +596,28 @@ getBook()
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                  />
+                </svg>
+              </button>
+            </li>
+            <li>
+              <button
+                v-tooltip="t('labels.add_quote')"
+                class="btn btn-circle btn-outline border-none"
+                @click="toggleBookQuoteModal(book?.book, false, null)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
                   />
                 </svg>
               </button>
@@ -763,6 +858,30 @@ getBook()
           :show-edit="true"
           @update:delete="deleteReview($event)"
           @update:edit="toggleReviewModal(book?.book, true, review)"
+        />
+      </div>
+    </div>
+    <div
+      v-if="bookQuotes != null && bookQuotes.length > 0"
+      class="w-11/12 sm:w-10/12 flex flex-row flex-wrap justify-center mt-4 gap-4"
+    >
+      <router-link
+        class="link text-2xl typewriter"
+        :to="{ name: 'book-quotes', params: { bookId: book?.book.id } }"
+      >
+        {{ t('book_quotes.quote', 2) }}
+      </router-link>
+      <div
+        v-for="quote in bookQuotes"
+        :key="quote.id"
+      >
+        <book-quote-card
+          v-if="quote != null"
+          :book-quote="quote"
+          :show-delete="true"
+          :show-edit="true"
+          @update:delete="deleteBookQuote($event)"
+          @update:edit="toggleBookQuoteModal(book?.book, true, quote)"
         />
       </div>
     </div>

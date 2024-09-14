@@ -24,6 +24,7 @@ import { StringUtils } from "../utils/StringUtils";
 import { MetadataRequest } from "../model/MetadataRequest";
 import { Series } from "../model/Series";
 import { DirectoryListing } from "../model/DirectoryListing";
+import { BookQuote, CreateBookQuoteDto, UpdateBookQuoteDto } from "../model/BookQuote";
 
 class DataService {
 
@@ -74,6 +75,8 @@ class DataService {
   private API_SHELVES = '/shelves';
 
   private API_REVIEWS = '/reviews';
+  
+  private API_BOOK_QUOTES = '/book-quotes';
 
   private MODE: string;
 
@@ -1672,8 +1675,127 @@ class DataService {
       throw new Error("error metadata from path " + error)
     }
   }
+  
+  saveBookQuote = async (quote: CreateBookQuoteDto) => {
+    try {
+      const resp = await this.apiClient.post<BookQuote>(`${this.API_BOOK_QUOTES}`, quote)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error creating book quote " + error.response.status + " " + error.response.data.error)
+        throw new Error("error creating book quote " + error.response.status + " " + error)
+      }
+      console.log("error creating book quote " + (error as AxiosError).code)
+      throw new Error("error creating book quote " + error)
+    }
+  }
+
+  /*
+  * Dates are deserialized as strings, convert to Date instead
+  */
+  transformBookQuotes = (data: string) => {
+    const page = JSON.parse(data)
+    if (page.content) {
+      for (const ev of page.content) {
+        if (ev.modificationDate != null) {
+          ev.modificationDate = dayjs(ev.modificationDate).toDate()
+        }
+        if (ev.creationDate != null) {
+          ev.creationDate = dayjs(ev.creationDate).toDate()
+        }
+      }
+    }
+    return page
+  }
+
+  transformBookQuote = (data: string) => {
+    const ev = JSON.parse(data)
+    if (ev.modificationDate != null) {
+      ev.modificationDate = dayjs(ev.modificationDate).toDate()
+    }
+    if (ev.creationDate != null) {
+      ev.creationDate = dayjs(ev.creationDate).toDate()
+    }
+    return ev
+  }
+
+  findBookQuotes = async (userId?: string, bookId?: string, visibility: Visibility | null = null,
+    page?: number, size?: number, sort: string | null = null) => {
+    try {
+      const response = await this.apiClient.get<Page<BookQuote>>(`${this.API_BOOK_QUOTES}`, {
+        params: {
+          userId: userId,
+          bookId: bookId,
+          visibility: visibility,
+          page: page,
+          size: size,
+          sort: sort
+        },
+        transformResponse: this.transformBookQuotes
+      });
+      console.log("called book quotes")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error book quotes " + (error as AxiosError).code)
+      throw new Error("error book quotes " + error)
+    }
+  }
+  
+  findBookQuoteById = async (quoteId: string) => {
+    try {
+      const response = await this.apiClient.get<BookQuote>(`${this.API_BOOK_QUOTES}/${quoteId}`, {
+        transformResponse: this.transformBookQuote
+      });
+      console.log("called book quote")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error book quote " + (error as AxiosError).code)
+      throw new Error("error book quote " + error)
+    }
+  }
+
+  deleteBookQuote = async (quoteId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_BOOK_QUOTES}/${quoteId}`);
+      console.log("delete quote")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete quote " + (error as AxiosError).code)
+      throw new Error("error delete quote " + error)
+    }
+  }
+
+  updateBookQuote = async (quoteId: string, updateDto: UpdateBookQuoteDto) => {
+    try {
+      const response = await this.apiClient.put<BookQuote>(`${this.API_BOOK_QUOTES}/${quoteId}`, updateDto);
+      console.log("called update quote")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error update quote " + (error as AxiosError).code)
+      throw new Error("error update quote " + error)
+    }
+  }
 
 }
-
 
 export default new DataService()

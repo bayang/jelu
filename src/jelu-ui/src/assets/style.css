@@ -212,6 +212,12 @@
   width: min(600px, 90vw);
 }
 
+.quote-modal {
+  @apply m-5 sm:p-5;
+  height: min(700px, 75vh);
+  width: min(900px, 85vw);
+}
+
 .review-modal {
   @apply m-5 sm:p-5;
   height: min(700px, 75vh);

@@ -511,4 +511,37 @@
             ALTER TABLE user_book ADD current_page_number INTEGER;
         </sql>
     </changeSet>
+    <changeSet id="add_book_quote" author="byng">
+        <createTable tableName="book_quote">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="user" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_book_quote_user_id" references="user(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="book" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_book_quote_book_id" references="book(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="text" type="varchar(500000)"
+                    remarks="quote content">
+                <constraints nullable="false" />
+            </column>
+            <column name="visibility" type="varchar(200)"
+                    remarks="the review visibility enum">
+                <constraints nullable="false" />
+            </column>
+            <column name="position" type="varchar(300)"
+                    remarks="the quote position, eg: page 123, chapter 2, etc...">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
