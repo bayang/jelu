@@ -109,7 +109,8 @@
         "current": "huidige",
         "set_progress": "je huidige voortgang instellen",
         "user_avg_rating": "mijn gemiddelde beoordeling: {rating}",
-        "avg_rating": "gemiddelde beoordeling : {rating}"
+        "avg_rating": "gemiddelde beoordeling : {rating}",
+        "add_quote": "add book quote"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -336,5 +337,12 @@
         "reorder_plugins": "plugins herordenen",
         "description": "Plugins worden van boven naar beneden aangeroepen, uitgeschakelde plugins zullen niet worden gebruikt",
         "default_priority": "standaard prioriteit"
+    },
+    "book_quotes": {
+        "edit_quote": "Edit book quote",
+        "create": "Post a quote",
+        "quote": "quote | quotes",
+        "position": "position",
+        "delete_quote": "delete this quote ?"
     }
 }
