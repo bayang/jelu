@@ -110,7 +110,7 @@
         "set_progress": "définir votre progression",
         "user_avg_rating": "ma note moyenne : {rating}",
         "avg_rating": "note moyenne : {rating}",
-        "add_quote": "add book quote"
+        "add_quote": "ajouter une citation de livre"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -339,10 +339,10 @@
         "default_priority": "Priorité par défaut"
     },
     "book_quotes": {
-        "edit_quote": "Edit book quote",
-        "create": "Post a quote",
-        "quote": "quote | quotes",
+        "edit_quote": "Modifier la citation",
+        "create": "Publier une citation",
+        "quote": "citation | citations",
         "position": "position",
-        "delete_quote": "delete this quote ?"
+        "delete_quote": "supprimer cette citation ?"
     }
 }
