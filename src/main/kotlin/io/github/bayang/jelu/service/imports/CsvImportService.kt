@@ -6,10 +6,12 @@ import io.github.bayang.jelu.dao.ImportSource
 import io.github.bayang.jelu.dao.MessageCategory
 import io.github.bayang.jelu.dao.ProcessingStatus
 import io.github.bayang.jelu.dao.ReadingEventType
+import io.github.bayang.jelu.dao.Visibility
 import io.github.bayang.jelu.dto.AuthorDto
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.CreateReadingEventDto
+import io.github.bayang.jelu.dto.CreateReviewDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.CreateUserMessageDto
 import io.github.bayang.jelu.dto.ImportConfigurationDto
@@ -24,6 +26,7 @@ import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.service.ImportService
 import io.github.bayang.jelu.service.ReadingEventService
+import io.github.bayang.jelu.service.ReviewService
 import io.github.bayang.jelu.service.UserMessageService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
@@ -40,6 +43,7 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
+import java.time.Instant
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -78,6 +82,7 @@ class CsvImportService(
     private val userService: UserService,
     private val readingEventService: ReadingEventService,
     private val userMessageService: UserMessageService,
+    private val reviewService: ReviewService,
 ) {
 
     // maybe later : use coroutines ?
@@ -320,6 +325,29 @@ class CsvImportService(
                     ),
                     userEntity,
                 )
+            }
+            val rating: Int = if (importEntity.rating != null) (importEntity.rating!! * 2) else 0
+            if (!importEntity.review.isNullOrEmpty() || rating > 0) {
+                val existing = reviewService.find(
+                    userEntity.id.value,
+                    savedUserBook.book.id!!,
+                    null,
+                    null,
+                    null,
+                    Pageable.ofSize(10),
+                )
+                if (existing.isEmpty) {
+                    reviewService.save(
+                        CreateReviewDto(
+                            Instant.now(),
+                            if (importEntity.review.isNullOrEmpty()) "" else importEntity.review!!,
+                            rating.toDouble(),
+                            Visibility.PUBLIC,
+                            savedUserBook.book.id,
+                        ),
+                        userEntity,
+                    )
+                }
             }
             importService.updateStatus(importEntity.id.value, ProcessingStatus.IMPORTED)
             return ProcessingStatus.IMPORTED
@@ -651,6 +679,8 @@ class CsvImportService(
             if (ownedCopies != null && ownedCopies > 0) {
                 dto.owned = true
             }
+            dto.review = cleanString(record.get(19))
+            dto.rating = parseNumber(record.get(7))
             dto.importSource = ImportSource.GOODREADS
             return dto
         }

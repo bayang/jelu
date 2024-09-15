@@ -544,4 +544,10 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="add_rating_review_columns" author="byng">
+        <sql>
+            ALTER TABLE import_entity ADD rating INTEGER;
+            ALTER TABLE import_entity ADD review varchar(500000);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -29,6 +29,8 @@ object ImportEntityTable : UUIDTable("import_entity") {
     var userId: Column<UUID> = uuid(name = "userId")
     var shouldFetchMetadata: Column<Boolean> = bool("should_fetch_metadata")
     var owned: Column<Boolean?> = bool("owned").nullable()
+    var rating: Column<Int?> = integer(name = "rating").nullable()
+    var review: Column<String?> = varchar("review", 500000).nullable()
 }
 
 class ImportEntity(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -53,6 +55,8 @@ class ImportEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     var userId by ImportEntityTable.userId
     var shouldFetchMetadata by ImportEntityTable.shouldFetchMetadata
     var owned by ImportEntityTable.owned
+    var rating by ImportEntityTable.rating
+    var review by ImportEntityTable.review
 }
 
 enum class ProcessingStatus {

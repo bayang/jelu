@@ -110,6 +110,27 @@ class CsvImportServiceTest(
     }
 
     @Test
+    fun testParseRatingAndReview() {
+        val userId = user().id.value
+        val csv = File(this::class.java.getResource("/csv-import/goodreads_library_export_one_line_modified_review.csv").file)
+        csvImportService.parse(csv, userId, importConfigurationDto())
+        val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        Assertions.assertEquals(4, nb)
+        val dtos = importService.getByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
+        dtos.forEach {
+            if (it.title.equals("Dr Jekyll and Mr Hyde")) {
+                Assertions.assertEquals("9780141973821", it.isbn13)
+                Assertions.assertEquals("Robert Louis Stevenson", it.authors)
+                Assertions.assertEquals(5, it.rating)
+                Assertions.assertTrue(it.review?.equals("Despite knowing the twist, I still enjoyed the book greatly. Excellently written.")!!)
+            } else if (it.title.equals("Povídky I")) {
+                Assertions.assertEquals(3, it.rating)
+                Assertions.assertTrue(it.review?.contains("Josefine (die Sängerin, oder Das Volk der Mäuse), and First Sorrow (Erstes Leid).<br/><br/>It should come as no surprise, then, that I like Kafka's more narrative-driven works better. In this collection, that would be:<br/><br/>(longer ones)<br/>* In the Penal Colony (In der Strafkolonie)<br/>* The Metamorphosis (Die Verwandlung)<br/>* The Stoker (Der Heizer)<br/>(shorter ones)<br/>* Before the Law (Vor dem Gesetz, amazing!)<br/>* The Dream (Ein Traum)<br/>* The Bucket")!!)
+            }
+        }
+    }
+
+    @Test
     fun testParseIsbnList() {
         val userId = user().id.value
         val csv = File(this::class.java.getResource("/csv-import/isbns-import.txt").file)

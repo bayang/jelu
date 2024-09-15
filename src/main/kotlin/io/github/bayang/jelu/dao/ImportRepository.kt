@@ -69,6 +69,8 @@ class ImportRepository {
             this.importSource = entity.importSource!!
             this.librarythingId = entity.librarythingId
             this.owned = entity.owned
+            this.rating = entity.rating
+            this.review = entity.review
         }
     }
 

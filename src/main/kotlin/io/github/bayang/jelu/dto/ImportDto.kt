@@ -19,6 +19,8 @@ class ImportDto {
     var readCount: Int? = null
     var owned: Boolean? = null
     var importSource: ImportSource? = null
+    var review: String? = null
+    var rating: Int? = null
 }
 data class ImportConfigurationDto(
     var shouldFetchMetadata: Boolean,
