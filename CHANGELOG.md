@@ -1,3 +1,15 @@
+## [0.58.0](https://github.com/bayang/jelu/compare/v0.57.0...v0.58.0) (2024-09-15)
+
+
+### Features
+
+* also import reviews from goodreads [#132](https://github.com/bayang/jelu/issues/132) ([4ff2cd1](https://github.com/bayang/jelu/commit/4ff2cd1d1883d3045374aa71cb6e6cd04ef51269))
+
+
+### Bug Fixes
+
+* deleting quote or review not updating book detail page ([d9d7a63](https://github.com/bayang/jelu/commit/d9d7a632666dcb5b75040a364523b07cb7c63455))
+
 ## [0.57.0](https://github.com/bayang/jelu/compare/v0.56.3...v0.57.0) (2024-09-14)
 
 
