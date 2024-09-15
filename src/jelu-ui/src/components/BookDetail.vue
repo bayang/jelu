@@ -79,9 +79,7 @@ const getUserReviewsForBook = async() => {
   dataService.findReviews(user.value.id, book.value?.book.id, null, null, null, 0, 20)
   .then(res => {
     console.log(res)
-    if (! res.empty) {
-      userReviews.value = res.content
-    }
+    userReviews.value = res.content
   })
   .catch(err => {
     console.log(err)
@@ -93,9 +91,7 @@ const getBookQuotesForBook = async() => {
   dataService.findBookQuotes(user.value.id, book.value?.book.id, null, 0, 20)
   .then(res => {
     console.log(res)
-    if (! res.empty) {
-      bookQuotes.value = res.content
-    }
+    bookQuotes.value = res.content
   })
   .catch(err => {
     console.log(err)
