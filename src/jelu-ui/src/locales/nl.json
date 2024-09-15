@@ -110,7 +110,7 @@
         "set_progress": "je huidige voortgang instellen",
         "user_avg_rating": "mijn gemiddelde beoordeling: {rating}",
         "avg_rating": "gemiddelde beoordeling : {rating}",
-        "add_quote": "add book quote"
+        "add_quote": "voeg citaat uit boek toe"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -339,10 +339,10 @@
         "default_priority": "standaard prioriteit"
     },
     "book_quotes": {
-        "edit_quote": "Edit book quote",
-        "create": "Post a quote",
-        "quote": "quote | quotes",
-        "position": "position",
-        "delete_quote": "delete this quote ?"
+        "edit_quote": "Bewerk citaat uit boek",
+        "create": "Citaat plaatsen",
+        "quote": "citaat | citaten",
+        "position": "positie",
+        "delete_quote": "dit citaat verwijderen?"
     }
 }
