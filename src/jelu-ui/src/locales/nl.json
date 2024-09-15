@@ -109,7 +109,8 @@
         "current": "huidige",
         "set_progress": "je huidige voortgang instellen",
         "user_avg_rating": "mijn gemiddelde beoordeling: {rating}",
-        "avg_rating": "gemiddelde beoordeling : {rating}"
+        "avg_rating": "gemiddelde beoordeling : {rating}",
+        "add_quote": "voeg citaat uit boek toe"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -336,5 +337,12 @@
         "reorder_plugins": "plugins herordenen",
         "description": "Plugins worden van boven naar beneden aangeroepen, uitgeschakelde plugins zullen niet worden gebruikt",
         "default_priority": "standaard prioriteit"
+    },
+    "book_quotes": {
+        "edit_quote": "Bewerk citaat uit boek",
+        "create": "Citaat plaatsen",
+        "quote": "citaat | citaten",
+        "position": "positie",
+        "delete_quote": "dit citaat verwijderen?"
     }
 }

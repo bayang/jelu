@@ -109,7 +109,8 @@
         "current": "bieżące",
         "set_progress": "ustaw swój aktualny postęp",
         "user_avg_rating": "moja średnia ocena: {rating}",
-        "avg_rating": "średnia ocena: {rating}"
+        "avg_rating": "średnia ocena: {rating}",
+        "add_quote": "add book quote"
     },
     "settings": {
         "pick_language": "Wybierz język",
@@ -336,5 +337,12 @@
         "reorder_plugins": "zmień kolejność wtyczek",
         "description": "Wtyczki zostaną wczytane od góry do dołu, a wyłączone wtyczki nie zostaną użyte",
         "default_priority": "domyślny priorytet"
+    },
+    "book_quotes": {
+        "edit_quote": "Edit book quote",
+        "create": "Post a quote",
+        "quote": "quote | quotes",
+        "position": "position",
+        "delete_quote": "delete this quote ?"
     }
 }

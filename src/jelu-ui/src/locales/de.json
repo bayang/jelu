@@ -39,7 +39,7 @@
         "invalid_isbn13": "Ungültige ISBN13",
         "auto_fill_doc": "Versuche einige Felder aus dem Web automatisch auszufüllen, wenn ISBN oder Titel angegeben wird",
         "auto_fill_book": "Try to auto fill some fields from an epub or opf file",
-        "auto_import_disabled": "Auto import requires a metadata plugin to be installed",
+        "auto_import_disabled": "Auto Import erfordert die Installation eines Metadaten-Plugins",
         "auto_fill": "Automatisch ausfüllen",
         "add_author": "Autor:in hinzufügen",
         "add_tag": "Tag hinzufügen",
@@ -107,9 +107,10 @@
         "operation-success": "Operation erfolgreich",
         "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
         "current": "aktuell",
-        "set_progress": "set your current progress",
-        "user_avg_rating": "my average rating : {rating}",
-        "avg_rating": "average rating : {rating}"
+        "set_progress": "aktuellen Fortschritt festlegen",
+        "user_avg_rating": "Meine durchschnittliche Bewertung: {rating}",
+        "avg_rating": "durchschnittliche Bewertung: {rating}",
+        "add_quote": "add book quote"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -145,7 +146,7 @@
         "date_added": "Hinzugefügt",
         "date_added_to_list": "Zur Liste hinzugefügt",
         "title": "Titel",
-        "random": "Random",
+        "random": "Zufällig",
         "publisher": "Verlag",
         "series": "Serie",
         "series_number": "Nummer in der Serie",
@@ -154,8 +155,8 @@
         "publication_date": "Veröffentlichungsdatum",
         "modification_date": "Änderungsdatum",
         "page_count": "Anzahl der Seiten",
-        "user_avg_rating": "my average rating",
-        "avg_rating": "average rating"
+        "user_avg_rating": "Meine durchschnittliche Bewertung",
+        "avg_rating": "durchschnittliche Bewertung"
     },
     "reading_events": {
         "finished": "Fertig gelesen",
@@ -336,5 +337,12 @@
         "reorder_plugins": "Plugins neu sortieren",
         "description": "Plugins werden von oben nach unten ausgeführt, deaktivierte Plugins werden nicht verwendet",
         "default_priority": "Standardpriorität"
+    },
+    "book_quotes": {
+        "edit_quote": "Edit book quote",
+        "create": "Post a quote",
+        "quote": "quote | quotes",
+        "position": "position",
+        "delete_quote": "delete this quote ?"
     }
 }
