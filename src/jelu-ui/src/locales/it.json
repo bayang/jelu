@@ -110,7 +110,7 @@
         "set_progress": "imposta il tuo progresso attuale",
         "user_avg_rating": "la mia valutazione media : {rating}",
         "avg_rating": "valutazione media : {rating}",
-        "add_quote": "add book quote"
+        "add_quote": "aggiungi una citazione dal libro"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
@@ -341,8 +341,8 @@
     "book_quotes": {
         "edit_quote": "Edit book quote",
         "create": "Post a quote",
-        "quote": "quote | quotes",
+        "quote": "citazione | citazioni",
         "position": "position",
-        "delete_quote": "delete this quote ?"
+        "delete_quote": "cancellare questa citazione?"
     }
 }
