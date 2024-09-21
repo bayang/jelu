@@ -110,7 +110,9 @@
         "set_progress": "nustatyti esamą pažangą",
         "user_avg_rating": "mano vidutinis įvertinimas : {rating}",
         "avg_rating": "vidutinis įvertinimas : {rating}",
-        "add_quote": "add book quote"
+        "add_quote": "add book quote",
+        "description": "description",
+        "user_rating": "my rating : {rating}"
     },
     "settings": {
         "pick_language": "Pasirinkite kalbą",
@@ -344,5 +346,10 @@
         "quote": "quote | quotes",
         "position": "position",
         "delete_quote": "delete this quote ?"
+    },
+    "series": {
+        "edit_series": "edit series",
+        "create_series": "create series",
+        "name": "name"
     }
 }
