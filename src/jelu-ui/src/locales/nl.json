@@ -110,7 +110,9 @@
         "set_progress": "je huidige voortgang instellen",
         "user_avg_rating": "mijn gemiddelde beoordeling: {rating}",
         "avg_rating": "gemiddelde beoordeling : {rating}",
-        "add_quote": "voeg citaat uit boek toe"
+        "add_quote": "voeg citaat uit boek toe",
+        "description": "description",
+        "user_rating": "my rating : {rating}"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -344,5 +346,10 @@
         "quote": "citaat | citaten",
         "position": "positie",
         "delete_quote": "dit citaat verwijderen?"
+    },
+    "series": {
+        "edit_series": "edit series",
+        "create_series": "create series",
+        "name": "name"
     }
 }
