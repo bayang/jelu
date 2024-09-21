@@ -112,7 +112,7 @@
         "avg_rating": "note moyenne : {rating}",
         "add_quote": "ajouter une citation de livre",
         "description": "description",
-        "user_rating": "my rating : {rating}"
+        "user_rating": "ma note : {rating}"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -348,8 +348,8 @@
         "delete_quote": "supprimer cette citation ?"
     },
     "series": {
-        "edit_series": "edit series",
-        "create_series": "create series",
-        "name": "name"
+        "edit_series": "modifier la série",
+        "create_series": "créer une série",
+        "name": "nom"
     }
 }
