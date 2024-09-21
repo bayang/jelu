@@ -18,6 +18,7 @@ const props = defineProps<{
   forceSelect: boolean,
   showSelect: boolean,
   proposeAdd: boolean,
+  seriesId?: string,
 }>();
 const emit = defineEmits<{
   (e: 'update:modalClosed', open: boolean): void,
@@ -87,6 +88,17 @@ const showProgressBar = (book: UserBook) => {
 
 const progressBarTooltip = computed(() => {
   return props.book.currentPageNumber != null ? `p. ${props.book.currentPageNumber}` : `${props.book.percentRead} %`
+})
+
+const currentSeries = computed(() => {
+  if (props.book.book.series != null &&      props.book.book.series?.length > 0) {
+    if (props.seriesId != null) {
+      return props.book.book.series?.find(s => s.seriesId === props.seriesId)
+    } else {
+      return props.book.book.series[0]
+    }
+  }
+  return null
 })
 
 function modalClosed() {
@@ -233,12 +245,12 @@ watch(checked, (newVal, oldVal) => {
         >{{ eventText }}</span>
         <div class="flex">
           <router-link
-            v-if="book.book.series && book.book.series.length > 0"
-            v-tooltip="book.book.series[0].name"
+            v-if="currentSeries != null"
+            v-tooltip="currentSeries.name"
             class="badge mx-1"
-            :to="{ name: 'series', params: { seriesId: book.book.series[0].seriesId } }"
+            :to="{ name: 'series', params: { seriesId: currentSeries.seriesId } }"
           >
-            #{{ book.book.series[0].numberInSeries }}
+            #{{ currentSeries.numberInSeries }}
           </router-link>
           <span
             v-if="book.userAvgRating"

@@ -292,6 +292,7 @@ getBooks()
         :force-select="selectAll"
         :show-select="showSelect"
         :propose-add="true"
+        :series-id="series.id"
         class="h-full"
         @update:modal-closed="modalClosed"
         @update:checked="cardChecked"
