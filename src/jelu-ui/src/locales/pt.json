@@ -110,7 +110,9 @@
         "set_progress": "definir o seu progresso atual",
         "user_avg_rating": "minha classificação média: {rating}",
         "avg_rating": "classificação média : {rating}",
-        "add_quote": "adicionar citação de livro"
+        "add_quote": "adicionar citação de livro",
+        "description": "description",
+        "user_rating": "my rating : {rating}"
     },
     "settings": {
         "pick_language": "Escolha o seu idioma",
@@ -344,5 +346,10 @@
         "quote": "citação | citações",
         "position": "posição",
         "delete_quote": "apagar esta citação?"
+    },
+    "series": {
+        "edit_series": "edit series",
+        "create_series": "create series",
+        "name": "name"
     }
 }
