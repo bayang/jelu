@@ -139,12 +139,36 @@ data class SeriesDto(
     val creationDate: Instant?,
     val modificationDate: Instant?,
     val name: String,
+    var avgRating: Double? = null,
+    var userRating: Double? = null,
+    var description: String?,
 )
 data class SeriesOrderDto(
     val seriesId: UUID? = null,
     var name: String,
     var numberInSeries: Double?,
 )
-data class SeriesUpdateDto(
+
+data class SeriesCreateDto(
     val name: String,
+    val rating: Double?,
+    val description: String?,
+)
+
+data class SeriesUpdateDto(
+    val name: String?,
+    val rating: Double?,
+    val description: String?,
+)
+
+data class CreateSeriesRatingDto(
+    val seriesId: UUID,
+    var rating: Double,
+)
+data class SeriesRatingDto(
+    val seriesId: UUID,
+    val userId: UUID,
+    var rating: Double,
+    val creationDate: Instant?,
+    val modificationDate: Instant?,
 )

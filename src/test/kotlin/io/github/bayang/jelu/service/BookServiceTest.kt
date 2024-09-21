@@ -10,10 +10,14 @@ import io.github.bayang.jelu.dto.AuthorDto
 import io.github.bayang.jelu.dto.AuthorUpdateDto
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
+import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.SeriesCreateDto
+import io.github.bayang.jelu.dto.SeriesDto
 import io.github.bayang.jelu.dto.SeriesOrderDto
+import io.github.bayang.jelu.dto.SeriesRatingDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -60,6 +64,7 @@ class BookServiceTest(
     @BeforeAll
     fun setupUser() {
         userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
+        userService.save(CreateUserDto(login = "testuser2", password = "1234", isAdmin = false))
         jeluProperties.files.images = tempDir.absolutePath
         luceneHelper.getIndexWriter().use { indexWriter ->
             indexWriter.deleteDocuments(Term(LuceneEntity.TYPE, LuceneEntity.Book.type))
@@ -88,13 +93,76 @@ class BookServiceTest(
         bookService.findAllTags(null, Pageable.ofSize(20)).content.forEach {
             bookService.deleteTagById(it.id!!)
         }
-        bookService.findAllSeries(null, Pageable.ofSize(20)).content.forEach {
+        bookService.findAllSeries(null, null, Pageable.ofSize(20)).content.forEach {
             bookService.deleteSeriesById(it.id!!)
         }
         luceneHelper.getIndexWriter().use { indexWriter ->
             indexWriter.deleteDocuments(Term(LuceneEntity.TYPE, LuceneEntity.Book.type))
             indexWriter.deleteDocuments(Term(LuceneEntity.TYPE, LuceneEntity.Author.type))
         }
+    }
+
+    @Test
+    fun testSeriesRatingManualRating() {
+        val s1: SeriesDto = bookService.saveSeries(SeriesCreateDto("series", null, null), user())
+        val r1: SeriesRatingDto = bookService.save(CreateSeriesRatingDto(seriesId = s1.id!!, rating = 4.3), user())
+        var findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        Assertions.assertEquals(4.3, findSeriesById.userRating)
+        Assertions.assertEquals(4.3, findSeriesById.avgRating)
+
+        val r2: SeriesRatingDto = bookService.save(CreateSeriesRatingDto(seriesId = s1.id!!, rating = 7.2), user2())
+        findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        Assertions.assertEquals(4.3, findSeriesById.userRating)
+        Assertions.assertEquals(5.75, findSeriesById.avgRating)
+
+        val s2: SeriesDto = bookService.saveSeries(SeriesCreateDto("my other series", null, null), user())
+        val r3: SeriesRatingDto = bookService.save(CreateSeriesRatingDto(seriesId = s2.id!!, rating = 3.3), user())
+
+        var findAllSeries = bookService.findAllSeries("seri", null, Pageable.ofSize(20))
+        Assertions.assertEquals(2, findAllSeries.totalElements)
+        Assertions.assertNull(findAllSeries.content[0].userRating)
+        Assertions.assertNull(findAllSeries.content[1].userRating)
+
+        findAllSeries = bookService.findAllSeries("seri", user().id.value, Pageable.ofSize(20))
+        Assertions.assertEquals(2, findAllSeries.totalElements)
+        Assertions.assertNotNull(findAllSeries.content[0].userRating)
+        Assertions.assertNotNull(findAllSeries.content[1].userRating)
+    }
+
+    @Test
+    fun testSeriesRatingImplicitRating() {
+        val s1: SeriesDto = bookService.saveSeries(SeriesCreateDto("series", 4.3, null), user())
+        var findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        Assertions.assertEquals(4.3, findSeriesById.userRating)
+        Assertions.assertEquals(4.3, findSeriesById.avgRating)
+
+        bookService.updateSeries(s1.id!!, SeriesUpdateDto(name = null, rating = 7.2, null), user2())
+        findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        Assertions.assertEquals(4.3, findSeriesById.userRating)
+        Assertions.assertEquals(5.75, findSeriesById.avgRating)
+
+        val s2: SeriesDto = bookService.saveSeries(SeriesCreateDto("my other series", 3.3, null), user())
+
+        var findAllSeries = bookService.findAllSeries("seri", null, Pageable.ofSize(20))
+        Assertions.assertEquals(2, findAllSeries.totalElements)
+        Assertions.assertNull(findAllSeries.content[0].userRating)
+        Assertions.assertNull(findAllSeries.content[1].userRating)
+
+        findAllSeries = bookService.findAllSeries("seri", user().id.value, Pageable.ofSize(20))
+        Assertions.assertEquals(2, findAllSeries.totalElements)
+        Assertions.assertNotNull(findAllSeries.content[0].userRating)
+        Assertions.assertNotNull(findAllSeries.content[1].userRating)
+    }
+
+    @Test
+    fun testSeriesDeleteCascadesRating() {
+        val s1: SeriesDto = bookService.saveSeries(SeriesCreateDto("series", 4.3, null), user())
+        val findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        Assertions.assertEquals(4.3, findSeriesById.userRating)
+        Assertions.assertEquals(4.3, findSeriesById.avgRating)
+        bookService.deleteSeriesById(s1.id!!)
+        val seriesRating = bookService.findSeriesRating(s1.id!!, user().id.value)
+        Assertions.assertNull(seriesRating)
     }
 
     @Test
@@ -382,7 +450,7 @@ class BookServiceTest(
 
     @Test
     fun testInsertBooksSeriesBothNoPositionDuplicateExistingSeries() {
-        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        val saved = bookService.saveSeries(SeriesCreateDto("series 1", null, null), user())
         Assertions.assertEquals("series 1", saved.name)
         Assertions.assertNotNull(saved.id)
         val s1 = SeriesOrderDto(name = "series 1", numberInSeries = null)
@@ -438,7 +506,7 @@ class BookServiceTest(
 
     @Test
     fun testInsertBooksSeriesBothNoPositionExistingSeries() {
-        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        val saved = bookService.saveSeries(SeriesCreateDto("series 1", null, null), user())
         Assertions.assertEquals("series 1", saved.name)
         Assertions.assertNotNull(saved.id)
         val s1 = SeriesOrderDto(name = "series 1", numberInSeries = null)
@@ -497,7 +565,7 @@ class BookServiceTest(
 
     @Test
     fun testInsertBooksExistingSeries() {
-        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        val saved = bookService.saveSeries(SeriesCreateDto("series 1", null, null), user())
         Assertions.assertEquals("series 1", saved.name)
         Assertions.assertNotNull(saved.id)
         val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
@@ -550,7 +618,7 @@ class BookServiceTest(
 
     @Test
     fun testUpdateBooksSeries() {
-        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        val saved = bookService.saveSeries(SeriesCreateDto("series 1", null, null), user())
         Assertions.assertEquals("series 1", saved.name)
         Assertions.assertNotNull(saved.id)
         val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
@@ -615,7 +683,7 @@ class BookServiceTest(
         Assertions.assertEquals(1.0, res.series?.get(1)?.numberInSeries)
 
         // series still exists, without books
-        val series = bookService.findAllSeries(name = "series2", Pageable.ofSize(5))
+        val series = bookService.findAllSeries(name = "series2", null, Pageable.ofSize(5))
         Assertions.assertEquals("series2", series.content[0].name)
 
         val booksById1 =
@@ -629,7 +697,7 @@ class BookServiceTest(
 
     @Test
     fun testInsertBooksExistingSeriesDifferentPosition() {
-        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        val saved = bookService.saveSeries(SeriesCreateDto("series 1", null, null), user())
         Assertions.assertEquals("series 1", saved.name)
         Assertions.assertNotNull(saved.id)
         val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
@@ -682,7 +750,7 @@ class BookServiceTest(
 
     @Test
     fun testInsertBooksExistingDuplicateSeries() {
-        val saved = bookService.saveSeries(SeriesUpdateDto("series 1"))
+        val saved = bookService.saveSeries(SeriesCreateDto("series 1", null, null), user())
         Assertions.assertEquals("series 1", saved.name)
         Assertions.assertNotNull(saved.id)
         val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0)
@@ -869,7 +937,7 @@ class BookServiceTest(
 
     @Test
     fun testUpdateSeriesRebuildsIndex() {
-        val saved = bookService.saveSeries(SeriesUpdateDto("series1"))
+        val saved = bookService.saveSeries(SeriesCreateDto("series1", null, null), user())
         Assertions.assertEquals("series1", saved.name)
         Assertions.assertNotNull(saved.id)
         val s1 = SeriesOrderDto(name = "series1", numberInSeries = 1.0)
@@ -923,11 +991,25 @@ class BookServiceTest(
         Assertions.assertEquals(1, entitiesIds?.size)
         Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
 
-        val updateSeries = bookService.updateSeries(saved.id!!, SeriesUpdateDto(name = "series3"))
+        var updateSeries = bookService.updateSeries(
+            saved.id!!,
+            SeriesUpdateDto(name = "series3", rating = null, null),
+            user(),
+        )
         Assertions.assertEquals("series3", updateSeries.name)
+        Assertions.assertNull(updateSeries.description)
+
+        updateSeries = bookService.updateSeries(
+            saved.id!!,
+            SeriesUpdateDto(name = null, rating = null, "this is a description of my series. <br> A long time ago bla bla bla"),
+            user(),
+        )
+        Assertions.assertEquals("series3", updateSeries.name)
+        Assertions.assertEquals("this is a description of my series. <br> A long time ago bla bla bla", updateSeries.description)
 
         val search = bookService.findSeriesById(saved.id!!)
         Assertions.assertEquals("series3", search.name)
+        Assertions.assertEquals("this is a description of my series. <br> A long time ago bla bla bla", search.description)
         entitiesIds = luceneHelper.searchEntitiesIds("series:series1", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)
 
@@ -2268,6 +2350,11 @@ class BookServiceTest(
 
     fun user(): User {
         val userDetail = userService.loadUserByUsername("testuser")
+        return (userDetail as JeluUser).user
+    }
+
+    fun user2(): User {
+        val userDetail = userService.loadUserByUsername("testuser2")
         return (userDetail as JeluUser).user
     }
 }

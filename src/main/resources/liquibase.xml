@@ -550,4 +550,34 @@
             ALTER TABLE import_entity ADD review varchar(500000);
         </sql>
     </changeSet>
+    <changeSet id="add_series_rating" author="byng">
+        <createTable tableName="series_rating">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="user" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_rating_user_id" references="user(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="series" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_rating_series_id" references="series(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="rating" type="double"
+                    remarks="The review rating">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="add_series_description" author="byng">
+        <sql>
+            ALTER TABLE "series" ADD description varchar(500000);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

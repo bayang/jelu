@@ -14,6 +14,8 @@ import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
 import { Series } from '../model/Series';
+import SeriesModalVue from './SeriesModal.vue'
+import { useOruga } from "@oruga-ui/oruga-next"
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -21,6 +23,7 @@ const { t } = useI18n({
     })
 
 const route = useRoute()
+const oruga = useOruga();
 
 const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
 
@@ -94,6 +97,26 @@ const convertedBooks = computed(() => books.value?.map(b => ObjectUtils.toUserBo
 function modalClosed() {
   console.log("modal closed")
   throttledGetBooks()
+}
+
+function seriesModalClosed() {
+  console.log("series modal closed")
+  getSeries()
+}
+
+function toggleSeriesModal(series: Series, edit: boolean) {
+    oruga.modal.open({
+      component: SeriesModalVue,
+      trapFocus: true,
+      active: true,
+      canCancel: ['x', 'button', 'outside'],
+      scroll: 'keep',
+      props: {
+        "series": series,
+        "edit" : edit,
+      },
+      onClose: seriesModalClosed
+    });
 }
 
 getSeries()
@@ -218,9 +241,30 @@ getBooks()
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
-      {{ series.name }} :
+      {{ series.name }} : 
+      <button
+        v-tooltip="t('series.edit_series')"
+        class="btn btn-circle btn-outline border-none"
+        @click="toggleSeriesModal(series, true)"
+      >
+        <span class="icon text-lg">
+          <i class="mdi mdi-pencil" />
+        </span>
+      </button>
     </h2>
     <div />
+  </div>
+  <div>
+    <div class="flex justify-center">
+      <v-md-preview
+        v-if="series.description != null"
+        class="text-justify text-base"
+        :text="series.description"
+      />
+    </div>
+    <div v-if="series.avgRating != null || series.userRating != null">
+      {{ t('labels.avg_rating', {rating : series.avgRating}) }} / {{ t('labels.user_rating', {rating : series.userRating}) }}
+    </div>
   </div>
   <div
     v-if="getBooksIsLoading && books.length < 1"

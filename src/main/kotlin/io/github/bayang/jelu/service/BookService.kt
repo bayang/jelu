@@ -14,10 +14,13 @@ import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateReadingEventDto
+import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.Role
+import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesDto
+import io.github.bayang.jelu.dto.SeriesRatingDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
@@ -103,7 +106,7 @@ class BookService(
     fun findAllTags(name: String?, pageable: Pageable): Page<TagDto> = bookRepository.findAllTags(name, pageable).map { it.toTagDto() }
 
     @Transactional
-    fun findAllSeries(name: String?, pageable: Pageable): Page<SeriesDto> = bookRepository.findAllSeries(name, pageable).map { it.toSeriesDto() }
+    fun findAllSeries(name: String?, userId: UUID?, pageable: Pageable): Page<SeriesDto> = bookRepository.findAllSeries(name, userId, pageable).map { it.toSeriesDto() }
 
     @Transactional
     fun findBookById(bookId: UUID): BookDto = bookRepository.findBookById(bookId).toBookDto()
@@ -348,8 +351,8 @@ class BookService(
     }
 
     @Transactional
-    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto): SeriesDto {
-        val res = bookRepository.updateSeries(seriesId, series)
+    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto, user: User): SeriesDto {
+        val res = bookRepository.updateSeries(seriesId, series, user)
         searchIndexService.seriesUpdated(seriesId)
         return res.toSeriesDto()
     }
@@ -396,13 +399,23 @@ class BookService(
     }
 
     @Transactional
+    fun findSeriesById(seriesId: UUID, userId: UUID): SeriesDto {
+        return bookRepository.findSeriesById(seriesId, userId).toSeriesDto()
+    }
+
+    @Transactional
+    fun findSeriesRating(seriesId: UUID, userId: UUID): SeriesRatingDto? {
+        return bookRepository.findSeriesRating(seriesId, userId)?.toSeriesRatingDto()
+    }
+
+    @Transactional
     fun save(tag: TagDto): TagDto {
         return bookRepository.save(tag).toTagDto()
     }
 
     @Transactional
-    fun saveSeries(series: SeriesUpdateDto): SeriesDto {
-        return bookRepository.saveSeries(series).toSeriesDto()
+    fun saveSeries(series: SeriesCreateDto, user: User): SeriesDto {
+        return bookRepository.saveSeries(series, user).toSeriesDto()
     }
 
     @Transactional
@@ -531,6 +544,11 @@ class BookService(
         val res = bookRepository.addTagsToBook(bookId, tagIds)
         searchIndexService.bookUpdated(bookId)
         return res
+    }
+
+    @Transactional
+    fun save(seriesRatingDto: CreateSeriesRatingDto, user: User): SeriesRatingDto {
+        return bookRepository.save(seriesRatingDto, user).toSeriesRatingDto()
     }
 
     @Transactional

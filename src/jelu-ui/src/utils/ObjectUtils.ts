@@ -102,5 +102,9 @@ export class ObjectUtils {
       }
     }
   }
-
+  
+// https://stackoverflow.com/questions/39924644/es6-generate-an-array-of-numbers
+public static range = (start: number, end: number, step: number) => {
+  return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), x => start + x * step);
+}
 }

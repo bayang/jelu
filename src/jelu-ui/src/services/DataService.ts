@@ -22,7 +22,7 @@ import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/R
 import { Role } from "../model/Role";
 import { StringUtils } from "../utils/StringUtils";
 import { MetadataRequest } from "../model/MetadataRequest";
-import { Series } from "../model/Series";
+import { Series, SeriesUpdate } from "../model/Series";
 import { DirectoryListing } from "../model/DirectoryListing";
 import { BookQuote, CreateBookQuoteDto, UpdateBookQuoteDto } from "../model/BookQuote";
 
@@ -1544,6 +1544,22 @@ class DataService {
       }
       console.log("error update review " + (error as AxiosError).code)
       throw new Error("error update review " + error)
+    }
+  }
+  
+  updateSeries = async (seriesId: string, updateDto: SeriesUpdate) => {
+    try {
+      const response = await this.apiClient.put<Series>(`${this.API_SERIES}/${seriesId}`, updateDto);
+      console.log("called update series")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error update series " + (error as AxiosError).code)
+      throw new Error("error update series " + error)
     }
   }
 

@@ -8,4 +8,12 @@ export interface Series {
     creationDate?: string,
     name: string,
     modificationDate?: string,
+    avgRating?: number,
+    userRating?: number,
+    description?: string,
+}
+export interface SeriesUpdate {
+    name?: string,
+    description?: string,
+    rating?: number,
 }

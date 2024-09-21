@@ -17,18 +17,25 @@ object SeriesTable : UUIDTable("series") {
     val name: Column<String> = varchar("name", 1000)
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
+    val description: Column<String?> = varchar("description", 500000).nullable()
 }
 class Series(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Series>(SeriesTable)
     var name by SeriesTable.name
     var creationDate by SeriesTable.creationDate
     var modificationDate by SeriesTable.modificationDate
+    var avgRating: Double? = null
+    var userRating: Double? = null
+    var description by SeriesTable.description
     fun toSeriesDto(): SeriesDto =
         SeriesDto(
             id = this.id.value,
             creationDate = this.creationDate,
             modificationDate = this.modificationDate,
             name = this.name,
+            userRating = this.userRating,
+            avgRating = this.avgRating,
+            description = this.description,
         )
 }
 object BookSeries : UUIDTable(name = "book_series") {

@@ -25,6 +25,7 @@ import ReviewModalVue from './ReviewModal.vue'
 import BookQuoteModalVue from './BookQuoteModal.vue'
 import { BookQuote } from "../model/BookQuote"
 import BookQuoteCard from "./BookQuoteCard.vue"
+import { Series } from '../model/Series'
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -68,11 +69,18 @@ const getBook = async () => {
     useTitle('Jelu | ' + book.value.book.title)
     getUserReviewsForBook()
     getBookQuotesForBook()
+    getAllSeriesInfo()
   } catch (error) {
     console.log("failed get book : " + error);
     getBookIsLoading.value = false
   }
 };
+
+const getAllSeriesInfo = async () => {
+  book.value?.book.series?.forEach(s => {
+    fetchSeries(s.seriesId as string)
+  })
+}
 
 const getUserReviewsForBook = async() => {
   await until(user.value).not.toBeNull()
@@ -456,6 +464,54 @@ const deleteBookQuote = async (bookQuoteId: string) => {
     })
 }
 
+const seriesmap: Map<string, Series> = new Map()
+
+const fetchSeries = async (seriesId: string) => {
+  dataService.getSeriesById(seriesId)
+    .then(data => {
+        seriesmap.set(seriesId, data)
+    })
+    .catch(e => {
+        console.log("fetching series error")
+    })
+}
+
+const getSeriesInfo = async (seriesId: string) => {
+    if (seriesmap.get(seriesId) != null) {
+        const s = seriesmap.get(seriesId)
+        return await formatSeries(s as Series)
+    }
+    dataService.getSeriesById(seriesId)
+    .then(data => {
+        seriesmap.set(seriesId, data)
+        return formatSeries(data)
+    })
+    .catch(e => {
+        return "error"
+    })
+}
+
+const formatSeries = async (series: Series)  => {
+    let txt = ""
+    if (series.description != null && series.description.length > 0) {
+        txt += series.description.substring(0, 40)
+        txt += " | "
+    }
+    if (series.avgRating != null) {
+        txt += "avg : "
+        txt += series.avgRating
+        txt += " "
+    }
+    if (series.userRating != null) {
+        txt += "me : "
+        txt += series.userRating
+    }
+    if (txt.trim().length < 1) {
+      return 'no data'
+    }
+    return txt
+}
+
 getBook()
 
 </script>
@@ -710,6 +766,9 @@ getBook()
             <li
               v-for="seriesItem in book?.book?.series"
               :key="seriesItem.seriesId"
+              v-tooltip="{
+                content: () => getSeriesInfo(seriesItem.seriesId as string)
+              }"
             >
               <router-link
                 class="link hover:underline hover:decoration-4 hover:decoration-secondary"

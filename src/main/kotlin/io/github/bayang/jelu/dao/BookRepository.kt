@@ -5,9 +5,11 @@ import io.github.bayang.jelu.dto.AuthorUpdateDto
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateReadingEventDto
+import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.Role
+import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesOrderDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
@@ -162,7 +164,6 @@ class BookRepository(
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
             .join(SeriesTable, JoinType.LEFT, onColumn = SeriesTable.id, otherColumn = BookSeries.series)
             .select(BookTable.columns)
-            // .selectAll()
             .withDistinct()
 
         if (!title?.trim().isNullOrBlank()) {
@@ -238,7 +239,6 @@ class BookRepository(
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
             .join(SeriesTable, JoinType.LEFT, onColumn = SeriesTable.id, otherColumn = BookSeries.series)
             .select(BookTable.columns)
-            // .selectAll()
             .withDistinct()
 
         if (!title?.trim().isNullOrBlank()) {
@@ -337,8 +337,18 @@ class BookRepository(
         )
     }
 
-    fun findAllSeries(name: String?, pageable: Pageable): Page<Series> {
-        val query: Query = SeriesTable.selectAll()
+    fun findAllSeries(name: String?, userId: UUID?, pageable: Pageable): Page<Series> {
+        val cols = mutableListOf<Expression<*>>()
+        cols.addAll(SeriesTable.columns)
+        cols.addAll(SeriesRatingTable.columns)
+        val ratingTableAlias = SeriesRatingTable.alias("srt")
+        val ratingAlias = ratingTableAlias[SeriesRatingTable.rating].avg().alias("avgRating")
+        cols.add(ratingAlias)
+        val query: Query = SeriesTable.join(SeriesRatingTable, JoinType.LEFT, additionalConstraint = { SeriesRatingTable.series eq SeriesTable.id and (SeriesRatingTable.user eq userId) })
+            .join(ratingTableAlias, JoinType.LEFT, onColumn = ratingTableAlias[SeriesRatingTable.series], otherColumn = SeriesTable.id)
+            .select(cols)
+            .groupBy(SeriesTable.id)
+            .withDistinct(true)
         name?.let {
             query.andWhere { SeriesTable.name like "%$name%" }
         }
@@ -347,10 +357,21 @@ class BookRepository(
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(SeriesTable.name, SortOrder.ASC_NULLS_LAST), SeriesTable)
         query.orderBy(*orders)
         return PageImpl(
-            query.map { resultRow -> Series.wrapRow(resultRow) },
+            query.map { resultRow -> wrapSeriesRow(resultRow, ratingAlias) },
             pageable,
             total,
         )
+    }
+
+    private fun wrapSeriesRow(
+        resultRow: ResultRow,
+        ratingAlias: ExpressionAlias<BigDecimal?>,
+    ): Series {
+        val s = Series.wrapRow(resultRow)
+        val rating = resultRow[ratingAlias]
+        s.avgRating = rating?.toDouble()
+        s.userRating = resultRow[SeriesRatingTable.rating]
+        return s
     }
 
     fun findAuthorsByName(name: String): List<Author> {
@@ -372,6 +393,23 @@ class BookRepository(
     fun findTagById(tagId: UUID): Tag = Tag[tagId]
 
     fun findSeriesById(seriesId: UUID): Series = Series[seriesId]
+
+    fun findSeriesById(seriesId: UUID, userId: UUID): Series {
+        val cols = mutableListOf<Expression<*>>()
+        cols.addAll(SeriesTable.columns)
+        cols.addAll(SeriesRatingTable.columns)
+        val ratingTableAlias = SeriesRatingTable.alias("srt")
+        val ratingAlias = ratingTableAlias[SeriesRatingTable.rating].avg().alias("avgRating")
+        cols.add(ratingAlias)
+        val query: Query = SeriesTable.join(SeriesRatingTable, JoinType.LEFT, additionalConstraint = { SeriesRatingTable.series eq SeriesTable.id and (SeriesRatingTable.user eq userId) })
+            .join(ratingTableAlias, JoinType.LEFT, onColumn = ratingTableAlias[SeriesRatingTable.series], otherColumn = SeriesTable.id)
+            .select(cols)
+            .andWhere { SeriesTable.id eq seriesId }
+            .groupBy(SeriesTable.id)
+            .withDistinct(true)
+        val res = query.map { resultRow -> wrapSeriesRow(resultRow, ratingAlias) }
+        return res.first()
+    }
 
     fun findTagBooksById(
         tagId: UUID,
@@ -808,13 +846,28 @@ class BookRepository(
         return found
     }
 
-    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto): Series {
+    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto, user: User): Series {
         val found: Series = Series[seriesId]
-        if (series.name.isNotBlank()) {
+        if (!series.name.isNullOrBlank()) {
             found.name = series.name.trim()
+        }
+        found.description = series.description
+        if (series.rating != null) {
+            val findSeriesRating = findSeriesRating(seriesId, user.id.value)
+            if (findSeriesRating != null) {
+                findSeriesRating.rating = series.rating
+            } else {
+                save(CreateSeriesRatingDto(seriesId, series.rating), user)
+            }
+        } else {
+            SeriesRatingTable.deleteWhere { SeriesRatingTable.series eq seriesId and(SeriesRatingTable.user eq user.id) }
         }
         found.modificationDate = nowInstant()
         return found
+    }
+
+    fun findSeriesRating(seriesId: UUID, userId: UUID): SeriesRating? {
+        return SeriesRating.find { SeriesRatingTable.series eq seriesId and(SeriesRatingTable.user eq userId) }.firstOrNull()
     }
 
     fun save(book: BookCreateDto): Book {
@@ -934,12 +987,16 @@ class BookRepository(
         return created
     }
 
-    fun saveSeries(series: SeriesUpdateDto): Series {
+    fun saveSeries(series: SeriesCreateDto, user: User): Series {
         val created = Series.new(UUID.randomUUID()) {
             this.name = series.name.trim()
+            this.description = series.description
             val instant: Instant = nowInstant()
             creationDate = instant
             modificationDate = instant
+        }
+        if (series.rating != null) {
+            save(CreateSeriesRatingDto(created.id.value, series.rating), user)
         }
         return created
     }
@@ -971,6 +1028,18 @@ class BookRepository(
             return withPosition
         }
         return null
+    }
+
+    fun save(seriesRatingDto: CreateSeriesRatingDto, user: User): SeriesRating {
+        val created = SeriesRating.new(UUID.randomUUID()) {
+            this.rating = seriesRatingDto.rating
+            val instant: Instant = nowInstant()
+            this.creationDate = instant
+            this.modificationDate = instant
+            this.series = Series[seriesRatingDto.seriesId]
+            this.user = user
+        }
+        return created
     }
 
     fun update(series: SeriesOrderDto, seriesEntity: Series, book: Book): BookSeriesItem? {
