@@ -110,7 +110,9 @@
         "set_progress": "aktuellen Fortschritt festlegen",
         "user_avg_rating": "Meine durchschnittliche Bewertung: {rating}",
         "avg_rating": "durchschnittliche Bewertung: {rating}",
-        "add_quote": "add book quote"
+        "add_quote": "add book quote",
+        "description": "description",
+        "user_rating": "my rating : {rating}"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -344,5 +346,10 @@
         "quote": "quote | quotes",
         "position": "position",
         "delete_quote": "delete this quote ?"
+    },
+    "series": {
+        "edit_series": "edit series",
+        "create_series": "create series",
+        "name": "name"
     }
 }
