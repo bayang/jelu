@@ -1,3 +1,15 @@
+## [0.59.0](https://github.com/bayang/jelu/compare/v0.58.0...v0.59.0) (2024-09-21)
+
+
+### Features
+
+* add series description and rating [#122](https://github.com/bayang/jelu/issues/122) ([f32d1fb](https://github.com/bayang/jelu/commit/f32d1fbc45e1f6cdf164b4f9b8e828911b722245))
+
+
+### Bug Fixes
+
+* series order number on card [#140](https://github.com/bayang/jelu/issues/140) ([c15ac02](https://github.com/bayang/jelu/commit/c15ac0299003d6239aaeacb9ab02ba9c4dfadf2a))
+
 ## [0.58.0](https://github.com/bayang/jelu/compare/v0.57.0...v0.58.0) (2024-09-15)
 
 
