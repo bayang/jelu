@@ -111,8 +111,8 @@
         "user_avg_rating": "mijn gemiddelde beoordeling: {rating}",
         "avg_rating": "gemiddelde beoordeling : {rating}",
         "add_quote": "voeg citaat uit boek toe",
-        "description": "description",
-        "user_rating": "my rating : {rating}"
+        "description": "omschrijving",
+        "user_rating": "mijn beoordeling: {rating}"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -348,8 +348,8 @@
         "delete_quote": "dit citaat verwijderen?"
     },
     "series": {
-        "edit_series": "edit series",
-        "create_series": "create series",
-        "name": "name"
+        "edit_series": "bewerk reeksen",
+        "create_series": "reeksen aanmaken",
+        "name": "naam"
     }
 }
