@@ -1,3 +1,10 @@
+### [0.59.1](https://github.com/bayang/jelu/compare/v0.59.0...v0.59.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* 404 on bulk edit [#143](https://github.com/bayang/jelu/issues/143) ([99b0ce4](https://github.com/bayang/jelu/commit/99b0ce4712c86db344ccd97c83b3549e160d7161))
+
 ## [0.59.0](https://github.com/bayang/jelu/compare/v0.58.0...v0.59.0) (2024-09-21)
 
 
