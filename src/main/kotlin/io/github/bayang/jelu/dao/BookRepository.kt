@@ -29,6 +29,7 @@ import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.Random
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SizedCollection
+import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
@@ -1071,6 +1072,8 @@ class BookRepository(
     }
 
     fun findUserBookById(userbookId: UUID): UserBook = UserBook[userbookId]
+
+    fun findUserBookByIdInList(userbookIds: List<UUID>): SizedIterable<UserBook> = UserBook.forIds(userbookIds)
 
     fun findUserBookByCriteria(
         userID: UUID,

@@ -534,7 +534,9 @@ class BookService(
     fun bulkEditUserbooks(userBookBulkUpdateDto: UserBookBulkUpdateDto): Int {
         val res = bookRepository.bulkEditUserbooks(userBookBulkUpdateDto)
         if (!userBookBulkUpdateDto.removeTags.isNullOrEmpty() || !userBookBulkUpdateDto.addTags.isNullOrEmpty()) {
-            searchIndexService.booksUpdated(userBookBulkUpdateDto.ids)
+            val bookIds =
+                bookRepository.findUserBookByIdInList(userBookBulkUpdateDto.ids).map { ub -> ub.book.id.value }.toList()
+            searchIndexService.booksUpdated(bookIds)
         }
         return res
     }
