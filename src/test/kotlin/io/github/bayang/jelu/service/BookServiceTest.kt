@@ -826,7 +826,32 @@ class BookServiceTest(
             ),
             null,
         )
+        val sameSeriesBook: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title2",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = emptyList(),
+                // numberInSeries = null,
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1),
+            ),
+            null,
+        )
         Assertions.assertNotNull(res.id)
+        Assertions.assertNotNull(sameSeriesBook.id)
         val found = bookService.findBookById(res.id!!)
         Assertions.assertEquals(found.id, res.id)
         Assertions.assertEquals(found.authors, res.authors)
@@ -841,16 +866,16 @@ class BookServiceTest(
             Assertions.assertTrue(names.contains(it.name))
         }
         var entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
-        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(2, entitiesIds?.size)
         Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
         entitiesIds = luceneHelper.searchEntitiesIds("series:ser", LuceneEntity.Book)
-        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(2, entitiesIds?.size)
         Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
         entitiesIds = luceneHelper.searchEntitiesIds("series:series", LuceneEntity.Book)
-        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(2, entitiesIds?.size)
         Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
         entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
-        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(2, entitiesIds?.size)
         Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
         val series1Id = res.series?.get(0)?.seriesId
 
@@ -863,7 +888,12 @@ class BookServiceTest(
         val seriesById = bookService.findSeriesById(series1Id!!)
         Assertions.assertEquals("series 1", seriesById.name)
         entitiesIds = luceneHelper.searchEntitiesIds("series:(series 1)", LuceneEntity.Book)
-        Assertions.assertEquals(0, entitiesIds?.size)
+        Assertions.assertEquals(1, entitiesIds?.size)
+
+        val afterDeleteOtherBook = bookService.findBookById(sameSeriesBook.id!!)
+        Assertions.assertEquals(1, afterDeleteOtherBook.series?.size)
+        Assertions.assertEquals(s1.name, afterDeleteOtherBook.series?.get(0)?.name)
+        Assertions.assertEquals(1.0, afterDeleteOtherBook.series?.get(0)?.numberInSeries)
     }
 
     @Test

@@ -749,7 +749,7 @@ class BookRepository(
         updated.seriesAndOrder.forEach { bsi ->
             if (book.series?.find { s -> s.name == bsi.series.name } == null) {
                 logger.trace { "delete previously existing series not in updated list ${bsi.series.name}" }
-                BookSeries.deleteWhere { BookSeries.series eq(bsi.series.id) }
+                BookSeries.deleteWhere { BookSeries.series eq(bsi.series.id) and(BookSeries.book eq(updated.id)) }
             }
         }
         return updated
