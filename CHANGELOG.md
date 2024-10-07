@@ -1,3 +1,10 @@
+### [0.59.2](https://github.com/bayang/jelu/compare/v0.59.1...v0.59.2) (2024-10-07)
+
+
+### Bug Fixes
+
+* all books deleted from series [#146](https://github.com/bayang/jelu/issues/146) ([e02acf9](https://github.com/bayang/jelu/commit/e02acf9ba2eed6124a238f93e2857b24c6784aa1))
+
 ### [0.59.1](https://github.com/bayang/jelu/compare/v0.59.0...v0.59.1) (2024-09-23)
 
 
