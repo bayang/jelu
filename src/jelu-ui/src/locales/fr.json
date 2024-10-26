@@ -353,10 +353,10 @@
         "name": "nom"
     },
     "login_info": {
-        "ip": "ip",
-        "user_agent": "user agent",
+        "ip": "IP",
+        "user_agent": "User Agent ",
         "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "last_activity": "Dernière activité",
+        "activity": "Historique des sessions"
     }
 }
