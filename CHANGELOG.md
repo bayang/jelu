@@ -1,3 +1,15 @@
+## [0.60.0](https://github.com/bayang/jelu/compare/v0.59.2...v0.60.0) (2024-10-26)
+
+
+### Features
+
+* save activity in DB [#116](https://github.com/bayang/jelu/issues/116) ([baa86f8](https://github.com/bayang/jelu/commit/baa86f8d558539471ded029f70abd0408e63d40e))
+
+
+### Bug Fixes
+
+* image cache too strict [#147](https://github.com/bayang/jelu/issues/147) ([fb3477f](https://github.com/bayang/jelu/commit/fb3477f05584510301d2de4761536cca941fde53))
+
 ### [0.59.2](https://github.com/bayang/jelu/compare/v0.59.1...v0.59.2) (2024-10-07)
 
 
