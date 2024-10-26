@@ -127,6 +127,7 @@ const hasExternalLink = computed(() => book.value?.book.amazonId != null
 
 function modalClosed() {
   console.log("modal closed")
+  currentTimestamp = timestamp()
   getBook()
 }
 
@@ -512,6 +513,9 @@ const formatSeries = async (series: Series)  => {
     return txt
 }
 
+const timestamp = () => new Date().toISOString()
+let currentTimestamp = timestamp()
+
 getBook()
 
 </script>
@@ -685,7 +689,7 @@ getBook()
         <figure>
           <img
             v-if="book?.book?.image"
-            :src="'/files/' + book.book.image"
+            :src="'/files/' + book.book.image + '?timestamp=' + currentTimestamp"
             alt="cover image"
             class="max-h-96"
           >
