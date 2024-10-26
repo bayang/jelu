@@ -1,3 +1,10 @@
+### [0.60.1](https://github.com/bayang/jelu/compare/v0.60.0...v0.60.1) (2024-10-26)
+
+
+### Bug Fixes
+
+* remove print statements ([afcaeb0](https://github.com/bayang/jelu/commit/afcaeb0aaa02100f27fdce1113e393b7f2b45abd))
+
 ## [0.60.0](https://github.com/bayang/jelu/compare/v0.59.2...v0.60.0) (2024-10-26)
 
 
