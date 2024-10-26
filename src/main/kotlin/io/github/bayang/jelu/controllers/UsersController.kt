@@ -185,8 +185,6 @@ class UsersController(
     }
 
     private fun mapToHistoryDto(entry: Map.Entry<String, Session>, ctx: SecurityContextImpl?): LoginHistoryInfoDto {
-        println(entry.value)
-        println(ctx)
         val details = ctx?.authentication?.details as UserAgentWebAuthenticationDetails
         val jeluUser = ctx.authentication.principal as JeluUser
         return LoginHistoryInfoDto(
