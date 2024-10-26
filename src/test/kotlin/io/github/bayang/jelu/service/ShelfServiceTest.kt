@@ -1,10 +1,10 @@
 package io.github.bayang.jelu.service
 
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.CreateShelfDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluValidationException
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
@@ -130,7 +130,7 @@ class ShelfServiceTest(
         Assertions.assertEquals(0, shelves.size)
     }
 
-    fun user(): User {
+    fun user(): UserDto {
         val userDetail = userService.loadUserByUsername("testuser")
         return (userDetail as JeluUser).user
     }

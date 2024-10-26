@@ -1,13 +1,13 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.bookDto
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.Visibility
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.CreateBookQuoteDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UpdateBookQuoteDto
+import io.github.bayang.jelu.dto.UserDto
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -41,7 +41,7 @@ class BookQuoteServiceTest(
     fun teardDown() {
         bookQuoteService.find(null, null, null, Pageable.ofSize(200))
             .forEach { quoteDto -> bookQuoteService.delete(quoteDto.id!!) }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         userService.findAll(null).forEach { userService.deleteUser(it.id!!) }
     }
@@ -79,7 +79,7 @@ class BookQuoteServiceTest(
         Assertions.assertEquals(0L, found.totalElements)
     }
 
-    fun user(username: String = "testuser"): User {
+    fun user(username: String = "testuser"): UserDto {
         val userDetail = userService.loadUserByUsername(username)
         return (userDetail as JeluUser).user
     }

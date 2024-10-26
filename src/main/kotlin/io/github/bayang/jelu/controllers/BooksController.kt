@@ -154,7 +154,7 @@ class BooksController(
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
     ): Page<UserBookWithoutEventsAndUserDto> {
         assertIsJeluUser(principal.principal)
-        val finalUserId = userId ?: (principal.principal as JeluUser).user.id.value
+        val finalUserId = userId ?: (principal.principal as JeluUser).user.id!!
         return repository.findUserBookByCriteria(finalUserId, bookId, eventTypes, toRead, owned, borrowed, pageable)
     }
 
@@ -205,7 +205,7 @@ class BooksController(
         principal: Authentication,
     ): Page<SeriesDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findAllSeries(name, (principal.principal as JeluUser).user.id.value, pageable)
+        return repository.findAllSeries(name, (principal.principal as JeluUser).user.id, pageable)
     }
 
     @GetMapping(path = ["/series/{id}"])
@@ -214,7 +214,7 @@ class BooksController(
         principal: Authentication,
     ): SeriesDto {
         assertIsJeluUser(principal.principal)
-        return repository.findSeriesById(seriesId, (principal.principal as JeluUser).user.id.value)
+        return repository.findSeriesById(seriesId, (principal.principal as JeluUser).user.id!!)
     }
 
     @GetMapping(path = ["/series/{id}/books"])

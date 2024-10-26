@@ -22,6 +22,7 @@ private val LOGGER = KotlinLogging.logger {}
 class AuthHeaderFilter(
     private val userService: UserService,
     private val properties: JeluProperties,
+    private val userAgentWebAuthenticationDetailsSource: WebAuthenticationDetailsSource,
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -37,16 +38,16 @@ class AuthHeaderFilter(
             val user: JeluUser = if (res.isEmpty()) {
                 val isAdmin = properties.auth.proxy.adminName.isNotBlank() && properties.auth.proxy.adminName == headerAuth
                 val saved = userService.save(CreateUserDto(login = headerAuth, password = "proxy", isAdmin = isAdmin, Provider.PROXY))
-                JeluUser(userService.findUserEntityById(saved.id!!))
+                JeluUser(userService.findUserEntityById(saved.id!!).toUserDto())
             } else {
-                JeluUser(userService.findUserEntityById(res.first().id!!))
+                JeluUser(userService.findUserEntityById(res.first().id!!).toUserDto())
             }
             val authentication = UsernamePasswordAuthenticationToken(
                 user,
                 null,
                 user.authorities,
             )
-            authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+            authentication.details = userAgentWebAuthenticationDetailsSource.buildDetails(request)
             SecurityContextHolder.getContext().authentication = authentication
         }
         filterChain.doFilter(request, response)

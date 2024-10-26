@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosHeaders, AxiosInstance } from "axios";
 import { UserBook, Book, UserBookBulkUpdate, UserBookUpdate } from "../model/Book";
 import { Author } from "../model/Author";
 import router from '../router'
-import { CreateUser, UpdateUser, User, UserAuthentication } from "../model/User";
+import { CreateUser, LoginHistoryInfo, UpdateUser, User, UserAuthentication } from "../model/User";
 import { CreateReadingEvent, ReadingEvent, ReadingEventType, ReadingEventWithUserBook } from "../model/ReadingEvent";
 import { Tag } from "../model/Tag";
 import { Metadata } from "../model/Metadata";
@@ -39,6 +39,8 @@ class DataService {
   private API_USERBOOK = '/userbooks';
 
   private API_USER = '/users';
+  
+  private API_HISTORY = '/history';
 
   private API_AUTHOR = '/authors';
 
@@ -975,6 +977,22 @@ class DataService {
       }
       console.log("error random quotes " + (error as AxiosError).code)
       throw new Error("error random quotes " + error)
+    }
+  }
+  
+  userLoginHistory = async () => {
+    try {
+      const response = await this.apiClient.get<Array<LoginHistoryInfo>>(`${this.API_USER}${this.API_HISTORY}`);
+      console.log("called history info")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error history info " + (error as AxiosError).code)
+      throw new Error("error history info " + error)
     }
   }
 

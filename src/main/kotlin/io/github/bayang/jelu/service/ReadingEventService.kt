@@ -2,10 +2,10 @@ package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.dao.ReadingEventRepository
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.ReadingEventDto
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
+import io.github.bayang.jelu.dto.UserDto
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -33,7 +33,7 @@ class ReadingEventService(private val readingEventRepository: ReadingEventReposi
         readingEventRepository.findYears(eventTypes, userId, bookId)
 
     @Transactional
-    fun save(createReadingEventDto: CreateReadingEventDto, user: User): ReadingEventDto {
+    fun save(createReadingEventDto: CreateReadingEventDto, user: UserDto): ReadingEventDto {
         return readingEventRepository.save(createReadingEventDto, user).toReadingEventDto()
     }
 

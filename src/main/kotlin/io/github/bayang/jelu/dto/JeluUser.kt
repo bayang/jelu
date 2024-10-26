@@ -1,6 +1,8 @@
 package io.github.bayang.jelu.dto
 
-import io.github.bayang.jelu.dao.User
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import io.github.bayang.jelu.errors.JeluException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -20,7 +22,15 @@ fun assertIsJeluUser(target: Any) {
     }
 }
 
-class JeluUser(val user: User) : UserDetails {
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "type",
+)
+@JsonSubTypes(
+    Type(value = JeluUser::class, name = "jeluUser"),
+)
+class JeluUser(val user: UserDto) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val basicRoles: MutableCollection<GrantedAuthority> = mutableSetOf(SimpleGrantedAuthority(ROLE_USER))
@@ -30,7 +40,9 @@ class JeluUser(val user: User) : UserDetails {
         return basicRoles
     }
 
-    override fun getPassword(): String = user.password
+    override fun getPassword(): String {
+        return user.password.orEmpty()
+    }
 
     override fun getUsername(): String = user.login
 

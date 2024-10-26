@@ -1,11 +1,11 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.dao.BookQuoteRepository
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.Visibility
 import io.github.bayang.jelu.dto.BookQuoteDto
 import io.github.bayang.jelu.dto.CreateBookQuoteDto
 import io.github.bayang.jelu.dto.UpdateBookQuoteDto
+import io.github.bayang.jelu.dto.UserDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -18,7 +18,7 @@ class BookQuoteService(
 ) {
 
     @Transactional
-    fun save(bookQuoteDto: CreateBookQuoteDto, user: User): BookQuoteDto {
+    fun save(bookQuoteDto: CreateBookQuoteDto, user: UserDto): BookQuoteDto {
         return bookQuoteRepository.save(bookQuoteDto, user).toBookQuoteDto()
     }
 

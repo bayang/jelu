@@ -4,7 +4,6 @@ import io.github.bayang.jelu.bookDto
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.createUserBookDto
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
@@ -12,6 +11,7 @@ import io.github.bayang.jelu.dto.LibraryFilter
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.utils.nowInstant
 import org.junit.jupiter.api.AfterAll
@@ -64,7 +64,7 @@ class ReadingEventServiceTest(
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -400,7 +400,7 @@ class ReadingEventServiceTest(
         val nbBooks = bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(1, nbBooks)
 
-        var nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
+        var nbUserBooks = bookService.findUserBookByCriteria(user.id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, nbUserBooks)
 
         Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
@@ -416,7 +416,7 @@ class ReadingEventServiceTest(
             user(),
         )
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, newEvent.eventType)
-        nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
+        nbUserBooks = bookService.findUserBookByCriteria(user.id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, nbUserBooks)
 
         Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
@@ -428,7 +428,7 @@ class ReadingEventServiceTest(
         val nbBooks = bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(0, nbBooks)
 
-        val nbUserBooks = bookService.findUserBookByCriteria(user.id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
+        val nbUserBooks = bookService.findUserBookByCriteria(user.id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, nbUserBooks)
 
         val dateAfter = nowInstant().plus(1, ChronoUnit.DAYS)
@@ -786,7 +786,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(3, betweenFarDates.totalElements)
     }
 
-    fun user(): User {
+    fun user(): UserDto {
         val userDetail = userService.loadUserByUsername("testuser")
         return (userDetail as JeluUser).user
     }

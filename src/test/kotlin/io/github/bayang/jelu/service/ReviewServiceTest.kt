@@ -2,7 +2,6 @@ package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.bookDto
 import io.github.bayang.jelu.createUserBookDto
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.Visibility
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.CreateReviewDto
@@ -10,6 +9,7 @@ import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UpdateReviewDto
 import io.github.bayang.jelu.dto.UserBookLightDto
+import io.github.bayang.jelu.dto.UserDto
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -48,7 +48,7 @@ class ReviewServiceTest(
     fun teardDown() {
         reviewService.find(null, null, null, null, null, Pageable.ofSize(200))
             .forEach { reviewDto -> reviewService.delete(reviewDto.id!!) }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         userService.findAll(null).forEach { userService.deleteUser(it.id!!) }
     }
@@ -152,7 +152,7 @@ class ReviewServiceTest(
             user(),
         )
         val userBookByCriteria = bookService.findUserBookByCriteria(
-            user().id.value,
+            user().id!!,
             null,
             null,
             null,
@@ -182,7 +182,7 @@ class ReviewServiceTest(
         )
         // another book with review from main user -> make sure we retrieve both, sorted by a rating field
         var userBookByCriteriaSorted = bookService.findUserBookByCriteria(
-            user().id.value,
+            user().id!!,
             null,
             null,
             null,
@@ -194,7 +194,7 @@ class ReviewServiceTest(
         Assertions.assertEquals(5.0, userBookByCriteriaSorted.content[0].userAvgRating)
         Assertions.assertEquals(8.0, userBookByCriteriaSorted.content[1].userAvgRating)
         userBookByCriteriaSorted = bookService.findUserBookByCriteria(
-            user().id.value, null, null, null,
+            user().id!!, null, null, null,
             null, null, PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "usrAvgRating")),
         )
         Assertions.assertEquals(2, userBookByCriteriaSorted.totalElements)
@@ -215,7 +215,7 @@ class ReviewServiceTest(
         val saved2: UserBookLightDto = bookService.save(createUserBookDto2, user(), null)
         // create a new book with no reviews, make sure it is retrieved as well
         userBookByCriteriaSorted = bookService.findUserBookByCriteria(
-            user().id.value, null, null, null,
+            user().id!!, null, null, null,
             null, null, PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "usrAvgRating")),
         )
         Assertions.assertEquals(3, userBookByCriteriaSorted.totalElements)
@@ -224,7 +224,7 @@ class ReviewServiceTest(
         Assertions.assertNull(userBookByCriteriaSorted.content[2].userAvgRating) // make sure null field is always last
 
         userBookByCriteriaSorted = bookService.findUserBookByCriteria(
-            user().id.value, null, null, null,
+            user().id!!, null, null, null,
             null, null, PageRequest.of(0, 20, Sort.by(Sort.Direction.ASC, "usrAvgRating")),
         )
         Assertions.assertEquals(3, userBookByCriteriaSorted.totalElements)
@@ -233,7 +233,7 @@ class ReviewServiceTest(
         Assertions.assertNull(userBookByCriteriaSorted.content[2].userAvgRating) // make sure null field is always last
     }
 
-    fun user(username: String = "testuser"): User {
+    fun user(username: String = "testuser"): UserDto {
         val userDetail = userService.loadUserByUsername(username)
         return (userDetail as JeluUser).user
     }

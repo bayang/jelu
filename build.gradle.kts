@@ -45,7 +45,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.data:spring-data-jdbc") // required since exposed 0.51.0
     implementation("org.springframework.session:spring-session-core")
-    implementation("com.github.gotson:spring-session-caffeine:2.0.0")
+    implementation("org.springframework.session:spring-session-jdbc")
     implementation("org.springframework.security:spring-security-ldap")
     // implementation("com.unboundid:unboundid-ldapsdk:6.0.5")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

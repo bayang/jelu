@@ -2,6 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
@@ -98,7 +99,7 @@ class ReadingEventRepository {
         return query.map { resultRow -> resultRow[ReadingEventTable.endDate.year()] }.toList()
     }
 
-    fun save(createReadingEventDto: CreateReadingEventDto, targetUser: User): ReadingEvent {
+    fun save(createReadingEventDto: CreateReadingEventDto, targetUser: UserDto): ReadingEvent {
         if (createReadingEventDto.bookId == null) {
             throw JeluException("Missing bookId to create reading event")
         }
@@ -106,14 +107,14 @@ class ReadingEventRepository {
         return save(createReadingEventDto, foundBook, targetUser)
     }
 
-    fun save(createReadingEventDto: CreateReadingEventDto, book: Book, targetUser: User): ReadingEvent {
+    fun save(createReadingEventDto: CreateReadingEventDto, book: Book, targetUser: UserDto): ReadingEvent {
         var found: UserBook? =
             UserBook.find { UserBookTable.user eq targetUser.id and (UserBookTable.book.eq(book.id)) }.firstOrNull()
         val instant: Instant = nowInstant()
         if (found == null) {
             found = UserBook.new {
                 this.creationDate = instant
-                this.user = targetUser
+                this.user = User[targetUser.id!!]
                 this.book = book
             }
         }

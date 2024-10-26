@@ -2,6 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.CreateUserMessageDto
 import io.github.bayang.jelu.dto.UpdateUserMessageDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.Expression
@@ -21,12 +22,12 @@ private val logger = KotlinLogging.logger {}
 @Repository
 class UserMessageRepository {
 
-    fun save(createUserMessageDto: CreateUserMessageDto, user: User): UserMessage {
+    fun save(createUserMessageDto: CreateUserMessageDto, user: UserDto): UserMessage {
         val instant: Instant = nowInstant()
         return UserMessage.new {
             this.creationDate = instant
             this.modificationDate = instant
-            this.user = user
+            this.user = User[user.id!!]
             this.message = createUserMessageDto.message
             this.link = createUserMessageDto.link
             this.messageCategory = createUserMessageDto.category
@@ -35,7 +36,7 @@ class UserMessageRepository {
     }
 
     fun find(
-        user: User,
+        user: UserDto,
         read: Boolean?,
         messageCategories: List<MessageCategory>?,
         pageable: Pageable,

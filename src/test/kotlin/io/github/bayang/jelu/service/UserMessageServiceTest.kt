@@ -1,11 +1,11 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.dao.MessageCategory
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.CreateUserMessageDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UpdateUserMessageDto
+import io.github.bayang.jelu.dto.UserDto
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -86,7 +86,7 @@ class UserMessageServiceTest(
         Assertions.assertEquals(1, foundSeveralCategories.totalElements)
     }
 
-    fun user(): User {
+    fun user(): UserDto {
         val userDetail = userService.loadUserByUsername("testuser")
         return (userDetail as JeluUser).user
     }

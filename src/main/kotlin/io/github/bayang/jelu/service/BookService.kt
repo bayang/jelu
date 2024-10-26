@@ -6,7 +6,6 @@ import io.github.bayang.jelu.dao.Book
 import io.github.bayang.jelu.dao.BookRepository
 import io.github.bayang.jelu.dao.ReadingEventRepository
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.UserBook
 import io.github.bayang.jelu.dto.AuthorDto
 import io.github.bayang.jelu.dto.AuthorUpdateDto
@@ -27,6 +26,7 @@ import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.search.LuceneEntity
 import io.github.bayang.jelu.search.LuceneHelper
@@ -66,7 +66,7 @@ class BookService(
     fun findAll(
         query: String?,
         pageable: Pageable,
-        user: User,
+        user: UserDto,
         libraryFilter: LibraryFilter,
     ): Page<BookDto> {
         val entitiesIds = luceneHelper.searchEntitiesIds(query, LuceneEntity.Book)
@@ -94,7 +94,7 @@ class BookService(
         translators: List<String>?,
         tags: List<String>?,
         pageable: Pageable,
-        user: User,
+        user: UserDto,
         libraryFilter: LibraryFilter,
     ): Page<BookDto> =
         bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
@@ -179,7 +179,7 @@ class BookService(
     }
 
     @Transactional
-    fun save(userBook: CreateUserBookDto, user: User, file: MultipartFile?): UserBookLightDto {
+    fun save(userBook: CreateUserBookDto, user: UserDto, file: MultipartFile?): UserBookLightDto {
         var newBook = false
         val book: Book = if (userBook.book.id != null) {
             bookRepository.update(userBook.book.id, fromBookCreateDto(userBook.book))
@@ -351,7 +351,7 @@ class BookService(
     }
 
     @Transactional
-    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto, user: User): SeriesDto {
+    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto, user: UserDto): SeriesDto {
         val res = bookRepository.updateSeries(seriesId, series, user)
         searchIndexService.seriesUpdated(seriesId)
         return res.toSeriesDto()
@@ -379,17 +379,17 @@ class BookService(
     }
 
     @Transactional
-    fun findTagById(tagId: UUID, user: User): TagDto {
+    fun findTagById(tagId: UUID, user: UserDto): TagDto {
         return bookRepository.findTagById(tagId).toTagDto()
     }
 
     @Transactional
-    fun findTagBooksById(tagId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter, eventTypes: List<ReadingEventType>?): Page<BookDto> {
+    fun findTagBooksById(tagId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter, eventTypes: List<ReadingEventType>?): Page<BookDto> {
         return bookRepository.findTagBooksById(tagId, user, pageable, libaryFilter, eventTypes).map { book -> book.toBookDto() }
     }
 
     @Transactional
-    fun findSeriesBooksById(seriesId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
+    fun findSeriesBooksById(seriesId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
         return bookRepository.findSeriesBooksById(seriesId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
     }
 
@@ -414,7 +414,7 @@ class BookService(
     }
 
     @Transactional
-    fun saveSeries(series: SeriesCreateDto, user: User): SeriesDto {
+    fun saveSeries(series: SeriesCreateDto, user: UserDto): SeriesDto {
         return bookRepository.saveSeries(series, user).toSeriesDto()
     }
 
@@ -526,7 +526,7 @@ class BookService(
     }
 
     @Transactional
-    fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter, role: Role = Role.ANY): Page<BookDto> {
+    fun findAuthorBooksById(authorId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter, role: Role = Role.ANY): Page<BookDto> {
         return bookRepository.findAuthorBooksById(authorId, user, pageable, libaryFilter, role).map { book -> book.toBookDto() }
     }
 
@@ -549,12 +549,12 @@ class BookService(
     }
 
     @Transactional
-    fun save(seriesRatingDto: CreateSeriesRatingDto, user: User): SeriesRatingDto {
+    fun save(seriesRatingDto: CreateSeriesRatingDto, user: UserDto): SeriesRatingDto {
         return bookRepository.save(seriesRatingDto, user).toSeriesRatingDto()
     }
 
     @Transactional
-    fun mergeAuthors(authorId: UUID, otherId: UUID, authorUpdateDto: AuthorUpdateDto, user: User): AuthorDto {
+    fun mergeAuthors(authorId: UUID, otherId: UUID, authorUpdateDto: AuthorUpdateDto, user: UserDto): AuthorDto {
         val pageNum = 0
         val size = 30
         val author = bookRepository.findAuthorsById(authorId)

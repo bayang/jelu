@@ -2,6 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.CreateBookQuoteDto
 import io.github.bayang.jelu.dto.UpdateBookQuoteDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.utils.nowInstant
 import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.SortOrder
@@ -19,7 +20,7 @@ class BookQuoteRepository {
 
     fun findById(quoteId: UUID): BookQuote = BookQuote[quoteId]
 
-    fun save(bookQuoteDto: CreateBookQuoteDto, user: User): BookQuote {
+    fun save(bookQuoteDto: CreateBookQuoteDto, user: UserDto): BookQuote {
         val instant: Instant = nowInstant()
         return BookQuote.new {
             this.creationDate = instant
@@ -27,7 +28,7 @@ class BookQuoteRepository {
             this.text = bookQuoteDto.text
             this.visibility = bookQuoteDto.visibility
             this.book = Book[bookQuoteDto.bookId]
-            this.user = user
+            this.user = User[user.id!!]
             this.position = bookQuoteDto.position
         }
     }

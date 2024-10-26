@@ -4,13 +4,13 @@ import com.ninjasquad.springmockk.MockkBean
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.ImportSource
 import io.github.bayang.jelu.dao.ProcessingStatus
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.importConfigurationDto
 import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.service.ImportService
@@ -19,7 +19,12 @@ import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.mockk.coVerify
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.io.TempDir
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -59,11 +64,11 @@ class CsvImportServiceTest(
         tempDir.listFiles().forEach {
             it.deleteRecursively()
         }
-        importService.deleteByprocessingStatusAndUser(ProcessingStatus.SAVED, user().id.value)
+        importService.deleteByprocessingStatusAndUser(ProcessingStatus.SAVED, user().id!!)
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -75,9 +80,9 @@ class CsvImportServiceTest(
 
     @Test
     fun testParse() {
-        val userId = user().id.value
+        val userId = user().id
         val csv = File(this::class.java.getResource("/csv-import/goodreads1.csv").file)
-        csvImportService.parse(csv, userId, importConfigurationDto())
+        csvImportService.parse(csv, userId!!, importConfigurationDto())
         val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
         Assertions.assertEquals(10, nb)
         val dtos = importService.getByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
@@ -93,7 +98,7 @@ class CsvImportServiceTest(
 
     @Test
     fun testParseNewColumnNUmber() {
-        val userId = user().id.value
+        val userId = user().id!!
         val csv = File(this::class.java.getResource("/csv-import/goodreads_library_export-2022.csv").file)
         csvImportService.parse(csv, userId, importConfigurationDto())
         val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
@@ -111,7 +116,7 @@ class CsvImportServiceTest(
 
     @Test
     fun testParseRatingAndReview() {
-        val userId = user().id.value
+        val userId = user().id!!
         val csv = File(this::class.java.getResource("/csv-import/goodreads_library_export_one_line_modified_review.csv").file)
         csvImportService.parse(csv, userId, importConfigurationDto())
         val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
@@ -132,7 +137,7 @@ class CsvImportServiceTest(
 
     @Test
     fun testParseIsbnList() {
-        val userId = user().id.value
+        val userId = user().id!!
         val csv = File(this::class.java.getResource("/csv-import/isbns-import.txt").file)
         csvImportService.parse(csv, userId, ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = true, ImportSource.ISBN_LIST))
         val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
@@ -146,7 +151,7 @@ class CsvImportServiceTest(
 
     @Test
     fun testParseAndImport() {
-        val userId = user().id.value
+        val userId = user().id!!
         val csv = File(this::class.java.getResource("/csv-import/goodreads1.csv").file)
         // shouldFetchMetadata true but binary path is null so we shouldn't try to call fetchMetadata
         csvImportService.parse(
@@ -174,7 +179,7 @@ class CsvImportServiceTest(
 
     @Test
     fun testNoDuplicates() {
-        val userId = user().id.value
+        val userId = user().id!!
         val csv = File(this::class.java.getResource("/csv-import/goodreads-duplicate-events.csv").file)
         csvImportService.parse(csv, userId, importConfigurationDto())
         val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
@@ -199,7 +204,7 @@ class CsvImportServiceTest(
 
     @Test
     fun testReimportShouldNotOverwriteExisting() {
-        val userId = user().id.value
+        val userId = user().id!!
         val csv = File(this::class.java.getResource("/csv-import/goodreads_library_export_one_line.csv").file)
         csvImportService.parse(csv, userId, importConfigurationDto())
         var nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
@@ -248,7 +253,7 @@ class CsvImportServiceTest(
         Assertions.assertTrue(imported.book.image!!.contains("Epidemie", true))
     }
 
-    fun user(): User {
+    fun user(): UserDto {
         val userDetail = userService.loadUserByUsername("testuser")
         return (userDetail as JeluUser).user
     }

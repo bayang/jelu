@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +23,7 @@ class SecurityConfig(
     private val userDetailsService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
     private val authHeaderFilter: AuthHeaderFilter?,
+    private val userAgentWebAuthenticationDetailsSource: WebAuthenticationDetailsSource,
 ) {
 
     @Bean
@@ -70,7 +72,9 @@ class SecurityConfig(
                     "/api/**",
                 ).hasRole("USER")
             }
-            .httpBasic { }
+            .httpBasic {
+                it.authenticationDetailsSource(userAgentWebAuthenticationDetailsSource)
+            }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             }

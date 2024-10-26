@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { key } from '../store'
 import UserModalVue from './UserModal.vue'
-import { Provider } from "../model/User"
+import { LoginHistoryInfo, Provider } from "../model/User"
 import { Shelf } from "../model/Shelf"
 import dataService from "../services/DataService";
 import { Tag } from "../model/Tag"
@@ -31,6 +31,8 @@ const user = computed(() => {
 
 let filteredTags: Ref<Array<Tag>> = ref([]);
 const isFetching = ref(false)
+
+let loginHistoryInfo: Ref<Array<LoginHistoryInfo>> = ref([])
 
 function getFilteredTags(text: string) {
   isFetching.value = true
@@ -85,6 +87,14 @@ function modalClosed() {
 const shelves = computed(() => {
   return store.getters.getShelves
 })
+
+const fetchHistoryInfo = async () => {
+  dataService.userLoginHistory()
+    .then( res => loginHistoryInfo.value = res)
+    .catch(err => console.log(err))
+}
+
+fetchHistoryInfo()
 
 </script>
 
@@ -196,6 +206,33 @@ const shelves = computed(() => {
         </div>
       </div>
     </div>
+  </div>
+  <div class="overflow-x-auto mt-6">
+    <h1 class="text-2xl typewriter capitalize">
+      {{ t('login_info.activity') }}
+    </h1>
+    <table class="table">
+      <thead>
+        <tr class="text-xl">
+          <th>{{ t('login_info.ip') }}</th>
+          <th>{{ t('login_info.user_agent') }}</th>
+          <th>{{ t('login_info.source') }}</th>
+          <th>{{ t('login_info.last_activity') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="line in loginHistoryInfo"
+          :key="line.date"
+          class="text-lg"
+        >
+          <td>{{ line.ip }}</td>
+          <td>{{ line.userAgent }}</td>
+          <td>{{ line.source }}</td>
+          <td>{{ line.date }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 

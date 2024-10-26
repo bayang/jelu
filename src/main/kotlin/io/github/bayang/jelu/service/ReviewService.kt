@@ -1,11 +1,11 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.dao.ReviewRepository
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.Visibility
 import io.github.bayang.jelu.dto.CreateReviewDto
 import io.github.bayang.jelu.dto.ReviewDto
 import io.github.bayang.jelu.dto.UpdateReviewDto
+import io.github.bayang.jelu.dto.UserDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -20,7 +20,7 @@ class ReviewService(
 ) {
 
     @Transactional
-    fun save(reviewDto: CreateReviewDto, user: User): ReviewDto {
+    fun save(reviewDto: CreateReviewDto, user: UserDto): ReviewDto {
         return reviewRepository.save(reviewDto, user).toReviewDto()
     }
 

@@ -85,7 +85,7 @@ class ReadingEventsController(
         principal: Authentication,
     ): Page<ReadingEventDto> {
         assertIsJeluUser(principal.principal)
-        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id.value, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable)
+        return repository.findAll(eventTypes, (principal.principal as JeluUser).user.id, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable)
     }
 
     @PostMapping(path = ["/reading-events"])
@@ -129,7 +129,7 @@ class ReadingEventsController(
         val pageSize = 200
         val yearStats = mutableMapOf<Int, YearStatsDto>()
         do {
-            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, null, null, PageRequest.of(currentPage, pageSize, Sort.by("endDate, asc")))
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id, null, null, null, null, null, PageRequest.of(currentPage, pageSize, Sort.by("endDate, asc")))
             currentPage++
             events.forEach {
                 val year = OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault()).year
@@ -161,7 +161,7 @@ class ReadingEventsController(
         val pageSize = 200
         val monthStats = mutableMapOf<Int, MonthStatsDto>()
         do {
-            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
+            events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
             currentPage++
             // FIXME use date filtering in repository method now
             events.filter { OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault()).year == year }.forEach {
@@ -190,7 +190,7 @@ class ReadingEventsController(
     fun years(
         principal: Authentication,
     ): ResponseEntity<List<Int>> {
-        val years = repository.findYears(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id.value, null)
+        val years = repository.findYears(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id, null)
         return if (years != null && years.isNotEmpty()) {
             ResponseEntity.ok(years.sorted())
         } else {

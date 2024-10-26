@@ -89,7 +89,7 @@ class CsvImportService(
     @Async
     fun import(file: File, user: UUID, importConfig: ImportConfigurationDto) {
         val start = System.currentTimeMillis()
-        val userEntity = userService.findUserEntityById(user)
+        val userEntity = userService.findUserEntityById(user).toUserDto()
         val nowString: String = OffsetDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
         try {
             userMessageService.save(
@@ -171,7 +171,7 @@ class CsvImportService(
                     logger.debug { "no isbn on entity ${importEntity.id}, not fetching metadata" }
                 }
             }
-            val userEntity = userService.findUserEntityById(user)
+            val userEntity = userService.findUserEntityById(user).toUserDto()
             val book: BookCreateDto = fillBook(importEntity, metadata)
             if (book.title.isBlank() && (book.authors == null || book.authors!!.isEmpty())) {
                 logger.error { "no title nor authors on entity ${importEntity.id} ${importEntity.isbn10} ${importEntity.isbn13} , not saving" }
@@ -329,7 +329,7 @@ class CsvImportService(
             val rating: Int = if (importEntity.rating != null) (importEntity.rating!! * 2) else 0
             if (!importEntity.review.isNullOrEmpty() || rating > 0) {
                 val existing = reviewService.find(
-                    userEntity.id.value,
+                    userEntity.id,
                     savedUserBook.book.id!!,
                     null,
                     null,

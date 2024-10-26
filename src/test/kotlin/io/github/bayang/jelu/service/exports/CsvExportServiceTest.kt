@@ -4,13 +4,13 @@ import io.github.bayang.jelu.authorDto
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.createUserBookDto
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UserBookLightDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserMessageService
@@ -68,7 +68,7 @@ class CsvExportServiceTest(
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -193,7 +193,7 @@ class CsvExportServiceTest(
         Assertions.assertEquals(2, messages.numberOfElements)
     }
 
-    fun user(): User {
+    fun user(): UserDto {
         val userDetail = userService.loadUserByUsername("testuser")
         return (userDetail as JeluUser).user
     }

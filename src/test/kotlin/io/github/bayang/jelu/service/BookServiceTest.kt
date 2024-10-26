@@ -5,7 +5,6 @@ import io.github.bayang.jelu.bookDto
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.createUserBookDto
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.AuthorDto
 import io.github.bayang.jelu.dto.AuthorUpdateDto
 import io.github.bayang.jelu.dto.BookCreateDto
@@ -21,6 +20,7 @@ import io.github.bayang.jelu.dto.SeriesRatingDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.search.LuceneEntity
 import io.github.bayang.jelu.search.LuceneHelper
@@ -85,7 +85,7 @@ class BookServiceTest(
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -106,12 +106,12 @@ class BookServiceTest(
     fun testSeriesRatingManualRating() {
         val s1: SeriesDto = bookService.saveSeries(SeriesCreateDto("series", null, null), user())
         val r1: SeriesRatingDto = bookService.save(CreateSeriesRatingDto(seriesId = s1.id!!, rating = 4.3), user())
-        var findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        var findSeriesById = bookService.findSeriesById(s1.id!!, user().id!!)
         Assertions.assertEquals(4.3, findSeriesById.userRating)
         Assertions.assertEquals(4.3, findSeriesById.avgRating)
 
         val r2: SeriesRatingDto = bookService.save(CreateSeriesRatingDto(seriesId = s1.id!!, rating = 7.2), user2())
-        findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        findSeriesById = bookService.findSeriesById(s1.id!!, user().id!!)
         Assertions.assertEquals(4.3, findSeriesById.userRating)
         Assertions.assertEquals(5.75, findSeriesById.avgRating)
 
@@ -123,7 +123,7 @@ class BookServiceTest(
         Assertions.assertNull(findAllSeries.content[0].userRating)
         Assertions.assertNull(findAllSeries.content[1].userRating)
 
-        findAllSeries = bookService.findAllSeries("seri", user().id.value, Pageable.ofSize(20))
+        findAllSeries = bookService.findAllSeries("seri", user().id, Pageable.ofSize(20))
         Assertions.assertEquals(2, findAllSeries.totalElements)
         Assertions.assertNotNull(findAllSeries.content[0].userRating)
         Assertions.assertNotNull(findAllSeries.content[1].userRating)
@@ -132,12 +132,12 @@ class BookServiceTest(
     @Test
     fun testSeriesRatingImplicitRating() {
         val s1: SeriesDto = bookService.saveSeries(SeriesCreateDto("series", 4.3, null), user())
-        var findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        var findSeriesById = bookService.findSeriesById(s1.id!!, user().id!!)
         Assertions.assertEquals(4.3, findSeriesById.userRating)
         Assertions.assertEquals(4.3, findSeriesById.avgRating)
 
         bookService.updateSeries(s1.id!!, SeriesUpdateDto(name = null, rating = 7.2, null), user2())
-        findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        findSeriesById = bookService.findSeriesById(s1.id!!, user().id!!)
         Assertions.assertEquals(4.3, findSeriesById.userRating)
         Assertions.assertEquals(5.75, findSeriesById.avgRating)
 
@@ -148,7 +148,7 @@ class BookServiceTest(
         Assertions.assertNull(findAllSeries.content[0].userRating)
         Assertions.assertNull(findAllSeries.content[1].userRating)
 
-        findAllSeries = bookService.findAllSeries("seri", user().id.value, Pageable.ofSize(20))
+        findAllSeries = bookService.findAllSeries("seri", user().id, Pageable.ofSize(20))
         Assertions.assertEquals(2, findAllSeries.totalElements)
         Assertions.assertNotNull(findAllSeries.content[0].userRating)
         Assertions.assertNotNull(findAllSeries.content[1].userRating)
@@ -157,11 +157,11 @@ class BookServiceTest(
     @Test
     fun testSeriesDeleteCascadesRating() {
         val s1: SeriesDto = bookService.saveSeries(SeriesCreateDto("series", 4.3, null), user())
-        val findSeriesById = bookService.findSeriesById(s1.id!!, user().id.value)
+        val findSeriesById = bookService.findSeriesById(s1.id!!, user().id!!)
         Assertions.assertEquals(4.3, findSeriesById.userRating)
         Assertions.assertEquals(4.3, findSeriesById.avgRating)
         bookService.deleteSeriesById(s1.id!!)
-        val seriesRating = bookService.findSeriesRating(s1.id!!, user().id.value)
+        val seriesRating = bookService.findSeriesRating(s1.id!!, user().id!!)
         Assertions.assertNull(seriesRating)
     }
 
@@ -1405,15 +1405,15 @@ class BookServiceTest(
         Assertions.assertNull(saved2.book.librarythingId)
         Assertions.assertEquals(createUserBookDto2.owned, saved2.owned)
 
-        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
+        var nb = bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(3, nb)
 
-        var res = bookService.findUserBookByCriteria(user().id.value, null, null, null, true, null, Pageable.ofSize(30))
+        var res = bookService.findUserBookByCriteria(user().id!!, null, null, null, true, null, Pageable.ofSize(30))
         nb = res.totalElements
         Assertions.assertEquals(1, nb)
         Assertions.assertEquals(createBook.title, res.content[0].book.title)
 
-        res = bookService.findUserBookByCriteria(user().id.value, null, null, null, false, null, Pageable.ofSize(30))
+        res = bookService.findUserBookByCriteria(user().id!!, null, null, null, false, null, Pageable.ofSize(30))
         nb = res.totalElements
         Assertions.assertEquals(2, nb)
         val titles = listOf<String>(createBook1.title, createBook2.title)
@@ -1433,13 +1433,13 @@ class BookServiceTest(
             bookService.save(createUserBookDto, user(), null)
         }
 
-        val totalCheckRes = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(booksToCreate))
+        val totalCheckRes = bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(booksToCreate))
         // Check total number of books created -- cast to Int for assert
         val totalNumberOfBooks = totalCheckRes.totalElements.toInt()
         Assertions.assertEquals(booksToCreate, totalNumberOfBooks)
 
         val pageable = PageRequest.of(0, targetPageableSize, Sort.by("random").descending())
-        val randomCheckRes = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, pageable)
+        val randomCheckRes = bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, pageable)
         // Check number of randomly returned books (pageSize, not total)
         val randomNumberOfBooks = randomCheckRes.numberOfElements.toInt()
         Assertions.assertEquals(targetPageableSize, randomNumberOfBooks)
@@ -1963,12 +1963,12 @@ class BookServiceTest(
 
         Assertions.assertNotNull(saved1)
         Assertions.assertNotNull(saved2)
-        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
+        var nb = bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, nb)
         var eventsNb = readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, eventsNb)
         bookService.deleteUserBookById(saved1.id!!)
-        nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
+        nb = bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, nb)
         eventsNb = readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, eventsNb)
@@ -2004,7 +2004,7 @@ class BookServiceTest(
 
         Assertions.assertNotNull(saved1)
         Assertions.assertNotNull(saved2)
-        var nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
+        var nb = bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, nb)
         var eventsNb = readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, eventsNb)
@@ -2014,7 +2014,7 @@ class BookServiceTest(
         Assertions.assertEquals(2, tagsNb)
         Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
         bookService.deleteBookById(savedBook.id!!)
-        nb = bookService.findUserBookByCriteria(user().id.value, null, null, null, null, null, Pageable.ofSize(30)).totalElements
+        nb = bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, nb)
         authorsNb = bookService.findAllAuthors(null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, authorsNb)
@@ -2378,12 +2378,12 @@ class BookServiceTest(
         Assertions.assertEquals(3, entitiesIds?.size)
     }
 
-    fun user(): User {
+    fun user(): UserDto {
         val userDetail = userService.loadUserByUsername("testuser")
         return (userDetail as JeluUser).user
     }
 
-    fun user2(): User {
+    fun user2(): UserDto {
         val userDetail = userService.loadUserByUsername("testuser2")
         return (userDetail as JeluUser).user
     }

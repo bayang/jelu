@@ -2,6 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.CreateReviewDto
 import io.github.bayang.jelu.dto.UpdateReviewDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.Expression
@@ -26,7 +27,7 @@ class ReviewRepository {
 
     fun findById(reviewId: UUID): Review = Review[reviewId]
 
-    fun save(reviewDto: CreateReviewDto, user: User): Review {
+    fun save(reviewDto: CreateReviewDto, user: UserDto): Review {
         val instant: Instant = nowInstant()
         return Review.new {
             this.creationDate = instant
@@ -40,7 +41,7 @@ class ReviewRepository {
             this.text = reviewDto.text
             this.visibility = reviewDto.visibility
             this.book = Book[reviewDto.bookId]
-            this.user = user
+            this.user = User[user.id!!]
         }
     }
 

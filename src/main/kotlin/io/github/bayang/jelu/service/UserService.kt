@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.session.FindByIndexNameSessionRepository
+import org.springframework.session.Session
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -25,6 +27,7 @@ private val logger = KotlinLogging.logger {}
 class UserService(
     private val userRepository: UserRepository,
     private val sessionRegistry: SessionRegistry,
+    private val sessionsRepo: FindByIndexNameSessionRepository<out Session>,
     private val passwordEncoder: PasswordEncoder,
 ) : UserDetailsService {
 
@@ -62,7 +65,17 @@ class UserService(
         }
         val res = userRepository.findByLogin(username)
         if (!res.empty()) {
-            return JeluUser(res.first())
+            val found = res.first()
+            val dto = UserDto(
+                id = found.id.value,
+                creationDate = found.creationDate,
+                modificationDate = found.modificationDate,
+                login = found.login,
+                password = found.password,
+                isAdmin = found.isAdmin,
+                provider = found.provider,
+            )
+            return JeluUser(dto)
         }
         throw UsernameNotFoundException("user $username not found in db")
     }
@@ -76,9 +89,10 @@ class UserService(
     fun updateUser(userId: UUID, userDto: UpdateUserDto): UserDto {
         val updated = userRepository.updateUser(userId, userDto.copy(password = passwordEncoder.encode(userDto.password.trim()))).toUserDto()
         val jeluUser: JeluUser = this.loadUserByUsername(updated.login) as JeluUser
-        sessionRegistry.getAllSessions(jeluUser, false).forEach {
-            it.expireNow()
-        }
+        // sessionRegistry.getAllSessions(jeluUser, false).forEach {
+        //     it.expireNow()
+        // }
+        // val r = sessionsRepo.findByPrincipalName(updated.login)
         return updated
     }
 }

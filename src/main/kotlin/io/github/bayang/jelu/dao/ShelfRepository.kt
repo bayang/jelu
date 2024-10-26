@@ -1,6 +1,7 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.CreateShelfDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.andWhere
@@ -14,19 +15,19 @@ private val logger = KotlinLogging.logger {}
 @Repository
 class ShelfRepository {
 
-    fun save(createShelfDto: CreateShelfDto, user: User): Shelf {
+    fun save(createShelfDto: CreateShelfDto, user: UserDto): Shelf {
         val instant: Instant = nowInstant()
         return Shelf.new {
             this.creationDate = instant
             this.modificationDate = instant
-            this.user = user
+            this.user = User[user.id!!]
             this.name = createShelfDto.name
             this.targetId = createShelfDto.targetId
         }
     }
 
     fun find(
-        user: User?,
+        user: UserDto?,
         name: String?,
         targetId: UUID?,
     ): List<Shelf> {

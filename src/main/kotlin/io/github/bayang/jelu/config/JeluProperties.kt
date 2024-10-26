@@ -39,7 +39,7 @@ data class JeluProperties(
     )
 
     data class Session(
-        @get:Positive var duration: Int,
+        @get:Positive var duration: Long,
     )
 
     data class Cors(

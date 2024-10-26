@@ -1,10 +1,10 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.dao.MessageCategory
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.UserMessageRepository
 import io.github.bayang.jelu.dto.CreateUserMessageDto
 import io.github.bayang.jelu.dto.UpdateUserMessageDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.dto.UserMessageDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -16,13 +16,13 @@ import java.util.UUID
 class UserMessageService(private val userMessageRepository: UserMessageRepository) {
 
     @Transactional
-    fun save(createUserMessageDto: CreateUserMessageDto, user: User): UserMessageDto {
+    fun save(createUserMessageDto: CreateUserMessageDto, user: UserDto): UserMessageDto {
         return userMessageRepository.save(createUserMessageDto, user).toUserMessageDto()
     }
 
     @Transactional
     fun find(
-        user: User,
+        user: UserDto,
         read: Boolean?,
         messageCategories: List<MessageCategory>?,
         pageable: Pageable,

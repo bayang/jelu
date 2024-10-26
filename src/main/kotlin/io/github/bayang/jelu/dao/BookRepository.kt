@@ -15,6 +15,7 @@ import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.service.FileManager
 import io.github.bayang.jelu.utils.nowInstant
@@ -106,7 +107,7 @@ class BookRepository(
     val fileManager: FileManager,
 ) {
 
-    fun findAll(bookIds: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAll(bookIds: List<String>?, pageable: Pageable, user: UserDto, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .select(BookTable.id)
             .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
@@ -146,7 +147,7 @@ class BookRepository(
             query.orderBy(*orders)
         }
         return PageImpl(
-            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            query.map { resultRow -> wrapRow(resultRow, user.id!!) },
             pageable,
             total,
         )
@@ -223,7 +224,7 @@ class BookRepository(
         )
     }
 
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable, user: User, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable, user: UserDto, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .select(BookTable.id)
             .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
@@ -300,7 +301,7 @@ class BookRepository(
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
-            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            query.map { resultRow -> wrapRow(resultRow, user.id!!) },
             pageable,
             total,
         )
@@ -414,7 +415,7 @@ class BookRepository(
 
     fun findTagBooksById(
         tagId: UUID,
-        user: User,
+        user: UserDto,
         pageable: Pageable,
         filter: LibraryFilter = LibraryFilter.ANY,
         eventTypes: List<ReadingEventType>?,
@@ -448,13 +449,13 @@ class BookRepository(
             query.orderBy(*orders)
         }
         return PageImpl(
-            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            query.map { resultRow -> wrapRow(resultRow, user.id!!) },
             pageable,
             total,
         )
     }
 
-    fun findSeriesBooksById(seriesId: UUID, user: User, pageable: Pageable, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findSeriesBooksById(seriesId: UUID, user: UserDto, pageable: Pageable, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .select(BookTable.id)
             .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
@@ -476,7 +477,7 @@ class BookRepository(
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookSeries, BookTable)
         query.orderBy(*orders)
         return PageImpl(
-            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            query.map { resultRow -> wrapRow(resultRow, user.id!!) },
             pageable,
             total,
         )
@@ -518,7 +519,7 @@ class BookRepository(
         )
     }
 
-    fun findAuthorBooksById(authorId: UUID, user: User, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
+    fun findAuthorBooksById(authorId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
         logger.trace { "role $role" }
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .select(BookTable.id)
@@ -548,7 +549,7 @@ class BookRepository(
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
-            query.map { resultRow -> wrapRow(resultRow, user.id.value) },
+            query.map { resultRow -> wrapRow(resultRow, user.id!!) },
             pageable,
             total,
         )
@@ -847,14 +848,14 @@ class BookRepository(
         return found
     }
 
-    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto, user: User): Series {
+    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto, user: UserDto): Series {
         val found: Series = Series[seriesId]
         if (!series.name.isNullOrBlank()) {
             found.name = series.name.trim()
         }
         found.description = series.description
         if (series.rating != null) {
-            val findSeriesRating = findSeriesRating(seriesId, user.id.value)
+            val findSeriesRating = findSeriesRating(seriesId, user.id!!)
             if (findSeriesRating != null) {
                 findSeriesRating.rating = series.rating
             } else {
@@ -988,7 +989,7 @@ class BookRepository(
         return created
     }
 
-    fun saveSeries(series: SeriesCreateDto, user: User): Series {
+    fun saveSeries(series: SeriesCreateDto, user: UserDto): Series {
         val created = Series.new(UUID.randomUUID()) {
             this.name = series.name.trim()
             this.description = series.description
@@ -1031,14 +1032,14 @@ class BookRepository(
         return null
     }
 
-    fun save(seriesRatingDto: CreateSeriesRatingDto, user: User): SeriesRating {
+    fun save(seriesRatingDto: CreateSeriesRatingDto, user: UserDto): SeriesRating {
         val created = SeriesRating.new(UUID.randomUUID()) {
             this.rating = seriesRatingDto.rating
             val instant: Instant = nowInstant()
             this.creationDate = instant
             this.modificationDate = instant
             this.series = Series[seriesRatingDto.seriesId]
-            this.user = user
+            this.user = User[user.id!!]
         }
         return created
     }
@@ -1056,12 +1057,12 @@ class BookRepository(
         return null
     }
 
-    fun save(book: Book, user: User, createUserBookDto: CreateUserBookDto): UserBook {
+    fun save(book: Book, user: UserDto, createUserBookDto: CreateUserBookDto): UserBook {
         val instant: Instant = nowInstant()
         return UserBook.new(UUID.randomUUID()) {
             this.creationDate = instant
             this.modificationDate = instant
-            this.user = user
+            this.user = User[user.id!!]
             this.book = book
             this.owned = createUserBookDto.owned
             this.toRead = createUserBookDto.toRead

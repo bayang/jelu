@@ -2,7 +2,7 @@ package io.github.bayang.jelu.dto
 
 import io.github.bayang.jelu.dao.Provider
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 data class UserDto(
     val id: UUID?,

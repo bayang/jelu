@@ -47,7 +47,7 @@ class ImportController(
         if (!destFile.exists()) {
             logger.error { "File ${destFile.absolutePath} not created, csv import aborted" }
         }
-        csvImportService.import(destFile, (principal.principal as JeluUser).user.id.value, importConfig)
+        csvImportService.import(destFile, (principal.principal as JeluUser).user.id!!, importConfig)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 

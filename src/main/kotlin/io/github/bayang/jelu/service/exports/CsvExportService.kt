@@ -4,9 +4,9 @@ import io.github.bayang.jelu.config.EXPORTS_PREFIX
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.MessageCategory
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dto.CreateUserMessageDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
+import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.service.BookService
 import io.github.bayang.jelu.service.ReadingEventService
 import io.github.bayang.jelu.service.UserMessageService
@@ -51,10 +51,10 @@ class CsvExportService(
      * see https://help.goodreads.com/s/article/How-to-import-my-books-from-other-cataloging-services-1553870934585
      * Other columns are generic data that could be used elsewhere.
      */
-    fun export(user: User, locale: Locale) {
+    fun export(user: UserDto, locale: Locale) {
         val format: CSVFormat = CSVFormat.Builder.create(CSVFormat.EXCEL).setQuoteMode(QuoteMode.MINIMAL).build()
         val start = System.currentTimeMillis()
-        val userId = user.id.value
+        val userId = user.id
         logger.debug { "beginning csv export" }
         val nowString: String = OffsetDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
         val nowPretty: String = try {
@@ -85,7 +85,7 @@ class CsvExportService(
             CSVPrinter(BufferedWriter(FileWriter(destFile)), format).use { printer ->
                 printer.printRecord("Title", "Author", "ISBN", "Publisher", "Date Read", "Shelves", "Bookshelves", "read_dates", "tags", "authors", "isbn10", "isbn13", "owned", "dropped_dates", "currently_reading")
                 do {
-                    books = bookService.findUserBookByCriteria(userId, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
+                    books = bookService.findUserBookByCriteria(userId!!, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
                     currentPage++
                     logger.debug { "current $currentPage" }
                     count += books.content.size
