@@ -351,5 +351,12 @@
         "edit_series": "edit series",
         "create_series": "create series",
         "name": "name"
+    },
+    "login_info": {
+        "ip": "ip",
+        "user_agent": "user agent",
+        "source": "source",
+        "last_activity": "last activity",
+        "activity": "login activity"
     }
 }
