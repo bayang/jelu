@@ -355,8 +355,8 @@
     "login_info": {
         "ip": "ip",
         "user_agent": "user agent",
-        "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "source": "bron",
+        "last_activity": "laatste activiteit",
+        "activity": "login activiteit"
     }
 }
