@@ -1,3 +1,10 @@
+### [0.60.2](https://github.com/bayang/jelu/compare/v0.60.1...v0.60.2) (2024-11-03)
+
+
+### Bug Fixes
+
+* userBook details on bookCard in search, author, and series views ([#152](https://github.com/bayang/jelu/issues/152)) ([89fa0df](https://github.com/bayang/jelu/commit/89fa0dfbc1a5346f33d31edcf9cf07b8b4ba8b67))
+
 ### [0.60.1](https://github.com/bayang/jelu/compare/v0.60.0...v0.60.1) (2024-10-26)
 
 
