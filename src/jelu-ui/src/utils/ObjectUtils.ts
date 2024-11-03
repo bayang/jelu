@@ -30,7 +30,20 @@ export class ObjectUtils {
   public static toUserBook = (book: Book): UserBook => {
     const converted = {
       id: book.userBookId != null ? book.userBookId : null,
-      book: book
+      book: book,
+      lastReadingEvent: book.userbook?.lastReadingEvent != null ? book.userbook?.lastReadingEvent : null,
+      lastReadingEventDate: book.userbook?.lastReadingEventDate != null ? book.userbook?.lastReadingEventDate : null,
+      creationDate: book.userbook?.creationDate != null ? book.userbook?.creationDate : null,
+      modificationDate: book.userbook?.modificationDate != null ? book.userbook?.modificationDate : null,
+      personalNotes: book.userbook?.personalNotes != null ? book.userbook?.personalNotes : null,
+      owned: book.userbook?.owned != null ? book.userbook?.owned : null,
+      borrowed: book.userbook?.borrowed != null ? book.userbook?.borrowed : null,
+      toRead: book.userbook?.toRead != null ? book.userbook?.toRead : null,
+      readingEvents: book.userbook?.readingEvents != null ? book.userbook?.readingEvents : null,
+      percentRead: book.userbook?.percentRead != null ? book.userbook?.percentRead : null,
+      currentPageNumber: book.userbook?.currentPageNumber != null ? book.userbook?.currentPageNumber : null,
+      avgRating: book.userbook?.avgRating != null ? book.userbook?.avgRating : null,
+      userAvgRating: book.userbook?.userAvgRating != null ? book.userbook?.userAvgRating : null
     } as UserBook
     // console.log('after')
     // console.log(converted)
