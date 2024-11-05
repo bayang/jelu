@@ -8,7 +8,7 @@
     "nav": {
         "my_books": "mine bøger",
         "to_read": "læseliste",
-        "random": "random",
+        "random": "tilfældig",
         "add_book": "tilføj bog",
         "dashboard": "kontrolpanel",
         "login": "log ind",
@@ -110,9 +110,9 @@
         "set_progress": "sæt dine aktuelle fremskridt",
         "user_avg_rating": "min gennemsnitlige bedømmelse : {rating}",
         "avg_rating": "gennemsnitlig bedømmelse : {rating}",
-        "add_quote": "add book quote",
-        "description": "description",
-        "user_rating": "my rating : {rating}"
+        "add_quote": "tilføj bogcitat",
+        "description": "beskrivelse",
+        "user_rating": "min bedømmelse: {rating}"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -148,7 +148,7 @@
         "date_added": "Dato tilføjet",
         "date_added_to_list": "Dato tilføjet til listen",
         "title": "Titel",
-        "random": "Random",
+        "random": "Tilfældig",
         "publisher": "Udgiver",
         "series": "Serie",
         "series_number": "Serienummer",
@@ -341,22 +341,22 @@
         "default_priority": "standard prioritet"
     },
     "book_quotes": {
-        "edit_quote": "Edit book quote",
-        "create": "Post a quote",
-        "quote": "quote | quotes",
+        "edit_quote": "Rediger bogcitat",
+        "create": "Skriv et bogcitat",
+        "quote": "bogcitater",
         "position": "position",
-        "delete_quote": "delete this quote ?"
+        "delete_quote": "slet dette bogcitat?"
     },
     "series": {
-        "edit_series": "edit series",
-        "create_series": "create series",
-        "name": "name"
+        "edit_series": "rediger serier",
+        "create_series": "opret serier",
+        "name": "navn"
     },
     "login_info": {
         "ip": "ip-adresse",
-        "user_agent": "user agent",
-        "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "user_agent": "brugeragent",
+        "source": "kilde",
+        "last_activity": "seneste aktivitet",
+        "activity": "login aktivitet"
     }
 }
