@@ -7,7 +7,9 @@ import io.github.bayang.jelu.dto.MetadataRequestDto
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpHeaders
 import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.test.web.client.match.MockRestRequestMatchers
 import org.springframework.test.web.client.response.MockRestResponseCreators
@@ -16,6 +18,7 @@ import org.springframework.web.client.RestClient
 @SpringBootTest
 class InventaireIoMetadataProviderTest(
     @Autowired private val springRestClient: RestClient,
+    @Autowired private val buildProperties: BuildProperties,
 ) {
 
     @Test
@@ -53,7 +56,7 @@ class InventaireIoMetadataProviderTest(
             """,
         )
 
-        serv.expect(MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=isbn:9782290349229")).andRespond(isbn)
+        serv.expect(MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=isbn:9782290349229")).andExpect(MockRestRequestMatchers.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)).andRespond(isbn)
         serv.expect(MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=wd:Q3203603")).andRespond(edition)
         serv.expect(MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=wd:Q237087")).andRespond(author)
         serv.expect(MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=wd:Q182015")).andRespond(genre1)
@@ -74,7 +77,7 @@ class InventaireIoMetadataProviderTest(
                 ),
             ),
         )
-        val service = InventaireIoMetadataProvider(builder.build(), jeluProperties, ObjectMapper())
+        val service = InventaireIoMetadataProvider(builder.build(), jeluProperties, ObjectMapper(), buildProperties)
 
         // When
         val result: MetadataDto = service.fetchMetadata(
@@ -115,7 +118,7 @@ class InventaireIoMetadataProviderTest(
             ),
         )
         val objectMapper = ObjectMapper()
-        val service = InventaireIoMetadataProvider(springRestClient, jeluProperties, objectMapper)
+        val service = InventaireIoMetadataProvider(springRestClient, jeluProperties, objectMapper, buildProperties)
         val res = """
             {
               "wdt:P31" : [ "wd:Q3331189" ],

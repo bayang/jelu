@@ -7,6 +7,8 @@ import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
 import jakarta.annotation.Resource
 import mu.KotlinLogging
+import org.springframework.boot.info.BuildProperties
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
@@ -14,11 +16,14 @@ import java.util.Optional
 
 private val logger = KotlinLogging.logger {}
 
+const val USER_AGENT = "jelu/"
+
 @Service
 class InventaireIoMetadataProvider(
     @Resource(name = "springRestClient") private val restClient: RestClient,
     private val properties: JeluProperties,
     private val objectMapper: ObjectMapper,
+    private val buildProperties: BuildProperties,
 ) : IMetaDataProvider {
 
     private val _name = "inventaireio"
@@ -40,6 +45,7 @@ class InventaireIoMetadataProvider(
                         .queryParam("uris", "isbn:$isbn")
                         .build()
                 }
+                .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
                 .exchange { clientRequest, clientResponse ->
                     if (clientResponse.statusCode == HttpStatus.OK) {
                         val bodyString = clientResponse.bodyTo(String::class.java)
@@ -79,6 +85,7 @@ class InventaireIoMetadataProvider(
                     .queryParam("search", author)
                     .build()
             }
+            .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
             .exchange { clientRequest, clientResponse ->
                 if (clientResponse.statusCode == HttpStatus.OK) {
                     val bodyString = clientResponse.bodyTo(String::class.java)
@@ -107,6 +114,7 @@ class InventaireIoMetadataProvider(
                     .queryParam("search", title)
                     .build()
             }
+            .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
             .exchange { clientRequest, clientResponse ->
                 if (clientResponse.statusCode == HttpStatus.OK) {
                     val bodyString = clientResponse.bodyTo(String::class.java)
@@ -263,6 +271,7 @@ class InventaireIoMetadataProvider(
                         .queryParam("uri", authorUri)
                         .build()
                 }
+                .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
                 .exchange { clientRequest, clientResponse ->
                     if (clientResponse.statusCode == HttpStatus.OK) {
                         val bodyString = clientResponse.bodyTo(String::class.java)
@@ -300,6 +309,7 @@ class InventaireIoMetadataProvider(
                         .queryParam("uris", dto.editionClaim)
                         .build()
                 }
+                .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
                 .exchange { clientRequest, clientResponse ->
                     if (clientResponse.statusCode == HttpStatus.OK) {
                         val bodyString = clientResponse.bodyTo(String::class.java)
@@ -357,6 +367,7 @@ class InventaireIoMetadataProvider(
                     .queryParam("uris", dataId)
                     .build()
             }
+            .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
             .exchange { clientRequest, clientResponse ->
                 if (clientResponse.statusCode == HttpStatus.OK) {
                     val bodyString = clientResponse.bodyTo(String::class.java)
