@@ -11,7 +11,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriBuilder
-import reactor.core.publisher.Mono
+import java.time.Duration
+import java.util.Optional
 
 private val logger = KotlinLogging.logger {}
 
@@ -26,12 +27,12 @@ class GoogleBooksIMetaDataProvider(
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String>,
-    ): Mono<MetadataDto>? {
+    ): Optional<MetadataDto> {
         val googleProviderApiKey = getGoogleProviderApiKey()
         if (googleProviderApiKey.isNullOrBlank() || metadataRequestDto.isbn.isNullOrBlank()) {
-            return null
+            return Optional.empty()
         }
-        return restClient.get()
+        val res = restClient.get()
             .uri { uriBuilder: UriBuilder ->
                 uriBuilder
                     .scheme("https")
@@ -55,6 +56,11 @@ class GoogleBooksIMetaDataProvider(
                     null
                 }
             }
+            .block(Duration.ofSeconds(60))
+        if (res == null) {
+            return Optional.empty()
+        }
+        return Optional.of(res)
     }
 
     override fun name(): String {

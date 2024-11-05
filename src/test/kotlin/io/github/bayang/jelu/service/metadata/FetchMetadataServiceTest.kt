@@ -10,6 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import java.util.Optional
 
 class FetchMetadataServiceTest {
 
@@ -27,10 +28,10 @@ class FetchMetadataServiceTest {
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
         every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
-        every { jeluDebug.fetchMetadata(any(), any()) } returns null
+        every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
         every { calibre.name() } returns PluginInfoHolder.calibre
-        every { calibre.fetchMetadata(any(), any()) } returns null
+        every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
         val info = PluginInfoHolder(jeluProperties)
@@ -54,10 +55,10 @@ class FetchMetadataServiceTest {
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
         every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
-        every { jeluDebug.fetchMetadata(any(), any()) } returns null
+        every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
         every { calibre.name() } returns PluginInfoHolder.calibre
-        every { calibre.fetchMetadata(any(), any()) } returns null
+        every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
         val info = PluginInfoHolder(jeluProperties)
@@ -91,10 +92,10 @@ class FetchMetadataServiceTest {
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
         every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
-        every { jeluDebug.fetchMetadata(any(), any()) } returns null
+        every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
         every { calibre.name() } returns PluginInfoHolder.calibre
-        every { calibre.fetchMetadata(any(), any()) } returns null
+        every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
         val info = PluginInfoHolder(jeluProperties)
@@ -118,10 +119,10 @@ class FetchMetadataServiceTest {
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
         every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
-        every { jeluDebug.fetchMetadata(any(), any()) } returns null
+        every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
         every { calibre.name() } returns PluginInfoHolder.calibre
-        every { calibre.fetchMetadata(any(), any()) } returns null
+        every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
         val info = PluginInfoHolder(jeluProperties)
@@ -159,10 +160,10 @@ class FetchMetadataServiceTest {
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
         every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
-        every { jeluDebug.fetchMetadata(any(), any()) } returns null
+        every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
         every { calibre.name() } returns PluginInfoHolder.calibre
-        every { calibre.fetchMetadata(any(), any()) } returns null
+        every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
         val info = PluginInfoHolder(jeluProperties)

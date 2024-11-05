@@ -23,6 +23,10 @@ data class BookDto(
     val amazonId: String?,
     val goodreadsId: String?,
     val librarythingId: String?,
+    val isfdbId: String?,
+    val openlibraryId: String?,
+    val noosfereId: String?,
+    val inventaireId: String?,
     val language: String?,
     val userBookId: UUID?,
     val userbook: UserBookLightWithoutBookDto?,
@@ -46,6 +50,10 @@ data class BookCreateDto(
     var amazonId: String? = null,
     var goodreadsId: String? = null,
     var librarythingId: String? = null,
+    var isfdbId: String? = null,
+    var openlibraryId: String? = null,
+    var noosfereId: String? = null,
+    var inventaireId: String? = null,
     var language: String? = null,
 )
 
@@ -65,6 +73,10 @@ data class BookUpdateDto(
     val amazonId: String?,
     val goodreadsId: String?,
     val librarythingId: String?,
+    val isfdbId: String?,
+    val openlibraryId: String?,
+    val noosfereId: String?,
+    val inventaireId: String?,
     val language: String?,
     var series: List<SeriesOrderDto>?,
 )
@@ -129,6 +141,10 @@ fun fromBookCreateDto(dto: BookCreateDto): BookUpdateDto {
         amazonId = dto.amazonId,
         goodreadsId = dto.goodreadsId,
         librarythingId = dto.librarythingId,
+        isfdbId = dto.isfdbId,
+        openlibraryId = dto.openlibraryId,
+        noosfereId = dto.noosfereId,
+        inventaireId = dto.inventaireId,
         language = dto.language,
         series = dto.series,
     )

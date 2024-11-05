@@ -52,6 +52,10 @@ const form = reactive({
   amazonId: "",
   goodreadsId: "",
   librarythingId: "",
+  isfdbId: "",
+  openlibraryId: "",
+  noosfereId: "",
+  inventaireId: "",
   language: ""
 });
 const eventType = ref(null);
@@ -210,6 +214,10 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
       amazonId: formdata.amazonId,
       goodreadsId: formdata.goodreadsId,
       librarythingId: formdata.librarythingId,
+      isfdbId: formdata.isfdbId,
+      openlibraryId: formdata.openlibraryId,
+      noosfereId: formdata.noosfereId,
+      inventaireId: formdata.inventaireId,
       language: formdata.language,
       authors: [],
       translators: [],
@@ -249,6 +257,10 @@ const clearForm = () => {
   form.googleId = ""
   form.goodreadsId = ""
   form.librarythingId = ""
+  form.isfdbId = ""
+  form.openlibraryId = ""
+  form.noosfereId = ""
+  form.inventaireId = ""
   form.percentRead = null
   form.currentPageNumber = null
 };
@@ -699,6 +711,30 @@ let displayDatepicker = computed(() => {
               v-model="form.librarythingId"
               name="librarythingId"
               :placeholder="t('book.librarything_id')"
+              class="input focus:input-accent"
+            />
+            <o-input
+              v-model="form.isfdbId"
+              name="isfdbId"
+              :placeholder="t('book.isfdb_id')"
+              class="input focus:input-accent"
+            />
+            <o-input
+              v-model="form.openlibraryId"
+              name="openlibraryId"
+              :placeholder="t('book.openlibrary_id')"
+              class="input focus:input-accent"
+            />
+<o-input
+              v-model="form.noosfereId"
+              name="noosfereId"
+              :placeholder="t('book.noosfere_id')"
+              class="input focus:input-accent"
+            />
+<o-input
+              v-model="form.inventaireId"
+              name="inventaireId"
+              :placeholder="t('book.inventaire_id')"
               class="input focus:input-accent"
             />
           </o-field>

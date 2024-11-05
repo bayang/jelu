@@ -123,7 +123,11 @@ const sortedEvents = computed(() => {
 const hasExternalLink = computed(() => book.value?.book.amazonId != null
   || book.value?.book.goodreadsId != null
   || book.value?.book.googleId != null
-  || book.value?.book.librarythingId != null)
+  || book.value?.book.librarythingId != null
+  || book.value?.book.openlibraryId != null
+  || book.value?.book.isfdbId != null
+  || book.value?.book.noosfereId != null
+  || book.value?.book.inventaireId != null)
 
 function modalClosed() {
   console.log("modal closed")
@@ -516,6 +520,16 @@ const formatSeries = async (series: Series)  => {
 const timestamp = () => new Date().toISOString()
 let currentTimestamp = timestamp()
 
+const getIsbn = (): string|null => {
+  if (book.value?.book.isbn13 && book.value.book.isbn13.length > 0) {
+    return book.value.book.isbn13.replaceAll("-", "")
+  }
+  if (book.value?.book.isbn10 && book.value.book.isbn10.length > 0) {
+    return book.value.book.isbn10.replaceAll("-", "")
+  }
+  return null
+}
+
 getBook()
 
 </script>
@@ -874,6 +888,51 @@ getBook()
           :href="'https://www.librarything.com/work/' + book.book.librarythingId"
           target="_blank"
         >librarything</a>
+      </span>
+      <span
+        v-if="book?.book.isfdbId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://www.isfdb.org/cgi-bin/title.cgi?' + book.book.isfdbId"
+          target="_blank"
+        >ISFDB</a>
+      </span>
+      <span
+        v-if="book?.book.openlibraryId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="`https://openlibrary.org/works/${book.book.openlibraryId}?mode=all`"
+          target="_blank"
+        >Openlibrary</a>
+      </span>
+      <span
+        v-if="book?.book.noosfereId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://www.noosfere.org/livres/EditionsLivre.asp?numitem=' + book.book.noosfereId"
+          target="_blank"
+        >Noosfere</a>
+      </span>
+      <span
+        v-if="getIsbn() != null"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://inventaire.io/entity/isbn:' + getIsbn()"
+          target="_blank"
+        >inventaire</a>
+      </span>
+      <span
+        v-else-if="book?.book.inventaireId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://inventaire.io/entity/inv:' + book.book.inventaireId"
+          target="_blank"
+        >inventaire</a>
       </span>
     </div>
     <div

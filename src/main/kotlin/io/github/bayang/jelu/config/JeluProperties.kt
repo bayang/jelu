@@ -26,6 +26,7 @@ data class JeluProperties(
         var isEnabled: Boolean = false,
         var apiKey: String?,
         var order: Int = -1000,
+        var config: String? = null,
     )
 
     data class Database(

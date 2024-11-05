@@ -42,6 +42,10 @@ fun Book.toDocument() =
         if (!goodreadsId.isNullOrBlank()) add(TextField("goodreadsId", goodreadsId, Field.Store.NO))
         if (!amazonId.isNullOrBlank()) add(TextField("amazonId", amazonId, Field.Store.NO))
         if (!librarythingId.isNullOrBlank()) add(TextField("librarythingId", librarythingId, Field.Store.NO))
+        if (!noosfereId.isNullOrBlank()) add(TextField("noosfereId", noosfereId, Field.Store.NO))
+        if (!isfdbId.isNullOrBlank()) add(TextField("isfdbId", isfdbId, Field.Store.NO))
+        if (!inventaireId.isNullOrBlank()) add(TextField("inventaireId", inventaireId, Field.Store.NO))
+        if (!openlibraryId.isNullOrBlank()) add(TextField("openlibraryId", openlibraryId, Field.Store.NO))
 
         add(StringField(LuceneEntity.TYPE, LuceneEntity.Book.type, Field.Store.NO))
         add(StringField(LuceneEntity.Book.id, id.value.toString(), Field.Store.YES))

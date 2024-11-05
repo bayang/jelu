@@ -27,6 +27,10 @@ object BookTable : UUIDTable("book") {
     val goodreadsId: Column<String?> = varchar("goodreads_id", 30).nullable()
     val amazonId: Column<String?> = varchar("amazon_id", 30).nullable()
     val librarythingId: Column<String?> = varchar("librarything_id", 30).nullable()
+    val isfdbId: Column<String?> = varchar("isfdb_id", length = 30).nullable()
+    val openlibraryId: Column<String?> = varchar("openlibrary_id", 30).nullable()
+    val noosfereId: Column<String?> = varchar("noosfere_id", 128).nullable()
+    val inventaireId: Column<String?> = varchar("inventaire_id", 128).nullable()
     val language: Column<String?> = varchar("language", 30).nullable()
 }
 class Book(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -52,6 +56,10 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
     var amazonId by BookTable.amazonId
     var goodreadsId by BookTable.goodreadsId
     var librarythingId by BookTable.librarythingId
+    var isfdbId by BookTable.isfdbId
+    var openlibraryId by BookTable.openlibraryId
+    var noosfereId by BookTable.noosfereId
+    var inventaireId by BookTable.inventaireId
     val userBooks by UserBook referrersOn UserBookTable.book
     var userBookId: UUID? = null
     var userBook: UserBook? = null
@@ -75,6 +83,10 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             googleId = this.googleId,
             amazonId = this.amazonId,
             librarythingId = this.librarythingId,
+            isfdbId = this.isfdbId,
+            openlibraryId = this.openlibraryId,
+            noosfereId = this.noosfereId,
+            inventaireId = this.inventaireId,
             language = this.language,
             authors = this.authors.map { it.toAuthorDto() },
             translators = this.translators.map { it.toAuthorDto() },
@@ -100,6 +112,10 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             googleId = this.googleId,
             amazonId = this.amazonId,
             librarythingId = this.librarythingId,
+            isfdbId = this.isfdbId,
+            openlibraryId = this.openlibraryId,
+            noosfereId = this.noosfereId,
+            inventaireId = this.inventaireId,
             language = this.language,
             authors = this.authors.map { it.toAuthorDto() },
             translators = this.translators.map { it.toAuthorDto() },

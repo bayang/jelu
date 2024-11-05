@@ -166,7 +166,6 @@ class CsvImportService(
                     config[CalibreMetadataProvider.fetchCover] = importConfig.shouldFetchCovers.toString()
                     metadata = fetchMetadataService
                         .fetchMetadata(MetadataRequestDto(isbn), config)
-                        .block()!!
                 } else {
                     logger.debug { "no isbn on entity ${importEntity.id}, not fetching metadata" }
                 }

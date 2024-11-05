@@ -662,6 +662,18 @@ class BookRepository(
         book.librarythingId?.let {
             updated.librarythingId = book.librarythingId.trim()
         }
+        book.isfdbId?.let {
+            updated.isfdbId = book.isfdbId.trim()
+        }
+        book.openlibraryId?.let {
+            updated.openlibraryId = book.openlibraryId.trim()
+        }
+        book.noosfereId?.let {
+            updated.noosfereId = book.noosfereId
+        }
+        book.inventaireId?.let {
+            updated.inventaireId = book.inventaireId
+        }
         book.language?.let {
             updated.language = book.language.trim()
         }
@@ -929,6 +941,10 @@ class BookRepository(
             this.goodreadsId = cleanString(book.goodreadsId)
             this.googleId = cleanString(book.googleId)
             this.librarythingId = cleanString(book.librarythingId)
+            this.isfdbId = cleanString(book.isfdbId)
+            this.openlibraryId = cleanString(book.openlibraryId)
+            this.noosfereId = cleanString(book.noosfereId)
+            this.inventaireId = cleanString(book.inventaireId)
             this.language = cleanString(book.language)
         }
         book.series?.forEach {

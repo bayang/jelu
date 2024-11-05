@@ -51,8 +51,8 @@ class AppLifecycleAware(
             val nowString: String = OffsetDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
             logger.info { "Series data not migrated, starting migration at at $nowString" }
             bookService.migrateSeries()
-            var end = System.currentTimeMillis()
-            var deltaInSec = (end - start) / 1000
+            val end = System.currentTimeMillis()
+            val deltaInSec = (end - start) / 1000
             logger.info { "Series data migration completed after : $deltaInSec seconds, check your data" }
             val seriesMigrated = lifeCycleService.setSeriesMigrated()
             logger.debug { "lifeCycled updated to ${seriesMigrated.seriesMigrated}" }

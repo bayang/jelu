@@ -11,6 +11,10 @@ jelu:
       apiKey: ""
       order: -100000
       name: "jelu-debug"
+    - name: "inventaireio"
+      is-enabled: false
+      order: 200000
+      config: "fr"
   metadata:
     calibre:
       path: /usr/bin/fetch-ebook-metadata

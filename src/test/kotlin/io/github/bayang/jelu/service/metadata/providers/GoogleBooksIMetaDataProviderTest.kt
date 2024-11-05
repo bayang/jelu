@@ -116,7 +116,7 @@ class GoogleBooksIMetaDataProviderTest {
         val result: MetadataDto = service.fetchMetadata(
             MetadataRequestDto("9781785650406"),
             mapOf(),
-        )?.block()!!
+        ).get()
 
         // Then
         Assertions.assertNotNull(result)

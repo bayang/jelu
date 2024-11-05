@@ -17,6 +17,11 @@ data class MetadataDto(
     var googleId: String? = null,
     var amazonId: String? = null,
     var goodreadsId: String? = null,
+    var librarythingId: String? = null,
+    var isfdbId: String? = null,
+    var openlibraryId: String? = null,
+    var inventaireId: String? = null,
+    var noosfereId: String? = null,
 )
 data class MetadataRequestDto(
     val isbn: String? = null,

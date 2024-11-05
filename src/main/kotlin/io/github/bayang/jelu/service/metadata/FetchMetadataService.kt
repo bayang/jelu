@@ -6,7 +6,7 @@ import io.github.bayang.jelu.service.metadata.providers.IMetaDataProvider
 import io.github.bayang.jelu.utils.PluginInfoComparator
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
+import java.util.Optional
 
 private val logger = KotlinLogging.logger {}
 
@@ -19,7 +19,7 @@ class FetchMetadataService(
     fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String> = mapOf(),
-    ): Mono<MetadataDto> {
+    ): MetadataDto {
         var pluginsToUse = if (metadataRequestDto.plugins.isNullOrEmpty()) pluginInfoHolder.plugins() else metadataRequestDto.plugins
         pluginsToUse = pluginsToUse.toMutableList()
         // pluginInfoHolder sorts plugins, but plugins received via metadataRequestDto
@@ -30,14 +30,14 @@ class FetchMetadataService(
             logger.trace { "fetching provider for plugin ${plugin.name} with order ${plugin.order} " }
             val provider = providers.find { plugin.name.equals(it.name(), true) }
             if (provider != null) {
-                val res: Mono<MetadataDto>? = provider.fetchMetadata(metadataRequestDto, config)
-                if (res != null) {
-                    return res
+                val res: Optional<MetadataDto> = provider.fetchMetadata(metadataRequestDto, config)
+                if (res.isPresent) {
+                    return res.get()
                 }
             } else {
                 logger.warn { "could not find provider for plugin info ${plugin.name}" }
             }
         }
-        return Mono.just(MetadataDto())
+        return MetadataDto()
     }
 }

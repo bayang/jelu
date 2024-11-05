@@ -119,6 +119,30 @@ defineProps<{
           <span class="font-semibold">{{ t('book.amazon_id') }} : </span>{{ metadata.amazonId }}
         </p>
         <p
+          v-if="metadata?.isfdbId"
+          class="mb-2"
+        >
+          <span class="font-semibold">{{ t('book.isfdb_id') }} : </span>{{ metadata.isfdbId }}
+        </p>
+        <p
+          v-if="metadata?.openlibraryId"
+          class="mb-2"
+        >
+          <span class="font-semibold">{{ t('book.openlibrary_id') }} : </span>{{ metadata.openlibraryId }}
+        </p>
+        <p
+          v-if="metadata?.noosfereId"
+          class="mb-2"
+        >
+          <span class="font-semibold">{{ t('book.noosfere_id') }} : </span>{{ metadata.noosfereId }}
+        </p>
+        <p
+          v-if="metadata?.inventaireId"
+          class="mb-2"
+        >
+          <span class="font-semibold">{{ t('book.inventaire_id') }} : </span>{{ metadata.inventaireId }}
+        </p>
+        <p
           v-if="metadata?.tags != null && metadata?.tags?.length > 0"
         >
           <span class="font-semibold capitalize">{{ t('book.tag', 2) }} : </span>

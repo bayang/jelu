@@ -50,6 +50,8 @@ dependencies {
     // implementation("com.unboundid:unboundid-ldapsdk:6.0.5")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    implementation("org.apache.httpcomponents.client5:httpclient5")
+
     implementation("com.github.ben-manes.caffeine:caffeine")
 
     implementation("com.fasterxml.staxmate:staxmate:2.4.1")

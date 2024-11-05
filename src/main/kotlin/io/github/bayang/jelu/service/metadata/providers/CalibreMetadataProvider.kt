@@ -11,9 +11,9 @@ import mu.KotlinLogging
 import org.apache.commons.validator.routines.ISBNValidator
 import org.codehaus.staxmate.SMInputFactory
 import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
 import java.io.BufferedReader
 import java.io.File
+import java.util.Optional
 
 private val logger = KotlinLogging.logger {}
 
@@ -35,12 +35,12 @@ class CalibreMetadataProvider(
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String>,
-    ): Mono<MetadataDto>? {
+    ): Optional<MetadataDto> {
         if (metadataRequestDto.isbn.isNullOrBlank() && metadataRequestDto.title.isNullOrBlank() &&
             metadataRequestDto.authors.isNullOrBlank()
         ) {
             logger.error { "At least one of isbn, authors or title is required to fetch metadata" }
-            return null
+            return Optional.empty()
         }
         val onlyUseCorePlugins: Boolean = if (config.containsKey(CalibreMetadataProvider.onlyUseCorePlugins)) {
             config[CalibreMetadataProvider.onlyUseCorePlugins].toBoolean()
@@ -134,14 +134,14 @@ class CalibreMetadataProvider(
                     parseOpf.image = targetCover.name
                     logger.trace { "fetch metadata image ${targetCover.name}" }
                 }
-                return Mono.just(parseOpf)
+                return Optional.of(parseOpf)
             } else {
                 logger.error { "fetch ebookmetadata process exited abnormally with code $exitVal" }
-                return null
+                return Optional.empty()
             }
         } catch (e: Exception) {
             logger.error(e) { "failure while calling fetch-ebook-metadata process" }
-            return null
+            return Optional.empty()
         }
     }
 

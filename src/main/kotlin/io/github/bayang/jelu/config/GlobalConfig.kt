@@ -8,6 +8,7 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.client.RestClient
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.reactive.function.client.ExchangeStrategies
@@ -29,6 +30,11 @@ class GlobalConfig {
                 HttpClient.create().compress(true).followRedirect(true),
             ),
         ).build()
+    }
+
+    @Bean("springRestClient")
+    fun springRestClient(): RestClient {
+        return RestClient.create()
     }
 
     @Bean("passwordEncoder")

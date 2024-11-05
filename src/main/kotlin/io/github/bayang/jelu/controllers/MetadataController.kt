@@ -41,7 +41,7 @@ class MetadataController(
         @RequestParam(name = "isbn", required = false) isbn: String?,
         @RequestParam(name = "title", required = false) title: String?,
         @RequestParam(name = "authors", required = false) authors: String?,
-    ): Mono<MetadataDto> =
+    ): MetadataDto =
         if (pluginInfoHolder.plugins().isEmpty()) {
             throw JeluException("Automatic fetching of metadata is disabled, install calibre or configure a metadata plugin")
         } else {
@@ -71,7 +71,7 @@ class MetadataController(
     fun fetchMetadata(
         @RequestBody @Valid
         metadataRequestDto: MetadataRequestDto,
-    ): Mono<MetadataDto> {
+    ): MetadataDto {
         if (pluginInfoHolder.plugins().isEmpty()) {
             throw JeluException("Automatic fetching of metadata is disabled, install calibre or configure a metadata plugin")
         }

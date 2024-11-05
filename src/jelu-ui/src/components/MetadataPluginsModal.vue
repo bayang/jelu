@@ -75,7 +75,9 @@ function checkMove(evt: any){
       >
         {{ t('metadata.reorder_plugins') }}
       </h1>
-      <p>{{ t('metadata.description') }}</p>
+      <p class="text-justify">
+        {{ t('metadata.description') }}
+      </p>
       <div class="flex flex-wrap place-content-center my-3">
         <draggable
           v-model="plugins"
@@ -107,7 +109,7 @@ function checkMove(evt: any){
             </div>
           </template>
         </draggable>
-        <div class="my-3">
+        <div class="m-3">
           <button
             class="btn btn-primary mr-2 uppercase"
             :disabled="progress"
@@ -120,7 +122,7 @@ function checkMove(evt: any){
             <span class="icon">
               <i class="mdi mdi-pencil mdi-18px" />
             </span>
-            <span>{{ t('labels.submit') }}</span>
+            <span>{{ t('labels.apply') }}</span>
           </button>
           <button
             class="btn btn-secondary mr-2 uppercase"
@@ -137,6 +139,9 @@ function checkMove(evt: any){
             <span>{{ t('labels.discard') }}</span>
           </button>
         </div>
+        <p class="mt-3 text-sm">
+          {{ t('metadata.note') }}
+        </p>
       </div>
     </div>
   </section>

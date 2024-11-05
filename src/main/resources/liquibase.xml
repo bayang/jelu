@@ -606,4 +606,16 @@
         );
         </sql>
     </changeSet>
+    <changeSet id="add_isfdb_openlibrary_columns" author="byng">
+        <sql>
+            ALTER TABLE book ADD isfdb_id varchar(30);
+            ALTER TABLE book ADD openlibrary_id varchar(30);
+        </sql>
+    </changeSet>
+    <changeSet id="add_noosfere_inventaire_columns" author="byng">
+        <sql>
+            ALTER TABLE book ADD noosfere_id varchar(128);
+            ALTER TABLE book ADD inventaire_id varchar(128);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
