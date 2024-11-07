@@ -112,7 +112,8 @@
         "avg_rating": "gemiddelde beoordeling : {rating}",
         "add_quote": "voeg citaat uit boek toe",
         "description": "omschrijving",
-        "user_rating": "mijn beoordeling: {rating}"
+        "user_rating": "mijn beoordeling: {rating}",
+        "apply": "apply"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -202,6 +203,10 @@
         "goodreads_id": "Goodreads Id",
         "amazon_id": "Amazon Id",
         "librarything_id": "Librarything Id",
+        "isfdb_id": "ISFDB Id",
+        "openlibrary_id": "Openlibrary Id",
+        "noosfere_id": "Noosfere Id",
+        "inventaire_id": "inventaire id",
         "publisher": "uitgever",
         "published_date": "gepubliceerde datum",
         "page_count": "aantal pagina's",
@@ -337,8 +342,9 @@
     },
     "metadata": {
         "reorder_plugins": "plugins herordenen",
-        "description": "Plugins worden van boven naar beneden aangeroepen, uitgeschakelde plugins zullen niet worden gebruikt",
-        "default_priority": "standaard prioriteit"
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "default_priority": "standaard prioriteit",
+        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
     },
     "book_quotes": {
         "edit_quote": "Bewerk citaat uit boek",

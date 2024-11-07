@@ -112,7 +112,8 @@
         "avg_rating": "classificação média : {rating}",
         "add_quote": "adicionar citação de livro",
         "description": "description",
-        "user_rating": "my rating : {rating}"
+        "user_rating": "my rating : {rating}",
+        "apply": "apply"
     },
     "settings": {
         "pick_language": "Escolha o seu idioma",
@@ -202,6 +203,10 @@
         "goodreads_id": "ID de Goodreads",
         "amazon_id": "ID de Amazon",
         "librarything_id": "ID de Librarything",
+        "isfdb_id": "ISFDB Id",
+        "openlibrary_id": "Openlibrary Id",
+        "noosfere_id": "Noosfere Id",
+        "inventaire_id": "inventaire id",
         "publisher": "editor",
         "published_date": "data de publicação",
         "page_count": "número de páginas",
@@ -337,8 +342,9 @@
     },
     "metadata": {
         "reorder_plugins": "reordenar extensões",
-        "description": "As extensões serão chamadas de cima para baixo, as extensões desativadas não serão usadas",
-        "default_priority": "prioridade padrão"
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "default_priority": "prioridade padrão",
+        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
     },
     "book_quotes": {
         "edit_quote": "Editar citação do livro",

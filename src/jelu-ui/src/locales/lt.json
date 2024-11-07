@@ -112,7 +112,8 @@
         "avg_rating": "vidutinis įvertinimas : {rating}",
         "add_quote": "add book quote",
         "description": "description",
-        "user_rating": "my rating : {rating}"
+        "user_rating": "my rating : {rating}",
+        "apply": "apply"
     },
     "settings": {
         "pick_language": "Pasirinkite kalbą",
@@ -202,6 +203,10 @@
         "goodreads_id": "Google Id",
         "amazon_id": "Amazon Id",
         "librarything_id": "Librarything Id",
+        "isfdb_id": "ISFDB Id",
+        "openlibrary_id": "Openlibrary Id",
+        "noosfere_id": "Noosfere Id",
+        "inventaire_id": "inventaire id",
         "publisher": "leidėjas",
         "published_date": "publikavimo data",
         "page_count": "puslapių skaičius",
@@ -337,8 +342,9 @@
     },
     "metadata": {
         "reorder_plugins": "pertvarkyti įskiepius",
-        "description": "Įskiepiai bus iškviesti iš viršaus į apačią, išjungti įskiepiai nebus naudojami",
-        "default_priority": "numatytasis prioritetas"
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "default_priority": "numatytasis prioritetas",
+        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
     },
     "book_quotes": {
         "edit_quote": "Edit book quote",

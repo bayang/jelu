@@ -112,7 +112,8 @@
         "avg_rating": "average rating : {rating}",
         "add_quote": "add book quote",
         "description": "description",
-        "user_rating": "my rating : {rating}"
+        "user_rating": "my rating : {rating}",
+        "apply": "apply"
     },
     "settings": {
         "pick_language": "Izberite svoj jezik",
@@ -202,6 +203,10 @@
         "goodreads_id": "Goodreads Id",
         "amazon_id": "Amazon Id",
         "librarything_id": "Librarything Id",
+        "isfdb_id": "ISFDB Id",
+        "openlibrary_id": "Openlibrary Id",
+        "noosfere_id": "Noosfere Id",
+        "inventaire_id": "inventaire id",
         "publisher": "založnik",
         "published_date": "datum objave",
         "page_count": "število strani",
@@ -337,8 +342,9 @@
     },
     "metadata": {
         "reorder_plugins": "prerazporedi vtičnike",
-        "description": "Vtičniki bodo uporabljeni od zgoraj navzdol, onemogočeni vtičniki ne bodo uporabljeni",
-        "default_priority": "privzeta prioriteta"
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "default_priority": "privzeta prioriteta",
+        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
     },
     "book_quotes": {
         "edit_quote": "Edit book quote",

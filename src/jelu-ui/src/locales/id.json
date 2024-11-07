@@ -112,7 +112,8 @@
         "avg_rating": "rating rata-rata : {rating}",
         "add_quote": "tambahkan kutipan buku",
         "description": "deskripsi",
-        "user_rating": "rating saya : {rating}"
+        "user_rating": "rating saya : {rating}",
+        "apply": "apply"
     },
     "settings": {
         "pick_language": "Pilih bahasa",
@@ -202,6 +203,10 @@
         "goodreads_id": "Id Goodreads",
         "amazon_id": "Id Amazon",
         "librarything_id": "Id Librarything",
+        "isfdb_id": "ISFDB Id",
+        "openlibrary_id": "Openlibrary Id",
+        "noosfere_id": "Noosfere Id",
+        "inventaire_id": "inventaire id",
         "publisher": "penerbit",
         "published_date": "tanggal terbit",
         "page_count": "jumlah halaman",
@@ -337,8 +342,9 @@
     },
     "metadata": {
         "reorder_plugins": "atur ulang plugin",
-        "description": "Plugin akan disebut dari atas hingga bawah, plugin nonaktif tidak akan digunakan",
-        "default_priority": "prioritas bawaan"
+        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "default_priority": "prioritas bawaan",
+        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
     },
     "book_quotes": {
         "edit_quote": "Ubah kutipan buku",
