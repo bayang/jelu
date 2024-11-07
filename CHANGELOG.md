@@ -1,3 +1,15 @@
+## [0.61.0](https://github.com/bayang/jelu/compare/v0.60.2...v0.61.0) (2024-11-07)
+
+
+### Features
+
+* add inventaireio metadata plugin ([1fdbf37](https://github.com/bayang/jelu/commit/1fdbf376125f76dd52c6f5bf0d479323dc2c50fd))
+
+
+### Bug Fixes
+
+* add custom user-agent to calls to inventaireio ([8f8e594](https://github.com/bayang/jelu/commit/8f8e5946d8f380bda0c72311d92283b0f548ce81))
+
 ### [0.60.2](https://github.com/bayang/jelu/compare/v0.60.1...v0.60.2) (2024-11-03)
 
 
