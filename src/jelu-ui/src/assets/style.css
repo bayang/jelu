@@ -68,6 +68,10 @@
 }
 
 /* oruga customization with daisyui */
+.input.o-dpck {
+  @apply px-0;
+}
+
 .o-chk__input {
   @apply bg-none;
 }
@@ -127,11 +131,11 @@
 
 
 .o-input__wrapper {
-    @apply w-fit sm:w-full;
+    @apply w-fit sm:w-full items-center;
 }
 
 .o-input__wrapper .o-input {
-    @apply w-fit sm:w-full focus:input-accent;
+    @apply w-fit sm:w-full focus:input-accent bg-white;
 }
 
 .o-icon.o-input__icon-left {
@@ -162,8 +166,22 @@
     @apply w-full grow;  
 }
 
+.o-drop .o-tpck__dropdown {
+  height: 100%;
+  width: 100%;
+}
+
 .o-taginput .o-taginput__container {
-    @apply w-fit sm:w-full;
+    @apply w-fit sm:w-full items-center;
+}
+
+.o-taginput__autocomplete {
+ height: 100%;
+ @apply py-1;
+}
+
+.o-input.o-taginput__input {
+  height: 100%;
 }
 /* end oruga customization with daisyui */
 
@@ -283,11 +301,11 @@
 
 
 .jelu-authorinput .o-taginput__item {
-  @apply bg-success rounded my-1;
+  @apply bg-success rounded my-1 items-center;
 }
 
 .jelu-taginput .o-taginput__item {
-  @apply bg-warning rounded text-warning-content my-1;
+  @apply bg-warning rounded text-warning-content my-1 items-center;
 }
 
 [data-theme="jelu"] .card {
