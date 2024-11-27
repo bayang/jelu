@@ -362,7 +362,7 @@
         "ip": "ip",
         "user_agent": "user agent",
         "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "last_activity": "ultima attività",
+        "activity": "accessi"
     }
 }
