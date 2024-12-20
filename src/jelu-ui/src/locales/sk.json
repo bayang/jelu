@@ -59,7 +59,7 @@
         "book_not_yet_in_books": "Táto kniha ešte nie je vo vašich knihách, dvojklikom ju pridáte",
         "not_in_your_books": "nie je vo vašich knihách",
         "books_from_name": "Knihy od {name}",
-        "delete_for_all_or_only_you": "Delete book for all users or only you ?",
+        "delete_for_all_or_only_you": "Vymazať knihu pre všetkých používateľov alebo len pre vás?",
         "only_me": "Iba ja",
         "all_users": "Všetci používatelia",
         "dont_delete": "Neodstraňovať",
