@@ -99,7 +99,7 @@
         "add_to_my_books": "Not yet in your books, click to add it",
         "add_translator": "Pridať prekladateľa",
         "reading_list_from_name": "Reading list from {name}",
-        "search_query": "Enter search query...",
+        "search_query": "Zadajte hľadaný výraz...",
         "search_documentation": "Go to search documentation",
         "orphan-tags": "orphan tags",
         "find-tag": "find a tag",
@@ -231,7 +231,7 @@
         "author_right_subtitle": "Author to merge in 1",
         "author_right_description": "Choose next the author you want to merge with the other.",
         "authors_merge_subtitle": "Zlúčiť",
-        "authors_merge_description": "Use fields on the right author to complete the author on the left one, then merge.",
+        "authors_merge_description": "Pomocou polí na pravej strane autora doplňte autora na ľavej strane a potom ich zlúčte.",
         "search_message": "Search authors to merge"
     },
     "author": {
