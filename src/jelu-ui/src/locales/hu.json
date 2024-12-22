@@ -282,87 +282,87 @@
         "password_confirm": "jelszó újra",
         "password": "jelszó",
         "admin": "admin",
-        "admin_help": "user should have admin rights ?",
-        "user_saved": "User saved : {name}",
-        "user_updated": "User updated : {name}",
+        "admin_help": "legyen a felhasználónak admin joga?",
+        "user_saved": "Felhasználó mentve: {name}",
+        "user_updated": "Felhasználó frissítve: {name}",
         "login": "login",
-        "edit_user": "Edit user {name}",
-        "delete_user": "delete user"
+        "edit_user": "Felhasználó szerkesztése {name}",
+        "delete_user": "felhasználó törlése"
     },
     "shortcuts": {
-        "toggle_bar": "Toggle filters bar",
-        "page_previous": "Go to previous page",
-        "page_next": "Go to next page"
+        "toggle_bar": "Szűrő eszköztár de/aktiválása",
+        "page_previous": "Vissza az előző oldalra",
+        "page_next": "Tovább a következő oldalra"
     },
     "profile": {
-        "edit_user": "Edit user"
+        "edit_user": "Felhasználó szerkesztése"
     },
     "user-messages": {
         "link": "link",
-        "mark_read": "mark as read",
-        "no_messages": "no messages here"
+        "mark_read": "olvasotként jelöl",
+        "no_messages": "nincsenek üzenetek"
     },
     "stats": {
-        "all_time": "All time stats",
-        "yearly_stats": "Yearly stats",
-        "choose_year": "Choose a year"
+        "all_time": "Összes statisztika",
+        "yearly_stats": "Éves statisztika",
+        "choose_year": "Válassz évet"
     },
     "history": {
-        "years": "years"
+        "years": "évek"
     },
     "bulk": {
-        "bulk_edit_books": "Bulk edit books",
-        "owned": "Mark/unmark all as owned",
-        "toRead": "Mark/unmark all as to read",
-        "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
-        "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove"
+        "bulk_edit_books": "Könyvek módosítása csoportban",
+        "owned": "Nem/jelöli az összes sajátot",
+        "toRead": "Nem/jelöli olvasottként",
+        "toggle": "Váltás a módosító módok között",
+        "select_all": "Nem/jelöl mindent",
+        "edit": "Módosíŧás elkezdése",
+        "add_or_remove": "Tag hozzáad/töröl",
+        "add": "Hozzáad",
+        "remove": "Töröl",
+        "choose_tag": "Hozzáadandó/törlendő tag kiválasztása"
     },
     "reviews": {
-        "create_review": "Create review",
-        "edit_review": "Edit review",
-        "visibility": "visibility",
-        "private": "private",
-        "public": "public",
-        "review": "review | reviews",
-        "rating": "rating",
-        "my_reviews": "My reviews",
-        "all_reviews": "All reviews",
-        "delete_review": "Delete this review ?",
-        "review_detail": "Go to review detail",
-        "book_all_reviews": "All reviews for this book"
+        "create_review": "Értékelés hozzáadása",
+        "edit_review": "Értékelés szerkesztése",
+        "visibility": "láthatóság",
+        "private": "privát",
+        "public": "publikus",
+        "review": "értékelés | értékelések",
+        "rating": "értékelés",
+        "my_reviews": "Saját értékelések",
+        "all_reviews": "Összes értékelés",
+        "delete_review": "Értékelés törlése?",
+        "review_detail": "Részletes értékelés",
+        "book_all_reviews": "A könyv összes értékelése"
     },
     "book_merge": {
-        "merge_books": "Merge books",
-        "fetch_metadata": "Fetch metadata"
+        "merge_books": "Könyvek Összefésülése",
+        "fetch_metadata": "Metaadatok frissítése"
     },
     "metadata": {
         "reorder_plugins": "reorder plugins",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
-        "default_priority": "default priority",
-        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
+        "description": "A pluginok sorrendben vannak alkalmazva. Az inaktívak nincsenek alkalmazva.",
+        "default_priority": "alapértelmezett prioritás",
+        "note": "Ez a módosítás csak ideiglenes, végleges újrarendezéshez szerkeszd a konfigurációt."
     },
     "book_quotes": {
-        "edit_quote": "Edit book quote",
-        "create": "Post a quote",
-        "quote": "quote | quotes",
-        "position": "position",
-        "delete_quote": "delete this quote ?"
+        "edit_quote": "Könyv idézet szerkesztése",
+        "create": "Idézet létrehozása",
+        "quote": "idézet | idézetek",
+        "position": "pozíció",
+        "delete_quote": "törli ezt az idézetet?"
     },
     "series": {
-        "edit_series": "edit series",
-        "create_series": "create series",
-        "name": "name"
+        "edit_series": "soroaztok szerkesztése",
+        "create_series": "sorozatok létrehozása",
+        "name": "név"
     },
     "login_info": {
         "ip": "ip",
         "user_agent": "user agent",
-        "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "source": "forrás",
+        "last_activity": "utolsó aktivitás",
+        "activity": "login aktivitás"
     }
 }
