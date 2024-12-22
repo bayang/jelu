@@ -1,3 +1,10 @@
+### [0.61.1](https://github.com/bayang/jelu/compare/v0.61.0...v0.61.1) (2024-12-22)
+
+
+### Bug Fixes
+
+* some oruga input css ([74cfada](https://github.com/bayang/jelu/commit/74cfadafa46ad9d615d9f5a40399e6b0b14ba377))
+
 ## [0.61.0](https://github.com/bayang/jelu/compare/v0.60.2...v0.61.0) (2024-11-07)
 
 
