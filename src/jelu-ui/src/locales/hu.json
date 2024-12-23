@@ -2,12 +2,12 @@
     "home": {
         "currently_reading": "Olvasás alatt",
         "recent_events": "Aktuális olvasó események",
-        "quotes": "idézőjelek",
+        "quotes": "idézetek",
         "not_reading": "Jelenleg semmit nem olvasok"
     },
     "nav": {
         "my_books": "könyveim",
-        "to_read": "olvasandó lista",
+        "to_read": "olvasnivaló",
         "random": "véletlen",
         "add_book": "könyv hozzáadása",
         "dashboard": "vezérlőpult",
@@ -16,13 +16,13 @@
         "search": "keres",
         "history": "előzények",
         "shelves": "polcok",
-        "tags-admin": "tag menedzsment"
+        "tags-admin": "tagek kezelése"
     },
     "labels": {
         "search": "Keresés",
         "advanced_search": "Haladó keresés",
-        "true": "Igaz",
-        "false": "Hamis",
+        "true": "Igen",
+        "false": "Nem",
         "library_empty": "a könyvtár üres",
         "nothing_to_read": "Semmi olvasandó",
         "book_will_be_added": "A könyve hozzá lesz adva az olvasandó listához",
@@ -82,7 +82,7 @@
         "search_title": "Cím keresése...",
         "search_selected": "Keresés a kiválasztott kifejezésben",
         "books_tagged_name": "Könyv tagelve: #{tag}",
-        "upload_from_web": "Feltöltés a webről",
+        "upload_from_web": "Feltöltés internetről",
         "upload_from_file": "Feltöltés fájlból",
         "upload_from_computer": "Feltöltés a számítógépről",
         "upload_from_server": "Jelu szerverről",
@@ -101,7 +101,7 @@
         "reading_list_from_name": "Lista betöltésének forrása: {name}",
         "search_query": "Keresési kifejezés beírása...",
         "search_documentation": "Menj a dokumentécióhoz",
-        "orphan-tags": "átva tag-ek",
+        "orphan-tags": "árva tagek",
         "find-tag": "tag keresése",
         "associated-books": "hozzárendelt könyvek",
         "operation-success": "sikeres művelet",
@@ -123,14 +123,14 @@
         "my_profile": "Saját profil",
         "settings": "Beállítások",
         "imports": "Import/Export",
-        "author_management": "Szerző menedzsment",
+        "author_management": "Szerző kezelése",
         "csv_import": "Csv import",
         "authors": "Szerzők",
         "username": "Felhasználónév",
         "role": "role | roles",
         "users": "Felhasználók",
         "add_users": "Felhasználó hozzáadása",
-        "users_management": "Felhasználó menedzsment",
+        "users_management": "Felhasználók kezelése",
         "shortcuts": "Parancsok",
         "shortcuts_tooltip": "Billentyűzet parancsok",
         "messages": "Üzenetek",
@@ -145,11 +145,11 @@
     "sorting": {
         "sort_by": "Rendezés",
         "sort_order": "Rendezési sorrend",
-        "last_reading_event_date": "Utolsó olvasási esemény dátuma",
-        "date_added": "Dátum hozzáadva",
-        "date_added_to_list": "Dátum hozzáadva a listához",
+        "last_reading_event_date": "Olvasás dátuma",
+        "date_added": "Hozzáadás dátuma",
+        "date_added_to_list": "Listához adás dátuma",
         "title": "Cím",
-        "random": "Random",
+        "random": "Véletlen",
         "publisher": "Kiadó",
         "series": "Sorozat",
         "series_number": "Sorozat száma",
@@ -158,8 +158,8 @@
         "publication_date": "Kiadás dátuma",
         "modification_date": "Módosítás dátuma",
         "page_count": "Oldalak száma",
-        "user_avg_rating": "átlagos értékelésem",
-        "avg_rating": "átlagos értékelés"
+        "user_avg_rating": "Átlagos értékelésem",
+        "avg_rating": "Átlagos értékelés"
     },
     "reading_events": {
         "finished": "befejezve",
@@ -180,7 +180,7 @@
     },
     "filtering": {
         "book_in_list": "A könyv az elolvasandó listában",
-        "unset": "Unset",
+        "unset": "Semmi",
         "books_type": "Könyv típusa",
         "any": "Bármi",
         "only_in_my_list": "Csak a listámban szereplő könyvek",
@@ -278,15 +278,15 @@
         "password_length": "a jelszó legalább 3 karakter kell legyen"
     },
     "admin_user": {
-        "create_user": "felhasználó létrehozása",
+        "create_user": "új felhasználó",
         "password_confirm": "jelszó újra",
         "password": "jelszó",
         "admin": "admin",
         "admin_help": "legyen a felhasználónak admin joga?",
         "user_saved": "Felhasználó mentve: {name}",
         "user_updated": "Felhasználó frissítve: {name}",
-        "login": "login",
-        "edit_user": "Felhasználó szerkesztése {name}",
+        "login": "felhasználónév",
+        "edit_user": "Felhasználó szerkesztése: {name}",
         "delete_user": "felhasználó törlése"
     },
     "shortcuts": {
