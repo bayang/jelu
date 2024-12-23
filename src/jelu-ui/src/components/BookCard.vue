@@ -199,6 +199,7 @@ watch(checked, (newVal, oldVal) => {
     <div class="card-body">
       <router-link
         v-if="book.id != null"
+        class="grow"
         :to="{ name: 'book-detail', params: { bookId: book.id } }"
       >
         <h2
@@ -210,6 +211,7 @@ watch(checked, (newVal, oldVal) => {
       </router-link>
       <router-link
         v-else
+        class="grow"
         :to="{ name: 'book-reviews', params: { bookId: book.book.id } }"
       >
         <h2
