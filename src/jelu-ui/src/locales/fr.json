@@ -262,7 +262,8 @@
         "export_ok": "Votre demande d'export a bien été enregistrée. Vous pouvez quitter cette page, l'export sera disponible dans la section messages.",
         "export_ko": "Une erreur est survenue, votre demande d'export n'a probablement pas été prise en compte.",
         "import_help": "Choisissez d'abord le type de fichier que vous voulez importer, puis choisissez un fichier ci-dessous et enfin cliquez sur le bouton Import. Une fois l'import lancé, vous pouvez quitter cette page et aller dans la section messages.",
-        "import_ok": "Votre demande d'import a bien été enregistrée. Vous pouvez quitter cette page, le résultat de l'import sera disponible dans la section messages."
+        "import_ok": "Votre demande d'import a bien été enregistrée. Vous pouvez quitter cette page, le résultat de l'import sera disponible dans la section messages.",
+        "isbn_list": "Liste d'ISBN dans un fichier"
     },
     "login": {
         "login": "identifiant",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Données globales",
         "yearly_stats": "Statistiques annuelles",
-        "choose_year": "Choisir une année"
+        "choose_year": "Choisir une année",
+        "pages_read": "pages lues",
+        "finished": "terminé",
+        "dropped": "abandonné"
     },
     "history": {
         "years": "années"
