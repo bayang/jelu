@@ -262,7 +262,8 @@
         "export_ok": "Din eksportanmodning er blevet gemt. Du kan forlade denne side. Rapporten vil være tilgængelig i meddelelsesfanen.",
         "export_ko": "Der opstod en fejl og din eksportanmodning er sandsynligvis ikke blevet registreret.",
         "import_help": "Vælg først den type fil, du vil importere og vælg derefter en fil nedenfor. Klik endeligt på importknappen. Når importprocessen er startet, kan du forlade denne side og gå til afsnittet meddelelser.",
-        "import_ok": "Din importanmodning er blevet gemt. Du kan forlade denne side, importresultatet vil være tilgængeligt i beskedsektionen."
+        "import_ok": "Din importanmodning er blevet gemt. Du kan forlade denne side, importresultatet vil være tilgængeligt i beskedsektionen.",
+        "isbn_list": "List of ISBN in a file"
     },
     "login": {
         "login": "log ind",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Alle statistikker",
         "yearly_stats": "Årlige statistikker",
-        "choose_year": "Vælg et år"
+        "choose_year": "Vælg et år",
+        "pages_read": "pages read",
+        "finished": "finished",
+        "dropped": "dropped"
     },
     "history": {
         "years": "år"
