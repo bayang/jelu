@@ -262,7 +262,8 @@
         "export_ok": "Je exportverzoek is opgeslagen. Je kunt deze pagina verlaten, het rapport zal beschikbaar zijn in de berichtensectie.",
         "export_ko": "Er is een fout opgetreden en je exportverzoek is waarschijnlijk niet geregistreerd.",
         "import_help": "Kies eerst het type bestand dat u wilt importeren, kies dan een bestand hieronder en klik daarna op de knop importeren. Zodra de import is gestart, kan je deze pagina verlaten en naar de berichtensectie gaan.",
-        "import_ok": "Uw importverzoek is opgeslagen. U kunt deze pagina verlaten, het importresultaat zal beschikbaar zijn in de berichtensectie."
+        "import_ok": "Uw importverzoek is opgeslagen. U kunt deze pagina verlaten, het importresultaat zal beschikbaar zijn in de berichtensectie.",
+        "isbn_list": "List of ISBN in a file"
     },
     "login": {
         "login": "inloggen",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Statistieken van alle tijden",
         "yearly_stats": "Jaarlijkse statistieken",
-        "choose_year": "Kies een jaar"
+        "choose_year": "Kies een jaar",
+        "pages_read": "pages read",
+        "finished": "finished",
+        "dropped": "dropped"
     },
     "history": {
         "years": "jaren"
