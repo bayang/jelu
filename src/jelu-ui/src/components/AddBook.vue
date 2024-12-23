@@ -1034,7 +1034,7 @@ let displayDatepicker = computed(() => {
           >
             <div class="form-control">
               <label class="label cursor-pointer justify-center gap-2">
-                <span class="label-text">From web</span> 
+                <span class="label-text">{{ t('labels.upload_from_web') }}</span> 
                 <input
                   v-model="uploadType"
                   type="radio"
@@ -1042,7 +1042,7 @@ let displayDatepicker = computed(() => {
                   class="radio radio-primary"
                   value="web"
                 >
-                <span class="label-text">From computer</span> 
+                <span class="label-text">{{ t('labels.upload_from_computer') }}</span> 
                 <input
                   v-model="uploadType"
                   type="radio"
@@ -1050,7 +1050,7 @@ let displayDatepicker = computed(() => {
                   class="radio radio-primary"
                   value="computer"
                 >
-                <span class="label-text">From Jelu server</span> 
+                <span class="label-text">{{ t('labels.upload_from_server') }}</span> 
                 <input
                   v-model="uploadType"
                   type="radio"

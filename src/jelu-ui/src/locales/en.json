@@ -262,7 +262,8 @@
         "export_ok" : "Your export request has been saved. You can leave this page, the report will be available in the messages section.",
         "export_ko" : "An error happened and you export request has probably not been registered.",
         "import_help" : "First choose the type of file you want to import, then pick a file below and finally click the import button. Once the import is launched you can leave this page and go to the messages section.",
-        "import_ok" : "Your import request has been saved. You can leave this page, the import result will be available in the messages section."
+        "import_ok" : "Your import request has been saved. You can leave this page, the import result will be available in the messages section.",
+        "isbn_list" : "List of ISBN in a file"
     },
     "login" : {
         "login" : "login",
@@ -305,7 +306,11 @@
     "stats" : {
         "all_time" : "All time stats",
         "yearly_stats" : "Yearly stats",
-        "choose_year" : "Choose a year"
+        "choose_year" : "Choose a year",
+        "pages_read" : "pages read",
+        "finished" : "finished",
+        "dropped" : "dropped"
+
     },
     "history" : {
         "years" : "years"

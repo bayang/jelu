@@ -39,7 +39,7 @@ const getAllStats = () => {
         datasets: [
         {
             type: 'line',
-            label: 'pages read',
+            label: t('stats.pages_read'),
             backgroundColor: '#3abff8',
             borderColor: '#3abff8',
             borderWidth: 2,
@@ -47,13 +47,13 @@ const getAllStats = () => {
             data: res.map(r => r.pageCount)
           },
           {
-            label: 'finished',
+            label: t('stats.finished'),
             yAxisID: 'y1',
             backgroundColor: '#bbbbbb',
             data: res.map(r => r.finished)
           },
           {
-            label: 'dropped',
+            label: t('stats.dropped'),
             yAxisID: 'y1',
             backgroundColor: '#f87979',
             data: res.map(r => r.dropped)
@@ -81,7 +81,7 @@ const getYearStats = () => {
           datasets: [
           {
             type: 'line',
-            label: 'pages read',
+            label: t('stats.pages_read'),
             backgroundColor: '#3abff8',
             borderColor: '#3abff8',
             borderWidth: 2,
@@ -89,13 +89,13 @@ const getYearStats = () => {
             data: res.map(r => r.pageCount)
           },
             {
-              label: 'finished',
+              label: t('stats.finished'),
               backgroundColor: '#bbbbbb',
               yAxisID: 'y1',
               data: res.map(r => r.finished)
             },
             {
-              label: 'dropped',
+              label: t('stats.dropped'),
               backgroundColor: '#f87979',
               yAxisID: 'y1',
               data: res.map(r => r.dropped)

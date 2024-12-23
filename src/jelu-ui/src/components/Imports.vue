@@ -121,7 +121,6 @@ watch(file, (newVal, oldVal) => {
         <o-field
           horizontal
           :label="t('csv_import.import_source') + ' : '"
-          class="capitalize"
         >
           <o-radio
             v-model="importSource"
@@ -135,7 +134,7 @@ watch(file, (newVal, oldVal) => {
             name="source"
             native-value="ISBN_LIST"
           >
-            List of ISBN in a file
+            {{ t('csv_import.isbn_list') }}
           </o-radio>
         </o-field>
       </div>
@@ -152,7 +151,7 @@ watch(file, (newVal, oldVal) => {
             v-model="fetchMetadata"
             :disabled="store != null && !store.getters.getMetadataFetchEnabled"
           >
-            {{ fetchMetadata }}
+            {{ fetchMetadata ? t('labels.yes'):t('labels.no') }}
           </o-checkbox>
         </o-field>
       </div>
@@ -168,7 +167,7 @@ watch(file, (newVal, oldVal) => {
             v-model="fetchCovers" 
             :disabled="fetchCoversDisabled"
           >
-            {{ fetchCovers }}
+            {{ fetchCovers ? t('labels.yes'):t('labels.no') }}
           </o-checkbox>
         </o-field>
       </div>

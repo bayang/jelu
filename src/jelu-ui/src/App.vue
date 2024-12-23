@@ -268,7 +268,7 @@ const collapseDropdown = () => {
                 <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Search…"
+                  :placeholder="t('labels.search_query')"
                   class="input input-accent join-item"
                   @focus="showAdvanced = true"
                   @blur="hideAdvanced"
@@ -322,7 +322,7 @@ const collapseDropdown = () => {
               class="font-sans text-xl capitalize"
               :to="{ name: 'random' }"
             >
-              {{ "Random" }}
+              {{ t('nav.random') }}
             </router-link>
           </li>
           <li>
@@ -399,7 +399,7 @@ const collapseDropdown = () => {
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Search…"
+              :placeholder="t('labels.search_query')"
               class="input input-accent join-item"
               @focus="showAdvanced = true"
               @blur="hideAdvanced"
