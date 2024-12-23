@@ -262,7 +262,8 @@
         "export_ok": "Váš požadavek na export byl uložen. Můžete opustit tuto stránku, report bude k dispozici v sekci zpráv.",
         "export_ko": "Došlo k chybě, požadavek na export pravděpodobně nebyl zaregistrován.",
         "import_help": "Nejprve vyberte typ souboru, který chcete importovat, poté vyberte soubor a nakonec klikněte na tlačítko Importovat. Po spuštění importu můžete opustit tuto stránku a přejít do sekce zpráv.",
-        "import_ok": "Váš požadavek na import byl uložen. Můžete opustit tuto stránku, výsledek importu bude k dispozici v sekci zpráv."
+        "import_ok": "Váš požadavek na import byl uložen. Můžete opustit tuto stránku, výsledek importu bude k dispozici v sekci zpráv.",
+        "isbn_list": "List of ISBN in a file"
     },
     "login": {
         "login": "přihlášení",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Všechny statistiky",
         "yearly_stats": "Roční statistiky",
-        "choose_year": "Vyberte rok"
+        "choose_year": "Vyberte rok",
+        "pages_read": "pages read",
+        "finished": "finished",
+        "dropped": "dropped"
     },
     "history": {
         "years": "roky"

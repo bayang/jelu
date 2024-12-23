@@ -262,7 +262,8 @@
         "export_ok": "Permintaan ekspor anda sudah tersimpan. Anda bisa meninggalkan halaman ini, laporan akan di bagian pesan.",
         "export_ko": "Terjadi kesalahan dan permintaan ekspor tidak terdaftar.",
         "import_help": "Pilih tipe file yang hendak diimpor, kemudian pilih file di bawah dan ketuk tombol impor. Setelah impor diluncurkan anda bisa meninggalkan halaman ini dan pergi ke bagian pesan.",
-        "import_ok": "Permintaan impor anda sudah tersimpan. Anda bisa meninggalkan halaman ini dan pergi ke bagian pesan."
+        "import_ok": "Permintaan impor anda sudah tersimpan. Anda bisa meninggalkan halaman ini dan pergi ke bagian pesan.",
+        "isbn_list": "List of ISBN in a file"
     },
     "login": {
         "login": "masuk",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Statistik sepanjang waktu",
         "yearly_stats": "Statistik tahunan",
-        "choose_year": "Pilih tahun"
+        "choose_year": "Pilih tahun",
+        "pages_read": "pages read",
+        "finished": "finished",
+        "dropped": "dropped"
     },
     "history": {
         "years": "tahun"

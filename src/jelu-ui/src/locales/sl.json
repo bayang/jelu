@@ -262,7 +262,8 @@
         "export_ok": "Vaša zahteva za izvoz je bila shranjena. To stran lahko zapustite, poročilo bo na voljo v razdelku s sporočili.",
         "export_ko": "Zgodila se je napaka in vaša zahteva za izvoz verjetno ni bila zabeležena.",
         "import_help": "Najprej izberite vrsto datoteke, ki jo želite uvoziti, nato izberite datoteko ter kliknite gumb za uvoz. Ko se uvoz začne, lahko zapustite to stran in se premaknete v razdelek s sporočili.",
-        "import_ok": "Vaša zahteva za uvoz je bila shranjena. To stran lahko zapustite, poročilo bo na voljo v razdelku s sporočili."
+        "import_ok": "Vaša zahteva za uvoz je bila shranjena. To stran lahko zapustite, poročilo bo na voljo v razdelku s sporočili.",
+        "isbn_list": "List of ISBN in a file"
     },
     "login": {
         "login": "prijava",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Vsa statistika",
         "yearly_stats": "Letna statistika",
-        "choose_year": "Izberite leto"
+        "choose_year": "Izberite leto",
+        "pages_read": "pages read",
+        "finished": "finished",
+        "dropped": "dropped"
     },
     "history": {
         "years": "let"

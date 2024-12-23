@@ -262,7 +262,8 @@
         "export_ok": "O seu pedido de exportação foi salvo. Pode sair desta página, o relatório estará disponível na secção de mensagens.",
         "export_ko": "Ocorreu um erro e provavelmente o seu pedido de exportação não foi registado.",
         "import_help": "Primeiro escolha o tipo de ficheiro que deseja importar, depois escolha um ficheiro abaixo e finalmente clique no botão importar. Quando a importação for iniciada, poderá sair desta página e ir para a secção de mensagens.",
-        "import_ok": "A sua solicitação de importação foi salva. Pode deixar esta página, o resultado de importação estará disponível na secção de mensagens."
+        "import_ok": "A sua solicitação de importação foi salva. Pode deixar esta página, o resultado de importação estará disponível na secção de mensagens.",
+        "isbn_list": "List of ISBN in a file"
     },
     "login": {
         "login": "iniciar sessão",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Estatísticas globais",
         "yearly_stats": "Estatísticas anuais",
-        "choose_year": "Escolha um ano"
+        "choose_year": "Escolha um ano",
+        "pages_read": "pages read",
+        "finished": "finished",
+        "dropped": "dropped"
     },
     "history": {
         "years": "anos"
