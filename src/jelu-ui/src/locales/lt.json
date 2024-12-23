@@ -262,7 +262,8 @@
         "export_ok": "Jūsų eksporto užklausa išsaugota. Galite išeiti iš šio puslapio, ataskaitą bus galima rasti pranešimų skiltyje.",
         "export_ko": "Įvyko klaida ir eksporto užklausa tikriausiai nebuvo užregistruota.",
         "import_help": "Pirmiausia pasirinkite failo, kurį norite importuoti, tipą, tada pasirinkite žemiau esantį failą ir galiausiai spustelėkite importo mygtuką. Paleidę importą galite palikti šį puslapį ir pereiti į pranešimų skyrių.",
-        "import_ok": "Jūsų importo užklausa buvo išsaugota. Galite palikti šį puslapį, o importo rezultatas bus pateiktas pranešimų skiltyje."
+        "import_ok": "Jūsų importo užklausa buvo išsaugota. Galite palikti šį puslapį, o importo rezultatas bus pateiktas pranešimų skiltyje.",
+        "isbn_list": "List of ISBN in a file"
     },
     "login": {
         "login": "prisijungti",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Visų laikų statistika",
         "yearly_stats": "Metinė statistika",
-        "choose_year": "Pasirinkite metus"
+        "choose_year": "Pasirinkite metus",
+        "pages_read": "pages read",
+        "finished": "finished",
+        "dropped": "dropped"
     },
     "history": {
         "years": "metai"
