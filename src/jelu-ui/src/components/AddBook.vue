@@ -26,7 +26,7 @@ const { t } = useI18n({
       useScope: 'global'
     })
 
-useTitle('Jelu | Add book')
+useTitle('Jelu | ' + t('nav.add_book'))
 
 const store = useStore(key)
 const router = useRouter()

@@ -17,7 +17,7 @@ const { t } = useI18n({
       useScope: 'global'
     })
 
-useTitle('Jelu | Random')
+useTitle('Jelu | ' + t('nav.random'))
 
 const books: Ref<Array<UserBook>> = ref([]);
 

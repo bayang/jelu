@@ -12,12 +12,12 @@ import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
 
-useTitle('Jelu | My books')
-
 const { t } = useI18n({
-      inheritLocale: true,
-      useScope: 'global'
-    })
+  inheritLocale: true,
+  useScope: 'global'
+})
+
+useTitle('Jelu | ' + t('nav.my_books'))
 
 const books: Ref<Array<UserBook>> = ref([]);
 

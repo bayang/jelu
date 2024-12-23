@@ -14,7 +14,7 @@ const { t, d } = useI18n({
       useScope: 'global'
     })
 
-useTitle('Jelu | History')
+useTitle('Jelu | ' + t('nav.history'))
 
 dayjs.extend(localizedFormat)
 
