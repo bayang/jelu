@@ -1,3 +1,10 @@
+### [0.61.3](https://github.com/bayang/jelu/compare/v0.61.2...v0.61.3) (2024-12-23)
+
+
+### Bug Fixes
+
+* Better align book details when shown in a grid ([#166](https://github.com/bayang/jelu/issues/166)) ([c67f955](https://github.com/bayang/jelu/commit/c67f9554c0b1a3937997338b2cc18445f94039d0))
+
 ### [0.61.2](https://github.com/bayang/jelu/compare/v0.61.1...v0.61.2) (2024-12-23)
 
 
