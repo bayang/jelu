@@ -84,7 +84,7 @@
         "books_tagged_name": "Könyv tagelve: #{tag}",
         "upload_from_web": "Feltöltés internetről",
         "upload_from_file": "Feltöltés fájlból",
-        "upload_from_computer": "Feltöltés számítógépről",
+        "upload_from_computer": "Feltöltés a számítógépről",
         "upload_from_server": "Jelu szerverről",
         "double_click_to_edit": "Dupla klikk a szerkesztéshez",
         "mark_read_or_drop": "Jelöld olvasotként vagy hagyd",
@@ -262,7 +262,8 @@
         "export_ok": "Az export kérelem mentve lett. Elhagyhatod ezt az oldalt, a jelentés az üzeneteknél lesz elérhető.",
         "export_ko": "Hiba történt és az export kérésed valószínű nem lett regisztrálva.",
         "import_help": "Először válaszd ki az importálandó fájl típusát, majd válaszd ki a fájlt és kattints az import gombra. Amint az import elkezdődik, elhagyhatod ezt az oldalt és átmehetsz az üzenetekhez.",
-        "import_ok": "Az import kérésed mentve lett. Elhagyhatod ezt az oldalt, az importálás eredménye az üzeneteknél lesz elérhető."
+        "import_ok": "Az import kérésed mentve lett. Elhagyhatod ezt az oldalt, az importálás eredménye az üzeneteknél lesz elérhető.",
+        "isbn_list": "List of ISBN in a file"
     },
     "login": {
         "login": "felhasználónév",
@@ -305,7 +306,10 @@
     "stats": {
         "all_time": "Összes statisztika",
         "yearly_stats": "Éves statisztika",
-        "choose_year": "Válassz évet"
+        "choose_year": "Válassz évet",
+        "pages_read": "pages read",
+        "finished": "finished",
+        "dropped": "dropped"
     },
     "history": {
         "years": "évek"
