@@ -7,12 +7,12 @@
     },
     "nav": {
         "my_books": "moje knihy",
-        "to_read": "do zoznamu na prečítanie",
+        "to_read": "Na prečítanie",
         "random": "náhodné",
         "add_book": "pridať knihu",
         "dashboard": "nástenka",
         "login": "prihlásiť",
-        "logout": "odhlásiť",
+        "logout": "Odhlásiť sa",
         "search": "hľadať",
         "history": "história",
         "shelves": "poličky",
@@ -229,7 +229,7 @@
         "author_left_subtitle": "Autor, ktorý sa ponechá",
         "author_left_description": "Najprv vyberte autora, ktorý bude upravený a ponechaný v databáze.",
         "author_right_subtitle": "Autor, ktorý sa má zlúčiť s prvým",
-        "author_right_description": "Ďalej vyberte autora, ktorého chcete zlúčiť s druhým.",
+        "author_right_description": "Ďalej vyberte autora, ktorého chcete zlúčiť s prvým vybratým.",
         "authors_merge_subtitle": "Zlúčiť",
         "authors_merge_description": "Pomocou polí na pravej strane autora doplňte autora na ľavej strane a potom ich zlúčte.",
         "search_message": "Vyhľadať autorov na zlúčenie"
