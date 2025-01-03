@@ -307,9 +307,9 @@
         "all_time": "Statistieken van alle tijden",
         "yearly_stats": "Jaarlijkse statistieken",
         "choose_year": "Kies een jaar",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped"
+        "pages_read": "gelezen pagina's",
+        "finished": "voltooid",
+        "dropped": "gestopt"
     },
     "history": {
         "years": "jaren"
