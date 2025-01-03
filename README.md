@@ -111,7 +111,6 @@ The docker image we provide embeds the fetch-ebook-metadata executable to automa
 A sample docker compose would look like that :
 
 ```yaml
-version: '3.3'
 services:
   jelu:
     image: wabayang/jelu
