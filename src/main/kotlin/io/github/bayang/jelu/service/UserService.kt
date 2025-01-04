@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.service
 
+import io.github.bayang.jelu.dao.BookRepository
 import io.github.bayang.jelu.dao.Provider
 import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.UserRepository
@@ -29,6 +30,7 @@ class UserService(
     private val sessionRegistry: SessionRegistry,
     private val sessionsRepo: FindByIndexNameSessionRepository<out Session>,
     private val passwordEncoder: PasswordEncoder,
+    private val bookRepository: BookRepository,
 ) : UserDetailsService {
 
     @Transactional
@@ -82,6 +84,7 @@ class UserService(
 
     @Transactional
     fun deleteUser(userId: UUID) {
+        bookRepository.deleteUserBookForUser(userId)
         userRepository.deleteUser(userId)
     }
 

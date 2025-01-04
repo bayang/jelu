@@ -1229,6 +1229,10 @@ class BookRepository(
         entity.delete()
     }
 
+    fun deleteUserBookForUser(userId: UUID) {
+        UserBookTable.deleteWhere { user eq userId }
+    }
+
     fun deleteBookById(bookId: UUID) {
         val book = Book[bookId]
         book.image?.let { fileManager.deleteImage(it) }

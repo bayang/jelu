@@ -1446,6 +1446,40 @@ class BookServiceTest(
     }
 
     @Test
+    fun testDeleteUserWithUserbookWithNewBookImageAndEvent() {
+        val userDto = userService.save(CreateUserDto(login = "testdelete", password = "1234", isAdmin = true))
+        var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        val createBook = bookDto()
+        val createUserBookDto = createUserBookDto(createBook, ReadingEventType.CURRENTLY_READING, nowInstant())
+        val uploadFile = MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val saved: UserBookLightDto = bookService.save(createUserBookDto, userDto, uploadFile)
+        Assertions.assertEquals(createBook.title, saved.book.title)
+        Assertions.assertEquals(createBook.isbn10, saved.book.isbn10)
+        Assertions.assertEquals(createBook.isbn13?.trim(), saved.book.isbn13)
+        Assertions.assertEquals("This is a test summary with a newline", saved.book.summary)
+        Assertions.assertEquals(createBook.publisher, saved.book.publisher)
+        Assertions.assertEquals(createBook.pageCount, saved.book.pageCount)
+        Assertions.assertEquals(createBook.goodreadsId, saved.book.goodreadsId)
+        Assertions.assertNull(saved.book.librarythingId)
+        Assertions.assertEquals(createUserBookDto.owned, saved.owned)
+        Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
+        Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
+        Assertions.assertNotNull(saved.creationDate)
+        Assertions.assertNotNull(saved.modificationDate)
+        Assertions.assertNotNull(saved.book.creationDate)
+        Assertions.assertNotNull(saved.book.modificationDate)
+        Assertions.assertTrue(saved.book.image!!.contains(slugify(saved.book.title), true))
+        Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, saved.lastReadingEvent)
+        Assertions.assertNotNull(saved.lastReadingEventDate)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        userService.deleteUser(userDto.id!!)
+    }
+
+    @Test
     fun testInsertUserbookWithNewBookImageAndEvent() {
         var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)
