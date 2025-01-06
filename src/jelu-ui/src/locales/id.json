@@ -113,7 +113,9 @@
         "add_quote": "tambahkan kutipan buku",
         "description": "deskripsi",
         "user_rating": "rating saya : {rating}",
-        "apply": "apply"
+        "apply": "apply",
+        "loading": "loading",
+        "pick_camera": "pick camera"
     },
     "settings": {
         "pick_language": "Pilih bahasa",
