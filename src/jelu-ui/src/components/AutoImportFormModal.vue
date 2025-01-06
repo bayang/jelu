@@ -123,11 +123,6 @@ function togglePluginsModal() {
 
 function scanModalClosed() {
   console.log("scan modal closed")
-    barcodeReader.codeReader.stream
-        .getTracks()
-        .forEach(function (track: any) {
-            track.stop();
-        });
 }
 
 function pluginsModalClosed() {
