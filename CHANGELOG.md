@@ -1,3 +1,11 @@
+### [0.62.1](https://github.com/bayang/jelu/compare/v0.62.0...v0.62.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* always display link to other user library on profile page ([8aac2a2](https://github.com/bayang/jelu/commit/8aac2a21bf31909221ed55d410b637a2c2646338))
+* change barcode scanner lib ([55e0c5a](https://github.com/bayang/jelu/commit/55e0c5acb4934e12a3b9c075c3a022b777f4bcc7))
+
 ## [0.62.0](https://github.com/bayang/jelu/compare/v0.61.3...v0.62.0) (2025-01-06)
 
 
