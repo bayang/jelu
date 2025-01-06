@@ -114,8 +114,8 @@
         "description": "popis",
         "user_rating": "moje hodnotenie : {rating}",
         "apply": "použiť",
-        "loading": "loading",
-        "pick_camera": "pick camera"
+        "loading": "načítava sa",
+        "pick_camera": "Vybrať kameru"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
