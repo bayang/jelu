@@ -122,8 +122,15 @@ getUserReviews()
       <Avatar
         :username="user.login"
       />
-      <strong>{{ user.login }}</strong>
+      <strong class="text-2xl">{{ user.login }}</strong>
     </div>
+    <router-link
+
+      class="link text-3xl typewriter py-4"
+      :to="{ name: 'my-books', query: { userId: route.params.userId } }"
+    >
+      {{ t('labels.books_from_name', { name: user.login }) }}
+    </router-link>
     <h2
       v-if="currentlyReading.length > 0"
       class="text-3xl typewriter py-4"
@@ -172,13 +179,7 @@ getUserReviews()
       v-if="events.length > 0"
       class="text-3xl typewriter py-4"
     >
-      <router-link
-
-        class="link text-3xl typewriter py-4"
-        :to="{ name: 'my-books', query: { userId: route.params.userId } }"
-      >
-        {{ t('home.recent_events') }}
-      </router-link>
+      {{ t('home.recent_events') }}
     </h2>
     <div
       v-if="events.length > 0"
