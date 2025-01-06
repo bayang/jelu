@@ -374,6 +374,13 @@ function defaultCreateEvent(): CreateReadingEvent {
   }
 }
 
+const publisherQuery = computed(() => {
+  if (book.value?.book.publisher) {
+    return "\"" + book.value.book.publisher + "\""
+  }
+  return ""
+})
+
 const embedCode = computed(() => {
   if (book.value) {
     return generateEmbed(book.value)
@@ -757,7 +764,12 @@ getBook()
         </ul>
         <p v-if="book?.book?.publisher">
           <span class="font-semibold capitalize">{{ t('book.publisher') }} :</span>
-          {{ book.book.publisher }}
+          <router-link
+            class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+            :to="{ name: 'search', query: { q: `publisher:` + publisherQuery } }"
+          >
+            {{ book.book.publisher }}
+          </router-link>
         </p>
         <p v-if="book?.book?.isbn10">
           <span class="font-semibold uppercase">{{ t('book.isbn10') }} :</span>

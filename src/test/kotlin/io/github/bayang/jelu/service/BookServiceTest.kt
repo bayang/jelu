@@ -85,7 +85,9 @@ class BookServiceTest(
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
+        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(100))
+            .forEach { bookService.deleteUserBookById(it.id!!) }
+        bookService.findUserBookByCriteria(user2().id!!, null, null, null, null, null, Pageable.ofSize(100))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -95,6 +97,12 @@ class BookServiceTest(
         }
         bookService.findAllSeries(null, null, Pageable.ofSize(20)).content.forEach {
             bookService.deleteSeriesById(it.id!!)
+        }
+        bookService.findAll(null, Pageable.ofSize(100), user(), LibraryFilter.ANY).forEach {
+            bookService.deleteBookById(it.id!!)
+        }
+        bookService.findAll(null, Pageable.ofSize(100), user2(), LibraryFilter.ANY).forEach {
+            bookService.deleteBookById(it.id!!)
         }
         luceneHelper.getIndexWriter().use { indexWriter ->
             indexWriter.deleteDocuments(Term(LuceneEntity.TYPE, LuceneEntity.Book.type))
@@ -1084,6 +1092,69 @@ class BookServiceTest(
         val entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
         Assertions.assertEquals(1, entitiesIds?.size)
         Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+    }
+
+    @Test
+    fun testFindPublishers() {
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "publisher1",
+                pageCount = 50,
+                publishedDate = "",
+                authors = emptyList(),
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        val entitiesIds = luceneHelper.searchEntitiesIds("tit", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(res.id, UUID.fromString(entitiesIds?.get(0)))
+        var page = bookService.findPublishers(null, Pageable.ofSize(30))
+        Assertions.assertEquals(1, page.totalElements)
+        Assertions.assertEquals("publisher1", page.content[0])
+        val res1: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title2",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "publisher2",
+                pageCount = 50,
+                publishedDate = "",
+                authors = emptyList(),
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res1.id)
+        page = bookService.findPublishers(null, Pageable.ofSize(20))
+        Assertions.assertEquals(2, page.totalElements)
     }
 
     @Test

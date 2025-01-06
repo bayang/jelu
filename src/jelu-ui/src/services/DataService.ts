@@ -591,6 +591,27 @@ class DataService {
       throw new Error("error get series by criteria " + error)
     }
   }
+  
+  
+  findPublisherByCriteria = async (query?: string | null) => {
+    try {
+      const response = await this.apiClient.get<Page<string>>(`${this.API_BOOK}/publishers`, {
+        params: {
+          name: query
+        }
+      });
+      console.log("called publishers by criteria")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error publishers by criteria " + (error as AxiosError).code)
+      throw new Error("error get publishers by criteria " + error)
+    }
+  }
 
   getTagById = async (tagId: string) => {
     try {

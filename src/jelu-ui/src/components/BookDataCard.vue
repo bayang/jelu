@@ -59,6 +59,13 @@ const getUserbookId = async () => {
   })
 }
 
+const publisherQuery = computed(() => {
+  if (props.book.publisher) {
+    return "\"" + props.book.publisher + "\""
+  }
+  return ""
+})
+
 watch(() => props.book.id, (newVal, oldVal) => {
   console.log("props.book.id ")
   console.log(newVal + " " + oldVal)
@@ -169,8 +176,17 @@ function modalClosed() {
           </li>
         </ul>
         <p v-if="props.book.publisher">
-          <span class="font-semibold capitalize">{{ t('book.publisher') }} :</span>
-          {{ props.book.publisher }}
+          <span class="font-semibold capitalize">{{ t('book.publisher') }} :&nbsp;</span>
+          <router-link
+            v-if="links != null && links === true"
+            class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+            :to="{ name: 'search', query: { q: `publisher:` + publisherQuery } }"
+          >
+            {{ props.book.publisher }}
+          </router-link>
+          <span v-else>
+            {{ props.book.publisher }}
+          </span>
         </p>
         <p v-if="props.book.isbn10">
           <span class="font-semibold uppercase">{{ t('book.isbn10') }} :</span>

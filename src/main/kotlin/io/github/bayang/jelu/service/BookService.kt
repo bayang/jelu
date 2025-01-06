@@ -114,6 +114,9 @@ class BookService(
     @Transactional
     fun findAuthorsById(authorId: UUID): AuthorDto = bookRepository.findAuthorsById(authorId).toAuthorDto()
 
+    @Transactional
+    fun findPublishers(name: String?, pageable: Pageable): Page<String> = bookRepository.findAllPublishers(name, pageable)
+
     /**
      * Image not updated, to add or update an image call the variant which accepts a MultiPartFile
      */

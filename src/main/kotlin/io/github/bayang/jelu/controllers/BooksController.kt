@@ -172,6 +172,14 @@ class BooksController(
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
     ): Page<TagDto> = repository.findAllTags(name, pageable)
 
+    @GetMapping(path = ["/books/publishers"])
+    fun publishers(
+        @RequestParam(name = "name", required = false) name: String?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
+    ): Page<String> {
+        return repository.findPublishers(name, pageable)
+    }
+
     @GetMapping(path = ["/tags/{id}"])
     fun tagById(
         @PathVariable("id") tagId: UUID,

@@ -599,6 +599,23 @@ class BookRepository(
         )
     }
 
+    fun findAllPublishers(name: String?, pageable: Pageable): Page<String> {
+        val query: Query = BookTable.select(BookTable.publisher)
+        name?.let {
+            query.andWhere { BookTable.publisher like "%$name%" }
+        }
+        query.withDistinct()
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        query.orderBy(BookTable.publisher, SortOrder.ASC)
+        val res = query.map { it[BookTable.publisher] }.stream().filter { it != null }.toList()
+        return PageImpl(
+            res,
+            pageable,
+            total,
+        )
+    }
+
     fun wrapRow(resultRow: ResultRow, userId: UUID): Book {
         val e = Book.wrapRow(resultRow)
         val userbook = e.userBooks.firstOrNull { u -> u.user.id.value == userId }

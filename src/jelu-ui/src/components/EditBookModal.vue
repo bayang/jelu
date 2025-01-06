@@ -29,6 +29,7 @@ const emit = defineEmits(['close']);
 let filteredAuthors: Ref<Array<Author>> = ref([]);
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let filteredTranslators: Ref<Array<Author>> = ref([]);
+let filteredPublishers: Ref<Array<string>> = ref([])
 let userbook: Ref<UserBook> = ref(copyInput(props.book))
 let hasImage: Ref<boolean> = ref(userbook.value.book.image != null)
 let deleteImage: Ref<boolean> = ref(false)
@@ -156,6 +157,10 @@ function getFilteredTags(text: string) {
   dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
 
+function getFilteredPublishers(text: string) {
+  dataService.findPublisherByCriteria(text).then(data => filteredPublishers.value = data.content)
+}
+
 function itemAdded() {
   console.log("added")
   console.log(userbook.value.book.authors)
@@ -245,6 +250,14 @@ function createTag(item: Tag | string) {
   }
   return {
     "name": item
+  }
+}
+
+function selectPublisher(publisher: string, event: UIEvent) {
+  // we receive from oruga weird events while nothing is selected
+  // so try to get rid of those null data we receive
+  if (publisher != null && event != null) {
+    userbook.value.book.publisher = publisher
   }
 }
 
@@ -456,9 +469,15 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             :label="t('book.publisher')"
             class="capitalize"
           >
-            <o-input 
-              v-model="userbook.book.publisher" 
-              class="input focus:input-accent"
+            <o-autocomplete
+              v-model="userbook.book.publisher"
+              :root-class="'grow, w-full'"
+              :input-classes="{rootClass:'border-2 border-accent'}"
+              :data="filteredPublishers"
+              :clear-on-select="true"
+              :debounce="100"
+              @input="getFilteredPublishers"
+              @select="selectPublisher"
             />
           </o-field>
         </div>

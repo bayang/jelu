@@ -101,6 +101,8 @@ let tags: Ref<Array<Tag>> = ref([]);
 let translators: Ref<Array<Author>> = ref([]);
 let filteredTranslators: Ref<Array<Author>> = ref([]);
 
+let filteredPublishers: Ref<Array<string>> = ref([])
+
 let seriesCopy: Ref<Array<SeriesOrder>> = ref([])
 
 const showModal: Ref<boolean> = ref(false)
@@ -290,6 +292,10 @@ function getFilteredTags(text: string) {
   dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
 }
 
+function getFilteredPublishers(text: string) {
+  dataService.findPublisherByCriteria(text).then(data => filteredPublishers.value = data.content)
+}
+
 function beforeAdd(item: Author | string) {
   let shouldAdd = true
   if (item instanceof Object) {
@@ -374,6 +380,14 @@ function createTag(item: Tag | string) {
   }
   return {
     "name": item
+  }
+}
+
+function selectPublisher(publisher: string, event: UIEvent) {
+  // we receive from oruga weird events while nothing is selected
+  // so try to get rid of those null data we receive
+  if (publisher != null && event != null) {
+    form.publisher = publisher
   }
 }
 
@@ -725,13 +739,13 @@ let displayDatepicker = computed(() => {
               :placeholder="t('book.openlibrary_id')"
               class="input focus:input-accent"
             />
-<o-input
+            <o-input
               v-model="form.noosfereId"
               name="noosfereId"
               :placeholder="t('book.noosfere_id')"
               class="input focus:input-accent"
             />
-<o-input
+            <o-input
               v-model="form.inventaireId"
               name="inventaireId"
               :placeholder="t('book.inventaire_id')"
@@ -745,9 +759,15 @@ let displayDatepicker = computed(() => {
             :label="t('book.publisher')"
             class="capitalize"
           >
-            <o-input
+            <o-autocomplete
               v-model="form.publisher"
-              class="input focus:input-accent"
+              :root-class="'grow, w-full'"
+              :input-classes="{rootClass:'border-2 border-accent'}"
+              :data="filteredPublishers"
+              :clear-on-select="true"
+              :debounce="100"
+              @input="getFilteredPublishers"
+              @select="selectPublisher"
             />
           </o-field>
         </div>
