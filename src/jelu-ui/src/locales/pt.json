@@ -111,9 +111,9 @@
         "user_avg_rating": "minha classificação média: {rating}",
         "avg_rating": "classificação média : {rating}",
         "add_quote": "adicionar citação de livro",
-        "description": "description",
-        "user_rating": "my rating : {rating}",
-        "apply": "apply"
+        "description": "descrição",
+        "user_rating": "a minha classificação: {rating}",
+        "apply": "aplicar"
     },
     "settings": {
         "pick_language": "Escolha o seu idioma",
@@ -203,10 +203,10 @@
         "goodreads_id": "ID de Goodreads",
         "amazon_id": "ID de Amazon",
         "librarything_id": "ID de Librarything",
-        "isfdb_id": "ISFDB Id",
-        "openlibrary_id": "Openlibrary Id",
-        "noosfere_id": "Noosfere Id",
-        "inventaire_id": "inventaire id",
+        "isfdb_id": "Id ISFDB",
+        "openlibrary_id": "Id Openlibrary",
+        "noosfere_id": "Id Noosfere",
+        "inventaire_id": "id inventaire",
         "publisher": "editor",
         "published_date": "data de publicação",
         "page_count": "número de páginas",
@@ -263,7 +263,7 @@
         "export_ko": "Ocorreu um erro e provavelmente o seu pedido de exportação não foi registado.",
         "import_help": "Primeiro escolha o tipo de ficheiro que deseja importar, depois escolha um ficheiro abaixo e finalmente clique no botão importar. Quando a importação for iniciada, poderá sair desta página e ir para a secção de mensagens.",
         "import_ok": "A sua solicitação de importação foi salva. Pode deixar esta página, o resultado de importação estará disponível na secção de mensagens.",
-        "isbn_list": "List of ISBN in a file"
+        "isbn_list": "Lista ISBN em um ficheiro"
     },
     "login": {
         "login": "iniciar sessão",
@@ -307,9 +307,9 @@
         "all_time": "Estatísticas globais",
         "yearly_stats": "Estatísticas anuais",
         "choose_year": "Escolha um ano",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped"
+        "pages_read": "páginas lidas",
+        "finished": "terminado",
+        "dropped": "abandonado"
     },
     "history": {
         "years": "anos"
@@ -346,9 +346,9 @@
     },
     "metadata": {
         "reorder_plugins": "reordenar extensões",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "description": "As extensões serão utilizadas de cima para baixo, as extensões desativadas não serão usadas.",
         "default_priority": "prioridade padrão",
-        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
+        "note": "Esta alteração é apenas temporária, se quiser reordenar permanentemente as extensões, tem que editar a configuração."
     },
     "book_quotes": {
         "edit_quote": "Editar citação do livro",
@@ -358,15 +358,15 @@
         "delete_quote": "apagar esta citação?"
     },
     "series": {
-        "edit_series": "edit series",
-        "create_series": "create series",
-        "name": "name"
+        "edit_series": "modificar a série",
+        "create_series": "criar uma série",
+        "name": "nome"
     },
     "login_info": {
         "ip": "ip",
         "user_agent": "user agent",
-        "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "source": "fonte",
+        "last_activity": "última atividade",
+        "activity": "histórico de sessões"
     }
 }
