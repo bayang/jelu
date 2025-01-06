@@ -194,5 +194,6 @@ You can help with translations : everything is hosted on crowdin https://crowdin
 * German translation : @puckzuck
 * Polish translation: @Sebastian Jasiński (PrinceNorris)
 * Italian translation : @AleCornella
+* Portuguese translation : @M0streng0
 
 (if you should be here or want your name modified just contact me)
