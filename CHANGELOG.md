@@ -1,3 +1,16 @@
+## [0.62.0](https://github.com/bayang/jelu/compare/v0.61.3...v0.62.0) (2025-01-06)
+
+
+### Features
+
+* autocomplete publisher [#159](https://github.com/bayang/jelu/issues/159) ([dd48440](https://github.com/bayang/jelu/commit/dd484407b5d37168baf14d807d611d3435d973be))
+
+
+### Bug Fixes
+
+* deleting an user generates an error ([12892af](https://github.com/bayang/jelu/commit/12892af9b8c96f8de5367532e576e1d461444201))
+* title for main pages ([15c866c](https://github.com/bayang/jelu/commit/15c866c7baf69e9ff0a97b91e77b1131427685d6))
+
 ### [0.61.3](https://github.com/bayang/jelu/compare/v0.61.2...v0.61.3) (2024-12-23)
 
 
