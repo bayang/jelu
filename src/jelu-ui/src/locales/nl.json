@@ -113,7 +113,9 @@
         "add_quote": "voeg citaat uit boek toe",
         "description": "omschrijving",
         "user_rating": "mijn beoordeling: {rating}",
-        "apply": "toepassen"
+        "apply": "toepassen",
+        "loading": "loading",
+        "pick_camera": "pick camera"
     },
     "settings": {
         "pick_language": "Kies een taal",
