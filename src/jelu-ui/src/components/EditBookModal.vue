@@ -29,6 +29,7 @@ const emit = defineEmits(['close']);
 let filteredAuthors: Ref<Array<Author>> = ref([]);
 let filteredTags: Ref<Array<Tag>> = ref([]);
 let filteredTranslators: Ref<Array<Author>> = ref([]);
+let filteredNarrators: Ref<Array<Author>> = ref([]);
 let filteredPublishers: Ref<Array<string>> = ref([])
 let userbook: Ref<UserBook> = ref(copyInput(props.book))
 let hasImage: Ref<boolean> = ref(userbook.value.book.image != null)
@@ -144,13 +145,11 @@ const importBook = () => {
 
 }
 
-function getFilteredAuthors(text: string) {
-  console.log("option " + text)
-  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
-}
-
-function getFilteredTranslators(text: string) {
-  dataService.findAuthorByCriteria(text).then((data) => filteredTranslators.value = data.content)
+function getFilteredData(text: string, target: Array<Author>) {
+  dataService.findAuthorByCriteria(text).then((data) => {
+    target.splice(0, target.length)
+    data.content.forEach(a => target.push(a))
+  })
 }
 
 function getFilteredTags(text: string) {
@@ -166,10 +165,10 @@ function itemAdded() {
   console.log(userbook.value.book.authors)
 }
 
-function beforeAdd(item: Author | string) {
+function beforeAdd(item: Author | string, target: Array<Author>) {
   let shouldAdd = true
   if (item instanceof Object) {
-    userbook.value.book?.authors?.forEach(author => {
+    target.forEach(author => {
       console.log(`author ${author.name}`)
       if (author.name === item.name) {
         console.log(`author ${author.name} item ${item.name}`)
@@ -178,33 +177,10 @@ function beforeAdd(item: Author | string) {
     });
   }
   else {
-    userbook.value.book?.authors?.forEach(author => {
+    target.forEach(author => {
       console.log(`author ${author.name}`)
       if (author.name === item) {
         console.log(`author ${author.name} item ${item}`)
-        shouldAdd = false;
-      }
-    });
-  }
-  return shouldAdd
-}
-
-function beforeAddTranslator(item: Author | string) {
-  let shouldAdd = true
-  if (item instanceof Object) {
-    userbook.value.book?.translators?.forEach(translator => {
-      console.log(`translator ${translator.name}`)
-      if (translator.name === item.name) {
-        console.log(`translator ${translator.name} item ${item.name}`)
-        shouldAdd = false;
-      }
-    });
-  }
-  else {
-    userbook.value.book?.translators?.forEach(translator => {
-      console.log(`translator ${translator.name}`)
-      if (translator.name === item) {
-        console.log(`translator ${translator.name} item ${item}`)
         shouldAdd = false;
       }
     });
@@ -337,13 +313,13 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="beforeAdd"
+              :before-adding="(item: Author|string) => beforeAdd(item, userbook.book.authors as Array<Author>)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_author')"
-              @input="getFilteredAuthors"
+              @input="(v: string) => getFilteredData(v, filteredAuthors)"
               @add="itemAdded"
             />
           </o-field>
@@ -386,13 +362,38 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="beforeAddTranslator"
+              :before-adding="(item: Author|string) => beforeAdd(item, userbook.book.translators as Array<Author>)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_translator')"
-              @input="getFilteredTranslators"
+              @input="(v: string) => getFilteredData(v, filteredTranslators)"
+              @add="itemAdded"
+            />
+          </o-field>
+        </div>
+        <div class="field jelu-authorinput pb-2">
+          <o-field
+            horizontal
+            :label="t('book.narrator', 2)"
+            class="capitalize"
+          >
+            <o-taginput
+              v-model="userbook.book.narrators"
+              :data="filteredNarrators"
+              :allow-autocomplete="true"
+              autocomplete="off"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="(item: Author|string) => beforeAdd(item, userbook.book.narrators as Array<Author>)"
+              :create-item="createAuthor"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              :placeholder="t('labels.add_narrator')"
+              @input="(v: string) => getFilteredData(v, filteredNarrators)"
               @add="itemAdded"
             />
           </o-field>

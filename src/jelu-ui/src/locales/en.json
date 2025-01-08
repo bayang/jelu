@@ -115,7 +115,8 @@
       "user_rating" : "my rating : {rating}",
       "apply" : "apply",
       "loading": "loading",
-      "pick_camera": "pick camera"
+      "pick_camera": "pick camera",
+      "add_narrator": "Add a narrator"
     },
     "settings" : {
         "pick_language" : "Pick your language",
@@ -223,7 +224,8 @@
         "in_read_list" : "in read list",
         "translator" : "translator | translators",
         "borrowed" : "borrowed",
-        "current_page_number" : "current page number"
+        "current_page_number" : "current page number",
+        "narrator": "narrator | narrators"
     },
     "authors_merge" : {
         "authors_merging_utility" : "Authors merging utility",

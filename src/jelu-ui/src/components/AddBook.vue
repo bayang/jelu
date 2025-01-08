@@ -101,6 +101,9 @@ let tags: Ref<Array<Tag>> = ref([]);
 let translators: Ref<Array<Author>> = ref([]);
 let filteredTranslators: Ref<Array<Author>> = ref([]);
 
+let narrators: Ref<Array<Author>> = ref([]);
+let filteredNarrators: Ref<Array<Author>> = ref([]);
+
 let filteredPublishers: Ref<Array<string>> = ref([])
 
 let seriesCopy: Ref<Array<SeriesOrder>> = ref([])
@@ -149,6 +152,7 @@ const importBook = async () => {
     authors.value.forEach((a) => userBook.book.authors?.push(a));
     tags.value.forEach((t) => userBook.book.tags?.push(t));
     translators.value.forEach((tr) => userBook.book.translators?.push(tr));
+    narrators.value.forEach((n) => userBook.book.narrators?.push(n))
     seriesCopy.value.forEach((s) => {
       if (s.name.trim().length > 0) {
         userBook.book.series?.push(s)
@@ -223,6 +227,7 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
       language: formdata.language,
       authors: [],
       translators: [],
+      narrators: [],
       tags: []
     },
     owned: formdata.owned,
@@ -243,6 +248,7 @@ const clearForm = () => {
   authors.value = [];
   tags.value = [];
   translators.value = [];
+  narrators.value = []
   uploadPercentage.value = 0;
   form.title = "";
   form.summary = "";
@@ -280,12 +286,11 @@ const clearImageField = () => {
   imageUrl.value = "";
 };
 
-function getFilteredAuthors(text: string) {
-  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
-}
-
-function getFilteredTranslators(text: string) {
-  dataService.findAuthorByCriteria(text).then((data) => filteredTranslators.value = data.content)
+function getFilteredData(text: string, target: Array<Author>) {
+  dataService.findAuthorByCriteria(text).then((data) => {
+    target.splice(0, target.length)
+    data.content.forEach(a => target.push(a))
+  })
 }
 
 function getFilteredTags(text: string) {
@@ -296,10 +301,10 @@ function getFilteredPublishers(text: string) {
   dataService.findPublisherByCriteria(text).then(data => filteredPublishers.value = data.content)
 }
 
-function beforeAdd(item: Author | string) {
+function beforeAdd(item: Author | string, target: Array<Author>) {
   let shouldAdd = true
   if (item instanceof Object) {
-    authors.value.forEach(author => {
+    target.forEach(author => {
       console.log(`author ${author.name}`)
       if (author.name === item.name) {
         console.log(`author ${author.name} item ${item.name}`)
@@ -308,33 +313,10 @@ function beforeAdd(item: Author | string) {
     });
   }
   else {
-    authors.value.forEach(author => {
+    target.forEach(author => {
       console.log(`author ${author.name}`)
       if (author.name === item) {
         console.log(`author ${author.name} item ${item}`)
-        shouldAdd = false;
-      }
-    });
-  }
-  return shouldAdd
-}
-
-function beforeAddTranslator(item: Author | string) {
-  let shouldAdd = true
-  if (item instanceof Object) {
-    translators.value.forEach(translator => {
-      console.log(`translator ${translator.name}`)
-      if (translator.name === item.name) {
-        console.log(`translator ${translator.name} item ${item.name}`)
-        shouldAdd = false;
-      }
-    });
-  }
-  else {
-    translators.value.forEach(translator => {
-      console.log(`translator ${translator.name}`)
-      if (translator.name === item) {
-        console.log(`translator ${translator.name} item ${item}`)
         shouldAdd = false;
       }
     });
@@ -591,13 +573,13 @@ let displayDatepicker = computed(() => {
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="beforeAdd"
+              :before-adding="(item: Author|string) => beforeAdd(item, authors)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_author')"
-              @input="getFilteredAuthors"
+              @input="(v: string) => getFilteredData(v, filteredAuthors)"
             />
           </o-field>
         </div>
@@ -639,13 +621,37 @@ let displayDatepicker = computed(() => {
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="beforeAddTranslator"
+              :before-adding="(item: Author|string) => beforeAdd(item, translators)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_translator')"
-              @input="getFilteredTranslators"
+              @input="(v: string) => getFilteredData(v, filteredTranslators)"
+            />
+          </o-field>
+        </div>
+        <div class="field jelu-authorinput pb-2">
+          <o-field
+            horizontal
+            :label="t('book.narrator', 2)"
+            class="capitalize"
+          >
+            <o-taginput
+              v-model="narrators"
+              :data="filteredNarrators"
+              :allow-autocomplete="true"
+              autocomplete="off"
+              :allow-new="true"
+              :allow-duplicates="false"
+              :open-on-focus="true"
+              :before-adding="(item: Author|string) => beforeAdd(item, narrators)"
+              :create-item="createAuthor"
+              icon-pack="mdi"
+              icon="account-plus"
+              field="name"
+              :placeholder="t('labels.add_narrator')"
+              @input="(v: string) => getFilteredData(v, filteredNarrators)"
             />
           </o-field>
         </div>

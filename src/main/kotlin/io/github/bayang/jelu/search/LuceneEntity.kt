@@ -30,6 +30,9 @@ fun Book.toDocument() =
         translators.forEach {
             add(TextField("translator", it.name, Field.Store.NO))
         }
+        narrators.forEach {
+            add(TextField("narrator", it.name, Field.Store.NO))
+        }
         if (!seriesBak.isNullOrBlank()) add(TextField("series", seriesBak, Field.Store.NO))
         seriesAndOrder.forEach {
             add(TextField("series", it.series.name, Field.Store.NO))

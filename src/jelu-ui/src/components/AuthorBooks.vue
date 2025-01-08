@@ -223,6 +223,12 @@ getBooks()
         >
           {{ t('book.translator') }}
         </o-radio>
+        <o-radio
+          v-model="roleFilter"
+          native-value="NARRATOR"
+        >
+          {{ t('book.narrator') }}
+        </o-radio>
       </div>
     </template>
   </sort-filter-bar-vue>

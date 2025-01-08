@@ -17,6 +17,7 @@ export interface Book {
     modificationDate?: string,
     authors?: Array<Author>,
     translators?: Array<Author>,
+    narrators?: Array<Author>,
     tags?: Array<Tag>,
     series?: Array<SeriesOrder>, 
     googleId?: string,

@@ -218,7 +218,7 @@ class CsvImportService(
             }
             val readStatusEnum: ReadingEventType? = readingStatus(readStatusFromShelves)
             book.tags = tags
-            val booksPage: Page<BookDto> = bookService.findAll(null, importEntity.isbn10, importEntity.isbn13, null, null, null, null, Pageable.ofSize(20), userEntity, LibraryFilter.ANY)
+            val booksPage: Page<BookDto> = bookService.findAll(null, importEntity.isbn10, importEntity.isbn13, null, null, null, null, null, Pageable.ofSize(20), userEntity, LibraryFilter.ANY)
             // first case : the book we try to import from csv already exists in DB,
             // try to see if user already has it attached to his account (and only update userbook), or create new userbook if not
             val savedUserBook: UserBookLightDto = if (!booksPage.isEmpty) {

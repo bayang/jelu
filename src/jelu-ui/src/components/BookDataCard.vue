@@ -175,6 +175,54 @@ function modalClosed() {
             </p>
           </li>
         </ul>
+        <p
+          v-if="props.book != null && props.book.translators != null && props.book.translators?.length > 0"
+        >
+          <span class="font-semibold capitalize">{{ t('book.translator', 2) }} :</span>
+        </p>
+        <ul
+          v-if="props.book != null && props.book.translators != null && props.book.translators?.length > 0"
+        >
+          <li
+            v-for="translator in props.book.translators"
+            :key="translator.id"
+          >
+            <router-link
+              v-if="links != null && links === true"
+              class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+              :to="{ name: 'author-detail', params: { authorId: translator.id } }"
+            >
+              {{ translator.name }}&nbsp;
+            </router-link>
+            <p v-else>
+              {{ translator.name }}
+            </p>
+          </li>
+        </ul>
+        <p
+          v-if="props.book != null && props.book.narrators != null && props.book.narrators?.length > 0"
+        >
+          <span class="font-semibold capitalize">{{ t('book.narrator', 2) }} :</span>
+        </p>
+        <ul
+          v-if="props.book != null && props.book.narrators != null && props.book.narrators?.length > 0"
+        >
+          <li
+            v-for="narrator in props.book.narrators"
+            :key="narrator.id"
+          >
+            <router-link
+              v-if="links != null && links === true"
+              class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+              :to="{ name: 'author-detail', params: { authorId: narrator.id } }"
+            >
+              {{ narrator.name }}&nbsp;
+            </router-link>
+            <p v-else>
+              {{ narrator.name }}
+            </p>
+          </li>
+        </ul>
         <p v-if="props.book.publisher">
           <span class="font-semibold capitalize">{{ t('book.publisher') }} :&nbsp;</span>
           <router-link

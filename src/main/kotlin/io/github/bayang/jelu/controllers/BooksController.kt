@@ -125,6 +125,16 @@ class BooksController(
         return ResponseEntity.noContent().build()
     }
 
+    @ApiResponse(responseCode = "204", description = "Deleted the narrator from the book")
+    @DeleteMapping(path = ["/books/{bookId}/narrators/{narratorId}"])
+    fun deleteNarratorFromBook(
+        @PathVariable("bookId") bookId: UUID,
+        @PathVariable("narratorId") narratorId: UUID,
+    ): ResponseEntity<Unit> {
+        repository.deleteNarratorFromBook(bookId, narratorId)
+        return ResponseEntity.noContent().build()
+    }
+
     @ApiResponse(responseCode = "204", description = "Deleted the author")
     @DeleteMapping(path = ["/authors/{authorId}"])
     fun deleteAuthorById(@PathVariable("authorId") authorId: UUID): ResponseEntity<Unit> {

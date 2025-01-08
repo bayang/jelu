@@ -114,11 +114,14 @@ class BookRepository(
             .withDistinct()
         // required to avoir ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
+        val narratorAlias = AuthorTable.alias("narr")
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
             .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookNarrators.book)
+            .join(narratorAlias, JoinType.LEFT, onColumn = narratorAlias[AuthorTable.id], otherColumn = BookNarrators.narrator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
@@ -153,14 +156,17 @@ class BookRepository(
         )
     }
 
-    fun findAllNoFilters(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable): Page<Book> {
+    fun findAllNoFilters(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, narrators: List<String>?, tags: List<String>?, pageable: Pageable): Page<Book> {
         // required to avoir ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
+        val narratorAlias = AuthorTable.alias("narr")
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
             .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookNarrators.book)
+            .join(narratorAlias, JoinType.LEFT, onColumn = narratorAlias[AuthorTable.id], otherColumn = BookNarrators.narrator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
@@ -199,6 +205,17 @@ class BookRepository(
                     query.andWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
                 } else {
                     query.orWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
+                }
+            }
+        }
+        if (!narrators.isNullOrEmpty()) {
+            var first = true
+            narrators.forEach { narrator: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { narratorAlias[AuthorTable.name] like(formatLike(narrator)) }
+                } else {
+                    query.orWhere { narratorAlias[AuthorTable.name] like(formatLike(narrator)) }
                 }
             }
         }
@@ -224,18 +241,21 @@ class BookRepository(
         )
     }
 
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable, user: UserDto, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, narrators: List<String>?, tags: List<String>?, pageable: Pageable, user: UserDto, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .select(BookTable.id)
             .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         // required to avoir ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
+        val narratorAlias = AuthorTable.alias("narr")
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
             .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookNarrators.book)
+            .join(narratorAlias, JoinType.LEFT, onColumn = narratorAlias[AuthorTable.id], otherColumn = BookNarrators.narrator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
@@ -274,6 +294,17 @@ class BookRepository(
                     query.andWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
                 } else {
                     query.orWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
+                }
+            }
+        }
+        if (!narrators.isNullOrEmpty()) {
+            var first = true
+            narrators.forEach { narrator: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { narratorAlias[AuthorTable.name] like(formatLike(narrator)) }
+                } else {
+                    query.orWhere { narratorAlias[AuthorTable.name] like(formatLike(narrator)) }
                 }
             }
         }
@@ -527,13 +558,15 @@ class BookRepository(
             .withDistinct()
         val query = BookTable.join(BookAuthors, JoinType.LEFT)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.book, otherColumn = BookTable.id)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookNarrators.book, otherColumn = BookTable.id)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .select(BookTable.columns)
             .where {
                 when (role) {
-                    Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId)
+                    Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId) or(BookNarrators.narrator eq authorId)
                     Role.AUTHOR -> BookAuthors.author eq authorId
                     Role.TRANSLATOR -> BookTranslators.translator eq authorId
+                    Role.NARRATOR -> BookNarrators.narrator eq authorId
                 }
             }
         if (libaryFilter == LibraryFilter.ONLY_USER_BOOKS) {
@@ -559,6 +592,7 @@ class BookRepository(
         logger.trace { "role $role" }
         val query = BookTable.join(BookAuthors, JoinType.LEFT)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.book, otherColumn = BookTable.id)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookNarrators.book, otherColumn = BookTable.id)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .select(BookTable.columns)
             .where {
@@ -566,6 +600,7 @@ class BookRepository(
                     Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId)
                     Role.AUTHOR -> BookAuthors.author eq authorId
                     Role.TRANSLATOR -> BookTranslators.translator eq authorId
+                    Role.NARRATOR -> BookNarrators.narrator eq authorId
                 }
             }
         query.withDistinct(true)
@@ -732,6 +767,25 @@ class BookRepository(
         }
         if (translatorsList.isNotEmpty()) {
             updated.translators = SizedCollection(translatorsList)
+        }
+        val narratorsList = mutableListOf<Author>()
+        book.narrators?.forEach {
+            // first try to find exact match by id
+            var authorEntity: Author? = if (it.id != null) {
+                findAuthorsById(it.id)
+            }
+            // if no id provided or research by id doesn't return anything try to find by name
+            else {
+                findAuthorsByName(it.name.trim()).firstOrNull()
+            }
+            if (authorEntity != null) {
+                narratorsList.add(authorEntity)
+            } else {
+                narratorsList.add(save(it))
+            }
+        }
+        if (narratorsList.isNotEmpty()) {
+            updated.narrators = SizedCollection(narratorsList)
         }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
@@ -930,6 +984,20 @@ class BookRepository(
                 translatorsList.add(save(authorDto))
             }
         }
+        val narratorsList = mutableListOf<Author>()
+        book.narrators?.forEach { authorDto ->
+            val authorEntity: Author? = findAuthorsByName(authorDto.name.trim()).firstOrNull()
+            if (authorEntity != null) {
+                // we can receive the same author or the same but
+                // with only one letter with a different case
+                // so do not put twice the same entity in the list
+                if (!narratorsList.contains(authorEntity)) {
+                    narratorsList.add(authorEntity)
+                }
+            } else {
+                narratorsList.add(save(authorDto))
+            }
+        }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
             val tagEntity: Tag? = findTagsByName(it.name.trim()).firstOrNull()
@@ -976,10 +1044,12 @@ class BookRepository(
         created.authors = SizedCollection(authorsList)
         created.tags = SizedCollection(tagsList)
         created.translators = SizedCollection(translatorsList)
+        created.narrators = SizedCollection(narratorsList)
 
         // eager loading, see if we keep this in the long term
         created.load(Book::authors)
         created.load(Book::translators)
+        created.load(Book::narrators)
         created.load(Book::tags)
         return created
     }
@@ -1315,6 +1385,16 @@ class BookRepository(
     fun deleteTranslatorFromBook(bookId: UUID, translatorId: UUID) {
         BookTranslators.deleteWhere {
             BookTranslators.book eq bookId and(BookTranslators.translator eq translatorId)
+        }
+    }
+
+    /**
+     * Removes a narrator from a book without deleting the narrator from the database.
+     * Used to clean the composite table
+     */
+    fun deleteNarratorFromBook(bookId: UUID, narratorId: UUID) {
+        BookNarrators.deleteWhere {
+            BookNarrators.book eq bookId and(BookNarrators.narrator eq narratorId)
         }
     }
 

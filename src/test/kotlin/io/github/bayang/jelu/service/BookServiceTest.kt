@@ -1247,6 +1247,76 @@ class BookServiceTest(
     }
 
     @Test
+    fun testDeletedAuthorShouldBeRemovedFromBookTranslatorsAndNarrators() {
+        val dto = BookCreateDto(
+            id = null,
+            title = "title",
+            isbn10 = "1566199093",
+            isbn13 = "9781566199094 ",
+            summary = "This is a test summary\nwith a newline",
+            image = "",
+            publisher = "test-publisher",
+            pageCount = 50,
+            publishedDate = "",
+            authors = mutableListOf(authorDto()),
+            translators = mutableListOf(authorDto()),
+            narrators = mutableListOf(authorDto()),
+            tags = emptyList(),
+            goodreadsId = "4321abc",
+            googleId = "1234",
+            librarythingId = "",
+            language = "",
+            amazonId = "",
+        )
+        val res: BookDto = bookService.save(bookDto(), null)
+        Assertions.assertNotNull(res.id)
+        val res2: BookDto = bookService.save(bookDto("title2"), null)
+        Assertions.assertNotNull(res2.id)
+        val res3: BookDto = bookService.save(dto, null)
+        Assertions.assertNotNull(res3.id)
+        Assertions.assertEquals(1, res3.translators?.size)
+        Assertions.assertEquals(1, res3.narrators?.size)
+        var entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
+        Assertions.assertEquals(3, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("translator:test", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("narrator:test", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors?.get(0)?.name, res.authors?.get(0)?.name)
+        Assertions.assertEquals(0, found.translators?.size)
+        Assertions.assertEquals(0, found.narrators?.size)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        val found1 = bookService.findBookById(res3.id!!)
+        Assertions.assertEquals(found1.id, res3.id)
+        Assertions.assertEquals(found1.authors?.get(0)?.name, res3.authors?.get(0)?.name)
+        Assertions.assertEquals(found1.translators?.get(0)?.name, res3.translators?.get(0)?.name)
+        Assertions.assertEquals(1, found1.translators?.size)
+        Assertions.assertEquals(found1.narrators?.get(0)?.name, res3.narrators?.get(0)?.name)
+        Assertions.assertEquals(1, found1.narrators?.size)
+        Assertions.assertEquals(found1.title, res3.title)
+        bookService.deleteAuthorById(found.authors?.get(0)?.id!!)
+        val foundAfterModification = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(0, foundAfterModification.authors?.size)
+        val foundAfterModification2 = bookService.findBookById(res2.id!!)
+        Assertions.assertEquals(0, foundAfterModification2.authors?.size)
+        val foundAfterModification3 = bookService.findBookById(res3.id!!)
+        Assertions.assertEquals(0, foundAfterModification3.authors?.size)
+        Assertions.assertEquals(0, foundAfterModification3.translators?.size)
+        Assertions.assertEquals(0, foundAfterModification3.narrators?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("translator:test", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("narrator:test", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+    }
+
+    @Test
     fun testDeleteAuthorOnlyFromOneBookStillExistsInDb() {
         val res: BookDto = bookService.save(bookDto(), null)
         Assertions.assertNotNull(res.id)
@@ -1327,6 +1397,62 @@ class BookServiceTest(
         entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
         Assertions.assertEquals(2, entitiesIds?.size)
         entitiesIds = luceneHelper.searchEntitiesIds("translator:test", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+    }
+
+    @Test
+    fun testDeleteNarratorOnlyFromOneBookStillExistsInDb() {
+        val dto = BookCreateDto(
+            id = null,
+            title = "title",
+            isbn10 = "1566199093",
+            isbn13 = "9781566199094 ",
+            summary = "This is a test summary\nwith a newline",
+            image = "",
+            publisher = "test-publisher",
+            pageCount = 50,
+            publishedDate = "",
+            // seriesBak = "",
+            authors = mutableListOf(authorDto()),
+            narrators = mutableListOf(authorDto()),
+            // numberInSeries = null,
+            tags = emptyList(),
+            goodreadsId = "4321abc",
+            googleId = "1234",
+            librarythingId = "",
+            language = "",
+            amazonId = "",
+        )
+        val res: BookDto = bookService.save(dto, null)
+        Assertions.assertNotNull(res.id)
+        Assertions.assertEquals(1, res.narrators?.size)
+        val res2: BookDto = bookService.save(bookDto("title2"), null)
+        Assertions.assertNotNull(res2.id)
+        var entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
+        Assertions.assertEquals(2, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("narrator:test", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors?.get(0)?.name, res.authors?.get(0)?.name)
+        Assertions.assertEquals(found.narrators?.get(0)?.name, res.narrators?.get(0)?.name)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        val authorId = res.narrators?.get(0)?.id
+        val authorName = res.narrators?.get(0)?.name
+        bookService.deleteNarratorFromBook(res.id!!, authorId!!)
+        val foundAfterModification = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(1, foundAfterModification.authors?.size)
+        Assertions.assertEquals(0, foundAfterModification.translators?.size)
+        val foundAfterModification2 = bookService.findBookById(res2.id!!)
+        Assertions.assertEquals(1, foundAfterModification2.authors?.size)
+        val authorStillInDb = bookService.findAuthorsById(authorId)
+        Assertions.assertEquals(authorName, authorStillInDb.name)
+        entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
+        Assertions.assertEquals(2, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("narrator:test", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)
     }
 

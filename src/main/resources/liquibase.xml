@@ -618,4 +618,15 @@
             ALTER TABLE book ADD inventaire_id varchar(128);
         </sql>
     </changeSet>
+    <changeSet id="create_book_narrators" author="byng">
+        <sql>CREATE TABLE book_narrators
+            (
+            narrator BLOB(16) NOT NULL,
+            book BLOB(16) NOT NULL,
+            PRIMARY KEY (narrator, book),
+            FOREIGN KEY (narrator) REFERENCES author(id) ON DELETE CASCADE,
+            FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
+    </changeSet>
 </databaseChangeLog>

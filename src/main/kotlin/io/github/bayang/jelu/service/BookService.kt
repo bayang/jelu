@@ -92,12 +92,13 @@ class BookService(
         series: String?,
         authors: List<String>?,
         translators: List<String>?,
+        narrators: List<String>?,
         tags: List<String>?,
         pageable: Pageable,
         user: UserDto,
         libraryFilter: LibraryFilter,
     ): Page<BookDto> =
-        bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
+        bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, narrators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
 
     @Transactional
     fun findAllAuthors(name: String?, pageable: Pageable): Page<AuthorDto> = bookRepository.findAllAuthors(name, pageable).map { it.toAuthorDto() }
@@ -512,6 +513,16 @@ class BookService(
         searchIndexService.bookUpdated(bookId)
     }
 
+    /**
+     * Removes an narrator from a book without deleting the narrator from the database.
+     * The narrator is removed only from that book.
+     */
+    @Transactional
+    fun deleteNarratorFromBook(bookId: UUID, narratorId: UUID) {
+        bookRepository.deleteNarratorFromBook(bookId, narratorId)
+        searchIndexService.bookUpdated(bookId)
+    }
+
     @Transactional
     fun deleteAuthorById(authorId: UUID) {
         var books: Page<Book>
@@ -576,6 +587,7 @@ class BookService(
                         filtered.add(authorToKeepDto)
                     }
                     dto.authors = filtered
+
                     var filteredTranslators = dto.translators?.filter { authorDto -> authorDto.id != otherId }?.toMutableList()
                     if (filteredTranslators == null) {
                         filteredTranslators = mutableListOf()
@@ -584,6 +596,16 @@ class BookService(
                         filteredTranslators.add(authorToKeepDto)
                     }
                     dto.translators = filteredTranslators
+
+                    var filteredNarrators = dto.narrators?.filter { authorDto -> authorDto.id != otherId }?.toMutableList()
+                    if (filteredNarrators == null) {
+                        filteredNarrators = mutableListOf()
+                    }
+                    if (!filteredNarrators.contains(authorToKeepDto)) {
+                        filteredNarrators.add(authorToKeepDto)
+                    }
+                    dto.narrators = filteredNarrators
+
                     bookRepository.update(book, dto)
                     otherAuthorBooksIds.add(book.id.value)
                 }

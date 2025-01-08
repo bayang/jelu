@@ -836,7 +836,8 @@ class DataService {
   }
 
   findBooksDetailed = async (title?: string, isbn10?: string, isbn13?: string,
-    series?: string, authors?: Array<string>, translators?: Array<string>, 
+    series?: string, authors?: Array<string>, translators?: Array<string>,
+    narrators?: Array<string>, 
     tags?: Array<string>, page?: number, size?: number, sort?: string,
     libraryFilter?: LibraryFilter) => {
     try {
@@ -848,6 +849,7 @@ class DataService {
           series: series,
           authors: authors,
           translators: translators,
+          narrators: narrators,
           tags: tags,
           page: page,
           size: size,
