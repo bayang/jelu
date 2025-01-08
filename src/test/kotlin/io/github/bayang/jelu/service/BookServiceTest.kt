@@ -98,10 +98,10 @@ class BookServiceTest(
         bookService.findAllSeries(null, null, Pageable.ofSize(20)).content.forEach {
             bookService.deleteSeriesById(it.id!!)
         }
-        bookService.findAll(null, Pageable.ofSize(100), user(), LibraryFilter.ANY).forEach {
+        bookService.findAll(null, Pageable.ofSize(100), user(), null, null, null, null, LibraryFilter.ANY).forEach {
             bookService.deleteBookById(it.id!!)
         }
-        bookService.findAll(null, Pageable.ofSize(100), user2(), LibraryFilter.ANY).forEach {
+        bookService.findAll(null, Pageable.ofSize(100), user2(), null, null, null, null, LibraryFilter.ANY).forEach {
             bookService.deleteBookById(it.id!!)
         }
         luceneHelper.getIndexWriter().use { indexWriter ->

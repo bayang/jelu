@@ -129,13 +129,12 @@
   @apply w-fit sm:w-full bg-base-100 text-base-content focus:input-accent;
 }
 
-
 .o-input__wrapper {
-    @apply w-fit sm:w-full items-center;
+    @apply w-full items-center;
 }
 
 .o-input__wrapper .o-input {
-    @apply w-fit sm:w-full focus:input-accent bg-white;
+    @apply w-full focus:input-accent bg-white;
 }
 
 .o-icon.o-input__icon-left {

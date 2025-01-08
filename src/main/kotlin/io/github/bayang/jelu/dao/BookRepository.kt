@@ -8,6 +8,7 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.ReadingEventTypeFilter
 import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesOrderDto
@@ -107,12 +108,21 @@ class BookRepository(
     val fileManager: FileManager,
 ) {
 
-    fun findAll(bookIds: List<String>?, pageable: Pageable, user: UserDto, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAll(
+        bookIds: List<String>?,
+        pageable: Pageable,
+        user: UserDto,
+        eventTypes: List<ReadingEventTypeFilter>?,
+        toRead: Boolean?,
+        owned: Boolean?,
+        borrowed: Boolean?,
+        filter: LibraryFilter = LibraryFilter.ANY,
+    ): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .select(BookTable.id)
             .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
-        // required to avoir ambiguous column name "author.id" in joins below
+        // required to avoid ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
         val narratorAlias = AuthorTable.alias("narr")
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
@@ -132,10 +142,49 @@ class BookRepository(
             val uuids = bookIds.map { UUID.fromString(it) }
             query.andWhere { BookTable.id inList uuids }
         }
-        if (filter == LibraryFilter.ONLY_USER_BOOKS) {
-            // only books where user has an userbook
+        if (filter == LibraryFilter.ONLY_USER_BOOKS || toRead != null || owned != null || borrowed != null || !eventTypes.isNullOrEmpty()) {
             query.andWhere { UserBookTable.user eq user.id }
-        } else if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
+        }
+        if (toRead != null) {
+            if (toRead) {
+                query.andWhere { UserBookTable.toRead eq toRead }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with toRead == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.toRead eq toRead or (UserBookTable.toRead.isNull()) }
+            }
+        }
+        if (owned != null) {
+            if (owned) {
+                query.andWhere { UserBookTable.owned eq owned }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with owned == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.owned eq owned or (UserBookTable.owned.isNull()) }
+            }
+        }
+        if (borrowed != null) {
+            if (borrowed) {
+                query.andWhere { UserBookTable.borrowed eq borrowed }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with borrowed == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.borrowed eq borrowed or (UserBookTable.borrowed.isNull()) }
+            }
+        }
+        if (!eventTypes.isNullOrEmpty()) {
+            val daoTypes = eventTypes.stream().filter { it != ReadingEventTypeFilter.NONE }.map { ReadingEventType.valueOf(it.name) }.toList()
+            // user specifically asked for userBooks without any event type so return those
+            // with other selected ones.
+            // eg if we receive NONE and DROPPED the user wants books that have never
+            // been read or those which have been dropped
+            if (eventTypes.contains(ReadingEventTypeFilter.NONE)) {
+                query.andWhere { UserBookTable.lastReadingEvent inList daoTypes or (UserBookTable.lastReadingEvent.isNull()) }
+            } else {
+                query.andWhere { UserBookTable.lastReadingEvent inList daoTypes }
+            }
+        }
+        if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
             // only books where there are no userbooks or only other users have userbooks
             query.andWhere { BookTable.id notInSubQuery booksWithSameIdAndUserHasUserbook }
         }
@@ -1182,7 +1231,7 @@ class BookRepository(
     fun findUserBookByCriteria(
         userID: UUID,
         bookId: UUID?,
-        eventTypes: List<ReadingEventType>?,
+        eventTypes: List<ReadingEventTypeFilter>?,
         toRead: Boolean?,
         owned: Boolean?,
         borrowed: Boolean?,
@@ -1209,7 +1258,16 @@ class BookRepository(
             query.andWhere { UserBookTable.book eq bookId }
         }
         if (!eventTypes.isNullOrEmpty()) {
-            query.andWhere { UserBookTable.lastReadingEvent inList eventTypes }
+            val daoTypes = eventTypes.stream().filter { it != ReadingEventTypeFilter.NONE }.map { ReadingEventType.valueOf(it.name) }.toList()
+            // user specifically asked for userBooks without any event type so return those
+            // with other selected ones.
+            // eg if we receive NONE and DROPPED the user wants books that have never
+            // been read or those which have been dropped
+            if (eventTypes.contains(ReadingEventTypeFilter.NONE)) {
+                query.andWhere { UserBookTable.lastReadingEvent inList daoTypes or (UserBookTable.lastReadingEvent.isNull()) }
+            } else {
+                query.andWhere { UserBookTable.lastReadingEvent inList daoTypes }
+            }
         }
         if (toRead != null) {
             if (toRead) {

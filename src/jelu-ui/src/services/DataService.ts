@@ -875,7 +875,8 @@ class DataService {
   }
 
   findBooks = async (query?: string, page?: number, size?: number, sort?: string,
-    libraryFilter?: LibraryFilter) => {
+    libraryFilter?: LibraryFilter, lastEventTypes?: Array<ReadingEventType> | null, 
+    toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null,) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_BOOK}`, {
         params: {
@@ -883,7 +884,11 @@ class DataService {
           page: page,
           size: size,
           sort: sort,
-          libraryFilter: libraryFilter
+          libraryFilter: libraryFilter,
+          lastEventTypes: lastEventTypes,
+          toRead: toRead,
+          owned: owned,
+          borrowed: borrowed,
         },
         paramsSerializer: {
           serialize : (params) => {

@@ -249,6 +249,12 @@ try {
         >
           {{ t('reading_events.dropped') }}
         </o-checkbox>
+        <o-checkbox
+          v-model="eventTypes"
+          native-value="NONE"
+        >
+          {{ t('reading_events.none') }}
+        </o-checkbox>
       </div>
       <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.book_in_list') }} : </label>

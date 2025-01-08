@@ -16,6 +16,7 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.ReadingEventTypeFilter
 import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesDto
@@ -67,6 +68,10 @@ class BookService(
         query: String?,
         pageable: Pageable,
         user: UserDto,
+        eventTypes: List<ReadingEventTypeFilter>?,
+        toRead: Boolean?,
+        owned: Boolean?,
+        borrowed: Boolean?,
         libraryFilter: LibraryFilter,
     ): Page<BookDto> {
         val entitiesIds = luceneHelper.searchEntitiesIds(query, LuceneEntity.Book)
@@ -80,7 +85,7 @@ class BookService(
                 0,
             )
         } else {
-            return bookRepository.findAll(entitiesIds, pageable, user, libraryFilter).map { it.toBookDto() }
+            return bookRepository.findAll(entitiesIds, pageable, user, eventTypes, toRead, owned, borrowed, libraryFilter).map { it.toBookDto() }
         }
     }
 
@@ -368,7 +373,7 @@ class BookService(
     fun findUserBookByCriteria(
         userId: UUID,
         bookId: UUID?,
-        eventTypes: List<ReadingEventType>?,
+        eventTypes: List<ReadingEventTypeFilter>?,
         toRead: Boolean?,
         owned: Boolean? = null,
         borrowed: Boolean? = null,

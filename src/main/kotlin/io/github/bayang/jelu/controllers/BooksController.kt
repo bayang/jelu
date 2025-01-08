@@ -10,6 +10,7 @@ import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.ReadingEventTypeFilter
 import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.SeriesDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
@@ -57,6 +58,10 @@ class BooksController(
     fun books(
         @RequestParam(name = "q", required = false) query: String?,
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
+        @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventTypeFilter>?,
+        @RequestParam(name = "toRead", required = false) toRead: Boolean?,
+        @RequestParam(name = "owned", required = false) owned: Boolean?,
+        @RequestParam(name = "borrowed", required = false) borrowed: Boolean?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
         principal: Authentication,
     ): Page<BookDto> {
@@ -64,6 +69,10 @@ class BooksController(
             query,
             pageable,
             (principal.principal as JeluUser).user,
+            eventTypes,
+            toRead,
+            owned,
+            borrowed,
             libraryFilter ?: LibraryFilter.ANY,
         )
     }
@@ -155,7 +164,7 @@ class BooksController(
     @GetMapping(path = ["/userbooks"])
     fun userbooks(
         principal: Authentication,
-        @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventType>?,
+        @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventTypeFilter>?,
         @RequestParam(name = "bookId", required = false) bookId: UUID?,
         @RequestParam(name = "toRead", required = false) toRead: Boolean?,
         @RequestParam(name = "owned", required = false) owned: Boolean?,
