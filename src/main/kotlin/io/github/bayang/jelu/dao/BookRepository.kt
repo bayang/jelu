@@ -738,9 +738,7 @@ class BookRepository(
         book.isbn13?.let {
             updated.isbn13 = book.isbn13.trim()
         }
-        book.pageCount?.let {
-            updated.pageCount = book.pageCount
-        }
+        updated.pageCount = book.pageCount
         book.publisher?.let {
             updated.publisher = book.publisher.trim()
         }
@@ -904,19 +902,17 @@ class BookRepository(
         if (book.toRead != null) {
             found.toRead = book.toRead
         }
-        if (book.percentRead != null) {
-            found.percentRead = book.percentRead
-        }
-        if (book.currentPageNumber != null) {
-            found.currentPageNumber = book.currentPageNumber
-            val current = book.currentPageNumber
-            val total = found.book.pageCount
-            if (total != null) {
-                if (current >= total) {
-                    found.percentRead = 100
-                } else {
-                    found.percentRead = current.times(100).div(total)
-                }
+        found.percentRead = book.percentRead
+        found.currentPageNumber = book.currentPageNumber
+        val current = book.currentPageNumber
+        val total = book.book?.pageCount
+        if (total != null) {
+            if (current == null) {
+                found.percentRead = 0
+            } else if (current >= total) {
+                found.percentRead = 100
+            } else {
+                found.percentRead = current.times(100).div(total)
             }
         }
         if (book.book != null) {

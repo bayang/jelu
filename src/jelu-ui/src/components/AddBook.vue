@@ -809,6 +809,9 @@ let displayDatepicker = computed(() => {
               type="number"
               min="0"
               class="input focus:input-accent"
+              icon-right="delete"
+              icon-right-clickable
+              @icon-right-click="form.pageCount = null;form.currentPageNumber=null"
             />
           </o-field>
         </div>
@@ -981,6 +984,11 @@ let displayDatepicker = computed(() => {
               type="number"
               min="0"
               class="input focus:input-accent"
+              :max="form.pageCount"
+              :disabled="form.pageCount == null"
+              icon-right="delete"
+              icon-right-clickable
+              @icon-right-click="form.currentPageNumber = null"
             />
           </o-field>
         </div>
@@ -994,6 +1002,7 @@ let displayDatepicker = computed(() => {
               v-model="form.percentRead"
               :min="0"
               :max="100"
+              :disabled="form.pageCount != null"
             />
           </o-field>
         </div>

@@ -38,10 +38,10 @@ const update = () => {
 }
 
 watch(() => [userBookUpdate.value.currentPageNumber, userBookUpdate.value.percentRead],(newVals, oldVals) => {
-  if (props.pageCount != null) {
-    ObjectUtils.computePages(newVals, oldVals, userBookUpdate.value, props.pageCount)
-  }
-})
+   if (props.pageCount != null) {
+     ObjectUtils.computePages(newVals, oldVals, userBookUpdate.value, props.pageCount)
+   }
+ })
 
 </script>
 
@@ -64,9 +64,13 @@ watch(() => [userBookUpdate.value.currentPageNumber, userBookUpdate.value.percen
             v-model="userBookUpdate.percentRead"
             :min="0"
             :max="100"
+            :disabled="pageCount != null"
           />
         </div>
-        <div class="field">
+        <div
+          v-if="pageCount != null"
+          class="field"
+        >
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('book.current_page_number') }} : </span>
           </label>
@@ -74,6 +78,8 @@ watch(() => [userBookUpdate.value.currentPageNumber, userBookUpdate.value.percen
             v-model="userBookUpdate.currentPageNumber"
             type="number"
             min="0"
+            :max="pageCount"
+            :disabled="pageCount == null"
             class="input focus:input-accent"
           />
         </div>

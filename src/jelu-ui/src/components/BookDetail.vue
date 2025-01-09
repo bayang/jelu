@@ -806,6 +806,12 @@ getBook()
           </span>
           <span v-if="book?.currentPageNumber">&nbsp;(<span class="font-semibold capitalize">{{ t('labels.current') }}</span> : {{ book.currentPageNumber }})</span>
         </p>
+        <p
+          v-if="book?.book.pageCount == null && book?.currentPageNumber == null && book?.percentRead != null"
+          class="capitalize"
+        >
+          {{ t('book.percent_read') }} {{ book.percentRead }} %
+        </p>
         <p v-if="book?.book?.publishedDate">
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
           {{ formatDateString(book.book.publishedDate) }}

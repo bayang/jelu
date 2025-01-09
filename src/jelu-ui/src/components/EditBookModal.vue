@@ -526,7 +526,10 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               v-model="userbook.book.pageCount"
               type="number"
               min="0"
+              icon-right="delete"
+              icon-right-clickable
               class="input focus:input-accent"
+              @icon-right-click="userbook.book.pageCount = null;userbook.currentPageNumber=null"
             />
           </o-field>
         </div>
@@ -677,7 +680,12 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               v-model="userbook.currentPageNumber"
               type="number"
               min="0"
+              :max="userbook.book.pageCount"
+              :disabled="userbook.book.pageCount == null"
               class="input focus:input-accent"
+              icon-right="delete"
+              icon-right-clickable
+              @icon-right-click="userbook.currentPageNumber = null"
             />
           </o-field>
         </div>
@@ -691,6 +699,7 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               v-model="userbook.percentRead"
               :min="0"
               :max="100"
+              :disabled="userbook.book.pageCount != null"
             />
           </o-field>
         </div>
