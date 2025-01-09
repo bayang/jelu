@@ -113,7 +113,9 @@
         "add_quote": "könyvidézet hozzáadása",
         "description": "leírás",
         "user_rating": "saját értékelésem: {rating}",
-        "apply": "alkalmaz"
+        "apply": "alkalmaz",
+        "loading": "loading",
+        "pick_camera": "pick camera"
     },
     "settings": {
         "pick_language": "Nyelv kiválasztása",

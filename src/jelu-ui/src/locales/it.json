@@ -113,7 +113,9 @@
         "add_quote": "aggiungi una citazione del libro",
         "description": "descrizione",
         "user_rating": "la mia valutazione : {rating}",
-        "apply": "conferma"
+        "apply": "conferma",
+        "loading": "loading",
+        "pick_camera": "pick camera"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",

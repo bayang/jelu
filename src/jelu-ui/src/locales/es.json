@@ -113,7 +113,9 @@
         "add_quote": "add book quote",
         "description": "description",
         "user_rating": "my rating : {rating}",
-        "apply": "apply"
+        "apply": "apply",
+        "loading": "loading",
+        "pick_camera": "pick camera"
     },
     "settings": {
         "pick_language": "Elige un idioma",

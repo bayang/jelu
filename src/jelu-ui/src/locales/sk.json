@@ -113,7 +113,9 @@
         "add_quote": "pridať citát z knihy",
         "description": "popis",
         "user_rating": "moje hodnotenie : {rating}",
-        "apply": "použiť"
+        "apply": "použiť",
+        "loading": "načítava sa",
+        "pick_camera": "Vybrať kameru"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
