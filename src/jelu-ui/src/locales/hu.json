@@ -115,7 +115,8 @@
         "user_rating": "saját értékelésem: {rating}",
         "apply": "alkalmaz",
         "loading": "loading",
-        "pick_camera": "pick camera"
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator"
     },
     "settings": {
         "pick_language": "Nyelv kiválasztása",
@@ -223,7 +224,8 @@
         "in_read_list": "olvasó listán",
         "translator": "fordító | fordítók",
         "borrowed": "kölcsönözve",
-        "current_page_number": "jelenlegi oldalszám"
+        "current_page_number": "jelenlegi oldalszám",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Szerzők Összefésülésének eszköze",
