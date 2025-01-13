@@ -116,7 +116,7 @@
         "apply": "použiť",
         "loading": "načítava sa",
         "pick_camera": "Vybrať kameru",
-        "add_narrator": "Add a narrator"
+        "add_narrator": "Pridať rozprávača"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
@@ -225,7 +225,7 @@
         "translator": "prekladateľ | prekladatelia",
         "borrowed": "požičané",
         "current_page_number": "Aktuálne číslo strany",
-        "narrator": "narrator | narrators"
+        "narrator": "Rozprávač | Rozprávači"
     },
     "authors_merge": {
         "authors_merging_utility": "Nástroj na zlúčenie autorov",
