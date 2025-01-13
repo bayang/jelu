@@ -114,8 +114,9 @@
         "description": "description",
         "user_rating": "ma note : {rating}",
         "apply": "appliquer",
-        "loading": "loading",
-        "pick_camera": "pick camera"
+        "loading": "chargement en cours",
+        "pick_camera": "choisir une caméra",
+        "add_narrator": "Ajouter un narrateur"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -223,7 +224,8 @@
         "in_read_list": "dans la liste de lecture",
         "translator": "traducteur | traducteurs",
         "borrowed": "Emprunté",
-        "current_page_number": "Numéro de page actuel"
+        "current_page_number": "Numéro de page actuel",
+        "narrator": "narrateur | narrateurs"
     },
     "authors_merge": {
         "authors_merging_utility": "Outil de fusion d'auteurs",

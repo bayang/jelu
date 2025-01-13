@@ -115,7 +115,8 @@
         "user_rating": "moje hodnotenie : {rating}",
         "apply": "použiť",
         "loading": "načítava sa",
-        "pick_camera": "Vybrať kameru"
+        "pick_camera": "Vybrať kameru",
+        "add_narrator": "Add a narrator"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
@@ -223,7 +224,8 @@
         "in_read_list": "v zozname na prečítanie",
         "translator": "prekladateľ | prekladatelia",
         "borrowed": "požičané",
-        "current_page_number": "Aktuálne číslo strany"
+        "current_page_number": "Aktuálne číslo strany",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Nástroj na zlúčenie autorov",

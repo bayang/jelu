@@ -115,7 +115,8 @@
         "user_rating": "mijn beoordeling: {rating}",
         "apply": "toepassen",
         "loading": "loading",
-        "pick_camera": "pick camera"
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -223,7 +224,8 @@
         "in_read_list": "in de te-lezen lijst",
         "translator": "vertaler | vertalers",
         "borrowed": "geleend",
-        "current_page_number": "huidige pagina nummer"
+        "current_page_number": "huidige pagina nummer",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Hulpprogramma samenvoegen auteurs",

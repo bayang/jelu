@@ -115,7 +115,8 @@
         "user_rating": "min bedømmelse: {rating}",
         "apply": "apply",
         "loading": "loading",
-        "pick_camera": "pick camera"
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -223,7 +224,8 @@
         "in_read_list": "på læseliste",
         "translator": "oversætter | oversættere",
         "borrowed": "lånt",
-        "current_page_number": "nuværende sidenummer"
+        "current_page_number": "nuværende sidenummer",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Forfattersammenfletningsværktøj",
