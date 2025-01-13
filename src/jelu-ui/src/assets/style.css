@@ -130,7 +130,7 @@
 }
 
 .o-input__wrapper {
-    @apply w-full items-center;
+    @apply w-full items-center h-full;
 }
 
 .o-input__wrapper .o-input {
@@ -176,7 +176,6 @@
 
 .o-taginput__autocomplete {
  height: 100%;
- @apply py-1;
 }
 
 .o-input.o-taginput__input {
@@ -300,11 +299,11 @@
 
 
 .jelu-authorinput .o-taginput__item {
-  @apply bg-success rounded my-1 items-center;
+  @apply bg-success rounded items-center mx-1;
 }
 
 .jelu-taginput .o-taginput__item {
-  @apply bg-warning rounded text-warning-content my-1 items-center;
+  @apply bg-warning rounded text-warning-content items-center mx-1;
 }
 
 [data-theme="jelu"] .card {
