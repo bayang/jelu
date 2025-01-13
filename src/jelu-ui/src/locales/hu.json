@@ -116,7 +116,8 @@
         "apply": "alkalmaz",
         "loading": "loading",
         "pick_camera": "pick camera",
-        "add_narrator": "Add a narrator"
+        "add_narrator": "Add a narrator",
+        "social_login": "sign in with {provider}"
     },
     "settings": {
         "pick_language": "Nyelv kiválasztása",
