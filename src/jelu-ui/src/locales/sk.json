@@ -117,7 +117,7 @@
         "loading": "načítava sa",
         "pick_camera": "Vybrať kameru",
         "add_narrator": "Pridať rozprávača",
-        "social_login": "sign in with {provider}"
+        "social_login": "Prihlásiť sa cez {provider}"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
