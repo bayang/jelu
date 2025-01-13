@@ -17,7 +17,8 @@ import org.springframework.session.config.SessionRepositoryCustomizer
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession
 import org.springframework.session.security.SpringSessionBackedSessionRegistry
-import org.springframework.session.web.http.HeaderHttpSessionIdResolver
+import org.springframework.session.web.http.CookieSerializer
+import org.springframework.session.web.http.DefaultCookieSerializer
 import org.springframework.session.web.http.HttpSessionIdResolver
 import java.io.IOException
 import java.io.InputStream
@@ -36,9 +37,22 @@ class SessionConfig : BeanClassLoaderAware {
         "DELETE FROM %TABLE_NAME% WHERE PRIMARY_ID IN (SELECT SESSION_PRIMARY_ID FROM %TABLE_NAME%_ATTRIBUTES WHERE ATTRIBUTE_NAME = 'org.springframework.session.security.SpringSessionBackedSessionInformation.EXPIRED' AND ATTRIBUTE_BYTES = 'true') OR EXPIRY_TIME < ?\n"
 
     @Bean
-    fun httpSessionIdResolver(): HttpSessionIdResolver {
-        return HeaderHttpSessionIdResolver.xAuthToken()
-    }
+    fun sessionCookieName() = "SESSION"
+
+    @Bean
+    fun sessionHeaderName() = "X-Auth-Token"
+
+    @Bean
+    fun httpSessionIdResolver(
+        sessionHeaderName: String,
+        cookieSerializer: CookieSerializer,
+    ): HttpSessionIdResolver = SmartHttpSessionIdResolver(sessionHeaderName, cookieSerializer)
+
+    @Bean
+    fun cookieSerializer(sessionCookieName: String): CookieSerializer =
+        DefaultCookieSerializer().apply {
+            setCookieName(sessionCookieName)
+        }
 
     @Bean
     fun sessionRegistry(sessionRepository: FindByIndexNameSessionRepository<*>): SessionRegistry =

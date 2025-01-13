@@ -59,6 +59,8 @@ data class JeluProperties(
     data class Auth(
         var ldap: Ldap,
         var proxy: Proxy,
+        var oauth2AccountCreation: Boolean = false,
+        var oidcEmailVerification: Boolean = true,
     )
 
     data class Ldap(

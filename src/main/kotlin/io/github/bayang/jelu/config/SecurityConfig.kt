@@ -11,7 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
+import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 
@@ -24,7 +32,12 @@ class SecurityConfig(
     private val passwordEncoder: PasswordEncoder,
     private val authHeaderFilter: AuthHeaderFilter?,
     private val userAgentWebAuthenticationDetailsSource: WebAuthenticationDetailsSource,
+    private val oauth2UserService: OAuth2UserService<OAuth2UserRequest, OAuth2User>,
+    private val oidcUserService: OAuth2UserService<OidcUserRequest, OidcUser>,
+    clientRegistrationRepository: InMemoryClientRegistrationRepository?,
 ) {
+
+    private val oauth2Enabled = clientRegistrationRepository != null
 
     @Bean
     @Throws(Exception::class)
@@ -40,6 +53,8 @@ class SecurityConfig(
                 // only apply security to those endpoints
                 it.requestMatchers(
                     "/api/**",
+                    "/oauth2/authorization/**",
+                    "/login/oauth2/code/**",
                 )
             }
             .authorizeHttpRequests {
@@ -48,6 +63,7 @@ class SecurityConfig(
                     "/api/v1/setup/status",
                     "/api/v1/server-settings",
                     "/api/v1/reviews/**",
+                    "/api/v1/oauth2/providers",
                 ).permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
@@ -86,6 +102,29 @@ class SecurityConfig(
         }
         if (properties.auth.proxy.enabled) {
             http.addFilterBefore(authHeaderFilter, UsernamePasswordAuthenticationFilter::class.java)
+        }
+        if (oauth2Enabled) {
+            http.oauth2Login { oauth2 ->
+                oauth2.userInfoEndpoint {
+                    it.userService(oauth2UserService)
+                    it.oidcUserService(oidcUserService)
+                }
+                oauth2.authenticationDetailsSource(userAgentWebAuthenticationDetailsSource)
+                oauth2
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/?server_redirect=Y", true)
+                    .failureHandler { request, response, exception ->
+                        val errorMessage =
+                            when (exception) {
+                                is OAuth2AuthenticationException -> exception.error.errorCode
+                                else -> exception.message
+                            }
+                        val url = "/login?server_redirect=Y&error=$errorMessage"
+                        SimpleUrlAuthenticationFailureHandler(url).onAuthenticationFailure(request, response, exception)
+                    }
+                oauth2.redirectionEndpoint {
+                }
+            }
         }
         return http.build()
     }

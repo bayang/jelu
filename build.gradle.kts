@@ -43,6 +43,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.data:spring-data-jdbc") // required since exposed 0.51.0
     implementation("org.springframework.session:spring-session-core")
     implementation("org.springframework.session:spring-session-jdbc")
@@ -73,6 +74,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("com.github.slugify:slugify:3.0.7")
     implementation("commons-io:commons-io:2.16.1")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("commons-validator:commons-validator:1.7")
     implementation("org.jsoup:jsoup:1.18.1")
     implementation("net.coobird:thumbnailator:0.4.20")

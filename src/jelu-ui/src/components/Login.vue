@@ -5,6 +5,9 @@ import { key } from '../store'
 import { StringUtils } from '../utils/StringUtils'
 import { useI18n } from 'vue-i18n'
 import { useTitle } from '@vueuse/core'
+import dataService from "../services/DataService";
+import { OAuth2ClientDto } from '../model/oauth-client-dto'
+import urls from '../urls'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -17,6 +20,13 @@ const loginValidation = ref('')
 const passwordValidation = ref('')
 const errorMessage = ref('')
 const progress: Ref<boolean> = ref(false)
+const providers: Ref<Array<OAuth2ClientDto>> = ref([])
+
+const getOauthproviders = () => {
+  dataService.oauth2Providers().then(res => {
+    providers.value = res
+  })
+}
 
 useTitle('Jelu | Login')
 
@@ -106,18 +116,42 @@ const createInitialUser = async () => {
     }
   }
 }
-onMounted(() => {
-            console.log(`form data ${form}`)
-        })
 
-const submit = () => {
-  if (displayInitialSetup.value) {
-    createInitialUser()
-  }
-  else {
-    logUser()
-  }
+const oauth2Login = (provider: OAuth2ClientDto) => {
+const url = `${urls.BASE_URL}/oauth2/authorization/${provider.registrationId}`
+      const height = 600
+      const width = 600
+      const y = window.top!.outerHeight / 2 + window.top!.screenY - (height / 2)
+      const x = window.top!.outerWidth / 2 + window.top!.screenX - (width / 2)
+      window.open(url, 'oauth2Login',
+        `toolbar=no,
+        location=off,
+        status=no,
+        menubar=no,
+        scrollbars=yes,
+        resizable=yes,
+        top=${y},
+        left=${x},
+        width=${height},
+        height=${width}`,
+      )
 }
+
+// onMounted(() => {
+  // console.log(`form data ${form}`)
+  // })
+  
+  const submit = () => {
+    if (displayInitialSetup.value) {
+      createInitialUser()
+    }
+    else {
+      logUser()
+    }
+  }
+
+
+  getOauthproviders()
 </script>
 
 <template>
@@ -217,6 +251,20 @@ const submit = () => {
         >
           {{ errorMessage }}
         </p>
+      </div>
+      <div class="mt-3">
+        <button
+          v-for="provider in providers"
+          :key="provider.name"
+          class="btn btn-info mx-2 capitalize"
+          :disabled="displayInitialSetup"
+          @click="oauth2Login(provider)"
+        >
+          <span class="icon">
+            <i :class="'mdi mdi-18px mdi-' + provider.registrationId" />
+          </span>
+          {{ t("labels.social_login", {provider: provider.registrationId}) }}
+        </button>
       </div>
       <progress
         v-if="progress"

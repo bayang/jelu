@@ -25,6 +25,8 @@ import { MetadataRequest } from "../model/MetadataRequest";
 import { Series, SeriesUpdate } from "../model/Series";
 import { DirectoryListing } from "../model/DirectoryListing";
 import { BookQuote, CreateBookQuoteDto, UpdateBookQuoteDto } from "../model/BookQuote";
+import urls from "../urls";
+import { OAuth2ClientDto } from "../model/oauth-client-dto";
 
 class DataService {
 
@@ -80,25 +82,9 @@ class DataService {
   
   private API_BOOK_QUOTES = '/book-quotes';
 
-  private MODE: string;
-
-  private BASE_URL: string;
-
   constructor() {
-    if (import.meta.env.DEV) {
-      this.MODE = "dev"
-      this.BASE_URL = import.meta.env.VITE_API_URL as string
-    }
-    else {
-      this.MODE = "prod"
-      this.BASE_URL = window.location.origin
-      this.BASE_URL.endsWith("/") ? this.BASE_URL = this.BASE_URL + "api/v1"
-        : this.BASE_URL = this.BASE_URL + "/api/v1"
-    }
-    console.log(`running in ${this.MODE} mode at ${this.BASE_URL}`)
-
     this.apiClient = axios.create({
-      baseURL: this.BASE_URL,
+      baseURL: urls.API_URL,
       headers: {
         "Content-type": "application/json",
         'X-Requested-With': 'XMLHttpRequest'
@@ -1857,6 +1843,23 @@ class DataService {
       throw new Error("error update quote " + error)
     }
   }
+
+  oauth2Providers = async () => {
+    try {
+      const response = await this.apiClient.get<Array<OAuth2ClientDto>>("/oauth2/providers");
+      console.log("called oauth providers")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error oauth providers " + (error as AxiosError).code)
+      throw new Error("error oauth providers " + error)
+    }
+  }
+  
 
 }
 
