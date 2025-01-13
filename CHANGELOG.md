@@ -1,3 +1,15 @@
+## [0.64.0](https://github.com/bayang/jelu/compare/v0.63.0...v0.64.0) (2025-01-13)
+
+
+### Features
+
+* add oidc [#131](https://github.com/bayang/jelu/issues/131) ([07288a8](https://github.com/bayang/jelu/commit/07288a88367b6434628d15869889a9052e7131d5))
+
+
+### Bug Fixes
+
+* better taginput css ([3b6ea31](https://github.com/bayang/jelu/commit/3b6ea316df5669d21a1a3263847949f4c9ebd9eb))
+
 ## [0.63.0](https://github.com/bayang/jelu/compare/v0.62.1...v0.63.0) (2025-01-13)
 
 
