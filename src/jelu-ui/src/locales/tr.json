@@ -255,7 +255,7 @@
     },
     "csv_import": {
         "import_csv": "csv dosyasını içe aktar",
-        "import_source": "import source",
+        "import_source": "",
         "auto_fetch_online": "Automatically fetch metadata online",
         "fetch_covers": "Also fetch covers",
         "choose_file": "Choose file to import",
