@@ -1,3 +1,16 @@
+## [0.63.0](https://github.com/bayang/jelu/compare/v0.62.1...v0.63.0) (2025-01-13)
+
+
+### Features
+
+* add narrator field [#139](https://github.com/bayang/jelu/issues/139) ([804121b](https://github.com/bayang/jelu/commit/804121ba371b64065bbdb7c8be21c0bb68271d81))
+* improve search and add none event type [#145](https://github.com/bayang/jelu/issues/145) ([842b719](https://github.com/bayang/jelu/commit/842b7194e2deeceac540df120d3457fea9baed99))
+
+
+### Bug Fixes
+
+* unable to set progress [#169](https://github.com/bayang/jelu/issues/169) ([dcf23a3](https://github.com/bayang/jelu/commit/dcf23a3c5df560ccc3cc3a20d9c311076f7153e3))
+
 ### [0.62.1](https://github.com/bayang/jelu/compare/v0.62.0...v0.62.1) (2025-01-06)
 
 
