@@ -117,7 +117,7 @@
         "loading": "chargement en cours",
         "pick_camera": "choisir une caméra",
         "add_narrator": "Ajouter un narrateur",
-        "social_login": "sign in with {provider}"
+        "social_login": "Se connecter avec {provider}"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
