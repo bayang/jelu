@@ -116,7 +116,8 @@
         "apply": "uygula",
         "loading": "yükleniyor",
         "pick_camera": "kamera seç",
-        "add_narrator": "Anlatıcı ekle"
+        "add_narrator": "Anlatıcı ekle",
+        "social_login": "sign in with {provider}"
     },
     "settings": {
         "pick_language": "Dilini seç",
