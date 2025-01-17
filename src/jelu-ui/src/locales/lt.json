@@ -16,7 +16,8 @@
         "search": "paieška",
         "history": "istorija",
         "shelves": "lentynos",
-        "tags-admin": "žymos valdymas"
+        "tags-admin": "žymos valdymas",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Paieška",
@@ -117,7 +118,13 @@
         "loading": "loading",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Pasirinkite kalbą",
@@ -237,7 +244,8 @@
         "author_right_description": "Pirmiausia pasirinkite autorių, kuris bus keičiamas ir saugomas duomenų bazėje.",
         "authors_merge_subtitle": "Sujungti",
         "authors_merge_description": "Naudokite dešiniojo autoriaus laukus, kad užpildytumėte kairiojo autoriaus laukus, tada suliekite.",
-        "search_message": "Ieškoti autorius, kuriuos reikia sujungti"
+        "search_message": "Ieškoti autorius, kuriuos reikia sujungti",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "vardas",
