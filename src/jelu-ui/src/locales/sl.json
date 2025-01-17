@@ -16,7 +16,8 @@
         "search": "iskanje",
         "history": "zgodovina",
         "shelves": "police",
-        "tags-admin": "upravljanje oznak"
+        "tags-admin": "upravljanje oznak",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Iskanje",
@@ -117,7 +118,13 @@
         "loading": "loading",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Izberite svoj jezik",
@@ -237,7 +244,8 @@
         "author_right_description": "Izberite avtorja, ki ga želite združiti z ostalimi.",
         "authors_merge_subtitle": "Združi",
         "authors_merge_description": "Uporabite polja desnega avtorja za dopolnitev levega avtorja, nato jih združite.",
-        "search_message": "Iskanje avtorjev za združitev"
+        "search_message": "Iskanje avtorjev za združitev",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "ime",
