@@ -16,7 +16,8 @@
         "search": "hledat",
         "history": "historie",
         "shelves": "police",
-        "tags-admin": "tags management"
+        "tags-admin": "tags management",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Hledat",
@@ -117,7 +118,13 @@
         "loading": "loading",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
@@ -237,7 +244,8 @@
         "author_right_description": "Zvolte dalšího autora sloučení.",
         "authors_merge_subtitle": "Sloučit",
         "authors_merge_description": "Použijte pole autora vpravo k vyplnění autora vlevo, pak je slučte.",
-        "search_message": "Hledat autory pro sloučení"
+        "search_message": "Hledat autory pro sloučení",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "jméno",
