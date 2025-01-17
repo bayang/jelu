@@ -16,7 +16,8 @@
         "search": "søg",
         "history": "historik",
         "shelves": "reoler",
-        "tags-admin": "tags håndtering"
+        "tags-admin": "tags håndtering",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Søg",
@@ -117,7 +118,13 @@
         "loading": "loading",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -237,7 +244,8 @@
         "author_right_description": "Vælg den næste forfatter, du vil flette med den anden.",
         "authors_merge_subtitle": "Sammenflet",
         "authors_merge_description": "Brug felterne til højre til at forfatteren til venstre, og flet derefter sammen.",
-        "search_message": "Søg efter forfattere at flette"
+        "search_message": "Søg efter forfattere at flette",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "navn",

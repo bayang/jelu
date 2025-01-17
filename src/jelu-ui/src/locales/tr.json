@@ -16,7 +16,8 @@
         "search": "ara",
         "history": "geçmiş",
         "shelves": "raflar",
-        "tags-admin": "etiket yönetimi"
+        "tags-admin": "etiket yönetimi",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Ara",
@@ -117,7 +118,13 @@
         "loading": "yükleniyor",
         "pick_camera": "kamera seç",
         "add_narrator": "Anlatıcı ekle",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Dilini seç",
@@ -237,7 +244,8 @@
         "author_right_description": "Diğeriyle birleştirmek istediğiniz sonraki yazarı seçin.",
         "authors_merge_subtitle": "Birleştir",
         "authors_merge_description": "Sağdaki yazarın alanlarını kullanarak soldaki yazarı tamamlayın, daha sonra birleştirin.",
-        "search_message": "Birleştirmek için yazar arayın"
+        "search_message": "Birleştirmek için yazar arayın",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "isim",

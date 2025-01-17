@@ -16,7 +16,8 @@
         "search": "keres",
         "history": "előzények",
         "shelves": "polcok",
-        "tags-admin": "tagek kezelése"
+        "tags-admin": "tagek kezelése",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Keresés",
@@ -117,7 +118,13 @@
         "loading": "loading",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Nyelv kiválasztása",
@@ -237,7 +244,8 @@
         "author_right_description": "Majd válassza ki a szerzőket akiket össze szeretne fésülni másokkal.",
         "authors_merge_subtitle": "Összefésülés",
         "authors_merge_description": "Használja a jobboldali mezőket a bal oldali szerzők kiegészítéséhez, majd fésülje össze őket.",
-        "search_message": "Szerzők keresése az Összefésüléshez"
+        "search_message": "Szerzők keresése az Összefésüléshez",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "név",

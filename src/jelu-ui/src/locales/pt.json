@@ -16,7 +16,8 @@
         "search": "pesquisar",
         "history": "história",
         "shelves": "prateleiras",
-        "tags-admin": "gestão de etiquetas"
+        "tags-admin": "gestão de etiquetas",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Pesquisar",
@@ -117,7 +118,13 @@
         "loading": "loading",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Escolha o seu idioma",
@@ -237,7 +244,8 @@
         "author_right_description": "Escolha o autor que deseja fundir com o outro.",
         "authors_merge_subtitle": "Fundir",
         "authors_merge_description": "Utilizar os campos na direita por completar o autor da esquerda, depois fundir.",
-        "search_message": "Procurar autores para fundir"
+        "search_message": "Procurar autores para fundir",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "nome",
