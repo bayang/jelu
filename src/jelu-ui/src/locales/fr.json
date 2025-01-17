@@ -16,7 +16,8 @@
         "search": "recherche",
         "history": "historique",
         "shelves": "Étagères",
-        "tags-admin": "gestion des tags"
+        "tags-admin": "gestion des tags",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Rechercher",
@@ -117,7 +118,13 @@
         "loading": "chargement en cours",
         "pick_camera": "choisir une caméra",
         "add_narrator": "Ajouter un narrateur",
-        "social_login": "Se connecter avec {provider}"
+        "social_login": "Se connecter avec {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -237,7 +244,8 @@
         "author_right_description": "Choisissez ensuite l'auteur à fusionner avec le précédent.",
         "authors_merge_subtitle": "Fusionner",
         "authors_merge_description": "Utilisez les champs sur la droite pour remplir l'auteur de gauche puis fusionnez.",
-        "search_message": "Rechercher les auteurs à fusionner"
+        "search_message": "Rechercher les auteurs à fusionner",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "nom",
