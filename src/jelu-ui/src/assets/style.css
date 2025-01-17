@@ -130,7 +130,7 @@
 }
 
 .o-input__wrapper {
-    @apply w-full items-center h-full;
+    @apply w-full items-center ;
 }
 
 .o-input__wrapper .o-input {
