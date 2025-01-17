@@ -16,7 +16,8 @@
         "search": "cari",
         "history": "riwayat",
         "shelves": "rak",
-        "tags-admin": "manajemen penanda"
+        "tags-admin": "manajemen penanda",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Cari",
@@ -117,7 +118,13 @@
         "loading": "loading",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Pilih bahasa",
@@ -237,7 +244,8 @@
         "author_right_description": "Pilih penulis berikut yang ingin digabung dengan yang lain",
         "authors_merge_subtitle": "Gabung",
         "authors_merge_description": "Pilih isian di kanan penulis untuk melengkapi penulis di kiri, lalu gabung.",
-        "search_message": "Cari penulis untuk digabung"
+        "search_message": "Cari penulis untuk digabung",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "nama",
