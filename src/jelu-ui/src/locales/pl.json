@@ -16,7 +16,8 @@
         "search": "szukaj",
         "history": "historia",
         "shelves": "półki",
-        "tags-admin": "zarządzanie znacznikami"
+        "tags-admin": "zarządzanie znacznikami",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Szukaj",
@@ -117,7 +118,13 @@
         "loading": "loading",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}"
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Wybierz język",
@@ -237,7 +244,8 @@
         "author_right_description": "Wybierz autora, którego chcesz scalić z wcześniej wybranym.",
         "authors_merge_subtitle": "Scal",
         "authors_merge_description": "Użyj pól autora po prawej, aby uzupełnić pola autora po lewej, a następnie scal.",
-        "search_message": "Szukaj autorów do scalenia"
+        "search_message": "Szukaj autorów do scalenia",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "nazwa",
