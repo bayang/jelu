@@ -1,3 +1,16 @@
+## [0.65.0](https://github.com/bayang/jelu/compare/v0.64.0...v0.65.0) (2025-01-17)
+
+
+### Features
+
+* orphan authors and series management [#148](https://github.com/bayang/jelu/issues/148) ([9061b88](https://github.com/bayang/jelu/commit/9061b88efb36cfa7cd8df2d9a5b55fb058ee29f4))
+
+
+### Bug Fixes
+
+* google api provider [#161](https://github.com/bayang/jelu/issues/161) ([ba3cb81](https://github.com/bayang/jelu/commit/ba3cb81ef99cd238b90eca97313f8c1e46cfb047))
+* less disturbing taginput css [#179](https://github.com/bayang/jelu/issues/179) ([f64990d](https://github.com/bayang/jelu/commit/f64990ddcb2d00b7a83805fb9466962f7ec32a7e))
+
 ## [0.64.0](https://github.com/bayang/jelu/compare/v0.63.0...v0.64.0) (2025-01-13)
 
 
