@@ -713,6 +713,50 @@ class DataService {
       throw new Error("error get tag orphans " + error)
     }
   }
+  
+  getOrphanAuthors = async (page?: number, size?: number, sort?: string) => {
+    try {
+      const response = await this.apiClient.get<Page<Author>>(`${this.API_AUTHOR}/orphans`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort,
+        }
+      });
+      console.log("called orphan authors")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error author orphans " + (error as AxiosError).code)
+      throw new Error("error get author orphans " + error)
+    }
+  }
+
+  getOrphanSeries = async (page?: number, size?: number, sort?: string) => {
+    try {
+      const response = await this.apiClient.get<Page<Series>>(`${this.API_SERIES}/orphans`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort,
+        }
+      });
+      console.log("called series orphans")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error series orphans " + (error as AxiosError).code)
+      throw new Error("error get series orphans " + error)
+    }
+  }
 
   getSeriesBooksById = async (seriesId: string,
     page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
@@ -939,6 +983,38 @@ class DataService {
       }
       console.log("error delete event " + (error as AxiosError).code)
       throw new Error("error delete event " + error)
+    }
+  }
+  
+  deleteAuthor = async (authorId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_AUTHOR}/${authorId}`);
+      console.log("delete author")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete author " + (error as AxiosError).code)
+      throw new Error("error delete author " + error)
+    }
+  }
+  
+  deleteSeries = async (seriesId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_SERIES}/${seriesId}`);
+      console.log("delete series")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete series " + (error as AxiosError).code)
+      throw new Error("error delete series " + error)
     }
   }
 

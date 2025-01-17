@@ -388,6 +388,16 @@ class BookService(
     }
 
     @Transactional
+    fun findOrphanAuthors(pageable: Pageable): Page<AuthorDto> {
+        return bookRepository.findOrphanAuthors(pageable).map { author -> author.toAuthorDto() }
+    }
+
+    @Transactional
+    fun findOrphanSeries(pageable: Pageable): Page<SeriesDto> {
+        return bookRepository.findOrphanSeries(pageable).map { series -> series.toSeriesDto() }
+    }
+
+    @Transactional
     fun findTagById(tagId: UUID, user: UserDto): TagDto {
         return bookRepository.findTagById(tagId).toTagDto()
     }

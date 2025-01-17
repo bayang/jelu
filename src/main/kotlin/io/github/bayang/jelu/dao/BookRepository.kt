@@ -599,6 +599,42 @@ class BookRepository(
         )
     }
 
+    fun findOrphanAuthors(pageable: Pageable): Page<Author> {
+        val query = AuthorTable.join(BookAuthors, JoinType.LEFT)
+            .selectAll()
+            .groupBy(AuthorTable.name)
+            .having { BookAuthors.author.count() eq(0) }
+
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(AuthorTable.name, SortOrder.ASC_NULLS_LAST), AuthorTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> Author.wrapRow(resultRow) },
+            pageable,
+            total,
+        )
+    }
+
+    fun findOrphanSeries(pageable: Pageable): Page<Series> {
+        val query = SeriesTable.join(BookSeries, JoinType.LEFT)
+            .selectAll()
+            .groupBy(SeriesTable.name)
+            .having { BookSeries.series.count() eq(0) }
+
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(SeriesTable.name, SortOrder.ASC_NULLS_LAST), SeriesTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> Series.wrapRow(resultRow) },
+            pageable,
+            total,
+        )
+    }
+
     fun findAuthorBooksById(authorId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
         logger.trace { "role $role" }
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)

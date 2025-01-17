@@ -114,6 +114,13 @@ class BooksController(
         return ResponseEntity.noContent().build()
     }
 
+    @ApiResponse(responseCode = "204", description = "Deleted the series")
+    @DeleteMapping(path = ["/series/{seriesId}"])
+    fun deleteSeriesById(@PathVariable("seriesId") seriesId: UUID): ResponseEntity<Unit> {
+        repository.deleteSeriesById(seriesId)
+        return ResponseEntity.noContent().build()
+    }
+
     @ApiResponse(responseCode = "204", description = "Deleted the author from the book")
     @DeleteMapping(path = ["/books/{bookId}/authors/{authorId}"])
     fun deleteAuthorFromBook(
@@ -224,6 +231,16 @@ class BooksController(
     fun orphanTags(
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
     ): Page<TagDto> = repository.findOrphanTags(pageable)
+
+    @GetMapping(path = ["/authors/orphans"])
+    fun orphanAuthors(
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
+    ): Page<AuthorDto> = repository.findOrphanAuthors(pageable)
+
+    @GetMapping(path = ["/series/orphans"])
+    fun orphanSeries(
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
+    ): Page<SeriesDto> = repository.findOrphanSeries(pageable)
 
     @GetMapping(path = ["/series"])
     fun series(

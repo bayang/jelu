@@ -2441,6 +2441,67 @@ class BookServiceTest(
     }
 
     @Test
+    fun testFindOrphanAuthors() {
+        val createBook = bookDto(withTags = true)
+        val savedBook = bookService.save(createBook, null)
+        Assertions.assertEquals(1, savedBook.authors?.size)
+        var entitiesIds = luceneHelper.searchEntitiesIds("tag:fantasy", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("author:author", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        val author = authorDto("jean jacques")
+        val res = bookService.save(author)
+        Assertions.assertNotNull(res)
+        Assertions.assertEquals(author.name, res.name)
+        val p = bookService.findOrphanAuthors(Pageable.ofSize(20))
+        Assertions.assertEquals(1, p.totalElements)
+        Assertions.assertEquals(author.name, p.content[0].name)
+    }
+
+    @Test
+    fun testFindOrphanSeries() {
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0, seriesId = null)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0, seriesId = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                authors = emptyList(),
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val orphan = bookService.saveSeries(SeriesCreateDto("series orphan", 1.3, "desc"), user())
+        val r = bookService.findOrphanSeries(Pageable.ofSize(20))
+        Assertions.assertEquals(1, r.totalElements)
+        Assertions.assertEquals(orphan.name, r.content[0].name)
+    }
+
+    @Test
     fun testFindOrphanTags() {
         bookService.findAllTags(null, Pageable.ofSize(20)).content.forEach {
             bookService.deleteTagById(it.id!!)

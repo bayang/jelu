@@ -131,6 +131,7 @@ const router = createRouter({
                 { path: 'messages', component: () => import(/* webpackChunkName: "recommend" */ './components/UserMessages.vue')},
                 { path: 'stats', component: () => import(/* webpackChunkName: "recommend" */ './components/UserStats.vue')},
                 { path: 'tags', component: () => import(/* webpackChunkName: "recommend" */ './components/TagsAdmin.vue')},
+                { path: 'data', component: () => import(/* webpackChunkName: "recommend" */ './components/DataAdmin.vue')},
             ]
         },
     ],
