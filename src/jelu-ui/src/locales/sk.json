@@ -16,7 +16,8 @@
         "search": "hľadať",
         "history": "história",
         "shelves": "poličky",
-        "tags-admin": "správa štítkov"
+        "tags-admin": "správa štítkov",
+        "data-admin": "data management"
     },
     "labels": {
         "search": "Hľadať",
@@ -117,7 +118,13 @@
         "loading": "načítava sa",
         "pick_camera": "Vybrať kameru",
         "add_narrator": "Pridať rozprávača",
-        "social_login": "Prihlásiť sa cez {provider}"
+        "social_login": "Prihlásiť sa cez {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
@@ -237,7 +244,8 @@
         "author_right_description": "Ďalej vyberte autora, ktorého chcete zlúčiť s prvým vybratým.",
         "authors_merge_subtitle": "Zlúčiť",
         "authors_merge_description": "Pomocou polí na pravej strane autora doplňte autora na ľavej strane a potom ich zlúčte.",
-        "search_message": "Vyhľadať autorov na zlúčenie"
+        "search_message": "Vyhľadať autorov na zlúčenie",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "meno",
