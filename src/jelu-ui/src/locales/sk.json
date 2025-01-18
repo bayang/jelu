@@ -102,7 +102,7 @@
         "reading_list_from_name": "Zoznam na prečítanie od {name}",
         "search_query": "Zadajte hľadaný výraz...",
         "search_documentation": "Prejsť na dokumentáciu vyhľadávania",
-        "orphan-tags": "opustené štítky",
+        "orphan-tags": "Osamotené štítky",
         "find-tag": "nájsť štítok",
         "associated-books": "súvisiaca kniha (knihy)",
         "operation-success": "operácia bola úspešná",
@@ -119,12 +119,12 @@
         "pick_camera": "Vybrať kameru",
         "add_narrator": "Pridať rozprávača",
         "social_login": "Prihlásiť sa cez {provider}",
-        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
-        "orphan-series": "orphan series",
-        "find-series": "find a series",
-        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
-        "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "delete_this_series": "Vymazať túto sériu z {nb} knihy (kníh) a z databázy?",
+        "orphan-series": "Osamotené série",
+        "find-series": "Nájsť sériu",
+        "delete_this_author": "Vymazať tohto autora z {nb} knihy (kníh) a z databázy?",
+        "orphan_authors": "Osamotení autori",
+        "find-authors": "Nájsť autorov"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
@@ -245,7 +245,7 @@
         "authors_merge_subtitle": "Zlúčiť",
         "authors_merge_description": "Pomocou polí na pravej strane autora doplňte autora na ľavej strane a potom ich zlúčte.",
         "search_message": "Vyhľadať autorov na zlúčenie",
-        "merge_authors": "merge authors"
+        "merge_authors": "Zlúčiť autorov"
     },
     "author": {
         "name": "meno",
