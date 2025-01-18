@@ -17,7 +17,7 @@
         "history": "história",
         "shelves": "prateleiras",
         "tags-admin": "gestão de etiquetas",
-        "data-admin": "data management"
+        "data-admin": "gestão de dados"
     },
     "labels": {
         "search": "Pesquisar",
@@ -115,16 +115,16 @@
         "description": "descrição",
         "user_rating": "a minha classificação: {rating}",
         "apply": "aplicar",
-        "loading": "loading",
-        "pick_camera": "pick camera",
-        "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}",
-        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
-        "orphan-series": "orphan series",
-        "find-series": "find a series",
-        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
-        "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "loading": "carregando",
+        "pick_camera": "selecionar câmara",
+        "add_narrator": "Adicionar um narrador",
+        "social_login": "iniciar sessão com {provider}",
+        "delete_this_series": "Apagar esta série de {nb} livro(s) e da base de dados?",
+        "orphan-series": "séries órfãs",
+        "find-series": "encontrar uma série",
+        "delete_this_author": "Excluir este autor de {nb} livro(s) e da base de dados?",
+        "orphan_authors": "autores órfãos",
+        "find-authors": "encontrar autores"
     },
     "settings": {
         "pick_language": "Escolha o seu idioma",
@@ -233,7 +233,7 @@
         "translator": "tradutor | tradutores",
         "borrowed": "emprestado",
         "current_page_number": "número da página atual",
-        "narrator": "narrator | narrators"
+        "narrator": "narrador | narradores"
     },
     "authors_merge": {
         "authors_merging_utility": "Ferramenta de fusão de autores",
@@ -245,7 +245,7 @@
         "authors_merge_subtitle": "Fundir",
         "authors_merge_description": "Utilizar os campos na direita por completar o autor da esquerda, depois fundir.",
         "search_message": "Procurar autores para fundir",
-        "merge_authors": "merge authors"
+        "merge_authors": "fundir autores"
     },
     "author": {
         "name": "nome",
