@@ -1,3 +1,10 @@
+### [0.65.1](https://github.com/bayang/jelu/compare/v0.65.0...v0.65.1) (2025-01-21)
+
+
+### Bug Fixes
+
+* npe in google provider [#182](https://github.com/bayang/jelu/issues/182) ([8dd4491](https://github.com/bayang/jelu/commit/8dd44915f37e65f4d55e394cba723ee1c2971e19))
+
 ## [0.65.0](https://github.com/bayang/jelu/compare/v0.64.0...v0.65.0) (2025-01-17)
 
 
