@@ -101,12 +101,20 @@ class GoogleBooksIMetaDataProvider(
             googleId = node.get("id").asText(),
             isbn10 = identifiers.find { it.get("type").asText() == "ISBN_10" }?.get("identifier")?.asText(),
             isbn13 = identifiers.find { it.get("type").asText() == "ISBN_13" }?.get("identifier")?.asText(),
-            authors = volumeInfo.get("authors").asIterable().map { it.asText() }.toMutableSet(),
+            authors = extractAuthors(volumeInfo),
             image = extractImage(volumeInfo),
             language = volumeInfo.get("language").asText(),
             publishedDate = volumeInfo.get("publishedDate").asText(),
             summary = summary(node),
         )
+    }
+
+    private fun extractAuthors(node: JsonNode): MutableSet<String> {
+        return if (node.get("authors") != null) {
+            node.get("authors").asIterable().map { it.asText() }.toMutableSet()
+        } else {
+            mutableSetOf()
+        }
     }
 
     private fun extractImage(node: JsonNode): String? {
