@@ -6,6 +6,7 @@ import { Ref, ref, watch } from "vue";
 import { Bar } from 'vue-chartjs';
 import { useI18n } from 'vue-i18n';
 import dataService from "../services/DataService";
+import { TotalsStats } from '../model/YearStats';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -112,6 +113,12 @@ const getYearStats = () => {
   }
 }
 
+const totalStats = () => {
+  dataService.totalsStats()
+  .then( data => totals.value = data)
+  .catch(e => console.log(e))
+}
+
 const loading = ref(false)
 const chartData = ref<ChartData<'bar'>>({
       datasets: []
@@ -133,6 +140,7 @@ const chartOptions = ref({
 
 const years: Ref<Array<number>> = ref([])
 const currentYear: Ref<number|null> = ref(null)
+const totals: Ref<TotalsStats> = ref({"read": 0, "unread": 0})
 
 watch(currentYear, (newVal, oldVal) => {
   console.log("year " + newVal + " " + oldVal)
@@ -144,11 +152,18 @@ const loaderFullPage = ref(false)
 
 getAllStats()
 getYears()
+totalStats()
 
 </script>
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center">
+  <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
+      {{ t('stats.total') }}
+    </h1>
+    <div class="mb-2">
+      {{ t('stats.read') }}:&nbsp;{{ totals.read }} / {{ t('stats.unread') }}:&nbsp;:{{ totals.unread }}
+    </div>
     <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
       {{ t('stats.all_time') }}
     </h1>

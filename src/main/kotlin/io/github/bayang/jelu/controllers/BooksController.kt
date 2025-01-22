@@ -15,6 +15,7 @@ import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.SeriesDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.TotalsStatsDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -408,5 +409,13 @@ class BooksController(
     ): SeriesDto {
         assertIsJeluUser(principal.principal)
         return repository.updateSeries(seriesId, seriesUpdate, (principal.principal as JeluUser).user)
+    }
+
+    @GetMapping(path = ["/stats/total"])
+    fun totalStats(
+        principal: Authentication,
+    ): TotalsStatsDto {
+        assertIsJeluUser(principal.principal)
+        return repository.stats((principal.principal as JeluUser).user.id!!)
     }
 }

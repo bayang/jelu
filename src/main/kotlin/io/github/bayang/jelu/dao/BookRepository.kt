@@ -14,6 +14,7 @@ import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesOrderDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.TotalsStatsDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserDto
@@ -42,6 +43,7 @@ import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.avg
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.count
+import org.jetbrains.exposed.sql.countDistinct
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
@@ -1528,5 +1530,17 @@ class BookRepository(
                 )
             }
         }
+    }
+
+    fun stats(userId: UUID): TotalsStatsDto {
+        val query = UserBookTable.join(ReadingEventTable, JoinType.LEFT, onColumn = UserBookTable.id, otherColumn = ReadingEventTable.userBook)
+            .select(UserBookTable.id.countDistinct())
+            .andWhere { UserBookTable.user eq userId }
+            .andWhere { ReadingEventTable.eventType eq ReadingEventType.FINISHED }
+            .distinct()
+        val resultRow = query.single()
+        val readCount = resultRow[UserBookTable.id.countDistinct()]
+        val totalUserBooks = UserBook.count(UserBookTable.user eq userId)
+        return TotalsStatsDto(read = readCount, unread = totalUserBooks - readCount)
     }
 }

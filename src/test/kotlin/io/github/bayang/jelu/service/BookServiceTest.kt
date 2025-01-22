@@ -2023,6 +2023,66 @@ class BookServiceTest(
     }
 
     @Test
+    fun testGlobalStats() {
+        var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        val createBook = bookDto()
+        val createUserBookDto = createUserBookDto(createBook, ReadingEventType.FINISHED, nowInstant())
+        val uploadFile = MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), uploadFile)
+        Assertions.assertEquals(createBook.isbn10, saved.book.isbn10)
+        Assertions.assertEquals(ReadingEventType.FINISHED, saved.lastReadingEvent)
+        Assertions.assertNotNull(saved.lastReadingEventDate)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+
+        val updater = UserBookUpdateDto(
+            ReadingEventType.DROPPED,
+            personalNotes = "new notes",
+            owned = false,
+            book = null,
+            toRead = null,
+            percentRead = 50,
+            borrowed = true,
+            currentPageNumber = null,
+        )
+        val updated = bookService.update(saved.id!!, updater, null)
+        Assertions.assertEquals(ReadingEventType.DROPPED, updated.lastReadingEvent)
+        Assertions.assertNotNull(updated.lastReadingEventDate)
+        Assertions.assertEquals(2, updated.readingEvents?.size)
+        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+
+        val createBook2 = bookDto("title 2")
+        val createUserBookDto2 = createUserBookDto(createBook2, ReadingEventType.CURRENTLY_READING, nowInstant())
+        val uploadFile2 = MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val saved2: UserBookLightDto = bookService.save(createUserBookDto2, user(), uploadFile2)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).unread)
+
+        val updater2 = UserBookUpdateDto(
+            ReadingEventType.FINISHED,
+            personalNotes = "new notes",
+            owned = false,
+            book = null,
+            toRead = null,
+            percentRead = 50,
+            borrowed = true,
+            currentPageNumber = null,
+        )
+        val updated2 = bookService.update(saved2.id!!, updater2, null)
+        Assertions.assertEquals(ReadingEventType.FINISHED, updated2.lastReadingEvent)
+        Assertions.assertNotNull(updated2.lastReadingEventDate)
+        Assertions.assertEquals(1, updated2.readingEvents?.size)
+        Assertions.assertEquals(2, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+    }
+
+    @Test
     fun testUpdateUserbookWithImageAndEventNewEventRequiredAndDeleteExistingImage() {
         var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)

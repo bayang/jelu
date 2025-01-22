@@ -23,6 +23,7 @@ import io.github.bayang.jelu.dto.SeriesDto
 import io.github.bayang.jelu.dto.SeriesRatingDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.TotalsStatsDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -646,5 +647,10 @@ class BookService(
                 pageNum++
             }
         } while (booksPage.hasNext())
+    }
+
+    @Transactional
+    fun stats(userId: UUID): TotalsStatsDto {
+        return bookRepository.stats(userId)
     }
 }

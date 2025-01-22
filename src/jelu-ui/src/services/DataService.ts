@@ -16,7 +16,7 @@ import { LibraryFilter } from "../model/LibraryFilter";
 import { WikipediaSearchResult } from "../model/WikipediaSearchResult";
 import { WikipediaPageResult } from "../model/WikipediaPageResult";
 import { MessageCategory, UpdateUserMessage, UserMessage } from "../model/UserMessage";
-import { MonthStats, YearStats } from "../model/YearStats";
+import { MonthStats, TotalsStats, YearStats } from "../model/YearStats";
 import { Shelf } from "../model/Shelf";
 import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/Review";
 import { Role } from "../model/Role";
@@ -1452,6 +1452,22 @@ class DataService {
       }
       console.log("error stats years " + (error as AxiosError).code)
       throw new Error("error stats years " + error)
+    }
+  }
+
+  totalsStats = async () => {
+    try {
+      const response = await this.apiClient.get<TotalsStats>(`${this.API_STATS}/total`);
+      console.log("called stats total")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error stats total " + (error as AxiosError).code)
+      throw new Error("error stats total " + error)
     }
   }
 
