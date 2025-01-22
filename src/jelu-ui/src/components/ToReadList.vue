@@ -21,7 +21,7 @@ useTitle('Jelu | ' + t('nav.to_read'))
 
 const books: Ref<Array<UserBook>> = ref([]);
 
-const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading, pageCount } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('creationDate,desc')
 
@@ -243,7 +243,7 @@ getToRead()
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="flex flex-row justify-between">
+  <div class="flex flex-row justify-between mb-2">
     <div class="flex flex-row gap-1 order-last sm:order-first">
       <o-button
         variant="success"
@@ -289,6 +289,14 @@ getToRead()
     </h2>
     <div />
   </div>
+  <o-pagination
+    v-if="books.length > 0 && pageCount > 1"
+    v-model:current="pageAsNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    @change="updatePage"
+  />
   <div
     v-if="books.length > 0"
     class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-0 my-3"

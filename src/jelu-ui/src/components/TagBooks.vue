@@ -26,7 +26,7 @@ const route = useRoute()
 const tag: Ref<Tag> = ref({name: ""})
 const tagBooks: Ref<Array<Book>> = ref([]);
 
-const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading, pageCount } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
 
@@ -203,7 +203,7 @@ getBooks()
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="flex flex-row justify-between">
+  <div class="flex flex-row justify-between mb-2">
     <div class="flex flex-row gap-1 order-last sm:order-first">
       <o-button
         variant="success"
@@ -267,6 +267,14 @@ getBooks()
       :animated="true"
     />
   </div>
+  <o-pagination
+    v-if="pageCount > 1"
+    v-model:current="pageAsNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    @change="updatePage"
+  />
   <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1 my-3">
     <div
       v-for="book in convertedBooks"

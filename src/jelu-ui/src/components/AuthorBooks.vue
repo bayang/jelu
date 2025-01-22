@@ -35,7 +35,7 @@ const author: Ref<Author> = ref({name: ""})
 const authorBooks: Ref<Array<Book>> = ref([]);
 const authorEdit: Ref<boolean> = ref(false)
 
-const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading, pageCount } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
 
@@ -163,8 +163,8 @@ getBooks()
         >
           {{ t('sorting.series') }}
         </o-radio>
-    </div>
-    <div class="field">
+      </div>
+      <div class="field">
         <o-radio
           v-model="sortBy"
           native-value="publishedDate"
@@ -338,7 +338,7 @@ getBooks()
       </div>
     </div>
   </div>
-  <div class="flex flex-row justify-between mt-4">
+  <div class="flex flex-row justify-between mt-4 mb-2">
     <o-button
       variant="success"
       outlined
@@ -357,7 +357,15 @@ getBooks()
     </h2>
     <div />
   </div>
-  <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-2 justify-center justify-items-center justify-self-center">
+  <o-pagination
+    v-if="pageCount > 1"
+    v-model:current="pageAsNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    @change="updatePage"
+  />
+  <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-2 justify-center justify-items-center justify-self-center mt-2">
     <div
       v-for="book in convertedBooks"
       :key="book.book.id"

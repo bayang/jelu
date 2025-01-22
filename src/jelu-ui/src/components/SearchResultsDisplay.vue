@@ -25,7 +25,7 @@ const searchQuery: Ref<string|undefined> = useRouteQuery('q', undefined)
 
 const books: Ref<Array<Book>> = ref([]);
 
-const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading, pageCount } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
 
@@ -359,7 +359,7 @@ if (searchQuery.value != null) {
     <div />
   </div>
   <div
-    class="flex flex-row justify-center justify-items-center"
+    class="flex flex-row justify-center justify-items-center mb-2"
   >
     <div class="basis-full sm:basis-5/12">
       <div class="basis-full">
@@ -451,6 +451,14 @@ if (searchQuery.value != null) {
       <button>close</button>
     </form>
   </dialog>
+  <o-pagination
+    v-if="pageCount > 1"
+    v-model:current="pageAsNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    @change="updatePage"
+  />
   <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1 my-4">
     <div
       v-for="book in convertedBooks"

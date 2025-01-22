@@ -25,7 +25,7 @@ const { t } = useI18n({
 const route = useRoute()
 const oruga = useOruga();
 
-const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading, pageCount } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('numberInSeries,asc')
 
@@ -254,7 +254,7 @@ getBooks()
     </h2>
     <div />
   </div>
-  <div>
+  <div class="mb-2">
     <div class="flex justify-center">
       <v-md-preview
         v-if="series.description != null"
@@ -281,6 +281,14 @@ getBooks()
       :animated="true"
     />
   </div>
+  <o-pagination
+    v-if="pageCount > 1"
+    v-model:current="pageAsNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    @change="updatePage"
+  />
   <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-1 my-3">
     <div
       v-for="book in convertedBooks"

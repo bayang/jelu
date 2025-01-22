@@ -18,7 +18,7 @@ useTitle('Jelu | ' + t('nav.history'))
 
 dayjs.extend(localizedFormat)
 
-const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading, pageCount } = usePagination()
 
 const nonCurrentlyReadingEvents: Array<ReadingEventType> = [ReadingEventType.DROPPED, ReadingEventType.FINISHED]
 
@@ -137,9 +137,18 @@ getYears()
           {{ year }}
         </option>
       </select>
+      <o-pagination
+        v-if="yearEvents.length > 0 && pageCount > 1"
+        :current="pageAsNumber"
+        :total="total"
+        order="centered"
+        :per-page="perPage"
+        @change="updatePage"
+      />
       <div
         v-for="[month, ev] in eventsByMonth"
         :key="month"
+        class="mt-2"
       >
         <div class="flex items-center mx-2">
           <svg
