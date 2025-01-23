@@ -17,7 +17,8 @@
         "history": "geçmiş",
         "shelves": "raflar",
         "tags-admin": "etiket yönetimi",
-        "data-admin": "data management"
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Ara",
@@ -322,7 +323,10 @@
         "choose_year": "Yıl seç",
         "pages_read": "okunan sayfa sayısı",
         "finished": "bitti",
-        "dropped": "bırakıldı"
+        "dropped": "bırakıldı",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "yıllar"
