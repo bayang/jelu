@@ -17,7 +17,8 @@
         "history": "cronologia",
         "shelves": "scaffali",
         "tags-admin": "gestione dei tag",
-        "data-admin": "data management"
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Cerca",
@@ -322,7 +323,10 @@
         "choose_year": "Seleziona un anno",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "anni"
