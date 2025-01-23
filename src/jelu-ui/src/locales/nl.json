@@ -17,7 +17,8 @@
         "history": "geschiedenis",
         "shelves": "boekenplanken",
         "tags-admin": "labelbeheer",
-        "data-admin": "data management"
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Zoeken",
@@ -322,7 +323,10 @@
         "choose_year": "Kies een jaar",
         "pages_read": "gelezen pagina's",
         "finished": "voltooid",
-        "dropped": "gestopt"
+        "dropped": "gestopt",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "jaren"
