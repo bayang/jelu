@@ -18,7 +18,7 @@
         "shelves": "Étagères",
         "tags-admin": "gestion des tags",
         "data-admin": "Gestion des données",
-        "activity": "activity"
+        "activity": "activité"
     },
     "labels": {
         "search": "Rechercher",
@@ -325,8 +325,8 @@
         "finished": "terminé",
         "dropped": "abandonné",
         "total": "total",
-        "read": "read",
-        "unread": "unread"
+        "read": "lu",
+        "unread": "non lu"
     },
     "history": {
         "years": "années"
