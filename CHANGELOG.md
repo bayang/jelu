@@ -1,3 +1,17 @@
+## [0.66.0](https://github.com/bayang/jelu/compare/v0.65.1...v0.66.0) (2025-01-23)
+
+
+### Features
+
+* add activity page ([01a99bd](https://github.com/bayang/jelu/commit/01a99bd99eabf79ad2c729bd33b61d19cfe78141))
+* also display pagination at the top [#183](https://github.com/bayang/jelu/issues/183) ([4d14bf6](https://github.com/bayang/jelu/commit/4d14bf64ee95ffda90c4c82f7ab000af1c4efb99))
+* display total read and unread [#171](https://github.com/bayang/jelu/issues/171) ([04e0bfe](https://github.com/bayang/jelu/commit/04e0bfe0d271fcb7e3a7f3693bdf772c71509fa9))
+
+
+### Bug Fixes
+
+* upgrade upload action ([af9b64e](https://github.com/bayang/jelu/commit/af9b64e9b2efdb628b64ff4a12efee91845e7c69))
+
 ### [0.65.1](https://github.com/bayang/jelu/compare/v0.65.0...v0.65.1) (2025-01-21)
 
 
