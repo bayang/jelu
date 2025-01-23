@@ -17,7 +17,8 @@
         "history": "istorija",
         "shelves": "lentynos",
         "tags-admin": "žymos valdymas",
-        "data-admin": "data management"
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Paieška",
@@ -322,7 +323,10 @@
         "choose_year": "Pasirinkite metus",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "metai"
