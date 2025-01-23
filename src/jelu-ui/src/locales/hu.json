@@ -17,7 +17,8 @@
         "history": "előzények",
         "shelves": "polcok",
         "tags-admin": "tagek kezelése",
-        "data-admin": "data management"
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Keresés",
@@ -322,7 +323,10 @@
         "choose_year": "Válassz évet",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "évek"

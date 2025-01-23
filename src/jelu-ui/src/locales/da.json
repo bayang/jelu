@@ -17,7 +17,8 @@
         "history": "historik",
         "shelves": "reoler",
         "tags-admin": "tags håndtering",
-        "data-admin": "data management"
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Søg",
@@ -322,7 +323,10 @@
         "choose_year": "Vælg et år",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "år"

@@ -17,7 +17,8 @@
         "history": "historia",
         "shelves": "półki",
         "tags-admin": "zarządzanie znacznikami",
-        "data-admin": "data management"
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Szukaj",
@@ -322,7 +323,10 @@
         "choose_year": "Wybierz rok",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "lata"
