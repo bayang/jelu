@@ -98,6 +98,12 @@ const router = createRouter({
             component: () => import(/* webpackChunkName: "recommend" */ './components/ReviewDetail.vue'),
             name: 'review-detail',
         },
+{
+            path: '/reviews',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/ReviewList.vue'),
+            name: 'reviews',
+            beforeEnter: [isLogged]
+        },
         {
             path: '/search',
             component: () => import(/* webpackChunkName: "recommend" */ './components/SearchResultsDisplay.vue'),

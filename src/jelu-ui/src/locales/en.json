@@ -17,7 +17,8 @@
       "history": "history",
       "shelves": "shelves",
       "tags-admin" : "tags management",
-      "data-admin": "data management"
+      "data-admin": "data management",
+      "activity": "activity"
     },
     "labels": {
       "search": "Search",

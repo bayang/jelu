@@ -221,6 +221,15 @@ const collapseDropdown = () => {
             <li @click="collapseDropdown()">
               <router-link
                 v-if="isLogged"
+                :to="{ name: 'reviews' }"
+                class="font-sans text-base capitalize"
+              >
+                {{ t('nav.activity') }}
+              </router-link>
+            </li>
+            <li @click="collapseDropdown()">
+              <router-link
+                v-if="isLogged"
                 :to="{ name: 'search' }"
                 class="font-sans text-base capitalize"
               >
@@ -341,6 +350,15 @@ const collapseDropdown = () => {
               class="font-sans text-xl capitalize"
             >
               {{ t('nav.history') }}
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              v-if="isLogged"
+              :to="{ name: 'reviews' }"
+              class="font-sans text-xl capitalize"
+            >
+              {{ t('nav.activity') }}
             </router-link>
           </li>
           <li
