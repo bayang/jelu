@@ -17,7 +17,8 @@
         "history": "historique",
         "shelves": "Étagères",
         "tags-admin": "gestion des tags",
-        "data-admin": "Gestion des données"
+        "data-admin": "Gestion des données",
+        "activity": "activity"
     },
     "labels": {
         "search": "Rechercher",
@@ -322,7 +323,10 @@
         "choose_year": "Choisir une année",
         "pages_read": "pages lues",
         "finished": "terminé",
-        "dropped": "abandonné"
+        "dropped": "abandonné",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "années"
