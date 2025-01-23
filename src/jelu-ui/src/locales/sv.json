@@ -17,7 +17,8 @@
         "history": "history",
         "shelves": "shelves",
         "tags-admin": "tags management",
-        "data-admin": "data management"
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Search",
@@ -322,7 +323,10 @@
         "choose_year": "Choose a year",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "years"
