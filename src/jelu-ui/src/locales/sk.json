@@ -18,7 +18,7 @@
         "shelves": "poličky",
         "tags-admin": "správa štítkov",
         "data-admin": "Správa údajov",
-        "activity": "activity"
+        "activity": "Aktivita"
     },
     "labels": {
         "search": "Hľadať",
@@ -324,9 +324,9 @@
         "pages_read": "prečítaných strán",
         "finished": "prečítané",
         "dropped": "nedočítané",
-        "total": "total",
-        "read": "read",
-        "unread": "unread"
+        "total": "Celkom",
+        "read": "Prečítané",
+        "unread": "Neprečítané"
     },
     "history": {
         "years": "roky"
