@@ -17,8 +17,8 @@
         "history": "geschiedenis",
         "shelves": "boekenplanken",
         "tags-admin": "labelbeheer",
-        "data-admin": "data management",
-        "activity": "activity"
+        "data-admin": "gegevensbeheer",
+        "activity": "activiteit"
     },
     "labels": {
         "search": "Zoeken",
@@ -116,10 +116,10 @@
         "description": "omschrijving",
         "user_rating": "mijn beoordeling: {rating}",
         "apply": "toepassen",
-        "loading": "loading",
+        "loading": "laden",
         "pick_camera": "pick camera",
         "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}",
+        "social_login": "inloggen met {provider}",
         "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
         "orphan-series": "orphan series",
         "find-series": "find a series",
@@ -246,7 +246,7 @@
         "authors_merge_subtitle": "Samenvoegen",
         "authors_merge_description": "Gebruik de velden van de rechter auteur om de auteur aan de linkerkant aan te vullen en samen te voegen.",
         "search_message": "Zoek auteurs om samen te voegen",
-        "merge_authors": "merge authors"
+        "merge_authors": "auteurs samenvoegen"
     },
     "author": {
         "name": "naam",
@@ -324,9 +324,9 @@
         "pages_read": "gelezen pagina's",
         "finished": "voltooid",
         "dropped": "gestopt",
-        "total": "total",
-        "read": "read",
-        "unread": "unread"
+        "total": "totaal",
+        "read": "gelezen",
+        "unread": "ongelezen"
     },
     "history": {
         "years": "jaren"
