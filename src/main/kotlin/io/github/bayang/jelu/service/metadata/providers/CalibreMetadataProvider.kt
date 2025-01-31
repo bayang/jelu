@@ -53,7 +53,7 @@ class CalibreMetadataProvider(
             true
         }
         var bookFileName: String = FILE_PREFIX
-        val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path!!, "-o", "-d 90")
+        val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path!!, "-o", "-d ${properties.metadata.calibre.timeout}")
         var fileNameComplete = false
         if (!metadataRequestDto.isbn.isNullOrBlank()) {
             bookFileName += metadataRequestDto.isbn
