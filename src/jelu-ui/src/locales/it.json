@@ -17,8 +17,8 @@
         "history": "cronologia",
         "shelves": "scaffali",
         "tags-admin": "gestione dei tag",
-        "data-admin": "data management",
-        "activity": "activity"
+        "data-admin": "gestione dati",
+        "activity": "attività"
     },
     "labels": {
         "search": "Cerca",
@@ -116,16 +116,16 @@
         "description": "descrizione",
         "user_rating": "la mia valutazione : {rating}",
         "apply": "conferma",
-        "loading": "loading",
-        "pick_camera": "pick camera",
-        "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}",
-        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
-        "orphan-series": "orphan series",
-        "find-series": "find a series",
-        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
-        "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "loading": "caricamento",
+        "pick_camera": "seleziona una fotocamera",
+        "add_narrator": "Aggiungi un narratore",
+        "social_login": "accedi con {provider}",
+        "delete_this_series": "Cancellare questa collana da {nb} libro/i e dal database?",
+        "orphan-series": "collane orfane",
+        "find-series": "trova una collana",
+        "delete_this_author": "Cancellare questo autore da {nb} libro/i e dal database?",
+        "orphan_authors": "autori orfani",
+        "find-authors": "trova un autore"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
@@ -234,7 +234,7 @@
         "translator": "traduttore | traduttori",
         "borrowed": "preso in prestito",
         "current_page_number": "numero di pagina attuale",
-        "narrator": "narrator | narrators"
+        "narrator": "narratore | narratori"
     },
     "authors_merge": {
         "authors_merging_utility": "Utilità per l'unione di due autori",
@@ -246,7 +246,7 @@
         "authors_merge_subtitle": "Unisci",
         "authors_merge_description": "Utilizzare i campi sull'autore di destra per completare l'autore a sinistra, quindi unisci i due autori.",
         "search_message": "Cerca autori da unire",
-        "merge_authors": "merge authors"
+        "merge_authors": "unisci gli autori"
     },
     "author": {
         "name": "nome",
@@ -277,7 +277,7 @@
         "export_ko": "Si è verificato un errore e la tua richiesta di esportazione probabilmente non è stata registrata.",
         "import_help": "Per prima cosa seleziona il tipo di file che vuoi importare, poi scegli il file e infine seleziona il bottone di importazione. Una volta che l'importazione è partita puoi abbandonare questa pagina e andare alla sezione messaggi.",
         "import_ok": "La tua richiesta d'importazione è stata salvata. Puoi abbandonare questa pagina, il risultato dell'importazione sarà disponibile nella sezione messaggi.",
-        "isbn_list": "List of ISBN in a file"
+        "isbn_list": "Elenco degli ISBN in un file"
     },
     "login": {
         "login": "accedi",
@@ -321,12 +321,12 @@
         "all_time": "Statistiche globali",
         "yearly_stats": "Statistiche annuali",
         "choose_year": "Seleziona un anno",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped",
-        "total": "total",
-        "read": "read",
-        "unread": "unread"
+        "pages_read": "pagine lette",
+        "finished": "finiti",
+        "dropped": "abbandonati",
+        "total": "totale",
+        "read": "letti",
+        "unread": "da leggere"
     },
     "history": {
         "years": "anni"
