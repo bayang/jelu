@@ -31,7 +31,6 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       libglx0 \
       libxkbcommon-x11-0 \
       libxcb-cursor0 \
-      python3 \
       python3-xdg \
       binutils \
       poppler-utils \
