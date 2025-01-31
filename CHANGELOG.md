@@ -1,3 +1,13 @@
+### [0.66.1](https://github.com/bayang/jelu/compare/v0.66.0...v0.66.1) (2025-01-31)
+
+
+### Bug Fixes
+
+* calibre provider broken [#185](https://github.com/bayang/jelu/issues/185) ([9307080](https://github.com/bayang/jelu/commit/93070805e4d46a5d4c5a931a13ced6c6f1527a11))
+* do not install python3 in docker ([3b1c2af](https://github.com/bayang/jelu/commit/3b1c2af0e316d10d15af6ad09ba80a93396eb719))
+* remove arm64, python 3.12 does not build ([c03c812](https://github.com/bayang/jelu/commit/c03c812d13a09b34f9fc5c484f4696719ba4ff1b))
+* simplify calibre install ([dae4fac](https://github.com/bayang/jelu/commit/dae4fac6ae45020cc214983cfe2c1f419044b053))
+
 ## [0.66.0](https://github.com/bayang/jelu/compare/v0.65.1...v0.66.0) (2025-01-23)
 
 
