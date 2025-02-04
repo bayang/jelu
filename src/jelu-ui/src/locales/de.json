@@ -120,12 +120,12 @@
         "pick_camera": "Kamera auswählen",
         "add_narrator": "Erzähler hinzufügen",
         "social_login": "Einloggen mit {provider}",
-        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
-        "orphan-series": "orphan series",
-        "find-series": "find a series",
-        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
-        "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "delete_this_series": "Diese Serie aus {nb} Bu(e)ch(ern) und aus der Datenbank löschen?",
+        "orphan-series": "verwaiste Serie",
+        "find-series": "eine Serie finden",
+        "delete_this_author": "Diesen Autor aus {nb} Bu(e)ch(ern) und aus der Datenbank löschen?",
+        "orphan_authors": "verwaiste Autoren",
+        "find-authors": "Autoren finden"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -234,7 +234,7 @@
         "translator": "Übersetzer:in | Übersetzer:innen",
         "borrowed": "Geliehen",
         "current_page_number": "aktuelle Seitenzahl",
-        "narrator": "narrator | narrators"
+        "narrator": "erzähler | Erzähler"
     },
     "authors_merge": {
         "authors_merging_utility": "Autor:innen zusammenführen",
@@ -246,7 +246,7 @@
         "authors_merge_subtitle": "Zusammenführen",
         "authors_merge_description": "Verwende die Felder der rechten Autor:in um die linke Autor:in zu vervollständigen, dann zusammenführen.",
         "search_message": "Suche Autor:innen zum Zusammenführen",
-        "merge_authors": "merge authors"
+        "merge_authors": "Autoren zusammenführen"
     },
     "author": {
         "name": "Name",
@@ -277,7 +277,7 @@
         "export_ko": "Ein Fehler ist aufgetreten und die Exportanfrage wurde wahrscheinlich nicht registriert.",
         "import_help": "Wähle zuerst den Dateityp aus, den Du importieren möchtest, dann wähle unten eine Datei aus und klicke auf den Import-Button. Sobald der Import gestartet ist, kannst Du diese Seite verlassen und zum Nachrichten-Abschnitt gehen.",
         "import_ok": "Deine Importanfrage wurde gespeichert. Du kannst diese Seite verlassen, das Importresultat wird im Nachrichten-Abschnitt verfügbar sein.",
-        "isbn_list": "List of ISBN in a file"
+        "isbn_list": "ISBN Liste in einer Datei"
     },
     "login": {
         "login": "Anmelden",
@@ -321,12 +321,12 @@
         "all_time": "Ewige Statistik",
         "yearly_stats": "Jährliche Statistik",
         "choose_year": "Jahr auswählen",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped",
-        "total": "total",
-        "read": "read",
-        "unread": "unread"
+        "pages_read": "gelesene Seiten",
+        "finished": "Fertig gelesen",
+        "dropped": "Aufgegeben",
+        "total": "Gesamt",
+        "read": "lesen",
+        "unread": "ungelesen"
     },
     "history": {
         "years": "Jahre"
