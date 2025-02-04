@@ -123,9 +123,9 @@
         "delete_this_series": "Diese Serie aus {nb} Bu(e)ch(ern) und aus der Datenbank löschen?",
         "orphan-series": "verwaiste Serie",
         "find-series": "eine Serie finden",
-        "delete_this_author": "Diesen Autor aus {nb} Bu(e)ch(ern) und aus der Datenbank löschen?",
-        "orphan_authors": "verwaiste Autoren",
-        "find-authors": "Autoren finden"
+        "delete_this_author": "Diese(n) Autor:in aus {nb} Buch/Büchern und aus der Datenbank löschen?",
+        "orphan_authors": "verwaiste(r) Autor:in",
+        "find-authors": "Autor:innen finden"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -246,7 +246,7 @@
         "authors_merge_subtitle": "Zusammenführen",
         "authors_merge_description": "Verwende die Felder der rechten Autor:in um die linke Autor:in zu vervollständigen, dann zusammenführen.",
         "search_message": "Suche Autor:innen zum Zusammenführen",
-        "merge_authors": "Autoren zusammenführen"
+        "merge_authors": "Autor:innen zusammenführen"
     },
     "author": {
         "name": "Name",
@@ -354,7 +354,7 @@
         "my_reviews": "Meine Rezensionen",
         "all_reviews": "Alle Rezensionen",
         "delete_review": "Diese Rezension löschen?",
-        "review_detail": "Go to review detail",
+        "review_detail": "Zur Rezension",
         "book_all_reviews": "Alle Bewertungen für dieses Buch"
     },
     "book_merge": {
@@ -363,27 +363,27 @@
     },
     "metadata": {
         "reorder_plugins": "Plugins neu sortieren",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "description": "Plugins werden von oben nach unten ausgeführt, deaktivierte Plugins werden nicht verwendet.",
         "default_priority": "Standardpriorität",
-        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
+        "note": "Diese Änderung ist nur vorübergehend, wenn du die Plugins permanent neu ordnen möchtest, musst du die Konfiguration ändern."
     },
     "book_quotes": {
-        "edit_quote": "Edit book quote",
-        "create": "Post a quote",
-        "quote": "quote | quotes",
-        "position": "position",
-        "delete_quote": "delete this quote ?"
+        "edit_quote": "Buchzitat bearbeiten",
+        "create": "Zitat posten",
+        "quote": "zitieren | Zitate",
+        "position": "Position",
+        "delete_quote": "dieses Zitat löschen?"
     },
     "series": {
-        "edit_series": "edit series",
-        "create_series": "create series",
-        "name": "name"
+        "edit_series": "Serie bearbeiten",
+        "create_series": "Serie erstellen",
+        "name": "Name"
     },
     "login_info": {
         "ip": "ip",
-        "user_agent": "user agent",
-        "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "user_agent": "User-Agent",
+        "source": "Quelle",
+        "last_activity": "Letzte Aktivität",
+        "activity": "Login Aktivität"
     }
 }
