@@ -1,3 +1,16 @@
+### [0.66.2](https://github.com/bayang/jelu/compare/v0.66.1...v0.66.2) (2025-02-06)
+
+
+### Bug Fixes
+
+* try to come back to manual calibre install ([c000232](https://github.com/bayang/jelu/commit/c000232f002e3adf41079847aafebf415bd1bc0a))
+* try to come back to manual calibre install ([3d7b646](https://github.com/bayang/jelu/commit/3d7b6465103d6c719123c3f297987f770b413f9f))
+* try to come back to manual calibre install ([c9d9664](https://github.com/bayang/jelu/commit/c9d9664fff5e3fffce4ed4b1c31bcfc3fbeed909))
+* try to restore arm64 build ([5ae0587](https://github.com/bayang/jelu/commit/5ae05877f9353a0efbcc6b44a42a1ab41f02b009))
+* try to temporarily remove cache for docker build ([bf8840e](https://github.com/bayang/jelu/commit/bf8840e5e762f81e2a7d56249c029b0cdd83637b))
+* try to update docker actions ([2fe2bf9](https://github.com/bayang/jelu/commit/2fe2bf9563a4bcfa35dbcea1a0e6caafeba13c58))
+* upgrade docker login ([71454ca](https://github.com/bayang/jelu/commit/71454cadf89f9b99b5e49f110a92e60512ed2f4c))
+
 ### [0.66.1](https://github.com/bayang/jelu/compare/v0.66.0...v0.66.1) (2025-01-31)
 
 
