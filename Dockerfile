@@ -61,7 +61,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.8.2/goodreads-v1.8.2.zip \
       && /opt/calibre/calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
-  else \
+  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
     apt-get update && apt-get install --no-install-recommends --yes wget xz-utils \
       libxcb-xinerama0 \
       libxcb-icccm4 \
@@ -104,6 +104,11 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.8.2/goodreads-v1.8.2.zip \
       && /opt/calibre/calibre-customize --add-plugin goodreads.zip \
       && rm goodreads.zip; \
+  else \
+    apt-get update && apt-get install --no-install-recommends --yes calibre \
+          && curl -L -o goodreads.zip https://github.com/kiwidude68/calibre_plugins/releases/download/goodreads-v1.8.2/goodreads-v1.8.2.zip \
+          && calibre-customize --add-plugin goodreads.zip \
+          && rm goodreads.zip; \
   fi
 
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher", "--spring.config.additional-location=optional:file:/config/"]
