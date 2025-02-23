@@ -783,7 +783,7 @@ getBook()
           </li>
         </ul>
         <p v-if="book?.book?.publisher">
-          <span class="font-semibold capitalize">{{ t('book.publisher') }} :</span>
+          <span class="font-semibold capitalize">{{ t('book.publisher') }} :&nbsp;</span>
           <router-link
             class="link hover:underline hover:decoration-4 hover:decoration-secondary"
             :to="{ name: 'search', query: { q: `publisher:` + publisherQuery } }"
