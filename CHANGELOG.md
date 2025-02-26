@@ -1,3 +1,11 @@
+### [0.66.3](https://github.com/bayang/jelu/compare/v0.66.2...v0.66.3) (2025-02-26)
+
+
+### Bug Fixes
+
+* initial user creation [#184](https://github.com/bayang/jelu/issues/184) ([5a30ff9](https://github.com/bayang/jelu/commit/5a30ff9925921867e297ee0fb9ecccca3e10000e))
+* missing space after publisher on detail page [#196](https://github.com/bayang/jelu/issues/196) ([65d77c3](https://github.com/bayang/jelu/commit/65d77c39dd17780780dc7f09a188e9ca2c00d0a5))
+
 ### [0.66.2](https://github.com/bayang/jelu/compare/v0.66.1...v0.66.2) (2025-02-06)
 
 
