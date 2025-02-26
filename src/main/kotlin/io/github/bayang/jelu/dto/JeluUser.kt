@@ -38,6 +38,7 @@ class JeluUser(
     val user: UserDto,
     val oAuth2User: OAuth2User? = null,
     val oidcUser: OidcUser? = null,
+    val initialSetup: Boolean = false,
 ) : UserDetails, OAuth2User, OidcUser {
     override fun getName(): String {
         return user.login
@@ -48,9 +49,14 @@ class JeluUser(
     }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        val basicRoles: MutableCollection<GrantedAuthority> = mutableSetOf(SimpleGrantedAuthority(ROLE_USER))
-        if (user.isAdmin) {
-            basicRoles.add(SimpleGrantedAuthority(ROLE_ADMIN))
+        val basicRoles: MutableCollection<GrantedAuthority> = mutableSetOf()
+        if (initialSetup) {
+            basicRoles.add(SimpleGrantedAuthority(ROLE_INITIAL_SETUP))
+        } else {
+            basicRoles.add(SimpleGrantedAuthority(ROLE_USER))
+            if (user.isAdmin) {
+                basicRoles.add(SimpleGrantedAuthority(ROLE_ADMIN))
+            }
         }
         return basicRoles
     }

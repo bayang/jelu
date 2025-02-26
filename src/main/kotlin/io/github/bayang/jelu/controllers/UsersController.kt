@@ -1,10 +1,8 @@
 package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.config.UserAgentWebAuthenticationDetails
-import io.github.bayang.jelu.dao.Provider
 import io.github.bayang.jelu.dto.AuthenticationDto
 import io.github.bayang.jelu.dto.CreateUserDto
-import io.github.bayang.jelu.dto.DummyUser
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LoginHistoryInfoDto
 import io.github.bayang.jelu.dto.ROLE_ADMIN
@@ -60,21 +58,6 @@ class UsersController(
     @GetMapping(path = ["/users/me"])
     fun authenticatedUser(principal: Authentication, session: HttpSession): AuthenticationDto {
         when (principal.principal) {
-            is DummyUser -> {
-                logger.trace { "dummy user $principal" }
-                return AuthenticationDto(
-                    UserDto(
-                        login = principal.name,
-                        isAdmin = true,
-                        id = null,
-                        password = "****",
-                        modificationDate = null,
-                        creationDate = null,
-                        provider = Provider.JELU_DB,
-                    ),
-                    token = session.id,
-                )
-            }
             is JeluUser -> {
                 logger.trace { "jelu user $principal" }
                 logger.trace { "session ${session.id}" }

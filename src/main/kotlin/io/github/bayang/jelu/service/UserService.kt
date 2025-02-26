@@ -5,11 +5,11 @@ import io.github.bayang.jelu.dao.Provider
 import io.github.bayang.jelu.dao.User
 import io.github.bayang.jelu.dao.UserRepository
 import io.github.bayang.jelu.dto.CreateUserDto
-import io.github.bayang.jelu.dto.DummyUser
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UpdateUserDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluException
+import io.github.bayang.jelu.utils.nowInstant
 import mu.KotlinLogging
 import org.springframework.security.core.session.SessionRegistry
 import org.springframework.security.core.userdetails.UserDetails
@@ -63,7 +63,7 @@ class UserService(
     @Transactional
     override fun loadUserByUsername(username: String): UserDetails {
         if (userRepository.countUsers() == 0L) {
-            return DummyUser(passwordEncoder.encode("initial"))
+            return dummyUser()
         }
         val res = userRepository.findByLogin(username)
         if (!res.empty()) {
@@ -80,6 +80,19 @@ class UserService(
             return JeluUser(dto)
         }
         throw UsernameNotFoundException("user $username not found in db")
+    }
+
+    fun dummyUser(): JeluUser {
+        val date = nowInstant()
+        val dto = UserDto(
+            id = UUID.randomUUID(),
+            creationDate = date,
+            modificationDate = date,
+            login = "setup",
+            password = passwordEncoder.encode("initial"),
+            isAdmin = false,
+        )
+        return JeluUser(dto, initialSetup = true)
     }
 
     @Transactional
