@@ -15,6 +15,7 @@ export interface Metadata {
     googleId?: string,
     amazonId?: string,
     goodreadsId?: string,
+    librarythingId?: string,
     isfdbId?: string,
     openlibraryId?: string,
     noosfereId?: string,

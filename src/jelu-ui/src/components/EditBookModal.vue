@@ -462,6 +462,30 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               :placeholder="t('book.librarything_id')"
               class="input focus:input-accent"
             />
+            <o-input
+              v-model="userbook.book.isfdbId"
+              name="isfdbId"
+              :placeholder="t('book.isfdb_id')"
+              class="input focus:input-accent"
+            />
+            <o-input
+              v-model="userbook.book.openlibraryId"
+              name="openlibraryId"
+              :placeholder="t('book.openlibrary_id')"
+              class="input focus:input-accent"
+            />
+            <o-input
+              v-model="userbook.book.noosfereId"
+              name="noosfereId"
+              :placeholder="t('book.noosfere_id')"
+              class="input focus:input-accent"
+            />
+            <o-input
+              v-model="userbook.book.inventaireId"
+              name="inventaireId"
+              :placeholder="t('book.inventaire_id')"
+              class="input focus:input-accent"
+            />
           </o-field>
         </div>
         <div class="field pb-2">
@@ -539,8 +563,8 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             :label="t('book.language')"
             class="capitalize"
           >
-            <o-input 
-              v-model="userbook.book.language" 
+            <o-input
+              v-model="userbook.book.language"
               class="input focus:input-accent"
             />
           </o-field>
@@ -766,7 +790,7 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
           >
             <div class="form-control">
               <label class="label cursor-pointer justify-center gap-2">
-                <span class="label-text">From web</span> 
+                <span class="label-text">From web</span>
                 <input
                   v-model="uploadType"
                   type="radio"
@@ -774,7 +798,7 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
                   class="radio radio-primary"
                   value="web"
                 >
-                <span class="label-text">From computer</span> 
+                <span class="label-text">From computer</span>
                 <input
                   v-model="uploadType"
                   type="radio"
@@ -782,7 +806,7 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
                   class="radio radio-primary"
                   value="computer"
                 >
-                <span class="label-text">From Jelu server</span> 
+                <span class="label-text">From Jelu server</span>
                 <input
                   v-model="uploadType"
                   type="radio"

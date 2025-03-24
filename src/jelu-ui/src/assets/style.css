@@ -58,7 +58,7 @@
   --oruga-taginput-color: theme('colors.primary');
   --oruga-taginput-item-background-color: theme('colors.primary');
   --oruga-taginput-item-color: theme('colors.primary-content');
-  
+
   --oruga-autocomplete-item-color: theme('colors.primary-content');
 
 
@@ -98,7 +98,7 @@
 
 .o-radio .o-radio__input{
   @apply radio radio-sm radio-primary bg-none;
-  
+
 }
 
 .o-pag__link {
@@ -162,7 +162,7 @@
 }
 
 .o-drop__menu {
-    @apply w-full grow;  
+    @apply w-full grow;
 }
 
 .o-drop .o-tpck__dropdown {
@@ -205,7 +205,7 @@
     font-style: normal;
     font-display: swap;
     src: url('./atwriter.ttf') format('truetype');
-    
+
   }
 
 .typewriter {
@@ -215,7 +215,7 @@
 
 .edit-modal {
     margin: 30px;
-    width: min(600px, 90vw);
+    width: min(900px, 90vw);
 }
 
 .event-modal {
@@ -254,7 +254,7 @@
 .small-cover {
     @apply w-28;
   }
-  
+
 .small-cover img {
   @apply w-28 relative;
 }
@@ -269,7 +269,7 @@
 
 .jelu-bordered {
   @apply border-2 rounded-none border-accent;
-  -webkit-box-shadow: 10px 10px 10px 0px var(--jelu_background); 
+  -webkit-box-shadow: 10px 10px 10px 0px var(--jelu_background);
   box-shadow: 10px 10px 10px 0px var(--jelu_background);
 }
 

@@ -47,8 +47,8 @@ const importData = async () => {
   if (book.value.id != null) {
     progress.value = true
     let saveBook = true
-    // only check if isbn has changed, otherwise we could 
-    // only be editing an already existing book 
+    // only check if isbn has changed, otherwise we could
+    // only be editing an already existing book
     // with an isbn already set. And we don't want to warn in that case
     if (isbnHasChanged()) {
       let alreadyExisting = await dataService.checkIsbnExists(book.value.isbn10, book.value.isbn13)
@@ -211,7 +211,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.title = props.metadata.title != null ? props.metadata.title : ''"
             >
@@ -304,7 +304,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.isbn10 = props.metadata.isbn10"
             >
@@ -341,7 +341,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.isbn13 = props.metadata.isbn13"
             >
@@ -378,7 +378,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.publisher = props.metadata.publisher"
             >
@@ -415,7 +415,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.pageCount = props.metadata.pageCount"
             >
@@ -452,7 +452,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.publishedDate = props.metadata.publishedDate"
             >
@@ -531,7 +531,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.language = props.metadata.language"
             >
@@ -568,7 +568,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.googleId = props.metadata.googleId"
             >
@@ -605,7 +605,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.goodreadsId = props.metadata.goodreadsId"
             >
@@ -642,7 +642,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.amazonId = props.metadata.amazonId"
             >
@@ -667,6 +667,196 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
             >
           </div>
         </div>
+
+        <div class="form-control w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ t('book.librarything_id') }}</span>
+          </label>
+          <input
+            v-model="book.librarythingId"
+            type="text"
+            class="input input-bordered input-primary w-full max-w-xs"
+          >
+        </div>
+        <div class="form-control w-full max-w-xs">
+          <div class="join">
+            <button
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
+              @click="book.librarythingId = props.metadata.librarythingId"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <input
+              type="text"
+              :value="props.metadata.librarythingId"
+              disabled
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+            >
+          </div>
+        </div>
+
+        <div class="form-control w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ t('book.isfdb_id') }}</span>
+          </label>
+          <input
+            v-model="book.isfdbId"
+            type="text"
+            class="input input-bordered input-primary w-full max-w-xs"
+          >
+        </div>
+        <div class="form-control w-full max-w-xs">
+          <div class="join">
+            <button
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
+              @click="book.isfdbId = props.metadata.isfdbId"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <input
+              type="text"
+              :value="props.metadata.isfdbId"
+              disabled
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+            >
+          </div>
+        </div>
+
+        <div class="form-control w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ t('book.openlibrary_id') }}</span>
+          </label>
+          <input
+            v-model="book.openlibraryId"
+            type="text"
+            class="input input-bordered input-primary w-full max-w-xs"
+          >
+        </div>
+        <div class="form-control w-full max-w-xs">
+          <div class="join">
+            <button
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
+              @click="book.openlibraryId = props.metadata.openlibraryId"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <input
+              type="text"
+              :value="props.metadata.openlibraryId"
+              disabled
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+            >
+          </div>
+        </div>
+
+        <div class="form-control w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ t('book.noosfere_id') }}</span>
+          </label>
+          <input
+            v-model="book.noosfereId"
+            type="text"
+            class="input input-bordered input-primary w-full max-w-xs"
+          >
+        </div>
+        <div class="form-control w-full max-w-xs">
+          <div class="join">
+            <button
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
+              @click="book.noosfereId = props.metadata.noosfereId"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <input
+              type="text"
+              :value="props.metadata.noosfereId"
+              disabled
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+            >
+          </div>
+        </div>
+
+        <div class="form-control w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">{{ t('book.inventaire_id') }}</span>
+          </label>
+          <input
+            v-model="book.inventaireId"
+            type="text"
+            class="input input-bordered input-primary w-full max-w-xs"
+          >
+        </div>
+        <div class="form-control w-full max-w-xs">
+          <div class="join">
+            <button
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
+              @click="book.inventaireId = props.metadata.inventaireId"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <input
+              type="text"
+              :value="props.metadata.inventaireId"
+              disabled
+              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+            >
+          </div>
+        </div>
         <div class="form-control w-full max-w-xs">
           <label class="label">
             <span class="label-text">{{ t('book.summary') }}</span>
@@ -678,7 +868,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </div>
         <div class="form-control w-full max-w-xs">
           <div class="join">
-            <button 
+            <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.summary = props.metadata.summary"
             >
