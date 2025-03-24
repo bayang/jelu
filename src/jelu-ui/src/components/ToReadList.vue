@@ -154,14 +154,6 @@ getToRead()
       <div class="field">
         <o-radio
           v-model="sortBy"
-          native-value="series"
-        >
-          {{ t('sorting.series') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
           native-value="pageCount"
         >
           {{ t('sorting.page_count') }}

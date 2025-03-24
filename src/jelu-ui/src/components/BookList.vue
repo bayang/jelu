@@ -98,7 +98,7 @@ const borrowedAsBool = computed(() => {
 
 const getBooks = () => {
   getBookIsLoading.value = true
-  dataService.findUserBookByCriteria(eventTypes.value, null, userId.value, 
+  dataService.findUserBookByCriteria(eventTypes.value, null, userId.value,
   toReadAsBool.value, ownedAsBool.value, borrowedAsBool.value,
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
@@ -119,7 +119,7 @@ const getBooks = () => {
       getBookIsLoading.value = false
       updatePageLoading(false)
     })
-  
+
 };
 
 // watches set above sometimes called twice
@@ -185,14 +185,6 @@ try {
           native-value="publisher"
         >
           {{ t('sorting.publisher') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="series"
-        >
-          {{ t('sorting.series') }}
         </o-radio>
       </div>
       <div class="field">
