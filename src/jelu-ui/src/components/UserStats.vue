@@ -26,7 +26,7 @@ const getYears = () => {
   .catch(e => {
     console.log(e)
   })
-  
+
 }
 
 const getAllStats = () => {
@@ -76,7 +76,7 @@ const getYearStats = () => {
     dataService.monthStatsForYear(currentYear.value)
     .then(res => {
       let labels = res.map(r => r.month).map(m => dayjs(`2020-${m}-1`).format('MMMM'))
-  
+
       const updatedChartData = {
           labels: labels,
           datasets: [
@@ -128,6 +128,7 @@ const yearChartData = ref<ChartData<'bar'>>({
 })
 const chartOptions = ref({
       responsive: true,
+      maintainAspectRatio: true,
       scales : {
         y1: {
           position: 'left'
@@ -145,7 +146,7 @@ const totals: Ref<TotalsStats> = ref({"read": 0, "unread": 0})
 watch(currentYear, (newVal, oldVal) => {
   console.log("year " + newVal + " " + oldVal)
   getYearStats()
-  
+
 })
 
 const loaderFullPage = ref(false)
@@ -157,7 +158,7 @@ totalStats()
 </script>
 
 <template>
-  <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center">
+  <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center w-full">
   <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
       {{ t('stats.total') }}
     </h1>
