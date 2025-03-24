@@ -1,3 +1,17 @@
+## [0.67.0](https://github.com/bayang/jelu/compare/v0.66.3...v0.67.0) (2025-03-24)
+
+
+### Features
+
+* also display dropped count in stats [#202](https://github.com/bayang/jelu/issues/202) ([c3d3360](https://github.com/bayang/jelu/commit/c3d3360bd5db077907f74f01f30771d29cdbdf37))
+
+
+### Bug Fixes
+
+* identifiers could not be filled [#201](https://github.com/bayang/jelu/issues/201) ([834d633](https://github.com/bayang/jelu/commit/834d63369738f2628930358bf6c183b7e41e62a2))
+* remove broken series sort option [#195](https://github.com/bayang/jelu/issues/195) ([c975597](https://github.com/bayang/jelu/commit/c9755978ea93badd34c50f0a72e482b39d4a6ab2))
+* stats tables not displaying on chrome [#203](https://github.com/bayang/jelu/issues/203) ([c409a88](https://github.com/bayang/jelu/commit/c409a88a4af4b645ee0044c9744e0608759ae371))
+
 ### [0.66.3](https://github.com/bayang/jelu/compare/v0.66.2...v0.66.3) (2025-02-26)
 
 
