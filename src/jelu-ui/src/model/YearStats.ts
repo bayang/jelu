@@ -15,5 +15,6 @@ export interface MonthStats {
 
 export interface TotalsStats {
     read: number,
-    unread: number
+    unread: number,
+    dropped: number,
 }

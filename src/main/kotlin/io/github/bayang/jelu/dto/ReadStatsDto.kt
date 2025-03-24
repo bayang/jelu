@@ -18,4 +18,5 @@ data class MonthStatsDto(
 data class TotalsStatsDto(
     val read: Long = 0,
     val unread: Long = 0,
+    val dropped: Long = 0,
 )

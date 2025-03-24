@@ -1540,7 +1540,13 @@ class BookRepository(
             .distinct()
         val resultRow = query.single()
         val readCount = resultRow[UserBookTable.id.countDistinct()]
+        val droppedQuery = UserBookTable.join(ReadingEventTable, JoinType.LEFT, onColumn = UserBookTable.id, otherColumn = ReadingEventTable.userBook)
+            .select(UserBookTable.id.countDistinct())
+            .andWhere { UserBookTable.user eq userId }
+            .andWhere { ReadingEventTable.eventType eq ReadingEventType.DROPPED }
+            .distinct()
+        val droppedCount = droppedQuery.single()[UserBookTable.id.countDistinct()]
         val totalUserBooks = UserBook.count(UserBookTable.user eq userId)
-        return TotalsStatsDto(read = readCount, unread = totalUserBooks - readCount)
+        return TotalsStatsDto(read = readCount, unread = totalUserBooks - readCount, dropped = droppedCount)
     }
 }
