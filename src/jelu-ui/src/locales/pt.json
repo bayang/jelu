@@ -18,7 +18,7 @@
         "shelves": "prateleiras",
         "tags-admin": "gestão de etiquetas",
         "data-admin": "gestão de dados",
-        "activity": "activity"
+        "activity": "atividade"
     },
     "labels": {
         "search": "Pesquisar",
@@ -325,7 +325,7 @@
         "finished": "terminado",
         "dropped": "abandonado",
         "total": "total",
-        "read": "read",
+        "read": "lido",
         "unread": "não lido"
     },
     "history": {
