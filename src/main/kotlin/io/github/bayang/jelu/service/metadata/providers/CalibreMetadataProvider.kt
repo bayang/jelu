@@ -3,6 +3,7 @@ package io.github.bayang.jelu.service.metadata.providers
 import com.ctc.wstx.stax.WstxInputFactory
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.dto.MetadataError
 import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.service.metadata.OpfParser
 import io.github.bayang.jelu.service.metadata.PluginInfoHolder
@@ -137,11 +138,21 @@ class CalibreMetadataProvider(
                 return Optional.of(parseOpf)
             } else {
                 logger.error { "fetch ebookmetadata process exited abnormally with code $exitVal" }
-                return Optional.empty()
+                val dto = MetadataDto()
+                var output: String = process.inputStream.bufferedReader().use(BufferedReader::readText)
+                output += process.errorStream.bufferedReader().use(BufferedReader::readText)
+                dto.errorType = MetadataError.EXIT_CODE_NOT_ZERO
+                dto.pluginErrorMessage = output
+                logger.error { "output from fetch-ebook-metadata process : $output" }
+                return Optional.of(dto)
             }
         } catch (e: Exception) {
             logger.error(e) { "failure while calling fetch-ebook-metadata process" }
-            return Optional.empty()
+            val dto = MetadataDto()
+            dto.errorType = MetadataError.EXCEPTION_CAUGHT
+            dto.pluginErrorMessage = e.message
+            logger.error { "output from fetch-ebook-metadata process : ${e.message}" }
+            return Optional.of(dto)
         }
     }
 
