@@ -49,7 +49,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       && rm -rf /var/lib/apt/lists/* && \
       mkdir -p \
         /opt/calibre && \
-      CALIBRE_VERSION="7.24.0" && \
+      CALIBRE_VERSION="8.4.0" && \
       CALIBRE_URL="https://download.calibre-ebook.com/${CALIBRE_VERSION}/calibre-${CALIBRE_VERSION}-x86_64.txz" && \
       curl -o \
         /tmp/calibre-tarball.txz -L \
@@ -92,7 +92,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       && rm -rf /var/lib/apt/lists/* && \
       mkdir -p \
         /opt/calibre && \
-      CALIBRE_VERSION="7.24.0" && \
+      CALIBRE_VERSION="8.4.0" && \
       CALIBRE_URL="https://download.calibre-ebook.com/${CALIBRE_VERSION}/calibre-${CALIBRE_VERSION}-arm64.txz" && \
       curl -o \
         /tmp/calibre-tarball.txz -L \
