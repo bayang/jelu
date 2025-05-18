@@ -1,0 +1,4 @@
+export enum MetadataError {
+    EXIT_CODE_NOT_ZERO = 'EXIT_CODE_NOT_ZERO',
+    EXCEPTION_CAUGHT = 'EXCEPTION_CAUGHT',
+}
