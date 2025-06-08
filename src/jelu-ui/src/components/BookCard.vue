@@ -135,7 +135,7 @@ watch(checked, (newVal, oldVal) => {
 
 <template>
   <div
-    class="card card-compact bg-base-100 shadow-2xl shadow-base-300"
+    class="card card-sm bg-base-100 shadow-2xl shadow-base-300"
     @dblclick="toggleEdit(book)"
   >
     <div>

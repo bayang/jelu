@@ -171,7 +171,7 @@ const collapseDropdown = () => {
           </label>
           <ul
             tabindex="0"
-            class="menu menu-compact dropdown-content z-[1] mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            class="menu menu-compact dropdown-content z-[1] mt-3 p-2 shadow-sm bg-base-100 rounded-box w-52"
           >
             <li @click="collapseDropdown()">
               <router-link
@@ -474,7 +474,7 @@ const collapseDropdown = () => {
           >
             <ul
               tabindex="0"
-              class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+              class="menu menu-sm dropdown-content mt-3 p-2 shadow-sm bg-base-100 rounded-box w-52"
             >
               <li
                 v-for="shelf in shelves"
@@ -504,7 +504,7 @@ const collapseDropdown = () => {
           </label>
           <ul
             tabindex="0"
-            class="mt-3 p-2 shadow menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-52"
+            class="mt-3 p-2 shadow-sm menu menu-sm dropdown-content z-[1] bg-base-100 rounded-box w-52"
           >
             <li
               v-if="isLogged"

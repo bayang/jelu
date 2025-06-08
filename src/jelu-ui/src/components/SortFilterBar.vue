@@ -53,8 +53,8 @@ watch(shiftF, (v) => {
     @close="emit('update:open', false)"
   >
     <div class="p-5 flex flex-col items-start">
+      <label class="label font-bold">{{ t('sorting.sort_order') }} : </label>
       <div class="field">
-        <label class="label font-bold">{{ t('sorting.sort_order') }} : </label>
         <o-radio
           v-model="sortOrder"
           native-value="desc"

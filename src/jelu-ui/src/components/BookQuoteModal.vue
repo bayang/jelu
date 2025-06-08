@@ -142,7 +142,7 @@ const editBookQuote = () => {
             <input
               v-model="position"
               type="text"
-              class="input input-bordered w-full"
+              class="input w-full"
             >
           </div>
         </div>

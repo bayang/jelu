@@ -303,7 +303,7 @@ function modalClosed() {
     </div>
     <div
       v-if="props.book.summary"
-      class="flex flex-row justify-center mt-4 prose-base dark:prose-invert sm:w-10/12"
+      class="flex flex-row justify-center mt-4 prose prose-base dark:prose-invert sm:w-10/12"
     >
       <div
         v-if="props.book.summary"

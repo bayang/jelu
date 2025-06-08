@@ -26,7 +26,7 @@ const changeView = (viewName: string) => {
   <div class="w-fit sm:w-full flex flex-wrap justify-center gap-3 sm:gap-0 mb-3">
     <div
       role="tablist"
-      class="tabs tabs-boxed tabs-lg"
+      class="tabs tabs-box tabs-lg"
     >
       <a
         role="tab"

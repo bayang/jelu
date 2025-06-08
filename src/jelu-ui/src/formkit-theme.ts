@@ -56,7 +56,7 @@ const textClassification = {
     },
     range: {
       inner: 'max-w-md',
-      input: 'form-range appearance-none w-full h-2 p-0 bg-gray-200 rounded-full focus:outline-none focus:ring-0 focus:shadow-none'
+      input: 'form-range appearance-none w-full h-2 p-0 bg-gray-200 rounded-full focus:outline-hidden focus:ring-0 focus:shadow-none'
     },
     search: textClassification,
     select: textClassification,

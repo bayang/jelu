@@ -1,8 +1,57 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss" important;
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes: all;
+}
 
 @import '@oruga-ui/theme-oruga/dist/oruga.css';
+@theme{
+  
+  --jelu_background: #262429;
+  --jelu_background_accent: #262429;
+  --jelu_background_contrast: #f7f5d1;
+
+  --jelu_text_primary : #ffffff;
+  --jelu_text_secondary : #aaaaaa;
+  --jelu_text_accent : #69ea7d;
+
+  --jelu_test : #69ea7d;
+}
+
+@plugin "daisyui/theme" {
+  name: "jelu";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(0.26 0.0096 303.83);
+  --color-base-200: oklch(0.26 0.0096 303.83);
+  --color-base-300: oklch(0.26 0.0096 303.83);
+  --color-base-content: oklch(1 0 0);
+  --color-primary: oklch(0.96 0.0469 104.63);
+  --color-primary-content: oklch(93% 0.034 272.788);
+  --color-secondary: oklch(0.74 0 0);
+  --color-secondary-content: oklch(94% 0.028 342.258);
+  --color-accent: oklch(0.59 0.0497 77.61);
+  --color-accent-content: oklch(38% 0.063 188.416);
+  --color-neutral: oklch(0.37 0 0);
+  --color-neutral-content: oklch(92% 0.004 286.32);
+  --color-info: #6191c2;
+  --color-info-content: oklch(29% 0.066 243.157);
+  --color-success: oklch(0.76 0.1395 94.78);
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: oklch(0.81 0.1483 68.18);
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(0.71 0.1649 22.15);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 0rem;
+  --radius-field: 0rem;
+  --radius-box: 0rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 0.5px;
+  --depth: 1;
+  --noise: 0;
+}
 
 :root {
   --jelu_background: #262429;
@@ -15,57 +64,60 @@
 
   --jelu_test : #69ea7d;
 
-  --oruga-checkbox-border-color: theme('colors.primary');
-  --oruga-checkbox-active-background-color: theme('colors.primary');
-  --oruga-checkbox-background-color: theme('colors.neutral');
+  --oruga-checkbox-border-color: var(--color-primary);
+  --oruga-checkbox-active-background-color: var(--color-primary);
+  --oruga-checkbox-background-color: var(--color-neutral);
 
-  --oruga-pagination-link-color: theme('colors.neutral');
-  --oruga-pagination-link-border-color: theme('colors.transparent');
+  --oruga-pagination-link-color: var(--color-neutral);
+  --oruga-pagination-link-border-color: var(--color-transparent);
 
-  --oruga-variant-primary: theme('colors.primary');
-  --oruga-variant-success: theme('colors.success');
-  --oruga-variant-danger: theme('colors.error');
-  --oruga-variant-warning: theme('colors.warning');
-  --oruga-variant-info: theme('colors.info');
+  --oruga-variant-primary: var(--color-primary);
+  --oruga-variant-success: var(--color-success);
+  --oruga-variant-danger: var(--color-error);
+  --oruga-variant-warning: var(--color-warning);
+  --oruga-variant-info: var(--color-info);
 
-  --oruga-datepicker-item-selected-background-color: theme('colors.primary');
+  --oruga-datepicker-item-selected-background-color: var(--color-primary);
 
-  --oruga-slider-tick-background: theme('colors.primary');
+  --oruga-slider-tick-background: var(--color-primary);
 
-  --oruga-slider-fill-background: theme('colors.primary');
+  --oruga-slider-fill-background: var(--color-primary);
 
   --oruga-slider-thumb-radius: 100%;
 
-  --oruga-slider-thumb-background: theme('colors.primary');
+  --oruga-slider-thumb-background: var(--color-primary);
   --oruga-slider-thumb-border: 0px solid transparent;
-  --oruga-tooltip-background-color: theme('colors.primary');
-  --oruga-tooltip-color: theme('colors.primary-content');
+  --oruga-tooltip-background-color: var(--color-primary);
+  --oruga-tooltip-color: var(--color-primary-content);
 
-  --oruga-switch-active-background-color: theme('colors.primary');
+  --oruga-switch-active-background-color: var(--color-primary);
 
-  --oruga-modal-content-background-color: theme('colors.base-100');
+  --oruga-modal-content-background-color: var(--color-base-100);
 
   --oruga-modal-content-max-height: calc(100vh - 75px);
 
-  --oruga-steps-marker-color: theme('colors.base-content');
+  --oruga-steps-marker-color: var(--color-base-content);
 
-  --oruga-steps-marker-background: theme('colors.base-100');
+  --oruga-steps-marker-background: var(--color-base-100);
 
-  --oruga-loading-overlay: theme('colors.jelu_overlay');
+  --oruga-loading-overlay: var(--color-jelu_overlay);
 
-  --oruga-taginput-background-color: theme('colors.base-100');
-  --oruga-taginput-border-color: theme('colors.base-100');
-  --oruga-taginput-color: theme('colors.primary');
-  --oruga-taginput-item-background-color: theme('colors.primary');
-  --oruga-taginput-item-color: theme('colors.primary-content');
+  --oruga-taginput-background-color: var(--color-base-100);
+  --oruga-taginput-border-color: var(--color-base-100);
+  --oruga-taginput-color: var(--color-primary);
+  --oruga-taginput-item-background-color: var(--color-primary);
+  --oruga-taginput-item-color: var(--color-primary-content);
 
-  --oruga-autocomplete-item-color: theme('colors.primary-content');
+  --oruga-autocomplete-item-color: var(--color-primary-content);
 
 
-  --vdp-bg-color: theme('colors.base-100');
-  --vdp-text-color: theme('colors.base-content');
+  --vdp-bg-color: var(--color-base-100);
+  --vdp-text-color: var(--color-base-content);
 
 }
+
+@layer components {
+
 
 /* oruga customization with daisyui */
 .input.o-dpck {
@@ -102,15 +154,15 @@
 }
 
 .o-pag__link {
-  @apply btn text-neutral-content !important;
+  @apply btn text-neutral-content!;
 }
 
 .o-pag__link.o-pag__link--current {
-  @apply btn btn-active bg-primary text-primary-content !important;
+  @apply btn btn-active bg-primary text-primary-content!;
 }
 
 .o-pag__ellipsis {
-  @apply btn btn-disabled;
+  @apply p-2;
 }
 
 .o-ctrl-sel {
@@ -125,24 +177,40 @@
   @apply text-base-content;
 }
 
+.o-field.o-field--addons .o-input__wrapper {
+  @apply w-full;
+
+  .o-input {
+    @apply w-full;
+  }
+}
+
+.o-field.o-field--filled .o-input__wrapper .o-input {
+ @apply w-full;
+} 
+
 .o-input.o-inputit__input {
   @apply w-fit sm:w-full bg-base-100 text-base-content focus:input-accent;
 }
 
 .o-input__wrapper {
-    @apply w-full items-center ;
+    @apply flex;
 }
 
 .o-input__wrapper .o-input {
-    @apply w-full focus:input-accent bg-white;
+    @apply focus:input-accent bg-white w-full;
 }
 
 .o-icon.o-input__icon-left {
-    @apply text-base-content;
+    @apply text-accent-content;
+}
+
+.o-icon.o-input__icon-right {
+    @apply text-accent-content;
 }
 
 .o-steps__title {
-  @apply bg-base-100 text-base-content !important;
+  @apply bg-base-100 text-base-content!;
 }
 
 .o-icon.o-icon--spin.o-icon--medium.o-load__icon {
@@ -158,7 +226,7 @@
 }
 
 .o-acp {
-    @apply grow !important;
+    @apply grow!;
 }
 
 .o-drop__menu {
@@ -188,7 +256,7 @@
 }
 
 .swal2-container .swal2-popup.swal2-modal {
-  @apply bg-base-300 text-base-content text-lg font-semibold !important;
+  @apply bg-base-300 text-base-content text-lg font-semibold!;
 }
 
 .bar {
@@ -277,19 +345,19 @@
 /* dashboard sidebar customizing */
 
 .sidebar {
-  @apply h-fit !important;
+  @apply h-fit!;
 }
 
 .sidebar-header {
-  @apply bg-base-100 text-base-content !important;
+  @apply bg-base-100 text-base-content!;
 }
 
 .sidebar-content {
-   @apply bg-base-100 !important;
+   @apply bg-base-100!;
 }
 
 .sidebar-content ul li a {
-  @apply bg-base-100 rounded-lg text-base-content hover:bg-accent/50 !important;
+  @apply bg-base-100 rounded-lg text-base-content hover:bg-accent/50!;
 }
 
 .sidebar-content ul li span {
@@ -297,13 +365,16 @@
 }
 /* end dashboard sidebar */
 
+.o-taginput__item {
+  @apply items-center;
+}
 
 .jelu-authorinput .o-taginput__item {
-  @apply bg-success rounded items-center mx-1;
+  @apply bg-success rounded-sm mx-1;
 }
 
 .jelu-taginput .o-taginput__item {
-  @apply bg-warning rounded text-warning-content items-center mx-1;
+  @apply bg-warning rounded-sm text-warning-content mx-1;
 }
 
 [data-theme="jelu"] .card {
@@ -322,11 +393,19 @@
     @apply bg-base-100;
 }
 
-[data-theme="jelu"] .card.card-compact {
+[data-theme="jelu"] .btn.btn-primary {
+    @apply text-accent-content;
+}
+
+[data-theme="jelu"] .o-taginput__item {
+    @apply text-accent-content;
+}
+
+[data-theme="jelu"] .card.card-sm {
   @apply rounded-none;
 }
 
-.card.card-compact {
+.card.card-sm {
   @apply rounded;
 }
 
@@ -355,7 +434,7 @@
   position: absolute;
   left: 8px;
   width: 16px;
-  background: theme('colors.accent');
+  /* background: var(--color-accent); */
   animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 }
 .lds-facebook div:nth-child(1) {
@@ -384,21 +463,22 @@
 
 /* clear button positioning from https://github.com/icehaunter/vue3-datepicker  */
 .v3dp__clearable {
-  left: -25px !important;
-  top: 5px !important;
+  left: -25px!;
+  top: 5px!;
 }
 /* end clear button */
 
 /* vue markdown editor textarea color */
 .v-md-textarea-editor pre, .v-md-textarea-editor textarea {
-  @apply text-base-content !important;
+  @apply text-base-content!;
 }
 /* end vue markdown editor */
 
 .jelu-cursor-text {
-  @apply cursor-text !important;
+  @apply cursor-text!;
 }
 
 .jl-formkit .o-input {
   @apply w-fit sm:w-full bg-base-100 text-base-content border-primary focus:input-accent;
+}
 }

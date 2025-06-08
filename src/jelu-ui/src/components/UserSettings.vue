@@ -47,6 +47,12 @@ const themes = [
         "night",
         "coffee",
         "winter",
+        "dim",
+        "nord",
+        "sunset",
+        "caramellatte",
+        "abyss",
+        "silk",
       ];
 
 onMounted(() => {
@@ -63,7 +69,7 @@ watch(() => locale.value,(newValue, oldValue) => {
 </script>
 
 <template>
-  <div class="w-fit form-control">
+  <div class="w-fit flex flex-col">
     <label class="label">
       <span class="label-text text-lg">
         <svg
@@ -101,8 +107,6 @@ watch(() => locale.value,(newValue, oldValue) => {
     <label class="label">
       <span class="label-text-alt font-bold">{{ t('settings.theme_warning') }}</span>
     </label>
-  </div>
-  <div class="w-fit form-control">
     <label class="label">
       <span class="label-text text-lg">
         <svg

@@ -309,7 +309,7 @@ getBooks()
           <span class="font-semibold">{{ t('author.biography') }} :</span>
         </p>
         <p
-          class="prose-base"
+          class="prose prose-base"
           v-html="author.biography"
         />
         <p
@@ -332,7 +332,7 @@ getBooks()
           <span class="font-semibold">{{ t('author.additional_notes') }} :</span>
         </p>
         <p
-          class="prose-base"
+          class="prose prose-base"
           v-html="author.notes"
         />
       </div>

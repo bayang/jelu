@@ -206,7 +206,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.title"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -232,7 +232,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.title"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -299,7 +299,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.isbn10"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -325,7 +325,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.isbn10"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -336,7 +336,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.isbn13"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -362,7 +362,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.isbn13"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -373,7 +373,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.publisher"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -399,7 +399,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.publisher"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -410,7 +410,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.pageCount"
             type="number"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -436,7 +436,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.pageCount"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -447,7 +447,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.publishedDate"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -473,7 +473,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.publishedDate"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -526,7 +526,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.language"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -552,7 +552,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.language"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -563,7 +563,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.googleId"
             type="text"
-            class="jelu-cursor-text input input-bordered input-primary w-full max-w-xs"
+            class="jelu-cursor-text input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -589,7 +589,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.googleId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -600,7 +600,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.goodreadsId"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -626,7 +626,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.goodreadsId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -637,7 +637,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.amazonId"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -663,7 +663,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.amazonId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -675,7 +675,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.librarythingId"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -701,7 +701,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.librarythingId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -713,7 +713,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.isfdbId"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -739,7 +739,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.isfdbId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -751,7 +751,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.openlibraryId"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -777,7 +777,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.openlibraryId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -789,7 +789,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.noosfereId"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -815,7 +815,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.noosfereId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -827,7 +827,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           <input
             v-model="book.inventaireId"
             type="text"
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input  input-primary w-full max-w-xs"
           >
         </div>
         <div class="form-control w-full max-w-xs">
@@ -853,7 +853,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.inventaireId"
               disabled
-              class="jelu-cursor-text input input-bordered input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
             >
           </div>
         </div>
@@ -863,7 +863,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
           </label>
           <textarea
             v-model="book.summary"
-            class="textarea textarea-bordered textarea-primary w-full max-w-xs"
+            class="textarea textarea-primary w-full max-w-xs"
           />
         </div>
         <div class="form-control w-full max-w-xs">
@@ -888,7 +888,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
             <textarea
               :value="props.metadata.summary"
               disabled
-              class="jelu-cursor-text textarea textarea-bordered textarea-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text textarea textarea-secondary w-full max-w-xs join-item"
             />
           </div>
         </div>

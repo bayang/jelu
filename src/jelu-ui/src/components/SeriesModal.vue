@@ -116,7 +116,7 @@ const submit = () => {
             <input
               v-model="seriesName"
               type="text"
-              class="input input-bordered w-full"
+              class="input w-full"
             >
           </div>
         </div>

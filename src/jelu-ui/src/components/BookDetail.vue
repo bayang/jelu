@@ -545,7 +545,7 @@ getBook()
   <div class="grid grid-cols-1 justify-center justify-items-center">
     <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12">
       <div />
-      <div>
+      <div class="grow">
         <h3 class="typewriter text-3xl">
           {{ book?.book?.title }}
         </h3>
@@ -615,7 +615,7 @@ getBook()
           </label>
           <ul
             tabindex="0"
-            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+            class="dropdown-content menu p-2 shadow-sm bg-base-100 rounded-box w-52"
           >
             <li>
               <button
@@ -860,7 +860,7 @@ getBook()
     </div>
     <div
       v-if="book?.book?.summary"
-      class="flex flex-row justify-center mt-4 prose-base dark:prose-invert sm:w-10/12"
+      class="flex flex-row justify-center mt-4 prose prose-base dark:prose-invert sm:w-10/12"
     >
       <div
         v-if="book?.book?.summary"

@@ -118,8 +118,8 @@ getToRead()
     @update:sort-order="sortOrderUpdated"
   >
     <template #sort-fields>
+      <label class="label">{{ t('sorting.sort_by') }} : </label>
       <div class="field">
-        <label class="label">{{ t('sorting.sort_by') }} : </label>
         <o-radio
           v-model="sortBy"
           native-value="creationDate"

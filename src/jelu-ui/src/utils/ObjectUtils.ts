@@ -6,9 +6,11 @@ export class ObjectUtils {
   // from https://javascript.plainenglish.io/deep-clone-an-object-and-preserve-its-type-with-typescript-d488c35e5574
   public static deepCopy<T>(source: T): T {
     return Array.isArray(source)
-      ? source.map(item => this.deepCopy(item))
-      : source instanceof Date
-        ? new Date(source.getTime())
+    //@ts-ignore
+    ? source.map(item => this.deepCopy(item))
+    : source instanceof Date
+    //@ts-ignore
+    ? new Date(source.getTime())
         : source && typeof source === 'object'
           ? Object.getOwnPropertyNames(source).reduce((o, prop) => {
             Object.defineProperty(o, prop, Object.getOwnPropertyDescriptor(source, prop)!);
@@ -78,9 +80,9 @@ export class ObjectUtils {
       popup: 'p-2 shadow-lg sm:p-3 bg-red-600',
       title: 'ml-4 truncate',
       input: 'bg-white text-center',
-      confirmButton: 'btn btn-warning font-bold border-b-4 rounded mx-1',
-      cancelButton: 'btn btn-info font-bold border-b-4 rounded mx-1',
-      denyButton: 'btn btn-error font-bold rounded mx-1'
+      confirmButton: 'btn btn-warning font-bold border-b-4 rounded-sm mx-1',
+      cancelButton: 'btn btn-info font-bold border-b-4 rounded-sm mx-1',
+      denyButton: 'btn btn-error font-bold rounded-sm mx-1'
     }
   })
 
