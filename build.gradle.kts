@@ -141,12 +141,12 @@ tasks.register<JavaExec>("unpack") {
 node {
     nodeProjectDir.set(file("${project.projectDir}/src/jelu-ui"))
     version.set("18.18.2")
+    npmInstallCommand.set("ci")
     download.set(true)
 }
 
 val buildTaskUsingNpm = tasks.register<NpmTask>("npmBuild") {
-    dependsOn(tasks.npmInstall)
-    npmCommand.set(listOf("run", "build"))
+    npmCommand.set(listOf("run", "install-build"))
     args.set(listOf("--", "--out-dir", "${layout.buildDirectory.get()}/npm-output"))
     inputs.dir("src")
     outputs.dir("${layout.buildDirectory.get()}/npm-output")

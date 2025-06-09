@@ -6,7 +6,8 @@
     "dev": "vite --debug",
     "build": "vite build",
     "serve": "vite preview --debug",
-    "tsc": "vue-tsc --noEmit"
+    "tsc": "vue-tsc --noEmit",
+    "install-build": "npm ci --force && vite build"
   },
   "dependencies": {
     "@formkit/i18n": "1.6.9",
