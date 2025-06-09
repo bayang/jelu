@@ -5,12 +5,6 @@ WORKDIR app
 ARG TARGETPLATFORM
 ENV TARGETPLATFORM=${TARGETPLATFORM:-linux/amd64}
 
-ARG DEPENDENCY=build/dependency
-COPY ${DEPENDENCY}/dependencies/ ./
-COPY ${DEPENDENCY}/spring-boot-loader/ ./
-COPY ${DEPENDENCY}/snapshot-dependencies/ ./
-COPY ${DEPENDENCY}/application/ ./
-
 ENV JELU_DATABASE_PATH="/database/"
 ENV JELU_FILES_IMAGES="/files/images/"
 ENV JELU_FILES_IMPORTS="/files/imports/"
@@ -49,7 +43,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       && rm -rf /var/lib/apt/lists/* && \
       mkdir -p \
         /opt/calibre && \
-      CALIBRE_VERSION="7.24.0" && \
+      CALIBRE_VERSION="8.4.0" && \
       CALIBRE_URL="https://download.calibre-ebook.com/${CALIBRE_VERSION}/calibre-${CALIBRE_VERSION}-x86_64.txz" && \
       curl -o \
         /tmp/calibre-tarball.txz -L \
@@ -92,7 +86,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       && rm -rf /var/lib/apt/lists/* && \
       mkdir -p \
         /opt/calibre && \
-      CALIBRE_VERSION="7.24.0" && \
+      CALIBRE_VERSION="8.4.0" && \
       CALIBRE_URL="https://download.calibre-ebook.com/${CALIBRE_VERSION}/calibre-${CALIBRE_VERSION}-arm64.txz" && \
       curl -o \
         /tmp/calibre-tarball.txz -L \
@@ -110,6 +104,12 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
           && calibre-customize --add-plugin goodreads.zip \
           && rm goodreads.zip; \
   fi
+
+ARG DEPENDENCY=build/dependency
+COPY ${DEPENDENCY}/dependencies/ ./
+COPY ${DEPENDENCY}/spring-boot-loader/ ./
+COPY ${DEPENDENCY}/snapshot-dependencies/ ./
+COPY ${DEPENDENCY}/application/ ./
 
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher", "--spring.config.additional-location=optional:file:/config/"]
 EXPOSE 11111
