@@ -1,3 +1,16 @@
+## [0.68.0](https://github.com/bayang/jelu/compare/v0.67.0...v0.68.0) (2025-06-09)
+
+
+### Features
+
+* migrate to tailwind 4 and daisy ui 5 ([3c05afd](https://github.com/bayang/jelu/commit/3c05afd863a519be31dd68cfabf6606c49b6a777))
+* Update Calibre Version ([#208](https://github.com/bayang/jelu/issues/208)) ([ef6648f](https://github.com/bayang/jelu/commit/ef6648f30be453a74baf6a302e819b2d760ea6aa))
+
+
+### Bug Fixes
+
+* frontend build ([91e0161](https://github.com/bayang/jelu/commit/91e0161729246fbc147ccf7180613a3d9037cfb6))
+
 ## [0.67.0](https://github.com/bayang/jelu/compare/v0.66.3...v0.67.0) (2025-03-24)
 
 
