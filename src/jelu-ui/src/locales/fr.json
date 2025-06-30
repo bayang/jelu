@@ -388,9 +388,9 @@
     },
     "errors": {
         "metadata": {
-            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
-            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+            "EXIT_CODE_NOT_ZERO": "le plugin de métadonnées s'est terminé anormalement",
+            "EXCEPTION_CAUGHT": "une exception a été interceptée lors de l'appel au plugin de métadonnées"
         },
-        "details": "error details"
+        "details": "Détail de l'erreur"
     }
 }
