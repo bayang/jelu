@@ -18,10 +18,22 @@ import java.util.Optional
 
 private val logger = KotlinLogging.logger {}
 
+// Add this interface for dependency injection
+interface ProcessBuilderFactory {
+    fun createProcessBuilder(): ProcessBuilder
+}
+
+// Add this implementation for production use
+@Service
+class DefaultProcessBuilderFactory : ProcessBuilderFactory {
+    override fun createProcessBuilder(): ProcessBuilder = ProcessBuilder()
+}
+
 @Service
 class CalibreMetadataProvider(
     private val properties: JeluProperties,
     private val opfParser: OpfParser,
+    private val processBuilderFactory: ProcessBuilderFactory = DefaultProcessBuilderFactory(),
 ) : IMetaDataProvider {
 
     companion object {
@@ -106,7 +118,7 @@ class CalibreMetadataProvider(
             commandArray.add("-c")
             commandArray.add(targetCover.absolutePath)
         }
-        val builder = ProcessBuilder()
+        val builder = processBuilderFactory.createProcessBuilder()
         logger.trace { "fetch metadata command : $commandArray" }
         builder.command(commandArray)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
