@@ -1,17 +1,327 @@
 package io.github.bayang.jelu.service.metadata.providers
 
+import io.github.bayang.jelu.config.JeluProperties
+import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.dto.MetadataError
+import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.service.metadata.OpfParser
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.TestPropertySource
+import java.io.ByteArrayInputStream
 import java.io.File
+import java.io.IOException
 
 @SpringBootTest
+@TestPropertySource(
+    properties =
+    [
+        "jelu.metadata.calibre.path=/fake/calibre/path",
+        "jelu.metadata.calibre.timeout=30",
+        "jelu.files.images=/tmp/test-images",
+    ],
+)
 class CalibreMetadataProviderTest(
-    @Autowired private val calibreMetadataProvider: CalibreMetadataProvider,
     @Autowired private val opfParser: OpfParser,
 ) {
+
+    private lateinit var calibreMetadataProvider: CalibreMetadataProvider
+    private lateinit var jeluProperties: JeluProperties
+    private lateinit var processBuilderFactory: ProcessBuilderFactory
+
+    @BeforeEach
+    fun setUp() {
+        // opfParser = mockk<OpfParser>()
+        jeluProperties = mockk<JeluProperties>()
+        processBuilderFactory = mockk<ProcessBuilderFactory>()
+
+        val calibreConfig = mockk<JeluProperties.Calibre>()
+        every { calibreConfig.path } returns "/fake/calibre/path"
+        every { calibreConfig.timeout } returns 30
+
+        val metadataConfig = mockk<JeluProperties.Metadata>()
+        every { metadataConfig.calibre } returns calibreConfig
+
+        val filesConfig = mockk<JeluProperties.Files>()
+        every { filesConfig.images } returns "/tmp/test-images"
+
+        every { jeluProperties.metadata } returns metadataConfig
+        every { jeluProperties.files } returns filesConfig
+
+        calibreMetadataProvider =
+            CalibreMetadataProvider(jeluProperties, opfParser, processBuilderFactory)
+    }
+
+    private fun createBasicXmlOutput(
+        title: String = "The Fellowship of the Ring",
+        author: String = "J. R. R. Tolkien",
+        identifierScheme: String = "ISBN",
+        identifier: String = "9780547928210",
+    ): String {
+        return """<?xml version='1.0' encoding='utf-8'?>
+            <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+                <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+                    <dc:title>$title</dc:title>
+                    <dc:creator opf:role="aut">$author</dc:creator>
+                    <dc:identifier opf:scheme="$identifierScheme">$identifier</dc:identifier>
+                </metadata>
+            </package>"""
+    }
+
+    @Test
+    fun testFetchMetadataWithEmptyRequest() {
+        // Test that empty request returns Optional.empty()
+        val metadataRequest = MetadataRequestDto()
+        val config = mapOf<String, String>()
+
+        val result = calibreMetadataProvider.fetchMetadata(metadataRequest, config)
+
+        Assertions.assertFalse(result.isPresent)
+    }
+
+    @Test
+    fun testFetchMetadataWithExitCodeNotZero() {
+        // Mock ProcessBuilder and Process to simulate non-zero exit code
+        val mockProcess = mockk<Process>()
+        val mockProcessBuilder = mockk<ProcessBuilder>()
+
+        // Mock process output streams
+        val errorOutput = "Error: No metadata found for ISBN 9780547928210"
+        val errorStream = ByteArrayInputStream(errorOutput.toByteArray())
+        val outputStream = ByteArrayInputStream("".toByteArray())
+
+        every { mockProcess.inputStream } returns outputStream
+        every { mockProcess.errorStream } returns errorStream
+        every { mockProcess.waitFor() } returns 1
+
+        every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
+        every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
+            mockProcessBuilder
+        every { mockProcessBuilder.start() } returns mockProcess
+
+        // Mock the factory instead of static ProcessBuilder
+        every { processBuilderFactory.createProcessBuilder() } returns mockProcessBuilder
+
+        val metadataRequest = MetadataRequestDto(isbn = "9780547928210")
+        val config = mapOf<String, String>()
+
+        val result = calibreMetadataProvider.fetchMetadata(metadataRequest, config)
+
+        Assertions.assertTrue(result.isPresent)
+        val metadataDto = result.get()
+        Assertions.assertEquals(MetadataError.EXIT_CODE_NOT_ZERO, metadataDto.errorType)
+        Assertions.assertEquals(errorOutput, metadataDto.pluginErrorMessage)
+        Assertions.assertNull(metadataDto.title)
+        Assertions.assertTrue(metadataDto.authors.isEmpty())
+    }
+
+    @Test
+    fun testFetchMetadataWithExceptionCaught() {
+        // Mock ProcessBuilder to throw exception
+        val mockProcessBuilder = mockk<ProcessBuilder>()
+        val exceptionMessage = "No such file or directory"
+
+        every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
+        every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
+            mockProcessBuilder
+        every { mockProcessBuilder.start() } throws IOException(exceptionMessage)
+
+        // Mock the factory instead of static ProcessBuilder
+        every { processBuilderFactory.createProcessBuilder() } returns mockProcessBuilder
+
+        val metadataRequest = MetadataRequestDto(isbn = "9780547928210")
+        val config = mapOf<String, String>()
+
+        val result = calibreMetadataProvider.fetchMetadata(metadataRequest, config)
+
+        Assertions.assertTrue(result.isPresent)
+        val metadataDto = result.get()
+        Assertions.assertEquals(MetadataError.EXCEPTION_CAUGHT, metadataDto.errorType)
+        Assertions.assertEquals(exceptionMessage, metadataDto.pluginErrorMessage)
+        Assertions.assertNull(metadataDto.title)
+        Assertions.assertTrue(metadataDto.authors.isEmpty())
+    }
+
+    @Test
+    fun testFetchMetadataWithSuccessfulProcess() {
+        // Mock ProcessBuilder and Process to simulate successful execution
+        mockkStatic(ProcessBuilder::class)
+
+        val mockProcess = mockk<Process>()
+        val mockProcessBuilder = mockk<ProcessBuilder>()
+
+        // Mock successful XML output
+        val xmlOutput = createBasicXmlOutput()
+
+        val outputStream = ByteArrayInputStream(xmlOutput.toByteArray())
+
+        every { mockProcess.inputStream } returns outputStream
+        every { mockProcess.waitFor() } returns 0
+
+        every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
+        every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
+            mockProcessBuilder
+        every { mockProcessBuilder.start() } returns mockProcess
+
+        // Mock the factory instead of static ProcessBuilder
+        every { processBuilderFactory.createProcessBuilder() } returns mockProcessBuilder
+
+        val metadataRequest = MetadataRequestDto(isbn = "9780547928210")
+        val config = mapOf<String, String>()
+
+        val result = calibreMetadataProvider.fetchMetadata(metadataRequest, config)
+
+        Assertions.assertTrue(result.isPresent)
+        val metadataDto = result.get()
+        Assertions.assertNull(metadataDto.errorType)
+        Assertions.assertNull(metadataDto.pluginErrorMessage)
+        Assertions.assertEquals("The Fellowship of the Ring", metadataDto.title)
+        Assertions.assertEquals("9780547928210", metadataDto.isbn13)
+        Assertions.assertEquals(1, metadataDto.authors.size)
+        Assertions.assertEquals("J. R. R. Tolkien", metadataDto.authors.first())
+
+        unmockkStatic(ProcessBuilder::class)
+    }
+
+    @Test
+    fun testFetchMetadataWithASIN() {
+        // Test ASIN handling logic
+        mockkStatic(ProcessBuilder::class)
+
+        val mockProcess = mockk<Process>()
+        val mockProcessBuilder = mockk<ProcessBuilder>()
+
+        // Mock successful XML output for ASIN
+        val xmlOutput =
+            createBasicXmlOutput(
+                author = "J. R. R. Tolkien",
+                identifierScheme = "AMAZON",
+                identifier = "B007978NPG",
+            )
+
+        val outputStream = ByteArrayInputStream(xmlOutput.toByteArray())
+
+        every { mockProcess.inputStream } returns outputStream
+        every { mockProcess.waitFor() } returns 0
+
+        every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
+        every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
+            mockProcessBuilder
+        every { mockProcessBuilder.start() } returns mockProcess
+
+        // Mock the factory instead of static ProcessBuilder
+        every { processBuilderFactory.createProcessBuilder() } returns mockProcessBuilder
+
+        val metadataRequest = MetadataRequestDto(isbn = "B007978NPG") // ASIN
+        val config = mapOf<String, String>()
+
+        val result = calibreMetadataProvider.fetchMetadata(metadataRequest, config)
+
+        // Verify the result is present and contains expected metadata
+        Assertions.assertTrue(result.isPresent)
+        val metadataDto = result.get()
+        Assertions.assertNull(metadataDto.errorType)
+        Assertions.assertNull(metadataDto.pluginErrorMessage)
+        Assertions.assertEquals("The Fellowship of the Ring", metadataDto.title)
+        Assertions.assertEquals("B007978NPG", metadataDto.amazonId)
+        Assertions.assertEquals(1, metadataDto.authors.size)
+        Assertions.assertEquals("J. R. R. Tolkien", metadataDto.authors.first())
+
+        unmockkStatic(ProcessBuilder::class)
+    }
+
+    @Test
+    fun testFetchMetadataWithOnlyUseCorePlugins() {
+        // Test onlyUseCorePlugins configuration
+        mockkStatic(ProcessBuilder::class)
+
+        val mockProcess = mockk<Process>()
+        val mockProcessBuilder = mockk<ProcessBuilder>()
+
+        // Mock successful XML output
+        val xmlOutput = createBasicXmlOutput()
+
+        val outputStream = ByteArrayInputStream(xmlOutput.toByteArray())
+
+        every { mockProcess.inputStream } returns outputStream
+        every { mockProcess.waitFor() } returns 0
+
+        every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
+        every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
+            mockProcessBuilder
+        every { mockProcessBuilder.start() } returns mockProcess
+
+        // Mock the factory instead of static ProcessBuilder
+        every { processBuilderFactory.createProcessBuilder() } returns mockProcessBuilder
+
+        val metadataRequest = MetadataRequestDto(isbn = "9780547928210")
+        val config = mapOf("onlyUseCorePlugins" to "true")
+
+        val result = calibreMetadataProvider.fetchMetadata(metadataRequest, config)
+
+        // Verify the result is present and contains expected metadata
+        Assertions.assertTrue(result.isPresent)
+        val metadataDto = result.get()
+        Assertions.assertNull(metadataDto.errorType)
+        Assertions.assertNull(metadataDto.pluginErrorMessage)
+        Assertions.assertEquals("The Fellowship of the Ring", metadataDto.title)
+        Assertions.assertEquals("9780547928210", metadataDto.isbn13)
+        Assertions.assertEquals(1, metadataDto.authors.size)
+        Assertions.assertEquals("J. R. R. Tolkien", metadataDto.authors.first())
+
+        unmockkStatic(ProcessBuilder::class)
+    }
+
+    @Test
+    fun testFetchMetadataWithFetchCoverDisabled() {
+        // Test fetchCover configuration
+        mockkStatic(ProcessBuilder::class)
+
+        val mockProcess = mockk<Process>()
+        val mockProcessBuilder = mockk<ProcessBuilder>()
+
+        // Mock successful XML output
+        val xmlOutput = createBasicXmlOutput()
+
+        val outputStream = ByteArrayInputStream(xmlOutput.toByteArray())
+
+        every { mockProcess.inputStream } returns outputStream
+        every { mockProcess.waitFor() } returns 0
+
+        every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
+        every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
+            mockProcessBuilder
+        every { mockProcessBuilder.start() } returns mockProcess
+
+        // Mock the factory instead of static ProcessBuilder
+        every { processBuilderFactory.createProcessBuilder() } returns mockProcessBuilder
+
+        val metadataRequest = MetadataRequestDto(isbn = "9780547928210")
+        val config = mapOf("fetchCover" to "false")
+
+        val result = calibreMetadataProvider.fetchMetadata(metadataRequest, config)
+
+        // Verify the result is present and contains expected metadata
+        Assertions.assertTrue(result.isPresent)
+        val metadataDto = result.get()
+        Assertions.assertNull(metadataDto.errorType)
+        Assertions.assertNull(metadataDto.pluginErrorMessage)
+        Assertions.assertEquals("The Fellowship of the Ring", metadataDto.title)
+        Assertions.assertEquals("9780547928210", metadataDto.isbn13)
+        Assertions.assertEquals(1, metadataDto.authors.size)
+        Assertions.assertEquals("J. R. R. Tolkien", metadataDto.authors.first())
+        // When fetchCover is disabled, the image field should be null or empty
+        Assertions.assertNull(metadataDto.image)
+
+        unmockkStatic(ProcessBuilder::class)
+    }
 
     @Test
     fun testParseOpf() {
@@ -163,5 +473,63 @@ class CalibreMetadataProviderTest(
         val dashedResultingCodeType = calibreMetadataProvider.determineCodeType(dashedInput)
         Assertions.assertEquals("ISBN-13", plainResultingCodeType)
         Assertions.assertEquals("ISBN-13", dashedResultingCodeType)
+    }
+
+    @Test
+    fun testMetadataErrorEnumValues() {
+        // Test that MetadataError enum contains the expected values
+        Assertions.assertEquals("EXIT_CODE_NOT_ZERO", MetadataError.EXIT_CODE_NOT_ZERO.name)
+        Assertions.assertEquals("EXCEPTION_CAUGHT", MetadataError.EXCEPTION_CAUGHT.name)
+
+        // Test that we can create MetadataDto with these error types
+        val exitCodeDto = MetadataDto()
+        exitCodeDto.errorType = MetadataError.EXIT_CODE_NOT_ZERO
+        Assertions.assertEquals(MetadataError.EXIT_CODE_NOT_ZERO, exitCodeDto.errorType)
+
+        val exceptionDto = MetadataDto()
+        exceptionDto.errorType = MetadataError.EXCEPTION_CAUGHT
+        Assertions.assertEquals(MetadataError.EXCEPTION_CAUGHT, exceptionDto.errorType)
+    }
+
+    @Test
+    fun testMetadataDtoErrorFields() {
+        // Test that MetadataDto can properly hold error information
+        val dto = MetadataDto()
+
+        // Test setting and getting error type
+        dto.errorType = MetadataError.EXIT_CODE_NOT_ZERO
+        Assertions.assertEquals(MetadataError.EXIT_CODE_NOT_ZERO, dto.errorType)
+
+        // Test setting and getting plugin error message
+        dto.pluginErrorMessage = "Test error message"
+        Assertions.assertEquals("Test error message", dto.pluginErrorMessage)
+
+        // Test that other fields remain null when error is set
+        Assertions.assertNull(dto.title)
+        Assertions.assertNull(dto.isbn13)
+        Assertions.assertTrue(dto.authors.isEmpty())
+    }
+
+    @Test
+    fun testMetadataDtoWithBothErrorAndData() {
+        // Test that MetadataDto can hold both error information and partial data
+        val dto = MetadataDto()
+
+        // Set some metadata
+        dto.title = "Test Book"
+        dto.isbn13 = "9780547928210"
+        dto.authors.add("Test Author")
+
+        // Set error information
+        dto.errorType = MetadataError.EXCEPTION_CAUGHT
+        dto.pluginErrorMessage = "Partial data retrieved before error occurred"
+
+        // Verify both data and error information are preserved
+        Assertions.assertEquals("Test Book", dto.title)
+        Assertions.assertEquals("9780547928210", dto.isbn13)
+        Assertions.assertEquals(1, dto.authors.size)
+        Assertions.assertEquals("Test Author", dto.authors.first())
+        Assertions.assertEquals(MetadataError.EXCEPTION_CAUGHT, dto.errorType)
+        Assertions.assertEquals("Partial data retrieved before error occurred", dto.pluginErrorMessage)
     }
 }

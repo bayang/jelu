@@ -22,6 +22,8 @@ data class MetadataDto(
     var openlibraryId: String? = null,
     var inventaireId: String? = null,
     var noosfereId: String? = null,
+    var errorType: MetadataError? = null,
+    var pluginErrorMessage: String? = null,
 )
 data class MetadataRequestDto(
     val isbn: String? = null,
