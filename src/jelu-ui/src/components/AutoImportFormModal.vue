@@ -75,6 +75,10 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
 || StringUtils.isNotBlank(form.isbn)
 || StringUtils.isNotBlank(form.authors))
 
+const formattedErrorMessage = computed(() => {
+  return metadata.value?.pluginErrorMessage?.replace(/\n/g, '<br>') || ''
+})
+
 let barcodeReader: any = null
 
 function toggleScanModal() {
@@ -262,8 +266,30 @@ function pluginsModalClosed() {
     <div 
       class="flex flex-col items-center"
     >
+      <div
+        v-if="metadata != null && metadata.errorType != undefined"
+      >
+        <p class="text-error">
+          {{ t('errors.metadata.' + metadata.errorType) }}
+        </p>
+        <div class="collapse">
+          <input type="checkbox" />
+          <div class="collapse-title text-xl font-medium capitalize">
+            {{ t('errors.details') }}
+          </div>
+          <blockquote
+            v-if="formattedErrorMessage"
+            class="collapse-content"
+          >
+            <p
+              v-html="formattedErrorMessage"
+              class="whitespace-pre-line text-error"
+            />
+          </blockquote>
+        </div>
+      </div>
       <MetadataDetail
-        v-if="metadata != null"
+        v-else-if="metadata != null"
         :metadata="metadata"
       />
       <div
