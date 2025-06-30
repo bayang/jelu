@@ -1,3 +1,10 @@
+## [0.69.0](https://github.com/bayang/jelu/compare/v0.68.0...v0.69.0) (2025-06-30)
+
+
+### Features
+
+* add error message to AutoImportFormModal ([#209](https://github.com/bayang/jelu/issues/209)) ([a74d557](https://github.com/bayang/jelu/commit/a74d557291a216c7cb24ad9cf5629bb5f1f9310f))
+
 ## [0.68.0](https://github.com/bayang/jelu/compare/v0.67.0...v0.68.0) (2025-06-09)
 
 
