@@ -391,6 +391,6 @@
             "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
             "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
         },
-        "details": "error details"
+        "details": "details van fout"
     }
 }
