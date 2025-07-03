@@ -15,6 +15,9 @@ jelu:
       is-enabled: false
       order: 200000
       config: "fr"
+    - name: "databazeknih"
+      is-enabled: false
+      order: 200001
   metadata:
     calibre:
       path: /usr/bin/fetch-ebook-metadata
