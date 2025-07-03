@@ -25,11 +25,27 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             !metadataRequestDto.title.isNullOrBlank() -> metadataRequestDto.title!!
             else -> return Optional.empty()
         }
-        val result = searchDatabazeKnih(query)
+        val (result, sid) = searchDatabazeKnih(query)
+        // If we have a SID, try to fetch extra ISBN info
+        if (sid != null) {
+            fetchIsbnFromDetailPage(sid)?.let { isbn ->
+                // Prefer new ISBN if DTO doesn't already have one
+                if (result != null && (result.isbn10.isNullOrBlank() && result.isbn13.isNullOrBlank())) {
+                    if (isbn.length == 10) {
+                        result.isbn10 = isbn
+                    } else if (isbn.length == 13) {
+                        result.isbn13 = isbn
+                    }
+                }
+            }
+        }
         return if (result != null) Optional.of(result) else Optional.empty()
     }
 
-    private fun searchDatabazeKnih(query: String): MetadataDto? {
+    /**
+     * Returns Pair<MetadataDto?, SID?>
+     */
+    private fun searchDatabazeKnih(query: String): Pair<MetadataDto?, String?> {
         val url = "https://www.databazeknih.cz/search?in=books&q=${URLEncoder.encode(query, "UTF-8")}"
         val doc = Jsoup.connect(url).get()
 
@@ -37,11 +53,46 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         if (doc.title().startsWith("Vyhledávání")) {
             doc.select("p.new a.new").firstOrNull()?.attr("href")?.let { relative ->
                 val bookUrl = "https://www.databazeknih.cz$relative"
-                return parseBookPage(Jsoup.connect(bookUrl).get())
+                val bookDoc = Jsoup.connect(bookUrl).get()
+                val dto = parseBookPage(bookDoc)
+                val sid = extractSidFromUrl(bookUrl)
+                return Pair(dto, sid)
             }
-            return null
+            return Pair(null, null)
         }
-        return parseBookPage(doc)
+        // On single book page
+        val dto = parseBookPage(doc)
+        val sid = extractSidFromDocument(doc)
+        return Pair(dto, sid)
+    }
+
+    private fun extractSidFromUrl(url: String): String? {
+        // URLs are like /knihy/12345-abc-title
+        val regex = Regex("/knihy/(\\d+)-")
+        return regex.find(url)?.groupValues?.getOrNull(1)
+    }
+
+    private fun extractSidFromDocument(doc: Document): String? {
+        // Try to extract from meta tags or canonical link
+        doc.select("link[rel=canonical]").firstOrNull()?.attr("href")?.let { canonical ->
+            val regex = Regex("/knihy/(\\d+)-")
+            return regex.find(canonical)?.groupValues?.getOrNull(1)
+        }
+        // Fallback: Try to extract from data-sid attribute
+        doc.select("[data-sid]").firstOrNull()?.attr("data-sid")?.let {
+            if (it.isNotBlank()) return it
+        }
+        return null
+    }
+
+    /**
+     * Fetches ISBN from the book detail more info endpoint, if available.
+     */
+    private fun fetchIsbnFromDetailPage(sid: String): String? {
+        val detailUrl = "https://www.databazeknih.cz/book-detail-more-info/$sid"
+        val doc = Jsoup.connect(detailUrl).get()
+        // [itemprop='isbn']
+        return doc.select("[itemprop=isbn]").firstOrNull()?.text()?.replace("-", "")?.replace(" ", "")
     }
 
     private fun parseBookPage(doc: Document): MetadataDto? {
