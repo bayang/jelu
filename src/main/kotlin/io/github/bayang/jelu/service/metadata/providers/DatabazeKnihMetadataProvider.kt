@@ -16,7 +16,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
 
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
-        config: Map<String, String>
+        config: Map<String, String>,
     ): Optional<MetadataDto> {
         val query = when {
             !metadataRequestDto.isbn.isNullOrBlank() -> metadataRequestDto.isbn!!
