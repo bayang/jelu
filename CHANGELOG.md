@@ -1,3 +1,15 @@
+## [0.70.0](https://github.com/bayang/jelu/compare/v0.69.0...v0.70.0) (2025-07-03)
+
+
+### Features
+
+* Add DatabazeKnihMetadataProvider.kt ([#218](https://github.com/bayang/jelu/issues/218)) [#211](https://github.com/bayang/jelu/issues/211) ([05b99b0](https://github.com/bayang/jelu/commit/05b99b06343b3ef31510a17804d36e944ee39656))
+
+
+### Bug Fixes
+
+* linting ([2654475](https://github.com/bayang/jelu/commit/26544759d5419cd9039920ce4181f2e44d94ded7))
+
 ## [0.69.0](https://github.com/bayang/jelu/compare/v0.68.0...v0.69.0) (2025-06-30)
 
 
