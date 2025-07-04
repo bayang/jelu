@@ -25,7 +25,9 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             !metadataRequestDto.title.isNullOrBlank() -> metadataRequestDto.title!!
             else -> return Optional.empty()
         }
+
         val (result, sid) = searchDatabazeKnih(query)
+
         if (sid != null) {
             fetchIsbnFromDetailPage(sid)?.let { isbn ->
                 if (result != null && (result.isbn10.isNullOrBlank() && result.isbn13.isNullOrBlank())) {
@@ -37,25 +39,55 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 }
             }
         }
+
         return if (result != null) Optional.of(result) else Optional.empty()
     }
 
+    /**
+     * Returns Pair<MetadataDto?, SID?>
+     */
     private fun searchDatabazeKnih(query: String): Pair<MetadataDto?, String?> {
         val url = "https://www.databazeknih.cz/search?in=books&q=${URLEncoder.encode(query, "UTF-8")}"
         val doc = Jsoup.connect(url).get()
 
+        // If this is a multi-result page, follow the first book link
         if (doc.title().startsWith("Vyhledávání")) {
             doc.select("p.new a.new").firstOrNull()?.attr("href")?.let { relative ->
                 val bookUrl = "https://www.databazeknih.cz$relative"
                 val bookDoc = Jsoup.connect(bookUrl).get()
-                val dto = parseBookPage(bookDoc)
-                val sid = extractSidFromUrl(bookUrl)
+
+                // follow canonical link if available
+                val canonicalUrl = bookDoc.select("link[rel=canonical]").attr("href")
+                val detailUrl = if (canonicalUrl.contains("/knihy/")) {
+                    canonicalUrl
+                } else {
+                    bookUrl
+                }
+
+                val detailDoc = Jsoup.connect(detailUrl).get()
+                val dto = parseBookPage(detailDoc)
+                val sid = extractSidFromUrl(detailUrl)
                 return Pair(dto, sid)
             }
             return Pair(null, null)
         }
-        val dto = parseBookPage(doc)
-        val sid = extractSidFromDocument(doc)
+
+        // If already on book detail page
+        val canonicalUrl = doc.select("link[rel=canonical]").attr("href")
+        val detailUrl = if (canonicalUrl.contains("/knihy/")) {
+            canonicalUrl
+        } else {
+            null
+        }
+
+        val detailDoc = if (detailUrl != null) {
+            Jsoup.connect(detailUrl).get()
+        } else {
+            doc
+        }
+
+        val dto = parseBookPage(detailDoc)
+        val sid = extractSidFromDocument(detailDoc)
         return Pair(dto, sid)
     }
 
@@ -150,23 +182,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
 
         tags.addAll(doc.select("a.tag").map(Element::text))
 
-        // 🟢 Fallback: parse .book-biblio block
-        if (pageCount == null) {
-            doc.extractBiblioField("Počet stran")?.toIntOrNull()?.let { pageCount = it }
-        }
-        if (language == null) {
-            doc.extractBiblioField("Jazyk")?.let { language = mapLanguage(it) }
-        }
-        if (isbn10.isNullOrBlank() && isbn13.isNullOrBlank()) {
-            doc.extractBiblioField("ISBN")?.let { raw ->
-                val clean = raw.replace("-", "").replace(" ", "")
-                when {
-                    clean.length == 10 -> isbn10 = clean
-                    clean.length == 13 -> isbn13 = clean
-                }
-            }
-        }
-
         dto.title = dto.title ?: ""
         dto.authors = authors
         dto.tags = tags
@@ -183,13 +198,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         return if (dto.title.isNullOrBlank()) null else dto
     }
 
-    private fun Document.extractBiblioField(label: String): String? {
-        val dt = select(".book-biblio dt").firstOrNull { it.text().trim() == label }
-        val dd = dt?.nextElementSibling()
-        return dd?.text()?.takeIf { it.isNotBlank() }
-    }
-
-    private fun mapLanguage(dbLang: String): String? = when (dbLang.lowercase()) {
+    private fun mapLanguage(dbLang: String): String? = when (dbLang) {
         "český" -> "ces"
         "slovenský" -> "slo"
         "německý" -> "deu"
