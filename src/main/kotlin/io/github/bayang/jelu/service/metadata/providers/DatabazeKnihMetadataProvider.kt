@@ -25,9 +25,11 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             !metadataRequestDto.title.isNullOrBlank() -> metadataRequestDto.title!!
             else -> return Optional.empty()
         }
+        println("DEBUG: Query: [$query]")
         val (result, sid) = searchDatabazeKnih(query)
 
         if (sid != null) {
+            println("DEBUG: Found SID: $sid — trying to fetch ISBN from detail page")
             fetchIsbnFromDetailPage(sid)?.let { isbn ->
                 if (result != null && (result.isbn10.isNullOrBlank() && result.isbn13.isNullOrBlank())) {
                     if (isbn.length == 10) {
@@ -44,24 +46,29 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
 
     private fun searchDatabazeKnih(query: String): Pair<MetadataDto?, String?> {
         val url = "https://www.databazeknih.cz/search?in=books&q=${URLEncoder.encode(query, "UTF-8")}"
+        println("DEBUG: Search URL: $url")
         val doc = Jsoup.connect(url).get()
+        println("DEBUG: Search page title: ${doc.title()}")
 
-        // If this is a multi-result page, follow the first book link
         if (doc.title().startsWith("Vyhledávání")) {
             doc.select("p.new a.new").firstOrNull()?.attr("href")?.let { relative ->
                 val bookUrl = "https://www.databazeknih.cz$relative"
                 val canonicalBookUrl = convertToKnihyUrlIfNeeded(bookUrl)
+                println("DEBUG: Found first book URL: $bookUrl -> canonical: $canonicalBookUrl")
                 val bookDoc = Jsoup.connect(canonicalBookUrl).get()
+                println("DEBUG: Book page title: ${bookDoc.title()}")
                 val dto = parseBookPage(bookDoc)
                 val sid = extractSidFromUrl(canonicalBookUrl)
                 return Pair(dto, sid)
             }
+            println("DEBUG: No book link found on search page.")
             return Pair(null, null)
         }
 
-        // On single book page
         val canonicalBookUrl = convertToKnihyUrlIfNeeded(doc.location())
         val canonicalDoc = if (canonicalBookUrl != doc.location()) Jsoup.connect(canonicalBookUrl).get() else doc
+        println("DEBUG: Single book page URL: $canonicalBookUrl")
+        println("DEBUG: Single book page title: ${canonicalDoc.title()}")
 
         val dto = parseBookPage(canonicalDoc)
         val sid = extractSidFromDocument(canonicalDoc)
@@ -95,12 +102,16 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
 
     private fun fetchIsbnFromDetailPage(sid: String): String? {
         val detailUrl = "https://www.databazeknih.cz/book-detail-more-info/$sid"
+        println("DEBUG: Fetching extra detail page: $detailUrl")
         val doc = Jsoup.connect(detailUrl).get()
-        return doc.select("[itemprop=isbn]").firstOrNull()?.text()?.replace("-", "")?.replace(" ", "")
+        val isbn = doc.select("[itemprop=isbn]").firstOrNull()?.text()?.replace("-", "")?.replace(" ", "")
+        println("DEBUG: Extra detail ISBN: $isbn")
+        return isbn
     }
 
     private fun parseBookPage(doc: Document): MetadataDto? {
         val dto = MetadataDto()
+        println("DEBUG: Parsing book page...")
 
         doc.head().select("meta").forEach { metaTag ->
             when (metaTag.attr("property")) {
@@ -122,7 +133,11 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         var isbn13: String? = null
 
         for (item in doc.select("[itemprop]")) {
-            when (item.attr("itemprop")) {
+            val prop = item.attr("itemprop")
+            val text = item.text().trim()
+            println("DEBUG: Found itemprop [$prop]: [$text]")
+
+            when (prop) {
                 "author" -> {
                     item.select("a").forEach { a ->
                         val authorName = a.text().trim()
@@ -140,21 +155,18 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                             .trim()
                     }
                 }
-                "publisher" -> publisher = item.text()
+                "publisher" -> publisher = text
                 "genre" -> tags.addAll(item.select("a.genre").map(Element::text))
-                "datePublished" -> {
-                    val t = item.text()
-                    if (t.isNotEmpty() && t != "?") publishedDate = t
-                }
+                "datePublished" -> if (text.isNotEmpty() && text != "?") publishedDate = text
                 "isbn" -> {
-                    val raw = item.text().replace("-", "").replace(" ", "")
+                    val raw = text.replace("-", "").replace(" ", "")
                     when {
                         raw.length == 10 -> isbn10 = raw
                         raw.length == 13 -> isbn13 = raw
                     }
                 }
-                "language" -> language = mapLanguage(item.text())
-                "numberOfPages" -> item.text().toIntOrNull()?.let { pageCount = it }
+                "language" -> language = mapLanguage(text)
+                "numberOfPages" -> text.toIntOrNull()?.let { pageCount = it }
             }
         }
 
@@ -180,6 +192,8 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         dto.numberInSeries = numberInSeries
         dto.isbn10 = isbn10
         dto.isbn13 = isbn13
+
+        println("DEBUG: Extracted DTO: $dto")
 
         return if (dto.title.isNullOrBlank()) null else dto
     }
