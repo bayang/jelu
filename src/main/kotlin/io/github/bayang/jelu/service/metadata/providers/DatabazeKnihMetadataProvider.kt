@@ -146,7 +146,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 dto.pageCount = it
                 logger.debug("Page count found: $it")
             } ?: logger.debug("Page count not found or invalid in extended details")
-
         } catch (e: Exception) {
             logger.error("Error fetching extended details for SID $sid: ${e.message}", e)
         }
