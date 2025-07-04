@@ -29,11 +29,10 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         // If we have a SID, try to fetch extra ISBN info
         if (sid != null) {
             fetchIsbnFromDetailPage(sid)?.let { isbn ->
-                // Prefer new ISBN if DTO doesn't already have one
-                if (result != null && (result.isbn10.isNullOrBlank() && result.isbn13.isNullOrBlank())) {
-                    if (isbn.length == 10) {
+                if (result != null) {
+                    if (isbn.length == 10 && result.isbn10.isNullOrBlank()) {
                         result.isbn10 = isbn
-                    } else if (isbn.length == 13) {
+                    } else if (isbn.length == 13 && result.isbn13.isNullOrBlank()) {
                         result.isbn13 = isbn
                     }
                 }
@@ -67,18 +66,15 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
     }
 
     private fun extractSidFromUrl(url: String): String? {
-        // URLs are like /knihy/12345-abc-title
         val regex = Regex("/knihy/(\\d+)-")
         return regex.find(url)?.groupValues?.getOrNull(1)
     }
 
     private fun extractSidFromDocument(doc: Document): String? {
-        // Try to extract from meta tags or canonical link
         doc.select("link[rel=canonical]").firstOrNull()?.attr("href")?.let { canonical ->
             val regex = Regex("/knihy/(\\d+)-")
             return regex.find(canonical)?.groupValues?.getOrNull(1)
         }
-        // Fallback: Try to extract from data-sid attribute
         doc.select("[data-sid]").firstOrNull()?.attr("data-sid")?.let {
             if (it.isNotBlank()) return it
         }
@@ -91,13 +87,12 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
     private fun fetchIsbnFromDetailPage(sid: String): String? {
         val detailUrl = "https://www.databazeknih.cz/book-detail-more-info/$sid"
         val doc = Jsoup.connect(detailUrl).get()
-        // [itemprop='isbn']
         return doc.select("[itemprop=isbn]").firstOrNull()?.text()?.replace("-", "")?.replace(" ", "")
     }
 
     private fun parseBookPage(doc: Document): MetadataDto? {
         val dto = MetadataDto()
-        // Title & Image
+
         doc.head().select("meta").forEach { metaTag ->
             when (metaTag.attr("property")) {
                 "og:title" -> dto.title = metaTag.attr("content")
@@ -155,6 +150,15 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             }
         }
 
+        // Fallbacks from <td> labels
+        if (pageCount == null) {
+            doc.extractField("Počet stran")?.toIntOrNull()?.let { pageCount = it }
+        }
+
+        if (language == null) {
+            doc.extractField("Jazyk")?.let { language = mapLanguage(it) }
+        }
+
         // Series
         doc.selectFirst("h3 > a[href^=/serie/]")?.let { serieLink ->
             series = serieLink.text().trim()
@@ -164,10 +168,8 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             }
         }
 
-        // Add tags (from <a class="tag">)
         tags.addAll(doc.select("a.tag").map(Element::text))
 
-        // Populate DTO
         dto.title = dto.title ?: ""
         dto.authors = authors
         dto.tags = tags
@@ -184,7 +186,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         return if (dto.title.isNullOrBlank()) null else dto
     }
 
-    private fun mapLanguage(dbLang: String): String? = when (dbLang) {
+    private fun mapLanguage(dbLang: String): String? = when (dbLang.lowercase()) {
         "český" -> "ces"
         "slovenský" -> "slo"
         "německý" -> "deu"
@@ -194,5 +196,12 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         "španělský" -> "spa"
         "italský" -> "ita"
         else -> dbLang
+    }
+
+    /**
+     * Helper to extract a detail field by label from <td>.
+     */
+    private fun Document.extractField(label: String): String? {
+        return select("td:containsOwn($label)").next().text().takeIf { it.isNotBlank() }
     }
 }
