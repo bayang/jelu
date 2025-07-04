@@ -25,7 +25,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             !metadataRequestDto.title.isNullOrBlank() -> metadataRequestDto.title!!
             else -> return Optional.empty()
         }
-
         val (result, sid) = searchDatabazeKnih(query)
 
         if (sid != null) {
@@ -43,9 +42,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         return if (result != null) Optional.of(result) else Optional.empty()
     }
 
-    /**
-     * Returns Pair<MetadataDto?, SID?>
-     */
     private fun searchDatabazeKnih(query: String): Pair<MetadataDto?, String?> {
         val url = "https://www.databazeknih.cz/search?in=books&q=${URLEncoder.encode(query, "UTF-8")}"
         val doc = Jsoup.connect(url).get()
@@ -54,46 +50,36 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         if (doc.title().startsWith("Vyhledávání")) {
             doc.select("p.new a.new").firstOrNull()?.attr("href")?.let { relative ->
                 val bookUrl = "https://www.databazeknih.cz$relative"
-                val bookDoc = Jsoup.connect(bookUrl).get()
-
-                // follow canonical link if available
-                val canonicalUrl = bookDoc.select("link[rel=canonical]").attr("href")
-                val detailUrl = if (canonicalUrl.contains("/knihy/")) {
-                    canonicalUrl
-                } else {
-                    bookUrl
-                }
-
-                val detailDoc = Jsoup.connect(detailUrl).get()
-                val dto = parseBookPage(detailDoc)
-                val sid = extractSidFromUrl(detailUrl)
+                val canonicalBookUrl = convertToKnihyUrlIfNeeded(bookUrl)
+                val bookDoc = Jsoup.connect(canonicalBookUrl).get()
+                val dto = parseBookPage(bookDoc)
+                val sid = extractSidFromUrl(canonicalBookUrl)
                 return Pair(dto, sid)
             }
             return Pair(null, null)
         }
 
-        // If already on book detail page
-        val canonicalUrl = doc.select("link[rel=canonical]").attr("href")
-        val detailUrl = if (canonicalUrl.contains("/knihy/")) {
-            canonicalUrl
-        } else {
-            null
-        }
+        // On single book page
+        val canonicalBookUrl = convertToKnihyUrlIfNeeded(doc.location())
+        val canonicalDoc = if (canonicalBookUrl != doc.location()) Jsoup.connect(canonicalBookUrl).get() else doc
 
-        val detailDoc = if (detailUrl != null) {
-            Jsoup.connect(detailUrl).get()
-        } else {
-            doc
-        }
-
-        val dto = parseBookPage(detailDoc)
-        val sid = extractSidFromDocument(detailDoc)
+        val dto = parseBookPage(canonicalDoc)
+        val sid = extractSidFromDocument(canonicalDoc)
         return Pair(dto, sid)
+    }
+
+    private fun convertToKnihyUrlIfNeeded(url: String): String {
+        val regex = Regex("/(prehled-knihy|knihy)/([\\w-]+)-(\\d+)")
+        val match = regex.find(url) ?: return url
+        val slug = match.groupValues[2]
+        val id = match.groupValues[3]
+        return "https://www.databazeknih.cz/knihy/$slug-$id"
     }
 
     private fun extractSidFromUrl(url: String): String? {
         val regex = Regex("/knihy/(\\d+)-")
         return regex.find(url)?.groupValues?.getOrNull(1)
+            ?: Regex("/knihy/[\\w-]+-(\\d+)").find(url)?.groupValues?.getOrNull(1)
     }
 
     private fun extractSidFromDocument(doc: Document): String? {
@@ -198,7 +184,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         return if (dto.title.isNullOrBlank()) null else dto
     }
 
-    private fun mapLanguage(dbLang: String): String? = when (dbLang) {
+    private fun mapLanguage(dbLang: String): String? = when (dbLang.lowercase()) {
         "český" -> "ces"
         "slovenský" -> "slo"
         "německý" -> "deu"
