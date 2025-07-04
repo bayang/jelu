@@ -45,9 +45,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         return if (result != null) Optional.of(result) else Optional.empty()
     }
 
-    /**
-     * Returns Pair<MetadataDto?, SID?>
-     */
     private fun searchDatabazeKnih(query: String): Pair<MetadataDto?, String?> {
         val url = "https://www.databazeknih.cz/search?in=books&q=${URLEncoder.encode(query, "UTF-8")}"
         logger.debug("Fetching search URL: $url")
@@ -55,7 +52,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
 
         logger.debug("Search page title: ${doc.title()}")
 
-        // If this is a multi-result page, follow the first book link
         if (doc.title().startsWith("Vyhledávání")) {
             val firstBookLink = doc.select("p.new a.new").firstOrNull()?.attr("href")
             if (firstBookLink != null) {
@@ -69,19 +65,18 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             return Pair(null, null)
         }
 
-        // On single book page
         val dto = parseBookPage(doc)
         val sid = extractSidFromDocument(doc)
         return Pair(dto, sid)
     }
 
     private fun extractSidFromUrl(url: String): String? {
-        val regex = Regex("/knihy/(\\d+)-")
-        return regex.find(url)?.groupValues?.getOrNull(1)
+        val regex = Regex("/(knihy|prehled-knihy)/[a-z0-9\\-]+-(\\d+)")
+        return regex.find(url)?.groupValues?.getOrNull(2)
     }
 
+
     private fun extractSidFromDocument(doc: Document): String? {
-        // Try canonical link
         doc.select("link[rel=canonical]").firstOrNull()?.attr("href")?.let { canonical ->
             val regex = Regex("/knihy/(\\d+)-")
             regex.find(canonical)?.groupValues?.getOrNull(1)?.let {
@@ -89,14 +84,12 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 return it
             }
         }
-        // Try data-sid attribute
         doc.select("[data-sid]").firstOrNull()?.attr("data-sid")?.let {
             if (it.isNotBlank()) {
                 logger.debug("SID extracted from data-sid attribute: $it")
                 return it
             }
         }
-        // Try span#moreBookDetails bookid attribute
         doc.select("span#moreBookDetails").firstOrNull()?.attr("bookid")?.let {
             if (it.isNotBlank()) {
                 logger.debug("SID extracted from span#moreBookDetails bookid: $it")
@@ -107,9 +100,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         return null
     }
 
-    /**
-     * Fetch ISBN, language, and page count from extended detail page.
-     */
     private fun fetchIsbnLanguagePageCount(sid: String, dto: MetadataDto?) {
         if (dto == null) return
         try {
@@ -117,7 +107,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             logger.debug("Fetching extended details from: $detailUrl")
             val doc = Jsoup.connect(detailUrl).get()
 
-            // ISBN
             val isbnRaw = doc.select("[itemprop=isbn]").firstOrNull()?.text()?.replace("-", "")?.replace(" ", "")
             if (!isbnRaw.isNullOrBlank()) {
                 if (isbnRaw.length == 10 && dto.isbn10.isNullOrBlank()) {
@@ -131,21 +120,18 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 logger.debug("ISBN not found in extended details")
             }
 
-            // Language
             val langRaw = doc.select("[itemprop=language]").firstOrNull()?.text()
             if (!langRaw.isNullOrBlank()) {
                 dto.language = mapLanguage(langRaw.trim())
                 logger.debug("Language found: ${dto.language} (raw: $langRaw)")
-            } else {
-                logger.debug("Language not found in extended details")
             }
 
-            // Page Count
             val pagesText = doc.select("[itemprop=numberOfPages]").firstOrNull()?.text()
             pagesText?.toIntOrNull()?.let {
                 dto.pageCount = it
                 logger.debug("Page count found: $it")
-            } ?: logger.debug("Page count not found or invalid in extended details")
+            }
+
         } catch (e: Exception) {
             logger.error("Error fetching extended details for SID $sid: ${e.message}", e)
         }
@@ -155,17 +141,10 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         logger.debug("parseBookPage started")
         val dto = MetadataDto()
 
-        // Title and image from meta tags
         doc.head().select("meta").forEach { metaTag ->
             when (metaTag.attr("property")) {
-                "og:title" -> {
-                    dto.title = metaTag.attr("content")
-                    logger.debug("Title extracted: ${dto.title}")
-                }
-                "og:image" -> {
-                    dto.image = metaTag.attr("content")
-                    logger.debug("Image extracted from meta: ${dto.image}")
-                }
+                "og:title" -> dto.title = metaTag.attr("content")
+                "og:image" -> dto.image = metaTag.attr("content")
             }
         }
 
@@ -181,7 +160,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         var isbn10: String? = null
         var isbn13: String? = null
 
-        // Authors, description, publisher, tags, date, isbn, language, page count
         for (item in doc.select("[itemprop]")) {
             when (item.attr("itemprop")) {
                 "author" -> {
@@ -189,7 +167,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                         val authorName = a.text().trim()
                         if (authorName.isNotEmpty()) authors.add(authorName)
                     }
-                    logger.debug("Authors extracted: $authors")
                 }
                 "description" -> {
                     val desc = item.nextElementSibling()?.wholeText()?.trim()
@@ -200,23 +177,13 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                             .joinToString("\n")
                             .removeSuffix("... celý text")
                             .trim()
-                        logger.debug("Summary extracted")
                     }
                 }
-                "publisher" -> {
-                    publisher = item.text()
-                    logger.debug("Publisher extracted: $publisher")
-                }
-                "genre" -> {
-                    tags.addAll(item.select("a.genre").map(Element::text))
-                    logger.debug("Tags extracted: $tags")
-                }
+                "publisher" -> publisher = item.text()
+                "genre" -> tags.addAll(item.select("a.genre").map(Element::text))
                 "datePublished" -> {
                     val t = item.text()
-                    if (t.isNotEmpty() && t != "?") {
-                        publishedDate = t
-                        logger.debug("Published date extracted: $publishedDate")
-                    }
+                    if (t.isNotEmpty() && t != "?") publishedDate = t
                 }
                 "isbn" -> {
                     val raw = item.text().replace("-", "").replace(" ", "")
@@ -225,33 +192,33 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                         raw.length == 13 -> isbn13 = raw
                     }
                 }
-                "language" -> {
-                    language = mapLanguage(item.text())
-                }
+                "language" -> language = mapLanguage(item.text())
                 "numberOfPages" -> {
-                    item.text().toIntOrNull()?.let {
-                        pageCount = it
-                        logger.debug("Page count extracted: $pageCount")
-                    }
+                    item.text().toIntOrNull()?.let { pageCount = it }
                 }
             }
         }
 
-        // Fallbacks for page count and language from labels in table cells
+        // Fallbacks for page count and language
         if (pageCount == null) {
-            doc.extractField("Počet stran")?.toIntOrNull()?.let {
-                pageCount = it
-                logger.debug("Page count extracted from fallback: $pageCount")
-            }
+            doc.extractField("Počet stran")?.toIntOrNull()?.let { pageCount = it }
         }
         if (language == null) {
-            doc.extractField("Jazyk vydání")?.let {
-                language = mapLanguage(it)
-                logger.debug("Language extracted from fallback: $language")
+            doc.extractField("Jazyk vydání")?.let { language = mapLanguage(it) }
+        }
+
+        // Fallback for ISBN if not found yet
+        if (isbn10 == null && isbn13 == null) {
+            doc.extractField("ISBN")?.let { raw ->
+                val cleaned = raw.replace("-", "").replace(" ", "")
+                when {
+                    cleaned.length == 10 -> isbn10 = cleaned
+                    cleaned.length == 13 -> isbn13 = cleaned
+                }
+                logger.debug("ISBN extracted from fallback: $isbn10 / $isbn13")
             }
         }
 
-        // Series info
         doc.selectFirst("h3 > a[href^=/serie/]")?.let { serieLink ->
             series = serieLink.text().trim()
             doc.selectFirst("span.nowrap > span.odright_pet, span.nowrap > span.odleft_pet")?.text()?.let { nstr ->
@@ -262,13 +229,9 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
 
         tags.addAll(doc.select("a.tag").map(Element::text))
 
-        // Try extracting cover image if not already set
         if (dto.image.isNullOrBlank()) {
             val coverImg = doc.select("div.book-cover img").firstOrNull()?.attr("src")
-            if (!coverImg.isNullOrBlank()) {
-                dto.image = coverImg
-                logger.debug("Cover image extracted from img tag: ${dto.image}")
-            }
+            if (!coverImg.isNullOrBlank()) dto.image = coverImg
         }
 
         dto.title = dto.title ?: ""
@@ -289,7 +252,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             return null
         }
 
-        logger.debug("Returning metadata: $dto")
         return dto
     }
 
@@ -305,9 +267,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         else -> dbLang
     }
 
-    /**
-     * Helper to extract a detail field by label from <td>.
-     */
     private fun Document.extractField(label: String): String? {
         return select("td:containsOwn($label)").next().text().takeIf { it.isNotBlank() }
     }
