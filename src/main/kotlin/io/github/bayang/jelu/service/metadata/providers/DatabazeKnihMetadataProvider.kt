@@ -75,7 +75,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         return regex.find(url)?.groupValues?.getOrNull(2)
     }
 
-
     private fun extractSidFromDocument(doc: Document): String? {
         doc.select("link[rel=canonical]").firstOrNull()?.attr("href")?.let { canonical ->
             val regex = Regex("/knihy/(\\d+)-")
@@ -131,7 +130,6 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 dto.pageCount = it
                 logger.debug("Page count found: $it")
             }
-
         } catch (e: Exception) {
             logger.error("Error fetching extended details for SID $sid: ${e.message}", e)
         }
