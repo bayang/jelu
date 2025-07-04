@@ -138,12 +138,23 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
     private fun parseBookPage(doc: Document): MetadataDto? {
         logger.debug("parseBookPage started")
         val dto = MetadataDto()
-
+            
         doc.head().select("meta").forEach { metaTag ->
             when (metaTag.attr("property")) {
                 "og:title" -> dto.title = metaTag.attr("content")
-                "og:image" -> dto.image = metaTag.attr("content")
+                "og:image" -> {
+                    val ogImage = metaTag.attr("content")
+                    dto.image = ogImage
+                    logger.debug("Found og:image: $ogImage")
+                }
             }
+        }
+        
+        // Prefer better quality cover if available
+        val betterCoverImg = doc.select("#icover_mid img.kniha_img.coverOnDetail").firstOrNull()?.attr("src")
+        if (!betterCoverImg.isNullOrBlank()) {
+            dto.image = betterCoverImg
+            logger.debug("Overriding image with better cover from #icover_mid: $betterCoverImg")
         }
 
         val authors = mutableSetOf<String>()
@@ -157,7 +168,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         var numberInSeries: Double? = null
         var isbn10: String? = null
         var isbn13: String? = null
-
+    
         for (item in doc.select("[itemprop]")) {
             when (item.attr("itemprop")) {
                 "author" -> {
@@ -196,16 +207,15 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 }
             }
         }
-
-        // Fallbacks for page count and language
+    
+        // Fallbacks
         if (pageCount == null) {
             doc.extractField("Počet stran")?.toIntOrNull()?.let { pageCount = it }
         }
         if (language == null) {
             doc.extractField("Jazyk vydání")?.let { language = mapLanguage(it) }
         }
-
-        // Fallback for ISBN if not found yet
+    
         if (isbn10 == null && isbn13 == null) {
             doc.extractField("ISBN")?.let { raw ->
                 val cleaned = raw.replace("-", "").replace(" ", "")
@@ -216,7 +226,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 logger.debug("ISBN extracted from fallback: $isbn10 / $isbn13")
             }
         }
-
+    
         doc.selectFirst("h3 > a[href^=/serie/]")?.let { serieLink ->
             series = serieLink.text().trim()
             doc.selectFirst("span.nowrap > span.odright_pet, span.nowrap > span.odleft_pet")?.text()?.let { nstr ->
@@ -224,14 +234,9 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 numberInSeries = num.toDoubleOrNull()
             }
         }
-
+    
         tags.addAll(doc.select("a.tag").map(Element::text))
-
-        if (dto.image.isNullOrBlank()) {
-            val coverImg = doc.select("div.book-cover img").firstOrNull()?.attr("src")
-            if (!coverImg.isNullOrBlank()) dto.image = coverImg
-        }
-
+    
         dto.title = dto.title ?: ""
         dto.authors = authors
         dto.tags = tags
@@ -244,14 +249,15 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         dto.numberInSeries = numberInSeries
         dto.isbn10 = isbn10
         dto.isbn13 = isbn13
-
+    
         if (dto.title.isNullOrBlank()) {
             logger.debug("No title found, returning null")
             return null
         }
-
+    
         return dto
     }
+
 
     private fun mapLanguage(dbLang: String): String? = when (dbLang.lowercase()) {
         "český", "česká" -> "ces"
