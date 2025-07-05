@@ -120,31 +120,30 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         // ISBN (with safer fallback, fix two ISBNs)
         val isbnText = doc.select("[itemprop=isbn]").firstOrNull()?.text()?.takeIf { it.isNotBlank() }
             ?: doc.select("div.book-info").text()
-                .substringAfter("ISBN:")        
-                .substringBefore("Vazba:")      // stop before next field if applicable
+                .substringAfter("ISBN:")
+                .substringBefore("Vazba:") // stop before next field if applicable
                 .trim()
-        
+
         if (!isbnText.isNullOrBlank()) {
             val isbnCandidates = isbnText.split(",").map { it.trim() }
-        
+
             var isbn10: String? = null
             var isbn13: String? = null
-        
+
             isbnCandidates.forEach { raw ->
                 val cleaned = raw.replace("-", "").replace(" ", "")
                 when (cleaned.length) {
                     10 -> if (isbn10 == null) isbn10 = cleaned
                     13 -> if (isbn13 == null) isbn13 = cleaned
-                    7  -> if (isbn10 == null) isbn10 = cleaned
+                    7 -> if (isbn10 == null) isbn10 = cleaned
                 }
             }
-        
+
             if (dto.isbn10.isNullOrBlank() && isbn10 != null) dto.isbn10 = isbn10
             if (dto.isbn13.isNullOrBlank() && isbn13 != null) dto.isbn13 = isbn13
-        
+
             logger.debug("Extended ISBN detected: ISBN-10=${dto.isbn10}, ISBN-13=${dto.isbn13}")
         }
-
 
         // Language (with fallback)
         doc.select("[itemprop=language]").firstOrNull()?.text()?.trim()?.let {
@@ -234,7 +233,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
     private fun parseIsbn(raw: String): Pair<String?, String?> {
         val cleaned = raw.replace("-", "").replace(" ", "")
         return when (cleaned.length) {
-            7 -> Pair(cleaned, null)    // Old style ISBN treated as ISBN10
+            7 -> Pair(cleaned, null) // Old style ISBN treated as ISBN10
             10 -> Pair(cleaned, null)
             13 -> Pair(null, cleaned)
             else -> Pair(null, null)
@@ -247,7 +246,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         "slovenský" to "slo", "slovenská" to "slo",
         "německý" to "deu", "polský" to "pol",
         "anglický" to "eng", "francouzský" to "fre",
-        "španělský" to "spa", "italský" to "ita"
+        "španělský" to "spa", "italský" to "ita",
     )
 
     private fun mapLanguage(dbLang: String): String? =
