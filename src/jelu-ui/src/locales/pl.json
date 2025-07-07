@@ -188,7 +188,8 @@
         "edit_event": "edytuj zdarzenie",
         "reading": "czytane",
         "start_date": "data rozpoczęcia",
-        "end_date": "data zakończenia"
+        "end_date": "data zakończenia",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Książka jest na liście do przeczytania",
