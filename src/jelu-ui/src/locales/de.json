@@ -120,11 +120,11 @@
         "pick_camera": "Kamera auswählen",
         "add_narrator": "Erzähler:in hinzufügen",
         "social_login": "Einloggen mit {provider}",
-        "delete_this_series": "Diese Serie aus {nb} Bu(e)ch(ern) und aus der Datenbank löschen?",
+        "delete_this_series": "Diese Serie aus {nb} Buch/Büchern und aus der Datenbank löschen?",
         "orphan-series": "verwaiste Serie",
         "find-series": "eine Serie finden",
         "delete_this_author": "Diese(n) Autor:in aus {nb} Buch/Büchern und aus der Datenbank löschen?",
-        "orphan_authors": "verwaiste(r) Autor:in",
+        "orphan_authors": "verwaiste Autor:innen",
         "find-authors": "Autor:innen finden"
     },
     "settings": {
@@ -175,7 +175,7 @@
     },
     "reading_events": {
         "finished": "Fertig gelesen",
-        "currently_reading": "Du liest gerade",
+        "currently_reading": "Aktuell gelesen",
         "dropped": "Aufgegeben",
         "last_event_type": "Letzter Ereignistyp",
         "none": "keine",
@@ -186,7 +186,7 @@
         "event_type": "Ereignis-Typ",
         "event_date": "Ereignis-Datum",
         "edit_event": "Ereignis bearbeiten",
-        "reading": "wird derzeit gelesen",
+        "reading": "Aktuelle Lektüre",
         "start_date": "Beginn",
         "end_date": "Ende"
     },
@@ -234,7 +234,7 @@
         "translator": "Übersetzer:in | Übersetzer:innen",
         "borrowed": "Geliehen",
         "current_page_number": "aktuelle Seitenzahl",
-        "narrator": "erzähler | Erzähler"
+        "narrator": "Erzähler:in | Erzähler:innen"
     },
     "authors_merge": {
         "authors_merging_utility": "Autor:innen zusammenführen",
@@ -322,10 +322,10 @@
         "yearly_stats": "Jährliche Statistik",
         "choose_year": "Jahr auswählen",
         "pages_read": "gelesene Seiten",
-        "finished": "Fertig gelesen",
-        "dropped": "Aufgegeben",
+        "finished": "Beendet",
+        "dropped": "aufgegeben",
         "total": "Gesamt",
-        "read": "lesen",
+        "read": "gelesen",
         "unread": "ungelesen"
     },
     "history": {
@@ -370,7 +370,7 @@
     "book_quotes": {
         "edit_quote": "Buchzitat bearbeiten",
         "create": "Zitat posten",
-        "quote": "zitieren | Zitate",
+        "quote": "Zitat | Zitate",
         "position": "Position",
         "delete_quote": "dieses Zitat löschen?"
     },
