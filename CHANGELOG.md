@@ -1,3 +1,10 @@
+### [0.70.1](https://github.com/bayang/jelu/compare/v0.70.0...v0.70.1) (2025-07-07)
+
+
+### Bug Fixes
+
+* some dates are not translated [#221](https://github.com/bayang/jelu/issues/221) ([7b1c5b5](https://github.com/bayang/jelu/commit/7b1c5b50e5175f02bc1057e6c869f06ee30e3d24))
+
 ## [0.70.0](https://github.com/bayang/jelu/compare/v0.69.0...v0.70.0) (2025-07-03)
 
 
