@@ -188,7 +188,8 @@
         "edit_event": "Upraviť udalosť",
         "reading": "číta sa",
         "start_date": "dátum začiatku",
-        "end_date": "dátum ukončenia"
+        "end_date": "dátum ukončenia",
+        "started": "začiatok čítania"
     },
     "filtering": {
         "book_in_list": "Kniha je v zozname na prečítanie",
