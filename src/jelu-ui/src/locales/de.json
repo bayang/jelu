@@ -188,7 +188,8 @@
         "edit_event": "Ereignis bearbeiten",
         "reading": "Aktuelle Lektüre",
         "start_date": "Beginn",
-        "end_date": "Ende"
+        "end_date": "Ende",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Buch ist in der Leseliste",
