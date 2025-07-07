@@ -188,7 +188,8 @@
         "edit_event": "esemény szerkesztése",
         "reading": "olvasás",
         "start_date": "kezdő dátum",
-        "end_date": "végső dátum"
+        "end_date": "végső dátum",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "A könyv az elolvasandó listában",
