@@ -188,7 +188,8 @@
         "edit_event": "editar evento",
         "reading": "leyendo",
         "start_date": "fecha de inicio",
-        "end_date": "fecha de finalización"
+        "end_date": "fecha de finalización",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "El libro está en la lista para leer",

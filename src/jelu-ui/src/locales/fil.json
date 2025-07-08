@@ -188,7 +188,8 @@
         "edit_event": "edit event",
         "reading": "reading",
         "start_date": "start date",
-        "end_date": "end date"
+        "end_date": "end date",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Book is in to-read list",

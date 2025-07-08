@@ -188,7 +188,8 @@
         "edit_event": "redaguoti įvykį",
         "reading": "skaitymas",
         "start_date": "pradžios data",
-        "end_date": "pabaigos data"
+        "end_date": "pabaigos data",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Knyga įtraukta į skaitomų knygų sąrašą",

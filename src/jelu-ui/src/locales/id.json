@@ -188,7 +188,8 @@
         "edit_event": "ubah aktivitas",
         "reading": "membaca",
         "start_date": "tanggal mulai",
-        "end_date": "tanggal akhir"
+        "end_date": "tanggal akhir",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Buku ada di daftar akan baca",

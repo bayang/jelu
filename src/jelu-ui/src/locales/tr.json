@@ -188,7 +188,8 @@
         "edit_event": "etkinliği düzenle",
         "reading": "okunuyor",
         "start_date": "başlangıç ​​tarihi",
-        "end_date": "bitiş tarihi"
+        "end_date": "bitiş tarihi",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Kitap okunacaklar listesinde",

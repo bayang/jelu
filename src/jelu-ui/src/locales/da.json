@@ -188,7 +188,8 @@
         "edit_event": "rediger begivenhed",
         "reading": "læser",
         "start_date": "startdato",
-        "end_date": "slutdato"
+        "end_date": "slutdato",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Bogen er på læselisten",
