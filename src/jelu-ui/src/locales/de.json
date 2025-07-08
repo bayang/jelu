@@ -174,7 +174,7 @@
         "avg_rating": "durchschnittliche Bewertung"
     },
     "reading_events": {
-        "finished": "Fertig gelesen",
+        "finished": "beendet",
         "currently_reading": "Aktuell gelesen",
         "dropped": "Aufgegeben",
         "last_event_type": "Letzter Ereignistyp",
@@ -189,7 +189,7 @@
         "reading": "Aktuelle Lektüre",
         "start_date": "Beginn",
         "end_date": "Ende",
-        "started": "started"
+        "started": "begonnen"
     },
     "filtering": {
         "book_in_list": "Buch ist in der Leseliste",
