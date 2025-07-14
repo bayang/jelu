@@ -117,15 +117,15 @@
         "user_rating": "mijn beoordeling: {rating}",
         "apply": "toepassen",
         "loading": "laden",
-        "pick_camera": "pick camera",
+        "pick_camera": "kies een camera",
         "add_narrator": "Add a narrator",
         "social_login": "inloggen met {provider}",
         "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
         "orphan-series": "orphan series",
-        "find-series": "find a series",
+        "find-series": "vind een serie",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "find-authors": "auteurs vinden"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -189,7 +189,7 @@
         "reading": "aan het lezen",
         "start_date": "begindatum",
         "end_date": "einddatum",
-        "started": "started"
+        "started": "gestart"
     },
     "filtering": {
         "book_in_list": "Boek staat in te-lezen lijst",
