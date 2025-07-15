@@ -1,3 +1,10 @@
+## [0.71.0](https://github.com/bayang/jelu/compare/v0.70.1...v0.71.0) (2025-07-15)
+
+
+### Features
+
+* Update to fetch ISBN from databazeknih ([#219](https://github.com/bayang/jelu/issues/219)) ([73e30dd](https://github.com/bayang/jelu/commit/73e30dd9b03c6086adfcd73c321990d57448254c))
+
 ### [0.70.1](https://github.com/bayang/jelu/compare/v0.70.0...v0.70.1) (2025-07-07)
 
 
