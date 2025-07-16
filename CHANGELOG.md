@@ -1,3 +1,10 @@
+### [0.71.1](https://github.com/bayang/jelu/compare/v0.71.0...v0.71.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* remove extra button on delete user choice popup [#227](https://github.com/bayang/jelu/issues/227) ([74bb33d](https://github.com/bayang/jelu/commit/74bb33d17742712824a299095129df9f3e43b70b))
+
 ## [0.71.0](https://github.com/bayang/jelu/compare/v0.70.1...v0.71.0) (2025-07-15)
 
 
