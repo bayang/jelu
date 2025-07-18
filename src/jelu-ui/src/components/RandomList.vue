@@ -98,14 +98,6 @@ function modalClosed() {
   throttledGetRandom()
 }
 
-const message = computed(() => {
-  if (userId.value != null) {
-    return t('labels.reading_list_from_name', { name: username.value })
-  } else {
-    return "Random"
-  }
-} )
-
 getRandom()
 
 </script>
@@ -211,7 +203,7 @@ getRandom()
       </button>
     </div>
     <h2 class="text-3xl typewriter capitalize">
-      {{ message }} :
+      {{ t('nav.random') }} :
     </h2>
     <div />
   </div>
@@ -257,7 +249,7 @@ getRandom()
   </div>
   <div v-else>
     <h2 class="text-3xl typewriter">
-      "Random"
+      {{ t('nav.random') }}
     </h2>
     <span class="icon">
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
