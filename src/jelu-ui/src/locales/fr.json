@@ -281,7 +281,7 @@
         "isbn_list": "Liste d'ISBN dans un fichier"
     },
     "login": {
-        "login": "identifiant",
+        "login": "se connecter",
         "password": "mot de passe",
         "confirm_login": "confirmez l'identifiant",
         "confirm_password": "confirmez le mot de passe",
