@@ -291,7 +291,8 @@
         "login_not_match": "i campi nome utente non corrispondono",
         "password_not_match": "le password non coincidono",
         "login_length": "il nome utente deve essere lungo almeno 3 caratteri",
-        "password_length": "la password deve essere di almeno 3 caratteri"
+        "password_length": "la password deve essere di almeno 3 caratteri",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "crea un utente",
@@ -342,7 +343,9 @@
         "add_or_remove": "Aggiungi o rimuovi un'etichetta",
         "add": "Aggiungi",
         "remove": "Rimuovi",
-        "choose_tag": "Scegli l'etichetta che vuoi aggiungere o rimuovere"
+        "choose_tag": "Scegli l'etichetta che vuoi aggiungere o rimuovere",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Crea una recensione",
