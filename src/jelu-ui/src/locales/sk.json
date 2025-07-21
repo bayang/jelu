@@ -281,7 +281,7 @@
         "isbn_list": "Zoznam ISBN čísel v súbore"
     },
     "login": {
-        "login": "prihlasovacie meno",
+        "login": "Prihlásiť sa",
         "password": "Heslo",
         "confirm_login": "potvrdiť prihlasovacie meno",
         "confirm_password": "potvrdiť heslo",
