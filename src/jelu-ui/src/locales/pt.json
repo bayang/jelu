@@ -291,7 +291,8 @@
         "login_not_match": "o campo de utilizador não coincide",
         "password_not_match": "o campos de palavra-passe não coincide",
         "login_length": "o utilizador deve ter no mínimo 3 caracteres",
-        "password_length": "a palavra-passe deve ter no mínimo 3 caracteres"
+        "password_length": "a palavra-passe deve ter no mínimo 3 caracteres",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "criar utilizador",
@@ -342,7 +343,9 @@
         "add_or_remove": "Adicionar ou remover etiqueta",
         "add": "Adicionar",
         "remove": "Remover",
-        "choose_tag": "Escolha a etiqueta que deseja adicionar ou remover"
+        "choose_tag": "Escolha a etiqueta que deseja adicionar ou remover",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Criar avaliação",

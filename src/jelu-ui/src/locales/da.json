@@ -291,7 +291,8 @@
         "login_not_match": "login-felter matcher ikke",
         "password_not_match": "adgangskodefelter stemmer ikke overens",
         "login_length": "login skal mindst være 3 tegn langt",
-        "password_length": "adgangskode skal mindst være 3 tegn langt"
+        "password_length": "adgangskode skal mindst være 3 tegn langt",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "opret bruger",
@@ -342,7 +343,9 @@
         "add_or_remove": "Tilføj eller fjern mærkat",
         "add": "Tilføj",
         "remove": "Fjern",
-        "choose_tag": "Vælg det mærkat du vil tilføje eller fjerne"
+        "choose_tag": "Vælg det mærkat du vil tilføje eller fjerne",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Opret anmeldelse",

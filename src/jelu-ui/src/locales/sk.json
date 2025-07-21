@@ -291,7 +291,8 @@
         "login_not_match": "prihlasovacie polia sa nezhodujú",
         "password_not_match": "polia s heslom sa nezhodujú",
         "login_length": "prihlasovacie meno musí mať aspoň 3 znaky",
-        "password_length": "Heslo musí mať aspoň 3 znaky"
+        "password_length": "Heslo musí mať aspoň 3 znaky",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "vytvoriť používateľa",
@@ -342,7 +343,9 @@
         "add_or_remove": "Pridať alebo odobrať štítky",
         "add": "Pridať",
         "remove": "Odstrániť",
-        "choose_tag": "Vyberte štítok, ktorý chcete pridať alebo odstrániť"
+        "choose_tag": "Vyberte štítok, ktorý chcete pridať alebo odstrániť",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Vytvoriť recenziu",
