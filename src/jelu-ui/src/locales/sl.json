@@ -291,7 +291,8 @@
         "login_not_match": "polja za vpis se ne ujemajo",
         "password_not_match": "gesli se ne ujemata",
         "login_length": "uporabniško ime mora biti dolgo vsaj 3 znake",
-        "password_length": "geslo mora biti dolgo vsaj 3 znake"
+        "password_length": "geslo mora biti dolgo vsaj 3 znake",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "ustvari uporabnika",
@@ -342,7 +343,9 @@
         "add_or_remove": "Dodaj/Odstrani oznake",
         "add": "Dodaj",
         "remove": "Odstrani",
-        "choose_tag": "Izberite oznako, ki jo želite dodati ali odstraniti"
+        "choose_tag": "Izberite oznako, ki jo želite dodati ali odstraniti",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Dodajte mnenje",
