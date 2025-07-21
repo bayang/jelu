@@ -292,7 +292,7 @@
         "password_not_match": "les mots de passe ne sont pas identiques",
         "login_length": "l'identifiant doit avoir une taille de 3 caractères au moins",
         "password_length": "le mot de passe doit avoir une taille de 3 caractères au moins",
-        "username": "username"
+        "username": "Nom d'utilisateur"
     },
     "admin_user": {
         "create_user": "créer utilisateur",
@@ -344,8 +344,8 @@
         "add": "Ajouter",
         "remove": "Enlever",
         "choose_tag": "Choisissez le tag que vous souhaitez ajouter ou retirer",
-        "add_tag": "add tag",
-        "remove_tag": "remove tag"
+        "add_tag": "ajouter une étiquette",
+        "remove_tag": "Supprimer l'étiquette"
     },
     "reviews": {
         "create_review": "écrire une critique",
