@@ -291,7 +291,8 @@
         "login_not_match": "nem ugyanaz a felhasználónév",
         "password_not_match": "nem ugyanaz a jelszó",
         "login_length": "a felhasználónév legalább 3 karakter kell legyen",
-        "password_length": "a jelszó legalább 3 karakter kell legyen"
+        "password_length": "a jelszó legalább 3 karakter kell legyen",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "új felhasználó",
@@ -342,7 +343,9 @@
         "add_or_remove": "Tag hozzáad/töröl",
         "add": "Hozzáad",
         "remove": "Töröl",
-        "choose_tag": "Hozzáadandó/törlendő tag kiválasztása"
+        "choose_tag": "Hozzáadandó/törlendő tag kiválasztása",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Értékelés hozzáadása",
