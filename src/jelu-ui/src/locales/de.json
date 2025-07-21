@@ -291,7 +291,8 @@
         "login_not_match": "Benutzernamen stimmen nicht überein",
         "password_not_match": "Passwörter stimmen nicht überein",
         "login_length": "Benutzername muss mindestens 3 Zeichen lang sein",
-        "password_length": "Passwort muss mindestens 3 Zeichen lang sein"
+        "password_length": "Passwort muss mindestens 3 Zeichen lang sein",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "Benutzer erstellen",
@@ -342,7 +343,9 @@
         "add_or_remove": "Tags hinzufügen oder entfernen",
         "add": "Hinzufügen",
         "remove": "Entfernen",
-        "choose_tag": "Tag zum hinzufügen/entfernen auswählen "
+        "choose_tag": "Tag zum hinzufügen/entfernen auswählen ",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Rezension erstellen",
