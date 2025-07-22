@@ -292,7 +292,7 @@
         "password_not_match": "Passwörter stimmen nicht überein",
         "login_length": "Benutzername muss mindestens 3 Zeichen lang sein",
         "password_length": "Passwort muss mindestens 3 Zeichen lang sein",
-        "username": "username"
+        "username": "Benutzername"
     },
     "admin_user": {
         "create_user": "Benutzer erstellen",
@@ -336,7 +336,7 @@
     "bulk": {
         "bulk_edit_books": "Bücher-Massenbearbeitung",
         "owned": "Alle als \"Im Besitz\" markieren/Markierung entfernen",
-        "toRead": "Alle als (un)gelesen markieren",
+        "toRead": "Alle als \"In Leseliste\" markieren/Markierung entfernen",
         "toggle": "Massenbearbeitungsmodus umschalten",
         "select_all": "Alle aus-/abwählen",
         "edit": "Bearbeitung starten",
@@ -344,8 +344,8 @@
         "add": "Hinzufügen",
         "remove": "Entfernen",
         "choose_tag": "Tag auswählen, der hinzugefügt oder entfernt werden soll",
-        "add_tag": "add tag",
-        "remove_tag": "remove tag"
+        "add_tag": "Tag hinzufügen",
+        "remove_tag": "Tag entfernen"
     },
     "reviews": {
         "create_review": "Rezension erstellen",
