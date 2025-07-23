@@ -266,7 +266,7 @@
     },
     "csv_import": {
         "import_csv": "csv-Datei importieren",
-        "import_source": "Quelle importieren",
+        "import_source": "Importquelle",
         "auto_fetch_online": "Metadaten automatisch online abrufen",
         "fetch_covers": "Auch Titelbilder abrufen",
         "choose_file": "Datei zum Importieren auswählen",
