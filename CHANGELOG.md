@@ -1,3 +1,12 @@
+### [0.71.3](https://github.com/bayang/jelu/compare/v0.71.2...v0.71.3) (2025-07-23)
+
+
+### Bug Fixes
+
+* localize history months [#235](https://github.com/bayang/jelu/issues/235) ([075869b](https://github.com/bayang/jelu/commit/075869b6903d51ee13704934bae53bee06c3d194))
+* make import page more readable [#236](https://github.com/bayang/jelu/issues/236) ([18977c6](https://github.com/bayang/jelu/commit/18977c61f9216257d7b3b4f256519bc24425f9e1))
+* user login [#229](https://github.com/bayang/jelu/issues/229) ([573fe96](https://github.com/bayang/jelu/commit/573fe969c6f41fd2ead6774131365d138756c0b4))
+
 ### [0.71.2](https://github.com/bayang/jelu/compare/v0.71.1...v0.71.2) (2025-07-21)
 
 
