@@ -165,7 +165,15 @@ getYears()
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg><h2 class="typewriter text-2xl text-left mx-2 my-2">
-            {{ dayjs(`2020-${month}-1`).format('MMMM') }}
+            <i18n-d
+              tag="span"
+              :value="dayjs(`2020-${month}-1`).toDate()"
+              :format="{month: 'long'}"
+            >
+              <template #month="props">
+                <span>{{ props.month }}</span>
+              </template>
+            </i18n-d>
           </h2>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-2 justify-center justify-items-center justify-self-center">
