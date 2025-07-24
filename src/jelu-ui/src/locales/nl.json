@@ -292,7 +292,7 @@
         "password_not_match": "wachtwoorden komen niet overeen",
         "login_length": "login moet minimaal 3 tekens lang zijn",
         "password_length": "wachtwoord moet minimaal 3 tekens lang zijn",
-        "username": "username"
+        "username": "gebruikersnaam"
     },
     "admin_user": {
         "create_user": "gebruiker aanmaken",
@@ -344,8 +344,8 @@
         "add": "Toevoegen",
         "remove": "Verwijderen",
         "choose_tag": "Kies het label die je wilt toevoegen of verwijderen",
-        "add_tag": "add tag",
-        "remove_tag": "remove tag"
+        "add_tag": "label toevoegen",
+        "remove_tag": "label verwijderen"
     },
     "reviews": {
         "create_review": "Maak een beoordeling",
