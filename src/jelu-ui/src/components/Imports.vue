@@ -89,7 +89,7 @@ watch(file, (newVal, oldVal) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center">
+  <div class="justify-center justify-items-center justify-self-center">
     <div
       v-tooltip="t('csv_import.import_help')"
       class="w-11/12 sm:w-8/12 pb-4 flex justify-center items-center"
@@ -117,15 +117,18 @@ watch(file, (newVal, oldVal) => {
       >
         !! {{ t('labels.auto_import_disabled') }}
       </div>
-      <div class="form-control">
-        <o-field
-          horizontal
-          :label="t('csv_import.import_source') + ' : '"
-        >
+      <div class="">
+        <fieldset class="fieldset">
+          <label
+            class="label capitalize"
+            for="source"
+          >{{ t('csv_import.import_source') + ' : ' }}</label>
+          
           <o-radio
             v-model="importSource"
             name="source"
             native-value="GOODREADS"
+            class="input capitalize"
           >
             Goodreads
           </o-radio>
@@ -133,52 +136,59 @@ watch(file, (newVal, oldVal) => {
             v-model="importSource"
             name="source"
             native-value="ISBN_LIST"
+            class="input"
           >
             {{ t('csv_import.isbn_list') }}
           </o-radio>
-        </o-field>
+        </fieldset>
       </div>
       <div
         v-if="importSource != ImportSource.ISBN_LIST"
         class="field"
       >
-        <o-field
-          horizontal
-          :label="t('csv_import.auto_fetch_online')"
-          class="capitalize"
-        >
+        <fieldset class="fieldset">
+          <label
+            class="label"
+            for="fetch"
+          >{{ t('csv_import.auto_fetch_online') }}</label>
           <o-checkbox
+            id="fetch"
             v-model="fetchMetadata"
+            class="input"
             :disabled="store != null && !store.getters.getMetadataFetchEnabled"
           >
             {{ fetchMetadata ? t('labels.yes'):t('labels.no') }}
           </o-checkbox>
-        </o-field>
+        </fieldset>
       </div>
       <div
         class="field"
       >
-        <o-field
-          horizontal
-          :label="t('csv_import.fetch_covers') + ' ?'"
-          class="capitalize"
-        >
+        <fieldset class="fieldset">
+          <label
+            class="label"
+            for="covers"
+          >{{ t('csv_import.fetch_covers') + ' ?' }}</label>
           <o-checkbox
-            v-model="fetchCovers" 
+            id=""
+            v-model="fetchCovers"
+            covers 
             :disabled="fetchCoversDisabled"
+            class="input"
           >
             {{ fetchCovers ? t('labels.yes'):t('labels.no') }}
           </o-checkbox>
-        </o-field>
+        </fieldset>
       </div>
         
       <div>
-        <o-field
-          horizontal
-          :label="t('csv_import.choose_file')"
-          class="file"
-        >
+        <fieldset class="fieldset">
+          <label
+            class="label"
+            for="file"
+          >{{ t('csv_import.choose_file') }}</label>
           <input
+            id="file"
             type="file"
             accept=".csv,.tsv,.txt"
             class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-accent-content hover:file:bg-gray-300"
@@ -192,7 +202,7 @@ watch(file, (newVal, oldVal) => {
             class="progress progress-primary"
           />
           <br>
-        </o-field>
+        </fieldset>
       </div>
 
       <div class="field">

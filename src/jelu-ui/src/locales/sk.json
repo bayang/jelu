@@ -188,7 +188,8 @@
         "edit_event": "Upraviť udalosť",
         "reading": "číta sa",
         "start_date": "dátum začiatku",
-        "end_date": "dátum ukončenia"
+        "end_date": "dátum ukončenia",
+        "started": "začiatok čítania"
     },
     "filtering": {
         "book_in_list": "Kniha je v zozname na prečítanie",
@@ -280,7 +281,7 @@
         "isbn_list": "Zoznam ISBN čísel v súbore"
     },
     "login": {
-        "login": "prihlasovacie meno",
+        "login": "Prihlásiť sa",
         "password": "Heslo",
         "confirm_login": "potvrdiť prihlasovacie meno",
         "confirm_password": "potvrdiť heslo",
@@ -290,7 +291,8 @@
         "login_not_match": "prihlasovacie polia sa nezhodujú",
         "password_not_match": "polia s heslom sa nezhodujú",
         "login_length": "prihlasovacie meno musí mať aspoň 3 znaky",
-        "password_length": "Heslo musí mať aspoň 3 znaky"
+        "password_length": "Heslo musí mať aspoň 3 znaky",
+        "username": "Používateľské meno"
     },
     "admin_user": {
         "create_user": "vytvoriť používateľa",
@@ -341,7 +343,9 @@
         "add_or_remove": "Pridať alebo odobrať štítky",
         "add": "Pridať",
         "remove": "Odstrániť",
-        "choose_tag": "Vyberte štítok, ktorý chcete pridať alebo odstrániť"
+        "choose_tag": "Vyberte štítok, ktorý chcete pridať alebo odstrániť",
+        "add_tag": "Pridať štítok",
+        "remove_tag": "Odstrániť štítok"
     },
     "reviews": {
         "create_review": "Vytvoriť recenziu",

@@ -117,15 +117,15 @@
         "user_rating": "mijn beoordeling: {rating}",
         "apply": "toepassen",
         "loading": "laden",
-        "pick_camera": "pick camera",
+        "pick_camera": "kies een camera",
         "add_narrator": "Add a narrator",
         "social_login": "inloggen met {provider}",
         "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
         "orphan-series": "orphan series",
-        "find-series": "find a series",
+        "find-series": "vind een serie",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "find-authors": "auteurs vinden"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -188,7 +188,8 @@
         "edit_event": "bewerk gebeurtenis",
         "reading": "aan het lezen",
         "start_date": "begindatum",
-        "end_date": "einddatum"
+        "end_date": "einddatum",
+        "started": "gestart"
     },
     "filtering": {
         "book_in_list": "Boek staat in te-lezen lijst",
@@ -290,7 +291,8 @@
         "login_not_match": "login velden komen niet overeen",
         "password_not_match": "wachtwoorden komen niet overeen",
         "login_length": "login moet minimaal 3 tekens lang zijn",
-        "password_length": "wachtwoord moet minimaal 3 tekens lang zijn"
+        "password_length": "wachtwoord moet minimaal 3 tekens lang zijn",
+        "username": "gebruikersnaam"
     },
     "admin_user": {
         "create_user": "gebruiker aanmaken",
@@ -341,7 +343,9 @@
         "add_or_remove": "Label toevoegen of verwijderen",
         "add": "Toevoegen",
         "remove": "Verwijderen",
-        "choose_tag": "Kies het label die je wilt toevoegen of verwijderen"
+        "choose_tag": "Kies het label die je wilt toevoegen of verwijderen",
+        "add_tag": "label toevoegen",
+        "remove_tag": "label verwijderen"
     },
     "reviews": {
         "create_review": "Maak een beoordeling",

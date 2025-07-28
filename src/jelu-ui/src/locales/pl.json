@@ -188,7 +188,8 @@
         "edit_event": "edytuj zdarzenie",
         "reading": "czytane",
         "start_date": "data rozpoczęcia",
-        "end_date": "data zakończenia"
+        "end_date": "data zakończenia",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Książka jest na liście do przeczytania",
@@ -290,7 +291,8 @@
         "login_not_match": "loginy nie są identyczne",
         "password_not_match": "hasła nie są identyczne",
         "login_length": "login musi zawierać co najmniej 3 znaki",
-        "password_length": "hasło musi zawierać co najmniej 3 znaki"
+        "password_length": "hasło musi zawierać co najmniej 3 znaki",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "utwórz użytkownika",
@@ -341,7 +343,9 @@
         "add_or_remove": "Dodaj lub usuń znacznik",
         "add": "Dodaj",
         "remove": "Usuń",
-        "choose_tag": "Wybierz znacznik, który chcesz dodać lub usunąć"
+        "choose_tag": "Wybierz znacznik, który chcesz dodać lub usunąć",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Napisz recenzję",

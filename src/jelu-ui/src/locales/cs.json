@@ -188,7 +188,8 @@
         "edit_event": "upravit událost",
         "reading": "čtu",
         "start_date": "počáteční datum",
-        "end_date": "datum ukončení"
+        "end_date": "datum ukončení",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Kniha je v seznamu k přečtení",
@@ -290,7 +291,8 @@
         "login_not_match": "pole přihlášení se neshodují",
         "password_not_match": "hesla se neshodují",
         "login_length": "přihlášení musí být minimálně 3 znaky",
-        "password_length": "heslo musí být minimálně 3 znaky"
+        "password_length": "heslo musí být minimálně 3 znaky",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "vytvořit uživatele",
@@ -341,7 +343,9 @@
         "add_or_remove": "Přidat nebo odebrat tagy",
         "add": "Přidat",
         "remove": "Odstranit",
-        "choose_tag": "Vyberte tag, který chcete přidat nebo odebrat"
+        "choose_tag": "Vyberte tag, který chcete přidat nebo odebrat",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Vytvořit recenzi",

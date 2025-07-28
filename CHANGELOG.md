@@ -1,3 +1,40 @@
+### [0.71.3](https://github.com/bayang/jelu/compare/v0.71.2...v0.71.3) (2025-07-23)
+
+
+### Bug Fixes
+
+* localize history months [#235](https://github.com/bayang/jelu/issues/235) ([075869b](https://github.com/bayang/jelu/commit/075869b6903d51ee13704934bae53bee06c3d194))
+* make import page more readable [#236](https://github.com/bayang/jelu/issues/236) ([18977c6](https://github.com/bayang/jelu/commit/18977c61f9216257d7b3b4f256519bc24425f9e1))
+* user login [#229](https://github.com/bayang/jelu/issues/229) ([573fe96](https://github.com/bayang/jelu/commit/573fe969c6f41fd2ead6774131365d138756c0b4))
+
+### [0.71.2](https://github.com/bayang/jelu/compare/v0.71.1...v0.71.2) (2025-07-21)
+
+
+### Bug Fixes
+
+* translations bugs [#229](https://github.com/bayang/jelu/issues/229) ([4a376a7](https://github.com/bayang/jelu/commit/4a376a74fedf8fd9885f0bf3bdd25d4dea29801d))
+
+### [0.71.1](https://github.com/bayang/jelu/compare/v0.71.0...v0.71.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* remove extra button on delete user choice popup [#227](https://github.com/bayang/jelu/issues/227) ([74bb33d](https://github.com/bayang/jelu/commit/74bb33d17742712824a299095129df9f3e43b70b))
+
+## [0.71.0](https://github.com/bayang/jelu/compare/v0.70.1...v0.71.0) (2025-07-15)
+
+
+### Features
+
+* Update to fetch ISBN from databazeknih ([#219](https://github.com/bayang/jelu/issues/219)) ([73e30dd](https://github.com/bayang/jelu/commit/73e30dd9b03c6086adfcd73c321990d57448254c))
+
+### [0.70.1](https://github.com/bayang/jelu/compare/v0.70.0...v0.70.1) (2025-07-07)
+
+
+### Bug Fixes
+
+* some dates are not translated [#221](https://github.com/bayang/jelu/issues/221) ([7b1c5b5](https://github.com/bayang/jelu/commit/7b1c5b50e5175f02bc1057e6c869f06ee30e3d24))
+
 ## [0.70.0](https://github.com/bayang/jelu/compare/v0.69.0...v0.70.0) (2025-07-03)
 
 

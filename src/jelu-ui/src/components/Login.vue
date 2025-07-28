@@ -159,7 +159,7 @@ const url = `${urls.BASE_URL}/oauth2/authorization/${provider.registrationId}`
     <div class="basis-10/12 sm:basis-1/3">
       <div class="field">
         <label class="label">
-          <span class="label-text font-semibold capitalize">{{ t('login.login') }}</span>
+          <span class="label-text font-semibold capitalize">{{ t('login.username') }}</span>
         </label>
 
         <o-input

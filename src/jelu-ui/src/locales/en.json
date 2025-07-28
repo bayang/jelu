@@ -188,7 +188,8 @@
         "edit_event" : "edit event",
         "reading" : "reading",
         "start_date" : "start date",
-        "end_date" : "end date"
+        "end_date" : "end date",
+        "started" : "started"
     },
     "filtering" : {
         "book_in_list" : "Book is in to-read list",
@@ -290,7 +291,8 @@
         "login_not_match" : "login fields do not match",
         "password_not_match" : "password fields do not match",
         "login_length" : "login must be 3 chars long minimum",
-        "password_length" : "password must be 3 chars long minimum"
+        "password_length" : "password must be 3 chars long minimum",
+        "username" : "username"
     },
     "admin_user" : {
         "create_user" : "create user",
@@ -342,7 +344,9 @@
         "add_or_remove" : "Add or remove tag",
         "add" : "Add",
         "remove" : "Remove",
-        "choose_tag" : "Choose the tag you want to add or remove"
+        "choose_tag" : "Choose the tag you want to add or remove",
+        "add_tag" : "add tag",
+        "remove_tag" : "remove tag"
     },
     "reviews" : {
         "create_review" : "Create review",

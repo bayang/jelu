@@ -165,7 +165,7 @@ const submit = () => {
             type="checkbox"
             class="toggle toggle-primary"
           >
-          <span class="mx-2">{{ add == true ? "Add tag" : "Remove tag" }}</span>
+          <span class="mx-2 capitalize">{{ add == true ? t("bulk.add_tag") : t("bulk.remove_tag") }}</span>
         </div>
         <div class="field">
           <o-field :label="t('bulk.choose_tag')">

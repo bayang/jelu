@@ -188,7 +188,8 @@
         "edit_event": "redaguoti įvykį",
         "reading": "skaitymas",
         "start_date": "pradžios data",
-        "end_date": "pabaigos data"
+        "end_date": "pabaigos data",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Knyga įtraukta į skaitomų knygų sąrašą",
@@ -290,7 +291,8 @@
         "login_not_match": "prisijungimo laukai nesutampa",
         "password_not_match": "slaptažodžio laukai nesutampa",
         "login_length": "prisijungimo vardas turi būti ne trumpesnis kaip 3 ženklų",
-        "password_length": "slaptažodis turi būti ne trumpesnis kaip 3 ženklų"
+        "password_length": "slaptažodis turi būti ne trumpesnis kaip 3 ženklų",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "sukurti naudotoją",
@@ -341,7 +343,9 @@
         "add_or_remove": "Pradėkite redaguoti",
         "add": "Pridėti",
         "remove": "Pašalinti",
-        "choose_tag": "Pasirinkite žymą, kurią norite pridėti arba pašalinti"
+        "choose_tag": "Pasirinkite žymą, kurią norite pridėti arba pašalinti",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Sukurti apžvalgą",

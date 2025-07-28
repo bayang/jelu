@@ -249,6 +249,15 @@
 .o-input.o-taginput__input {
   height: 100%;
 }
+
+.o-chk__label {
+  @apply text-lg;
+}
+
+.o-radio__label {
+  @apply text-lg;
+}
+
 /* end oruga customization with daisyui */
 
 .swal2-container {
@@ -331,6 +340,10 @@
   filter: blur(4px) invert(38%);
   -webkit-filter: blur(4px) invert(38%);
   -moz-filter: blur(4px) invert(38%);
+}
+
+.label {
+  @apply text-lg;
 }
 
 /* // book detail */

@@ -188,7 +188,8 @@
         "edit_event": "ubah aktivitas",
         "reading": "membaca",
         "start_date": "tanggal mulai",
-        "end_date": "tanggal akhir"
+        "end_date": "tanggal akhir",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Buku ada di daftar akan baca",
@@ -290,7 +291,8 @@
         "login_not_match": "isian masuk tidak cocok",
         "password_not_match": "isian kata sandi tidak cocok",
         "login_length": "masuk minimum 3 karakter",
-        "password_length": "kata sandi minimum 3 karakter"
+        "password_length": "kata sandi minimum 3 karakter",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "buat pengguna",
@@ -341,7 +343,9 @@
         "add_or_remove": "Tambah atau hapus penanda",
         "add": "Tambah",
         "remove": "Hapus",
-        "choose_tag": "Pilih penanda yang ingin ditambahkan atau dihapus"
+        "choose_tag": "Pilih penanda yang ingin ditambahkan atau dihapus",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Buat ulasan",

@@ -188,7 +188,8 @@
         "edit_event": "etkinliği düzenle",
         "reading": "okunuyor",
         "start_date": "başlangıç ​​tarihi",
-        "end_date": "bitiş tarihi"
+        "end_date": "bitiş tarihi",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Kitap okunacaklar listesinde",
@@ -290,7 +291,8 @@
         "login_not_match": "giriş bilgisi eşleşmiyor",
         "password_not_match": "şifre bilgisi eşleşmiyor",
         "login_length": "giriş minimum 3 karakter uzunluğunda olmalı",
-        "password_length": "şifre minimum 3 karakter uzunluğunda olmalı"
+        "password_length": "şifre minimum 3 karakter uzunluğunda olmalı",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "kullanıcı oluştur",
@@ -341,7 +343,9 @@
         "add_or_remove": "Etiket ekle ya da kaldır",
         "add": "Ekle",
         "remove": "Kaldır",
-        "choose_tag": "Eklemek ya da silmek istediğin etiketleri seç"
+        "choose_tag": "Eklemek ya da silmek istediğin etiketleri seç",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Değerlendirme yaz",

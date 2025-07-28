@@ -188,7 +188,8 @@
         "edit_event": "modifier évènement",
         "reading": "en cours",
         "start_date": "date de début ",
-        "end_date": "date de fin"
+        "end_date": "date de fin",
+        "started": "commencé"
     },
     "filtering": {
         "book_in_list": "Le livre est dans la liste de lecture",
@@ -280,7 +281,7 @@
         "isbn_list": "Liste d'ISBN dans un fichier"
     },
     "login": {
-        "login": "identifiant",
+        "login": "se connecter",
         "password": "mot de passe",
         "confirm_login": "confirmez l'identifiant",
         "confirm_password": "confirmez le mot de passe",
@@ -290,7 +291,8 @@
         "login_not_match": "les identifiants ne sont pas identiques",
         "password_not_match": "les mots de passe ne sont pas identiques",
         "login_length": "l'identifiant doit avoir une taille de 3 caractères au moins",
-        "password_length": "le mot de passe doit avoir une taille de 3 caractères au moins"
+        "password_length": "le mot de passe doit avoir une taille de 3 caractères au moins",
+        "username": "Nom d'utilisateur"
     },
     "admin_user": {
         "create_user": "créer utilisateur",
@@ -341,7 +343,9 @@
         "add_or_remove": "Ajouter ou supprimer une étiquette",
         "add": "Ajouter",
         "remove": "Enlever",
-        "choose_tag": "Choisissez le tag que vous souhaitez ajouter ou retirer"
+        "choose_tag": "Choisissez le tag que vous souhaitez ajouter ou retirer",
+        "add_tag": "ajouter une étiquette",
+        "remove_tag": "Supprimer l'étiquette"
     },
     "reviews": {
         "create_review": "écrire une critique",

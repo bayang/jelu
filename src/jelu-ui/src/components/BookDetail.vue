@@ -8,24 +8,24 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import useDates from '../composables/dates'
 import { Book, UserBook } from '../model/Book'
+import { BookQuote } from "../model/BookQuote"
 import { Metadata } from "../model/Metadata"
 import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
 import { Review } from '../model/Review'
+import { Series } from '../model/Series'
 import { User } from '../model/User'
 import dataService from "../services/DataService"
 import { key } from '../store'
 import { ObjectUtils } from '../utils/ObjectUtils'
 import AutoImportFormModalVue from "./AutoImportFormModal.vue"
+import BookQuoteCard from "./BookQuoteCard.vue"
+import BookQuoteModalVue from './BookQuoteModal.vue'
 import EditBookModal from "./EditBookModal.vue"
 import MergeBookModal from './MergeBookModal.vue'
 import ReadingEventModalVue from './ReadingEventModal.vue'
 import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewCard from "./ReviewCard.vue"
 import ReviewModalVue from './ReviewModal.vue'
-import BookQuoteModalVue from './BookQuoteModal.vue'
-import { BookQuote } from "../model/BookQuote"
-import BookQuoteCard from "./BookQuoteCard.vue"
-import { Series } from '../model/Series'
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -42,7 +42,7 @@ const store = useStore(key)
 const router = useRouter()
 const oruga = useOruga();
 
-const { formatDate, formatDateString } = useDates()
+const { stringToDate } = useDates()
 
 const isAdmin = computed(() => {
   return store !== undefined && store.getters.isAdmin
@@ -814,7 +814,7 @@ getBook()
         </p>
         <p v-if="book?.book?.publishedDate">
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
-          {{ formatDateString(book.book.publishedDate) }}
+          {{ d(stringToDate(book.book.publishedDate)!!, 'short') }}
         </p>
         <p v-if="book?.book?.series && book?.book?.series != null && book?.book?.series.length > 0">
           <span class="font-semibold capitalize">{{ t('book.series') }} :&nbsp;</span>
@@ -1072,21 +1072,21 @@ getBook()
               class="sm:flex sm:gap-2"
             >
               <h3 class="font-semibold">
-                {{ formatDate(event.endDate) }}
+                {{ d(event.endDate, 'short') }}
               </h3>
               <p class="capitalize">
                 {{ eventLabel(event.eventType) }}&nbsp;-
               </p>
               <h3 class="font-semibold">
-                {{ formatDate(event.startDate) }}
+                {{ d(event.startDate!!, 'short') }}
               </h3>
               <p class="capitalize">
-                started
+                {{ t('reading_events.started') }}
               </p>
             </div>
             <div v-else>
               <h3 class="font-semibold">
-                {{ formatDate(event.startDate) }}
+                {{ d(event.startDate!!, 'short') }}
               </h3>
               <p class="capitalize">
                 {{ eventLabel(event.eventType) }}
@@ -1146,21 +1146,21 @@ getBook()
               class="sm:flex sm:gap-2"
             >
               <h3 class="font-semibold">
-                {{ formatDate(event.endDate) }}
+                {{ d(event.endDate, 'short') }}
               </h3>
               <p class="capitalize">
                 {{ eventLabel(event.eventType) }}&nbsp;-
               </p>
               <h3 class="font-semibold">
-                {{ formatDate(event.startDate) }}
+                {{ d(event.startDate!!, 'short') }}
               </h3>
               <p class="capitalize">
-                started
+                {{ t('reading_events.started') }}
               </p>
             </div>
             <div v-else>
               <h3 class="font-semibold">
-                {{ formatDate(event.startDate) }}
+                {{ d(event.startDate!!, 'short') }}
               </h3>
               <p class="capitalize">
                 {{ eventLabel(event.eventType) }}

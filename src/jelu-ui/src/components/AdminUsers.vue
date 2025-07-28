@@ -52,7 +52,7 @@ async function createUser(user: any) {
           <FormKit
             type="text"
             name="login"
-            :label="t('admin_user.login')"
+            :label="t('login.username')"
             placeholder="joe123"
             validation="required|length:3"
           />
