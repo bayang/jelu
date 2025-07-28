@@ -23,7 +23,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String>,
     ): Optional<MetadataDto> {
-        // Build search query using ISBN, title + author, or just title
+        // Build search query from ISBN or title+author or just title
         val query = when {
             !metadataRequestDto.isbn.isNullOrBlank() -> metadataRequestDto.isbn
             !metadataRequestDto.title.isNullOrBlank() && !metadataRequestDto.authors.isNullOrBlank() ->
@@ -40,7 +40,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         // Perform search and extract basic book data + SID (book id)
         val (result, sid) = searchDatabazeKnih(query)
 
-        // If SID is found, fetch extended details (pages, ISBN, language, etc.)
+        // If SID and result found, fetch extended details like ISBN, language, page count
         if (sid != null && result != null) {
             logger.debug("SID found: $sid, fetching extended details for \"${result.title}\"")
             fetchExtendedDetails(sid, result, metadataRequestDto.isbn)
@@ -50,8 +50,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
     }
 
     /**
-     * Searches DatabazeKnih using the query.
-     * Returns a MetadataDto (basic book info) and the book's SID if found.
+     * Search databazeknih.cz and return metadata DTO + book SID
      */
     private fun searchDatabazeKnih(query: String): Pair<MetadataDto?, String?> {
         val url = "https://www.databazeknih.cz/search?in=books&q=${URLEncoder.encode(query, "UTF-8")}"
@@ -74,7 +73,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             return Pair(null, null)
         }
 
-        // If the search goes directly to the book page
+        // Direct hit
         val dto = parseBookPage(doc)
         val sid = extractSidFromDocument(doc)
         return Pair(dto, sid)
@@ -112,7 +111,7 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
     }
 
     /**
-     * Fetch additional info like ISBN, language, and page count from book-detail-more-info endpoint
+     * Fetch and populate extended book details (fallbacks included)
      */
     private fun fetchExtendedDetails(sid: String, dto: MetadataDto, searchedIsbn: String?) {
         val detailUrl = "https://www.databazeknih.cz/book-detail-more-info/$sid"
