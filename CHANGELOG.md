@@ -1,3 +1,10 @@
+### [0.71.4](https://github.com/bayang/jelu/compare/v0.71.3...v0.71.4) (2025-07-29)
+
+
+### Bug Fixes
+
+* Updated DatabazeKnihMetadataProvider ([#240](https://github.com/bayang/jelu/issues/240)) ([ada3bb0](https://github.com/bayang/jelu/commit/ada3bb0b5ae813fae34e0a6ce1fed6b76e3367d2))
+
 ### [0.71.3](https://github.com/bayang/jelu/compare/v0.71.2...v0.71.3) (2025-07-23)
 
 
