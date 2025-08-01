@@ -1,3 +1,10 @@
+## [0.72.0](https://github.com/bayang/jelu/compare/v0.71.4...v0.72.0) (2025-08-01)
+
+
+### Features
+
+* add custom lists [#170](https://github.com/bayang/jelu/issues/170) ([af9d375](https://github.com/bayang/jelu/commit/af9d37576a614646b5ead3b7253114bdccf83146))
+
 ### [0.71.4](https://github.com/bayang/jelu/compare/v0.71.3...v0.71.4) (2025-07-29)
 
 
