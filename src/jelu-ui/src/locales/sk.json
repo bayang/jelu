@@ -149,7 +149,8 @@
         "stats": "Štatistiky",
         "shelves": "Poličky",
         "shelves_max_number_reached": "Maximálny počet poličiek je dosiahnutý. Ak chcete pridať ďalšie, odstráňte existujúce.",
-        "shelf_choose_tag": "Výberom štítku vytvoríte príslušnú poličku"
+        "shelf_choose_tag": "Výberom štítku vytvoríte príslušnú poličku",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Najskôr sa prihláste, prosím"
@@ -396,5 +397,19 @@
             "EXCEPTION_CAUGHT": "Pri volaní zásuvného modulu metadát bola vyvolaná výnimka"
         },
         "details": "Podrobnosti o chybe"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }
