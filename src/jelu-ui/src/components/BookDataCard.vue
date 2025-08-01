@@ -36,7 +36,11 @@ const getBookIsLoading: Ref<boolean> = ref(false)
 const hasExternalLink = computed(() => props.book.amazonId != null
   || props.book.goodreadsId != null
   || props.book.googleId != null
-  || props.book.librarythingId != null)
+  || props.book.librarythingId != null
+  || props.book.inventaireId != null
+  || props.book.isfdbId != null
+  || props.book.noosfereId != null
+  || props.book.openlibraryId != null)
 
 const userbookId: Ref<string|null> = ref(null)
 const bookCanBeAdded: Ref<boolean> = ref(false)
@@ -70,7 +74,7 @@ watch(() => props.book.id, (newVal, oldVal) => {
   console.log("props.book.id ")
   console.log(newVal + " " + oldVal)
   bookCanBeAdded.value = false
-  if (newVal !== oldVal && props.book.id != null) {
+  if (props.addBook && newVal !== oldVal && props.book.id != null) {
     getUserbookId()
   }
 })
@@ -99,6 +103,15 @@ function modalClosed() {
   router.push({ name: 'book-reviews', params: { bookId: props.book.id } })
 }
 
+const getIsbn = (): string|null => {
+  if (props.book.isbn13 && props.book.isbn13.length > 0) {
+    return props.book.isbn13.replaceAll("-", "")
+  }
+  if (props.book.isbn10 && props.book.isbn10.length > 0) {
+    return props.book.isbn10.replaceAll("-", "")
+  }
+  return null
+}
 </script>
 
 <template>
@@ -374,6 +387,51 @@ function modalClosed() {
           :href="'https://www.librarything.com/work/' + props.book.librarythingId"
           target="_blank"
         >librarything</a>
+      </span>
+      <span
+        v-if="props.book.isfdbId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://www.isfdb.org/cgi-bin/title.cgi?' + props.book.isfdbId"
+          target="_blank"
+        >ISFDB</a>
+      </span>
+      <span
+        v-if="props.book.openlibraryId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="`https://openlibrary.org/works/${props.book.openlibraryId}?mode=all`"
+          target="_blank"
+        >Openlibrary</a>
+      </span>
+      <span
+        v-if="props.book.noosfereId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://www.noosfere.org/livres/EditionsLivre.asp?numitem=' + props.book.noosfereId"
+          target="_blank"
+        >Noosfere</a>
+      </span>
+      <span
+        v-if="getIsbn() != null"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://inventaire.io/entity/isbn:' + getIsbn()"
+          target="_blank"
+        >inventaire</a>
+      </span>
+      <span
+        v-else-if="props.book.inventaireId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://inventaire.io/entity/inv:' + props.book.inventaireId"
+          target="_blank"
+        >inventaire</a>
       </span>
     </div>
   </div>

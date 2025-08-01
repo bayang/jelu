@@ -64,10 +64,14 @@ class SecurityConfig(
                     "/api/v1/server-settings",
                     "/api/v1/reviews/**",
                     "/api/v1/oauth2/providers",
+                    "/api/v1/username/**",
+                    "/api/v1/custom-lists/remove",
                 ).permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
+                it.requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
+                it.requestMatchers(HttpMethod.GET, "/api/v1/custom-lists/**").permitAll()
+                // it.requestMatchers(HttpMethod.POST, "/api/v1/custom-lists/remove").permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
-                it.requestMatchers(HttpMethod.GET, "/api\\/v1\\/users\\/([a-zA-Z0-9-]*)\\/name$").permitAll()
                 it.requestMatchers(HttpMethod.POST, "/api/v1/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
                 it.requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("USER")
                 it.requestMatchers(

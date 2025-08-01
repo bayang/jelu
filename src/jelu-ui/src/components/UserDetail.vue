@@ -149,6 +149,7 @@ getUserReviews()
         <book-card
           :book="book"
           class="h-full"
+          :public="false"
           :force-select="false"
           :show-select="false"
           :propose-add="false"
@@ -199,6 +200,7 @@ getUserReviews()
           </p>
           <book-card
             :book="toUserBook(event.userBook)"
+            :public="false"
             class="h-full"
             :force-select="false"
             :show-select="false"
@@ -250,6 +252,7 @@ getUserReviews()
       >
         <book-card
           :book="book"
+          :public="false"
           class="h-full"
           :force-select="false"
           :show-select="false"

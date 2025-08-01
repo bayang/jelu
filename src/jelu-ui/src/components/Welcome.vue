@@ -177,6 +177,7 @@ function toggleReadProgressModal(userBookId: string, pageCount: number|null, cur
         >
           <book-card
             :book="book"
+            :public="false"
             size="xl"
             :force-select="false"
             :show-select="false"
@@ -263,6 +264,7 @@ function toggleReadProgressModal(userBookId: string, pageCount: number|null, cur
           </p>
           <book-card
             :book="event.userBook"
+            :public="false"
             class="h-full"
             :force-select="false"
             :show-select="false"

@@ -19,6 +19,7 @@ const props = defineProps<{
   showSelect: boolean,
   proposeAdd: boolean,
   seriesId?: string,
+  public: boolean // is it on a public facing page (so hide links etc...)
 }>();
 const emit = defineEmits<{
   (e: 'update:modalClosed', open: boolean): void,
@@ -107,7 +108,7 @@ function modalClosed() {
 }
 
 const toggleEdit = (book: UserBook) => {
-  if (book.id == null) {
+  if (!props.public && book.id == null) {
     console.log("book")
     console.log(book)
     oruga.modal.open({
@@ -126,8 +127,8 @@ const toggleEdit = (book: UserBook) => {
 }
 
 watch(checked, (newVal, oldVal) => {
-  console.log(props.book.id + " " + checked.value)
-  emit("update:checked", props.book.id != null ? props.book.id : null , checked.value)
+  console.log(props.book.id != null ? props.book.id : props.book.book.id + " " + checked.value)
+  emit("update:checked", props.book.id != null ? props.book.id as string : props.book.book.id as string , checked.value)
 })
 
 
@@ -186,7 +187,7 @@ watch(checked, (newVal, oldVal) => {
         :style="{ width: book.percentRead + '%' }"
       />
       <div
-        v-if="book.id != null && props.showSelect"
+        v-if="props.showSelect"
         class="absolute top-0 left-1"
       >
         <input
@@ -227,11 +228,13 @@ watch(checked, (newVal, oldVal) => {
           :key="author.id"
         >
           <router-link
+            v-if="!public"
             class="link hover:underline hover:decoration-4 hover:decoration-secondary line-clamp-2 inline-block"
             :to="{ name: 'author-detail', params: { authorId: author.id } }"
           >
             {{ author.name }}
           </router-link>
+          <span v-else>{{ author.name }}</span>
           <span>&nbsp;</span>
         </span>
         <span
@@ -247,13 +250,14 @@ watch(checked, (newVal, oldVal) => {
         >{{ eventText }}</span>
         <div class="flex">
           <router-link
-            v-if="currentSeries != null"
+            v-if="currentSeries != null && ! props.public"
             v-tooltip="currentSeries.name"
             class="badge mx-1"
             :to="{ name: 'series', params: { seriesId: currentSeries.seriesId } }"
           >
             #{{ currentSeries.numberInSeries }}
           </router-link>
+          <span v-if="currentSeries != null && props.public">#{{ currentSeries.numberInSeries }}</span>
           <span
             v-if="book.userAvgRating"
             v-tooltip="t('labels.user_avg_rating', {rating : book.userAvgRating})"

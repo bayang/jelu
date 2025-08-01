@@ -17,7 +17,7 @@ import java.util.UUID
 import kotlin.math.ceil
 import kotlin.time.measureTime
 
-const val INDEX_VERSION = 3
+const val INDEX_VERSION = 5
 private val logger = KotlinLogging.logger {}
 
 @Component

@@ -377,6 +377,7 @@ getBooks()
         :force-select="false"
         :show-select="false"
         :propose-add="true"
+        :public="false"
         @update:modal-closed="modalClosed"
       />
     </div>

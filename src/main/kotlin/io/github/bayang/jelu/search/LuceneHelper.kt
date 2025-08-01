@@ -84,6 +84,37 @@ class LuceneHelper(
             null
         }
     }
+    fun searchEntitiesIdsForTags(searchTerms: List<String>, entity: LuceneEntity): List<String>? {
+        return if (searchTerms.isNotEmpty()) {
+            try {
+                val terms = mutableListOf<Term>()
+                for (term in searchTerms) {
+                    terms.add(Term("tag_ex", term))
+                }
+                val typeQuery = TermQuery(Term(LuceneEntity.TYPE, entity.type))
+
+                val booleanIntermQuery = BooleanQuery.Builder()
+                    .add(typeQuery, BooleanClause.Occur.MUST)
+
+                for (t in terms) {
+                    booleanIntermQuery.add(TermQuery(t), BooleanClause.Occur.MUST)
+                }
+                val booleanQuery = booleanIntermQuery.build()
+                getIndexReader().use { index ->
+                    val searcher = IndexSearcher(index)
+                    val topDocs = searcher.search(booleanQuery, index.numDocs())
+                    topDocs.scoreDocs.map { searcher.storedFields().document(it.doc)[entity.id] }
+                }
+            } catch (e: ParseException) {
+                emptyList()
+            } catch (e: Exception) {
+                logger.error(e) { "Error fetching entities from index" }
+                emptyList()
+            }
+        } else {
+            null
+        }
+    }
 
     fun upgradeIndex() {
         IndexUpgrader(directory, getIndexWriterConfig(), true).upgrade()

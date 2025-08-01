@@ -27,6 +27,7 @@ import { DirectoryListing } from "../model/DirectoryListing";
 import { BookQuote, CreateBookQuoteDto, UpdateBookQuoteDto } from "../model/BookQuote";
 import urls from "../urls";
 import { OAuth2ClientDto } from "../model/oauth-client-dto";
+import { CustomList, CustomListRemoveDto } from "../model/custom-list";
 
 class DataService {
 
@@ -81,6 +82,8 @@ class DataService {
   private API_REVIEWS = '/reviews';
   
   private API_BOOK_QUOTES = '/book-quotes';
+  
+  private API_CUSTOM_LISTS = '/custom-lists';
 
   constructor() {
     this.apiClient = axios.create({
@@ -1721,7 +1724,7 @@ class DataService {
 
   usernameById = async (userId: string) => {
     try {
-      const response = await this.apiClient.get(`${this.API_USER}/${userId}/name`);
+      const response = await this.apiClient.get(`/username/${userId}`);
       console.log("called username by id")
       console.log(response)
       return response.data.username;
@@ -1952,6 +1955,111 @@ class DataService {
     }
   }
   
+  saveCustomList = async (list: CustomList) => {
+    try {
+      const resp = await this.apiClient.post<CustomList>(`${this.API_CUSTOM_LISTS}`, list)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error creating custom list " + error.response.status + " " + error.response.data.error)
+        throw new Error("error creating custom list " + error.response.status + " " + error)
+      }
+      console.log("error creating custom list " + (error as AxiosError).code)
+      throw new Error("error creating custom list " + error)
+    }
+  }
+  
+  findCustomLists = async (name?: string,
+    page?: number, size?: number, sort: string | null = null) => {
+    try {
+      const response = await this.apiClient.get<Page<CustomList>>(`${this.API_CUSTOM_LISTS}`, {
+        params: {
+          name: name,
+          page: page,
+          size: size,
+          sort: sort
+        },
+      });
+      console.log("called custom lists")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error custom lists " + (error as AxiosError).code)
+      throw new Error("error custom lists " + error)
+    }
+  }
+  
+  findCustomListById = async (listId: string) => {
+    try {
+      const response = await this.apiClient.get<CustomList>(`${this.API_CUSTOM_LISTS}/${listId}`);
+      console.log("called custom lists")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error custom list " + (error as AxiosError).code)
+      throw new Error("error custom list " + error)
+    }
+  }
+
+  deleteCustomList = async (listId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_CUSTOM_LISTS}/${listId}`);
+      console.log("delete list")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete list " + (error as AxiosError).code)
+      throw new Error("error delete list " + error)
+    }
+  }
+  
+  booksForList = async (listId: string, page?: number, size?: number, sort: string | null = null) => {
+    try {
+      const response = await this.apiClient.get<Page<Book>>(`${this.API_CUSTOM_LISTS}/${listId}/books`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort
+        },
+      });
+      console.log("called custom lists books")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error custom list books " + (error as AxiosError).code)
+      throw new Error("error custom list books " + error)
+    }
+  }
+
+  removeBooksFromList = async (customListRemoveDto: CustomListRemoveDto) => {
+    try {
+      const resp = await this.apiClient.post(`${this.API_CUSTOM_LISTS}/remove`, customListRemoveDto)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error remove from list " + error.response.status + " " + error.response.data.error)
+        throw new Error("error remove from list " + error.response.status + " " + error)
+      }
+      console.log("error remove from list " + (error as AxiosError).code)
+      throw new Error("error remove from list " + error)
+    }
+  }
 
 }
 

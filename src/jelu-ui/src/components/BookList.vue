@@ -402,6 +402,7 @@ try {
           :book="book"
           :force-select="selectAll"
           :show-select="showSelect"
+          :public="false"
           :propose-add="true"
           class="h-full"
           @update:modal-closed="modalClosed"

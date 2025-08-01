@@ -301,6 +301,7 @@ getToRead()
       <book-card
         :book="book"
         :force-select="selectAll"
+        :public="false"
         :show-select="showSelect"
         :propose-add="true"
         class="h-full"

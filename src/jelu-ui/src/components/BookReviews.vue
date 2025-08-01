@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core';
-import { Ref, ref, watch } from "vue";
+import { computed, Ref, ref, watch } from "vue";
 import { useRoute } from 'vue-router';
 import { Book } from "../model/Book";
 import { Review } from "../model/Review";
 import dataService from "../services/DataService";
 import BookDataCard from "./BookDataCard.vue";
 import ReviewCard from "./ReviewCard.vue";
+import { useStore } from 'vuex'
+import { key } from '../store'
 
 const route = useRoute()
+
+const store = useStore(key)
+
+const logged = computed(() => {
+  return store.getters.getLogged
+})
 
 useTitle('Jelu | Reviews')
 const reviews: Ref<Array<Review>> = ref([])
@@ -43,7 +51,6 @@ const getReviews = async () => {
 
 getBook()
 getReviews()
-
 </script>
 
 <template>
@@ -54,8 +61,8 @@ getReviews()
       :to-read="null"
       :borrowed="null"
       :book-link="true"
-      :links="true"
-      :add-book="true"
+      :links="logged"
+      :add-book="logged"
     />
     <div class="w-full flex flex-row flex-wrap place-content-center gap-3 mt-4">
       <div

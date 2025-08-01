@@ -183,6 +183,7 @@ getYears()
           >
             <book-card
               :book="event.userBook"
+              :public="false"
               class="h-full"
               :force-select="false"
               :show-select="false"

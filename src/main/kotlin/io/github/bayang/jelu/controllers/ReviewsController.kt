@@ -56,8 +56,10 @@ class ReviewsController(
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         before: LocalDate?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["reviewDate"]) @ParameterObject pageable: Pageable,
+        principal: Authentication?,
     ): Page<ReviewDto> {
-        return reviewService.find(userId, bookId, visibility, after, before, pageable)
+        val appliedVisibility = if (principal == null) Visibility.PUBLIC else visibility
+        return reviewService.find(userId, bookId, appliedVisibility, after, before, pageable)
     }
 
     @PutMapping(path = ["/reviews/{id}"])

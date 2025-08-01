@@ -40,8 +40,6 @@ initialLoad.value = true
 store.dispatch('getUser')
   .then(async () => {
     console.log("then")
-    // try {
-    // await router.push({ path: store.state.entryPoint })
     if (store.state.route != null) {
       await router.push(store.state.route)
     }
@@ -49,13 +47,12 @@ store.dispatch('getUser')
     initialLoad.value = false
     store.dispatch('getServerSettings')
     store.dispatch('getUserShelves')
-    // } catch(e) {
-    // console.log("error nav")
-    // console.log(e)
-    // }
   })
   .catch(() => {
-    if (store.state.route != null && store.state.route.name === "review-detail") {
+    if (store.state.route != null && (
+      store.state.route.name === "review-detail" || 
+      store.state.route.name === "list-detail"|| 
+      store.state.route.name === "book-reviews")) {
       router.push(store.state.route)
       initialLoad.value = false
       return
