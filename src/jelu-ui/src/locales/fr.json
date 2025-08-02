@@ -150,7 +150,7 @@
         "shelves": "Étagères",
         "shelves_max_number_reached": "Le nombre maximum d'étagères est atteint. Supprimez-en pour en ajouter d'autres.",
         "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante",
-        "custom_lists": "custom lists"
+        "custom_lists": "listes personnalisées"
     },
     "user": {
         "log_first": "Veuillez vous identifier"
@@ -399,17 +399,17 @@
         "details": "Détail de l'erreur"
     },
     "lists": {
-        "create_list": "create a custom list",
-        "name": "name",
-        "public": "public",
-        "actionable": "actionable",
-        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "create_list": "créer une liste personnalisée",
+        "name": "nom",
+        "public": "publique",
+        "actionable": "actionnable",
+        "actionable_desc": "Vous pouvez cliquer sur des éléments dans une liste actionnable pour les supprimer.",
         "tags": "tags",
-        "tags_desc": "The list will display the items that match all the chosen tags.",
-        "create": "create",
-        "remove": "remove selected",
-        "empty": "list is empty",
-        "edit_list": "edit the list",
-        "update_list": "update the list"
+        "tags_desc": "La liste affichera les éléments qui correspondent à tous les tags sélectionnés.",
+        "create": "créer",
+        "remove": "supprimer la sélection",
+        "empty": "la liste est vide",
+        "edit_list": "modifier la liste",
+        "update_list": "mettre à jour la liste"
     }
 }
