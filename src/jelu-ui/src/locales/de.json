@@ -149,7 +149,8 @@
         "stats": "Statistik",
         "shelves": "Regale",
         "shelves_max_number_reached": "Maximale Anzahl an Regalen ist erreicht. Lösche vorhandene Regale, um mehr hinzuzufügen.",
-        "shelf_choose_tag": "Tag wählen, um das zugehörige Regal zu erstellen"
+        "shelf_choose_tag": "Tag wählen, um das zugehörige Regal zu erstellen",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Bitte zuerst anmelden"
@@ -396,5 +397,19 @@
             "EXCEPTION_CAUGHT": "Ausnahme beim Aufruf des Metadaten-Plug-Ins"
         },
         "details": "Fehlerdetails"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

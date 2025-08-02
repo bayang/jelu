@@ -149,7 +149,8 @@
         "stats": "İstatistikler",
         "shelves": "Raflar",
         "shelves_max_number_reached": "Maksimum raf sayısına ulaşıldı. Daha fazla eklemek için bir tane sil.",
-        "shelf_choose_tag": "Raf oluşturmak için bir etiket seçin"
+        "shelf_choose_tag": "Raf oluşturmak için bir etiket seçin",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Lütfen önce giriş yapın"
@@ -396,5 +397,19 @@
             "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
         },
         "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

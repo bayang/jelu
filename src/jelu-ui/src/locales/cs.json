@@ -149,7 +149,8 @@
         "stats": "Statistiky",
         "shelves": "Police",
         "shelves_max_number_reached": "Dosažen maximální počet polic. Chcete-li přidat další, smažte některý ze stávajících.",
-        "shelf_choose_tag": "Vyberte tag pro vytvoření odpovídající police"
+        "shelf_choose_tag": "Vyberte tag pro vytvoření odpovídající police",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Nejprve se prosím přihlaste"
@@ -396,5 +397,19 @@
             "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
         },
         "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }
