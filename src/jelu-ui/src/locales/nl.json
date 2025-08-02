@@ -150,7 +150,7 @@
         "shelves": "Boekenplanken",
         "shelves_max_number_reached": "Maximum aantal boekenplanken is bereikt. Verwijder bestaande om er meer toe te voegen.",
         "shelf_choose_tag": "Kies een label om de corresponderende boekenplank te maken",
-        "custom_lists": "custom lists"
+        "custom_lists": "aangepaste lijsten"
     },
     "user": {
         "log_first": "Eerst inloggen a.u.b."
@@ -399,17 +399,17 @@
         "details": "details van fout"
     },
     "lists": {
-        "create_list": "create a custom list",
-        "name": "name",
-        "public": "public",
+        "create_list": "een aangepaste lijst maken",
+        "name": "naam",
+        "public": "openbaar",
         "actionable": "actionable",
         "actionable_desc": "Items in an actionable list can be clicked to be removed.",
         "tags": "tags",
         "tags_desc": "The list will display the items that match all the chosen tags.",
-        "create": "create",
-        "remove": "remove selected",
-        "empty": "list is empty",
-        "edit_list": "edit the list",
-        "update_list": "update the list"
+        "create": "aanmaken",
+        "remove": "verwijder selectie",
+        "empty": "lijst is leeg",
+        "edit_list": "bewerk de lijst",
+        "update_list": "update de lijst"
     }
 }
