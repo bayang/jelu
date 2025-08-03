@@ -149,7 +149,8 @@
         "stats": "Statistieken",
         "shelves": "Boekenplanken",
         "shelves_max_number_reached": "Maximum aantal boekenplanken is bereikt. Verwijder bestaande om er meer toe te voegen.",
-        "shelf_choose_tag": "Kies een label om de corresponderende boekenplank te maken"
+        "shelf_choose_tag": "Kies een label om de corresponderende boekenplank te maken",
+        "custom_lists": "aangepaste lijsten"
     },
     "user": {
         "log_first": "Eerst inloggen a.u.b."
@@ -396,5 +397,19 @@
             "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
         },
         "details": "details van fout"
+    },
+    "lists": {
+        "create_list": "een aangepaste lijst maken",
+        "name": "naam",
+        "public": "openbaar",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "aanmaken",
+        "remove": "verwijder selectie",
+        "empty": "lijst is leeg",
+        "edit_list": "bewerk de lijst",
+        "update_list": "update de lijst"
     }
 }

@@ -149,7 +149,8 @@
         "stats": "Statistiques",
         "shelves": "Étagères",
         "shelves_max_number_reached": "Le nombre maximum d'étagères est atteint. Supprimez-en pour en ajouter d'autres.",
-        "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante"
+        "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante",
+        "custom_lists": "listes personnalisées"
     },
     "user": {
         "log_first": "Veuillez vous identifier"
@@ -396,5 +397,19 @@
             "EXCEPTION_CAUGHT": "une exception a été interceptée lors de l'appel au plugin de métadonnées"
         },
         "details": "Détail de l'erreur"
+    },
+    "lists": {
+        "create_list": "créer une liste personnalisée",
+        "name": "nom",
+        "public": "publique",
+        "actionable": "actionnable",
+        "actionable_desc": "Vous pouvez cliquer sur des éléments dans une liste actionnable pour les supprimer.",
+        "tags": "tags",
+        "tags_desc": "La liste affichera les éléments qui correspondent à tous les tags sélectionnés.",
+        "create": "créer",
+        "remove": "supprimer la sélection",
+        "empty": "la liste est vide",
+        "edit_list": "modifier la liste",
+        "update_list": "mettre à jour la liste"
     }
 }

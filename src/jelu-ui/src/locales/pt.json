@@ -149,7 +149,8 @@
         "stats": "Estatísticas",
         "shelves": "Prateleiras",
         "shelves_max_number_reached": "O número máximo de prateleiras foi atingido. Apague já existentes para adicionar mais.",
-        "shelf_choose_tag": "Escolha uma etiqueta para criar a prateleira correspondente"
+        "shelf_choose_tag": "Escolha uma etiqueta para criar a prateleira correspondente",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Por favor, inicie sessão primeiro"
@@ -396,5 +397,19 @@
             "EXCEPTION_CAUGHT": "uma exceção foi gerada durante a chamada do plugin de metadados"
         },
         "details": "detalhes do erro"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }
