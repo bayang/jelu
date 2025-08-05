@@ -150,7 +150,7 @@
         "shelves": "Regale",
         "shelves_max_number_reached": "Maximale Anzahl an Regalen ist erreicht. Lösche vorhandene Regale, um mehr hinzuzufügen.",
         "shelf_choose_tag": "Tag wählen, um das zugehörige Regal zu erstellen",
-        "custom_lists": "custom lists"
+        "custom_lists": "Eigene Listen"
     },
     "user": {
         "log_first": "Bitte zuerst anmelden"
