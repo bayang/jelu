@@ -1,3 +1,12 @@
+### [0.72.1](https://github.com/bayang/jelu/compare/v0.72.0...v0.72.1) (2025-08-20)
+
+
+### Bug Fixes
+
+* translators and narrators appear ax orphaned authors [#245](https://github.com/bayang/jelu/issues/245) ([294cd58](https://github.com/bayang/jelu/commit/294cd58dccfa980d44014399c1bcd1c2123fb903))
+* use user locale to search for author metadata [#244](https://github.com/bayang/jelu/issues/244) ([1a428ce](https://github.com/bayang/jelu/commit/1a428cefd151ad9034f7faf7f55c701348962b0a))
+* wrong yes no popups, prevent users from deleting books from DB [#245](https://github.com/bayang/jelu/issues/245) ([b2e2d56](https://github.com/bayang/jelu/commit/b2e2d56f7521e1fab9c5531d31d4c686ab62c81d))
+
 ## [0.72.0](https://github.com/bayang/jelu/compare/v0.71.4...v0.72.0) (2025-08-01)
 
 
