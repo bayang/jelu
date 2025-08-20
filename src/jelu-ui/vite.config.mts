@@ -20,6 +20,9 @@ export default defineConfig({
         registerType: 'autoUpdate',
         useCredentials: true,
         strategies: "generateSW",
+        workbox: {
+          maximumFileSizeToCacheInBytes: 4000000
+        },
         injectRegister: "script-defer",
         manifest: {
           name: 'Jelu',

@@ -88,14 +88,13 @@ const deleteTag = async (target: Tag) => {
 
 const promptDeleteTag = async (tag: Tag, numberOfBooks: number|undefined) => {
   let abort = false
-  await ObjectUtils.swalMixin.fire({
+  await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('labels.delete_this_tag', {nb: numberOfBooks})}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
       cancelButtonText: t('labels.dont_delete'),
-      denyButtonText: t('labels.delete'),
     }).then((result) => {
       if (result.isDismissed) {
         abort = true

@@ -272,7 +272,7 @@ const toggleReadProgressModal = (userBookId: string, pageCount: number|null, cur
 const deleteBook = async () => {
   let deleteForUserOnly = true
   let abort = false
-  if (isAdmin.value) {
+  if (isAdmin.value === true) {
     await ObjectUtils.swalMixin.fire({
       html: `<p>${t('labels.delete_for_all_or_only_you')}</p>`,
       showDenyButton: true,
@@ -290,14 +290,13 @@ const deleteBook = async () => {
     })
   }
   else {
-    await ObjectUtils.swalMixin.fire({
+    await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('labels.delete_this_book')}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
       cancelButtonText: t('labels.dont_delete'),
-      denyButtonText: t('labels.delete'),
     }).then((result) => {
       if (result.isDismissed) {
         abort = true
@@ -419,11 +418,11 @@ function copyToClipboard(content: string) {
 const deleteReview = async (reviewId: string) => {
   console.log("delete " + reviewId)
   let abort = false
-  await ObjectUtils.swalMixin.fire({
+  await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('reviews.delete_review')}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
       cancelButtonText: t('labels.dont_delete'),
       denyButtonText: t('labels.delete'),
@@ -449,11 +448,11 @@ const deleteReview = async (reviewId: string) => {
 const deleteBookQuote = async (bookQuoteId: string) => {
   console.log("delete " + bookQuoteId)
   let abort = false
-  await ObjectUtils.swalMixin.fire({
+  await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('book_quotes.delete_quote')}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
       cancelButtonText: t('labels.dont_delete'),
       denyButtonText: t('labels.delete'),

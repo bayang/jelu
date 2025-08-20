@@ -131,11 +131,10 @@ const importBook = async () => {
     let saveBook = true
     if (alreadyExisting != null) {
       saveBook = false
-      await ObjectUtils.swalMixin.fire({
+      await ObjectUtils.swalYesNoMixin.fire({
         html: `<p>${t('labels.book_with_same_isbn_already_exists')}:<br>${alreadyExisting.title}<br>${t('labels.save_new_anyway')}</p>`,
-        showDenyButton: true,
+        showDenyButton: false,
         confirmButtonText: t('labels.save'),
-        denyButtonText: t('labels.dont_save'),
       }).then((result) => {
         if (result.isConfirmed) {
           saveBook = true

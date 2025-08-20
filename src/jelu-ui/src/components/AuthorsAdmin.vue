@@ -88,14 +88,13 @@ const deleteAuthor = async (target: Author) => {
 
 const promptDeleteAuthor = async (author: Author, numberOfBooks: number|undefined) => {
   let abort = false
-  await ObjectUtils.swalMixin.fire({
+  await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('labels.delete_this_author', {nb: numberOfBooks})}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
-      cancelButtonText: t('labels.dont_delete'),
-      denyButtonText: t('labels.delete'),
+      cancelButtonText: t('labels.dont_delete')
     }).then((result) => {
       if (result.isDismissed) {
         abort = true
