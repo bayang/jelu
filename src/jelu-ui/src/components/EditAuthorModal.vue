@@ -5,6 +5,7 @@ import { WikipediaSearchResult, WikipediaSearchResultElement } from "../model/Wi
 import dataService from "../services/DataService";
 import { StringUtils } from "../utils/StringUtils";
 import { useI18n } from 'vue-i18n'
+import { useLocalStorage } from '@vueuse/core'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -30,7 +31,9 @@ let uploadlabel = computed(() => {
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
 const uploadPercentage = ref(0);
-const searchlanguage = ref("en");
+
+const storedLanguage = useLocalStorage("jelu_language", "en")
+const searchlanguage = ref(storedLanguage.value);
 const FORM = "FORM"
 const SEARCH = "SEARCH"
 const currentPhase = ref(FORM)
