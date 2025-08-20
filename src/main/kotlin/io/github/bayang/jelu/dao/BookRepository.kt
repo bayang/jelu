@@ -603,9 +603,13 @@ class BookRepository(
 
     fun findOrphanAuthors(pageable: Pageable): Page<Author> {
         val query = AuthorTable.join(BookAuthors, JoinType.LEFT)
+            .join(BookTranslators, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookTranslators.translator)
+            .join(BookNarrators, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookNarrators.narrator)
             .selectAll()
             .groupBy(AuthorTable.name)
-            .having { BookAuthors.author.count() eq(0) }
+            .having {
+                BookAuthors.author.count() eq(0) and(BookTranslators.translator.count() eq(0)) and(BookNarrators.narrator.count() eq(0))
+            }
 
         query.withDistinct(true)
         val total = query.count()

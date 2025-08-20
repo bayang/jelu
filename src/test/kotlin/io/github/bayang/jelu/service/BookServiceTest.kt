@@ -9,6 +9,7 @@ import io.github.bayang.jelu.dto.AuthorDto
 import io.github.bayang.jelu.dto.AuthorUpdateDto
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
+import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
@@ -2518,6 +2519,39 @@ class BookServiceTest(
         val p = bookService.findOrphanAuthors(Pageable.ofSize(20))
         Assertions.assertEquals(1, p.totalElements)
         Assertions.assertEquals(author.name, p.content[0].name)
+
+        val updated = bookService.update(
+            savedBook.id!!,
+            BookUpdateDto(
+                translators = listOf(res), authors = savedBook.authors,
+                title = savedBook.title,
+                isbn10 = savedBook.isbn10,
+                isbn13 = savedBook.isbn13,
+                summary = savedBook.summary,
+                image = null,
+                publisher = null,
+                pageCount = null,
+                publishedDate = null,
+                narrators = null,
+                tags = null,
+                googleId = null,
+                amazonId = null,
+                goodreadsId = null,
+                librarythingId = null,
+                isfdbId = null,
+                openlibraryId = null,
+                noosfereId = null,
+                inventaireId = null,
+                language = null,
+                series = null,
+            ),
+        )
+        Assertions.assertEquals(1, updated.authors?.size)
+        Assertions.assertEquals(1, updated.translators?.size)
+        Assertions.assertEquals("jean jacques", updated.translators?.get(0)?.name)
+        val t = bookService.findOrphanAuthors(Pageable.ofSize(20))
+        // author that is only a translator should not be considered an orphan author
+        Assertions.assertEquals(0, t.totalElements)
     }
 
     @Test
