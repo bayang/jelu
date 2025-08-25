@@ -113,6 +113,7 @@ const getBooks = () => {
         }
         getBookIsLoading.value = false
         updatePageLoading(false)
+        removeIds()
     }
     )
     .catch(e => {
@@ -121,6 +122,12 @@ const getBooks = () => {
     })
 
 };
+
+const removeIds = () => {
+  if (userId.value != null) {
+    books.value.forEach(b => b.id = undefined)
+  }
+}
 
 // watches set above sometimes called twice
 // so getBooks was sometimes called twice at the same instant
@@ -403,7 +410,7 @@ try {
           :force-select="selectAll"
           :show-select="showSelect"
           :public="false"
-          :propose-add="true"
+          :propose-add="userId == null"
           class="h-full"
           @update:modal-closed="modalClosed"
           @update:checked="cardChecked"

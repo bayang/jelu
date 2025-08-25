@@ -73,12 +73,19 @@ const getToRead = async () => {
     }
     getToReadIsLoading.value = false
     updatePageLoading(false)
+    removeIds()
   } catch (error) {
     console.log("failed get books : " + error);
     getToReadIsLoading.value = false
     updatePageLoading(false)
   }
 };
+
+const removeIds = () => {
+  if (userId.value != null) {
+    books.value.forEach(b => b.id = undefined)
+  }
+}
 
 // watches set above sometimes called twice
 // so getBooks was sometimes called twice at the same instant
@@ -303,7 +310,7 @@ getToRead()
         :force-select="selectAll"
         :public="false"
         :show-select="showSelect"
-        :propose-add="true"
+        :propose-add="userId == null"
         class="h-full"
         @update:modal-closed="modalClosed"
         @update:checked="cardChecked"
