@@ -1,3 +1,13 @@
+### [0.72.2](https://github.com/bayang/jelu/compare/v0.72.1...v0.72.2) (2025-08-25)
+
+
+### Bug Fixes
+
+* make labels and radio buttons order consistent [#243](https://github.com/bayang/jelu/issues/243) ([ea4e21d](https://github.com/bayang/jelu/commit/ea4e21d7b23e253e15324cf504cb655f935bfe7b))
+* published date translation [#245](https://github.com/bayang/jelu/issues/245) ([485c90b](https://github.com/bayang/jelu/commit/485c90bdb5cb646392182f8c57ad93d4519d0de2))
+* search bar styling [#243](https://github.com/bayang/jelu/issues/243) ([6c4df2d](https://github.com/bayang/jelu/commit/6c4df2ddee9f3526bbd1959cafc91d8f63270ff2))
+* user permissions [#245](https://github.com/bayang/jelu/issues/245) ([ed290bb](https://github.com/bayang/jelu/commit/ed290bb44203076f9de9ed35a88cd06445cdb5d0))
+
 ### [0.72.1](https://github.com/bayang/jelu/compare/v0.72.0...v0.72.1) (2025-08-20)
 
 
