@@ -29,7 +29,7 @@ const router = useRouter()
 const oruga = useOruga();
 console.log(oruga)
 
-const { formatDate, formatDateString } = useDates()
+const { stringToDate } = useDates()
 
 const getBookIsLoading: Ref<boolean> = ref(false)
 
@@ -263,7 +263,7 @@ const getIsbn = (): string|null => {
         </p>
         <p v-if="props.book.publishedDate">
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
-          {{ formatDateString(props.book.publishedDate) }}
+          {{ d(stringToDate(props.book.publishedDate)!!, 'short') }}
         </p>
         <div v-if="props.book.series && props.book.series.length > 0">
           <span class="font-semibold capitalize">{{ t('book.series') }} :&nbsp;</span>
