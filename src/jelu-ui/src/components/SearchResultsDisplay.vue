@@ -363,25 +363,59 @@ if (searchQuery.value != null) {
   >
     <div class="basis-full sm:basis-5/12">
       <div class="basis-full content-center items-center">
-        <o-field class="title-input">
-          <o-input
-            v-model="searchQuery"
-            :placeholder="t('labels.search_query')" 
-            type="search"
-            icon="magnify" 
-            icon-clickable
-            icon-pack="mdi"
-            class="input focus:input-accent"
-            @keyup.enter="search"
-          />
-          <o-button
+        <div class="join">
+          <div>
+            <label class="input validator join-item">
+              <svg
+                class="h-[1em] opacity-50"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  stroke-width="2.5"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="8"
+                  />
+                  <path d="m21 21-4.3-4.3" />
+                </g>
+              </svg>
+              <input
+                v-model="searchQuery"
+                type="search"
+                class="" 
+                :placeholder="t('labels.search_query')"
+                @keyup.enter="search"
+              >
+            </label>
+          </div>
+          <button
             v-tooltip="t('labels.search_selected')"
-            variant="success"
-            icon-pack="mdi"
-            icon-right="magnify"
+            class="btn btn-success join-item"
             @click="search"
-          />
-        </o-field>
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </button>
+        </div>
         <div class="flex justify-center">
           <a
             class="link hover:link-accent tooltip self-center"
