@@ -236,7 +236,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
         <div class="field pb-2">
           <o-field
-            :label="t('author.twitter_page')"
+            :label="t('author.x_page')"
             class="capitalize"
           >
             <o-input

@@ -281,7 +281,7 @@ const rightDoD = computed(() => {
       </div>
       <div class="field">
         <o-field
-          :label="t('author.twitter_page')"
+          :label="t('author.x_page')"
           class="capitalize"
         >
           <o-input
@@ -464,7 +464,7 @@ const rightDoD = computed(() => {
       </div>
       <div class="field">
         <o-field
-          :label="t('author.twitter_page')"
+          :label="t('author.x_page')"
           class="capitalize"
         >
           <o-input
