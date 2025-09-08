@@ -1,3 +1,11 @@
+### [0.72.3](https://github.com/bayang/jelu/compare/v0.72.2...v0.72.3) (2025-09-08)
+
+
+### Bug Fixes
+
+* change twitter icon to X one [#248](https://github.com/bayang/jelu/issues/248) ([4963fc7](https://github.com/bayang/jelu/commit/4963fc78cfd58e5991e73415cdbfcb632adb6840))
+* upgrade oruga [#251](https://github.com/bayang/jelu/issues/251) [#243](https://github.com/bayang/jelu/issues/243) ([e8ad220](https://github.com/bayang/jelu/commit/e8ad2200bcfb3e1de01ecfe99fbe956454835fd7))
+
 ### [0.72.2](https://github.com/bayang/jelu/compare/v0.72.1...v0.72.2) (2025-08-25)
 
 
