@@ -135,6 +135,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               v-model="currentAuthor.name"
               maxlength="1000"
               name="name"
+              expanded
               class="input focus:input-accent"
             />
           </o-field>
@@ -150,14 +151,13 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               :show-week-number="false"
               :locale="undefined"
               :placeholder="t('labels.click_to_select')"
-              :expanded="true"
+              expanded
               icon="calendar"
               icon-right="close"
               :icon-right-clickable="true"
               :mobile-native="false"
               :mobile-modal="false"
               trap-focus
-              class="input focus:input-accent"
               @icon-right-click="currentAuthor.dateOfBirth = undefined"
             />
           </o-field>
@@ -173,14 +173,13 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               :show-week-number="false"
               :locale="undefined"
               :placeholder="t('labels.click_to_select')"
-              :expanded="true"
+              expanded
               icon="calendar"
               icon-right="close"
               :icon-right-clickable="true"
               :mobile-native="false"
               :mobile-modal="false"
               trap-focus
-              class="input focus:input-accent"
               @icon-right-click="currentAuthor.dateOfDeath = undefined"
             />
           </o-field>
@@ -194,6 +193,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               v-model="currentAuthor.biography"
               maxlength="5000"
               type="textarea"
+              expanded
               class="textarea focus:textarea-accent"
             />
           </o-field>
@@ -206,6 +206,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <o-input
               v-model="currentAuthor.officialPage"
               maxlength="5000"
+              expanded
               class="input focus:input-accent"
             />
           </o-field>
@@ -218,6 +219,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <o-input
               v-model="currentAuthor.wikipediaPage"
               maxlength="5000"
+              expanded
               class="input focus:input-accent"
             />
           </o-field>
@@ -230,6 +232,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <o-input
               v-model="currentAuthor.goodreadsPage"
               maxlength="5000"
+              expanded
               class="input focus:input-accent"
             />
           </o-field>
@@ -242,6 +245,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <o-input
               v-model="currentAuthor.twitterPage"
               maxlength="5000"
+              expanded
               class="input focus:input-accent"
             />
           </o-field>
@@ -254,6 +258,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <o-input
               v-model="currentAuthor.facebookPage"
               maxlength="5000"
+              expanded
               class="input focus:input-accent"
             />
           </o-field>
@@ -266,6 +271,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
             <o-input
               v-model="currentAuthor.instagramPage"
               maxlength="5000"
+              expanded
               class="input focus:input-accent"
             />
           </o-field>
@@ -279,6 +285,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               v-model="currentAuthor.notes"
               maxlength="5000"
               type="textarea"
+              expanded
               class="textarea focus:textarea-accent"
             />
           </o-field>
@@ -356,6 +363,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               type="url"
               pattern="https?://.*"
               :clearable="true"
+              expanded
               icon-right-clickable
               title="Url must start with http or https"
               :placeholder="t('labels.url_must_start')"

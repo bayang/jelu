@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useOruga } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
-import { ref, Ref, watch } from 'vue'
+import { computed, ref, Ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import usePagination from "../composables/pagination"
 import useSort from "../composables/sort"
@@ -135,6 +135,9 @@ const selectTag = (selected: Tag) => {
 
 getOrphanTags()
 
+const options = computed(() => {
+  return filteredTags.value.map(t => ObjectUtils.wrapForOptions(t))
+})
 </script>
 
 <template>
@@ -192,14 +195,21 @@ getOrphanTags()
       <div class="field border-2 border-accent">
         <o-field>
           <o-autocomplete
-            :data="filteredTags"
-            :clear-on-select="true"
-            field="name"
+            :options="options"
+            clear-on-select
             :loading="isFetching"
+            :input-classes="{rootClass:'border-2 border-accent'}"
+            backend-filtering
             :debounce="100"
             @input="getFilteredTags"
             @select="selectTag"
-          />
+          >
+            <template #default="{ value }">
+              <div class="jl-taginput-item">
+                {{ value.name }}
+              </div>
+            </template>
+          </o-autocomplete>
         </o-field>
       </div>
       <div

@@ -7,6 +7,7 @@ import { Shelf } from "../model/Shelf"
 import { Tag } from "../model/Tag"
 import dataService from "../services/DataService"
 import { key } from '../store'
+import { ObjectUtils } from '../utils/ObjectUtils'
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -26,16 +27,16 @@ function getFilteredTags(text: string) {
   isFetching.value = false
 }
 
-function createShelfFromTag(tag: Tag, event: UIEvent) {
+function createShelfFromTag(tag: Tag) {
   console.log(tag)
-  console.log(event)
   // we receive from oruga weird events while nothing is selected
   // so try to get rid of those null data we receive
-  if (tag != null && event != null && tag.id != null) {
+  if (tag != null && tag.id != null) {
     dataService.saveShelf({name: tag.name, targetId: tag.id})
       .then(res => {
         console.log("saved shef " + res.name)
         store.dispatch('getUserShelves')
+        filteredTags.value = []
       })
       .catch(err => console.log("failed to save shelf " + tag.name + " " + err))
   }
@@ -53,6 +54,10 @@ function deleteShelf(shelf: Shelf) {
 
 const shelves = computed(() => {
   return store.getters.getShelves
+})
+
+const options = computed(() => {
+  return filteredTags.value.map(t => ObjectUtils.wrapForOptions(t))
 })
 
 </script>
@@ -109,14 +114,21 @@ const shelves = computed(() => {
           <o-field :label="t('settings.shelf_choose_tag')">
             <o-autocomplete
               :input-classes="{rootClass:'border-2 border-accent'}"
-              :data="filteredTags"
-              :clear-on-select="true"
-              field="name"
               :loading="isFetching"
+              open-on-focus
+              backend-filtering
+              clear-on-select
               :debounce="100"
+              :options="options"
               @input="getFilteredTags"
               @select="createShelfFromTag"
-            />
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-autocomplete>
           </o-field>
         </div>
       </div>

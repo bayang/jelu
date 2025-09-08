@@ -1,21 +1,22 @@
 <script setup lang="ts">
 
+import { useOruga } from "@oruga-ui/oruga-next";
+import dayjs from "dayjs";
 import { computed, Ref, ref, watch } from "vue";
+import { useI18n } from 'vue-i18n';
+import Datepicker from 'vue3-datepicker';
 import { Author } from "../model/Author";
+import { Wrapper } from "../model/autocomplete-wrapper";
 import { UserBook } from "../model/Book";
+import { Path } from "../model/DirectoryListing";
 import { ReadingEventType } from "../model/ReadingEvent";
+import { SeriesOrder } from "../model/Series";
+import { Tag } from "../model/Tag";
 import dataService from "../services/DataService";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
-import { useOruga } from "@oruga-ui/oruga-next";
-import { Tag } from "../model/Tag";
-import { useI18n } from 'vue-i18n'
-import { SeriesOrder } from "../model/Series";
-import SeriesInput from "./SeriesInput.vue";
-import { Path } from "../model/DirectoryListing";
 import ImagePickerModal from "./ImagePickerModal.vue";
-import Datepicker from 'vue3-datepicker'
-import dayjs from "dayjs";
+import SeriesCompleteInput from "./SeriesCompleteInput.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -26,10 +27,15 @@ const props = defineProps<{ bookId: string, book: UserBook | null, canAddEvent: 
 const oruga = useOruga()
 const emit = defineEmits(['close']);
 
-let filteredAuthors: Ref<Array<Author>> = ref([]);
-let filteredTags: Ref<Array<Tag>> = ref([]);
-let filteredTranslators: Ref<Array<Author>> = ref([]);
-let filteredNarrators: Ref<Array<Author>> = ref([]);
+let authors: Ref<Array<string|Author>> = ref([]);
+let translators: Ref<Array<string|Author>> = ref([]);
+let narrators: Ref<Array<string|Author>> = ref([]);
+let tags: Ref<Array<string|Tag>> = ref([])
+
+let filteredAuthors: Ref<Array<Wrapper>> = ref([]);
+let filteredTags: Ref<Array<Wrapper>> = ref([]);
+let filteredTranslators: Ref<Array<Wrapper>> = ref([]);
+let filteredNarrators: Ref<Array<Wrapper>> = ref([]);
 let filteredPublishers: Ref<Array<string>> = ref([])
 let userbook: Ref<UserBook> = ref(copyInput(props.book))
 let hasImage: Ref<boolean> = ref(userbook.value.book.image != null)
@@ -145,24 +151,86 @@ const importBook = () => {
 
 }
 
-function getFilteredData(text: string, target: Array<Author>) {
+function getFilteredData(text: string, target: Array<Wrapper>) {
   dataService.findAuthorByCriteria(text).then((data) => {
     target.splice(0, target.length)
-    data.content.forEach(a => target.push(a))
+    // data.content.forEach(a => target.push(a))
+    data.content.forEach(a => target.push(ObjectUtils.wrapForOptions(a)))
   })
 }
 
 function getFilteredTags(text: string) {
-  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
+  // dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
+  dataService.findTagsByCriteria(text).then((data) => data.content.forEach(t => filteredTags.value.push(ObjectUtils.wrapForOptions(t))))
 }
 
 function getFilteredPublishers(text: string) {
   dataService.findPublisherByCriteria(text).then(data => filteredPublishers.value = data.content)
 }
 
-function itemAdded() {
-  console.log("added")
+function authorAdded(item: string|Author) {
+  itemAdded(item, userbook.value.book.authors as Array<Author>)
+}
+
+function translatorAdded(item: string|Author) {
+  itemAdded(item, userbook.value.book.translators as Array<Author>)
+}
+
+function narratorAdded(item: string|Author) {
+  itemAdded(item, userbook.value.book.narrators as Array<Author>)
+}
+
+function tagAdded(item: string|Tag) {
+  itemAdded(item, userbook.value.book.tags as Array<Tag>)
+}
+
+function itemAdded(item: string|Author|Tag, target: Array<Author|Tag>) {
+    if (typeof item === 'string') {
+      target.push({"name": item})
+    } else {
+      target.push(item)
+    }
+}
+
+function authorRemoved(item: string|Author) {
+  if (typeof item === 'string') {
+    const toKeep = userbook.value.book.authors?.filter(a => a.name !== item)
+    userbook.value.book.authors = toKeep
+  } else {
+    const toKeep = userbook.value.book.authors?.filter(a => a.id !== item.id)
+    userbook.value.book.authors = toKeep
+  }
   console.log(userbook.value.book.authors)
+}
+
+function translatorRemoved(item: string|Author) {
+  if (typeof item === 'string') {
+    const toKeep = userbook.value.book.translators?.filter(a => a.name !== item)
+    userbook.value.book.translators = toKeep
+  } else {
+    const toKeep = userbook.value.book.translators?.filter(a => a.id !== item.id)
+    userbook.value.book.translators = toKeep
+  }
+}
+
+function narratorRemoved(item: string|Author) {
+  if (typeof item === 'string') {
+    const toKeep = userbook.value.book.narrators?.filter(a => a.name !== item)
+    userbook.value.book.narrators = toKeep
+  } else {
+    const toKeep = userbook.value.book.narrators?.filter(a => a.id !== item.id)
+    userbook.value.book.narrators = toKeep
+  }
+}
+
+function tagRemoved(item: string|Tag) {
+  if (typeof item === 'string') {
+    const toKeep = userbook.value.book.tags?.filter(a => a.name !== item)
+    userbook.value.book.tags = toKeep
+  } else {
+    const toKeep = userbook.value.book.tags?.filter(a => a.id !== item.id)
+    userbook.value.book.tags = toKeep
+  }
 }
 
 function beforeAdd(item: Author | string, target: Array<Author>) {
@@ -212,21 +280,11 @@ function beforeAddTag(item: Tag | string) {
 }
 
 function createAuthor(item: Author | string) {
-  if (item instanceof Object) {
     return item
-  }
-  return {
-    "name": item
-  }
 }
 
 function createTag(item: Tag | string) {
-  if (item instanceof Object) {
     return item
-  }
-  return {
-    "name": item
-  }
 }
 
 function selectPublisher(publisher: string, event: UIEvent) {
@@ -280,12 +338,16 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
     }
 })
 
+userbook.value.book.authors?.forEach(a => authors.value.push(a.name))
+userbook.value.book.translators?.forEach(a => translators.value.push(a.name))
+userbook.value.book.narrators?.forEach(a => narrators.value.push(a.name))
+userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
 </script>
 
 <template>
   <section class="edit-modal">
     <div class="">
-      <div class="form-control">
+      <div class="">
         <div class="field pb-2">
           <o-field
             horizontal
@@ -294,7 +356,8 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
           >
             <o-input
               v-model="userbook.book.title"
-              class="input focus:input-accent"
+              expanded
+              class="input focus:input-accent w-full"
             />
           </o-field>
         </div>
@@ -306,22 +369,28 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             class="capitalize"
           >
             <o-taginput
-              v-model="userbook.book.authors"
-              :data="filteredAuthors"
+              v-model="authors"
+              :options="filteredAuthors"
               :allow-autocomplete="true"
               autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="(item: Author|string) => beforeAdd(item, userbook.book.authors as Array<Author>)"
+              :validate-item="(item: Author|string) => beforeAdd(item, userbook.book.authors as Array<Author>)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
-              field="name"
               :placeholder="t('labels.add_author')"
               @input="(v: string) => getFilteredData(v, filteredAuthors)"
-              @add="itemAdded"
-            />
+              @add="authorAdded"
+              @remove="authorRemoved"
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-taginput>
           </o-field>
         </div>
         <div class="field jelu-taginput pb-2">
@@ -331,21 +400,28 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             class="capitalize"
           >
             <o-taginput
-              v-model="userbook.book.tags"
-              :data="filteredTags"
+              v-model="tags"
+              :options="filteredTags"
               :allow-autocomplete="true"
               autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="beforeAddTag"
+              :validate-item="beforeAddTag"
               :create-item="createTag"
               icon-pack="mdi"
               icon="tag-plus"
-              field="name"
               :placeholder="t('labels.add_tag')"
               @input="getFilteredTags"
-            />
+              @add="tagAdded"
+              @remove="tagRemoved"
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-taginput>
           </o-field>
         </div>
         <div class="field jelu-authorinput pb-2">
@@ -355,22 +431,28 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             class="capitalize"
           >
             <o-taginput
-              v-model="userbook.book.translators"
-              :data="filteredTranslators"
+              v-model="translators"
+              :options="filteredTranslators"
               :allow-autocomplete="true"
               autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="(item: Author|string) => beforeAdd(item, userbook.book.translators as Array<Author>)"
+              :validate-item="(item: Author|string) => beforeAdd(item, userbook.book.translators as Array<Author>)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
-              field="name"
               :placeholder="t('labels.add_translator')"
               @input="(v: string) => getFilteredData(v, filteredTranslators)"
-              @add="itemAdded"
-            />
+              @add="translatorAdded"
+              @remove="translatorRemoved"
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-taginput>
           </o-field>
         </div>
         <div class="field jelu-authorinput pb-2">
@@ -380,22 +462,28 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             class="capitalize"
           >
             <o-taginput
-              v-model="userbook.book.narrators"
-              :data="filteredNarrators"
+              v-model="narrators"
+              :options="filteredNarrators"
               :allow-autocomplete="true"
               autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="(item: Author|string) => beforeAdd(item, userbook.book.narrators as Array<Author>)"
+              :validate-item="(item: Author|string) => beforeAdd(item, userbook.book.narrators as Array<Author>)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
-              field="name"
               :placeholder="t('labels.add_narrator')"
               @input="(v: string) => getFilteredData(v, filteredNarrators)"
-              @add="itemAdded"
-            />
+              @add="narratorAdded"
+              @remove="narratorRemoved"
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-taginput>
           </o-field>
         </div>
         <div class="field pb-2">
@@ -408,6 +496,7 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               v-model="userbook.book.summary"
               maxlength="50000"
               type="textarea"
+              expanded
               class="textarea focus:textarea-accent"
             />
           </o-field>
@@ -421,14 +510,16 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             <o-input
               v-model="userbook.book.isbn10"
               name="isbn10"
+              expanded
               :placeholder="t('book.isbn10')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="userbook.book.isbn13"
               name="isbn13"
+              expanded
               :placeholder="t('book.isbn13')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
           </o-field>
         </div>
@@ -436,55 +527,55 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
           <o-field
             horizontal
             :label="t('book.identifiers')"
-            class="capitalize"
+            class="capitalize providers-ids"
           >
             <o-input
               v-model="userbook.book.goodreadsId"
               name="goodreadsId"
               :placeholder="t('book.goodreads_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="userbook.book.googleId"
               name="googleId"
               :placeholder="t('book.google_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="userbook.book.amazonId"
               name="amazonId"
               :placeholder="t('book.amazon_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="userbook.book.librarythingId"
               name="librarythingId"
               :placeholder="t('book.librarything_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="userbook.book.isfdbId"
               name="isfdbId"
               :placeholder="t('book.isfdb_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="userbook.book.openlibraryId"
               name="openlibraryId"
               :placeholder="t('book.openlibrary_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="userbook.book.noosfereId"
               name="noosfereId"
               :placeholder="t('book.noosfere_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="userbook.book.inventaireId"
               name="inventaireId"
               :placeholder="t('book.inventaire_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
           </o-field>
         </div>
@@ -497,13 +588,19 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             <o-autocomplete
               v-model="userbook.book.publisher"
               :root-class="'grow, w-full'"
-              :input-classes="{rootClass:'border-2 border-accent'}"
-              :data="filteredPublishers"
-              :clear-on-select="true"
+              :input-classes="{rootClass:'w-full border-2 border-accent', inputClass:'w-full'}"
+              :options="filteredPublishers"
+              :clear-on-select="false"
               :debounce="100"
               @input="getFilteredPublishers"
               @select="selectPublisher"
-            />
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value }}
+                </div>
+              </template>
+            </o-autocomplete>
           </o-field>
         </div>
         <div class="field pb-2">
@@ -514,7 +611,7 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
           >
             <!-- eslint-disable -->
             <datepicker v-model="publishedDate as Date"
-              class="input input-primary"
+              class="input input-primary w-11/12"
               :typeable="true"
               :clearable="true"
             >
@@ -549,10 +646,12 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             <o-input
               v-model="userbook.book.pageCount"
               type="number"
+              number
               min="0"
+              expanded
               icon-right="delete"
               icon-right-clickable
-              class="input focus:input-accent"
+              class="input focus:input-accent sm:w-11/12"
               @icon-right-click="userbook.book.pageCount = null;userbook.currentPageNumber=null"
             />
           </o-field>
@@ -565,7 +664,9 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
           >
             <o-input
               v-model="userbook.book.language"
-              class="input focus:input-accent"
+              type="text"
+              expanded
+              class="input focus:input-accent w-full"
             />
           </o-field>
         </div>
@@ -576,37 +677,11 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             class="capitalize"
           >
             <div class="flex flex-col grow w-full">
-              <div
-                v-for="seriesItem,idx in seriesCopy"
-                :key="seriesItem.seriesId"
-                class="flex items-center grow w-full pb-2"
-              >
-                <SeriesInput
-                  :series="seriesItem"
-                  :parent-series="seriesCopy"
-                  @update-series="(series: SeriesOrder) => seriesCopy[idx] = series"
-                />
-                <button
-                  class="btn btn-error btn-outline sm:btn-sm px-1 sm:border-none"
-                  @click="seriesCopy.splice(idx, 1)"
-                >
-                  <span class="icon">
-                    <i class="mdi mdi-delete mdi-18px" />
-                  </span>
-                </button>
+              <div>
+                <SeriesCompleteInput v-model="seriesCopy" />
               </div>
             </div>
           </o-field>
-        </div>
-        <div class="field pb-2">
-          <button
-            class="btn btn-primary btn-circle p-2 btn-sm"
-            @click="seriesCopy.push({'name' : ''})"
-          >
-            <span class="icon">
-              <i class="mdi mdi-plus mdi-18px" />
-            </span>
-          </button>
         </div>
         <div
           v-if="props.canAddEvent"
@@ -657,6 +732,7 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               v-model="userbook.personalNotes"
               maxlength="5000"
               type="textarea"
+              expanded
               class="textarea focus:textarea-accent"
             />
           </o-field>
@@ -703,10 +779,12 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             <o-input
               v-model="userbook.currentPageNumber"
               type="number"
+              number
+              expanded
               min="0"
               :max="userbook.book.pageCount"
               :disabled="userbook.book.pageCount == null"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-11/12"
               icon-right="delete"
               icon-right-clickable
               @icon-right-click="userbook.currentPageNumber = null"
@@ -788,8 +866,8 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
             horizontal
             :label="t('labels.upload_cover')"
           >
-            <div class="form-control">
-              <label class="label cursor-pointer justify-center gap-2">
+            <div class="">
+              <label class="label cursor-pointer justify-center gap-2 flex flex-wrap">
                 <span class="label-text">{{ t('labels.upload_from_web') }}</span>
                 <input
                   v-model="uploadType"
@@ -828,10 +906,11 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
               type="url"
               pattern="https?://.*"
               clearable="true"
+              expanded
               icon-right-clickable
               title="Url must start with http or https"
               :placeholder="t('labels.url_must_start')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
               @icon-right-click="clearImageField"
             />
           </o-field>

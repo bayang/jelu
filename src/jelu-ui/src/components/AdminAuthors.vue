@@ -48,13 +48,12 @@ let rightHasImage = computed(() => {
 let leftDeleteImage: Ref<boolean> = ref(false)
 
 
-function dispatchAuthor(author: Author, event: UIEvent) {
+function dispatchAuthor(author: Author) {
   console.log(author)
   console.log(`step ${activeStep.value}`)
-  console.log(event)
   // we receive from oruga weird events while nothing is selected
   // so try to get rid of those null data we receive
-  if (author != null && event != null) {
+  if (author != null) {
     if (author.dateOfBirth != null) {
       author.dateOfBirth = dayjs(author.dateOfBirth).toDate()
     }
@@ -106,6 +105,9 @@ const rightDoD = computed(() => {
   return ""
 })
 
+const options = computed(() => {
+  return filteredAuthors.value.map(t => ObjectUtils.wrapForOptions(t))
+})
 </script>
 
 <template>
@@ -165,15 +167,20 @@ const rightDoD = computed(() => {
       <div class="field">
         <o-field :label="t('authors_merge.search_message')">
           <o-autocomplete
-            :data="filteredAuthors" 
+            :options="options" 
             :input-classes="{rootClass:'border-2 border-accent'}"
-            :clear-on-select="true"
-            field="name"
+            clear-on-select
             :loading="isFetching"
             :debounce="100"
             @input="getFilteredAuthors"
             @select="dispatchAuthor"
-          />
+          >
+            <template #default="{ value }">
+              <div class="jl-taginput-item">
+                {{ value.name }}
+              </div>
+            </template>
+          </o-autocomplete>
         </o-field>
       </div>
     </div>
@@ -186,6 +193,7 @@ const rightDoD = computed(() => {
           <o-input
             v-model="leftAuthor.name"
             maxlength="1000"
+            expanded
             name="name"
           />
         </o-field>
@@ -242,6 +250,7 @@ const rightDoD = computed(() => {
           <o-input
             v-model="leftAuthor.biography"
             maxlength="5000"
+            expanded
             type="textarea"
           />
         </o-field>
@@ -253,6 +262,7 @@ const rightDoD = computed(() => {
         >
           <o-input
             v-model="leftAuthor.officialPage"
+            expanded
             maxlength="5000"
           />
         </o-field>
@@ -264,6 +274,7 @@ const rightDoD = computed(() => {
         >
           <o-input
             v-model="leftAuthor.wikipediaPage"
+            expanded
             maxlength="5000"
           />
         </o-field>
@@ -276,6 +287,7 @@ const rightDoD = computed(() => {
           <o-input
             v-model="leftAuthor.goodreadsPage"
             maxlength="5000"
+            expanded
           />
         </o-field>
       </div>
@@ -287,6 +299,7 @@ const rightDoD = computed(() => {
           <o-input
             v-model="leftAuthor.twitterPage"
             maxlength="5000"
+            expanded
           />
         </o-field>
       </div>
@@ -298,6 +311,7 @@ const rightDoD = computed(() => {
           <o-input
             v-model="leftAuthor.facebookPage"
             maxlength="5000"
+            expanded
           />
         </o-field>
       </div>
@@ -309,6 +323,7 @@ const rightDoD = computed(() => {
           <o-input
             v-model="leftAuthor.instagramPage"
             maxlength="5000"
+            expanded
           />
         </o-field>
       </div>
@@ -321,19 +336,20 @@ const rightDoD = computed(() => {
             v-model="leftAuthor.notes"
             maxlength="5000"
             type="textarea"
+            expanded
           />
         </o-field>
       </div>
-      <div v-if="leftHasImage">
+      <div v-if="leftHasImage" class="w-full">
         <o-field>
-          <div class="indicator">
+          <div class="indicator w-full">
             <span
               class="badge indicator-item indicator-bottom indicator-start cursor-pointer"
               @click="leftAuthor.image = undefined"
             >
               <i class="mdi mdi-delete" />
             </span>
-            <figure class="small-cover">
+            <figure class="">
               <img
                 :src="'/files/' + leftAuthor.image"
                 :class="leftDeleteImage ? 'altered' : ''"
@@ -354,6 +370,7 @@ const rightDoD = computed(() => {
             v-model="rightAuthor.name"
             maxlength="1000"
             name="name"
+            expanded
             icon-pack="mdi"
             readonly
             :icon="rightAuthor.name !== null ? 'arrow-left-bold' : ''"
@@ -390,6 +407,7 @@ const rightDoD = computed(() => {
             maxlength="1000"
             name="dod"
             icon-pack="mdi"
+            expanded
             readonly
             :icon="rightAuthor.dateOfDeath !== null ? 'arrow-left-bold' : ''"
             :icon-clickable="rightAuthor.dateOfDeath !== null"
@@ -406,6 +424,7 @@ const rightDoD = computed(() => {
             v-model="rightAuthor.biography"
             maxlength="5000"
             type="textarea"
+            expanded
             icon-pack="mdi"
             :icon="rightAuthor.biography !== null ? 'arrow-left-bold' : ''"
             readonly
@@ -423,6 +442,7 @@ const rightDoD = computed(() => {
             v-model="rightAuthor.officialPage"
             maxlength="5000"
             icon-pack="mdi"
+            expanded
             :icon="rightAuthor.officialPage !== null ? 'arrow-left-bold' : ''"
             readonly
             :icon-clickable="rightAuthor.officialPage !== null"
@@ -439,6 +459,7 @@ const rightDoD = computed(() => {
             v-model="rightAuthor.wikipediaPage"
             maxlength="5000"
             icon-pack="mdi"
+            expanded
             :icon="rightAuthor.wikipediaPage !== null ? 'arrow-left-bold' : ''"
             readonly
             :icon-clickable="rightAuthor.wikipediaPage !== null"
@@ -455,6 +476,7 @@ const rightDoD = computed(() => {
             v-model="rightAuthor.goodreadsPage"
             maxlength="5000"
             icon-pack="mdi"
+            expanded
             :icon="rightAuthor.goodreadsPage !== null ? 'arrow-left-bold' : ''"
             readonly
             :icon-clickable="rightAuthor.goodreadsPage !== null"
@@ -471,6 +493,7 @@ const rightDoD = computed(() => {
             v-model="rightAuthor.twitterPage"
             maxlength="5000"
             icon-pack="mdi"
+            expanded
             :icon="rightAuthor.twitterPage !== null ? 'arrow-left-bold' : ''"
             readonly
             :icon-clickable="rightAuthor.twitterPage !== null"
@@ -487,6 +510,7 @@ const rightDoD = computed(() => {
             v-model="rightAuthor.facebookPage"
             maxlength="5000"
             icon-pack="mdi"
+            expanded
             :icon="rightAuthor.facebookPage !== null ? 'arrow-left-bold' : ''"
             readonly
             :icon-clickable="rightAuthor.facebookPage !== null"
@@ -503,6 +527,7 @@ const rightDoD = computed(() => {
             v-model="rightAuthor.instagramPage"
             maxlength="5000"
             icon-pack="mdi"
+            expanded
             :icon="rightAuthor.instagramPage !== null ? 'arrow-left-bold' : ''"
             readonly
             :icon-clickable="rightAuthor.instagramPage !== null"
@@ -520,6 +545,7 @@ const rightDoD = computed(() => {
             maxlength="5000"
             type="textarea"
             icon-pack="mdi"
+            expanded
             :icon="rightAuthor.notes !== null ? 'arrow-left-bold' : ''"
             readonly
             :icon-clickable="rightAuthor.notes !== null"
@@ -529,14 +555,14 @@ const rightDoD = computed(() => {
       </div>
       <div v-if="rightHasImage">
         <o-field>
-          <div class="indicator">
+          <div class="indicator w-full">
             <span
               class="badge indicator-item indicator-bottom indicator-start cursor-pointer"
               @click="leftAuthor.image = rightAuthor.image"
             >
               <i class="mdi mdi-arrow-left-bold" />
             </span>
-            <figure class="small-cover">
+            <figure class="">
               <img
                 :src="'/files/' + rightAuthor.image"
                 :class="leftDeleteImage ? 'altered' : ''"

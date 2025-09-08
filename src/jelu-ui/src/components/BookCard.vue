@@ -29,9 +29,6 @@ const emit = defineEmits<{
 const checked: Ref<boolean> = ref(false)
 
 watch(() => props.forceSelect, (newVal, oldVal) => {
-  console.log("props.forceSelect changed")
-  console.log(props.forceSelect)
-  console.log(newVal + " " + oldVal)
   checked.value = props.forceSelect
 })
 
@@ -242,13 +239,13 @@ watch(checked, (newVal, oldVal) => {
           v-tooltip="authorsText"
         >&#8230;</span>
       </div>
-      <div class="card-actions justify-end">
+      <div class="card-actions justify-end items-center gap-1">
         <span
           v-if="book.lastReadingEvent"
           :class="eventClass"
           class="badge"
         >{{ eventText }}</span>
-        <div class="flex">
+        <div class="flex items-center gap-1">
           <router-link
             v-if="currentSeries != null && ! props.public"
             v-tooltip="currentSeries.name"

@@ -703,7 +703,7 @@ getBook()
       </div>
     </div>
     <div
-      class="justify-center justify-items-center sm:gap-10 grid grid-cols-1 sm:grid-cols-2 sm:w-10/12"
+      class="justify-center justify-items-center sm:gap-10 grid grid-cols-1 sm:grid-cols-2 sm:w-10/12 w-full"
     >
       <div class="sm:justify-self-end">
         <figure>
@@ -1018,7 +1018,7 @@ getBook()
     </div>
     <div
       v-if="bookQuotes != null && bookQuotes.length > 0"
-      class="w-11/12 sm:w-10/12 flex flex-row flex-wrap justify-center mt-4 gap-4"
+      class="w-11/12 sm:w-10/12"
     >
       <router-link
         class="link text-2xl typewriter"
@@ -1026,6 +1026,11 @@ getBook()
       >
         {{ t('book_quotes.quote', 2) }}
       </router-link>
+    </div>
+    <div
+      v-if="bookQuotes != null && bookQuotes.length > 0"
+      class="w-11/12 sm:w-10/12 flex flex-row flex-wrap justify-center mt-4 gap-4"
+    >
       <div
         v-for="quote in bookQuotes"
         :key="quote.id"

@@ -66,10 +66,10 @@
 
   --oruga-checkbox-border-color: var(--color-primary);
   --oruga-checkbox-active-background-color: var(--color-primary);
-  --oruga-checkbox-background-color: var(--color-neutral);
+  --oruga-checkbox-background-color: var(--color-base-100);
 
-  --oruga-pagination-link-color: var(--color-neutral);
-  --oruga-pagination-link-border-color: var(--color-transparent);
+  --oruga-pagination-button-color: var(--color-neutral);
+  --oruga-pagination-button-border-color: var(--color-transparent);
 
   --oruga-variant-primary: var(--color-primary);
   --oruga-variant-success: var(--color-success);
@@ -91,6 +91,7 @@
   --oruga-tooltip-color: var(--color-primary-content);
 
   --oruga-switch-active-background-color: var(--color-primary);
+  --oruga-switch-checked-background: var(--color-primary);
 
   --oruga-modal-content-background-color: var(--color-base-100);
 
@@ -102,13 +103,17 @@
 
   --oruga-loading-overlay: var(--color-jelu_overlay);
 
-  --oruga-taginput-background-color: var(--color-base-100);
+  --oruga-input-background-color: var(--color-base-100);
+  --oruga-input-color: var(--color-base-content);
+  
+  /* --oruga-taginput-background-color: var(--color-base-content); */
   --oruga-taginput-border-color: var(--color-base-100);
-  --oruga-taginput-color: var(--color-primary);
-  --oruga-taginput-item-background-color: var(--color-primary);
-  --oruga-taginput-item-color: var(--color-primary-content);
+  /* --oruga-taginput-color: var(--color-primary); */
+  /* --oruga-taginput-item-background-color: var(--color-primary); */
+  /* --oruga-taginput-item-color: var(--color-primary-content); */
 
   --oruga-autocomplete-item-color: var(--color-primary-content);
+  --oruga-autocomplete-item-hover-background-color: var(--color-primary-content);
 
 
   --vdp-bg-color: var(--color-base-100);
@@ -124,27 +129,27 @@
   @apply px-0;
 }
 
-.o-chk__input {
-  @apply bg-none;
-}
+/* .o-chk__input { */
+  /* @apply bg-none; */
+/* } */
 
-.o-chk .o-chk__input {
+.o-checkbox .o-checkbox__input {
   @apply checkbox checkbox-primary;
 }
 
-.o-btn.o-btn--success.o-btn--outlined-success {
-  @apply btn btn-success;
+.o-button.o-button--outlined-success {
+  @apply btn btn-outline btn-success;
 }
 
-.o-btn.o-btn--warning.o-btn--outlined-warning {
-  @apply btn btn-warning;
+.o-button..o-button--outlined-warning {
+  @apply btn btn-outline btn-warning;
 }
 
-.o-btn.o-btn--info.o-btn--outlined-info {
-  @apply btn btn-info;
+.o-button.o-button--outlined-info {
+  @apply btn btn-outline btn-info;
 }
 
-.o-side__content.o-side__content--left {
+.o-sidebar__content.o-sidebar__content--left {
   @apply bg-base-100 w-fit;
 }
 
@@ -153,15 +158,23 @@
 
 }
 
-.o-pag__link {
-  @apply btn text-neutral-content!;
+/* .o-pag__link { */
+  /* @apply btn text-neutral-content!; */
+/* } */
+
+.o-pagination .o-pagination__button {
+  @apply btn;
 }
 
-.o-pag__link.o-pag__link--current {
-  @apply btn btn-active bg-primary text-primary-content!;
+li.o-pagination__item button.o-pagination__button.o-pagination__button--current {
+  @apply btn-active btn-accent;
 }
 
-.o-pag__ellipsis {
+/* .o-pag__link.o-pag__link--current { */
+  /* @apply btn btn-active bg-primary text-primary-content!; */
+/* } */
+
+.o-pagination__ellipsis {
   @apply p-2;
 }
 
@@ -185,6 +198,14 @@
   }
 }
 
+.o-field.o-field--filled {
+ @apply w-full;
+}
+
+.o-field__horizontal-body {
+ @apply w-full;
+}
+
 .o-field.o-field--filled .o-input__wrapper .o-input {
  @apply w-full;
 } 
@@ -201,12 +222,19 @@
     @apply focus:input-accent bg-white w-full;
 }
 
+.o-input--expanded input {
+  @apply w-full;
+}
 .o-icon.o-input__icon-left {
     @apply text-accent-content;
 }
 
 .o-icon.o-input__icon-right {
     @apply text-accent-content;
+}
+
+.o-steps__step-label {
+  @apply bg-base-100 text-base-content!;
 }
 
 .o-steps__title {
@@ -217,29 +245,37 @@
     @apply text-gray-700;
 }
 
-.o-ctrl-input > input[type="number"] {
-    @apply w-24;
-}
+/* .o-ctrl-input > input[type="number"] { */
+    /* @apply w-24; */
+/* } */
 
-.o-acp .o-input {
-  @apply w-fit sm:w-full bg-base-100 text-base-content border-base-200 focus:input-accent grow;
-}
+/* .o-acp .o-input { */
+  /* @apply w-fit sm:w-full bg-base-100 text-base-content border-base-200 focus:input-accent grow; */
+/* } */
 
-.o-acp {
-    @apply grow!;
-}
+/* .o-acp { */
+    /* @apply grow!; */
+/* } */
 
-.o-drop__menu {
+.o-dropdown__menu {
     @apply w-full grow;
 }
 
-.o-drop .o-tpck__dropdown {
-  height: 100%;
-  width: 100%;
+.o-datepicker .o-input {
+  @apply w-full border-0 focus:border-0;
 }
 
+.o-datepicker__table__cell {
+  @apply hover:bg-accent;
+}
+
+/* .o-drop .o-tpck__dropdown { */
+  /* height: 100%; */
+  /* width: 100%; */
+/* } */
+
 .o-taginput .o-taginput__container {
-    @apply w-fit sm:w-full items-center;
+    @apply w-full sm:w-full items-center h-fit;
 }
 
 .o-taginput__autocomplete {
@@ -250,15 +286,38 @@
   height: 100%;
 }
 
-.o-chk__label {
-  @apply text-lg;
-}
+/* .o-chk__label { */
+  /* @apply text-lg; */
+/* } */
 
 .o-radio__label {
   @apply text-lg;
 }
 
+.o-input .o-input__input.o-taginput__input {
+  /* @apply bg-base-100!; */
+}
+
+.o-field .o-autocomplete {
+  @apply w-full;
+}
+
+.o-field .o-autocomplete .o-input {
+  @apply w-full;
+}
+
+.o-field .o-autocomplete .o-input input {
+  @apply w-full;
+}
 /* end oruga customization with daisyui */
+
+.providers-ids .o-field__horizontal-body {
+  @apply sm:grid sm:grid-cols-3;
+}
+
+.providers-ids .o-input {
+  @apply w-full;
+}
 
 .swal2-container {
     @apply flex justify-center;
@@ -483,7 +542,15 @@
 
 /* vue markdown editor textarea color */
 .v-md-textarea-editor pre, .v-md-textarea-editor textarea {
-  @apply text-base-content!;
+  @apply text-accent-content;
+}
+
+.v-md-editor-preview  {
+  @apply text-black;
+}
+
+.card-body .v-md-editor-preview {
+  @apply text-base-content;
 }
 /* end vue markdown editor */
 

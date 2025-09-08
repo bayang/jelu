@@ -2,13 +2,14 @@
 import { Ref, ref } from "vue";
 import { useI18n } from 'vue-i18n';
 import { Author } from "../model/Author";
+import { Wrapper } from "../model/autocomplete-wrapper";
 import { Book } from "../model/Book";
 import { Metadata } from "../model/Metadata";
+import { SeriesOrder } from "../model/Series";
 import { Tag } from "../model/Tag";
 import dataService from "../services/DataService";
 import { ObjectUtils } from "../utils/ObjectUtils";
-import { SeriesOrder } from "../model/Series";
-import SeriesInput from "./SeriesInput.vue";
+import SeriesCompleteInput from "./SeriesCompleteInput.vue";
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -29,8 +30,11 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-let filteredAuthors: Ref<Array<Author>> = ref([]);
-let filteredTags: Ref<Array<Tag>> = ref([]);
+let authors: Ref<Array<string|Author>> = ref([]);
+let tags: Ref<Array<string|Tag>> = ref([])
+
+let filteredAuthors: Ref<Array<Wrapper>> = ref([]);
+let filteredTags: Ref<Array<Wrapper>> = ref([]);
 
 const progress: Ref<boolean> = ref(false)
 
@@ -143,48 +147,83 @@ function beforeAddTag(item: Tag | string) {
 }
 
 function createAuthor(item: Author | string) {
-  if (item instanceof Object) {
     return item
-  }
-  return {
-    "name": item
-  }
 }
 
 function createTag(item: Tag | string) {
-  if (item instanceof Object) {
     return item
-  }
-  return {
-    "name": item
-  }
 }
 
 function getFilteredAuthors(text: string) {
   console.log("option " + text)
-  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
+  dataService.findAuthorByCriteria(text).then((data) => {
+    filteredAuthors.value.splice(filteredAuthors.value.length)
+    data.content.forEach(a => filteredAuthors.value.push(ObjectUtils.wrapForOptions(a)))
+  })
 }
 
 function getFilteredTags(text: string) {
-  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
+  dataService.findTagsByCriteria(text).then((data) => data.content.forEach(t => filteredTags.value.push(ObjectUtils.wrapForOptions(t))))
 }
 
-const listAsString = (list: Array<Author|Tag>|undefined) => {
-  let res = ''
-  if (list != null && list.length > 0) {
-    let first = true
-    for (let obj of list) {
-      if (first) {
-        first = false
-      } else {
-        res += ', '
-      }
-      res += obj.name
+function authorAdded(item: string|Author) {
+  itemAdded(item, book.value.authors as Array<Author>)
+}
+
+function tagAdded(item: string|Tag) {
+  itemAdded(item, book.value.tags as Array<Tag>)
+}
+
+function itemAdded(item: string|Author|Tag, target: Array<Author|Tag>) {
+  console.log("added")
+  console.log(item)
+  console.log(book.value.authors)
+  console.log(authors.value)
+    if (typeof item === 'string') {
+      console.log("item is string : " + item)
+      target.push({"name": item})
+    } else {
+      console.log("item is author")
+      console.log(item)
+      target.push(item)
     }
-  }
-  return res
+  console.log(book.value.authors)
 }
 
+function authorRemoved(item: string|Author) {
+  console.log("removed")
+  console.log(item)
+  if (typeof item === 'string') {
+    console.log("type string")
+    const toKeep = book.value.authors?.filter(a => a.name !== item)
+    book.value.authors = toKeep
+  } else {
+    console.log('type author')
+    const toKeep = book.value.authors?.filter(a => a.id !== item.id)
+    book.value.authors = toKeep
+  }
+  console.log(book.value.authors)
+}
+
+function tagRemoved(item: string|Tag) {
+  console.log("removed")
+  console.log(item)
+  if (typeof item === 'string') {
+    console.log("type string")
+    const toKeep = book.value.tags?.filter(a => a.name !== item)
+    book.value.tags = toKeep
+  } else {
+    console.log('type tag')
+    const toKeep = book.value.tags?.filter(a => a.id !== item.id)
+    book.value.tags = toKeep
+  }
+  console.log(book.value.tags)
+}
+
+book.value.authors?.forEach(a => authors.value.push(a.name))
+console.log("authors")
+console.log(authors.value)
+book.value.tags?.forEach(t => tags.value.push(t.name))
 </script>
 
 <template>
@@ -198,18 +237,18 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
         </h1>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.title') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.title') }}</span>
           </label>
           <input
             v-model="book.title"
             type="text"
-            class="input input-primary w-full max-w-xs"
+            class="input input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.title = props.metadata.title != null ? props.metadata.title : ''"
@@ -231,78 +270,92 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.title"
               disabled
-              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="w-full jelu-authorinput">
           <label class="label">
-            <span class="label-text">{{ t('book.author', 2) }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.author', 2) }}</span>
           </label>
           <o-taginput
-            v-model="book.authors"
-            :data="filteredAuthors"
+            v-model="authors"
+            :options="filteredAuthors"
             :allow-autocomplete="true"
-            :autocomplete="true"
+            autocomplete="off"
             :allow-new="true"
             :allow-duplicates="false"
             :open-on-focus="true"
-            :before-adding="beforeAdd"
+            :validate-item="beforeAdd"
             :create-item="createAuthor"
             icon-pack="mdi"
             icon="account-plus"
-            field="name"
             :placeholder="t('labels.add_author')"
             @input="getFilteredAuthors"
-          />
+            @add="authorAdded"
+            @remove="authorRemoved"
+          >
+            <template #default="{ value }">
+              <div class="jl-taginput-item">
+                {{ value.name }}
+              </div>
+            </template>
+          </o-taginput>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <div class="flex">
             <div class="m-2">
-              {{ listAsString(book.authors) }}
+              {{ metadata.authors.join(',') }}
             </div>
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="w-full jelu-taginput">
           <label class="label">
-            <span class="label-text">{{ t('book.tag', 2) }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.tag', 2) }}</span>
           </label>
           <o-taginput
-            v-model="book.tags"
-            :data="filteredTags"
+            v-model="tags"
+            :options="filteredTags"
             :allow-autocomplete="true"
-            :autocomplete="true"
+            autocomplete="off"
             :allow-new="true"
             :allow-duplicates="false"
             :open-on-focus="true"
-            :before-adding="beforeAddTag"
+            :validate-item="beforeAddTag"
             :create-item="createTag"
             icon-pack="mdi"
             icon="tag-plus"
-            field="name"
             :placeholder="t('labels.add_tag')"
             @input="getFilteredTags"
-          />
+            @add="tagAdded"
+            @remove="tagRemoved"
+          >
+            <template #default="{ value }">
+              <div class="jl-taginput-item">
+                {{ value.name }}
+              </div>
+            </template>
+          </o-taginput>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <div class="flex">
             <div class="m-2">
-              {{ listAsString(book.tags) }}
+              {{ metadata.tags.join(',') }}
             </div>
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.isbn10') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.isbn10') }}</span>
           </label>
           <input
             v-model="book.isbn10"
             type="text"
-            class="input input-primary w-full max-w-xs"
+            class="input input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.isbn10 = props.metadata.isbn10"
@@ -324,22 +377,22 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.isbn10"
               disabled
-              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.isbn13') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.isbn13') }}</span>
           </label>
           <input
             v-model="book.isbn13"
             type="text"
-            class="input input-primary w-full max-w-xs"
+            class="input input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.isbn13 = props.metadata.isbn13"
@@ -361,22 +414,22 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.isbn13"
               disabled
-              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.publisher') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.publisher') }}</span>
           </label>
           <input
             v-model="book.publisher"
             type="text"
-            class="input input-primary w-full max-w-xs"
+            class="input input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.publisher = props.metadata.publisher"
@@ -398,22 +451,22 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.publisher"
               disabled
-              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.page_count') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.page_count') }}</span>
           </label>
           <input
             v-model="book.pageCount"
             type="number"
-            class="input input-primary w-full max-w-xs"
+            class="input input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.pageCount = props.metadata.pageCount"
@@ -435,22 +488,22 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.pageCount"
               disabled
-              class="jelu-cursor-text input input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.published_date') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.published_date') }}</span>
           </label>
           <input
             v-model="book.publishedDate"
             type="text"
-            class="input input-primary w-full max-w-xs"
+            class="input input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.publishedDate = props.metadata.publishedDate"
@@ -472,64 +525,37 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.publishedDate"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.series') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.series') }}</span>
           </label>
-          <div
-            v-for="seriesItem,idx in seriesCopy"
-            :key="seriesItem.seriesId"
-            class="flex flex-col sm:flex-row items-center grow w-full pb-2"
-          >
-            <SeriesInput
-              class="jl-formkit"
-              :series="seriesItem"
-              :parent-series="seriesCopy"
-              @update-series="(series: SeriesOrder) => seriesCopy[idx] = series"
-            />
-            <button
-              class="btn btn-error btn-outline sm:btn-sm px-1 sm:border-none"
-              @click="seriesCopy.splice(idx, 1)"
-            >
-              <span class="icon">
-                <i class="mdi mdi-delete mdi-18px" />
-              </span>
-            </button>
-          </div>
-          <div class="field pb-2">
-            <button
-              class="btn btn-primary btn-circle p-2 btn-sm"
-              @click="seriesCopy.push({'name' : ''})"
-            >
-              <span class="icon">
-                <i class="mdi mdi-plus mdi-18px" />
-              </span>
-            </button>
+          <div>
+            <SeriesCompleteInput v-model="seriesCopy" />
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <div class="flex">
             <div class="m-2">
               {{ props.metadata.series }} <span v-if="props.metadata.numberInSeries">#{{ props.metadata.numberInSeries }}</span>
             </div>
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.language') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.language') }}</span>
           </label>
           <input
             v-model="book.language"
             type="text"
-            class="input  input-primary w-full max-w-xs"
+            class="input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.language = props.metadata.language"
@@ -551,22 +577,22 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.language"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
             <span class="label-text">{{ t('book.google_id') }}</span>
           </label>
           <input
             v-model="book.googleId"
             type="text"
-            class="jelu-cursor-text input  input-primary w-full max-w-xs"
+            class="jelu-cursor-text input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.googleId = props.metadata.googleId"
@@ -588,22 +614,22 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.googleId"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
             <span class="label-text">{{ t('book.goodreads_id') }}</span>
           </label>
           <input
             v-model="book.goodreadsId"
             type="text"
-            class="input  input-primary w-full max-w-xs"
+            class="input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.goodreadsId = props.metadata.goodreadsId"
@@ -625,22 +651,22 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.goodreadsId"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
             <span class="label-text">{{ t('book.amazon_id') }}</span>
           </label>
           <input
             v-model="book.amazonId"
             type="text"
-            class="input  input-primary w-full max-w-xs"
+            class="input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.amazonId = props.metadata.amazonId"
@@ -662,23 +688,23 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.amazonId"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
 
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
             <span class="label-text">{{ t('book.librarything_id') }}</span>
           </label>
           <input
             v-model="book.librarythingId"
             type="text"
-            class="input  input-primary w-full max-w-xs"
+            class="input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.librarythingId = props.metadata.librarythingId"
@@ -700,23 +726,23 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.librarythingId"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
 
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
             <span class="label-text">{{ t('book.isfdb_id') }}</span>
           </label>
           <input
             v-model="book.isfdbId"
             type="text"
-            class="input  input-primary w-full max-w-xs"
+            class="input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.isfdbId = props.metadata.isfdbId"
@@ -738,23 +764,23 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.isfdbId"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
 
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
             <span class="label-text">{{ t('book.openlibrary_id') }}</span>
           </label>
           <input
             v-model="book.openlibraryId"
             type="text"
-            class="input  input-primary w-full max-w-xs"
+            class="input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.openlibraryId = props.metadata.openlibraryId"
@@ -776,23 +802,23 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.openlibraryId"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
 
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
             <span class="label-text">{{ t('book.noosfere_id') }}</span>
           </label>
           <input
             v-model="book.noosfereId"
             type="text"
-            class="input  input-primary w-full max-w-xs"
+            class="input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.noosfereId = props.metadata.noosfereId"
@@ -814,23 +840,23 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.noosfereId"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
 
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
             <span class="label-text">{{ t('book.inventaire_id') }}</span>
           </label>
           <input
             v-model="book.inventaireId"
             type="text"
-            class="input  input-primary w-full max-w-xs"
+            class="input  input-primary w-full"
           >
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.inventaireId = props.metadata.inventaireId"
@@ -852,21 +878,21 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
               type="text"
               :value="props.metadata.inventaireId"
               disabled
-              class="jelu-cursor-text input  input-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text input  input-secondary w-full join-item"
             >
           </div>
         </div>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">{{ t('book.summary') }}</span>
+            <span class="label-text first-letter:capitalize">{{ t('book.summary') }}</span>
           </label>
           <textarea
             v-model="book.summary"
-            class="textarea textarea-primary w-full max-w-xs"
+            class="textarea textarea-primary w-full"
           />
         </div>
-        <div class="form-control w-full max-w-xs">
-          <div class="join">
+        <div class="form-control w-full">
+          <div class="join w-full">
             <button
               class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
               @click="book.summary = props.metadata.summary"
@@ -887,7 +913,7 @@ const listAsString = (list: Array<Author|Tag>|undefined) => {
             <textarea
               :value="props.metadata.summary"
               disabled
-              class="jelu-cursor-text textarea textarea-secondary w-full max-w-xs join-item"
+              class="jelu-cursor-text textarea textarea-secondary w-full join-item"
             />
           </div>
         </div>

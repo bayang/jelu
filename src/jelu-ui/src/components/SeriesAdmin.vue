@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useOruga } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
-import { ref, Ref, watch } from 'vue'
+import { computed, ref, Ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import usePagination from "../composables/pagination"
 import useSort from "../composables/sort"
@@ -135,6 +135,9 @@ const selectSeries = (selected: Series) => {
 
 getOrphanSeries()
 
+const options = computed(() => {
+  return filteredSeries.value.map(t => ObjectUtils.wrapForOptions(t))
+})
 </script>
 
 <template>
@@ -192,14 +195,20 @@ getOrphanSeries()
       <div class="field border-2 border-accent">
         <o-field>
           <o-autocomplete
-            :data="filteredSeries"
-            :clear-on-select="true"
-            field="name"
+            :options="options"
+            clear-on-select
+            backend-filtering
             :loading="isFetching"
             :debounce="100"
             @input="getFilteredSeries"
             @select="selectSeries"
-          />
+          >
+            <template #default="{ value }">
+              <div class="jl-taginput-item">
+                {{ value.name }}
+              </div>
+            </template>
+          </o-autocomplete>
         </o-field>
       </div>
       <div

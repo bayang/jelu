@@ -1,5 +1,7 @@
+import { Author } from "../model/Author";
 import { Book, UserBook } from "../model/Book";
 import Swal from 'sweetalert2';
+import { Tag } from "../model/Tag";
 
 export class ObjectUtils {
 
@@ -47,8 +49,6 @@ export class ObjectUtils {
       avgRating: book.userbook?.avgRating != null ? book.userbook?.avgRating : null,
       userAvgRating: book.userbook?.userAvgRating != null ? book.userbook?.userAvgRating : null
     } as UserBook
-    // console.log('after')
-    // console.log(converted)
     return converted
   }
 
@@ -136,5 +136,17 @@ export class ObjectUtils {
   // https://stackoverflow.com/questions/39924644/es6-generate-an-array-of-numbers
   public static range = (start: number, end: number, step: number) => {
     return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), x => start + x * step);
+  }
+  
+  public static wrapForOptions = (object: any) => {
+    return {"label": object.name, "value": object}
+  }
+
+  public static wrapAsAuthor(a: Author|Tag|string) {
+      if (typeof a === 'string') {
+        return {"name": a}
+      } else {
+        return a
+      }
   }
 }

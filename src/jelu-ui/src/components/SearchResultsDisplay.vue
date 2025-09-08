@@ -317,15 +317,14 @@ if (searchQuery.value != null) {
   </sort-filter-bar-vue>
   <div class="flex flex-row sm:justify-between justify-center justify-items-center w-11/12 pb-2">
     <div class="flex flex-row gap-1 order-last sm:order-first">
-      <o-button
-        variant="success"
-        outlined
+      <button
+        class="btn btn-outline btn-success"
         @click="open = !open"
       >
         <span class="icon text-lg">
           <i class="mdi mdi-filter-variant" />
         </span>
-      </o-button>
+      </button>
       <button
         v-tooltip="t('bulk.toggle')"
         class="btn btn-outline btn-primary"

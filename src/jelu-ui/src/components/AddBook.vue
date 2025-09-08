@@ -7,19 +7,20 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { Author } from "../model/Author";
+import { Wrapper } from "../model/autocomplete-wrapper";
 import { UserBook } from "../model/Book";
+import { Path } from "../model/DirectoryListing";
 import { Metadata } from "../model/Metadata";
+import { SeriesOrder } from "../model/Series";
 import { Tag } from "../model/Tag";
 import dataService from "../services/DataService";
 import { key } from '../store';
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
-import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 import AutoImportFileModalVue from "./AutoImportFileModal.vue";
-import { SeriesOrder } from "../model/Series";
-import SeriesInput from "./SeriesInput.vue";
+import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 import ImagePickerModal from "./ImagePickerModal.vue";
-import { Path } from "../model/DirectoryListing";
+import SeriesCompleteInput from "./SeriesCompleteInput.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -59,7 +60,7 @@ const form = reactive({
   language: ""
 });
 const eventType = ref(null);
-const eventDate = ref(new Date());
+const eventDate: Ref<Date|null> = ref(new Date());
 const imageUrl = ref<string | null>(null);
 const imagePath = ref<string | null>(null);
 const file = ref(null);
@@ -92,17 +93,17 @@ watch(() => [form.currentPageNumber, form.percentRead, form.pageCount],(newVal, 
   }
 })
 
-let filteredAuthors: Ref<Array<Author>> = ref([]);
-let authors: Ref<Array<Author>> = ref([]);
+let filteredAuthors: Ref<Array<Wrapper>> = ref([]);
+let authors: Ref<Array<Author|string>> = ref([]);
 
-let filteredTags: Ref<Array<Tag>> = ref([]);
+let filteredTags: Ref<Array<Wrapper>> = ref([]);
 let tags: Ref<Array<Tag>> = ref([]);
 
-let translators: Ref<Array<Author>> = ref([]);
-let filteredTranslators: Ref<Array<Author>> = ref([]);
+let translators: Ref<Array<Author|string>> = ref([]);
+let filteredTranslators: Ref<Array<Wrapper>> = ref([]);
 
-let narrators: Ref<Array<Author>> = ref([]);
-let filteredNarrators: Ref<Array<Author>> = ref([]);
+let narrators: Ref<Array<Author|string>> = ref([]);
+let filteredNarrators: Ref<Array<Wrapper>> = ref([]);
 
 let filteredPublishers: Ref<Array<string>> = ref([])
 
@@ -148,10 +149,12 @@ const importBook = async () => {
       return
     }
     let userBook: UserBook = fillBook(form, publishedDate.value)
-    authors.value.forEach((a) => userBook.book.authors?.push(a));
-    tags.value.forEach((t) => userBook.book.tags?.push(t));
-    translators.value.forEach((tr) => userBook.book.translators?.push(tr));
-    narrators.value.forEach((n) => userBook.book.narrators?.push(n))
+    authors.value.forEach((a) => {
+        userBook.book.authors?.push(ObjectUtils.wrapAsAuthor(a))
+    });
+    tags.value.forEach((t) => userBook.book.tags?.push(ObjectUtils.wrapAsAuthor(t)));
+    translators.value.forEach((tr) => userBook.book.translators?.push(ObjectUtils.wrapAsAuthor(tr)));
+    narrators.value.forEach((n) => userBook.book.narrators?.push(ObjectUtils.wrapAsAuthor(n)))
     seriesCopy.value.forEach((s) => {
       if (s.name.trim().length > 0) {
         userBook.book.series?.push(s)
@@ -169,12 +172,12 @@ const importBook = async () => {
       && StringUtils.isNotBlank(metadata.value.image)) {
       userBook.book.image = metadata.value.image
     }
-    if (eventType.value !== null && eventType.value !== "NONE") {
+    if (eventType.value !== null && eventType.value !== "NONE" && eventDate.value != null) {
       console.log(
         "type " + StringUtils.readingEventTypeForValue(eventType.value)
       );
       userBook.lastReadingEvent = StringUtils.readingEventTypeForValue(eventType.value);
-      userBook.lastReadingEventDate = eventDate.value.toISOString()
+      userBook.lastReadingEventDate = eventDate.value?.toISOString()
     }
     try {
       console.log(`push book ` + userBook);
@@ -285,15 +288,15 @@ const clearImageField = () => {
   imageUrl.value = "";
 };
 
-function getFilteredData(text: string, target: Array<Author>) {
+function getFilteredData(text: string, target: Array<Wrapper>) {
   dataService.findAuthorByCriteria(text).then((data) => {
     target.splice(0, target.length)
-    data.content.forEach(a => target.push(a))
+    data.content.forEach(a => target.push(ObjectUtils.wrapForOptions(a)))
   })
 }
 
 function getFilteredTags(text: string) {
-  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
+  dataService.findTagsByCriteria(text).then((data) => data.content.forEach(t => filteredTags.value.push(ObjectUtils.wrapForOptions(t))))
 }
 
 function getFilteredPublishers(text: string) {
@@ -346,22 +349,20 @@ function beforeAddTag(item: Tag | string) {
   return shouldAdd
 }
 
-function createAuthor(item: Author | string) {
-  if (item instanceof Object) {
-    return item
-  }
-  return {
-    "name": item
-  }
+function createAuthor(item: string|Author) {
+  console.log("item")
+  console.log(item)
+  // if (item instanceof Object) {
+    // return item
+  // }
+  return item
 }
 
 function createTag(item: Tag | string) {
-  if (item instanceof Object) {
-    return item
-  }
-  return {
-    "name": item
-  }
+  // if (item instanceof Object) {
+    // return item
+  // }
+  return item
 }
 
 function selectPublisher(publisher: string, event: UIEvent) {
@@ -431,12 +432,12 @@ const mergeMetadata = () => {
   }
   if (metadata.value?.authors != null && metadata.value.authors.length > 0) {
     let auths: Array<Author> = []
-    metadata.value.authors.forEach(a => auths.push(createAuthor(a)))
+    metadata.value.authors.forEach(a => auths.push(ObjectUtils.wrapAsAuthor(a)))
     authors.value = auths
   }
   if (metadata.value?.tags != null && metadata.value.tags.length > 0) {
     let importedTags: Array<Tag> = []
-    metadata.value.tags.forEach(t => importedTags.push(createTag(t)))
+    metadata.value.tags.forEach(t => importedTags.push(ObjectUtils.wrapAsAuthor(t)))
     tags.value = importedTags
   }
   if (metadata.value?.publishedDate && StringUtils.isNotBlank(metadata.value?.publishedDate)) {
@@ -544,7 +545,7 @@ let displayDatepicker = computed(() => {
           </svg>
         </div>
       </div>
-      <div class="form-control sm:w-8/12 justify-self-center">
+      <div class="sm:w-8/12 justify-self-center">
         <div class="field mb-3">
           <o-field
             horizontal
@@ -552,8 +553,9 @@ let displayDatepicker = computed(() => {
             class="capitalize"
           >
             <o-input 
-              v-model="form.title" 
-              class="input focus:input-accent"
+              v-model="form.title"
+              expanded
+              class="w-full input focus:input-accent"
             />
           </o-field>
         </div>
@@ -566,20 +568,25 @@ let displayDatepicker = computed(() => {
           >
             <o-taginput
               v-model="authors"
-              :data="filteredAuthors"
               :allow-autocomplete="true"
               autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="(item: Author|string) => beforeAdd(item, authors)"
+              :options="filteredAuthors"
+              :validate-item="(item: Author|string) => beforeAdd(item, authors)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
-              field="name"
               :placeholder="t('labels.add_author')"
               @input="(v: string) => getFilteredData(v, filteredAuthors)"
-            />
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-taginput>
           </o-field>
         </div>
         <div class="field jelu-taginput mb-3">
@@ -590,20 +597,26 @@ let displayDatepicker = computed(() => {
           >
             <o-taginput
               v-model="tags"
-              :data="filteredTags"
+              :options="filteredTags"
               :allow-autocomplete="true"
               autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="beforeAddTag"
+              :validate-item="beforeAddTag"
               :create-item="createTag"
               icon-pack="mdi"
               icon="tag-plus"
               field="name"
               :placeholder="t('labels.add_tag')"
               @input="getFilteredTags"
-            />
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-taginput>
           </o-field>
         </div>
         <div class="field jelu-authorinput pb-2">
@@ -614,20 +627,26 @@ let displayDatepicker = computed(() => {
           >
             <o-taginput
               v-model="translators"
-              :data="filteredTranslators"
+              :options="filteredTranslators"
               :allow-autocomplete="true"
               autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="(item: Author|string) => beforeAdd(item, translators)"
+              :validate-item="(item: Author|string) => beforeAdd(item, translators)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_translator')"
               @input="(v: string) => getFilteredData(v, filteredTranslators)"
-            />
+            > 
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-taginput>
           </o-field>
         </div>
         <div class="field jelu-authorinput pb-2">
@@ -638,20 +657,26 @@ let displayDatepicker = computed(() => {
           >
             <o-taginput
               v-model="narrators"
-              :data="filteredNarrators"
+              :options="filteredNarrators"
               :allow-autocomplete="true"
               autocomplete="off"
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :before-adding="(item: Author|string) => beforeAdd(item, narrators)"
+              :validate-item="(item: Author|string) => beforeAdd(item, narrators)"
               :create-item="createAuthor"
               icon-pack="mdi"
               icon="account-plus"
               field="name"
               :placeholder="t('labels.add_narrator')"
               @input="(v: string) => getFilteredData(v, filteredNarrators)"
-            />
+            > 
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-taginput>
           </o-field>
         </div>
         <div class="field mb-3">
@@ -663,6 +688,7 @@ let displayDatepicker = computed(() => {
             <o-input
               v-model="form.summary"
               maxlength="50000"
+              expanded
               type="textarea"
               class="textarea focus:textarea-accent"
             />
@@ -679,8 +705,9 @@ let displayDatepicker = computed(() => {
             <o-input
               v-model="form.isbn10"
               name="isbn10"
+              expanded
               :placeholder="t('book.isbn10')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
               @blur="validateIsbn10($event.target.value)"
             />
           </o-field>
@@ -696,8 +723,9 @@ let displayDatepicker = computed(() => {
             <o-input
               v-model="form.isbn13"
               name="isbn13"
+              expanded
               :placeholder="t('book.isbn13')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
               @blur="validateIsbn13($event.target.value)"
             />
           </o-field>
@@ -706,55 +734,55 @@ let displayDatepicker = computed(() => {
           <o-field
             horizontal
             :label="t('book.identifiers')"
-            class="capitalize"
+            class="capitalize providers-ids"
           >
             <o-input
               v-model="form.googleId"
               name="googleId"
               :placeholder="t('book.google_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="form.goodreadsId"
               name="goodreadsId"
               :placeholder="t('book.goodreads_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="form.amazonId"
               name="amazonId"
               :placeholder="t('book.amazon_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="form.librarythingId"
               name="librarythingId"
               :placeholder="t('book.librarything_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="form.isfdbId"
               name="isfdbId"
               :placeholder="t('book.isfdb_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="form.openlibraryId"
               name="openlibraryId"
               :placeholder="t('book.openlibrary_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="form.noosfereId"
               name="noosfereId"
               :placeholder="t('book.noosfere_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
             <o-input
               v-model="form.inventaireId"
               name="inventaireId"
               :placeholder="t('book.inventaire_id')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
             />
           </o-field>
         </div>
@@ -766,14 +794,21 @@ let displayDatepicker = computed(() => {
           >
             <o-autocomplete
               v-model="form.publisher"
-              :root-class="'grow, w-full'"
-              :input-classes="{rootClass:'border-2 border-accent'}"
-              :data="filteredPublishers"
-              :clear-on-select="true"
+              :root-class="'grow w-full'"
+              :input-classes="{rootClass:'w-full border-2 border-accent', inputClass:'w-full'}"
+              :clear-on-select="false"
+              backend-filtering
               :debounce="100"
+              :options="filteredPublishers"
               @input="getFilteredPublishers"
               @select="selectPublisher"
-            />
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value }}
+                </div>
+              </template>
+            </o-autocomplete>
           </o-field>
         </div>
         <div class="field mb-3">
@@ -792,7 +827,7 @@ let displayDatepicker = computed(() => {
               icon-right="close"
               :icon-right-clickable="true"
               trap-focus
-              class="input focus:input-accent"
+              expanded
               @icon-right-click="clearDatePicker"
             />
           </o-field>
@@ -806,8 +841,10 @@ let displayDatepicker = computed(() => {
             <o-input
               v-model="form.pageCount"
               type="number"
+              number
               min="0"
-              class="input focus:input-accent"
+              class="input focus:input-accent sm:w-11/12"
+              expanded
               icon-right="delete"
               icon-right-clickable
               @icon-right-click="form.pageCount = null;form.currentPageNumber=null"
@@ -823,7 +860,8 @@ let displayDatepicker = computed(() => {
             <o-input
               v-model="form.language"
               type="text"
-              class="input focus:input-accent"
+              expanded
+              class="input focus:input-accent w-full"
             />
           </o-field>
         </div>
@@ -833,36 +871,12 @@ let displayDatepicker = computed(() => {
             horizontal
             class="capitalize"
           >
-            <div
-              v-for="seriesItem,idx in seriesCopy"
-              :key="seriesItem.seriesId"
-              class="flex flex-col sm:flex-row items-center grow w-full pb-2"
-            >
-              <SeriesInput
-                :series="seriesItem"
-                :parent-series="seriesCopy"
-                @update-series="(series: SeriesOrder) => seriesCopy[idx] = series"
-              />
-              <button
-                class="btn btn-error btn-outline sm:btn-sm px-1 sm:border-none"
-                @click="seriesCopy.splice(idx, 1)"
-              >
-                <span class="icon">
-                  <i class="mdi mdi-delete mdi-18px" />
-                </span>
-              </button>
+            <div class="flex flex-col grow w-full">
+              <div>
+                <SeriesCompleteInput v-model="seriesCopy" />
+              </div>
             </div>
           </o-field>
-        </div>
-        <div class="field mb-3">
-          <button
-            class="btn btn-primary btn-circle p-2 btn-sm"
-            @click="seriesCopy.push({'name' : ''})"
-          >
-            <span class="icon">
-              <i class="mdi mdi-plus mdi-18px" />
-            </span>
-          </button>
         </div>
         <div class="block">
           <o-field
@@ -922,6 +936,7 @@ let displayDatepicker = computed(() => {
               mobile-native="false"
               mobile-modal="false"
               trap-focus
+              @icon-right-click="eventDate = null"
             />
           </o-field>
         </div>
@@ -935,6 +950,7 @@ let displayDatepicker = computed(() => {
               v-model="form.personalNotes"
               maxlength="5000"
               type="textarea"
+              expanded
               class="textarea focus:textarea-accent"
             />
           </o-field>
@@ -981,8 +997,10 @@ let displayDatepicker = computed(() => {
             <o-input
               v-model="form.currentPageNumber"
               type="number"
+              number
               min="0"
-              class="input focus:input-accent"
+              expanded
+              class="input focus:input-accent w-11/12"
               :max="form.pageCount"
               :disabled="form.pageCount == null"
               icon-right="delete"
@@ -1063,35 +1081,42 @@ let displayDatepicker = computed(() => {
           class="mb-4"
         >
           <o-field
+            class=""
             horizontal
             :label="t('labels.upload_cover')"
           >
-            <div class="form-control">
-              <label class="label cursor-pointer justify-center gap-2">
-                <input
-                  v-model="uploadType"
-                  type="radio"
-                  name="radio-10"
-                  class="radio radio-primary"
-                  value="web"
-                >
-                <span class="label-text">{{ t('labels.upload_from_web') }}</span> 
-                <input
-                  v-model="uploadType"
-                  type="radio"
-                  name="radio-10"
-                  class="radio radio-primary"
-                  value="computer"
-                >
-                <span class="label-text">{{ t('labels.upload_from_computer') }}</span> 
-                <input
-                  v-model="uploadType"
-                  type="radio"
-                  name="radio-10"
-                  class="radio radio-primary"
-                  value="server"
-                >
-                <span class="label-text">{{ t('labels.upload_from_server') }}</span> 
+            <div class="">
+              <label class="label cursor-pointer justify-center gap-2 flex flex-wrap">
+                <div>
+                  <input
+                    v-model="uploadType"
+                    type="radio"
+                    name="radio-10"
+                    class="radio radio-primary mx-3"
+                    value="web"
+                  >
+                  <span class="label-text">{{ t('labels.upload_from_web') }}</span> 
+                </div>
+                <div>
+                  <input
+                    v-model="uploadType"
+                    type="radio"
+                    name="radio-10"
+                    class="radio radio-primary mx-3"
+                    value="computer"
+                  >
+                  <span class="label-text">{{ t('labels.upload_from_computer') }}</span>
+                </div>
+                <div>
+                  <input
+                    v-model="uploadType"
+                    type="radio"
+                    name="radio-10"
+                    class="radio radio-primary mx-3"
+                    value="server"
+                  >
+                  <span class="label-text">{{ t('labels.upload_from_server') }}</span> 
+                </div>
               </label>
             </div>
           </o-field>
@@ -1105,10 +1130,11 @@ let displayDatepicker = computed(() => {
               type="url"
               pattern="https?://.*"
               :clearable="true"
+              expanded
               icon-right-clickable
               title="Url must start with http or https"
               :placeholder="t('labels.url_must_start')"
-              class="input focus:input-accent"
+              class="input focus:input-accent w-full"
               @icon-right-click="clearImageField"
             />
           </o-field>

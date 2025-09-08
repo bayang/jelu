@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { Tag } from "../model/Tag";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { useOruga } from "@oruga-ui/oruga-next";
+import { Wrapper } from "../model/autocomplete-wrapper";
 
 const oruga = useOruga()
 
@@ -25,17 +26,20 @@ const toRead: Ref<boolean|null> = ref(null)
 const owned: Ref<boolean|null> = ref(null)
 const add: Ref<boolean> = ref(true)
 
-let filteredTags: Ref<Array<Tag>> = ref([]);
+let filteredTags: Ref<Array<Wrapper>> = ref([]);
 const isFetching = ref(false)
 
 function getFilteredTags(text: string) {
   isFetching.value = true
-  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
+  filteredTags.value.splice(0, filteredTags.value.length)
+  dataService.findTagsByCriteria(text).then((data) => data.content.forEach(t => filteredTags.value.push(ObjectUtils.wrapForOptions(t))))
   isFetching.value = false
 }
 
-function manageTag(tag: Tag, event: UIEvent) {
-  if (tag != null && event != null && tag.id != null) {
+function manageTag(tag: Tag) {
+  console.log("tag")
+  console.log(tag)
+  if (tag != null && tag.id != null) {
     console.log("received tag : " + tag.id + "/" + tag.name)
     if (add.value) {
       if (addTags.value.findIndex(elem => tag.id === elem.id) === -1) {
@@ -96,13 +100,13 @@ const submit = () => {
           </h1>
         </div>
       </div>
-      <div>
-        <div class="field">
+      <div class="my-2">
+        <div class="field my-2">
           <label class="label">
             <span class="label-text font-semibold">{{ t('bulk.owned') }} :</span>
           </label>
           
-          <div class="flex gap-1">
+          <div class="flex gap-2">
             <label>{{ t('labels.yes') }}</label>
             <input
               v-model="owned"
@@ -126,11 +130,11 @@ const submit = () => {
             >
           </div>
         </div>
-        <div class="field">
+        <div class="field my-2">
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('bulk.toRead') }} :</span>
           </label>
-          <div class="flex gap-1">
+          <div class="flex gap-2">
             <label>{{ t('labels.yes') }}</label>
             <input
               v-model="toRead"
@@ -154,7 +158,7 @@ const submit = () => {
             >
           </div>
         </div>
-        <div class="field">
+        <div class="field my-2">
           <label class="label">
             <span
               class="label-text font-semibold first-letter:capitalize"
@@ -163,21 +167,29 @@ const submit = () => {
           <input
             v-model="add"
             type="checkbox"
-            class="toggle toggle-primary"
+            class="toggle toggle-primary mx-2"
           >
           <span class="mx-2 capitalize">{{ add == true ? t("bulk.add_tag") : t("bulk.remove_tag") }}</span>
         </div>
         <div class="field">
           <o-field :label="t('bulk.choose_tag')">
             <o-autocomplete
-              :data="filteredTags"
+              :options="filteredTags"
               :clear-on-select="true"
               field="name"
+              backend-filtering
+              :input-classes="{rootClass:'w-full border-2 border-accent', inputClass:'w-full'}"
               :loading="isFetching"
               :debounce="100"
               @input="getFilteredTags"
               @select="manageTag"
-            />
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value.name }}
+                </div>
+              </template>
+            </o-autocomplete>
           </o-field>
         </div>
         <div
@@ -189,7 +201,7 @@ const submit = () => {
           <span
             v-for="tag in addTags"
             :key="tag.id"
-            class="badge badge-info"
+            class="badge badge-info mr-2"
           >
             {{ tag.name }}
             <svg
@@ -217,7 +229,7 @@ const submit = () => {
           <span
             v-for="tag in removeTags"
             :key="tag.id"
-            class="badge badge-warning"
+            class="badge badge-warning mr-2"
           >
             {{ tag.name }}
             <svg
