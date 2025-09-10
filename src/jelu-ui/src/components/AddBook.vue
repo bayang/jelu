@@ -94,15 +94,15 @@ watch(() => [form.currentPageNumber, form.percentRead, form.pageCount],(newVal, 
 })
 
 let filteredAuthors: Ref<Array<Wrapper>> = ref([]);
-let authors: Ref<Array<Author|string>> = ref([]);
+let authors: Ref<Array<Author>> = ref([]);
 
 let filteredTags: Ref<Array<Wrapper>> = ref([]);
 let tags: Ref<Array<Tag>> = ref([]);
 
-let translators: Ref<Array<Author|string>> = ref([]);
+let translators: Ref<Array<Author>> = ref([]);
 let filteredTranslators: Ref<Array<Wrapper>> = ref([]);
 
-let narrators: Ref<Array<Author|string>> = ref([]);
+let narrators: Ref<Array<Author>> = ref([]);
 let filteredNarrators: Ref<Array<Wrapper>> = ref([]);
 
 let filteredPublishers: Ref<Array<string>> = ref([])
@@ -150,11 +150,11 @@ const importBook = async () => {
     }
     let userBook: UserBook = fillBook(form, publishedDate.value)
     authors.value.forEach((a) => {
-        userBook.book.authors?.push(ObjectUtils.wrapAsAuthor(a))
+        userBook.book.authors?.push(a)
     });
-    tags.value.forEach((t) => userBook.book.tags?.push(ObjectUtils.wrapAsAuthor(t)));
-    translators.value.forEach((tr) => userBook.book.translators?.push(ObjectUtils.wrapAsAuthor(tr)));
-    narrators.value.forEach((n) => userBook.book.narrators?.push(ObjectUtils.wrapAsAuthor(n)))
+    tags.value.forEach((t) => userBook.book.tags?.push(t));
+    translators.value.forEach((tr) => userBook.book.translators?.push(tr));
+    narrators.value.forEach((n) => userBook.book.narrators?.push(n))
     seriesCopy.value.forEach((s) => {
       if (s.name.trim().length > 0) {
         userBook.book.series?.push(s)
@@ -296,10 +296,12 @@ function getFilteredData(text: string, target: Array<Wrapper>) {
 }
 
 function getFilteredTags(text: string) {
+  filteredTags.value.splice(0, filteredTags.value.length)
   dataService.findTagsByCriteria(text).then((data) => data.content.forEach(t => filteredTags.value.push(ObjectUtils.wrapForOptions(t))))
 }
 
 function getFilteredPublishers(text: string) {
+  form.publisher = text
   dataService.findPublisherByCriteria(text).then(data => filteredPublishers.value = data.content)
 }
 
@@ -349,26 +351,10 @@ function beforeAddTag(item: Tag | string) {
   return shouldAdd
 }
 
-function createAuthor(item: string|Author) {
-  console.log("item")
-  console.log(item)
-  // if (item instanceof Object) {
-    // return item
-  // }
-  return item
-}
-
-function createTag(item: Tag | string) {
-  // if (item instanceof Object) {
-    // return item
-  // }
-  return item
-}
-
-function selectPublisher(publisher: string, event: UIEvent) {
+function selectPublisher(publisher: string) {
   // we receive from oruga weird events while nothing is selected
   // so try to get rid of those null data we receive
-  if (publisher != null && event != null) {
+  if (publisher != null) {
     form.publisher = publisher
   }
 }
@@ -432,12 +418,12 @@ const mergeMetadata = () => {
   }
   if (metadata.value?.authors != null && metadata.value.authors.length > 0) {
     let auths: Array<Author> = []
-    metadata.value.authors.forEach(a => auths.push(ObjectUtils.wrapAsAuthor(a)))
+    metadata.value.authors.forEach(a => auths.push(ObjectUtils.createNamedItem(a)))
     authors.value = auths
   }
   if (metadata.value?.tags != null && metadata.value.tags.length > 0) {
     let importedTags: Array<Tag> = []
-    metadata.value.tags.forEach(t => importedTags.push(ObjectUtils.wrapAsAuthor(t)))
+    metadata.value.tags.forEach(t => importedTags.push(ObjectUtils.createNamedItem(t)))
     tags.value = importedTags
   }
   if (metadata.value?.publishedDate && StringUtils.isNotBlank(metadata.value?.publishedDate)) {
@@ -575,7 +561,7 @@ let displayDatepicker = computed(() => {
               :open-on-focus="true"
               :options="filteredAuthors"
               :validate-item="(item: Author|string) => beforeAdd(item, authors)"
-              :create-item="createAuthor"
+              :create-item="ObjectUtils.createNamedItem"
               icon-pack="mdi"
               icon="account-plus"
               :placeholder="t('labels.add_author')"
@@ -584,6 +570,30 @@ let displayDatepicker = computed(() => {
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <div
+                  v-for="(item, index) in items"
+                  :key="item.name"
+                  class="badge badge-primary badge-xl m-0.5"
+                >
+                  {{ item.name }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 hover:cursor-pointer"
+                    @click="removeItem(index, $event)"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
                 </div>
               </template>
             </o-taginput>
@@ -604,7 +614,7 @@ let displayDatepicker = computed(() => {
               :allow-duplicates="false"
               :open-on-focus="true"
               :validate-item="beforeAddTag"
-              :create-item="createTag"
+              :create-item="ObjectUtils.createNamedItem"
               icon-pack="mdi"
               icon="tag-plus"
               field="name"
@@ -614,6 +624,30 @@ let displayDatepicker = computed(() => {
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <div
+                  v-for="(item, index) in items"
+                  :key="item.name"
+                  class="badge badge-secondary badge-xl m-0.5"
+                >
+                  {{ item.name }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 hover:cursor-pointer"
+                    @click="removeItem(index, $event)"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
                 </div>
               </template>
             </o-taginput>
@@ -633,8 +667,8 @@ let displayDatepicker = computed(() => {
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :validate-item="(item: Author|string) => beforeAdd(item, translators)"
-              :create-item="createAuthor"
+              :validate-item="(item: Author) => beforeAdd(item, translators)"
+              :create-item="ObjectUtils.createNamedItem"
               icon-pack="mdi"
               icon="account-plus"
               field="name"
@@ -644,6 +678,30 @@ let displayDatepicker = computed(() => {
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <div
+                  v-for="(item, index) in items"
+                  :key="item.name"
+                  class="badge badge-primary badge-xl m-0.5"
+                >
+                  {{ item.name }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 hover:cursor-pointer"
+                    @click="removeItem(index, $event)"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
                 </div>
               </template>
             </o-taginput>
@@ -663,8 +721,8 @@ let displayDatepicker = computed(() => {
               :allow-new="true"
               :allow-duplicates="false"
               :open-on-focus="true"
-              :validate-item="(item: Author|string) => beforeAdd(item, narrators)"
-              :create-item="createAuthor"
+              :validate-item="(item: Author) => beforeAdd(item, narrators)"
+              :create-item="ObjectUtils.createNamedItem"
               icon-pack="mdi"
               icon="account-plus"
               field="name"
@@ -674,6 +732,30 @@ let displayDatepicker = computed(() => {
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <div
+                  v-for="(item, index) in items"
+                  :key="item.name"
+                  class="badge badge-primary badge-xl m-0.5"
+                >
+                  {{ item.name }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 hover:cursor-pointer"
+                    @click="removeItem(index, $event)"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
                 </div>
               </template>
             </o-taginput>

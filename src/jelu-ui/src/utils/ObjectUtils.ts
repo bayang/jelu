@@ -149,4 +149,14 @@ export class ObjectUtils {
         return a
       }
   }
+  
+  public static createNamedItem(item: Author | Tag | string) {
+  console.log("create")
+  console.log(item)
+  if (typeof item === 'string') {
+    return {"name": item}
+  } else {
+    return item
+  }
+}
 }

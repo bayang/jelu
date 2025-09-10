@@ -27,11 +27,6 @@ const props = defineProps<{ bookId: string, book: UserBook | null, canAddEvent: 
 const oruga = useOruga()
 const emit = defineEmits(['close']);
 
-let authors: Ref<Array<string|Author>> = ref([]);
-let translators: Ref<Array<string|Author>> = ref([]);
-let narrators: Ref<Array<string|Author>> = ref([]);
-let tags: Ref<Array<string|Tag>> = ref([])
-
 let filteredAuthors: Ref<Array<Wrapper>> = ref([]);
 let filteredTags: Ref<Array<Wrapper>> = ref([]);
 let filteredTranslators: Ref<Array<Wrapper>> = ref([]);
@@ -154,83 +149,20 @@ const importBook = () => {
 function getFilteredData(text: string, target: Array<Wrapper>) {
   dataService.findAuthorByCriteria(text).then((data) => {
     target.splice(0, target.length)
-    // data.content.forEach(a => target.push(a))
     data.content.forEach(a => target.push(ObjectUtils.wrapForOptions(a)))
   })
 }
 
 function getFilteredTags(text: string) {
-  // dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
-  dataService.findTagsByCriteria(text).then((data) => data.content.forEach(t => filteredTags.value.push(ObjectUtils.wrapForOptions(t))))
+  dataService.findTagsByCriteria(text).then((data) => {
+    filteredTags.value.splice(0, filteredTags.value.length)
+    data.content.forEach(t => filteredTags.value.push(ObjectUtils.wrapForOptions(t)))
+  })
 }
 
 function getFilteredPublishers(text: string) {
+  userbook.value.book.publisher = text
   dataService.findPublisherByCriteria(text).then(data => filteredPublishers.value = data.content)
-}
-
-function authorAdded(item: string|Author) {
-  itemAdded(item, userbook.value.book.authors as Array<Author>)
-}
-
-function translatorAdded(item: string|Author) {
-  itemAdded(item, userbook.value.book.translators as Array<Author>)
-}
-
-function narratorAdded(item: string|Author) {
-  itemAdded(item, userbook.value.book.narrators as Array<Author>)
-}
-
-function tagAdded(item: string|Tag) {
-  itemAdded(item, userbook.value.book.tags as Array<Tag>)
-}
-
-function itemAdded(item: string|Author|Tag, target: Array<Author|Tag>) {
-    if (typeof item === 'string') {
-      target.push({"name": item})
-    } else {
-      target.push(item)
-    }
-}
-
-function authorRemoved(item: string|Author) {
-  if (typeof item === 'string') {
-    const toKeep = userbook.value.book.authors?.filter(a => a.name !== item)
-    userbook.value.book.authors = toKeep
-  } else {
-    const toKeep = userbook.value.book.authors?.filter(a => a.id !== item.id)
-    userbook.value.book.authors = toKeep
-  }
-  console.log(userbook.value.book.authors)
-}
-
-function translatorRemoved(item: string|Author) {
-  if (typeof item === 'string') {
-    const toKeep = userbook.value.book.translators?.filter(a => a.name !== item)
-    userbook.value.book.translators = toKeep
-  } else {
-    const toKeep = userbook.value.book.translators?.filter(a => a.id !== item.id)
-    userbook.value.book.translators = toKeep
-  }
-}
-
-function narratorRemoved(item: string|Author) {
-  if (typeof item === 'string') {
-    const toKeep = userbook.value.book.narrators?.filter(a => a.name !== item)
-    userbook.value.book.narrators = toKeep
-  } else {
-    const toKeep = userbook.value.book.narrators?.filter(a => a.id !== item.id)
-    userbook.value.book.narrators = toKeep
-  }
-}
-
-function tagRemoved(item: string|Tag) {
-  if (typeof item === 'string') {
-    const toKeep = userbook.value.book.tags?.filter(a => a.name !== item)
-    userbook.value.book.tags = toKeep
-  } else {
-    const toKeep = userbook.value.book.tags?.filter(a => a.id !== item.id)
-    userbook.value.book.tags = toKeep
-  }
 }
 
 function beforeAdd(item: Author | string, target: Array<Author>) {
@@ -279,18 +211,10 @@ function beforeAddTag(item: Tag | string) {
   return shouldAdd
 }
 
-function createAuthor(item: Author | string) {
-    return item
-}
-
-function createTag(item: Tag | string) {
-    return item
-}
-
-function selectPublisher(publisher: string, event: UIEvent) {
+function selectPublisher(publisher: string) {
   // we receive from oruga weird events while nothing is selected
   // so try to get rid of those null data we receive
-  if (publisher != null && event != null) {
+  if (publisher != null) {
     userbook.value.book.publisher = publisher
   }
 }
@@ -338,10 +262,9 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
     }
 })
 
-userbook.value.book.authors?.forEach(a => authors.value.push(a.name))
-userbook.value.book.translators?.forEach(a => translators.value.push(a.name))
-userbook.value.book.narrators?.forEach(a => narrators.value.push(a.name))
-userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
+if (userbook.value.book.publisher != null) {
+  filteredPublishers.value.push(userbook.value.book.publisher as string) // prefill editor autocomplete. oruga workaround
+}
 </script>
 
 <template>
@@ -369,7 +292,7 @@ userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
             class="capitalize"
           >
             <o-taginput
-              v-model="authors"
+              v-model="userbook.book.authors"
               :options="filteredAuthors"
               :allow-autocomplete="true"
               autocomplete="off"
@@ -377,17 +300,39 @@ userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
               :allow-duplicates="false"
               :open-on-focus="true"
               :validate-item="(item: Author|string) => beforeAdd(item, userbook.book.authors as Array<Author>)"
-              :create-item="createAuthor"
+              :create-item="ObjectUtils.createNamedItem"
               icon-pack="mdi"
               icon="account-plus"
               :placeholder="t('labels.add_author')"
               @input="(v: string) => getFilteredData(v, filteredAuthors)"
-              @add="authorAdded"
-              @remove="authorRemoved"
             >
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <div
+                  v-for="(item, index) in items"
+                  :key="item.name"
+                  class="badge badge-primary badge-xl m-0.5"
+                >
+                  {{ item.name }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 hover:cursor-pointer"
+                    @click="removeItem(index, $event)"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
                 </div>
               </template>
             </o-taginput>
@@ -400,7 +345,7 @@ userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
             class="capitalize"
           >
             <o-taginput
-              v-model="tags"
+              v-model="userbook.book.tags"
               :options="filteredTags"
               :allow-autocomplete="true"
               autocomplete="off"
@@ -408,17 +353,39 @@ userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
               :allow-duplicates="false"
               :open-on-focus="true"
               :validate-item="beforeAddTag"
-              :create-item="createTag"
+              :create-item="ObjectUtils.createNamedItem"
               icon-pack="mdi"
               icon="tag-plus"
               :placeholder="t('labels.add_tag')"
               @input="getFilteredTags"
-              @add="tagAdded"
-              @remove="tagRemoved"
             >
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <div
+                  v-for="(item, index) in items"
+                  :key="item.name"
+                  class="badge badge-secondary badge-xl m-0.5"
+                >
+                  {{ item.name }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 hover:cursor-pointer"
+                    @click="removeItem(index, $event)"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
                 </div>
               </template>
             </o-taginput>
@@ -431,7 +398,7 @@ userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
             class="capitalize"
           >
             <o-taginput
-              v-model="translators"
+              v-model="userbook.book.translators"
               :options="filteredTranslators"
               :allow-autocomplete="true"
               autocomplete="off"
@@ -439,17 +406,39 @@ userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
               :allow-duplicates="false"
               :open-on-focus="true"
               :validate-item="(item: Author|string) => beforeAdd(item, userbook.book.translators as Array<Author>)"
-              :create-item="createAuthor"
+              :create-item="ObjectUtils.createNamedItem"
               icon-pack="mdi"
               icon="account-plus"
               :placeholder="t('labels.add_translator')"
               @input="(v: string) => getFilteredData(v, filteredTranslators)"
-              @add="translatorAdded"
-              @remove="translatorRemoved"
             >
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <div
+                  v-for="(item, index) in items"
+                  :key="item.name"
+                  class="badge badge-primary badge-xl m-0.5"
+                >
+                  {{ item.name }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 hover:cursor-pointer"
+                    @click="removeItem(index, $event)"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
                 </div>
               </template>
             </o-taginput>
@@ -462,7 +451,7 @@ userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
             class="capitalize"
           >
             <o-taginput
-              v-model="narrators"
+              v-model="userbook.book.narrators"
               :options="filteredNarrators"
               :allow-autocomplete="true"
               autocomplete="off"
@@ -470,17 +459,39 @@ userbook.value.book.tags?.forEach(t => tags.value.push(t.name))
               :allow-duplicates="false"
               :open-on-focus="true"
               :validate-item="(item: Author|string) => beforeAdd(item, userbook.book.narrators as Array<Author>)"
-              :create-item="createAuthor"
+              :create-item="ObjectUtils.createNamedItem"
               icon-pack="mdi"
               icon="account-plus"
               :placeholder="t('labels.add_narrator')"
               @input="(v: string) => getFilteredData(v, filteredNarrators)"
-              @add="narratorAdded"
-              @remove="narratorRemoved"
             >
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <div
+                  v-for="(item, index) in items"
+                  :key="item.name"
+                  class="badge badge-primary badge-xl m-0.5"
+                >
+                  {{ item.name }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 hover:cursor-pointer"
+                    @click="removeItem(index, $event)"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
                 </div>
               </template>
             </o-taginput>

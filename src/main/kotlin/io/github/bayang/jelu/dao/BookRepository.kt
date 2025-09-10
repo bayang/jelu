@@ -854,9 +854,7 @@ class BookRepository(
                 translatorsList.add(save(it))
             }
         }
-        if (translatorsList.isNotEmpty()) {
-            updated.translators = SizedCollection(translatorsList)
-        }
+        updated.translators = SizedCollection(translatorsList)
         val narratorsList = mutableListOf<Author>()
         book.narrators?.forEach {
             // first try to find exact match by id
@@ -873,9 +871,7 @@ class BookRepository(
                 narratorsList.add(save(it))
             }
         }
-        if (narratorsList.isNotEmpty()) {
-            updated.narrators = SizedCollection(narratorsList)
-        }
+        updated.narrators = SizedCollection(narratorsList)
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
             // first try to find exact match by id
