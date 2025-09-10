@@ -17,4 +17,5 @@ export interface TotalsStats {
     read: number,
     unread: number,
     dropped: number,
+    total: number,
 }

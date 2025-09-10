@@ -52,6 +52,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
@@ -1547,6 +1548,24 @@ class BookRepository(
             .distinct()
         val droppedCount = droppedQuery.single()[UserBookTable.id.countDistinct()]
         val totalUserBooks = UserBook.count(UserBookTable.user eq userId)
-        return TotalsStatsDto(read = readCount, unread = totalUserBooks - readCount, dropped = droppedCount)
+
+        var books: Page<UserBook>
+        val pageSize = 100
+        var pageNumber = 0
+        var unread = 0L
+        // ugly perf wise, but have not found a way to get all userbooks with only
+        // one readingevent which is currently reading (to avoid counting books already
+        // read or dropped thata are being re-read)
+        do {
+            books = findUserBookByCriteria(userId, null, listOf(ReadingEventTypeFilter.CURRENTLY_READING, ReadingEventTypeFilter.NONE), null, null, null, PageRequest.of(pageNumber, pageSize))
+            books.forEach {
+                if (it.readingEvents.empty() || it.readingEvents.count() < 2) {
+                    unread++
+                }
+            }
+            pageNumber++
+        }
+        while (books.hasNext())
+        return TotalsStatsDto(read = readCount, unread = unread, dropped = droppedCount, total = totalUserBooks)
     }
 }

@@ -141,7 +141,7 @@ const chartOptions = ref({
 
 const years: Ref<Array<number>> = ref([])
 const currentYear: Ref<number|null> = ref(null)
-const totals: Ref<TotalsStats> = ref({"read": 0, "unread": 0, "dropped": 0})
+const totals: Ref<TotalsStats> = ref({"read": 0, "unread": 0, "dropped": 0, "total" : 0})
 
 watch(currentYear, (newVal, oldVal) => {
   console.log("year " + newVal + " " + oldVal)
@@ -159,8 +159,8 @@ totalStats()
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center w-full">
-  <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
-      {{ t('stats.total') }}
+    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
+      {{ t('stats.total') }}:&nbsp;{{ totals.total }}
     </h1>
     <div class="mb-2">
       {{ t('stats.read') }}:&nbsp;{{ totals.read }} / {{ t('stats.unread') }}:&nbsp;{{ totals.unread }} / {{ t('stats.dropped') }}:&nbsp;{{ totals.dropped }}

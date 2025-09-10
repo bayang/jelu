@@ -2039,6 +2039,8 @@ class BookServiceTest(
         Assertions.assertEquals(1, entitiesIds?.size)
         Assertions.assertEquals(1, bookService.stats(user().id!!).read)
         Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+        Assertions.assertEquals(0, bookService.stats(user().id!!).dropped)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).total)
 
         val updater = UserBookUpdateDto(
             ReadingEventType.DROPPED,
@@ -2056,7 +2058,9 @@ class BookServiceTest(
         Assertions.assertEquals(2, updated.readingEvents?.size)
         Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(1, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).dropped)
         Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).total)
 
         val createBook2 = bookDto("title 2")
         val createUserBookDto2 = createUserBookDto(createBook2, ReadingEventType.CURRENTLY_READING, nowInstant())
@@ -2064,6 +2068,7 @@ class BookServiceTest(
         val saved2: UserBookLightDto = bookService.save(createUserBookDto2, user(), uploadFile2)
         Assertions.assertEquals(1, bookService.stats(user().id!!).read)
         Assertions.assertEquals(1, bookService.stats(user().id!!).unread)
+        Assertions.assertEquals(2, bookService.stats(user().id!!).total)
 
         val updater2 = UserBookUpdateDto(
             ReadingEventType.FINISHED,
@@ -2081,6 +2086,7 @@ class BookServiceTest(
         Assertions.assertEquals(1, updated2.readingEvents?.size)
         Assertions.assertEquals(2, bookService.stats(user().id!!).read)
         Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+        Assertions.assertEquals(2, bookService.stats(user().id!!).total)
     }
 
     @Test
