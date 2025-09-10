@@ -8,7 +8,7 @@
     "nav": {
         "my_books": "mis libros",
         "to_read": "lista de libros por leer",
-        "random": "random",
+        "random": "aleatorio",
         "add_book": "agregar libro",
         "dashboard": "panel de control",
         "login": "iniciar sesión",
@@ -16,9 +16,9 @@
         "search": "buscar",
         "history": "historial",
         "shelves": "estantes",
-        "tags-admin": "tags management",
-        "data-admin": "data management",
-        "activity": "activity"
+        "tags-admin": "gestión de etiquetas",
+        "data-admin": "gestión de datos",
+        "activity": "actividad"
     },
     "labels": {
         "search": "Buscar",
@@ -86,8 +86,8 @@
         "books_tagged_name": "Libros etiquetados #{tag}",
         "upload_from_web": "Subir desde la web",
         "upload_from_file": "Subir desde un archivo",
-        "upload_from_computer": "Upload from your computer",
-        "upload_from_server": "From Jelu server",
+        "upload_from_computer": "Subir archivos desde el ordenador",
+        "upload_from_server": "Desde el servidor de Jelu",
         "double_click_to_edit": "Doble clic para editar",
         "mark_read_or_drop": "Marcar o desmarcar lectura",
         "preview": "vista previa",
@@ -102,30 +102,30 @@
         "add_translator": "Añadir un traductor",
         "reading_list_from_name": "Reading list from {name}",
         "search_query": "Enter search query...",
-        "search_documentation": "Go to search documentation",
-        "orphan-tags": "orphan tags",
-        "find-tag": "find a tag",
-        "associated-books": "associated book(s)",
-        "operation-success": "operation successful",
+        "search_documentation": "Ir a la documentación de búsqueda",
+        "orphan-tags": "etiquetas huérfanas",
+        "find-tag": "buscar una etiqueta",
+        "associated-books": "libro(s) asociados",
+        "operation-success": "operación realizada con éxito",
         "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
-        "current": "current",
-        "set_progress": "set your current progress",
-        "user_avg_rating": "my average rating : {rating}",
-        "avg_rating": "average rating : {rating}",
-        "add_quote": "add book quote",
-        "description": "description",
-        "user_rating": "my rating : {rating}",
-        "apply": "apply",
-        "loading": "loading",
-        "pick_camera": "pick camera",
-        "add_narrator": "Add a narrator",
-        "social_login": "sign in with {provider}",
+        "current": "actual",
+        "set_progress": "establecer tu progreso actual:",
+        "user_avg_rating": "mi valoración media",
+        "avg_rating": "valoración media:",
+        "add_quote": "añadir cita del libro",
+        "description": "descripción",
+        "user_rating": "mi valoración:",
+        "apply": "aplicar",
+        "loading": "cargando",
+        "pick_camera": "elegir cámara",
+        "add_narrator": "Añadir un narrador",
+        "social_login": "iniciar sesión con {provider}",
         "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
         "orphan-series": "orphan series",
         "find-series": "find a series",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "find-authors": "buscar autores"
     },
     "settings": {
         "pick_language": "Elige un idioma",
@@ -150,7 +150,7 @@
         "shelves": "Estantes",
         "shelves_max_number_reached": "Se ha alcanzado el número máximo de estanterías. Elimina las existentes para añadir más.",
         "shelf_choose_tag": "Escoge una etiqueta para crear el estante correspondiente",
-        "custom_lists": "custom lists"
+        "custom_lists": "listas personalizadas"
     },
     "user": {
         "log_first": "Por favor, inicie sesión primero"
@@ -162,7 +162,7 @@
         "date_added": "Fecha agregada",
         "date_added_to_list": "Fecha añadida a la lista",
         "title": "Título",
-        "random": "Random",
+        "random": "Aleatorio",
         "publisher": "Publicador",
         "series": "Serie",
         "series_number": "Número de la serie",
@@ -170,9 +170,9 @@
         "ascending": "Ascendente",
         "publication_date": "Fecha de publicación",
         "modification_date": "Fecha de modificación",
-        "page_count": "Page count",
-        "user_avg_rating": "my average rating",
-        "avg_rating": "average rating"
+        "page_count": "Número de páginas",
+        "user_avg_rating": "mi valoración media",
+        "avg_rating": "valoración media"
     },
     "reading_events": {
         "finished": "terminado",
@@ -190,7 +190,7 @@
         "reading": "leyendo",
         "start_date": "fecha de inicio",
         "end_date": "fecha de finalización",
-        "started": "started"
+        "started": "comenzado"
     },
     "filtering": {
         "book_in_list": "El libro está en la lista para leer",
@@ -221,7 +221,7 @@
         "openlibrary_id": "Openlibrary Id",
         "noosfere_id": "Noosfere Id",
         "inventaire_id": "inventaire id",
-        "publisher": "publisher",
+        "publisher": "editorial",
         "published_date": "fecha de publicación",
         "page_count": "número de páginas",
         "language": "idioma",
@@ -235,7 +235,7 @@
         "in_read_list": "en lista de lectura",
         "translator": "traductor | traductores",
         "borrowed": "prestado",
-        "current_page_number": "current page number",
+        "current_page_number": "número de la página actual",
         "narrator": "narrator | narrators"
     },
     "authors_merge": {
@@ -245,7 +245,7 @@
         "author_left_description": "Choose first the author that will be modified and kept in database.",
         "author_right_subtitle": "Author to merge in 1",
         "author_right_description": "Choose next the author you want to merge with the other.",
-        "authors_merge_subtitle": "Merge",
+        "authors_merge_subtitle": "Fusionar",
         "authors_merge_description": "Use fields on the right author to complete the author on the left one, then merge.",
         "search_message": "Search authors to merge",
         "merge_authors": "merge authors"
@@ -289,73 +289,73 @@
         "confirm_password": "confirm password",
         "create_first_user": "create first user",
         "login_not_empty": "login cannot be empty",
-        "password_not_empty": "password cannot be empty",
+        "password_not_empty": "el campo de la contraseña no puede estar vacío",
         "login_not_match": "login fields do not match",
-        "password_not_match": "password fields do not match",
+        "password_not_match": "los campos de contraseña no coinciden",
         "login_length": "login must be 3 chars long minimum",
-        "password_length": "password must be 3 chars long minimum",
-        "username": "username"
+        "password_length": "la contraseña debe tener un mínimo de 3 caracteres",
+        "username": "nombre de usuario"
     },
     "admin_user": {
-        "create_user": "create user",
-        "password_confirm": "confirm password",
-        "password": "password",
-        "admin": "admin",
+        "create_user": "crear usuario",
+        "password_confirm": "confirmar contraseña",
+        "password": "contraseña",
+        "admin": "administrador",
         "admin_help": "user should have admin rights ?",
-        "user_saved": "User saved : {name}",
-        "user_updated": "User updated : {name}",
+        "user_saved": "Usuario guardado: {name}",
+        "user_updated": "Usuario actualizado: {name}",
         "login": "login",
-        "edit_user": "Edit user {name}",
-        "delete_user": "delete user"
+        "edit_user": "Editar usuario: {name}",
+        "delete_user": "eliminar usuario"
     },
     "shortcuts": {
         "toggle_bar": "Toggle filters bar",
-        "page_previous": "Go to previous page",
-        "page_next": "Go to next page"
+        "page_previous": "Ir a la página anterior",
+        "page_next": "Ir a la página siguiente"
     },
     "profile": {
-        "edit_user": "Edit user"
+        "edit_user": "Editar usuario"
     },
     "user-messages": {
-        "link": "link",
-        "mark_read": "mark as read",
+        "link": "enlace",
+        "mark_read": "marcar como leído",
         "no_messages": "no messages here"
     },
     "stats": {
-        "all_time": "All time stats",
-        "yearly_stats": "Yearly stats",
-        "choose_year": "Choose a year",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped",
+        "all_time": "Estadísticas de todos los tiempos",
+        "yearly_stats": "Estadísticas anuales",
+        "choose_year": "Elige un año",
+        "pages_read": "páginas leídas",
+        "finished": "terminado",
+        "dropped": "abandonado",
         "total": "total",
-        "read": "read",
-        "unread": "unread"
+        "read": "leído",
+        "unread": "no leído"
     },
     "history": {
-        "years": "years"
+        "years": "años"
     },
     "bulk": {
-        "bulk_edit_books": "Bulk edit books",
-        "owned": "Mark/unmark all as owned",
-        "toRead": "Mark/unmark all as to read",
+        "bulk_edit_books": "Editar libros en masa",
+        "owned": "Marcar/desmarcar todos como propios",
+        "toRead": "Marcar/desmarcar todos como leídos",
         "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
-        "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove",
-        "add_tag": "add tag",
-        "remove_tag": "remove tag"
+        "select_all": "Seleccionar/deseleccionar todos",
+        "edit": "Empezar a editar",
+        "add_or_remove": "Añadir o eliminar una etiqueta",
+        "add": "Añadir",
+        "remove": "Eliminar",
+        "choose_tag": "Elige la etiqueta que quieres añadir o eliminar",
+        "add_tag": "añadir etiqueta",
+        "remove_tag": "eliminar etiqueta"
     },
     "reviews": {
-        "create_review": "Create review",
-        "edit_review": "Edit review",
-        "visibility": "visibility",
-        "private": "private",
+        "create_review": "Crear reseña",
+        "edit_review": "Editar reseña",
+        "visibility": "visibilidad",
+        "private": "privado",
         "public": "public",
-        "review": "review",
+        "review": "reseña | reseñas",
         "rating": "rating",
         "my_reviews": "My reviews",
         "all_reviews": "All reviews",
