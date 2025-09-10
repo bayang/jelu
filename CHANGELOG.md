@@ -1,3 +1,13 @@
+### [0.72.4](https://github.com/bayang/jelu/compare/v0.72.3...v0.72.4) (2025-09-10)
+
+
+### Bug Fixes
+
+* button appearance on authors page ([27f91ef](https://github.com/bayang/jelu/commit/27f91ef5a15f2d6e805dec3b8a6e663e05c21b1d))
+* login page styling ([fef36fd](https://github.com/bayang/jelu/commit/fef36fdae609236b6cb6a9b11ce1f8f8f83b7565))
+* taginput and publishers not saved or displayed [#253](https://github.com/bayang/jelu/issues/253) ([ea3ecf5](https://github.com/bayang/jelu/commit/ea3ecf56127bcc2a765c649ed7d738ad8691b9e8))
+* user stats [#254](https://github.com/bayang/jelu/issues/254) ([b928f01](https://github.com/bayang/jelu/commit/b928f012afe8573e6496f2eb5e266779e342766f))
+
 ### [0.72.3](https://github.com/bayang/jelu/compare/v0.72.2...v0.72.3) (2025-09-08)
 
 
