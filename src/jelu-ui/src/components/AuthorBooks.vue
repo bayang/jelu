@@ -364,16 +364,14 @@ getBooks()
     </div>
   </div>
   <div class="flex flex-row justify-between mt-4 mb-2">
-    <o-button
-      variant="success"
-      outlined
-      class="order-last sm:order-first"
+    <button
+      class="order-last sm:order-first btn btn-outline btn-success"
       @click="open = !open"
     >
       <span class="icon">
         <i class="mdi mdi-filter-variant" />
       </span>
-    </o-button>
+    </button>
     <h2 class="text-xl typewriter">
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
