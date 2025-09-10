@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, Ref, ref, watch } from 'vue'
-import { useStore } from 'vuex'
-import { key } from '../store'
-import { StringUtils } from '../utils/StringUtils'
-import { useI18n } from 'vue-i18n'
 import { useTitle } from '@vueuse/core'
-import dataService from "../services/DataService";
+import { computed, reactive, Ref, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 import { OAuth2ClientDto } from '../model/oauth-client-dto'
+import dataService from "../services/DataService"
+import { key } from '../store'
 import urls from '../urls'
+import { StringUtils } from '../utils/StringUtils'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -136,89 +136,79 @@ const url = `${urls.BASE_URL}/oauth2/authorization/${provider.registrationId}`
         height=${width}`,
       )
 }
-
-// onMounted(() => {
-  // console.log(`form data ${form}`)
-  // })
   
-  const submit = () => {
-    if (displayInitialSetup.value) {
-      createInitialUser()
-    }
-    else {
-      logUser()
-    }
+const submit = () => {
+  if (displayInitialSetup.value) {
+    createInitialUser()
   }
+  else {
+    logUser()
+  }
+}
 
-
-  getOauthproviders()
+getOauthproviders()
 </script>
 
 <template>
-  <div class="flex flex-row justify-center">
-    <div class="basis-10/12 sm:basis-1/3">
-      <div class="field">
-        <label class="label">
-          <span class="label-text font-semibold capitalize">{{ t('login.username') }}</span>
-        </label>
-
-        <o-input
+  <div class="flex flex-row justify-center items-center content-center">
+    <div>
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+        <legend class="fieldset-legend capitalize">
+          {{ t('login.login') }}
+        </legend>
+        <label class="label">{{ t('login.username') }}</label>
+        <input
           v-model="form.login"
           type="text"
           maxlength="50"
           class="input focus:input-accent"
-        />
-      </div>
-      <div
-        v-if="displayInitialSetup"
-        class="field"
-      >
-        <label class="label">
-          <span class="label-text font-semibold capitalize">{{ t('login.confirm_login') }}</span>
+          :placeholder="t('login.username')"
+        >
+        <label
+          v-if="displayInitialSetup"
+          class="label"
+        >
+          {{ t('login.confirm_login') }}
         </label>
-        <o-input
+        <input
+          v-if="displayInitialSetup"
+
           v-model="loginValidation"
           type="text"
+          :placeholder="t('login.confirm_login')"
           maxlength="50"
           class="input focus:input-accent"
-        />
-      </div>
-      <div class="field">
-        <label class="label">
-          <span class="label-text font-semibold capitalize">{{ t('login.password') }}</span>
-        </label>
-        <o-input
+        >
+        <label class="label">{{ t('login.password') }}</label>
+        <input
           v-model="form.password"
           type="password"
           maxlength="150"
-          password-reveal
-          class="input focus:input-accent"
-          @keyup.enter="submit"
-        />
-      </div>
-      <div
-        v-if="displayInitialSetup"
-        class="field"
-      >
-        <label class="label">
-          <span class="label-text font-semibold capitalize">{{ t('login.confirm_password') }}</span>
+          class="input focus:input-accent" 
+          :placeholder="t('login.password')"
+        >
+        <label
+          v-if="displayInitialSetup"
+        
+          class="label"
+        >
+          {{ t('login.confirm_password') }}
         </label>
-        <o-input
+        <input
+          v-if="displayInitialSetup"
           v-model="passwordValidation"
           type="password"
+          :placeholder="t('login.confirm_password')"
           maxlength="150"
-          password-reveal
           class="input focus:input-accent"
           @keyup.enter="submit"
-        />
-      </div>
-      <div class="field">
+        >
         <p
           v-if="displayInitialSetup"
           class="control"
         >
           <button
-            class="btn btn-warning mt-2 uppercase"
+            class="btn btn-warning mt-4 uppercase"
             :disabled="progress"
             @click="createInitialUser"
           >
@@ -234,7 +224,7 @@ const url = `${urls.BASE_URL}/oauth2/authorization/${provider.registrationId}`
           class="control"
         >
           <button
-            class="btn btn-success mt-2 uppercase"
+            class="btn btn-success mt-4 capitalize"
             :disabled="progress"
             @click="logUser"
           >
@@ -251,21 +241,25 @@ const url = `${urls.BASE_URL}/oauth2/authorization/${provider.registrationId}`
         >
           {{ errorMessage }}
         </p>
-      </div>
-      <div class="mt-3">
-        <button
-          v-for="provider in providers"
-          :key="provider.name"
-          class="btn btn-info mx-2 capitalize"
-          :disabled="displayInitialSetup"
-          @click="oauth2Login(provider)"
+        
+        <div
+          v-if="!displayInitialSetup"
+          class="mt-3"
         >
-          <span class="icon">
-            <i :class="'mdi mdi-18px mdi-' + provider.registrationId" />
-          </span>
-          {{ t("labels.social_login", {provider: provider.registrationId}) }}
-        </button>
-      </div>
+          <button
+            v-for="provider in providers"
+            :key="provider.name"
+            class="btn btn-info m-2 capitalize"
+            :disabled="displayInitialSetup"
+            @click="oauth2Login(provider)"
+          >
+            <span class="icon">
+              <i :class="'mdi mdi-18px mdi-' + provider.registrationId" />
+            </span>
+            {{ t("labels.social_login", {provider: provider.registrationId}) }}
+          </button>
+        </div>
+      </fieldset>
       <progress
         v-if="progress"
         class="animate-pulse progress progress-success mt-5"
