@@ -302,58 +302,58 @@
         "password": "contraseña",
         "admin": "administrador",
         "admin_help": "user should have admin rights ?",
-        "user_saved": "User saved : {name}",
-        "user_updated": "User updated : {name}",
+        "user_saved": "Usuario guardado: {name}",
+        "user_updated": "Usuario actualizado: {name}",
         "login": "login",
-        "edit_user": "Edit user {name}",
-        "delete_user": "delete user"
+        "edit_user": "Editar usuario: {name}",
+        "delete_user": "eliminar usuario"
     },
     "shortcuts": {
         "toggle_bar": "Toggle filters bar",
-        "page_previous": "Go to previous page",
-        "page_next": "Go to next page"
+        "page_previous": "Ir a la página anterior",
+        "page_next": "Ir a la página siguiente"
     },
     "profile": {
-        "edit_user": "Edit user"
+        "edit_user": "Editar usuario"
     },
     "user-messages": {
-        "link": "link",
-        "mark_read": "mark as read",
+        "link": "enlace",
+        "mark_read": "marcar como leído",
         "no_messages": "no messages here"
     },
     "stats": {
-        "all_time": "All time stats",
-        "yearly_stats": "Yearly stats",
-        "choose_year": "Choose a year",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped",
+        "all_time": "Estadísticas de todos los tiempos",
+        "yearly_stats": "Estadísticas anuales",
+        "choose_year": "Elige un año",
+        "pages_read": "páginas leídas",
+        "finished": "terminado",
+        "dropped": "abandonado",
         "total": "total",
-        "read": "read",
-        "unread": "unread"
+        "read": "leído",
+        "unread": "no leído"
     },
     "history": {
-        "years": "years"
+        "years": "años"
     },
     "bulk": {
-        "bulk_edit_books": "Bulk edit books",
-        "owned": "Mark/unmark all as owned",
-        "toRead": "Mark/unmark all as to read",
+        "bulk_edit_books": "Editar libros en masa",
+        "owned": "Marcar/desmarcar todos como propios",
+        "toRead": "Marcar/desmarcar todos como leídos",
         "toggle": "Toggle bulk edit mode",
-        "select_all": "Select/deselect all",
-        "edit": "Start editing",
-        "add_or_remove": "Add or remove tag",
-        "add": "Add",
-        "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove",
-        "add_tag": "add tag",
-        "remove_tag": "remove tag"
+        "select_all": "Seleccionar/deseleccionar todos",
+        "edit": "Empezar a editar",
+        "add_or_remove": "Añadir o eliminar una etiqueta",
+        "add": "Añadir",
+        "remove": "Eliminar",
+        "choose_tag": "Elige la etiqueta que quieres añadir o eliminar",
+        "add_tag": "añadir etiqueta",
+        "remove_tag": "eliminar etiqueta"
     },
     "reviews": {
-        "create_review": "Create review",
-        "edit_review": "Edit review",
-        "visibility": "visibility",
-        "private": "private",
+        "create_review": "Crear reseña",
+        "edit_review": "Editar reseña",
+        "visibility": "visibilidad",
+        "private": "privado",
         "public": "public",
         "review": "review",
         "rating": "rating",
