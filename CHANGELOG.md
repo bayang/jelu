@@ -1,3 +1,12 @@
+### [0.72.5](https://github.com/bayang/jelu/compare/v0.72.4...v0.72.5) (2025-09-11)
+
+
+### Bug Fixes
+
+* add missing import after refactoring ([6ed8d38](https://github.com/bayang/jelu/commit/6ed8d38748992c964bf49296e34fc7059e2c9ad0))
+* factorize closable tag in taginput ([b5e73b7](https://github.com/bayang/jelu/commit/b5e73b7c4120a4b2ff2f43c3fe09f925096b5049))
+* force timeout directly on process builder [#226](https://github.com/bayang/jelu/issues/226) [#59](https://github.com/bayang/jelu/issues/59) ([f6608c1](https://github.com/bayang/jelu/commit/f6608c1f87b4c9a5ffb9478ca746f6a246b72a86))
+
 ### [0.72.4](https://github.com/bayang/jelu/compare/v0.72.3...v0.72.4) (2025-09-10)
 
 

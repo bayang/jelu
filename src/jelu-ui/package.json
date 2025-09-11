@@ -1,6 +1,6 @@
 {
   "name": "jelu-ui",
-  "version": "0.72.4",
+  "version": "0.72.5",
   "private": true,
   "scripts": {
     "dev": "vite --debug",
