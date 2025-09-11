@@ -573,28 +573,13 @@ let displayDatepicker = computed(() => {
                 </div>
               </template>
               <template #selected="{ removeItem, items }">
-                <div
+                <ClosableBadge
                   v-for="(item, index) in items"
                   :key="item.name"
-                  class="badge badge-primary badge-xl m-0.5"
-                >
-                  {{ item.name }}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 hover:cursor-pointer"
-                    @click="removeItem(index, $event)"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
-                </div>
+                  :content="item.name"
+                  class="badge-primary"
+                  @closed="removeItem(index, $event)"
+                />
               </template>
             </o-taginput>
           </o-field>
@@ -627,28 +612,13 @@ let displayDatepicker = computed(() => {
                 </div>
               </template>
               <template #selected="{ removeItem, items }">
-                <div
+                <ClosableBadge
                   v-for="(item, index) in items"
                   :key="item.name"
-                  class="badge badge-secondary badge-xl m-0.5"
-                >
-                  {{ item.name }}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 hover:cursor-pointer"
-                    @click="removeItem(index, $event)"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
-                </div>
+                  :content="item.name"
+                  class="badge-secondary"
+                  @closed="removeItem(index, $event)"
+                />
               </template>
             </o-taginput>
           </o-field>
@@ -681,28 +651,13 @@ let displayDatepicker = computed(() => {
                 </div>
               </template>
               <template #selected="{ removeItem, items }">
-                <div
+                <ClosableBadge
                   v-for="(item, index) in items"
                   :key="item.name"
-                  class="badge badge-primary badge-xl m-0.5"
-                >
-                  {{ item.name }}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 hover:cursor-pointer"
-                    @click="removeItem(index, $event)"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
-                </div>
+                  :content="item.name"
+                  class="badge-primary"
+                  @closed="removeItem(index, $event)"
+                />
               </template>
             </o-taginput>
           </o-field>
@@ -735,28 +690,13 @@ let displayDatepicker = computed(() => {
                 </div>
               </template>
               <template #selected="{ removeItem, items }">
-                <div
+                <ClosableBadge
                   v-for="(item, index) in items"
                   :key="item.name"
-                  class="badge badge-primary badge-xl m-0.5"
-                >
-                  {{ item.name }}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 hover:cursor-pointer"
-                    @click="removeItem(index, $event)"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                    />
-                  </svg>
-                </div>
+                  :content="item.name"
+                  class="badge-primary"
+                  @closed="removeItem(index, $event)"
+                />
               </template>
             </o-taginput>
           </o-field>
