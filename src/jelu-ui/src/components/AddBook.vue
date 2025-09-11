@@ -21,6 +21,7 @@ import AutoImportFileModalVue from "./AutoImportFileModal.vue";
 import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 import ImagePickerModal from "./ImagePickerModal.vue";
 import SeriesCompleteInput from "./SeriesCompleteInput.vue";
+import ClosableBadge from "./ClosableBadge.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
