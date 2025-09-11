@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.File
 import java.util.Optional
+import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
 
@@ -124,8 +125,8 @@ class CalibreMetadataProvider(
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
         try {
             val process: Process = builder.start()
-            val exitVal = process.waitFor()
-            if (exitVal == 0) {
+            val exitVal = process.waitFor(properties.metadata.calibre.timeout.toLong(), TimeUnit.SECONDS)
+            if (exitVal) {
                 var output: String = process.inputStream.bufferedReader().use(BufferedReader::readText)
                 // on ARM the fetch-ebook-metadata binary outputs a python byte string instead of a regular string
                 // cf test case for a sample string
@@ -149,7 +150,7 @@ class CalibreMetadataProvider(
                 }
                 return Optional.of(parseOpf)
             } else {
-                logger.error { "fetch ebookmetadata process exited abnormally with code $exitVal" }
+                logger.error { "fetch ebookmetadata process exited abnormally" }
                 val dto = MetadataDto()
                 var output: String = process.inputStream.bufferedReader().use(BufferedReader::readText)
                 output += process.errorStream.bufferedReader().use(BufferedReader::readText)

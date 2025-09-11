@@ -99,7 +99,7 @@ class CalibreMetadataProviderTest(
 
         every { mockProcess.inputStream } returns outputStream
         every { mockProcess.errorStream } returns errorStream
-        every { mockProcess.waitFor() } returns 1
+        every { mockProcess.waitFor(any<Long>(), any()) } returns false
 
         every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
         every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
@@ -163,7 +163,7 @@ class CalibreMetadataProviderTest(
         val outputStream = ByteArrayInputStream(xmlOutput.toByteArray())
 
         every { mockProcess.inputStream } returns outputStream
-        every { mockProcess.waitFor() } returns 0
+        every { mockProcess.waitFor(any<Long>(), any()) } returns true
 
         every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
         every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
@@ -209,7 +209,7 @@ class CalibreMetadataProviderTest(
         val outputStream = ByteArrayInputStream(xmlOutput.toByteArray())
 
         every { mockProcess.inputStream } returns outputStream
-        every { mockProcess.waitFor() } returns 0
+        every { mockProcess.waitFor(any<Long>(), any()) } returns true
 
         every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
         every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
@@ -251,7 +251,7 @@ class CalibreMetadataProviderTest(
         val outputStream = ByteArrayInputStream(xmlOutput.toByteArray())
 
         every { mockProcess.inputStream } returns outputStream
-        every { mockProcess.waitFor() } returns 0
+        every { mockProcess.waitFor(any<Long>(), any()) } returns true
 
         every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
         every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
@@ -293,7 +293,7 @@ class CalibreMetadataProviderTest(
         val outputStream = ByteArrayInputStream(xmlOutput.toByteArray())
 
         every { mockProcess.inputStream } returns outputStream
-        every { mockProcess.waitFor() } returns 0
+        every { mockProcess.waitFor(any<Long>(), any()) } returns true
 
         every { mockProcessBuilder.command(any<List<String>>()) } returns mockProcessBuilder
         every { mockProcessBuilder.redirectOutput(any<ProcessBuilder.Redirect>()) } returns
