@@ -34,6 +34,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       fonts-wqy-microhei \
       libxcomposite1 \
       libxdamage1 \
+      libxfixes3 \
       libxrandr2 \
       libxtst6 \
       libxkbfile1 \
@@ -77,6 +78,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then \
       fonts-wqy-microhei \
       libxcomposite1 \
       libxdamage1 \
+      libxfixes3 \
       libxrandr2 \
       libxtst6 \
       libxkbfile1 \
