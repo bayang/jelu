@@ -1,3 +1,10 @@
+### [0.72.6](https://github.com/bayang/jelu/compare/v0.72.5...v0.72.6) (2025-09-15)
+
+
+### Bug Fixes
+
+* Can't fetch metadata [#127](https://github.com/bayang/jelu/issues/127) ([#256](https://github.com/bayang/jelu/issues/256)) ([00ec7d2](https://github.com/bayang/jelu/commit/00ec7d2dad7bb47f7f0993f6b6399047acf2144d))
+
 ### [0.72.5](https://github.com/bayang/jelu/compare/v0.72.4...v0.72.5) (2025-09-11)
 
 
