@@ -1,3 +1,11 @@
+### [0.72.7](https://github.com/bayang/jelu/compare/v0.72.6...v0.72.7) (2025-09-17)
+
+
+### Bug Fixes
+
+* custom lists ([00381d5](https://github.com/bayang/jelu/commit/00381d5d896ecc1143f15d3eed4150ae6198a797))
+* minor tweaks to jelu theme ([55b1031](https://github.com/bayang/jelu/commit/55b1031026ccf957984c5907d8ee95dd27638a8a))
+
 ### [0.72.6](https://github.com/bayang/jelu/compare/v0.72.5...v0.72.6) (2025-09-15)
 
 
