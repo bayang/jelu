@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { CustomList } from '../model/custom-list'
 import { Tag } from "../model/Tag"
 import dataService from "../services/DataService"
+import ClosableBadge from "./ClosableBadge.vue"
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -13,16 +14,14 @@ const { t } = useI18n({
 
 useTitle('Jelu | User page')
 
-let filteredTags: Ref<Array<Tag>> = ref([]);
+let filteredTags: Ref<Array<string>> = ref([]);
 let customLists: Ref<Array<CustomList>> = ref([])
 const isFetching = ref(false)
 
-let currentListTags: Ref<Array<Tag>> = ref([])
+let currentListTags: Ref<Array<string>> = ref([])
 
 watch(currentListTags, (oldVal, newVal) => {
-  customList.value.tags = currentListTags.value.map(t => t.name).join()
-  console.log("tags")
-  console.log(customList.value.tags)
+  customList.value.tags = currentListTags.value.join()
 })
 
 const newList = (): CustomList => {
@@ -37,7 +36,10 @@ let editMode = ref(false)
 
 function getFilteredTags(text: string) {
   isFetching.value = true
-  dataService.findTagsByCriteria(text).then((data) => filteredTags.value = data.content)
+  dataService.findTagsByCriteria(text).then((data) => {
+    filteredTags.value.splice(0, filteredTags.value.length)
+    data.content.forEach(t => filteredTags.value.push(t.name))
+  })
   isFetching.value = false
 }
 
@@ -72,18 +74,18 @@ function beforeAddTag(item: Tag | string) {
   let shouldAdd = true
   if (item instanceof Object) {
     currentListTags.value.forEach(tag => {
-      console.log(`tag ${tag.name}`)
-      if (tag.name === item.name) {
-        console.log(`tag ${tag.name} item ${item.name}`)
+      console.log(`tag ${tag}`)
+      if (tag === item.name) {
+        console.log(`tag ${tag} item ${item.name}`)
         shouldAdd = false;
       }
     });
   }
   else {
     currentListTags.value.forEach(tag => {
-      console.log(`tag ${tag.name}`)
-      if (tag.name === item) {
-        console.log(`tag ${tag.name} item ${item}`)
+      console.log(`tag ${tag}`)
+      if (tag === item) {
+        console.log(`tag ${tag} item ${item}`)
         shouldAdd = false;
       }
     });
@@ -103,9 +105,7 @@ const editList = (list: CustomList) => {
   } else {
     editMode.value = true
     customList.value = list
-    currentListTags.value = customList.value.tags.split(",").map(s => {
-      return {name: s}
-    })
+    currentListTags.value = customList.value.tags.split(",")
   }
 }
 
@@ -138,66 +138,68 @@ getCustomLists()
                 </h3>
                 <p>{{ list.tags }}</p>
               </div>
-              <span
-                v-if="list.actionable"
-                class="badge badge-primary"
-              >{{ t('lists.actionable') }}</span>
-              <span
-                v-if="list.public"
-                class="badge badge-secondary"
-              >{{ t('lists.public') }}</span>
-              <button
-                class="btn btn-sm"
-                @click="editList(list)"
-              >
-                <svg
-                  v-if="editMode"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="size-6 h-5 w-5"
+              <div class="flex flex-wrap gap-2 justify-end">
+                <span
+                  v-if="list.actionable"
+                  class="badge badge-primary"
+                >{{ t('lists.actionable') }}</span>
+                <span
+                  v-if="list.public"
+                  class="badge badge-secondary"
+                >{{ t('lists.public') }}</span>
+                <button
+                  class="btn btn-sm"
+                  @click="editList(list)"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                <svg
-                  v-else
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="size-6 h-5 w-5"
+                  <svg
+                    v-if="editMode"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="size-6 h-5 w-5"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="size-6 h-5 w-5"
+                  >
+                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                  </svg>
+                </button>
+                <button
+                  class="btn btn-sm"
+                  @click="deleteList(list)"
                 >
-                  <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
-                </svg>
-              </button>
-              <button
-                class="btn btn-sm"
-                @click="deleteList(list)"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </li>
         </ul>
       </div>
     </div>
-    <div class="sm:mx-1 w-full sm:w-1/3">
+    <div class="sm:mx-1 w-full sm:w-5/12">
       <div>
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
           <legend class="fieldset-legend capitalize">
             {{ editMode ? t("lists.edit_list") : t("lists.create_list") }}
           </legend>
@@ -206,7 +208,7 @@ getCustomLists()
           <input
             v-model="customList.name"
             type="text"
-            class="input input-accent mb-1"
+            class="input input-accent mb-1 w-full"
             :placeholder="t('lists.name')"
           >
 
@@ -229,7 +231,7 @@ getCustomLists()
           <div class="jelu-taginput mb-4">
             <o-taginput
               v-model="currentListTags"
-              :data="filteredTags"
+              :options="filteredTags"
               :allow-autocomplete="true"
               autocomplete="off"
               :before-adding="beforeAddTag"
@@ -241,7 +243,22 @@ getCustomLists()
               field="name"
               :placeholder="t('labels.add_tag')"
               @input="getFilteredTags"
-            />
+            >
+              <template #default="{ value }">
+                <div class="jl-taginput-item">
+                  {{ value }}
+                </div>
+              </template>
+              <template #selected="{ removeItem, items }">
+                <ClosableBadge
+                  v-for="(item, index) in items"
+                  :key="item"
+                  :content="item"
+                  class="badge-primary"
+                  @closed="removeItem(index, $event)"
+                />
+              </template>
+            </o-taginput>
           </div>
 
           <label class="label capitalize">{{ t("lists.actionable") }}
