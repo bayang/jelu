@@ -28,7 +28,7 @@
   --color-base-300: oklch(0.26 0.0096 303.83);
   --color-base-content: oklch(1 0 0);
   --color-primary: oklch(0.96 0.0469 104.63);
-  --color-primary-content: oklch(93% 0.034 272.788);
+  --color-primary-content: oklch(0.37 0 0);
   --color-secondary: oklch(0.74 0 0);
   --color-secondary-content: oklch(94% 0.028 342.258);
   --color-accent: oklch(0.59 0.0497 77.61);
@@ -463,10 +463,6 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 
 [data-theme="jelu"] .card-body .btn {
     @apply bg-base-100;
-}
-
-[data-theme="jelu"] .btn.btn-primary {
-    @apply text-accent-content;
 }
 
 [data-theme="jelu"] .o-taginput__item {
