@@ -1,3 +1,10 @@
+### [0.72.8](https://github.com/bayang/jelu/compare/v0.72.7...v0.72.8) (2025-09-19)
+
+
+### Bug Fixes
+
+* add user agent when downloading covers to prevent wikipedia from blocking us [#250](https://github.com/bayang/jelu/issues/250) ([62e6e2e](https://github.com/bayang/jelu/commit/62e6e2ea0e7d219b5e7737c5265b8e98d8156175))
+
 ### [0.72.7](https://github.com/bayang/jelu/compare/v0.72.6...v0.72.7) (2025-09-17)
 
 
