@@ -25,6 +25,33 @@ const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, update
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('lastReadingEventDate,desc')
 
+const SORT_BY_KEY = "bookSortBy";
+const SORT_ORDER_KEY = "bookSortOrder";
+
+// Load saved sort preference on mount
+onMounted(() => {
+  const savedSortBy = localStorage.getItem(SORT_BY_KEY);
+  const savedSortOrder = localStorage.getItem(SORT_ORDER_KEY);
+
+  if (savedSortBy) {
+    sortBy.value = savedSortBy;
+  }
+  if (savedSortOrder) {
+    sortOrder.value = savedSortOrder;  // restore asc/desc
+  }
+});
+
+// Watch for changes and save them
+watch(sortBy, (newValue) => {
+  localStorage.setItem(SORT_BY_KEY, newValue);
+});
+
+watch(sortOrder, (newValue) => {
+  localStorage.setItem(SORT_ORDER_KEY, newValue);
+});
+
+
+
 const { showSelect, selectAll, checkedCards, cardChecked, toggleEdit } = useBulkEdition(modalClosed)
 
 const open = ref(false)
