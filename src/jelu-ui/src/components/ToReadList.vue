@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useThrottleFn, useTitle } from '@vueuse/core';
 import { useRouteQuery } from '@vueuse/router';
-import { computed, Ref, ref, watch } from 'vue';
+import { computed, Ref, ref, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import usePagination from '../composables/pagination';
 import useSort from '../composables/sort';
@@ -86,6 +86,46 @@ const removeIds = () => {
     books.value.forEach(b => b.id = undefined)
   }
 }
+
+// --- LocalStorage keys for ToReadList ---
+const SORT_BY_KEY = "toReadSortBy";
+const SORT_ORDER_KEY = "toReadSortOrder";
+const EVENT_TYPES_KEY = "toReadEventTypes";
+const OWNED_KEY = "toReadOwned";
+
+// Restore saved settings
+onMounted(() => {
+  const savedSortBy = localStorage.getItem(SORT_BY_KEY);
+  const savedSortOrder = localStorage.getItem(SORT_ORDER_KEY);
+  if (savedSortBy) sortBy.value = savedSortBy;
+  if (savedSortOrder) sortOrder.value = savedSortOrder;
+
+  const savedEventTypes = localStorage.getItem(EVENT_TYPES_KEY);
+  if (savedEventTypes) {
+    try {
+      eventTypes.value = JSON.parse(savedEventTypes);
+    } catch {}
+  }
+
+  const savedOwned = localStorage.getItem(OWNED_KEY);
+  if (savedOwned) owned.value = savedOwned;
+});
+
+// Persist changes
+watch(sortBy, (newVal) => {
+  localStorage.setItem(SORT_BY_KEY, newVal);
+});
+watch(sortOrder, (newVal) => {
+  localStorage.setItem(SORT_ORDER_KEY, newVal);
+});
+watch(eventTypes, (newVal) => {
+  localStorage.setItem(EVENT_TYPES_KEY, JSON.stringify(newVal));
+}, { deep: true });
+watch(owned, (newVal) => {
+  localStorage.setItem(OWNED_KEY, newVal ?? "null");
+});
+
+
 
 // watches set above sometimes called twice
 // so getBooks was sometimes called twice at the same instant
