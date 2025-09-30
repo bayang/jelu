@@ -25,47 +25,72 @@ const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, update
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('lastReadingEventDate,desc')
 
-const SORT_BY_KEY = "bookSortBy";
-const SORT_ORDER_KEY = "bookSortOrder";
-
-// Load saved sort preference on mount
-onMounted(() => {
-  const savedSortBy = localStorage.getItem(SORT_BY_KEY);
-  const savedSortOrder = localStorage.getItem(SORT_ORDER_KEY);
-
-  if (savedSortBy) {
-    sortBy.value = savedSortBy;
-  }
-  if (savedSortOrder) {
-    sortOrder.value = savedSortOrder;  // restore asc/desc
-  }
-});
-
-// Watch for changes and save them
-watch(sortBy, (newValue) => {
-  localStorage.setItem(SORT_BY_KEY, newValue);
-});
-
-watch(sortOrder, (newValue) => {
-  localStorage.setItem(SORT_ORDER_KEY, newValue);
-});
-
-
-
 const { showSelect, selectAll, checkedCards, cardChecked, toggleEdit } = useBulkEdition(modalClosed)
 
 const open = ref(false)
 
 const getBookIsLoading: Ref<boolean> = ref(false)
 
+// Filters
 const toRead: Ref<string|null> = useRouteQuery('toRead', "null")
 const owned: Ref<string|null> = useRouteQuery('owned', "null")
 const borrowed: Ref<string|null> = useRouteQuery('borrowed', "null")
-
 const userId: Ref<string|null> = useRouteQuery('userId', null)
-
 const eventTypes: Ref<Array<ReadingEventType>> = useRouteQuery('lastEventTypes', [])
 const username = ref("")
+
+// --- LocalStorage keys ---
+const SORT_BY_KEY = "bookSortBy";
+const SORT_ORDER_KEY = "bookSortOrder";
+const EVENT_TYPES_KEY = "bookEventTypes";
+const TO_READ_KEY = "bookToRead";
+const OWNED_KEY = "bookOwned";
+const BORROWED_KEY = "bookBorrowed";
+
+// Restore saved settings
+onMounted(() => {
+  const savedSortBy = localStorage.getItem(SORT_BY_KEY);
+  const savedSortOrder = localStorage.getItem(SORT_ORDER_KEY);
+  if (savedSortBy) sortBy.value = savedSortBy;
+  if (savedSortOrder) sortOrder.value = savedSortOrder;
+
+  const savedEventTypes = localStorage.getItem(EVENT_TYPES_KEY);
+  if (savedEventTypes) {
+    try {
+      eventTypes.value = JSON.parse(savedEventTypes);
+    } catch {}
+  }
+
+  const savedToRead = localStorage.getItem(TO_READ_KEY);
+  if (savedToRead) toRead.value = savedToRead;
+
+  const savedOwned = localStorage.getItem(OWNED_KEY);
+  if (savedOwned) owned.value = savedOwned;
+
+  const savedBorrowed = localStorage.getItem(BORROWED_KEY);
+  if (savedBorrowed) borrowed.value = savedBorrowed;
+});
+
+// Persist changes
+watch(sortBy, (newVal) => {
+  localStorage.setItem(SORT_BY_KEY, newVal);
+});
+watch(sortOrder, (newVal) => {
+  localStorage.setItem(SORT_ORDER_KEY, newVal);
+});
+watch(eventTypes, (newVal) => {
+  localStorage.setItem(EVENT_TYPES_KEY, JSON.stringify(newVal));
+}, { deep: true });
+watch(toRead, (newVal) => {
+  localStorage.setItem(TO_READ_KEY, newVal ?? "null");
+});
+watch(owned, (newVal) => {
+  localStorage.setItem(OWNED_KEY, newVal ?? "null");
+});
+watch(borrowed, (newVal) => {
+  localStorage.setItem(BORROWED_KEY, newVal ?? "null");
+});
+
 
 const getUsername = async () => {
   if (userId.value != null) {
