@@ -1,3 +1,10 @@
+## [0.73.0](https://github.com/bayang/jelu/compare/v0.72.8...v0.73.0) (2025-10-06)
+
+
+### Features
+
+* Save sorting preferences ([#260](https://github.com/bayang/jelu/issues/260)) ([d81ccd7](https://github.com/bayang/jelu/commit/d81ccd7ea15e94a014af2bc03da1e70f1003b0e3))
+
 ### [0.72.8](https://github.com/bayang/jelu/compare/v0.72.7...v0.72.8) (2025-09-19)
 
 
