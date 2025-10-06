@@ -1,3 +1,10 @@
+### [0.73.1](https://github.com/bayang/jelu/compare/v0.73.0...v0.73.1) (2025-10-06)
+
+
+### Bug Fixes
+
+* series prompt missing [#261](https://github.com/bayang/jelu/issues/261) ([6b0ee99](https://github.com/bayang/jelu/commit/6b0ee991c192595e14c679746f3802e4732239fe))
+
 ## [0.73.0](https://github.com/bayang/jelu/compare/v0.72.8...v0.73.0) (2025-10-06)
 
 
