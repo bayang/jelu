@@ -449,6 +449,10 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
   @apply bg-warning rounded-sm text-warning-content mx-1;
 }
 
+.jl-taginput-empty {
+  @apply cursor-pointer;
+}
+
 [data-theme="jelu"] .card {
   @apply bg-base-100 border-0;
 }
