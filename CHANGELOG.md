@@ -1,3 +1,15 @@
+## [0.74.0](https://github.com/bayang/jelu/compare/v0.73.1...v0.74.0) (2025-10-13)
+
+
+### Features
+
+* add barcode scan on search [#207](https://github.com/bayang/jelu/issues/207) ([3f96d0a](https://github.com/bayang/jelu/commit/3f96d0acec36ed94aa9c53b88d96597e8149b307))
+
+
+### Bug Fixes
+
+* make edit series save button label clearer [#264](https://github.com/bayang/jelu/issues/264) ([adc1e7e](https://github.com/bayang/jelu/commit/adc1e7e6ba4fe19eed480c8dbb426f27b05331ca))
+
 ### [0.73.1](https://github.com/bayang/jelu/compare/v0.73.0...v0.73.1) (2025-10-06)
 
 
