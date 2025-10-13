@@ -2,6 +2,7 @@
 import { useStore } from 'vuex'
 import { computed, onMounted, Ref, ref, watch } from 'vue'
 import { key } from './store'
+import { useOruga } from "@oruga-ui/oruga-next";
 import { useRoute, useRouter } from 'vue-router'
 import dataService from "./services/DataService";
 import Avatar from 'vue-avatar-sdh'
@@ -9,6 +10,7 @@ import { themeChange } from 'theme-change'
 import { useI18n } from 'vue-i18n'
 import { StringUtils } from './utils/StringUtils';
 import { useRegisterSW } from 'virtual:pwa-register/vue';
+import ScanModal from "./components/ScanModal.vue";
 
 const {
   offlineReady,
@@ -33,7 +35,9 @@ console.log("route " + route.fullPath + " " + route.path + " " + route.redirecte
 console.log(route)
 console.log(router.currentRoute.value)
 
+const oruga = useOruga();
 const initialLoad : Ref<boolean> = ref(false)
+const progress: Ref<boolean> = ref(false)
 
 store.dispatch('setupStatus')
 initialLoad.value = true
@@ -117,6 +121,37 @@ const collapseDropdown = () => {
   }
 }
 
+let barcodeReader: any = null
+
+function toggleScanModal() {
+    oruga.modal.open({
+      component: ScanModal,
+      trapFocus: true,
+      active: true,
+      canCancel: ['x', 'button', 'outside'],
+      scroll: 'keep',
+      props: {
+      },
+      events: {
+        decoded: (barcode: string|null) => {
+          console.log("barcode " + barcode)
+          if (barcode != null) {
+            // form.isbn = barcode
+            searchQuery.value = barcode
+            search()
+          }
+      },
+      barcodeLoaded: (reader: any) => {
+        barcodeReader = reader
+      }
+    },
+      onClose: scanModalClosed
+    });
+}
+
+function scanModalClosed() {
+  console.log("scan modal closed")
+}
 </script>
 
 <template>
@@ -265,17 +300,17 @@ const collapseDropdown = () => {
           /></svg></label>
           <div
             tabindex="0"
-            class="dropdown-content mt-2 -left-20"
+            class="dropdown-content mt-2-left-10 w-svw"
           >
             <div
-              class="form-control w-2"
+              class="form-control w-full"
             >
-              <div class="join">
+              <div class="join w-full">
                 <input
                   v-model="searchQuery"
                   type="text"
                   :placeholder="t('labels.search_query')"
-                  class="input input-accent join-item"
+                  class="input input-accent join-item w-1/2"
                   @focus="showAdvanced = true"
                   @blur="hideAdvanced"
                   @keyup.enter="search"
@@ -296,6 +331,31 @@ const collapseDropdown = () => {
                     stroke-width="2"
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   /></svg>
+                </button>
+                <button
+                  class="btn btn-warning p-2 mx-1"
+                  :class="{'btn-disabled' : progress}"
+                  @click="toggleScanModal"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -436,6 +496,31 @@ const collapseDropdown = () => {
                 stroke-width="2"
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               /></svg>
+            </button>
+            <button
+              class="btn btn-warning p-2 mx-1"
+              :class="{'btn-disabled' : progress}"
+              @click="toggleScanModal"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z"
+                />
+              </svg>
             </button>
           </div>
         </div>
