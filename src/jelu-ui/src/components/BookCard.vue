@@ -239,7 +239,8 @@ watch(checked, (newVal, oldVal) => {
           v-tooltip="authorsText"
         >&#8230;</span>
       </div>
-      <div class="card-actions justify-end items-center gap-1">
+      <div class="card-actions justify-between items-center gap-1">
+        <div v-if="book.percentRead" class="text-base font-semibold text-info">{{book.percentRead}}%</div>
         <span
           v-if="book.lastReadingEvent"
           :class="eventClass"
