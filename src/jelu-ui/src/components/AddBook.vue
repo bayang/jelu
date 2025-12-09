@@ -137,6 +137,7 @@ const importBook = async () => {
         html: `<p>${t('labels.book_with_same_isbn_already_exists')}:<br>${alreadyExisting.title}<br>${t('labels.save_new_anyway')}</p>`,
         showDenyButton: false,
         confirmButtonText: t('labels.save'),
+        cancelButtonText: t('labels.dont_save')
       }).then((result) => {
         if (result.isConfirmed) {
           saveBook = true
@@ -539,7 +540,7 @@ let displayDatepicker = computed(() => {
             :label="t('book.title')"
             class="capitalize"
           >
-            <o-input 
+            <o-input
               v-model="form.title"
               expanded
               class="w-full input focus:input-accent"
@@ -548,8 +549,8 @@ let displayDatepicker = computed(() => {
         </div>
 
         <div class="field jelu-authorinput mb-3">
-          <o-field 
-            horizontal 
+          <o-field
+            horizontal
             :label="t('book.author', 2)"
             class="capitalize"
           >
@@ -645,7 +646,7 @@ let displayDatepicker = computed(() => {
               field="name"
               :placeholder="t('labels.add_translator')"
               @input="(v: string) => getFilteredData(v, filteredTranslators)"
-            > 
+            >
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
@@ -684,7 +685,7 @@ let displayDatepicker = computed(() => {
               field="name"
               :placeholder="t('labels.add_narrator')"
               @input="(v: string) => getFilteredData(v, filteredNarrators)"
-            > 
+            >
               <template #default="{ value }">
                 <div class="jl-taginput-item">
                   {{ value.name }}
@@ -1118,7 +1119,7 @@ let displayDatepicker = computed(() => {
                     class="radio radio-primary mx-3"
                     value="web"
                   >
-                  <span class="label-text">{{ t('labels.upload_from_web') }}</span> 
+                  <span class="label-text">{{ t('labels.upload_from_web') }}</span>
                 </div>
                 <div>
                   <input
@@ -1138,7 +1139,7 @@ let displayDatepicker = computed(() => {
                     class="radio radio-primary mx-3"
                     value="server"
                   >
-                  <span class="label-text">{{ t('labels.upload_from_server') }}</span> 
+                  <span class="label-text">{{ t('labels.upload_from_server') }}</span>
                 </div>
               </label>
             </div>
