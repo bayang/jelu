@@ -941,14 +941,26 @@ class BookRepository(
         if (book.toRead != null) {
             found.toRead = book.toRead
         }
+        var bookFinished = false
+        if (book.percentRead != null && book.percentRead >= 100) {
+            bookFinished = true
+        }
         found.percentRead = book.percentRead
-        found.currentPageNumber = book.currentPageNumber
         val current = book.currentPageNumber
-        val total = book.book?.pageCount
+        found.currentPageNumber = current
+        var total = found.book.pageCount
+        if (total == null && book.book?.pageCount != null) {
+            total = book.book.pageCount
+        }
         if (total != null) {
             if (current == null) {
-                found.percentRead = 0
+                if (found.percentRead != null) {
+                    found.currentPageNumber = total.times(found.percentRead!!).div(100)
+                } else {
+                    found.percentRead = 0
+                }
             } else if (current >= total) {
+                bookFinished = true
                 found.percentRead = 100
             } else {
                 found.percentRead = current.times(100).div(total)
@@ -962,6 +974,22 @@ class BookRepository(
                 found,
                 CreateReadingEventDto(
                     eventType = book.lastReadingEvent,
+                    bookId = null,
+                    eventDate = null,
+                    startDate = null,
+                ),
+            )
+            if (bookFinished && book.lastReadingEvent == ReadingEventType.FINISHED) {
+                bookFinished = false
+            }
+        }
+        // the book was set as finished vioa current page number or percent read
+        // and an event was not already sent above
+        if (bookFinished) {
+            readingEventRepository.save(
+                found,
+                CreateReadingEventDto(
+                    eventType = ReadingEventType.FINISHED,
                     bookId = null,
                     eventDate = null,
                     startDate = null,
