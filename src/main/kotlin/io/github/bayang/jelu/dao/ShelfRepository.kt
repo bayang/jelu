@@ -3,7 +3,7 @@ package io.github.bayang.jelu.dao
 import io.github.bayang.jelu.dto.CreateShelfDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.utils.nowInstant
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.selectAll
 import org.springframework.stereotype.Repository

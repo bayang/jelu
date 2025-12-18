@@ -5,7 +5,7 @@ import io.github.bayang.jelu.dao.BookRepository
 import io.github.bayang.jelu.search.LuceneEntity
 import io.github.bayang.jelu.search.LuceneHelper
 import io.github.bayang.jelu.search.toDocument
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.lucene.document.Document
 import org.apache.lucene.index.Term
 import org.springframework.data.domain.Page

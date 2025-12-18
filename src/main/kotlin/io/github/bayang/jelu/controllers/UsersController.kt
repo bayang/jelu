@@ -12,11 +12,11 @@ import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.errors.JeluValidationException
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.utils.stringFormat
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.servlet.http.HttpSession
 import jakarta.validation.Valid
-import mu.KotlinLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority

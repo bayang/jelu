@@ -1,7 +1,7 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.utils.imageName
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.springframework.stereotype.Service
 import java.io.File

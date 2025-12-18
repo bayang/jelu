@@ -7,7 +7,7 @@ import io.github.bayang.jelu.dto.CustomListRemoveDto
 import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.search.LuceneEntity
 import io.github.bayang.jelu.search.LuceneHelper
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable

@@ -4,7 +4,7 @@ import io.github.bayang.jelu.dto.CreateReviewDto
 import io.github.bayang.jelu.dto.UpdateReviewDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.utils.nowInstant
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.andWhere

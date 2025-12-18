@@ -8,7 +8,7 @@ interface IMetaDataProvider {
     fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String> = mapOf(),
-    ): Optional<MetadataDto>
+    ): Optional<MetadataDto>?
 
     fun name(): String
 }

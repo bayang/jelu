@@ -1,7 +1,7 @@
 package io.github.bayang.jelu.controllers
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping

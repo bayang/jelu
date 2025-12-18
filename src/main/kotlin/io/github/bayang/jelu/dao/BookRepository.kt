@@ -22,7 +22,7 @@ import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.service.FileManager
 import io.github.bayang.jelu.utils.nowInstant
 import io.github.bayang.jelu.utils.sanitizeHtml
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Expression

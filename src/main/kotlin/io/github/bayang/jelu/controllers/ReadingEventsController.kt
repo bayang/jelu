@@ -10,9 +10,9 @@ import io.github.bayang.jelu.dto.UpdateReadingEventDto
 import io.github.bayang.jelu.dto.YearStatsDto
 import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.ReadingEventService
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.validation.Valid
-import mu.KotlinLogging
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

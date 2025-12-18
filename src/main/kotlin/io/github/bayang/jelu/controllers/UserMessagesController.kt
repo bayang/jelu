@@ -7,9 +7,9 @@ import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UpdateUserMessageDto
 import io.github.bayang.jelu.dto.UserMessageDto
 import io.github.bayang.jelu.service.UserMessageService
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.validation.Valid
-import mu.KotlinLogging
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

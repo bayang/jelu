@@ -4,7 +4,7 @@ import io.github.bayang.jelu.dto.CreateUserMessageDto
 import io.github.bayang.jelu.dto.UpdateUserMessageDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.utils.nowInstant
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.SortOrder

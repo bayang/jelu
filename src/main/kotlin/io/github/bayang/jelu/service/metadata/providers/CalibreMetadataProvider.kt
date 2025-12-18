@@ -8,7 +8,7 @@ import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.service.metadata.OpfParser
 import io.github.bayang.jelu.service.metadata.PluginInfoHolder
 import io.github.bayang.jelu.utils.slugify
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.validator.routines.ISBNValidator
 import org.codehaus.staxmate.SMInputFactory
 import org.springframework.stereotype.Service

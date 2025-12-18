@@ -5,7 +5,7 @@ import io.github.bayang.jelu.dao.Provider
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.service.UserService
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

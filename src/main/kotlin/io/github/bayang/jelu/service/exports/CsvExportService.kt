@@ -14,7 +14,7 @@ import io.github.bayang.jelu.service.imports.CURRENTLY_READING
 import io.github.bayang.jelu.service.imports.TO_READ
 import io.github.bayang.jelu.service.imports.goodreadsDateFormatter
 import io.github.bayang.jelu.utils.lastEventDate
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.QuoteMode

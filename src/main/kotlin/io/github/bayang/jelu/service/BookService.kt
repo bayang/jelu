@@ -36,7 +36,7 @@ import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.github.bayang.jelu.utils.imageName
 import io.github.bayang.jelu.utils.resizeImage
 import io.github.bayang.jelu.utils.slugify
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl

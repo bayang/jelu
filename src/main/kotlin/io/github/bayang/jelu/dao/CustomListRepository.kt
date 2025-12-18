@@ -3,7 +3,7 @@ package io.github.bayang.jelu.dao
 import io.github.bayang.jelu.dto.CustomListDto
 import io.github.bayang.jelu.errors.JeluValidationException
 import io.github.bayang.jelu.utils.nowInstant
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.SortOrder

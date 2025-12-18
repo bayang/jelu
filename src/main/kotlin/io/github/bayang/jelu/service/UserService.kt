@@ -10,7 +10,7 @@ import io.github.bayang.jelu.dto.UpdateUserDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.utils.nowInstant
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.security.core.session.SessionRegistry
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.annotation.Resource
-import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient

@@ -32,7 +32,7 @@ import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.github.bayang.jelu.utils.toInstant
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord

@@ -2,7 +2,7 @@ package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.search.LuceneHelper
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component

@@ -1,6 +1,6 @@
 package io.github.bayang.jelu.utils
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.coobird.thumbnailator.Thumbnails
 import net.coobird.thumbnailator.name.Rename
 import java.io.File

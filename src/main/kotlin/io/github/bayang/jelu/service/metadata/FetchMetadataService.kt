@@ -4,7 +4,7 @@ import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.service.metadata.providers.IMetaDataProvider
 import io.github.bayang.jelu.utils.PluginInfoComparator
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 import java.util.Optional
 
@@ -30,8 +30,8 @@ class FetchMetadataService(
             logger.trace { "fetching provider for plugin ${plugin.name} with order ${plugin.order} " }
             val provider = providers.find { plugin.name.equals(it.name(), true) }
             if (provider != null) {
-                val res: Optional<MetadataDto> = provider.fetchMetadata(metadataRequestDto, config)
-                if (res.isPresent) {
+                val res: Optional<MetadataDto>? = provider.fetchMetadata(metadataRequestDto, config)
+                if (res != null && res.isPresent) {
                     return res.get()
                 }
             } else {
