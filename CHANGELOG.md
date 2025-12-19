@@ -1,3 +1,16 @@
+## [0.75.0](https://github.com/bayang/jelu/compare/v0.74.0...v0.75.0) (2025-12-19)
+
+
+### Features
+
+* reading progress and finished state sync [#246](https://github.com/bayang/jelu/issues/246) ([974cfd9](https://github.com/bayang/jelu/commit/974cfd990242ba5923e04431c94867f5837ebeb1))
+
+
+### Bug Fixes
+
+* add missing translation [#267](https://github.com/bayang/jelu/issues/267) ([b4e11a2](https://github.com/bayang/jelu/commit/b4e11a2ef73bd8d34419b63c3e8f1f9b4dd9c6b3))
+* replace removed dependency ([abcf1d9](https://github.com/bayang/jelu/commit/abcf1d980d6953bb02f4195b922642567e5ee14b))
+
 ## [0.74.0](https://github.com/bayang/jelu/compare/v0.73.1...v0.74.0) (2025-10-13)
 
 
