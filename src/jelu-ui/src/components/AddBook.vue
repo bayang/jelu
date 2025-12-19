@@ -22,6 +22,7 @@ import AutoImportFormModalVue from "./AutoImportFormModal.vue";
 import ImagePickerModal from "./ImagePickerModal.vue";
 import SeriesCompleteInput from "./SeriesCompleteInput.vue";
 import ClosableBadge from "./ClosableBadge.vue";
+import FormField from "./FormField.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -440,26 +441,21 @@ const mergeMetadata = () => {
 }
 
 const isbn10ValidationMessage = ref("")
-const isbn10LabelVariant = ref("")
 
 const isbn13ValidationMessage = ref("")
-const isbn13LabelVariant = ref("")
 
 const validateIsbn10 = (isbn: string) => {
   if (StringUtils.isNotBlank(isbn)) {
     const isbnVerify = new IsbnVerify(isbn);
     if (!isbnVerify.isIsbn10()) {
       isbn10ValidationMessage.value = t('labels.invalid_isbn10')
-      isbn10LabelVariant.value = "danger"
     }
     else {
       isbn10ValidationMessage.value = ""
-      isbn10LabelVariant.value = ""
     }
   }
   else {
     isbn10ValidationMessage.value = ""
-    isbn10LabelVariant.value = ""
   }
 }
 
@@ -468,16 +464,13 @@ const validateIsbn13 = (isbn: string) => {
     const isbnVerify = new IsbnVerify(isbn);
     if (!isbnVerify.isIsbn13()) {
       isbn13ValidationMessage.value = t('labels.invalid_isbn13')
-      isbn13LabelVariant.value = "danger"
     }
     else {
       isbn13ValidationMessage.value = ""
-      isbn13LabelVariant.value = ""
     }
   }
   else {
     isbn13ValidationMessage.value = ""
-    isbn13LabelVariant.value = ""
   }
 }
 
@@ -534,26 +527,9 @@ let displayDatepicker = computed(() => {
         </div>
       </div>
       <div class="sm:w-8/12 justify-self-center">
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.title')"
-            class="capitalize"
-          >
-            <o-input
-              v-model="form.title"
-              expanded
-              class="w-full input focus:input-accent"
-            />
-          </o-field>
-        </div>
-
-        <div class="field jelu-authorinput mb-3">
-          <o-field
-            horizontal
-            :label="t('book.author', 2)"
-            class="capitalize"
-          >
+        <FormField :legend="t('book.title')" placeholder="" v-model="form.title"></FormField>
+        <fieldset class="fieldset jelu-authorinput">
+            <legend class="fieldset-legend capitalize"> {{t('book.author', 2)}}</legend>
             <o-taginput
               v-model="authors"
               :allow-autocomplete="true"
@@ -584,14 +560,9 @@ let displayDatepicker = computed(() => {
                 />
               </template>
             </o-taginput>
-          </o-field>
-        </div>
-        <div class="field jelu-taginput mb-3">
-          <o-field
-            horizontal
-            :label="t('book.tag', 2)"
-            class="capitalize"
-          >
+        </fieldset>
+        <fieldset class="fieldset jelu-taginput">
+            <legend class="fieldset-legend capitalize"> {{t('book.tag', 2)}}</legend>
             <o-taginput
               v-model="tags"
               :options="filteredTags"
@@ -623,14 +594,9 @@ let displayDatepicker = computed(() => {
                 />
               </template>
             </o-taginput>
-          </o-field>
-        </div>
-        <div class="field jelu-authorinput pb-2">
-          <o-field
-            horizontal
-            :label="t('book.translator', 2)"
-            class="capitalize"
-          >
+        </fieldset>
+        <fieldset class="field jelu-authorinput pb-2">
+            <legend class="fieldset-legend capitalize"> {{t('book.translator', 2)}}</legend>
             <o-taginput
               v-model="translators"
               :options="filteredTranslators"
@@ -662,14 +628,9 @@ let displayDatepicker = computed(() => {
                 />
               </template>
             </o-taginput>
-          </o-field>
-        </div>
-        <div class="field jelu-authorinput pb-2">
-          <o-field
-            horizontal
-            :label="t('book.narrator', 2)"
-            class="capitalize"
-          >
+        </fieldset>
+        <fieldset class="field jelu-authorinput pb-2">
+            <legend class="fieldset-legend capitalize"> {{t('book.narrator', 2)}}</legend>
             <o-taginput
               v-model="narrators"
               :options="filteredNarrators"
@@ -701,121 +662,91 @@ let displayDatepicker = computed(() => {
                 />
               </template>
             </o-taginput>
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.summary')"
-            class="capitalize"
-          >
-            <o-input
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.summary')}}</legend>
+            <textarea
               v-model="form.summary"
               maxlength="50000"
-              expanded
-              type="textarea"
-              class="textarea focus:textarea-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.isbn10')"
-            :message="isbn10ValidationMessage"
-            :variant="isbn10LabelVariant"
-            class="uppercase"
-          >
-            <o-input
-              v-model="form.isbn10"
-              name="isbn10"
-              expanded
-              :placeholder="t('book.isbn10')"
-              class="input focus:input-accent w-full"
-              @blur="validateIsbn10($event.target.value)"
-            />
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.isbn13')"
-            :message="isbn13ValidationMessage"
-            :variant="isbn13LabelVariant"
-            class="uppercase"
-          >
-            <o-input
-              v-model="form.isbn13"
-              name="isbn13"
-              expanded
-              :placeholder="t('book.isbn13')"
-              class="input focus:input-accent w-full"
-              @blur="validateIsbn13($event.target.value)"
-            />
-          </o-field>
-        </div>
-        <div class="field">
-          <o-field
-            horizontal
-            :label="t('book.identifiers')"
-            class="capitalize providers-ids"
-          >
-            <o-input
+              class="textarea focus:textarea-accent w-full"
+            ></textarea>
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">{{ t('book.isbn10') }}</legend>
+          <input type="text" name="isbn10" class="input w-full focus:input-accent validator" v-model="form.isbn10"
+          @blur="validateIsbn10($event.target.value)"
+          :valid="isbn10ValidationMessage.length < 1"
+          />
+          <div class="text-error">{{ isbn10ValidationMessage }}</div>
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">{{ t('book.isbn13') }}</legend>
+          <input type="text" name="isbn13" class="input w-full focus:input-accent validator" v-model="form.isbn13"
+          @blur="validateIsbn13($event.target.value)"
+          :valid="isbn13ValidationMessage.length < 1"
+          />
+          <div class="text-error">{{ isbn13ValidationMessage }}</div>
+        </fieldset>
+        <fieldset class="fieldset sm:grid sm:grid-cols-3">
+            <legend class="fieldset-legend capitalize providers-ids">{{ t('book.identifiers') }}</legend>
+            <input
               v-model="form.googleId"
               name="googleId"
               :placeholder="t('book.google_id')"
               class="input focus:input-accent w-full"
             />
-            <o-input
+            <input
               v-model="form.goodreadsId"
+              type="text"
               name="goodreadsId"
               :placeholder="t('book.goodreads_id')"
               class="input focus:input-accent w-full"
             />
-            <o-input
+            <input
               v-model="form.amazonId"
+              type="text"
               name="amazonId"
               :placeholder="t('book.amazon_id')"
               class="input focus:input-accent w-full"
             />
-            <o-input
+            <input
               v-model="form.librarythingId"
+              type="text"
               name="librarythingId"
               :placeholder="t('book.librarything_id')"
               class="input focus:input-accent w-full"
             />
-            <o-input
+            <input
               v-model="form.isfdbId"
+              type="text"
               name="isfdbId"
               :placeholder="t('book.isfdb_id')"
               class="input focus:input-accent w-full"
             />
-            <o-input
+            <input
               v-model="form.openlibraryId"
+              type="text"
               name="openlibraryId"
               :placeholder="t('book.openlibrary_id')"
               class="input focus:input-accent w-full"
             />
-            <o-input
+            <input
               v-model="form.noosfereId"
+              type="text"
               name="noosfereId"
               :placeholder="t('book.noosfere_id')"
               class="input focus:input-accent w-full"
             />
-            <o-input
+            <input
               v-model="form.inventaireId"
+              type="text"
               name="inventaireId"
               :placeholder="t('book.inventaire_id')"
               class="input focus:input-accent w-full"
             />
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.publisher')"
-            class="capitalize"
-          >
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.publisher')}}</legend>
             <o-autocomplete
               v-model="form.publisher"
               :root-class="'grow w-full'"
@@ -833,14 +764,9 @@ let displayDatepicker = computed(() => {
                 </div>
               </template>
             </o-autocomplete>
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.published_date')"
-            class="capitalize"
-          >
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.published_date')}}</legend>
             <o-datepicker
               ref="datepicker"
               v-model="publishedDate"
@@ -854,99 +780,78 @@ let displayDatepicker = computed(() => {
               expanded
               @icon-right-click="clearDatePicker"
             />
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.page_count')"
-            class="capitalize"
-          >
-            <o-input
-              v-model="form.pageCount"
-              type="number"
-              number
-              min="0"
-              class="input focus:input-accent sm:w-11/12"
-              expanded
-              icon-right="delete"
-              icon-right-clickable
-              @icon-right-click="form.pageCount = null;form.currentPageNumber=null"
-            />
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.language')"
-            class="capitalize"
-          >
-            <o-input
-              v-model="form.language"
-              type="text"
-              expanded
-              class="input focus:input-accent w-full"
-            />
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            :label="t('book.series')"
-            horizontal
-            class="capitalize"
-          >
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize"> {{ t('book.page_count') }}</legend>
+          <label class="input w-full">
+            <input type="number" v-model="form.pageCount" class="input focus:input-accent" min="0" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="size-6 hover:cursor-pointer"
+              @click="form.pageCount = null; form.currentPageNumber = null">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </label>
+        </fieldset>
+        <FormField :legend="t('book.language')" placeholder="" v-model="form.language"></FormField>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.series')}}</legend>
             <div class="flex flex-col grow w-full">
-              <div>
                 <SeriesCompleteInput v-model="seriesCopy" />
-              </div>
             </div>
-          </o-field>
-        </div>
-        <div class="block">
-          <o-field
-            horizontal
-            :label="t('book.status') + ' :'"
-            class="capitalize"
-          >
-            <o-radio
-              v-model="eventType"
-              name="type"
-              native-value="FINISHED"
-            >
-              {{ t('reading_events.finished') }}
-            </o-radio>
-            <o-radio
-              v-model="eventType"
-              name="type"
-              native-value="CURRENTLY_READING"
-            >
-              {{ t('reading_events.currently_reading') }}
-            </o-radio>
-            <o-radio
-              v-model="eventType"
-              name="type"
-              native-value="DROPPED"
-            >
-              {{ t('reading_events.dropped') }}
-            </o-radio>
-            <o-radio
-              v-model="eventType"
-              name="type"
-              native-value="NONE"
-            >
-              {{ t('reading_events.none') }}
-            </o-radio>
-          </o-field>
-        </div>
-        <div
+        </fieldset>
+        <fieldset class="block fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.status')}}</legend>
+            <div class="">
+              <label class="label cursor-pointer justify-center gap-2 flex flex-wrap">
+                <div>
+                  <input
+                    v-model="eventType"
+                    type="radio"
+                    name="radio-10"
+                    class="radio radio-primary mx-3"
+                    value="FINISHED"
+                  >
+                  <span class="label-text">{{ t('reading_events.finished') }}</span>
+                </div>
+                <div>
+                  <input
+                    v-model="eventType"
+                    type="radio"
+                    name="radio-10"
+                    class="radio radio-primary mx-3"
+                    value="CURRENTLY_READING"
+                  >
+                  <span class="label-text">{{ t('reading_events.currently_reading') }}</span>
+                </div>
+                <div>
+                  <input
+                    v-model="eventType"
+                    type="radio"
+                    name="radio-10"
+                    class="radio radio-primary mx-3"
+                    value="DROPPED"
+                  >
+                  <span class="label-text">{{ t('reading_events.dropped') }}</span>
+                </div>
+                <div>
+                  <input
+                    v-model="eventType"
+                    type="radio"
+                    name="radio-10"
+                    class="radio radio-primary mx-3"
+                    value="NONE"
+                  >
+                  <span class="label-text">{{ t('reading_events.none') }}</span>
+                </div>
+              </label>
+            </div>
+        </fieldset>
+        <fieldset
           v-if="displayDatepicker"
-          class="field"
+          class="fieldset"
         >
-          <o-field
-            horizontal
-            :label="t('labels.event_date')"
-            class="capitalize"
-          >
+            <legend class="fieldset-legend capitalize"> {{t('labels.event_date')}}</legend>
             <o-datepicker
               ref="datepicker"
               v-model="eventDate"
@@ -962,98 +867,63 @@ let displayDatepicker = computed(() => {
               trap-focus
               @icon-right-click="eventDate = null"
             />
-          </o-field>
-        </div>
-        <div class="field my-3">
-          <o-field
-            horizontal
-            :label="t('book.personal_notes')"
-            class="capitalize"
-          >
-            <o-input
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.personal_notes')}}</legend>
+            <textarea
               v-model="form.personalNotes"
               maxlength="5000"
               type="textarea"
-              expanded
-              class="textarea focus:textarea-accent"
+              class="textarea focus:textarea-accent w-full"
             />
-          </o-field>
+        </fieldset>
+        <div class="grid grid-cols-3">
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.owned')}}</legend>
+              <label class="label">
+                  <input type="checkbox" class="checkbox checkbox-primary" v-model="form.owned"></input>
+                  {{ ownedDisplay }}
+              </label>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.to_read')}}&nbsp?</legend>
+              <label class="label">
+                  <input type="checkbox" class="checkbox checkbox-primary" v-model="form.toRead"></input>
+                  {{ toReadDisplay }}
+              </label>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.borrowed')}}&nbsp?</legend>
+              <label class="label">
+                  <input type="checkbox" class="checkbox checkbox-primary" v-model="form.borrowed"></input>
+                  {{ borrowedDisplay }}
+              </label>
+        </fieldset>
         </div>
-        <div class="field mb-2">
-          <o-field
-            horizontal
-            :label="t('book.owned')"
-            class="capitalize"
-          >
-            <o-checkbox v-model="form.owned">
-              {{ ownedDisplay }}
-            </o-checkbox>
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.to_read') + ' ?'"
-            class="capitalize"
-          >
-            <o-checkbox v-model="form.toRead">
-              {{ toReadDisplay }}
-            </o-checkbox>
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.borrowed') + ' ?'"
-            class="capitalize"
-          >
-            <o-checkbox v-model="form.borrowed">
-              {{ borrowedDisplay }}
-            </o-checkbox>
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.current_page_number')"
-            class="capitalize"
-          >
-            <o-input
-              v-model="form.currentPageNumber"
-              type="number"
-              number
-              min="0"
-              expanded
-              class="input focus:input-accent w-11/12"
-              :max="form.pageCount"
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.current_page_number')}}</legend>
+          <label class="input w-full">
+            <input type="number" v-model="form.currentPageNumber" class="input focus:input-accent" min="0"
               :disabled="form.pageCount == null"
-              icon-right="delete"
-              icon-right-clickable
-              @icon-right-click="form.currentPageNumber = null"
-            />
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.percent_read')"
-            class="capitalize"
-          >
-            <o-slider
-              v-model="form.percentRead"
-              :min="0"
-              :max="100"
-              :disabled="form.pageCount != null"
-            />
-          </o-field>
-        </div>
-        <div
+              :max="form.pageCount"
+             />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="size-6 hover:cursor-pointer"
+              @click="form.currentPageNumber = null">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </label>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize"> {{t('book.percent_read')}}</legend>
+            <input type="range" min="0" max="100" class="w-full range range-primary range-xs" v-model="form.percentRead" />
+        </fieldset>
+        <fieldset
           v-if="hasImage"
-          class="mb-4"
+          class="fieldset"
         >
-          <o-field horizontal>
-            <template #label>
-              {{ t('labels.actual_cover') }} :
+            <legend class="fieldset-legend capitalize"> {{t('labels.actual_cover')}}
               <o-tooltip
                 v-if="!deleteImage"
                 :label="t('labels.click_bin_to_remove')"
@@ -1074,7 +944,7 @@ let displayDatepicker = computed(() => {
                   <i class="mdi mdi-information-outline" />
                 </span>
               </o-tooltip>
-            </template>
+              </legend>
             <div class="indicator">
               <span
                 v-if="!deleteImage"
@@ -1098,17 +968,14 @@ let displayDatepicker = computed(() => {
                 >
               </figure>
             </div>
-          </o-field>
-        </div>
+        </fieldset>
         <div
-          v-if="!hasImage || deleteImage"
-          class="mb-4"
+        v-if="!hasImage || deleteImage"
         >
-          <o-field
-            class=""
-            horizontal
-            :label="t('labels.upload_cover')"
-          >
+        <fieldset
+          class="fieldset"
+        >
+            <legend class="fieldset-legend capitalize"> {{t('labels.upload_cover')}}</legend>
             <div class="">
               <label class="label cursor-pointer justify-center gap-2 flex flex-wrap">
                 <div>
@@ -1143,31 +1010,46 @@ let displayDatepicker = computed(() => {
                 </div>
               </label>
             </div>
-          </o-field>
-          <o-field
-            v-if="uploadType == 'web'"
-            horizontal
-            :label="t('labels.enter_image_address')"
-          >
-            <o-input
-              v-model="imageUrl"
+        </fieldset>
+        <fieldset class="fieldset"
+        v-if="uploadType == 'web'"
+        >
+            <legend
+            class="fieldset-legend capitalize"> {{t('labels.enter_image_address')}}</legend>
+          <label class="input validator w-full">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+              </g>
+            </svg>
+            <input
               type="url"
-              pattern="https?://.*"
-              :clearable="true"
-              expanded
-              icon-right-clickable
-              title="Url must start with http or https"
+              required
+              class="w-full"
               :placeholder="t('labels.url_must_start')"
-              class="input focus:input-accent w-full"
-              @icon-right-click="clearImageField"
+              v-model="imageUrl"
+              pattern="https?://.*"
             />
-          </o-field>
-          <o-field
-            v-else-if="uploadType == 'computer'"
-            horizontal
-            :label="t('labels.choose_file')"
-            class="file"
-          >
+            <svg @click="clearImageField" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 hover:cursor-pointer">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </label>
+          <p class="validator-hint">{{ t('labels.url_must_start')}}</p>
+        </fieldset>
+        <fieldset
+class="fieldset"
+        v-else-if="uploadType == 'computer'"
+        >
+          <legend
+            class="file fieldset-legend"
+          >{{t('labels.choose_file')}}</legend>
             <input
               type="file"
               accept="image/*"
@@ -1181,13 +1063,11 @@ let displayDatepicker = computed(() => {
               class="progress progress-primary"
             />
             <br>
-          </o-field>
-          <o-field
-            v-else
-            horizontal
-            :label="t('labels.choose_file')"
-            class="file"
-          >
+        </fieldset>
+            <fieldset class="fieldset" v-else>
+          <legend
+            class="file fieldset-legend"
+          >{{t('labels.choose_file')}}</legend>
             <button
               class="btn btn-primary button"
               @click="toggleImagePickerModal()"
@@ -1198,9 +1078,8 @@ let displayDatepicker = computed(() => {
               <span>{{ t('labels.choose_file') }}</span>
             </button>
             <span>{{ imagePath }}</span>
-          </o-field>
+         </fieldset>
         </div>
-
         <div class="field">
           <button
             class="btn btn-success mb-3 uppercase"

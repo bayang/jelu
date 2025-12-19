@@ -351,7 +351,7 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 
 .edit-modal {
     margin: 30px;
-    width: min(900px, 90vw);
+    width: min(900px, 88vw);
 }
 
 .event-modal {
