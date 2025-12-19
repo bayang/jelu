@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useOruga } from "@oruga-ui/oruga-next";
-import IsbnVerify from '@saekitominaga/isbn-verify';
+import IsbnVerify from '@w0s/isbn-verify';
 import { useTitle } from '@vueuse/core';
 import { computed, reactive, Ref, ref, watch } from "vue";
 import { useI18n } from 'vue-i18n';
