@@ -47,20 +47,7 @@ class WebMvcConfig(private val properties: JeluProperties) : WebMvcConfigurer {
                 "/site.webmanifest",
             )
             .addResourceLocations(
-                "classpath:public/index.html",
-                "classpath:public/favicon.ico",
-                "classpath:public/favicon-16x16.png",
-                "classpath:public/favicon-32x32.png",
-                "classpath:public/mstile-144x144.png",
-                "classpath:public/apple-touch-icon.png",
-                "classpath:public/apple-touch-icon-180x180.png",
-                "classpath:public/android-chrome-192x192.png",
-                "classpath:public/android-chrome-512x512.png",
-                "classpath:public/manifest.json",
-                "classpath:public/registerSW.js",
-                "classpath:public/sw.js",
-                "classpath:public/manifest.webmanifest",
-                "classpath:public/site.webmanifest",
+                "classpath:public/",
             )
             .setCacheControl(CacheControl.noStore())
     }
