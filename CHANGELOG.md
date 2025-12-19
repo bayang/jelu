@@ -1,3 +1,10 @@
+### [0.75.1](https://github.com/bayang/jelu/compare/v0.75.0...v0.75.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* resources not served by spring anymore ([f14793f](https://github.com/bayang/jelu/commit/f14793f6026b23d281f97948efe826c9be4b62df))
+
 ## [0.75.0](https://github.com/bayang/jelu/compare/v0.74.0...v0.75.0) (2025-12-19)
 
 
