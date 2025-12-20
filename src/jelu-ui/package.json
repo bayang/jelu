@@ -41,13 +41,12 @@
     "vuex": "4.0.2"
   },
   "devDependencies": {
+    "@eslint/js": "9.39.2",
     "@intlify/unplugin-vue-i18n": "11.0.3",
     "@tailwindcss/line-clamp": "0.4.4",
     "@tailwindcss/typography": "0.5.19",
     "@tailwindcss/vite": "4.1.11",
     "@types/qs": "6.14.0",
-    "@typescript-eslint/eslint-plugin": "8.50.0",
-    "@typescript-eslint/parser": "8.50.0",
     "@vitejs/plugin-vue": "6.0.3",
     "autoprefixer": "10.4.14",
     "eslint": "9.39.2",
@@ -56,6 +55,7 @@
     "qs": "6.14.0",
     "tailwindcss": "4.1.18",
     "typescript": "5.8.3",
+    "typescript-eslint": "8.49.0",
     "vite": "6.4.1",
     "vite-plugin-pwa": "1.2.0",
     "vue-tsc": "3.1.8"
