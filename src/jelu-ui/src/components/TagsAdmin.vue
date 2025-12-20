@@ -31,10 +31,10 @@ watch([page, sortQuery], (newVal, oldVal) => {
   }
 })
 
-let orphanTags: Ref<Array<Tag>> = ref([]);
+const orphanTags: Ref<Array<Tag>> = ref([]);
 const isOrphanFetching = ref(false)
 
-let filteredTags: Ref<Array<Tag>> = ref([]);
+const filteredTags: Ref<Array<Tag>> = ref([]);
 const isFetching = ref(false)
 
 const tag: Ref<Tag> = ref({name: ""})
@@ -192,25 +192,24 @@ const options = computed(() => {
       <h1 class="typewriter text-2xl mb-3 capitalize">
         {{ t('labels.find-tag') }} :
       </h1>
-      <div class="field border-2 border-accent">
-        <o-field>
-          <o-autocomplete
-            :options="options"
-            clear-on-select
-            :loading="isFetching"
-            :input-classes="{rootClass:'border-2 border-accent'}"
-            backend-filtering
-            :debounce="100"
-            @input="getFilteredTags"
-            @select="selectTag"
-          >
-            <template #default="{ value }">
-              <div class="jl-taginput-item">
-                {{ value.name }}
-              </div>
-            </template>
-          </o-autocomplete>
-        </o-field>
+      <div class="field">
+        <o-autocomplete
+          :options="options"
+          clear-on-select
+          :loading="isFetching"
+          :input-classes="{rootClass:'border-2 border-accent w-full'}"
+          class="w-full"
+          backend-filtering
+          :debounce="100"
+          @input="getFilteredTags"
+          @select="selectTag"
+        >
+          <template #default="{ value }">
+            <div class="jl-taginput-item">
+              {{ value.name }}
+            </div>
+          </template>
+        </o-autocomplete>
       </div>
       <div
         v-if="tag.id != null"
@@ -248,5 +247,9 @@ const options = computed(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
+    @apply w-full;
+  }
 </style>

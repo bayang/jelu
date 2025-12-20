@@ -26,7 +26,7 @@ const toRead: Ref<boolean|null> = ref(null)
 const owned: Ref<boolean|null> = ref(null)
 const add: Ref<boolean> = ref(true)
 
-let filteredTags: Ref<Array<Wrapper>> = ref([]);
+const filteredTags: Ref<Array<Wrapper>> = ref([]);
 const isFetching = ref(false)
 
 function getFilteredTags(text: string) {
@@ -54,7 +54,7 @@ function manageTag(tag: Tag) {
 }
 
 function removeTag(tag: Tag, tagList: Array<Tag>) {
-  let idx = tagList.findIndex(elem => tag.id === elem.id);
+  const idx = tagList.findIndex(elem => tag.id === elem.id);
   if (idx !== -1) {
     tagList.splice(idx, 1)
   }
@@ -172,25 +172,25 @@ const submit = () => {
           <span class="mx-2 capitalize">{{ add == true ? t("bulk.add_tag") : t("bulk.remove_tag") }}</span>
         </div>
         <div class="field">
-          <o-field :label="t('bulk.choose_tag')">
-            <o-autocomplete
-              :options="filteredTags"
-              :clear-on-select="true"
-              field="name"
-              backend-filtering
-              :input-classes="{rootClass:'w-full border-2 border-accent', inputClass:'w-full'}"
-              :loading="isFetching"
-              :debounce="100"
-              @input="getFilteredTags"
-              @select="manageTag"
-            >
-              <template #default="{ value }">
-                <div class="jl-taginput-item">
-                  {{ value.name }}
-                </div>
-              </template>
-            </o-autocomplete>
-          </o-field>
+          <p>{{ t('bulk.choose_tag') }}</p>
+          <o-autocomplete
+            :options="filteredTags"
+            :clear-on-select="true"
+            field="name"
+            backend-filtering
+            :input-classes="{rootClass:'w-full border-2 border-accent', inputClass:'w-full'}"
+            class="w-full"
+            :loading="isFetching"
+            :debounce="100"
+            @input="getFilteredTags"
+            @select="manageTag"
+          >
+            <template #default="{ value }">
+              <div class="jl-taginput-item">
+                {{ value.name }}
+              </div>
+            </template>
+          </o-autocomplete>
         </div>
         <div
           v-if="addTags.length > 0"
@@ -264,5 +264,9 @@ const submit = () => {
   </section>
 </template>
 
-<style lang="scss">
+<style scoped>
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
+    @apply w-full;
+  }
 </style>

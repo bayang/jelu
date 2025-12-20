@@ -18,7 +18,7 @@ useTitle('Jelu | User page')
 
 const store = useStore(key)
 
-let filteredTags: Ref<Array<Tag>> = ref([]);
+const filteredTags: Ref<Array<Tag>> = ref([]);
 const isFetching = ref(false)
 
 function getFilteredTags(text: string) {
@@ -111,30 +111,34 @@ const options = computed(() => {
       </div>
       <div v-else>
         <div class="field">
-          <o-field :label="t('settings.shelf_choose_tag')">
-            <o-autocomplete
-              :input-classes="{rootClass:'border-2 border-accent'}"
-              :loading="isFetching"
-              open-on-focus
-              backend-filtering
-              clear-on-select
-              :debounce="100"
-              :options="options"
-              @input="getFilteredTags"
-              @select="createShelfFromTag"
-            >
-              <template #default="{ value }">
-                <div class="jl-taginput-item">
-                  {{ value.name }}
-                </div>
-              </template>
-            </o-autocomplete>
-          </o-field>
+          <p>{{ t('settings.shelf_choose_tag') }}</p>
+          <o-autocomplete
+            :input-classes="{rootClass:'border-2 border-accent w-full'}"
+            :loading="isFetching"
+            class="w-full"
+            open-on-focus
+            backend-filtering
+            clear-on-select
+            :debounce="100"
+            :options="options"
+            @input="getFilteredTags"
+            @select="createShelfFromTag"
+          >
+            <template #default="{ value }">
+              <div class="jl-taginput-item">
+                {{ value.name }}
+              </div>
+            </template>
+          </o-autocomplete>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
+    @apply w-full;
+  }
 </style>

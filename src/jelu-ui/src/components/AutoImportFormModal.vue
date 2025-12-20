@@ -137,7 +137,7 @@ function pluginsModalClosed() {
 
 <template>
   <section class="edit-modal">
-    <div class="grid justify-center justify-items-center">
+    <div class="flex flex-col items-center">
       <div class="mb-2">
         <h1 class="text-2xl typewriter capitalize">
           {{ t('labels.import_book') }}
@@ -145,47 +145,38 @@ function pluginsModalClosed() {
       </div>
       <div
         v-if="displayForm"
-        class="column"
+        class="sm:w-lg"
       >
-        <div class="field mb-2">
-          <o-field
-            horizontal
-            :label="t('book.isbn')"
-            class="capitalize"
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('book.isbn') }}
+          </legend>
+          <input
+            v-model="form.isbn"
+            class="input focus:input-accent w-full"
+            @keyup.enter="fetchMetadata"
           >
-            <o-input
-              v-model="form.isbn"
-              class="input focus:input-accent"
-              @keyup.enter="fetchMetadata"
-            />
-          </o-field>
-        </div>
-        <div class="field mb-2">
-          <o-field
-            horizontal
-            :label="t('book.title')"
-            class="capitalize"
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('book.title') }}
+          </legend>
+          <input
+            v-model="form.title"
+            class="input focus:input-accent w-full"
+            @keyup.enter="fetchMetadata"
           >
-            <o-input
-              v-model="form.title"
-              class="input focus:input-accent"
-              @keyup.enter="fetchMetadata"
-            />
-          </o-field>
-        </div>
-        <div class="field mb-3">
-          <o-field
-            horizontal
-            :label="t('book.author', 2)"
-            class="capitalize"
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('book.author', 2) }}
+          </legend>
+          <input
+            v-model="form.authors"
+            class="input focus:input-accent w-full"
+            @keyup.enter="fetchMetadata"
           >
-            <o-input
-              v-model="form.authors"
-              class="input focus:input-accent"
-              @keyup.enter="fetchMetadata"
-            />
-          </o-field>
-        </div>
+        </fieldset>
       </div>
       <div
         v-if="displayForm"
@@ -273,7 +264,7 @@ function pluginsModalClosed() {
           {{ t('errors.metadata.' + metadata.errorType) }}
         </p>
         <div class="collapse">
-          <input type="checkbox" />
+          <input type="checkbox">
           <div class="collapse-title text-xl font-medium capitalize">
             {{ t('errors.details') }}
           </div>
@@ -282,8 +273,8 @@ function pluginsModalClosed() {
             class="collapse-content"
           >
             <p
-              v-html="formattedErrorMessage"
               class="whitespace-pre-line text-error"
+              v-html="formattedErrorMessage"
             />
           </blockquote>
         </div>
