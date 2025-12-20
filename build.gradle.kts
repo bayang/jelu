@@ -71,7 +71,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
 
-    // implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
     implementation("com.github.slugify:slugify:3.0.7")
     implementation("commons-io:commons-io:2.21.0")
