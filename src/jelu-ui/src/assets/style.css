@@ -558,7 +558,4 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
   @apply cursor-text!;
 }
 
-.jl-formkit .o-input {
-  @apply w-fit sm:w-full bg-base-100 text-base-content border-primary focus:input-accent;
-}
 }

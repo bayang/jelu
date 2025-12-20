@@ -7,12 +7,9 @@
     "build": "vite build",
     "serve": "vite preview --debug",
     "tsc": "vue-tsc --noEmit",
-    "install-build": "npm ci --force && vite build"
+    "install-build": "npm ci && vite build"
   },
   "dependencies": {
-    "@formkit/i18n": "1.7.1",
-    "@formkit/tailwindcss": "1.7.1",
-    "@formkit/vue": "1.7.1",
     "@kangc/v-md-editor": "2.3.18",
     "@mdi/font": "7.4.47",
     "@oruga-ui/oruga-next": "0.11.6",

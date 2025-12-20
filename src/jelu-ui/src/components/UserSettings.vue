@@ -10,7 +10,6 @@ const { t, locale, availableLocales } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
-const formKitConfig: any = inject(Symbol.for('FormKitConfig'))
 
 availableLocales.forEach(locale => {
       console.log(`${locale} locale `)
@@ -63,7 +62,6 @@ watch(() => locale.value,(newValue, oldValue) => {
   console.log('locale changed: ' + newValue + " " + oldValue)
   const storedLanguage = useLocalStorage("jelu_language", oldValue)
   storedLanguage.value = newValue
-  formKitConfig.locale = newValue
 })
 
 </script>

@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { setErrors } from '@formkit/vue'
 import { useOruga } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import dataService from "../services/DataService"
 import { ObjectUtils } from "../utils/ObjectUtils"
@@ -16,19 +15,27 @@ useTitle('Jelu | Users admin')
 
 const oruga = useOruga()
 
-const form = ref({'login' : '', 'password' : '', 'admin': false})
+const form = ref({'login' : '', 'password' : '', 'password_confirm': '', 'admin': false})
 
-async function createUser(user: any) {
+async function createUser() {
   console.log("create user")
-  console.log(user)
+  console.log(form)
   try {
-    setErrors('create-user-form', [], undefined)
-    await dataService.createUser({"login" : user.login, "password": user.password, "isAdmin" : user.admin})
-    ObjectUtils.toast(oruga, "success", t('admin_user.user_saved', {name : user.login}), 4000)
+    await dataService.createUser({"login" : form.value.login, "password": form.value.password, "isAdmin" : form.value.admin})
+    ObjectUtils.toast(oruga, "success", t('admin_user.user_saved', {name : form.value.login}), 4000)
+    form.value.password = ''
+    form.value.password_confirm = ''
+    form.value.login = ''
+    form.value.admin = false
   } catch (err: any) {
-    setErrors('create-user-form', [], err.message)
+    console.log('error creating user')
+    console.log(err)
   }
 }
+
+const isValid = computed(() => {
+  return form.value.login.length >=3 && form.value.password.length >=3 && form.value.password_confirm.length >=3 && form.value.password === form.value.password_confirm
+})
 
 </script>
 
@@ -39,51 +46,62 @@ async function createUser(user: any) {
     </h1>
     <div class="flex flex-row justify-center basis-10/12 sm:basis-1/3">
       <div class="">
-        <FormKit
-          id="create-user-form"
-          v-slot="{ state: { valid } }"
-          v-model="form"
-          type="form"
-          :actions="false"
-          message-class="text-error-content"
-          messages-class="alert alert-error mt-2"
-          @submit="createUser"
-        >
-          <FormKit
+        <fieldset class="fieldset">
+          <label class="label">{{ t('login.username') }}</label>
+          <input
+            v-model="form.login"
             type="text"
-            name="login"
-            :label="t('login.username')"
+            class="input validator"
             placeholder="joe123"
-            validation="required|length:3"
-          />
-          <FormKit
-            type="password"
-            name="password"
-            :label="t('admin_user.password')"
-            validation="required|length:3"
-            :placeholder="t('admin_user.password')"
-          />
-          <FormKit
-            type="password"
-            name="password_confirm"
-            :label="t('admin_user.password_confirm')"
-            :placeholder="t('admin_user.password_confirm')"
-            validation="required|confirm"
-          />
-          <FormKit
-            type="checkbox"
-            :help="t('admin_user.admin_help')"
-            :label="t('admin_user.admin')"
-            name="admin"
-          />
-          <FormKit
-            type="submit"
-            :disabled="!valid"
-            input-class="btn-accent"
+            required
+            minlength="3"
           >
-            {{ t('admin_user.create_user') }}
-          </FormKit>
-        </FormKit>
+          <p class="validator-hint hidden">
+            {{ t('login.login_length') }}
+          </p>
+        </fieldset>
+
+        <label class="fieldset">
+          <span class="label capitalize">{{ t('admin_user.password') }}</span>
+          <input
+            v-model="form.password"
+            type="password"
+            class="input validator"
+            :placeholder="t('admin_user.password')"
+            required
+            minlength="3"
+          >
+          <span class="validator-hint hidden">{{ t('login.password_length') }}</span>
+        </label>
+        <label class="fieldset">
+          <span class="label capitalize">{{ t('admin_user.password_confirm') }}</span>
+          <input
+            v-model="form.password_confirm"
+            type="password"
+            class="input validator"
+            :placeholder="t('admin_user.password_confirm')"
+            required
+            minlength="3"
+          >
+          <span class="validator-hint hidden">{{ t('login.password_length') }}</span>
+        </label>
+        <label class="fieldset"> 
+          <span class="label capitalize">{{ t('admin_user.admin_help') }}</span>
+          <input
+            v-model="form.admin"
+            type="checkbox"
+            class="checkbox checkbox-success"
+          >
+        </label>
+
+        <button
+          class="btn btn-accent mt-4"
+          type="submit"
+          :disabled="! isValid"
+          @click="createUser"
+        >
+          {{ t('admin_user.create_user') }}
+        </button>
       </div>
     </div>
   </div>

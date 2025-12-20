@@ -62,6 +62,5 @@ module.exports = {
   plugins: [
     require("@tailwindcss/typography"), 
     // require("daisyui"),
-    require('@formkit/tailwindcss')
   ],
 }

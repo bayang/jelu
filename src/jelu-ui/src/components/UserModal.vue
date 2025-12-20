@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { setErrors } from '@formkit/vue';
 import { useOruga } from "@oruga-ui/oruga-next";
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import { User } from "../model/User";
@@ -21,30 +20,32 @@ const props = defineProps<{
   currentUser: User,
 }>()
 
-const createUser = ref({"password" : "", "isAdmin" : undefined})
+const form = ref({'password' : '', 'password_confirm': ''})
 console.log(props.currentUser)
-console.log(createUser)
 
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-async function editUser(user: any) {
+async function editUser() {
   console.log("edit user")
-  console.log(createUser)
-  console.log(user)
+  console.log(form)
   if (props.currentUser.id != null) {
     try {
-      let modified = await dataService.updateUser(props.currentUser.id, {"isAdmin": user.isAdmin, "password": user.password})
+      const modified = await dataService.updateUser(props.currentUser.id, {"isAdmin": undefined, "password": form.value.password})
       store.commit('user', modified)
       ObjectUtils.toast(oruga, "success", t('admin_user.user_updated', {name : props.currentUser.login}), 2500)
       emit('close')
     } catch (err: any) {
-      setErrors('edit-user-form', [], err.message)
+      console.log('failed to edit user')
+      console.log(err)
     }
   }
 }
 
+const isValid = computed(() => {
+  return form.value.password.length >=3 && form.value.password_confirm.length >=3 && form.value.password === form.value.password_confirm
+})
 </script>
 
 <template>
@@ -54,38 +55,38 @@ async function editUser(user: any) {
         {{ t('admin_user.edit_user', {name : props.currentUser.login}) }}
       </h1>
       <div>
-        <FormKit
-          id="edit-user-form"
-          v-slot="{ state: { valid } }"
-          v-model="createUser"
-          type="form"
-          :actions="false"
-          message-class="text-error-content"
-          messages-class="alert alert-error mt-2"
-          @submit="editUser"
-        >
-          <FormKit
+        <label class="fieldset">
+          <span class="label capitalize">{{ t('admin_user.password') }}</span>
+          <input
+            v-model="form.password"
             type="password"
-            name="password"
-            :label="t('admin_user.password')"
-            validation="required|length:3"
+            class="input validator"
             :placeholder="t('admin_user.password')"
-          />
-          <FormKit
-            type="password"
-            name="password_confirm"
-            :label="t('admin_user.password_confirm')"
-            :placeholder="t('admin_user.password_confirm')"
-            validation="required|confirm"
-          />
-          <FormKit
-            type="submit"
-            :disabled="!valid"
-            input-class="btn-accent mt-3"
+            required
+            minlength="3"
           >
-            {{ t('labels.submit') }}
-          </FormKit>
-        </FormKit>
+          <span class="validator-hint hidden">{{ t('login.password_length') }}</span>
+        </label>
+        <label class="fieldset">
+          <span class="label capitalize">{{ t('admin_user.password_confirm') }}</span>
+          <input
+            v-model="form.password_confirm"
+            type="password"
+            class="input validator"
+            :placeholder="t('admin_user.password_confirm')"
+            required
+            minlength="3"
+          >
+          <span class="validator-hint hidden">{{ t('login.password_length') }}</span>
+        </label>
+        <button
+          class="btn btn-accent mt-4"
+          type="submit"
+          :disabled="! isValid"
+          @click="editUser"
+        >
+          {{ t('labels.submit') }}
+        </button>
       </div>
     </div>
   </section>
