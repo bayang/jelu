@@ -50,7 +50,7 @@ const importFile = async () => {
     importConfig,
         file.value,
         (event: { loaded: number; total: number }) => {
-          let percent = Math.round((100 * event.loaded) / event.total);
+          const percent = Math.round((100 * event.loaded) / event.total);
           console.log("percent " + percent);
           uploadPercentage.value = percent;
         })
@@ -72,7 +72,7 @@ const exportFile =async () => {
   }
 }
 
-let fetchCoversDisabled = computed(() => {
+const fetchCoversDisabled = computed(() => {
   if (store != null && !store.getters.getMetadataFetchEnabled) {
     return true
   } else {
@@ -118,28 +118,32 @@ watch(file, (newVal, oldVal) => {
         !! {{ t('labels.auto_import_disabled') }}
       </div>
       <div class="">
-        <fieldset class="fieldset">
-          <label
-            class="label capitalize"
-            for="source"
-          >{{ t('csv_import.import_source') + ' : ' }}</label>
-          
-          <o-radio
-            v-model="importSource"
-            name="source"
-            native-value="GOODREADS"
-            class="input capitalize"
-          >
-            Goodreads
-          </o-radio>
-          <o-radio
-            v-model="importSource"
-            name="source"
-            native-value="ISBN_LIST"
-            class="input"
-          >
-            {{ t('csv_import.isbn_list') }}
-          </o-radio>
+        <fieldset class="fieldset justify-items-start">
+          <legend class="fieldset-legend capitalize text-lg">
+            {{ t('csv_import.import_source') + ' : ' }}
+          </legend>
+          <div>
+            <input
+              v-model="importSource"
+              type="radio"
+              name="radio-10"
+              class="radio radio-primary mx-3"
+              value="GOODREADS"
+            >
+            <span class="label-text text-lg">Goodreads</span>
+          </div>
+          <div>
+            <input
+              v-model="importSource"
+              type="radio"
+              name="radio-10"
+              class="radio radio-primary mx-3"
+              value="ISBN_LIST"
+            >
+            <span class="label-text text-lg">
+              {{ t('csv_import.isbn_list') }}
+            </span>
+          </div>
         </fieldset>
       </div>
       <div
@@ -147,46 +151,44 @@ watch(file, (newVal, oldVal) => {
         class="field"
       >
         <fieldset class="fieldset">
-          <label
-            class="label"
-            for="fetch"
-          >{{ t('csv_import.auto_fetch_online') }}</label>
-          <o-checkbox
-            id="fetch"
-            v-model="fetchMetadata"
-            class="input"
-            :disabled="store != null && !store.getters.getMetadataFetchEnabled"
-          >
+          <legend class="fieldset-legend capitalize text-lg">
+            {{ t('csv_import.auto_fetch_online') }}
+          </legend>
+          <label class="label">
+            <input
+              v-model="fetchMetadata"
+              type="checkbox"
+              :disabled="store != null && !store.getters.getMetadataFetchEnabled"
+              class="checkbox checkbox-primary"
+            >
             {{ fetchMetadata ? t('labels.yes'):t('labels.no') }}
-          </o-checkbox>
+          </label>
         </fieldset>
       </div>
       <div
         class="field"
       >
         <fieldset class="fieldset">
-          <label
-            class="label"
-            for="covers"
-          >{{ t('csv_import.fetch_covers') + ' ?' }}</label>
-          <o-checkbox
-            id=""
-            v-model="fetchCovers"
-            covers 
-            :disabled="fetchCoversDisabled"
-            class="input"
-          >
+          <legend class="fieldset-legend capitalize text-lg">
+            {{ t('csv_import.fetch_covers') + ' ?' }}
+          </legend>
+          <label class="label">
+            <input
+              v-model="fetchCovers"
+              type="checkbox"
+              :disabled="fetchCoversDisabled"
+              class="checkbox checkbox-primary"
+            >
             {{ fetchCovers ? t('labels.yes'):t('labels.no') }}
-          </o-checkbox>
+          </label>
         </fieldset>
       </div>
         
       <div>
         <fieldset class="fieldset">
-          <label
-            class="label"
-            for="file"
-          >{{ t('csv_import.choose_file') }}</label>
+          <legend class="fieldset-legend capitalize text-lg">
+            {{ t('csv_import.choose_file') }}
+          </legend>
           <input
             id="file"
             type="file"

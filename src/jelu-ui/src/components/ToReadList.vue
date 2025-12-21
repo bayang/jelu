@@ -167,117 +167,148 @@ getToRead()
     <template #sort-fields>
       <label class="label">{{ t('sorting.sort_by') }} : </label>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="creationDate"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary my-2"
+          value="creationDate"
         >
-          {{ t('sorting.date_added_to_list') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.date_added_to_list') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="lastReadingEventDate"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary my-2"
+          value="lastReadingEventDate"
         >
-          {{ t('sorting.last_reading_event_date') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.last_reading_event_date') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="title"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="title"
         >
-          {{ t('sorting.title') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.title') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="publisher"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="publisher"
         >
-          {{ t('sorting.publisher') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.publisher') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="pageCount"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="pageCount"
         >
-          {{ t('sorting.page_count') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.page_count') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="usrAvgRating"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="usrAvgRating"
         >
-          {{ t('sorting.user_avg_rating') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.user_avg_rating') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="avgRating"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="avgRating"
         >
-          {{ t('sorting.avg_rating') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.avg_rating') }}</span>
         <div class="field">
-          <o-radio
+          <input
             v-model="sortBy"
-            native-value="random"
+            type="radio"
+            name="radio-20"
+            class="radio radio-primary"
+            value="random"
           >
-            {{ t('sorting.random') }}
-          </o-radio>
+          <span class="label-text">{{ t('sorting.random') }}</span>
         </div>
       </div>
     </template>
     <template #filters>
       <div class="field flex flex-col gap-1 capitalize">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="FINISHED"
-        >
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="FINISHED"
+          >
           {{ t('reading_events.finished') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="CURRENTLY_READING"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="CURRENTLY_READING"
+          >
           {{ t('reading_events.currently_reading') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="DROPPED"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="DROPPED"
+          >
           {{ t('reading_events.dropped') }}
-        </o-checkbox>
+        </label>
       </div>
       <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.owned') }} : </label>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="null"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary my-2"
+            value="null"
           >
-            {{ t('filtering.unset') }}
-          </o-radio>
+          <span class="label-text">{{ t('filtering.unset') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="false"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary mb-2"
+            value="false"
           >
-            {{ t('labels.false') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.false') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="true"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary"
+            value="true"
           >
-            {{ t('labels.true') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.true') }}</span>
         </div>
       </div>
     </template>

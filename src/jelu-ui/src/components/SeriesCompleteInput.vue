@@ -84,13 +84,13 @@ const options = computed(() => {
           class="list-row items-center bg-base-200"
         >
           <div>{{ ser.name }}</div>
-          <o-input
+          <input
             v-model="ser.numberInSeries"
             type="number"
             min="0"
             step="0.1"
             class="input focus:input-accent w-30"
-          />
+          >
           <button
             class="btn btn-square btn-ghost"
             @click="model?.splice(idx, 1)"

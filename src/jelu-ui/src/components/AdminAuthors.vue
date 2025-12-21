@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import useDates from '../composables/dates'
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { useI18n } from 'vue-i18n'
+import FormField from "./FormField.vue";
 
 useTitle('Jelu | Authors admin')
 
@@ -29,7 +30,7 @@ const isMerging = ref(false)
 
 const activeStep = ref("left")
 
-let filteredAuthors: Ref<Array<Author>> = ref([]);
+const filteredAuthors: Ref<Array<Author>> = ref([]);
 
 function getFilteredAuthors(text: string) {
   isFetching.value = true
@@ -39,13 +40,13 @@ function getFilteredAuthors(text: string) {
 
 const leftAuthor: Ref<Author> = ref({ "name": "" })
 const rightAuthor: Ref<Author> = ref({ "name": "" })
-let leftHasImage = computed(() => {
+const leftHasImage = computed(() => {
   return StringUtils.isNotBlank(leftAuthor.value.image)
 })
-let rightHasImage = computed(() => {
+const rightHasImage = computed(() => {
   return StringUtils.isNotBlank(rightAuthor.value.image)
 })
-let leftDeleteImage: Ref<boolean> = ref(false)
+const leftDeleteImage: Ref<boolean> = ref(false)
 
 
 function dispatchAuthor(author: Author) {
@@ -164,413 +165,481 @@ const options = computed(() => {
           </h1>{{ t('authors_merge.authors_merge_description') }}
         </o-step-item>
       </o-steps>
-      <div class="field">
-        <o-field :label="t('authors_merge.search_message')">
-          <o-autocomplete
-            :options="options" 
-            :input-classes="{rootClass:'border-2 border-accent'}"
-            clear-on-select
-            :loading="isFetching"
-            :debounce="100"
-            @input="getFilteredAuthors"
-            @select="dispatchAuthor"
-          >
-            <template #default="{ value }">
-              <div class="jl-taginput-item">
-                {{ value.name }}
-              </div>
-            </template>
-          </o-autocomplete>
-        </o-field>
-      </div>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('authors_merge.search_message') }}
+        </legend>
+        <o-autocomplete
+          :options="options" 
+          :input-classes="{rootClass:'border-2 border-accent w-full', inputClass: 'w-full'}"
+          clear-on-select
+          :loading="isFetching"
+          :debounce="100"
+          @input="getFilteredAuthors"
+          @select="dispatchAuthor"
+        >
+          <template #default="{ value }">
+            <div class="jl-taginput-item">
+              {{ value.name }}
+            </div>
+          </template>
+        </o-autocomplete>
+      </fieldset>
     </div>
     <div class="justify-self-center col-span-2 sm:col-span-1 w-11/12 sm:w-8/12">
-      <div class="field">
-        <o-field
-          :label="t('author.name')"
-          class="capitalize"
-        >
-          <o-input
-            v-model="leftAuthor.name"
-            maxlength="1000"
-            expanded
-            name="name"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.date_of_birth')"
-          class="capitalize"
-        >
-          <o-datepicker
-            ref="datepicker"
-            v-model="leftAuthor.dateOfBirth"
-            :show-week-number="false"
-            :locale="undefined"
-            :placeholder="t('labels.click_to_select')"
-            :expanded="true"
-            icon="calendar"
-            icon-right="close"
-            icon-right-clickable="true"
-            :mobile-native="false"
-            mobile-modal="false"
-            trap-focus
-            @icon-right-click="leftAuthor.dateOfBirth = undefined"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.date_of_death')"
-          class="capitalize"
-        >
-          <o-datepicker
-            ref="datepicker"
-            v-model="leftAuthor.dateOfDeath"
-            :show-week-number="false"
-            :locale="undefined"
-            :placeholder="t('labels.click_to_select')"
-            :expanded="true"
-            icon="calendar"
-            icon-right="close"
-            icon-right-clickable="true"
-            mobile-native="false"
-            mobile-modal="false"
-            trap-focus
-            @icon-right-click="leftAuthor.dateOfDeath = undefined"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.biography')"
-          class="capitalize"
-        >
-          <o-input
-            v-model="leftAuthor.biography"
-            maxlength="5000"
-            expanded
-            type="textarea"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.official_page')"
-          class="capitalize"
-        >
-          <o-input
-            v-model="leftAuthor.officialPage"
-            expanded
-            maxlength="5000"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.wikipedia_page')"
-          class="capitalize"
-        >
-          <o-input
-            v-model="leftAuthor.wikipediaPage"
-            expanded
-            maxlength="5000"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.goodreads_page')"
-          class="capitalize"
-        >
-          <o-input
-            v-model="leftAuthor.goodreadsPage"
-            maxlength="5000"
-            expanded
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.x_page')"
-          class="capitalize"
-        >
-          <o-input
-            v-model="leftAuthor.twitterPage"
-            maxlength="5000"
-            expanded
-          />
-        </o-field>
-      </div>
+      <FormField
+        v-model="leftAuthor.name"
+        :legend="t('author.name')"
+        placeholder=""
+      />
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.date_of_birth') }}
+        </legend>
+        <o-datepicker
+          ref="datepicker"
+          v-model="leftAuthor.dateOfBirth"
+          :show-week-number="false"
+          :locale="undefined"
+          :placeholder="t('labels.click_to_select')"
+          :expanded="true"
+          icon="calendar"
+          icon-right="close"
+          icon-right-clickable="true"
+          :mobile-native="false"
+          mobile-modal="false"
+          trap-focus
+          @icon-right-click="leftAuthor.dateOfBirth = undefined"
+        />
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.date_of_death') }}
+        </legend>
+        <o-datepicker
+          ref="datepicker"
+          v-model="leftAuthor.dateOfDeath"
+          :show-week-number="false"
+          :locale="undefined"
+          :placeholder="t('labels.click_to_select')"
+          :expanded="true"
+          icon="calendar"
+          icon-right="close"
+          icon-right-clickable="true"
+          mobile-native="false"
+          mobile-modal="false"
+          trap-focus
+          @icon-right-click="leftAuthor.dateOfDeath = undefined"
+        />
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.biography') }}
+        </legend>
+        <textarea
+          v-model="leftAuthor.biography"
+          class="textarea focus:textarea-accent w-full"
+          maxlength="5000"
+        />
+      </fieldset>
+      <form-field
+        v-model="leftAuthor.officialPage"
+        :legend="t('author.official_page')"
+      />
+      <form-field
+        v-model="leftAuthor.wikipediaPage"
+        :legend="t('author.wikipedia_page')"
+      />
+      <FormField
+        v-model="leftAuthor.goodreadsPage"
+        :legend="t('author.goodreads_page')"
+        placeholder=""
+      />
+      <FormField
+        v-model="leftAuthor.twitterPage"
+        :legend="t('author.x_page')"
+        placeholder=""
+      />
+      <FormField
+        v-model="leftAuthor.facebookPage"
+        :legend="t('author.facebook_page')"
+        placeholder=""
+      />
+      <FormField
+        v-model="leftAuthor.instagramPage"
+        :legend="t('author.instagram_page')"
+        placeholder=""
+      />
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.personal_notes') }}
+        </legend>
+        <textarea
+          v-model="leftAuthor.notes"
+          class="textarea w-full focus:textarea-accent"
+          maxlength="5000"
+        />
+      </fieldset>
       <div
-        :label="t('author.facebook_page')"
-        class="capitalize"
+        v-if="leftHasImage"
+        class="w-full"
       >
-        <o-field label="Facebook page">
-          <o-input
-            v-model="leftAuthor.facebookPage"
-            maxlength="5000"
-            expanded
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.instagram_page')"
-          class="capitalize"
-        >
-          <o-input
-            v-model="leftAuthor.instagramPage"
-            maxlength="5000"
-            expanded
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.personal_notes')"
-          class="capitalize"
-        >
-          <o-input
-            v-model="leftAuthor.notes"
-            maxlength="5000"
-            type="textarea"
-            expanded
-          />
-        </o-field>
-      </div>
-      <div v-if="leftHasImage" class="w-full">
-        <o-field>
-          <div class="indicator w-full">
-            <span
-              class="badge indicator-item indicator-bottom indicator-start cursor-pointer"
-              @click="leftAuthor.image = undefined"
+        <div class="indicator w-full">
+          <span
+            class="badge indicator-item indicator-bottom indicator-start cursor-pointer"
+            @click="leftAuthor.image = undefined"
+          >
+            <i class="mdi mdi-delete" />
+          </span>
+          <figure class="">
+            <img
+              :src="'/files/' + leftAuthor.image"
+              :class="leftDeleteImage ? 'altered' : ''"
+              alt="cover image"
             >
-              <i class="mdi mdi-delete" />
-            </span>
-            <figure class="">
-              <img
-                :src="'/files/' + leftAuthor.image"
-                :class="leftDeleteImage ? 'altered' : ''"
-                alt="cover image"
-              >
-            </figure>
-          </div>
-        </o-field>
+          </figure>
+        </div>
       </div>
     </div>
     <div class="justify-self-center w-11/12 sm:w-8/12 col-span-2 sm:col-span-1">
-      <div class="field">
-        <o-field
-          :label="t('author.name')"
-          class="capitalize"
-        >
-          <o-input
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.name') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.name"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.name = rightAuthor.name"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.name"
-            maxlength="1000"
-            name="name"
-            expanded
-            icon-pack="mdi"
-            readonly
-            :icon="rightAuthor.name !== null ? 'arrow-left-bold' : ''"
-            :icon-clickable="rightAuthor.name !== null"
-            @icon-click="leftAuthor.name = rightAuthor.name"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.date_of_birth')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="grow input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.date_of_birth') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.dateOfBirth"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.dateOfBirth = rightAuthor.dateOfBirth"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightDoB"
-            maxlength="1000"
-            name="dob"
-            icon-pack="mdi"
-            expanded="true"
-            readonly
-            :icon="rightAuthor.dateOfBirth !== null ? 'arrow-left-bold' : ''"
-            :icon-clickable="rightAuthor.dateOfBirth !== null"
-            @icon-click="leftAuthor.dateOfBirth = rightAuthor.dateOfBirth"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.date_of_death')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="grow input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.date_of_death') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.dateOfDeath"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.dateOfDeath = rightAuthor.dateOfDeath"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightDoD"
-            maxlength="1000"
-            name="dod"
-            icon-pack="mdi"
-            expanded
-            readonly
-            :icon="rightAuthor.dateOfDeath !== null ? 'arrow-left-bold' : ''"
-            :icon-clickable="rightAuthor.dateOfDeath !== null"
-            @icon-click="leftAuthor.dateOfDeath = rightAuthor.dateOfDeath"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.biography')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="grow input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset sm:mb-5">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.biography') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.biography"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.biography = rightAuthor.biography"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.biography"
-            maxlength="5000"
-            type="textarea"
-            expanded
-            icon-pack="mdi"
-            :icon="rightAuthor.biography !== null ? 'arrow-left-bold' : ''"
-            readonly
-            :icon-clickable="rightAuthor.biography !== null"
-            @icon-click="leftAuthor.biography = rightAuthor.biography"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.official_page')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="grow input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.official_page') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.officialPage"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.officialPage = rightAuthor.officialPage"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.officialPage"
-            maxlength="5000"
-            icon-pack="mdi"
-            expanded
-            :icon="rightAuthor.officialPage !== null ? 'arrow-left-bold' : ''"
-            readonly
-            :icon-clickable="rightAuthor.officialPage !== null"
-            @icon-click="leftAuthor.officialPage = rightAuthor.officialPage"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.wikipedia_page')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="grow input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.wikipedia_page') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.wikipediaPage"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.wikipediaPage = rightAuthor.wikipediaPage"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.wikipediaPage"
-            maxlength="5000"
-            icon-pack="mdi"
-            expanded
-            :icon="rightAuthor.wikipediaPage !== null ? 'arrow-left-bold' : ''"
-            readonly
-            :icon-clickable="rightAuthor.wikipediaPage !== null"
-            @icon-click="leftAuthor.wikipediaPage = rightAuthor.wikipediaPage"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.goodreads_page')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="grow input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.goodreads_page') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.goodreadsPage"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.goodreadsPage = rightAuthor.goodreadsPage"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.goodreadsPage"
-            maxlength="5000"
-            icon-pack="mdi"
-            expanded
-            :icon="rightAuthor.goodreadsPage !== null ? 'arrow-left-bold' : ''"
-            readonly
-            :icon-clickable="rightAuthor.goodreadsPage !== null"
-            @icon-click="leftAuthor.goodreadsPage = rightAuthor.goodreadsPage"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.x_page')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.x_page') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.twitterPage"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.twitterPage = rightAuthor.twitterPage"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.twitterPage"
-            maxlength="5000"
-            icon-pack="mdi"
-            expanded
-            :icon="rightAuthor.twitterPage !== null ? 'arrow-left-bold' : ''"
-            readonly
-            :icon-clickable="rightAuthor.twitterPage !== null"
-            @icon-click="leftAuthor.twitterPage = rightAuthor.twitterPage"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.facebook_page')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.facebook_page') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.facebookPage"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.facebookPage = rightAuthor.facebookPage"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.facebookPage"
-            maxlength="5000"
-            icon-pack="mdi"
-            expanded
-            :icon="rightAuthor.facebookPage !== null ? 'arrow-left-bold' : ''"
-            readonly
-            :icon-clickable="rightAuthor.facebookPage !== null"
-            @icon-click="leftAuthor.facebookPage = rightAuthor.facebookPage"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.instagram_page')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.instagram_page') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.instagramPage"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.instagramPage = rightAuthor.instagramPage"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.instagramPage"
-            maxlength="5000"
-            icon-pack="mdi"
-            expanded
-            :icon="rightAuthor.instagramPage !== null ? 'arrow-left-bold' : ''"
-            readonly
-            :icon-clickable="rightAuthor.instagramPage !== null"
-            @icon-click="leftAuthor.instagramPage = rightAuthor.instagramPage"
-          />
-        </o-field>
-      </div>
-      <div class="field">
-        <o-field
-          :label="t('author.personal_notes')"
-          class="capitalize"
-        >
-          <o-input
+            type="text"
+            class="input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend capitalize">
+          {{ t('author.personal_notes') }}
+        </legend>
+        <label class="input w-full">
+          <svg 
+            v-if="rightAuthor.notes"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6 hover:cursor-pointer"
+            @click="leftAuthor.notes = rightAuthor.notes"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+          <input
             v-model="rightAuthor.notes"
-            maxlength="5000"
-            type="textarea"
-            icon-pack="mdi"
-            expanded
-            :icon="rightAuthor.notes !== null ? 'arrow-left-bold' : ''"
-            readonly
-            :icon-clickable="rightAuthor.notes !== null"
-            @icon-click="leftAuthor.notes = rightAuthor.notes"
-          />
-        </o-field>
-      </div>
-      <div v-if="rightHasImage">
-        <o-field>
-          <div class="indicator w-full">
-            <span
-              class="badge indicator-item indicator-bottom indicator-start cursor-pointer"
-              @click="leftAuthor.image = rightAuthor.image"
+            type="text"
+            class="input" 
+            disabled
+          >
+        </label>
+      </fieldset>
+      <div
+        v-if="rightHasImage"
+        class="sm:mt-3"
+      >
+        <div class="indicator w-full">
+          <span
+            class="badge indicator-item indicator-bottom indicator-start cursor-pointer"
+            @click="leftAuthor.image = rightAuthor.image"
+          >
+            <i class="mdi mdi-arrow-left-bold" />
+          </span>
+          <figure class="">
+            <img
+              :src="'/files/' + rightAuthor.image"
+              :class="leftDeleteImage ? 'altered' : ''"
+              alt="cover image"
             >
-              <i class="mdi mdi-arrow-left-bold" />
-            </span>
-            <figure class="">
-              <img
-                :src="'/files/' + rightAuthor.image"
-                :class="leftDeleteImage ? 'altered' : ''"
-                alt="cover image"
-              >
-            </figure>
-          </div>
-        </o-field>
+          </figure>
+        </div>
       </div>
     </div>
     <div class="mt-2 col-span-2">
@@ -593,5 +662,9 @@ const options = computed(() => {
   />
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
+    @apply w-full;
+  }
 </style>

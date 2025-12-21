@@ -951,7 +951,7 @@ const displayDatepicker = computed(() => {
                 v-model="form.owned"
                 type="checkbox"
                 class="checkbox checkbox-primary"
-              ></input>
+              >
               {{ ownedDisplay }}
             </label>
           </fieldset>
@@ -964,7 +964,7 @@ const displayDatepicker = computed(() => {
                 v-model="form.toRead"
                 type="checkbox"
                 class="checkbox checkbox-primary"
-              ></input>
+              >
               {{ toReadDisplay }}
             </label>
           </fieldset>
@@ -977,7 +977,7 @@ const displayDatepicker = computed(() => {
                 v-model="form.borrowed"
                 type="checkbox"
                 class="checkbox checkbox-primary"
-              ></input>
+              >
               {{ borrowedDisplay }}
             </label>
           </fieldset>
@@ -1090,7 +1090,7 @@ const displayDatepicker = computed(() => {
                   <input
                     v-model="uploadType"
                     type="radio"
-                    name="radio-10"
+                    name="radio-11"
                     class="radio radio-primary mx-3"
                     value="web"
                   >
@@ -1100,7 +1100,7 @@ const displayDatepicker = computed(() => {
                   <input
                     v-model="uploadType"
                     type="radio"
-                    name="radio-10"
+                    name="radio-11"
                     class="radio radio-primary mx-3"
                     value="computer"
                   >
@@ -1110,7 +1110,7 @@ const displayDatepicker = computed(() => {
                   <input
                     v-model="uploadType"
                     type="radio"
-                    name="radio-10"
+                    name="radio-11"
                     class="radio radio-primary mx-3"
                     value="server"
                   >

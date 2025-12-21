@@ -97,24 +97,42 @@ const deleteEvent = () => {
           <label class="label">
             <span class="label-text font-semibold">{{ t('reading_events.last_event_type') }} : </span>
           </label>
-          <o-radio
-            v-model="currentEvent.eventType"
-            native-value="FINISHED"
-          >
-            {{ t('reading_events.finished') }}
-          </o-radio>
-          <o-radio
-            v-model="currentEvent.eventType"
-            native-value="CURRENTLY_READING"
-          >
-            {{ t('reading_events.currently_reading') }}
-          </o-radio>
-          <o-radio
-            v-model="currentEvent.eventType"
-            native-value="DROPPED"
-          >
-            {{ t('reading_events.dropped') }}
-          </o-radio>
+          <div class="field">
+            <input
+              v-model="currentCreateEvent.eventType"
+              type="radio"
+              name="radio-28"
+              class="radio radio-primary my-2"
+              value="FINISHED"
+            >
+            <span class="label-text ml-2">
+              {{ t('reading_events.finished') }}
+            </span>
+          </div>
+          <div class="field">
+            <input
+              v-model="currentCreateEvent.eventType"
+              type="radio"
+              name="radio-28"
+              class="radio radio-primary my-2"
+              value="CURRENTLY_READING"
+            >
+            <span class="label-text ml-2">
+              {{ t('reading_events.currently_reading') }}
+            </span>
+          </div>
+          <div class="field">
+            <input
+              v-model="currentCreateEvent.eventType"
+              type="radio"
+              name="radio-28"
+              class="radio radio-primary my-2"
+              value="DROPPED"
+            >
+            <span class="label-text ml-2">
+              {{ t('reading_events.dropped') }}
+            </span>
+          </div>
         </div>
         <div class="field">
           <label class="label">
@@ -216,24 +234,42 @@ const deleteEvent = () => {
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_type') }} : </span>
           </label>
-          <o-radio
-            v-model="currentCreateEvent.eventType"
-            native-value="FINISHED"
-          >
-            {{ t('reading_events.finished') }}
-          </o-radio>
-          <o-radio
-            v-model="currentCreateEvent.eventType"
-            native-value="CURRENTLY_READING"
-          >
-            {{ t('reading_events.currently_reading') }}
-          </o-radio>
-          <o-radio
-            v-model="currentCreateEvent.eventType"
-            native-value="DROPPED"
-          >
-            {{ t('reading_events.dropped') }}
-          </o-radio>
+          <div class="field">
+            <input
+              v-model="currentCreateEvent.eventType"
+              type="radio"
+              name="radio-29"
+              class="radio radio-primary my-2"
+              value="FINISHED"
+            >
+            <span class="label-text ml-2">
+              {{ t('reading_events.finished') }}
+            </span>
+          </div>
+          <div class="field">
+            <input
+              v-model="currentCreateEvent.eventType"
+              type="radio"
+              name="radio-29"
+              class="radio radio-primary my-2"
+              value="CURRENTLY_READING"
+            >
+            <span class="label-text ml-2">
+              {{ t('reading_events.currently_reading') }}
+            </span>
+          </div>
+          <div class="field">
+            <input
+              v-model="currentCreateEvent.eventType"
+              type="radio"
+              name="radio-29"
+              class="radio radio-primary my-2"
+              value="DROPPED"
+            >
+            <span class="label-text ml-2">
+              {{ t('reading_events.dropped') }}
+            </span>
+          </div>
         </div>
         <div
           v-if="currentEvent.eventType === ReadingEventType.CURRENTLY_READING"

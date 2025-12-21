@@ -48,6 +48,7 @@ watch(shiftF, (v) => {
     :fullheight="true"
     :fullwidth="false"
     :overlay="false"
+    class="jl-sidebar"
     :scroll="scroll"
     :teleport="true"
     @close="emit('update:open', false)"
@@ -55,20 +56,24 @@ watch(shiftF, (v) => {
     <div class="p-5 flex flex-col items-start">
       <label class="label font-bold">{{ t('sorting.sort_order') }} : </label>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortOrder"
-          native-value="desc"
+          type="radio"
+          name="radio-10"
+          class="radio radio-primary my-2"
+          value="desc"
         >
-          {{ t('sorting.descending') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.descending') }}</span>
       </div>
-      <div class="field">
-        <o-radio
+      <div class="field mt-1">
+        <input
           v-model="sortOrder"
-          native-value="asc"
+          type="radio"
+          name="radio-10"
+          class="radio radio-primary mb-2"
+          value="asc"
         >
-          {{ t('sorting.ascending') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.ascending') }}</span>
       </div>
       <slot name="sort-fields" />
       <slot name="filters" />

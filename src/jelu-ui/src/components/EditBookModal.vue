@@ -812,7 +812,7 @@ if (userbook.value.book.publisher != null) {
                 <input
                   v-model="uploadType"
                   type="radio"
-                  name="radio-10"
+                  name="radio-11"
                   class="radio radio-primary"
                   value="web"
                 >
@@ -820,7 +820,7 @@ if (userbook.value.book.publisher != null) {
                 <input
                   v-model="uploadType"
                   type="radio"
-                  name="radio-10"
+                  name="radio-11"
                   class="radio radio-primary"
                   value="computer"
                 >
@@ -828,7 +828,7 @@ if (userbook.value.book.publisher != null) {
                 <input
                   v-model="uploadType"
                   type="radio"
-                  name="radio-10"
+                  name="radio-11"
                   class="radio radio-primary"
                   value="server"
                 >

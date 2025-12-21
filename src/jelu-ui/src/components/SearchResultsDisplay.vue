@@ -151,166 +151,228 @@ if (searchQuery.value != null) {
     <template #sort-fields>
       <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('sorting.sort_by') }} : </label>
-        <o-radio
-          v-model="sortBy"
-          native-value="title"
-        >
-          {{ t('sorting.title') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="publisher"
-        >
-          {{ t('sorting.publisher') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="series"
-        >
-          {{ t('sorting.series') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="publishedDate"
-        >
-          {{ t('sorting.publication_date') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="pageCount"
-        >
-          {{ t('sorting.page_count') }}
-        </o-radio>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="title"
+          >
+          <span class="label-text">{{ t('sorting.title') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="publisher"
+          >
+          <span class="label-text">{{ t('sorting.publisher') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="series"
+          >
+          <span class="label-text">{{ t('sorting.series') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="publishedDate"
+          >
+          <span class="label-text">{{ t('sorting.publication_date') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="pageCount"
+          >
+          <span class="label-text">{{ t('sorting.page_count') }}</span>
+        </div>
       </div>
     </template>
     <template #filters>
       <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('filtering.books_type') }} : </label>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ANY"
-        >
-          {{ t('filtering.any') }}
-        </o-radio>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ONLY_USER_BOOKS"
-        >
-          {{ t('filtering.only_in_my_list') }}
-        </o-radio>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ONLY_NON_USER_BOOKS"
-        >
-          {{ t('filtering.only_not_in_my_list') }}
-        </o-radio>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ANY"
+          >
+          <span class="label-text">{{ t('filtering.any') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ONLY_USER_BOOKS"
+          >
+          <span class="label-text">{{ t('filtering.only_in_my_list') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ONLY_NON_USER_BOOKS"
+          >
+          <span class="label-text">{{ t('filtering.only_not_in_my_list') }}</span>
+        </div>
       </div>
       <div class="field capitalize flex flex-col gap-1">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="FINISHED"
-        >
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="FINISHED"
+          >
           {{ t('reading_events.finished') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="CURRENTLY_READING"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="CURRENTLY_READING"
+          >
           {{ t('reading_events.currently_reading') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="DROPPED"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="DROPPED"
+          >
           {{ t('reading_events.dropped') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="NONE"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="NONE"
+          >
           {{ t('reading_events.none') }}
-        </o-checkbox>
+        </label>
       </div>
       <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.book_in_list') }} : </label>
         <div class="field">
-          <o-radio
+          <input
             v-model="toRead"
-            native-value="null"
+            type="radio"
+            name="radio-28"
+            class="radio radio-primary my-2"
+            value="null"
           >
-            {{ t('filtering.unset') }}
-          </o-radio>
+          <span class="label-text">{{ t('filtering.unset') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="toRead"
-            native-value="false"
+            type="radio"
+            name="radio-28"
+            class="radio radio-primary mb-2"
+            value="false"
           >
-            {{ t('labels.false') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.false') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="toRead"
-            native-value="true"
+            type="radio"
+            name="radio-28"
+            class="radio radio-primary"
+            value="true"
           >
-            {{ t('labels.true') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.true') }}</span>
         </div>
       </div>
       <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.owned') }} : </label>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="null"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary my-2"
+            value="null"
           >
-            {{ t('filtering.unset') }}
-          </o-radio>
+          <span class="label-text">{{ t('filtering.unset') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="false"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary mb-2"
+            value="false"
           >
-            {{ t('labels.false') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.false') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="true"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary"
+            value="true"
           >
-            {{ t('labels.true') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.true') }}</span>
         </div>
       </div>
       <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.borrowed') }} : </label>
         <div class="field">
-          <o-radio
+          <input
             v-model="borrowed"
-            native-value="null"
+            type="radio"
+            name="radio-34"
+            class="radio radio-primary my-2"
+            value="null"
           >
-            {{ t('filtering.unset') }}
-          </o-radio>
+          <span class="label-text">{{ t('filtering.unset') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="borrowed"
-            native-value="false"
+            type="radio"
+            name="radio-34"
+            class="radio radio-primary mb-2"
+            value="false"
           >
-            {{ t('labels.false') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.false') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="borrowed"
-            native-value="true"
+            type="radio"
+            name="radio-34"
+            class="radio radio-primary"
+            value="true"
           >
-            {{ t('labels.true') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.true') }}</span>
         </div>
       </div>
     </template>
@@ -362,9 +424,9 @@ if (searchQuery.value != null) {
   >
     <div class="basis-full sm:basis-5/12">
       <div class="basis-full content-center items-center">
-        <div class="join">
-          <div>
-            <label class="input validator join-item">
+        <div class="join w-full">
+          <div class="w-full">
+            <label class="input validator join-item w-full">
               <svg
                 class="h-[1em] opacity-50"
                 xmlns="http://www.w3.org/2000/svg"

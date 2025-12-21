@@ -60,12 +60,14 @@ watch(() => [userBookUpdate.value.currentPageNumber, userBookUpdate.value.percen
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('book.percent_read') }} : </span>
           </label>
-          <o-slider
+          <input
             v-model="userBookUpdate.percentRead"
-            :min="0"
-            :max="100"
+            type="range"
+            min="0"
+            max="100"
             :disabled="pageCount != null"
-          />
+            class="range range-xs range-primary"
+          >
         </div>
         <div
           v-if="pageCount != null"
@@ -74,14 +76,14 @@ watch(() => [userBookUpdate.value.currentPageNumber, userBookUpdate.value.percen
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('book.current_page_number') }} : </span>
           </label>
-          <o-input
+          <input
             v-model="userBookUpdate.currentPageNumber"
             type="number"
             min="0"
             :max="pageCount"
             :disabled="pageCount == null"
             class="input focus:input-accent"
-          />
+          >
         </div>
         <div class="mt-3 place-self-center">
           <button

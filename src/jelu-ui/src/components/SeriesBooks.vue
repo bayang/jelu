@@ -134,65 +134,101 @@ getBooks()
     <template #sort-fields>
       <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('sorting.sort_by') }} : </label>
-        <o-radio
-          v-model="sortBy"
-          native-value="title"
-        >
-          {{ t('sorting.title') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="publisher"
-        >
-          {{ t('sorting.publisher') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="numberInSeries"
-        >
-          {{ t('sorting.series_number') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="publishedDate"
-        >
-          {{ t('sorting.publication_date') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="modificationDate"
-        >
-          {{ t('sorting.modification_date') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="pageCount"
-        >
-          {{ t('sorting.page_count') }}
-        </o-radio>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="title"
+          >
+          <span class="label-text">{{ t('sorting.title') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="publisher"
+          >
+          <span class="label-text">{{ t('sorting.publisher') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="numberInSeries"
+          >
+          <span class="label-text">{{ t('sorting.series_number') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="publishedDate"
+          >
+          <span class="label-text">{{ t('sorting.publication_date') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="modificationDate"
+          >
+          <span class="label-text">{{ t('sorting.modification_date') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="pageCount"
+          >
+          <span class="label-text">{{ t('sorting.page_count') }}</span>
+        </div>
       </div>
     </template>
     <template #filters>
       <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('filtering.books_type') }} : </label>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ANY"
-        >
-          {{ t('filtering.any') }}
-        </o-radio>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ONLY_USER_BOOKS"
-        >
-          {{ t('filtering.only_in_my_list') }}
-        </o-radio>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ONLY_NON_USER_BOOKS"
-        >
-          {{ t('filtering.only_not_in_my_list') }}
-        </o-radio>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ANY"
+          >
+          <span class="label-text">{{ t('filtering.any') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ONLY_USER_BOOKS"
+          >
+          <span class="label-text">{{ t('filtering.only_in_my_list') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ONLY_NON_USER_BOOKS"
+          >
+          <span class="label-text">{{ t('filtering.only_not_in_my_list') }}</span>
+        </div>
       </div>
     </template>
   </sort-filter-bar-vue>

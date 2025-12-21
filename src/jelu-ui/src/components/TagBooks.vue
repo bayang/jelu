@@ -112,94 +112,143 @@ getBooks()
     @update:sort-order="sortOrderUpdated"
   >
     <template #sort-fields>
-      <div class="field flex flex-col items-start gap-1">
+      <div class="flex flex-col gap-1">
         <label class="label">{{ t('sorting.sort_by') }} : </label>
-        <o-radio
-          v-model="sortBy"
-          native-value="title"
-        >
-          {{ t('sorting.title') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="publisher"
-        >
-          {{ t('sorting.publisher') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="series"
-        >
-          {{ t('sorting.series') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="publishedDate"
-        >
-          {{ t('sorting.publication_date') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="modificationDate"
-        >
-          {{ t('sorting.modification_date') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="random"
-        >
-          {{ t('sorting.random') }}
-        </o-radio>
-        <o-radio
-          v-model="sortBy"
-          native-value="pageCount"
-        >
-          {{ t('sorting.page_count') }}
-        </o-radio>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="title"
+          >
+          <span class="label-text">{{ t('sorting.title') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="publisher"
+          >
+          <span class="label-text">{{ t('sorting.publisher') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="series"
+          >
+          <span class="label-text">{{ t('sorting.series') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="publishedDate"
+          >
+          <span class="label-text">{{ t('sorting.publication_date') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="modificationDate"
+          >
+          <span class="label-text">{{ t('sorting.modification_date') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary"
+            value="random"
+          >
+          <span class="label-text">{{ t('sorting.random') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="pageCount"
+          >
+          <span class="label-text">{{ t('sorting.page_count') }}</span>
+        </div>
       </div>
     </template>
     <template #filters>
-      <div class="field flex flex-col items-start gap-1">
+      <div class="flex flex-col gap-1">
         <label class="label">{{ t('filtering.books_type') }} : </label>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ANY"
-        >
-          {{ t('filtering.any') }}
-        </o-radio>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ONLY_USER_BOOKS"
-        >
-          {{ t('filtering.only_in_my_list') }}
-        </o-radio>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ONLY_NON_USER_BOOKS"
-        >
-          {{ t('filtering.only_not_in_my_list') }}
-        </o-radio>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-2"
+            value="ANY"
+          >
+          <span class="label-text">{{ t('filtering.any') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-2"
+            value="ONLY_USER_BOOKS"
+          >
+          <span class="label-text">{{ t('filtering.only_in_my_list') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-2"
+            value="ONLY_NON_USER_BOOKS"
+          >
+          <span class="label-text">{{ t('filtering.only_not_in_my_list') }}</span>
+        </div>
       </div>
-      <div class="field capitalize flex flex-col gap-1">
+      <div class="capitalize flex flex-col gap-1">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="FINISHED"
-        >
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="FINISHED"
+          >
           {{ t('reading_events.finished') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="CURRENTLY_READING"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="CURRENTLY_READING"
+          >
           {{ t('reading_events.currently_reading') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="DROPPED"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="DROPPED"
+          >
           {{ t('reading_events.dropped') }}
-        </o-checkbox>
+        </label>
       </div>
     </template>
   </sort-filter-bar-vue>
@@ -309,13 +358,7 @@ getBooks()
 <style scoped>
 
 label {
-  margin: 0 0.5em;
   font-weight: bold;
-}
-
-/* fields in side bar slots are shifted to the right and alignment is broken */
-.field {
-  margin-left: -8px;
 }
 
 </style>

@@ -15,7 +15,6 @@
   --jelu_text_secondary : #aaaaaa;
   --jelu_text_accent : #69ea7d;
 
-  --jelu_test : #69ea7d;
 }
 
 @plugin "daisyui/theme" {
@@ -106,11 +105,7 @@
   --oruga-input-background-color: var(--color-base-100);
   --oruga-input-color: var(--color-base-content);
   
-  /* --oruga-taginput-background-color: var(--color-base-content); */
   --oruga-taginput-border-color: var(--color-base-100);
-  /* --oruga-taginput-color: var(--color-primary); */
-  /* --oruga-taginput-item-background-color: var(--color-primary); */
-  /* --oruga-taginput-item-color: var(--color-primary-content); */
 
   --oruga-autocomplete-item-color: var(--color-primary-content);
   --oruga-autocomplete-item-hover-background-color: var(--color-primary-content);
@@ -125,42 +120,10 @@
 
 
 /* oruga customization with daisyui */
-.input.o-dpck {
-  @apply px-0;
-}
-
-/* .o-chk__input { */
-  /* @apply bg-none; */
-/* } */
-
-.o-checkbox .o-checkbox__input {
-  @apply checkbox checkbox-primary;
-}
-
-.o-button.o-button--outlined-success {
-  @apply btn btn-outline btn-success;
-}
-
-.o-button..o-button--outlined-warning {
-  @apply btn btn-outline btn-warning;
-}
-
-.o-button.o-button--outlined-info {
-  @apply btn btn-outline btn-info;
-}
 
 .o-sidebar__content.o-sidebar__content--left {
   @apply bg-base-100 w-fit;
 }
-
-.o-radio .o-radio__input{
-  @apply radio radio-sm radio-primary bg-none;
-
-}
-
-/* .o-pag__link { */
-  /* @apply btn text-neutral-content!; */
-/* } */
 
 .o-pagination .o-pagination__button {
   @apply btn;
@@ -170,10 +133,6 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
   @apply btn-active btn-accent;
 }
 
-/* .o-pag__link.o-pag__link--current { */
-  /* @apply btn btn-active bg-primary text-primary-content!; */
-/* } */
-
 .o-pagination__ellipsis {
   @apply p-2;
 }
@@ -182,49 +141,11 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
   @apply bg-white;
 }
 
-.o-field.o-field--horizontal .o-field__horizontal-label .o-field__label {
-  @apply text-base-content;
-}
-
-.o-field .o-field__label {
-  @apply text-base-content;
-}
-
-.o-field.o-field--addons .o-input__wrapper {
-  @apply w-full;
-
-  .o-input {
-    @apply w-full;
-  }
-}
-
-.o-field.o-field--filled {
- @apply w-full;
-}
-
-.o-field__horizontal-body {
- @apply w-full;
-}
-
-.o-field.o-field--filled .o-input__wrapper .o-input {
- @apply w-full;
-} 
-
 .o-input.o-inputit__input {
   @apply w-fit sm:w-full bg-base-100 text-base-content focus:input-accent;
 }
 
-.o-input__wrapper {
-    @apply flex;
-}
-
-.o-input__wrapper .o-input {
-    @apply focus:input-accent bg-white w-full;
-}
-
-.o-input--expanded input {
-  @apply w-full;
-}
+/* left icon color in autocomplete and taginput */
 .o-icon.o-input__icon-left {
     @apply text-accent-content;
 }
@@ -245,18 +166,6 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
     @apply text-gray-700;
 }
 
-/* .o-ctrl-input > input[type="number"] { */
-    /* @apply w-24; */
-/* } */
-
-/* .o-acp .o-input { */
-  /* @apply w-fit sm:w-full bg-base-100 text-base-content border-base-200 focus:input-accent grow; */
-/* } */
-
-/* .o-acp { */
-    /* @apply grow!; */
-/* } */
-
 .o-dropdown__menu {
     @apply w-full grow;
 }
@@ -269,46 +178,14 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
   @apply hover:bg-accent;
 }
 
-/* .o-drop .o-tpck__dropdown { */
-  /* height: 100%; */
-  /* width: 100%; */
-/* } */
-
 .o-taginput .o-taginput__container {
     @apply w-full sm:w-full items-center h-fit;
 }
 
-.o-taginput__autocomplete {
- height: 100%;
+.jl-sidebar .label-text {
+  @apply ml-2;
 }
 
-.o-input.o-taginput__input {
-  height: 100%;
-}
-
-/* .o-chk__label { */
-  /* @apply text-lg; */
-/* } */
-
-.o-radio__label {
-  @apply text-lg;
-}
-
-.o-input .o-input__input.o-taginput__input {
-  /* @apply bg-base-100!; */
-}
-
-.o-field .o-autocomplete {
-  @apply w-full;
-}
-
-.o-field .o-autocomplete .o-input {
-  @apply w-full;
-}
-
-.o-field .o-autocomplete .o-input input {
-  @apply w-full;
-}
 /* end oruga customization with daisyui */
 
 .providers-ids .o-field__horizontal-body {
@@ -436,10 +313,6 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
   @apply capitalize truncate;
 }
 /* end dashboard sidebar */
-
-.o-taginput__item {
-  @apply items-center;
-}
 
 .jelu-authorinput .o-taginput__item {
   @apply bg-success rounded-sm mx-1;
