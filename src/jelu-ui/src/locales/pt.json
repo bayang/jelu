@@ -150,7 +150,7 @@
         "shelves": "Prateleiras",
         "shelves_max_number_reached": "O número máximo de prateleiras foi atingido. Apague já existentes para adicionar mais.",
         "shelf_choose_tag": "Escolha uma etiqueta para criar a prateleira correspondente",
-        "custom_lists": "custom lists"
+        "custom_lists": "listas personalizadas"
     },
     "user": {
         "log_first": "Por favor, inicie sessão primeiro"
@@ -259,7 +259,7 @@
         "wikipedia_page": "página wikipédia",
         "goodreads_page": "página goodreads",
         "twitter_page": "página twitter",
-        "x_page": "X page",
+        "x_page": "Página X",
         "facebook_page": "página facebook",
         "instagram_page": "página instagram",
         "personal_notes": "notas pessoais",
@@ -294,7 +294,7 @@
         "password_not_match": "o campos de palavra-passe não coincide",
         "login_length": "o utilizador deve ter no mínimo 3 caracteres",
         "password_length": "a palavra-passe deve ter no mínimo 3 caracteres",
-        "username": "username"
+        "username": "utilizador"
     },
     "admin_user": {
         "create_user": "criar utilizador",
@@ -346,8 +346,8 @@
         "add": "Adicionar",
         "remove": "Remover",
         "choose_tag": "Escolha a etiqueta que deseja adicionar ou remover",
-        "add_tag": "add tag",
-        "remove_tag": "remove tag"
+        "add_tag": "adicionar uma etiqueta",
+        "remove_tag": "remover etiqueta"
     },
     "reviews": {
         "create_review": "Criar avaliação",
@@ -400,17 +400,17 @@
         "details": "detalhes do erro"
     },
     "lists": {
-        "create_list": "create a custom list",
-        "name": "name",
-        "public": "public",
-        "actionable": "actionable",
-        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
-        "tags": "tags",
-        "tags_desc": "The list will display the items that match all the chosen tags.",
-        "create": "create",
-        "remove": "remove selected",
-        "empty": "list is empty",
-        "edit_list": "edit the list",
-        "update_list": "update the list"
+        "create_list": "criar uma lista personalizada",
+        "name": "nome",
+        "public": "público",
+        "actionable": "acionável",
+        "actionable_desc": "Itens de uma lista acionável podem ser clicados para serem removidos.",
+        "tags": "etiquetas",
+        "tags_desc": "A lista irá exibir os itens que correspondem a todas as etiquetas escolhidos.",
+        "create": "criar",
+        "remove": "remover selecionado",
+        "empty": "lista está vazia",
+        "edit_list": "editar a lista",
+        "update_list": "atualizar a lista"
     }
 }
