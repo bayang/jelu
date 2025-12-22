@@ -125,7 +125,8 @@
         "find-series": "find a series",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "find-authors": "find authors",
+        "list_empty": "list is empty"
     },
     "settings": {
         "pick_language": "Vælg dit sprog",
@@ -172,7 +173,8 @@
         "modification_date": "Ændringsdato",
         "page_count": "Sideantal",
         "user_avg_rating": "min gennemsnitlige bedømmelse",
-        "avg_rating": "gennemsnitlig bedømmelse"
+        "avg_rating": "gennemsnitlig bedømmelse",
+        "name": "name"
     },
     "reading_events": {
         "finished": "færdig",
@@ -201,7 +203,9 @@
         "only_not_in_my_list": "Kun bøger ikke på mine lister",
         "owned": "Bogen ejes",
         "role": "Rolle",
-        "borrowed": "Bogen er lånt"
+        "borrowed": "Bogen er lånt",
+        "filter": "filter",
+        "type_to_filter": "type to filter"
     },
     "book": {
         "owned": "ejet",

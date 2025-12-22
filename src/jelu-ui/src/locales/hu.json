@@ -125,7 +125,8 @@
         "find-series": "find a series",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "find-authors": "find authors",
+        "list_empty": "list is empty"
     },
     "settings": {
         "pick_language": "Nyelv kiválasztása",
@@ -172,7 +173,8 @@
         "modification_date": "Módosítás dátuma",
         "page_count": "Oldalak száma",
         "user_avg_rating": "Átlagos értékelésem",
-        "avg_rating": "Átlagos értékelés"
+        "avg_rating": "Átlagos értékelés",
+        "name": "name"
     },
     "reading_events": {
         "finished": "befejezve",
@@ -201,7 +203,9 @@
         "only_not_in_my_list": "Csak a listában nem szereplő könyvek",
         "owned": "Saját könyv",
         "role": "Szerep",
-        "borrowed": "Kölcsönadott könyv"
+        "borrowed": "Kölcsönadott könyv",
+        "filter": "filter",
+        "type_to_filter": "type to filter"
     },
     "book": {
         "owned": "saját",

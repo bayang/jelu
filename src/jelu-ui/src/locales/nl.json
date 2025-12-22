@@ -125,7 +125,8 @@
         "find-series": "vind een serie",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "auteurs vinden"
+        "find-authors": "auteurs vinden",
+        "list_empty": "list is empty"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -172,7 +173,8 @@
         "modification_date": "Bewerkingsdatum",
         "page_count": "Aantal pagina's",
         "user_avg_rating": "mijn gemiddelde beoordeling",
-        "avg_rating": "gemiddelde beoordeling"
+        "avg_rating": "gemiddelde beoordeling",
+        "name": "name"
     },
     "reading_events": {
         "finished": "voltooid",
@@ -201,7 +203,9 @@
         "only_not_in_my_list": "Alleen boeken die niet in mijn lijsten staan",
         "owned": "Boek is in eigendom",
         "role": "Rol",
-        "borrowed": "Boek is geleend"
+        "borrowed": "Boek is geleend",
+        "filter": "filter",
+        "type_to_filter": "type to filter"
     },
     "book": {
         "owned": "in bezit",

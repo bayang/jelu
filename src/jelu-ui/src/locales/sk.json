@@ -125,7 +125,8 @@
         "find-series": "Nájsť sériu",
         "delete_this_author": "Vymazať tohto autora z {nb} knihy (kníh) a z databázy?",
         "orphan_authors": "Osamotení autori",
-        "find-authors": "Nájsť autorov"
+        "find-authors": "Nájsť autorov",
+        "list_empty": "list is empty"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
@@ -172,7 +173,8 @@
         "modification_date": "Dátum úpravy",
         "page_count": "Počet strán",
         "user_avg_rating": "moje priemerné hodnotenie",
-        "avg_rating": "priemerné hodnotenie"
+        "avg_rating": "priemerné hodnotenie",
+        "name": "name"
     },
     "reading_events": {
         "finished": "prečítaná",
@@ -201,7 +203,9 @@
         "only_not_in_my_list": "Iba knihy, ktoré nie sú v mojich zoznamoch",
         "owned": "Kniha je vo vlastníctve",
         "role": "Rola",
-        "borrowed": "Kniha je požičaná"
+        "borrowed": "Kniha je požičaná",
+        "filter": "filter",
+        "type_to_filter": "type to filter"
     },
     "book": {
         "owned": "vo vlastníctve",

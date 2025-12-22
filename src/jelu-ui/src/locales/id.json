@@ -125,7 +125,8 @@
         "find-series": "find a series",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "find-authors": "find authors",
+        "list_empty": "list is empty"
     },
     "settings": {
         "pick_language": "Pilih bahasa",
@@ -172,7 +173,8 @@
         "modification_date": "Tanggal diubah",
         "page_count": "Jumlah halaman",
         "user_avg_rating": "rating rata-rata saya",
-        "avg_rating": "rating rata-rata"
+        "avg_rating": "rating rata-rata",
+        "name": "name"
     },
     "reading_events": {
         "finished": "selesai",
@@ -201,7 +203,9 @@
         "only_not_in_my_list": "Hanya buku tidak di daftar saya",
         "owned": "Buku dimiliki",
         "role": "Peran",
-        "borrowed": "Buku dipinjam"
+        "borrowed": "Buku dipinjam",
+        "filter": "filter",
+        "type_to_filter": "type to filter"
     },
     "book": {
         "owned": "dimiliki",
