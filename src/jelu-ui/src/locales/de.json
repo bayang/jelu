@@ -126,7 +126,7 @@
         "delete_this_author": "Diese(n) Autor:in aus {nb} Buch/Büchern und aus der Datenbank löschen?",
         "orphan_authors": "verwaiste Autor:innen",
         "find-authors": "Autor:innen finden",
-        "list_empty": "list is empty"
+        "list_empty": "Liste ist leer"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -174,7 +174,7 @@
         "page_count": "Anzahl der Seiten",
         "user_avg_rating": "Meine durchschnittliche Bewertung",
         "avg_rating": "durchschnittliche Bewertung",
-        "name": "name"
+        "name": "Name"
     },
     "reading_events": {
         "finished": "beendet",
@@ -204,8 +204,8 @@
         "owned": "Buch im Besitz",
         "role": "Rolle",
         "borrowed": "Buch ist verliehen",
-        "filter": "filter",
-        "type_to_filter": "type to filter"
+        "filter": "Filter",
+        "type_to_filter": "Zum Filtern schreiben"
     },
     "book": {
         "owned": "Im Besitz",
