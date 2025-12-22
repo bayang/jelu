@@ -1,3 +1,10 @@
+## [0.76.0](https://github.com/bayang/jelu/compare/v0.75.2...v0.76.0) (2025-12-22)
+
+
+### Features
+
+* authors list [#244](https://github.com/bayang/jelu/issues/244) ([f5a2610](https://github.com/bayang/jelu/commit/f5a26102651a28596717c4eb280868f804a0dd47))
+
 ### [0.75.2](https://github.com/bayang/jelu/compare/v0.75.1...v0.75.2) (2025-12-21)
 
 ### [0.75.1](https://github.com/bayang/jelu/compare/v0.75.0...v0.75.1) (2025-12-19)
