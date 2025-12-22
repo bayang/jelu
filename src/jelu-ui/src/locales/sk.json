@@ -126,7 +126,7 @@
         "delete_this_author": "Vymazať tohto autora z {nb} knihy (kníh) a z databázy?",
         "orphan_authors": "Osamotení autori",
         "find-authors": "Nájsť autorov",
-        "list_empty": "list is empty"
+        "list_empty": "Zoznam je prázdny"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
@@ -174,7 +174,7 @@
         "page_count": "Počet strán",
         "user_avg_rating": "moje priemerné hodnotenie",
         "avg_rating": "priemerné hodnotenie",
-        "name": "name"
+        "name": "Meno"
     },
     "reading_events": {
         "finished": "prečítaná",
@@ -204,8 +204,8 @@
         "owned": "Kniha je vo vlastníctve",
         "role": "Rola",
         "borrowed": "Kniha je požičaná",
-        "filter": "filter",
-        "type_to_filter": "type to filter"
+        "filter": "Filtrovať",
+        "type_to_filter": "Napísaním filtrujte autorov"
     },
     "book": {
         "owned": "vo vlastníctve",
