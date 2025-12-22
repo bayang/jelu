@@ -125,7 +125,8 @@
         "find-series": "find a series",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "find-authors": "find authors",
+        "list_empty": "list is empty"
     },
     "settings": {
         "pick_language": "Pasirinkite kalbą",
@@ -172,7 +173,8 @@
         "modification_date": "Modifikacijos data",
         "page_count": "Puslapių skaičius",
         "user_avg_rating": "mano vidutinis įvertinimas",
-        "avg_rating": "vidutinis įvertinimas"
+        "avg_rating": "vidutinis įvertinimas",
+        "name": "name"
     },
     "reading_events": {
         "finished": "baigtas",
@@ -201,7 +203,9 @@
         "only_not_in_my_list": "Tik tos knygos, kurių nėra mano sąrašuose",
         "owned": "Knyga priklauso",
         "role": "Vaidmuo",
-        "borrowed": "Knyga pasiskolinta"
+        "borrowed": "Knyga pasiskolinta",
+        "filter": "filter",
+        "type_to_filter": "type to filter"
     },
     "book": {
         "owned": "priklauso",
