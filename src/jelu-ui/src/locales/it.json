@@ -125,7 +125,8 @@
         "find-series": "trova una collana",
         "delete_this_author": "Cancellare questo autore da {nb} libro/i e dal database?",
         "orphan_authors": "autori orfani",
-        "find-authors": "trova un autore"
+        "find-authors": "trova un autore",
+        "list_empty": "list is empty"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
@@ -172,7 +173,8 @@
         "modification_date": "Data di modifica",
         "page_count": "Numero di pagine",
         "user_avg_rating": "la mia valutazione media",
-        "avg_rating": "valutazione media"
+        "avg_rating": "valutazione media",
+        "name": "name"
     },
     "reading_events": {
         "finished": "terminato",
@@ -201,7 +203,9 @@
         "only_not_in_my_list": "Solo i libri non nelle mie liste",
         "owned": "Il libro è di proprietà",
         "role": "Ruolo",
-        "borrowed": "Il libro è preso in prestito"
+        "borrowed": "Il libro è preso in prestito",
+        "filter": "filter",
+        "type_to_filter": "type to filter"
     },
     "book": {
         "owned": "posseduto",
