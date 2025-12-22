@@ -126,7 +126,7 @@
         "delete_this_author": "Supprimer cet auteur de {nb} livre(s) et de la base de données ?",
         "orphan_authors": "auteurs orphelins",
         "find-authors": "rechercher des auteurs",
-        "list_empty": "list is empty"
+        "list_empty": "la liste est vide"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -174,7 +174,7 @@
         "page_count": "Nombre de pages",
         "user_avg_rating": "ma note moyenne",
         "avg_rating": "note moyenne",
-        "name": "name"
+        "name": "nom"
     },
     "reading_events": {
         "finished": "lu",
@@ -204,8 +204,8 @@
         "owned": "Possédé ?",
         "role": "Rôle",
         "borrowed": "Le livre est prêté",
-        "filter": "filter",
-        "type_to_filter": "type to filter"
+        "filter": "filtrer",
+        "type_to_filter": "tapez pour filtrer"
     },
     "book": {
         "owned": "possédé",
