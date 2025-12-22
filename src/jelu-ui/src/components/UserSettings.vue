@@ -10,7 +10,6 @@ const { t, locale, availableLocales } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
-const formKitConfig: any = inject(Symbol.for('FormKitConfig'))
 
 availableLocales.forEach(locale => {
       console.log(`${locale} locale `)
@@ -47,6 +46,12 @@ const themes = [
         "night",
         "coffee",
         "winter",
+        "dim",
+        "nord",
+        "sunset",
+        "caramellatte",
+        "abyss",
+        "silk",
       ];
 
 onMounted(() => {
@@ -57,13 +62,12 @@ watch(() => locale.value,(newValue, oldValue) => {
   console.log('locale changed: ' + newValue + " " + oldValue)
   const storedLanguage = useLocalStorage("jelu_language", oldValue)
   storedLanguage.value = newValue
-  formKitConfig.locale = newValue
 })
 
 </script>
 
 <template>
-  <div class="w-fit form-control">
+  <div class="w-fit flex flex-col">
     <label class="label">
       <span class="label-text text-lg">
         <svg
@@ -101,8 +105,6 @@ watch(() => locale.value,(newValue, oldValue) => {
     <label class="label">
       <span class="label-text-alt font-bold">{{ t('settings.theme_warning') }}</span>
     </label>
-  </div>
-  <div class="w-fit form-control">
     <label class="label">
       <span class="label-text text-lg">
         <svg

@@ -618,4 +618,49 @@
             ALTER TABLE book ADD inventaire_id varchar(128);
         </sql>
     </changeSet>
+    <changeSet id="create_book_narrators" author="byng">
+        <sql>CREATE TABLE book_narrators
+            (
+            narrator BLOB(16) NOT NULL,
+            book BLOB(16) NOT NULL,
+            PRIMARY KEY (narrator, book),
+            FOREIGN KEY (narrator) REFERENCES author(id) ON DELETE CASCADE,
+            FOREIGN KEY (book) REFERENCES book(id) ON DELETE CASCADE
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="add_custom_list" author="byng">
+        <createTable tableName="custom_list">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="user" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_custom_list_user_id" references="user(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="name" type="varchar(5000)"
+                    remarks="custom list name">
+                <constraints nullable="false" />
+            </column>
+            <column name="tags" type="varchar(5000)"
+                    remarks="tags applied to the list">
+                <constraints nullable="false" />
+            </column>
+            <column name="public" type="boolean"
+                    remarks="The list is public">
+                <constraints nullable="false" />
+            </column>
+            <column name="actionable" type="boolean"
+                    remarks="The list items are actionable">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

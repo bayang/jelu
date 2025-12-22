@@ -43,4 +43,5 @@ enum class Provider {
     LDAP,
     JELU_DB,
     PROXY,
+    OIDC,
 }

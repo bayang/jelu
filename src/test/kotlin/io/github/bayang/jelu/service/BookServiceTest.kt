@@ -9,6 +9,7 @@ import io.github.bayang.jelu.dto.AuthorDto
 import io.github.bayang.jelu.dto.AuthorUpdateDto
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
+import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
@@ -98,10 +99,10 @@ class BookServiceTest(
         bookService.findAllSeries(null, null, Pageable.ofSize(20)).content.forEach {
             bookService.deleteSeriesById(it.id!!)
         }
-        bookService.findAll(null, Pageable.ofSize(100), user(), LibraryFilter.ANY).forEach {
+        bookService.findAll(null, Pageable.ofSize(100), user(), null, null, null, null, LibraryFilter.ANY).forEach {
             bookService.deleteBookById(it.id!!)
         }
-        bookService.findAll(null, Pageable.ofSize(100), user2(), LibraryFilter.ANY).forEach {
+        bookService.findAll(null, Pageable.ofSize(100), user2(), null, null, null, null, LibraryFilter.ANY).forEach {
             bookService.deleteBookById(it.id!!)
         }
         luceneHelper.getIndexWriter().use { indexWriter ->
@@ -1247,6 +1248,76 @@ class BookServiceTest(
     }
 
     @Test
+    fun testDeletedAuthorShouldBeRemovedFromBookTranslatorsAndNarrators() {
+        val dto = BookCreateDto(
+            id = null,
+            title = "title",
+            isbn10 = "1566199093",
+            isbn13 = "9781566199094 ",
+            summary = "This is a test summary\nwith a newline",
+            image = "",
+            publisher = "test-publisher",
+            pageCount = 50,
+            publishedDate = "",
+            authors = mutableListOf(authorDto()),
+            translators = mutableListOf(authorDto()),
+            narrators = mutableListOf(authorDto()),
+            tags = emptyList(),
+            goodreadsId = "4321abc",
+            googleId = "1234",
+            librarythingId = "",
+            language = "",
+            amazonId = "",
+        )
+        val res: BookDto = bookService.save(bookDto(), null)
+        Assertions.assertNotNull(res.id)
+        val res2: BookDto = bookService.save(bookDto("title2"), null)
+        Assertions.assertNotNull(res2.id)
+        val res3: BookDto = bookService.save(dto, null)
+        Assertions.assertNotNull(res3.id)
+        Assertions.assertEquals(1, res3.translators?.size)
+        Assertions.assertEquals(1, res3.narrators?.size)
+        var entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
+        Assertions.assertEquals(3, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("translator:test", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("narrator:test", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors?.get(0)?.name, res.authors?.get(0)?.name)
+        Assertions.assertEquals(0, found.translators?.size)
+        Assertions.assertEquals(0, found.narrators?.size)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        val found1 = bookService.findBookById(res3.id!!)
+        Assertions.assertEquals(found1.id, res3.id)
+        Assertions.assertEquals(found1.authors?.get(0)?.name, res3.authors?.get(0)?.name)
+        Assertions.assertEquals(found1.translators?.get(0)?.name, res3.translators?.get(0)?.name)
+        Assertions.assertEquals(1, found1.translators?.size)
+        Assertions.assertEquals(found1.narrators?.get(0)?.name, res3.narrators?.get(0)?.name)
+        Assertions.assertEquals(1, found1.narrators?.size)
+        Assertions.assertEquals(found1.title, res3.title)
+        bookService.deleteAuthorById(found.authors?.get(0)?.id!!)
+        val foundAfterModification = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(0, foundAfterModification.authors?.size)
+        val foundAfterModification2 = bookService.findBookById(res2.id!!)
+        Assertions.assertEquals(0, foundAfterModification2.authors?.size)
+        val foundAfterModification3 = bookService.findBookById(res3.id!!)
+        Assertions.assertEquals(0, foundAfterModification3.authors?.size)
+        Assertions.assertEquals(0, foundAfterModification3.translators?.size)
+        Assertions.assertEquals(0, foundAfterModification3.narrators?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("translator:test", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("narrator:test", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+    }
+
+    @Test
     fun testDeleteAuthorOnlyFromOneBookStillExistsInDb() {
         val res: BookDto = bookService.save(bookDto(), null)
         Assertions.assertNotNull(res.id)
@@ -1331,6 +1402,62 @@ class BookServiceTest(
     }
 
     @Test
+    fun testDeleteNarratorOnlyFromOneBookStillExistsInDb() {
+        val dto = BookCreateDto(
+            id = null,
+            title = "title",
+            isbn10 = "1566199093",
+            isbn13 = "9781566199094 ",
+            summary = "This is a test summary\nwith a newline",
+            image = "",
+            publisher = "test-publisher",
+            pageCount = 50,
+            publishedDate = "",
+            // seriesBak = "",
+            authors = mutableListOf(authorDto()),
+            narrators = mutableListOf(authorDto()),
+            // numberInSeries = null,
+            tags = emptyList(),
+            goodreadsId = "4321abc",
+            googleId = "1234",
+            librarythingId = "",
+            language = "",
+            amazonId = "",
+        )
+        val res: BookDto = bookService.save(dto, null)
+        Assertions.assertNotNull(res.id)
+        Assertions.assertEquals(1, res.narrators?.size)
+        val res2: BookDto = bookService.save(bookDto("title2"), null)
+        Assertions.assertNotNull(res2.id)
+        var entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
+        Assertions.assertEquals(2, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("narrator:test", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors?.get(0)?.name, res.authors?.get(0)?.name)
+        Assertions.assertEquals(found.narrators?.get(0)?.name, res.narrators?.get(0)?.name)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        val authorId = res.narrators?.get(0)?.id
+        val authorName = res.narrators?.get(0)?.name
+        bookService.deleteNarratorFromBook(res.id!!, authorId!!)
+        val foundAfterModification = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(1, foundAfterModification.authors?.size)
+        Assertions.assertEquals(0, foundAfterModification.translators?.size)
+        val foundAfterModification2 = bookService.findBookById(res2.id!!)
+        Assertions.assertEquals(1, foundAfterModification2.authors?.size)
+        val authorStillInDb = bookService.findAuthorsById(authorId)
+        Assertions.assertEquals(authorName, authorStillInDb.name)
+        entitiesIds = luceneHelper.searchEntitiesIds("author:test", LuceneEntity.Book)
+        Assertions.assertEquals(2, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("narrator:test", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+    }
+
+    @Test
     fun testInsertUserbookWithNewBookNoImage() {
         var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)
@@ -1403,36 +1530,42 @@ class BookServiceTest(
         Assertions.assertEquals(update.percentRead, updated.percentRead)
         Assertions.assertEquals(update.currentPageNumber, updated.currentPageNumber)
         Assertions.assertNull(updated.book.pageCount)
+        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
         update = UserBookUpdateDto(percentRead = null, book = null, toRead = null, currentPageNumber = 20, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
         updated = bookService.update(saved.id!!, update)
-        Assertions.assertEquals(50, updated.percentRead)
+        Assertions.assertNull(updated.percentRead)
         Assertions.assertEquals(update.currentPageNumber, updated.currentPageNumber)
         Assertions.assertNull(updated.book.pageCount)
+        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
         update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = null, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
         updated = bookService.update(saved.id!!, update)
-        Assertions.assertEquals(50, updated.percentRead)
-        Assertions.assertEquals(20, updated.currentPageNumber)
+        Assertions.assertEquals(0, updated.percentRead)
+        Assertions.assertNull(updated.currentPageNumber)
         Assertions.assertEquals(update.book?.pageCount, updated.book.pageCount)
+        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
-        update = UserBookUpdateDto(percentRead = null, book = null, toRead = null, currentPageNumber = 40, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 40, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(40, updated.percentRead)
         Assertions.assertEquals(40, updated.currentPageNumber)
         Assertions.assertEquals(100, updated.book.pageCount)
+        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
-        update = UserBookUpdateDto(percentRead = null, book = null, toRead = null, currentPageNumber = 100, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 100, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(100, updated.percentRead)
         Assertions.assertEquals(100, updated.currentPageNumber)
         Assertions.assertEquals(100, updated.book.pageCount)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
-        update = UserBookUpdateDto(percentRead = null, book = null, toRead = null, currentPageNumber = 0, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 0, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(0, updated.percentRead)
         Assertions.assertEquals(0, updated.currentPageNumber)
         Assertions.assertEquals(100, updated.book.pageCount)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
     }
 
     @Test
@@ -1651,7 +1784,7 @@ class BookServiceTest(
         Assertions.assertEquals(createBook.isbn13?.trim(), saved.book.isbn13)
         Assertions.assertEquals("This is a test summary with a newline", saved.book.summary)
         Assertions.assertEquals(createBook.publisher, saved.book.publisher)
-        Assertions.assertEquals(createBook.pageCount, saved.book.pageCount)
+        Assertions.assertNull(saved.book.pageCount)
         Assertions.assertEquals(createBook.goodreadsId, saved.book.goodreadsId)
         Assertions.assertNull(saved.book.librarythingId)
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
@@ -1695,7 +1828,7 @@ class BookServiceTest(
         Assertions.assertEquals(createBook.isbn13?.trim(), saved.book.isbn13)
         Assertions.assertEquals("This is a test summary with a newline", saved.book.summary)
         Assertions.assertEquals(createBook.publisher, saved.book.publisher)
-        Assertions.assertEquals(createBook.pageCount, saved.book.pageCount)
+        Assertions.assertNull(saved.book.pageCount)
         Assertions.assertEquals(createBook.goodreadsId, saved.book.goodreadsId)
         Assertions.assertNull(saved.book.librarythingId)
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
@@ -1740,7 +1873,7 @@ class BookServiceTest(
         Assertions.assertEquals(createBook.isbn13?.trim(), saved.book.isbn13)
         Assertions.assertEquals("This is a test summary with a newline", saved.book.summary)
         Assertions.assertEquals(createBook.publisher, saved.book.publisher)
-        Assertions.assertEquals(createBook.pageCount, saved.book.pageCount)
+        Assertions.assertNull(saved.book.pageCount)
         Assertions.assertEquals(createBook.goodreadsId, saved.book.goodreadsId)
         Assertions.assertNull(saved.book.librarythingId)
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
@@ -1776,7 +1909,7 @@ class BookServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(0, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -1810,7 +1943,7 @@ class BookServiceTest(
         Assertions.assertNull(updated.book.librarythingId)
         Assertions.assertEquals(updater.owned, updated.owned)
         Assertions.assertEquals(saved.toRead, updated.toRead)
-        Assertions.assertEquals(updater.percentRead, updated.percentRead)
+        Assertions.assertEquals(100, updated.percentRead)
         Assertions.assertEquals(updater.personalNotes, updated.personalNotes)
         Assertions.assertNotNull(updated.creationDate)
         Assertions.assertNotNull(updated.modificationDate)
@@ -1845,7 +1978,7 @@ class BookServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -1897,6 +2030,72 @@ class BookServiceTest(
     }
 
     @Test
+    fun testGlobalStats() {
+        var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        val createBook = bookDto()
+        val createUserBookDto = createUserBookDto(createBook, ReadingEventType.FINISHED, nowInstant())
+        val uploadFile = MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), uploadFile)
+        Assertions.assertEquals(createBook.isbn10, saved.book.isbn10)
+        Assertions.assertEquals(ReadingEventType.FINISHED, saved.lastReadingEvent)
+        Assertions.assertNotNull(saved.lastReadingEventDate)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+        Assertions.assertEquals(0, bookService.stats(user().id!!).dropped)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).total)
+
+        val updater = UserBookUpdateDto(
+            ReadingEventType.DROPPED,
+            personalNotes = "new notes",
+            owned = false,
+            book = null,
+            toRead = null,
+            percentRead = 50,
+            borrowed = true,
+            currentPageNumber = null,
+        )
+        val updated = bookService.update(saved.id!!, updater, null)
+        Assertions.assertEquals(ReadingEventType.DROPPED, updated.lastReadingEvent)
+        Assertions.assertNotNull(updated.lastReadingEventDate)
+        Assertions.assertEquals(2, updated.readingEvents?.size)
+        Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).dropped)
+        Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).total)
+
+        val createBook2 = bookDto("title 2")
+        val createUserBookDto2 = createUserBookDto(createBook2, ReadingEventType.CURRENTLY_READING, nowInstant())
+        val uploadFile2 = MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val saved2: UserBookLightDto = bookService.save(createUserBookDto2, user(), uploadFile2)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(1, bookService.stats(user().id!!).unread)
+        Assertions.assertEquals(2, bookService.stats(user().id!!).total)
+
+        val updater2 = UserBookUpdateDto(
+            ReadingEventType.FINISHED,
+            personalNotes = "new notes",
+            owned = false,
+            book = null,
+            toRead = null,
+            percentRead = 50,
+            borrowed = true,
+            currentPageNumber = null,
+        )
+        val updated2 = bookService.update(saved2.id!!, updater2, null)
+        Assertions.assertEquals(ReadingEventType.FINISHED, updated2.lastReadingEvent)
+        Assertions.assertNotNull(updated2.lastReadingEventDate)
+        Assertions.assertEquals(1, updated2.readingEvents?.size)
+        Assertions.assertEquals(2, bookService.stats(user().id!!).read)
+        Assertions.assertEquals(0, bookService.stats(user().id!!).unread)
+        Assertions.assertEquals(2, bookService.stats(user().id!!).total)
+    }
+
+    @Test
     fun testUpdateUserbookWithImageAndEventNewEventRequiredAndDeleteExistingImage() {
         var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)
@@ -1915,7 +2114,7 @@ class BookServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -1986,7 +2185,7 @@ class BookServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -2312,6 +2511,100 @@ class BookServiceTest(
         Assertions.assertEquals(1, entitiesIds?.size)
         orphanTags = bookService.findOrphanTags(PageRequest.of(0, 20))
         Assertions.assertEquals(2, orphanTags.totalElements)
+    }
+
+    @Test
+    fun testFindOrphanAuthors() {
+        val createBook = bookDto(withTags = true)
+        val savedBook = bookService.save(createBook, null)
+        Assertions.assertEquals(1, savedBook.authors?.size)
+        var entitiesIds = luceneHelper.searchEntitiesIds("tag:fantasy", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("author:author", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        val author = authorDto("jean jacques")
+        val res = bookService.save(author)
+        Assertions.assertNotNull(res)
+        Assertions.assertEquals(author.name, res.name)
+        val p = bookService.findOrphanAuthors(Pageable.ofSize(20))
+        Assertions.assertEquals(1, p.totalElements)
+        Assertions.assertEquals(author.name, p.content[0].name)
+
+        val updated = bookService.update(
+            savedBook.id!!,
+            BookUpdateDto(
+                translators = listOf(res), authors = savedBook.authors,
+                title = savedBook.title,
+                isbn10 = savedBook.isbn10,
+                isbn13 = savedBook.isbn13,
+                summary = savedBook.summary,
+                image = null,
+                publisher = null,
+                pageCount = null,
+                publishedDate = null,
+                narrators = null,
+                tags = null,
+                googleId = null,
+                amazonId = null,
+                goodreadsId = null,
+                librarythingId = null,
+                isfdbId = null,
+                openlibraryId = null,
+                noosfereId = null,
+                inventaireId = null,
+                language = null,
+                series = null,
+            ),
+        )
+        Assertions.assertEquals(1, updated.authors?.size)
+        Assertions.assertEquals(1, updated.translators?.size)
+        Assertions.assertEquals("jean jacques", updated.translators?.get(0)?.name)
+        val t = bookService.findOrphanAuthors(Pageable.ofSize(20))
+        // author that is only a translator should not be considered an orphan author
+        Assertions.assertEquals(0, t.totalElements)
+    }
+
+    @Test
+    fun testFindOrphanSeries() {
+        val s1 = SeriesOrderDto(name = "series 1", numberInSeries = 1.0, seriesId = null)
+        val s2 = SeriesOrderDto(name = "series2", numberInSeries = 1.0, seriesId = null)
+        val res: BookDto = bookService.save(
+            BookCreateDto(
+                id = null,
+                title = "title1",
+                isbn10 = "",
+                isbn13 = "",
+                summary = "",
+                image = "",
+                publisher = "",
+                pageCount = 50,
+                publishedDate = "",
+                authors = emptyList(),
+                tags = emptyList(),
+                goodreadsId = "",
+                googleId = "",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+                series = listOf(s1, s2),
+            ),
+            null,
+        )
+        Assertions.assertNotNull(res.id)
+        val found = bookService.findBookById(res.id!!)
+        Assertions.assertEquals(found.id, res.id)
+        Assertions.assertEquals(found.authors, res.authors)
+        Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.isbn10, res.isbn10)
+        Assertions.assertEquals(found.pageCount, res.pageCount)
+        Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
+        Assertions.assertEquals(2, res.series?.size)
+        val orphan = bookService.saveSeries(SeriesCreateDto("series orphan", 1.3, "desc"), user())
+        val r = bookService.findOrphanSeries(Pageable.ofSize(20))
+        Assertions.assertEquals(1, r.totalElements)
+        Assertions.assertEquals(orphan.name, r.content[0].name)
     }
 
     @Test

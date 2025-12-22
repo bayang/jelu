@@ -12,7 +12,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="card card-compact box mb-2 shadow-lg shadow-base-300 hover:shadow-2xl hover:border-2 hover:border-accent w-96">
+  <div class="card card-sm box mb-2 shadow-lg shadow-base-300 hover:shadow-2xl hover:border-2 hover:border-accent w-96">
     <div class="card-body flex-row items-center">
       <span>
         <svg

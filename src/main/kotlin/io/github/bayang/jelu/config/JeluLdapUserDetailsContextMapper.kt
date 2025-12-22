@@ -5,7 +5,7 @@ import io.github.bayang.jelu.dao.UserRepository
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.UpdateUserDto
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.ldap.core.DirContextAdapter
 import org.springframework.ldap.core.DirContextOperations

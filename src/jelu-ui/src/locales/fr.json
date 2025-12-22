@@ -16,7 +16,9 @@
         "search": "recherche",
         "history": "historique",
         "shelves": "Étagères",
-        "tags-admin": "gestion des tags"
+        "tags-admin": "gestion des tags",
+        "data-admin": "Gestion des données",
+        "activity": "activité"
     },
     "labels": {
         "search": "Rechercher",
@@ -113,7 +115,17 @@
         "add_quote": "ajouter une citation de livre",
         "description": "description",
         "user_rating": "ma note : {rating}",
-        "apply": "appliquer"
+        "apply": "appliquer",
+        "loading": "chargement en cours",
+        "pick_camera": "choisir une caméra",
+        "add_narrator": "Ajouter un narrateur",
+        "social_login": "Se connecter avec {provider}",
+        "delete_this_series": "Supprimer cette série de {nb} livre(s) et de la base de données ?",
+        "orphan-series": "séries orphelines",
+        "find-series": "trouver une série",
+        "delete_this_author": "Supprimer cet auteur de {nb} livre(s) et de la base de données ?",
+        "orphan_authors": "auteurs orphelins",
+        "find-authors": "rechercher des auteurs"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
@@ -137,7 +149,8 @@
         "stats": "Statistiques",
         "shelves": "Étagères",
         "shelves_max_number_reached": "Le nombre maximum d'étagères est atteint. Supprimez-en pour en ajouter d'autres.",
-        "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante"
+        "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante",
+        "custom_lists": "listes personnalisées"
     },
     "user": {
         "log_first": "Veuillez vous identifier"
@@ -176,7 +189,8 @@
         "edit_event": "modifier évènement",
         "reading": "en cours",
         "start_date": "date de début ",
-        "end_date": "date de fin"
+        "end_date": "date de fin",
+        "started": "commencé"
     },
     "filtering": {
         "book_in_list": "Le livre est dans la liste de lecture",
@@ -221,7 +235,8 @@
         "in_read_list": "dans la liste de lecture",
         "translator": "traducteur | traducteurs",
         "borrowed": "Emprunté",
-        "current_page_number": "Numéro de page actuel"
+        "current_page_number": "Numéro de page actuel",
+        "narrator": "narrateur | narrateurs"
     },
     "authors_merge": {
         "authors_merging_utility": "Outil de fusion d'auteurs",
@@ -232,7 +247,8 @@
         "author_right_description": "Choisissez ensuite l'auteur à fusionner avec le précédent.",
         "authors_merge_subtitle": "Fusionner",
         "authors_merge_description": "Utilisez les champs sur la droite pour remplir l'auteur de gauche puis fusionnez.",
-        "search_message": "Rechercher les auteurs à fusionner"
+        "search_message": "Rechercher les auteurs à fusionner",
+        "merge_authors": "fusionner les auteurs"
     },
     "author": {
         "name": "nom",
@@ -243,6 +259,7 @@
         "wikipedia_page": "page Wikipédia",
         "goodreads_page": "page goodreads",
         "twitter_page": "page Twitter",
+        "x_page": "Page X",
         "facebook_page": "page Facebook",
         "instagram_page": "page Instagram",
         "personal_notes": "notes",
@@ -266,7 +283,7 @@
         "isbn_list": "Liste d'ISBN dans un fichier"
     },
     "login": {
-        "login": "identifiant",
+        "login": "se connecter",
         "password": "mot de passe",
         "confirm_login": "confirmez l'identifiant",
         "confirm_password": "confirmez le mot de passe",
@@ -276,7 +293,8 @@
         "login_not_match": "les identifiants ne sont pas identiques",
         "password_not_match": "les mots de passe ne sont pas identiques",
         "login_length": "l'identifiant doit avoir une taille de 3 caractères au moins",
-        "password_length": "le mot de passe doit avoir une taille de 3 caractères au moins"
+        "password_length": "le mot de passe doit avoir une taille de 3 caractères au moins",
+        "username": "Nom d'utilisateur"
     },
     "admin_user": {
         "create_user": "créer utilisateur",
@@ -309,7 +327,10 @@
         "choose_year": "Choisir une année",
         "pages_read": "pages lues",
         "finished": "terminé",
-        "dropped": "abandonné"
+        "dropped": "abandonné",
+        "total": "total",
+        "read": "lu",
+        "unread": "non lu"
     },
     "history": {
         "years": "années"
@@ -324,7 +345,9 @@
         "add_or_remove": "Ajouter ou supprimer une étiquette",
         "add": "Ajouter",
         "remove": "Enlever",
-        "choose_tag": "Choisissez le tag que vous souhaitez ajouter ou retirer"
+        "choose_tag": "Choisissez le tag que vous souhaitez ajouter ou retirer",
+        "add_tag": "ajouter une étiquette",
+        "remove_tag": "Supprimer l'étiquette"
     },
     "reviews": {
         "create_review": "écrire une critique",
@@ -368,5 +391,26 @@
         "source": "source",
         "last_activity": "Dernière activité",
         "activity": "Historique des sessions"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "le plugin de métadonnées s'est terminé anormalement",
+            "EXCEPTION_CAUGHT": "une exception a été interceptée lors de l'appel au plugin de métadonnées"
+        },
+        "details": "Détail de l'erreur"
+    },
+    "lists": {
+        "create_list": "créer une liste personnalisée",
+        "name": "nom",
+        "public": "publique",
+        "actionable": "actionnable",
+        "actionable_desc": "Vous pouvez cliquer sur des éléments dans une liste actionnable pour les supprimer.",
+        "tags": "tags",
+        "tags_desc": "La liste affichera les éléments qui correspondent à tous les tags sélectionnés.",
+        "create": "créer",
+        "remove": "supprimer la sélection",
+        "empty": "la liste est vide",
+        "edit_list": "modifier la liste",
+        "update_list": "mettre à jour la liste"
     }
 }

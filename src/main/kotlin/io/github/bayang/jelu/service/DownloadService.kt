@@ -1,7 +1,7 @@
 package io.github.bayang.jelu.service
 
 import io.github.bayang.jelu.utils.imageName
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.springframework.stereotype.Service
 import java.io.File
@@ -20,7 +20,10 @@ class DownloadService {
         try {
             val url: URL = URL(sourceUrl)
             logger.debug { "path ${url.path} file ${url.file}" }
-            var readableByteChannel: ReadableByteChannel = Channels.newChannel(url.openStream())
+            val conn = url.openConnection()
+            conn.setRequestProperty("User-Agent", "jelu-app")
+            val stream = conn.getInputStream()
+            var readableByteChannel: ReadableByteChannel = Channels.newChannel(stream)
             val filename: String = imageName(title, bookId, FilenameUtils.getExtension(url.path))
             val targetFile: File = File(targetFolder, filename)
             val fileOutputStream: FileOutputStream = FileOutputStream(targetFile)

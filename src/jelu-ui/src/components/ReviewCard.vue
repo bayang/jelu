@@ -40,7 +40,7 @@ const editReview = async (reviewId: string) => {
 
 <template>
   <div
-    class="card card-compact bg-base-200 shadow-2xl shadow-base-300 p-4"
+    class="card card-sm bg-base-200 shadow-2xl shadow-base-300 p-4"
   >
     <div class="card-body">
       <div class="card-title">

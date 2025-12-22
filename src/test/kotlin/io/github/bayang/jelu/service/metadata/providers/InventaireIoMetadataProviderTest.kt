@@ -80,24 +80,24 @@ class InventaireIoMetadataProviderTest(
         val service = InventaireIoMetadataProvider(builder.build(), jeluProperties, ObjectMapper(), buildProperties)
 
         // When
-        val result: MetadataDto = service.fetchMetadata(
+        val result: MetadataDto? = service.fetchMetadata(
             MetadataRequestDto("9782290349229"),
             mapOf(),
-        ).get()
+        )?.get()
 
         // Then
         Assertions.assertNotNull(result)
-        Assertions.assertEquals("L'homme aux cercles bleus", result.title)
-        Assertions.assertEquals("2-290-34922-4", result.isbn10)
-        Assertions.assertEquals("978-2-290-34922-9", result.isbn13)
-        Assertions.assertEquals(mutableSetOf("Fred Vargas"), result.authors)
+        Assertions.assertEquals("L'homme aux cercles bleus", result?.title)
+        Assertions.assertEquals("2-290-34922-4", result?.isbn10)
+        Assertions.assertEquals("978-2-290-34922-9", result?.isbn13)
+        Assertions.assertEquals(mutableSetOf("Fred Vargas"), result?.authors)
         Assertions.assertEquals(
             "https://inventaire.io/img/entities/57883743aa7c6ad25885a63e6e94349ec4f71562",
-            result.image,
+            result?.image,
         )
-        Assertions.assertEquals("fr", result.language)
-        Assertions.assertEquals("2005-05-01", result.publishedDate)
-        Assertions.assertEquals("1991 mystery novel by Fred Vargas, 1st of her Detective Adamsberg series", result.summary)
+        Assertions.assertEquals("fr", result?.language)
+        Assertions.assertEquals("2005-05-01", result?.publishedDate)
+        Assertions.assertEquals("1991 mystery novel by Fred Vargas, 1st of her Detective Adamsberg series", result?.summary)
     }
 
     @Test

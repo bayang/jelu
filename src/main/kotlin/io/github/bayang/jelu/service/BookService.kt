@@ -16,12 +16,14 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.ReadingEventTypeFilter
 import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesDto
 import io.github.bayang.jelu.dto.SeriesRatingDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.TotalsStatsDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
@@ -34,7 +36,7 @@ import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
 import io.github.bayang.jelu.utils.imageName
 import io.github.bayang.jelu.utils.resizeImage
 import io.github.bayang.jelu.utils.slugify
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -67,6 +69,10 @@ class BookService(
         query: String?,
         pageable: Pageable,
         user: UserDto,
+        eventTypes: List<ReadingEventTypeFilter>?,
+        toRead: Boolean?,
+        owned: Boolean?,
+        borrowed: Boolean?,
         libraryFilter: LibraryFilter,
     ): Page<BookDto> {
         val entitiesIds = luceneHelper.searchEntitiesIds(query, LuceneEntity.Book)
@@ -80,7 +86,7 @@ class BookService(
                 0,
             )
         } else {
-            return bookRepository.findAll(entitiesIds, pageable, user, libraryFilter).map { it.toBookDto() }
+            return bookRepository.findAll(entitiesIds, pageable, user, eventTypes, toRead, owned, borrowed, libraryFilter).map { it.toBookDto() }
         }
     }
 
@@ -92,12 +98,13 @@ class BookService(
         series: String?,
         authors: List<String>?,
         translators: List<String>?,
+        narrators: List<String>?,
         tags: List<String>?,
         pageable: Pageable,
         user: UserDto,
         libraryFilter: LibraryFilter,
     ): Page<BookDto> =
-        bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
+        bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, narrators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
 
     @Transactional
     fun findAllAuthors(name: String?, pageable: Pageable): Page<AuthorDto> = bookRepository.findAllAuthors(name, pageable).map { it.toAuthorDto() }
@@ -367,7 +374,7 @@ class BookService(
     fun findUserBookByCriteria(
         userId: UUID,
         bookId: UUID?,
-        eventTypes: List<ReadingEventType>?,
+        eventTypes: List<ReadingEventTypeFilter>?,
         toRead: Boolean?,
         owned: Boolean? = null,
         borrowed: Boolean? = null,
@@ -379,6 +386,16 @@ class BookService(
     @Transactional
     fun findOrphanTags(pageable: Pageable): Page<TagDto> {
         return bookRepository.findOrphanTags(pageable).map { tag -> tag.toTagDto() }
+    }
+
+    @Transactional
+    fun findOrphanAuthors(pageable: Pageable): Page<AuthorDto> {
+        return bookRepository.findOrphanAuthors(pageable).map { author -> author.toAuthorDto() }
+    }
+
+    @Transactional
+    fun findOrphanSeries(pageable: Pageable): Page<SeriesDto> {
+        return bookRepository.findOrphanSeries(pageable).map { series -> series.toSeriesDto() }
     }
 
     @Transactional
@@ -512,6 +529,16 @@ class BookService(
         searchIndexService.bookUpdated(bookId)
     }
 
+    /**
+     * Removes an narrator from a book without deleting the narrator from the database.
+     * The narrator is removed only from that book.
+     */
+    @Transactional
+    fun deleteNarratorFromBook(bookId: UUID, narratorId: UUID) {
+        bookRepository.deleteNarratorFromBook(bookId, narratorId)
+        searchIndexService.bookUpdated(bookId)
+    }
+
     @Transactional
     fun deleteAuthorById(authorId: UUID) {
         var books: Page<Book>
@@ -576,6 +603,7 @@ class BookService(
                         filtered.add(authorToKeepDto)
                     }
                     dto.authors = filtered
+
                     var filteredTranslators = dto.translators?.filter { authorDto -> authorDto.id != otherId }?.toMutableList()
                     if (filteredTranslators == null) {
                         filteredTranslators = mutableListOf()
@@ -584,6 +612,16 @@ class BookService(
                         filteredTranslators.add(authorToKeepDto)
                     }
                     dto.translators = filteredTranslators
+
+                    var filteredNarrators = dto.narrators?.filter { authorDto -> authorDto.id != otherId }?.toMutableList()
+                    if (filteredNarrators == null) {
+                        filteredNarrators = mutableListOf()
+                    }
+                    if (!filteredNarrators.contains(authorToKeepDto)) {
+                        filteredNarrators.add(authorToKeepDto)
+                    }
+                    dto.narrators = filteredNarrators
+
                     bookRepository.update(book, dto)
                     otherAuthorBooksIds.add(book.id.value)
                 }
@@ -609,5 +647,10 @@ class BookService(
                 pageNum++
             }
         } while (booksPage.hasNext())
+    }
+
+    @Transactional
+    fun stats(userId: UUID): TotalsStatsDto {
+        return bookRepository.stats(userId)
     }
 }

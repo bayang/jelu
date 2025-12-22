@@ -16,7 +16,9 @@
         "search": "cerca",
         "history": "cronologia",
         "shelves": "scaffali",
-        "tags-admin": "gestione dei tag"
+        "tags-admin": "gestione dei tag",
+        "data-admin": "gestione dati",
+        "activity": "attività"
     },
     "labels": {
         "search": "Cerca",
@@ -113,7 +115,17 @@
         "add_quote": "aggiungi una citazione del libro",
         "description": "descrizione",
         "user_rating": "la mia valutazione : {rating}",
-        "apply": "conferma"
+        "apply": "conferma",
+        "loading": "caricamento",
+        "pick_camera": "seleziona una fotocamera",
+        "add_narrator": "Aggiungi un narratore",
+        "social_login": "accedi con {provider}",
+        "delete_this_series": "Cancellare questa collana da {nb} libro/i e dal database?",
+        "orphan-series": "collane orfane",
+        "find-series": "trova una collana",
+        "delete_this_author": "Cancellare questo autore da {nb} libro/i e dal database?",
+        "orphan_authors": "autori orfani",
+        "find-authors": "trova un autore"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
@@ -137,7 +149,8 @@
         "stats": "Statistiche",
         "shelves": "Scaffali",
         "shelves_max_number_reached": "Il numero massimo di scaffali è stato raggiunto. Elimina quelli esistenti per aggiungerne altri.",
-        "shelf_choose_tag": "Scegli un'etichetta per creare lo scaffale corrispondente"
+        "shelf_choose_tag": "Scegli un'etichetta per creare lo scaffale corrispondente",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Effettua prima l'accesso"
@@ -176,7 +189,8 @@
         "edit_event": "modifica evento",
         "reading": "in lettura",
         "start_date": "data di inizio",
-        "end_date": "data di fine"
+        "end_date": "data di fine",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Il libro è nella lista da leggere",
@@ -221,7 +235,8 @@
         "in_read_list": "nella lista da leggere",
         "translator": "traduttore | traduttori",
         "borrowed": "preso in prestito",
-        "current_page_number": "numero di pagina attuale"
+        "current_page_number": "numero di pagina attuale",
+        "narrator": "narratore | narratori"
     },
     "authors_merge": {
         "authors_merging_utility": "Utilità per l'unione di due autori",
@@ -232,7 +247,8 @@
         "author_right_description": "Scegli ora l'autore che vuoi unire con l'altro.",
         "authors_merge_subtitle": "Unisci",
         "authors_merge_description": "Utilizzare i campi sull'autore di destra per completare l'autore a sinistra, quindi unisci i due autori.",
-        "search_message": "Cerca autori da unire"
+        "search_message": "Cerca autori da unire",
+        "merge_authors": "unisci gli autori"
     },
     "author": {
         "name": "nome",
@@ -243,6 +259,7 @@
         "wikipedia_page": "pagina wikipedia",
         "goodreads_page": "pagina goodreads",
         "twitter_page": "pagina twitter",
+        "x_page": "X page",
         "facebook_page": "pagina facebook",
         "instagram_page": "pagina instagram",
         "personal_notes": "note personali",
@@ -263,7 +280,7 @@
         "export_ko": "Si è verificato un errore e la tua richiesta di esportazione probabilmente non è stata registrata.",
         "import_help": "Per prima cosa seleziona il tipo di file che vuoi importare, poi scegli il file e infine seleziona il bottone di importazione. Una volta che l'importazione è partita puoi abbandonare questa pagina e andare alla sezione messaggi.",
         "import_ok": "La tua richiesta d'importazione è stata salvata. Puoi abbandonare questa pagina, il risultato dell'importazione sarà disponibile nella sezione messaggi.",
-        "isbn_list": "List of ISBN in a file"
+        "isbn_list": "Elenco degli ISBN in un file"
     },
     "login": {
         "login": "accedi",
@@ -276,7 +293,8 @@
         "login_not_match": "i campi nome utente non corrispondono",
         "password_not_match": "le password non coincidono",
         "login_length": "il nome utente deve essere lungo almeno 3 caratteri",
-        "password_length": "la password deve essere di almeno 3 caratteri"
+        "password_length": "la password deve essere di almeno 3 caratteri",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "crea un utente",
@@ -307,9 +325,12 @@
         "all_time": "Statistiche globali",
         "yearly_stats": "Statistiche annuali",
         "choose_year": "Seleziona un anno",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped"
+        "pages_read": "pagine lette",
+        "finished": "finiti",
+        "dropped": "abbandonati",
+        "total": "totale",
+        "read": "letti",
+        "unread": "da leggere"
     },
     "history": {
         "years": "anni"
@@ -324,7 +345,9 @@
         "add_or_remove": "Aggiungi o rimuovi un'etichetta",
         "add": "Aggiungi",
         "remove": "Rimuovi",
-        "choose_tag": "Scegli l'etichetta che vuoi aggiungere o rimuovere"
+        "choose_tag": "Scegli l'etichetta che vuoi aggiungere o rimuovere",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Crea una recensione",
@@ -368,5 +391,26 @@
         "source": "source",
         "last_activity": "ultima attività",
         "activity": "accessi"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
+            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+        },
+        "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

@@ -116,7 +116,7 @@ const submit = () => {
             <input
               v-model="seriesName"
               type="text"
-              class="input input-bordered w-full"
+              class="input w-full"
             >
           </div>
         </div>
@@ -190,7 +190,7 @@ const submit = () => {
             <span class="icon">
               <i class="mdi mdi-pencil mdi-18px" />
             </span>
-            <span>{{ t('labels.edit') }}</span>
+            <span>{{ t('labels.save_changes') }}</span>
           </button>
         </div>
       </div>

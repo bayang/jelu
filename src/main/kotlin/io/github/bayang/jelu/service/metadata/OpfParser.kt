@@ -3,7 +3,7 @@ package io.github.bayang.jelu.service.metadata
 import com.ctc.wstx.stax.WstxInputFactory
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.utils.sanitizeHtml
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.validator.routines.ISBNValidator
 import org.codehaus.staxmate.SMInputFactory
 import org.codehaus.staxmate.`in`.SMHierarchicCursor

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from './store'
 import AdminBaseVue from './components/AdminBase.vue'
+import urls from './urls'
 
 const isLogged = () => {
     if (!store.getters.getLogged) {
@@ -30,7 +31,6 @@ const router = createRouter({
             path: '/books/:bookId/reviews',
             component: () => import(/* webpackChunkName: "recommend" */ './components/BookReviews.vue'),
             name: 'book-reviews',
-            beforeEnter: [isLogged],
         },
         {
             path: '/books/:bookId/quotes',
@@ -98,6 +98,12 @@ const router = createRouter({
             name: 'review-detail',
         },
         {
+            path: '/reviews',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/ReviewList.vue'),
+            name: 'reviews',
+            beforeEnter: [isLogged]
+        },
+        {
             path: '/search',
             component: () => import(/* webpackChunkName: "recommend" */ './components/SearchResultsDisplay.vue'),
             name: 'search',
@@ -115,6 +121,11 @@ const router = createRouter({
             name: 'user-detail',
         },
         {
+            path: '/custom-lists/:listId',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/CustomListDetail.vue'),
+            name: 'list-detail'
+        },
+        {
             path: '/profile',
             component: AdminBaseVue,
             name: 'profile-page',
@@ -130,6 +141,7 @@ const router = createRouter({
                 { path: 'messages', component: () => import(/* webpackChunkName: "recommend" */ './components/UserMessages.vue')},
                 { path: 'stats', component: () => import(/* webpackChunkName: "recommend" */ './components/UserStats.vue')},
                 { path: 'tags', component: () => import(/* webpackChunkName: "recommend" */ './components/TagsAdmin.vue')},
+                { path: 'data', component: () => import(/* webpackChunkName: "recommend" */ './components/DataAdmin.vue')},
             ]
         },
     ],
@@ -141,6 +153,21 @@ router.beforeEach((to, from, next) => {
     console.log(`from : ${from.name?.toString()}`)
     console.log(from)
     console.log(store.getters.getLogged)
+    
+    if (window.opener !== null &&
+    window.name === 'oauth2Login' &&
+    to.query.server_redirect === 'Y'
+  ) {
+    if (!to.query.error) {
+      // authentication succeeded, we redirect the parent window so that it can login via cookie
+      window.opener.location.href = urls.BASE_URL
+    } else {
+      // authentication failed, we cascade the error message to the parent
+      window.opener.location.href = window.location
+    }
+    // we can close the popup
+    window.close()
+  }
     if (from.name == undefined 
         && from.matched.length < 1) {
         console.log('undefined wanting to go to ' + to.name?.toString())

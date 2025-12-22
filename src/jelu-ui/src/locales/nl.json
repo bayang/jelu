@@ -16,7 +16,9 @@
         "search": "zoeken",
         "history": "geschiedenis",
         "shelves": "boekenplanken",
-        "tags-admin": "labelbeheer"
+        "tags-admin": "labelbeheer",
+        "data-admin": "gegevensbeheer",
+        "activity": "activiteit"
     },
     "labels": {
         "search": "Zoeken",
@@ -113,7 +115,17 @@
         "add_quote": "voeg citaat uit boek toe",
         "description": "omschrijving",
         "user_rating": "mijn beoordeling: {rating}",
-        "apply": "toepassen"
+        "apply": "toepassen",
+        "loading": "laden",
+        "pick_camera": "kies een camera",
+        "add_narrator": "Voeg een verteller toe",
+        "social_login": "inloggen met {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "vind een serie",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "auteurs vinden"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -137,7 +149,8 @@
         "stats": "Statistieken",
         "shelves": "Boekenplanken",
         "shelves_max_number_reached": "Maximum aantal boekenplanken is bereikt. Verwijder bestaande om er meer toe te voegen.",
-        "shelf_choose_tag": "Kies een label om de corresponderende boekenplank te maken"
+        "shelf_choose_tag": "Kies een label om de corresponderende boekenplank te maken",
+        "custom_lists": "aangepaste lijsten"
     },
     "user": {
         "log_first": "Eerst inloggen a.u.b."
@@ -176,7 +189,8 @@
         "edit_event": "bewerk gebeurtenis",
         "reading": "aan het lezen",
         "start_date": "begindatum",
-        "end_date": "einddatum"
+        "end_date": "einddatum",
+        "started": "gestart"
     },
     "filtering": {
         "book_in_list": "Boek staat in te-lezen lijst",
@@ -221,7 +235,8 @@
         "in_read_list": "in de te-lezen lijst",
         "translator": "vertaler | vertalers",
         "borrowed": "geleend",
-        "current_page_number": "huidige pagina nummer"
+        "current_page_number": "huidige pagina nummer",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Hulpprogramma samenvoegen auteurs",
@@ -232,7 +247,8 @@
         "author_right_description": "Kies vervolgens de auteur die je met de andere wilt samenvoegen.",
         "authors_merge_subtitle": "Samenvoegen",
         "authors_merge_description": "Gebruik de velden van de rechter auteur om de auteur aan de linkerkant aan te vullen en samen te voegen.",
-        "search_message": "Zoek auteurs om samen te voegen"
+        "search_message": "Zoek auteurs om samen te voegen",
+        "merge_authors": "auteurs samenvoegen"
     },
     "author": {
         "name": "naam",
@@ -243,6 +259,7 @@
         "wikipedia_page": "wikipedia pagina",
         "goodreads_page": "goodreads pagina",
         "twitter_page": "twitter pagina",
+        "x_page": "X page",
         "facebook_page": "facebook pagina",
         "instagram_page": "instagram pagina",
         "personal_notes": "persoonlijke notities",
@@ -276,7 +293,8 @@
         "login_not_match": "login velden komen niet overeen",
         "password_not_match": "wachtwoorden komen niet overeen",
         "login_length": "login moet minimaal 3 tekens lang zijn",
-        "password_length": "wachtwoord moet minimaal 3 tekens lang zijn"
+        "password_length": "wachtwoord moet minimaal 3 tekens lang zijn",
+        "username": "gebruikersnaam"
     },
     "admin_user": {
         "create_user": "gebruiker aanmaken",
@@ -309,7 +327,10 @@
         "choose_year": "Kies een jaar",
         "pages_read": "gelezen pagina's",
         "finished": "voltooid",
-        "dropped": "gestopt"
+        "dropped": "gestopt",
+        "total": "totaal",
+        "read": "gelezen",
+        "unread": "ongelezen"
     },
     "history": {
         "years": "jaren"
@@ -324,7 +345,9 @@
         "add_or_remove": "Label toevoegen of verwijderen",
         "add": "Toevoegen",
         "remove": "Verwijderen",
-        "choose_tag": "Kies het label die je wilt toevoegen of verwijderen"
+        "choose_tag": "Kies het label die je wilt toevoegen of verwijderen",
+        "add_tag": "label toevoegen",
+        "remove_tag": "label verwijderen"
     },
     "reviews": {
         "create_review": "Maak een beoordeling",
@@ -368,5 +391,26 @@
         "source": "bron",
         "last_activity": "laatste activiteit",
         "activity": "login activiteit"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
+            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+        },
+        "details": "details van fout"
+    },
+    "lists": {
+        "create_list": "een aangepaste lijst maken",
+        "name": "naam",
+        "public": "openbaar",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "labels",
+        "tags_desc": "De lijst toont items die overeenkomen met alle gekozen labels.",
+        "create": "aanmaken",
+        "remove": "verwijder selectie",
+        "empty": "lijst is leeg",
+        "edit_list": "bewerk de lijst",
+        "update_list": "update de lijst"
     }
 }

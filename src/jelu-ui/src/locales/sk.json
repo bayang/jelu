@@ -16,7 +16,9 @@
         "search": "hľadať",
         "history": "história",
         "shelves": "poličky",
-        "tags-admin": "správa štítkov"
+        "tags-admin": "správa štítkov",
+        "data-admin": "Správa údajov",
+        "activity": "Aktivita"
     },
     "labels": {
         "search": "Hľadať",
@@ -101,7 +103,7 @@
         "reading_list_from_name": "Zoznam na prečítanie od {name}",
         "search_query": "Zadajte hľadaný výraz...",
         "search_documentation": "Prejsť na dokumentáciu vyhľadávania",
-        "orphan-tags": "opustené štítky",
+        "orphan-tags": "Osamotené štítky",
         "find-tag": "nájsť štítok",
         "associated-books": "súvisiaca kniha (knihy)",
         "operation-success": "operácia bola úspešná",
@@ -113,7 +115,17 @@
         "add_quote": "pridať citát z knihy",
         "description": "popis",
         "user_rating": "moje hodnotenie : {rating}",
-        "apply": "použiť"
+        "apply": "použiť",
+        "loading": "načítava sa",
+        "pick_camera": "Vybrať kameru",
+        "add_narrator": "Pridať rozprávača",
+        "social_login": "Prihlásiť sa cez {provider}",
+        "delete_this_series": "Vymazať túto sériu z {nb} knihy (kníh) a z databázy?",
+        "orphan-series": "Osamotené série",
+        "find-series": "Nájsť sériu",
+        "delete_this_author": "Vymazať tohto autora z {nb} knihy (kníh) a z databázy?",
+        "orphan_authors": "Osamotení autori",
+        "find-authors": "Nájsť autorov"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
@@ -137,7 +149,8 @@
         "stats": "Štatistiky",
         "shelves": "Poličky",
         "shelves_max_number_reached": "Maximálny počet poličiek je dosiahnutý. Ak chcete pridať ďalšie, odstráňte existujúce.",
-        "shelf_choose_tag": "Výberom štítku vytvoríte príslušnú poličku"
+        "shelf_choose_tag": "Výberom štítku vytvoríte príslušnú poličku",
+        "custom_lists": "Vlastné zoznamy"
     },
     "user": {
         "log_first": "Najskôr sa prihláste, prosím"
@@ -176,7 +189,8 @@
         "edit_event": "Upraviť udalosť",
         "reading": "číta sa",
         "start_date": "dátum začiatku",
-        "end_date": "dátum ukončenia"
+        "end_date": "dátum ukončenia",
+        "started": "začiatok čítania"
     },
     "filtering": {
         "book_in_list": "Kniha je v zozname na prečítanie",
@@ -221,7 +235,8 @@
         "in_read_list": "v zozname na prečítanie",
         "translator": "prekladateľ | prekladatelia",
         "borrowed": "požičané",
-        "current_page_number": "Aktuálne číslo strany"
+        "current_page_number": "Aktuálne číslo strany",
+        "narrator": "Rozprávač | Rozprávači"
     },
     "authors_merge": {
         "authors_merging_utility": "Nástroj na zlúčenie autorov",
@@ -232,7 +247,8 @@
         "author_right_description": "Ďalej vyberte autora, ktorého chcete zlúčiť s prvým vybratým.",
         "authors_merge_subtitle": "Zlúčiť",
         "authors_merge_description": "Pomocou polí na pravej strane autora doplňte autora na ľavej strane a potom ich zlúčte.",
-        "search_message": "Vyhľadať autorov na zlúčenie"
+        "search_message": "Vyhľadať autorov na zlúčenie",
+        "merge_authors": "Zlúčiť autorov"
     },
     "author": {
         "name": "meno",
@@ -243,6 +259,7 @@
         "wikipedia_page": "stránka na wikipédii",
         "goodreads_page": "stránka na goodreads",
         "twitter_page": "Twitter stránka",
+        "x_page": "X stránka",
         "facebook_page": "Facebook stránka",
         "instagram_page": "instagram stránka",
         "personal_notes": "osobné poznámky",
@@ -266,7 +283,7 @@
         "isbn_list": "Zoznam ISBN čísel v súbore"
     },
     "login": {
-        "login": "prihlasovacie meno",
+        "login": "Prihlásiť sa",
         "password": "Heslo",
         "confirm_login": "potvrdiť prihlasovacie meno",
         "confirm_password": "potvrdiť heslo",
@@ -276,7 +293,8 @@
         "login_not_match": "prihlasovacie polia sa nezhodujú",
         "password_not_match": "polia s heslom sa nezhodujú",
         "login_length": "prihlasovacie meno musí mať aspoň 3 znaky",
-        "password_length": "Heslo musí mať aspoň 3 znaky"
+        "password_length": "Heslo musí mať aspoň 3 znaky",
+        "username": "Používateľské meno"
     },
     "admin_user": {
         "create_user": "vytvoriť používateľa",
@@ -309,7 +327,10 @@
         "choose_year": "Vyberte rok",
         "pages_read": "prečítaných strán",
         "finished": "prečítané",
-        "dropped": "nedočítané"
+        "dropped": "nedočítané",
+        "total": "Celkom",
+        "read": "Prečítané",
+        "unread": "Neprečítané"
     },
     "history": {
         "years": "roky"
@@ -324,7 +345,9 @@
         "add_or_remove": "Pridať alebo odobrať štítky",
         "add": "Pridať",
         "remove": "Odstrániť",
-        "choose_tag": "Vyberte štítok, ktorý chcete pridať alebo odstrániť"
+        "choose_tag": "Vyberte štítok, ktorý chcete pridať alebo odstrániť",
+        "add_tag": "Pridať štítok",
+        "remove_tag": "Odstrániť štítok"
     },
     "reviews": {
         "create_review": "Vytvoriť recenziu",
@@ -368,5 +391,26 @@
         "source": "zdroj",
         "last_activity": "Posledná aktivita",
         "activity": "aktivita prihlasovania"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "Zásuvný modul na získanie metadát sa abnormálne ukončil",
+            "EXCEPTION_CAUGHT": "Pri volaní zásuvného modulu metadát bola vyvolaná výnimka"
+        },
+        "details": "Podrobnosti o chybe"
+    },
+    "lists": {
+        "create_list": "Vytvoriť vlastný zoznam",
+        "name": "Názov",
+        "public": "Verejný",
+        "actionable": "Interaktívny",
+        "actionable_desc": "Položky v interaktívnom zozname je možné odstrániť kliknutím.",
+        "tags": "Štítky",
+        "tags_desc": "Zoznam zobrazí položky, ktoré zodpovedajú všetkým zvoleným štítkom.",
+        "create": "Vytvoriť",
+        "remove": "Odstrániť označené",
+        "empty": "Zoznam je prázdny",
+        "edit_list": "Upraviť zoznam",
+        "update_list": "Aktualizovať zoznam"
     }
 }

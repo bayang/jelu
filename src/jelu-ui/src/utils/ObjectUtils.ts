@@ -1,14 +1,18 @@
+import { Author } from "../model/Author";
 import { Book, UserBook } from "../model/Book";
 import Swal from 'sweetalert2';
+import { Tag } from "../model/Tag";
 
 export class ObjectUtils {
 
   // from https://javascript.plainenglish.io/deep-clone-an-object-and-preserve-its-type-with-typescript-d488c35e5574
   public static deepCopy<T>(source: T): T {
     return Array.isArray(source)
-      ? source.map(item => this.deepCopy(item))
-      : source instanceof Date
-        ? new Date(source.getTime())
+    //@ts-ignore
+    ? source.map(item => this.deepCopy(item))
+    : source instanceof Date
+    //@ts-ignore
+    ? new Date(source.getTime())
         : source && typeof source === 'object'
           ? Object.getOwnPropertyNames(source).reduce((o, prop) => {
             Object.defineProperty(o, prop, Object.getOwnPropertyDescriptor(source, prop)!);
@@ -45,27 +49,25 @@ export class ObjectUtils {
       avgRating: book.userbook?.avgRating != null ? book.userbook?.avgRating : null,
       userAvgRating: book.userbook?.userAvgRating != null ? book.userbook?.userAvgRating : null
     } as UserBook
-    // console.log('after')
-    // console.log(converted)
     return converted
   }
 
   public static unwrapUserBook = (book: Book): UserBook => {
     const userbook = book.userbook
     if (userbook != undefined) {
-        userbook.book = {
-            ...book,
-            userbook: undefined
-        }
-        console.log('ub')
-        console.log(userbook)
-        return userbook
+      userbook.book = {
+        ...book,
+        userbook: undefined
+      }
+      console.log('ub')
+      console.log(userbook)
+      return userbook
     } else {
-        const converted = {
-          id: undefined,
-          book: book
-        } as UserBook
-        return converted
+      const converted = {
+        id: undefined,
+        book: book
+      } as UserBook
+      return converted
     }
   }
   public static swalMixin = Swal.mixin({
@@ -78,9 +80,27 @@ export class ObjectUtils {
       popup: 'p-2 shadow-lg sm:p-3 bg-red-600',
       title: 'ml-4 truncate',
       input: 'bg-white text-center',
-      confirmButton: 'btn btn-warning font-bold border-b-4 rounded mx-1',
-      cancelButton: 'btn btn-info font-bold border-b-4 rounded mx-1',
-      denyButton: 'btn btn-error font-bold rounded mx-1'
+      confirmButton: 'btn btn-warning font-bold border-b-4 rounded-sm mx-1',
+      cancelButton: 'btn btn-info font-bold border-b-4 rounded-sm mx-1',
+      denyButton: 'btn btn-error font-bold rounded-sm mx-1'
+    }
+  })
+
+  /**
+   * Workaround sweetalert bug
+   */
+  public static swalYesNoMixin = Swal.mixin({
+    background: '#404040',
+    color: '#ffffff',
+    buttonsStyling: false,
+    customClass: {
+      container: '',
+      htmlContainer: 'mb-3 ml-3',
+      popup: 'p-2 shadow-lg sm:p-3 bg-red-600',
+      title: 'ml-4 truncate',
+      input: 'bg-white text-center',
+      confirmButton: 'btn btn-warning font-bold border-b-4 rounded-sm mx-1',
+      cancelButton: 'btn btn-info font-bold border-b-4 rounded-sm mx-1',
     }
   })
 
@@ -96,28 +116,47 @@ export class ObjectUtils {
    * @param target userbook, or reactive form
    * @param pageCount current pageCount
    */
-  public static computePages = (newVals: Array<number | null | undefined>, oldVals: Array<number | null | undefined>, 
+  public static computePages = (newVals: Array<number | string | null | undefined>, oldVals: Array<number | string | null | undefined>,
     target: { currentPageNumber?: number | null, percentRead?: number | null }, pageCount: number | null) => {
+    console.log("pagecount " + pageCount)
     if (pageCount != null) {
-      if (newVals[0] != null && newVals[0] != oldVals[0]) {
-        target.percentRead = Math.min(100, ((newVals[0] * 100) / pageCount))
-      } else if (newVals[1] != null && newVals[1] != oldVals[1]) {
-        target.currentPageNumber = Math.trunc(Math.min(pageCount, ((newVals[1] * pageCount) / 100)))
-      } else if (newVals.length > 2 && newVals[2] != oldVals[2]) {
-        if (target.currentPageNumber != null && newVals[2] != null) {
-          if (target.currentPageNumber > newVals[2]) {
-            target.currentPageNumber = newVals[2]
-            target.percentRead = 100
-          } else {
-            target.percentRead = Math.min(100, ((target.currentPageNumber * 100) / newVals[2]))
-          }
-        }
+      console.log(newVals)
+      console.log(oldVals)
+      if (newVals[0] as number >= pageCount) {
+        target.currentPageNumber = pageCount
+        target.percentRead = 100
+      } else {
+        target.percentRead = Math.min(100, ((newVals[0] as number * 100) / pageCount))
       }
+    } else {
+      target.currentPageNumber = null
     }
   }
+
+  // https://stackoverflow.com/questions/39924644/es6-generate-an-array-of-numbers
+  public static range = (start: number, end: number, step: number) => {
+    return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), x => start + x * step);
+  }
   
-// https://stackoverflow.com/questions/39924644/es6-generate-an-array-of-numbers
-public static range = (start: number, end: number, step: number) => {
-  return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), x => start + x * step);
+  public static wrapForOptions = (object: any) => {
+    return {"label": object.name, "value": object}
+  }
+
+  public static wrapAsAuthor(a: Author|Tag|string) {
+      if (typeof a === 'string') {
+        return {"name": a}
+      } else {
+        return a
+      }
+  }
+  
+  public static createNamedItem(item: Author | Tag | string) {
+  console.log("create")
+  console.log(item)
+  if (typeof item === 'string') {
+    return {"name": item}
+  } else {
+    return item
+  }
 }
 }

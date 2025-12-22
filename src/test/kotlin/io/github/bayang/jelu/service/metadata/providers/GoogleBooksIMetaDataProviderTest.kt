@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.service.metadata.providers
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
@@ -110,7 +111,7 @@ class GoogleBooksIMetaDataProviderTest {
             JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
             listOf(JeluProperties.MetaDataProvider("google", true, "fake-google-api-key")),
         )
-        val service = GoogleBooksIMetaDataProvider(webClient, jeluProperties)
+        val service = GoogleBooksIMetaDataProvider(webClient, jeluProperties, ObjectMapper())
 
         // When
         val result: MetadataDto = service.fetchMetadata(

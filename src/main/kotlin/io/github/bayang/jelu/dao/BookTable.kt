@@ -46,6 +46,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
     var publisher by BookTable.publisher
     var authors by Author via BookAuthors
     var translators by Author via BookTranslators
+    var narrators by Author via BookNarrators
     var tags by Tag via BookTags
     var image by BookTable.image
     var seriesBak by BookTable.seriesBak
@@ -90,6 +91,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             language = this.language,
             authors = this.authors.map { it.toAuthorDto() },
             translators = this.translators.map { it.toAuthorDto() },
+            narrators = this.narrators.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() },
             userBookId = this.userBookId,
             series = this.seriesAndOrder.map { it.toSeriesOrderDto() },
@@ -119,6 +121,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             language = this.language,
             authors = this.authors.map { it.toAuthorDto() },
             translators = this.translators.map { it.toAuthorDto() },
+            narrators = this.narrators.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() },
             series = this.seriesAndOrder.map { it.toSeriesOrderDto() },
         )

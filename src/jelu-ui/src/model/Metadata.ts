@@ -1,3 +1,5 @@
+import { MetadataError } from './MetadataError';
+
 export interface Metadata {
     title?: string,
     isbn10?:string,
@@ -15,8 +17,11 @@ export interface Metadata {
     googleId?: string,
     amazonId?: string,
     goodreadsId?: string,
+    librarythingId?: string,
     isfdbId?: string,
     openlibraryId?: string,
     noosfereId?: string,
     inventaireId?: string,
+    errorType?: MetadataError,
+    pluginErrorMessage?: string,
 }

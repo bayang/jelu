@@ -127,9 +127,6 @@ services:
 
 ```
 
-!!!! WARNING : ARM versions must add this environment variable for automatic metadata fetching :
-`JELU_METADATA_CALIBRE_PATH=/usr/bin/fetch-ebook-metadata`
-
 ### Kubernetes (Helm)
 
 An unofficial Helm-Chart to deploy Jelu to Kubernetes is available here:

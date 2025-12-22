@@ -35,7 +35,7 @@ const author: Ref<Author> = ref({name: ""})
 const authorBooks: Ref<Array<Book>> = ref([]);
 const authorEdit: Ref<boolean> = ref(false)
 
-const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading, pageCount } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('title,asc')
 
@@ -141,88 +141,134 @@ getBooks()
     <template #sort-fields>
       <div class="field">
         <label class="label">{{ t('sorting.sort_by') }} : </label>
-        <o-radio
-          v-model="sortBy"
-          native-value="title"
-        >
-          {{ t('sorting.title') }}
-        </o-radio>
+        <div class="field">
+          <input
+            v-model="sortBy"
+            type="radio"
+            name="radio-22"
+            class="radio radio-primary mb-2"
+            value="title"
+          >
+          <span class="label-text">{{ t('sorting.title') }}</span>
+        </div>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="publisher"
+          type="radio"
+          name="radio-22"
+          class="radio radio-primary mb-2"
+          value="publisher"
         >
-          {{ t('sorting.publisher') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.publisher') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="series"
+          type="radio"
+          name="radio-22"
+          class="radio radio-primary mb-2"
+          value="series"
         >
-          {{ t('sorting.series') }}
-        </o-radio>
-    </div>
-    <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="publishedDate"
-        >
-          {{ t('sorting.publication_date') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.series') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="pageCount"
+          type="radio"
+          name="radio-22"
+          class="radio radio-primary mb-2"
+          value="publishedDate"
         >
-          {{ t('sorting.page_count') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.publication_date') }}</span>
+      </div>
+      <div class="field">
+        <input
+          v-model="sortBy"
+          type="radio"
+          name="radio-22"
+          class="radio radio-primary mb-2"
+          value="pageCount"
+        >
+        <span class="label-text">{{ t('sorting.page_count') }}</span>
       </div>
     </template>
     <template #filters>
       <div class="field flex flex-col items-start gap-1">
         <label class="label">{{ t('filtering.books_type') }} : </label>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ANY"
-        >
-          {{ t('filtering.any') }}
-        </o-radio>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ONLY_USER_BOOKS"
-        >
-          {{ t('filtering.only_in_my_list') }}
-        </o-radio>
-        <o-radio
-          v-model="libraryFilter"
-          native-value="ONLY_NON_USER_BOOKS"
-        >
-          {{ t('filtering.only_not_in_my_list') }}
-        </o-radio>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ANY"
+          >
+          <span class="label-text">{{ t('filtering.any') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ONLY_USER_BOOKS"
+          >
+          <span class="label-text">{{ t('filtering.only_in_my_list') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="libraryFilter"
+            type="radio"
+            name="radio-51"
+            class="radio radio-primary my-1"
+            value="ONLY_NON_USER_BOOKS"
+          >
+          <span class="label-text">{{ t('filtering.only_not_in_my_list') }}</span>
+        </div>
       </div>
-      <div class="field flex flex-col items-start gap-1">
+      <div class="field flex flex-col gap-1 capitalize">
         <label class="label">{{ t('filtering.role') }} : </label>
-        <o-radio
-          v-model="roleFilter"
-          native-value="ANY"
-        >
-          {{ t('filtering.any') }}
-        </o-radio>
-        <o-radio
-          v-model="roleFilter"
-          native-value="AUTHOR"
-        >
-          {{ t('book.author') }}
-        </o-radio>
-        <o-radio
-          v-model="roleFilter"
-          native-value="TRANSLATOR"
-        >
-          {{ t('book.translator') }}
-        </o-radio>
+        <div class="">
+          <input
+            v-model="roleFilter"
+            type="radio"
+            name="radio-53"
+            class="radio radio-primary my-1"
+            value="ANY"
+          >
+          <span class="label-text">{{ t('filtering.any') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="roleFilter"
+            type="radio"
+            name="radio-53"
+            class="radio radio-primary my-1"
+            value="AUTHOR"
+          >
+          <span class="label-text">{{ t('book.author') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="roleFilter"
+            type="radio"
+            name="radio-53"
+            class="radio radio-primary my-1"
+            value="TRANSLATOR"
+          >
+          <span class="label-text">{{ t('book.translator') }}</span>
+        </div>
+        <div class="">
+          <input
+            v-model="roleFilter"
+            type="radio"
+            name="radio-53"
+            class="radio radio-primary my-1"
+            value="NARRATOR"
+          >
+          <span class="label-text">{{ t('book.narrator') }}</span>
+        </div>
       </div>
     </template>
   </sort-filter-bar-vue>
@@ -264,7 +310,32 @@ getBooks()
           :href="author.twitterPage"
           target="_blank"
           class="link link-accent"
-        ><i class="mdi mdi-24px mdi-twitter" /></a>
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="100"
+            height="40"
+            viewBox="0 0 48 48"
+          >
+            <path
+              fill="#212121"
+              fill-rule="evenodd"
+              d="M38,42H10c-2.209,0-4-1.791-4-4V10c0-2.209,1.791-4,4-4h28	c2.209,0,4,1.791,4,4v28C42,40.209,40.209,42,38,42z"
+              clip-rule="evenodd"
+            /><path
+              fill="#fff"
+              d="M34.257,34h-6.437L13.829,14h6.437L34.257,34z M28.587,32.304h2.563L19.499,15.696h-2.563 L28.587,32.304z"
+            /><polygon
+              fill="#fff"
+              points="15.866,34 23.069,25.656 22.127,24.407 13.823,34"
+            /><polygon
+              fill="#fff"
+              points="24.45,21.721 25.355,23.01 33.136,14 31.136,14"
+            />
+          </svg>
+        </a>
         <a
           v-if="author.facebookPage"
           :href="author.facebookPage"
@@ -303,7 +374,7 @@ getBooks()
           <span class="font-semibold">{{ t('author.biography') }} :</span>
         </p>
         <p
-          class="prose-base"
+          class="prose prose-base"
           v-html="author.biography"
         />
         <p
@@ -326,23 +397,21 @@ getBooks()
           <span class="font-semibold">{{ t('author.additional_notes') }} :</span>
         </p>
         <p
-          class="prose-base"
+          class="prose prose-base"
           v-html="author.notes"
         />
       </div>
     </div>
   </div>
-  <div class="flex flex-row justify-between mt-4">
-    <o-button
-      variant="success"
-      outlined
-      class="order-last sm:order-first"
+  <div class="flex flex-row justify-between mt-4 mb-2">
+    <button
+      class="order-last sm:order-first btn btn-outline btn-success"
       @click="open = !open"
     >
       <span class="icon">
         <i class="mdi mdi-filter-variant" />
       </span>
-    </o-button>
+    </button>
     <h2 class="text-xl typewriter">
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
@@ -351,7 +420,15 @@ getBooks()
     </h2>
     <div />
   </div>
-  <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-2 justify-center justify-items-center justify-self-center">
+  <o-pagination
+    v-if="pageCount > 1"
+    v-model:current="pageAsNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    @change="updatePage"
+  />
+  <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-2 justify-center justify-items-center justify-self-center mt-2">
     <div
       v-for="book in convertedBooks"
       :key="book.book.id"
@@ -363,6 +440,7 @@ getBooks()
         :force-select="false"
         :show-select="false"
         :propose-add="true"
+        :public="false"
         @update:modal-closed="modalClosed"
       />
     </div>

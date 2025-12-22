@@ -17,9 +17,17 @@ export default function useDates() {
         return ''
     }
 
+    function stringToDate(dateString: string | null | undefined): Date|null {
+      if (dateString != null) {
+        return dayjs(dateString).toDate()
+      }
+      return null
+    }
+
     return {
         formatDate,
-        formatDateString
+        formatDateString,
+        stringToDate
     }
 }
 

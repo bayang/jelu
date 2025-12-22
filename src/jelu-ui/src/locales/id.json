@@ -16,7 +16,9 @@
         "search": "cari",
         "history": "riwayat",
         "shelves": "rak",
-        "tags-admin": "manajemen penanda"
+        "tags-admin": "manajemen penanda",
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Cari",
@@ -113,7 +115,17 @@
         "add_quote": "tambahkan kutipan buku",
         "description": "deskripsi",
         "user_rating": "rating saya : {rating}",
-        "apply": "apply"
+        "apply": "apply",
+        "loading": "loading",
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator",
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Pilih bahasa",
@@ -137,7 +149,8 @@
         "stats": "Statistik",
         "shelves": "Rak",
         "shelves_max_number_reached": "Jumlah rak sudah maksimal. Hapus rak saat ini untuk menambahkan lagi.",
-        "shelf_choose_tag": "Pilih penanda untuk membuat rak"
+        "shelf_choose_tag": "Pilih penanda untuk membuat rak",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Silakan masuk dahulu"
@@ -176,7 +189,8 @@
         "edit_event": "ubah aktivitas",
         "reading": "membaca",
         "start_date": "tanggal mulai",
-        "end_date": "tanggal akhir"
+        "end_date": "tanggal akhir",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Buku ada di daftar akan baca",
@@ -221,7 +235,8 @@
         "in_read_list": "di daftar baca",
         "translator": "penerjemah",
         "borrowed": "dipinjam",
-        "current_page_number": "halaman saat ini"
+        "current_page_number": "halaman saat ini",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Utilitias penulis gabungan",
@@ -232,7 +247,8 @@
         "author_right_description": "Pilih penulis berikut yang ingin digabung dengan yang lain",
         "authors_merge_subtitle": "Gabung",
         "authors_merge_description": "Pilih isian di kanan penulis untuk melengkapi penulis di kiri, lalu gabung.",
-        "search_message": "Cari penulis untuk digabung"
+        "search_message": "Cari penulis untuk digabung",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "nama",
@@ -243,6 +259,7 @@
         "wikipedia_page": "halaman wikipedia",
         "goodreads_page": "halaman goodreads",
         "twitter_page": "halaman twitter",
+        "x_page": "X page",
         "facebook_page": "halaman facebook",
         "instagram_page": "halaman instagram",
         "personal_notes": "catatan pribadi",
@@ -276,7 +293,8 @@
         "login_not_match": "isian masuk tidak cocok",
         "password_not_match": "isian kata sandi tidak cocok",
         "login_length": "masuk minimum 3 karakter",
-        "password_length": "kata sandi minimum 3 karakter"
+        "password_length": "kata sandi minimum 3 karakter",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "buat pengguna",
@@ -309,7 +327,10 @@
         "choose_year": "Pilih tahun",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "tahun"
@@ -324,7 +345,9 @@
         "add_or_remove": "Tambah atau hapus penanda",
         "add": "Tambah",
         "remove": "Hapus",
-        "choose_tag": "Pilih penanda yang ingin ditambahkan atau dihapus"
+        "choose_tag": "Pilih penanda yang ingin ditambahkan atau dihapus",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Buat ulasan",
@@ -368,5 +391,26 @@
         "source": "sumber",
         "last_activity": "aktivitas terakhir",
         "activity": "aktivitas login"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
+            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+        },
+        "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

@@ -23,12 +23,19 @@ fun Book.toDocument() =
         if (!isbn13.isNullOrBlank()) add(TextField("isbn", isbn13, Field.Store.NO))
         tags.forEach {
             add(TextField("tag", it.name, Field.Store.NO))
+            // add tag name as a string field as well so that it is stored with its original casing
+            // and is not tokenized. It is used for custom lists since we want to search by exact list of tags
+            add(StringField("tag_ex", it.name, Field.Store.NO))
+            add(StringField("tag_id", it.id.value.toString(), Field.Store.YES))
         }
         authors.forEach {
             add(TextField("author", it.name, Field.Store.NO))
         }
         translators.forEach {
             add(TextField("translator", it.name, Field.Store.NO))
+        }
+        narrators.forEach {
+            add(TextField("narrator", it.name, Field.Store.NO))
         }
         if (!seriesBak.isNullOrBlank()) add(TextField("series", seriesBak, Field.Store.NO))
         seriesAndOrder.forEach {

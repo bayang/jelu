@@ -5,7 +5,7 @@ import io.github.bayang.jelu.dto.UpdateReadingEventDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.utils.nowInstant
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.SortOrder
@@ -163,12 +163,14 @@ class ReadingEventRepository {
                 if (alreadyReadingEvent.userBook.toRead == true) {
                     alreadyReadingEvent.userBook.toRead = null
                 }
+                synchronizeReadingProgress(createReadingEventDto, userBook)
                 return alreadyReadingEvent
             }
             // FIXME else : alreadyReadingEvent is not null and createReadingEventDto.eventDate is before an already existing CURRENTLY_READING EVENT
             // this could create CURRENTLY_READING events in the past
             // should we allow this ? Let's wait and see for the moment, user can edit events in bookdetail page
         }
+        synchronizeReadingProgress(createReadingEventDto, userBook)
         val startDate = computeStartDate(createReadingEventDto, instant)
         val endDate = computeEndDate(createReadingEventDto, instant)
         return ReadingEvent.new {
@@ -178,6 +180,21 @@ class ReadingEventRepository {
             this.modificationDate = instant
             this.eventType = createReadingEventDto.eventType
             this.userBook = userBook
+        }
+    }
+
+    private fun synchronizeReadingProgress(createReadingEventDto: CreateReadingEventDto, userBook: UserBook) {
+        if (createReadingEventDto.eventType == ReadingEventType.CURRENTLY_READING) {
+            // we start a book, for the first time or it is a re-read
+            // set the progress to zero
+            userBook.percentRead = 0
+            userBook.currentPageNumber = 0
+        } else if (createReadingEventDto.eventType == ReadingEventType.FINISHED) {
+            // and if we mark a book as read set progress to 100 and current page to last page
+            userBook.percentRead = 100
+            if (userBook.book.pageCount != null) {
+                userBook.currentPageNumber = userBook.book.pageCount
+            }
         }
     }
 

@@ -3,24 +3,38 @@ package io.github.bayang.jelu.service.metadata.providers
 import com.ctc.wstx.stax.WstxInputFactory
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
+import io.github.bayang.jelu.dto.MetadataError
 import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.service.metadata.OpfParser
 import io.github.bayang.jelu.service.metadata.PluginInfoHolder
 import io.github.bayang.jelu.utils.slugify
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.validator.routines.ISBNValidator
 import org.codehaus.staxmate.SMInputFactory
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.File
 import java.util.Optional
+import java.util.concurrent.TimeUnit
 
 private val logger = KotlinLogging.logger {}
+
+// Add this interface for dependency injection
+interface ProcessBuilderFactory {
+    fun createProcessBuilder(): ProcessBuilder
+}
+
+// Add this implementation for production use
+@Service
+class DefaultProcessBuilderFactory : ProcessBuilderFactory {
+    override fun createProcessBuilder(): ProcessBuilder = ProcessBuilder()
+}
 
 @Service
 class CalibreMetadataProvider(
     private val properties: JeluProperties,
     private val opfParser: OpfParser,
+    private val processBuilderFactory: ProcessBuilderFactory = DefaultProcessBuilderFactory(),
 ) : IMetaDataProvider {
 
     companion object {
@@ -53,7 +67,7 @@ class CalibreMetadataProvider(
             true
         }
         var bookFileName: String = FILE_PREFIX
-        val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path!!, "-o", "-d 90")
+        val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path!!, "-o", "-d ${properties.metadata.calibre.timeout}")
         var fileNameComplete = false
         if (!metadataRequestDto.isbn.isNullOrBlank()) {
             bookFileName += metadataRequestDto.isbn
@@ -105,14 +119,14 @@ class CalibreMetadataProvider(
             commandArray.add("-c")
             commandArray.add(targetCover.absolutePath)
         }
-        val builder = ProcessBuilder()
+        val builder = processBuilderFactory.createProcessBuilder()
         logger.trace { "fetch metadata command : $commandArray" }
         builder.command(commandArray)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
         try {
             val process: Process = builder.start()
-            val exitVal = process.waitFor()
-            if (exitVal == 0) {
+            val exitVal = process.waitFor(properties.metadata.calibre.timeout.toLong(), TimeUnit.SECONDS)
+            if (exitVal) {
                 var output: String = process.inputStream.bufferedReader().use(BufferedReader::readText)
                 // on ARM the fetch-ebook-metadata binary outputs a python byte string instead of a regular string
                 // cf test case for a sample string
@@ -136,12 +150,22 @@ class CalibreMetadataProvider(
                 }
                 return Optional.of(parseOpf)
             } else {
-                logger.error { "fetch ebookmetadata process exited abnormally with code $exitVal" }
-                return Optional.empty()
+                logger.error { "fetch ebookmetadata process exited abnormally" }
+                val dto = MetadataDto()
+                var output: String = process.inputStream.bufferedReader().use(BufferedReader::readText)
+                output += process.errorStream.bufferedReader().use(BufferedReader::readText)
+                dto.errorType = MetadataError.EXIT_CODE_NOT_ZERO
+                dto.pluginErrorMessage = output
+                logger.error { "output from fetch-ebook-metadata process : $output" }
+                return Optional.of(dto)
             }
         } catch (e: Exception) {
             logger.error(e) { "failure while calling fetch-ebook-metadata process" }
-            return Optional.empty()
+            val dto = MetadataDto()
+            dto.errorType = MetadataError.EXCEPTION_CAUGHT
+            dto.pluginErrorMessage = e.message
+            logger.error { "output from fetch-ebook-metadata process : ${e.message}" }
+            return Optional.of(dto)
         }
     }
 

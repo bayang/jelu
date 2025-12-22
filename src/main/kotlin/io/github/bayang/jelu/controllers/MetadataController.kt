@@ -10,9 +10,9 @@ import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import io.github.bayang.jelu.service.metadata.FileMetadataService
 import io.github.bayang.jelu.service.metadata.PluginInfoHolder
 import io.github.bayang.jelu.service.metadata.WikipediaService
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.Operation
 import jakarta.validation.Valid
-import mu.KotlinLogging
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

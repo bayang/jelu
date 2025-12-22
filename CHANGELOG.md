@@ -1,3 +1,314 @@
+### [0.75.2](https://github.com/bayang/jelu/compare/v0.75.1...v0.75.2) (2025-12-21)
+
+### [0.75.1](https://github.com/bayang/jelu/compare/v0.75.0...v0.75.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* resources not served by spring anymore ([f14793f](https://github.com/bayang/jelu/commit/f14793f6026b23d281f97948efe826c9be4b62df))
+
+## [0.75.0](https://github.com/bayang/jelu/compare/v0.74.0...v0.75.0) (2025-12-19)
+
+
+### Features
+
+* reading progress and finished state sync [#246](https://github.com/bayang/jelu/issues/246) ([974cfd9](https://github.com/bayang/jelu/commit/974cfd990242ba5923e04431c94867f5837ebeb1))
+
+
+### Bug Fixes
+
+* add missing translation [#267](https://github.com/bayang/jelu/issues/267) ([b4e11a2](https://github.com/bayang/jelu/commit/b4e11a2ef73bd8d34419b63c3e8f1f9b4dd9c6b3))
+* replace removed dependency ([abcf1d9](https://github.com/bayang/jelu/commit/abcf1d980d6953bb02f4195b922642567e5ee14b))
+
+## [0.74.0](https://github.com/bayang/jelu/compare/v0.73.1...v0.74.0) (2025-10-13)
+
+
+### Features
+
+* add barcode scan on search [#207](https://github.com/bayang/jelu/issues/207) ([3f96d0a](https://github.com/bayang/jelu/commit/3f96d0acec36ed94aa9c53b88d96597e8149b307))
+
+
+### Bug Fixes
+
+* make edit series save button label clearer [#264](https://github.com/bayang/jelu/issues/264) ([adc1e7e](https://github.com/bayang/jelu/commit/adc1e7e6ba4fe19eed480c8dbb426f27b05331ca))
+
+### [0.73.1](https://github.com/bayang/jelu/compare/v0.73.0...v0.73.1) (2025-10-06)
+
+
+### Bug Fixes
+
+* series prompt missing [#261](https://github.com/bayang/jelu/issues/261) ([6b0ee99](https://github.com/bayang/jelu/commit/6b0ee991c192595e14c679746f3802e4732239fe))
+
+## [0.73.0](https://github.com/bayang/jelu/compare/v0.72.8...v0.73.0) (2025-10-06)
+
+
+### Features
+
+* Save sorting preferences ([#260](https://github.com/bayang/jelu/issues/260)) ([d81ccd7](https://github.com/bayang/jelu/commit/d81ccd7ea15e94a014af2bc03da1e70f1003b0e3))
+
+### [0.72.8](https://github.com/bayang/jelu/compare/v0.72.7...v0.72.8) (2025-09-19)
+
+
+### Bug Fixes
+
+* add user agent when downloading covers to prevent wikipedia from blocking us [#250](https://github.com/bayang/jelu/issues/250) ([62e6e2e](https://github.com/bayang/jelu/commit/62e6e2ea0e7d219b5e7737c5265b8e98d8156175))
+
+### [0.72.7](https://github.com/bayang/jelu/compare/v0.72.6...v0.72.7) (2025-09-17)
+
+
+### Bug Fixes
+
+* custom lists ([00381d5](https://github.com/bayang/jelu/commit/00381d5d896ecc1143f15d3eed4150ae6198a797))
+* minor tweaks to jelu theme ([55b1031](https://github.com/bayang/jelu/commit/55b1031026ccf957984c5907d8ee95dd27638a8a))
+
+### [0.72.6](https://github.com/bayang/jelu/compare/v0.72.5...v0.72.6) (2025-09-15)
+
+
+### Bug Fixes
+
+* Can't fetch metadata [#127](https://github.com/bayang/jelu/issues/127) ([#256](https://github.com/bayang/jelu/issues/256)) ([00ec7d2](https://github.com/bayang/jelu/commit/00ec7d2dad7bb47f7f0993f6b6399047acf2144d))
+
+### [0.72.5](https://github.com/bayang/jelu/compare/v0.72.4...v0.72.5) (2025-09-11)
+
+
+### Bug Fixes
+
+* add missing import after refactoring ([6ed8d38](https://github.com/bayang/jelu/commit/6ed8d38748992c964bf49296e34fc7059e2c9ad0))
+* factorize closable tag in taginput ([b5e73b7](https://github.com/bayang/jelu/commit/b5e73b7c4120a4b2ff2f43c3fe09f925096b5049))
+* force timeout directly on process builder [#226](https://github.com/bayang/jelu/issues/226) [#59](https://github.com/bayang/jelu/issues/59) ([f6608c1](https://github.com/bayang/jelu/commit/f6608c1f87b4c9a5ffb9478ca746f6a246b72a86))
+
+### [0.72.4](https://github.com/bayang/jelu/compare/v0.72.3...v0.72.4) (2025-09-10)
+
+
+### Bug Fixes
+
+* button appearance on authors page ([27f91ef](https://github.com/bayang/jelu/commit/27f91ef5a15f2d6e805dec3b8a6e663e05c21b1d))
+* login page styling ([fef36fd](https://github.com/bayang/jelu/commit/fef36fdae609236b6cb6a9b11ce1f8f8f83b7565))
+* taginput and publishers not saved or displayed [#253](https://github.com/bayang/jelu/issues/253) ([ea3ecf5](https://github.com/bayang/jelu/commit/ea3ecf56127bcc2a765c649ed7d738ad8691b9e8))
+* user stats [#254](https://github.com/bayang/jelu/issues/254) ([b928f01](https://github.com/bayang/jelu/commit/b928f012afe8573e6496f2eb5e266779e342766f))
+
+### [0.72.3](https://github.com/bayang/jelu/compare/v0.72.2...v0.72.3) (2025-09-08)
+
+
+### Bug Fixes
+
+* change twitter icon to X one [#248](https://github.com/bayang/jelu/issues/248) ([4963fc7](https://github.com/bayang/jelu/commit/4963fc78cfd58e5991e73415cdbfcb632adb6840))
+* upgrade oruga [#251](https://github.com/bayang/jelu/issues/251) [#243](https://github.com/bayang/jelu/issues/243) ([e8ad220](https://github.com/bayang/jelu/commit/e8ad2200bcfb3e1de01ecfe99fbe956454835fd7))
+
+### [0.72.2](https://github.com/bayang/jelu/compare/v0.72.1...v0.72.2) (2025-08-25)
+
+
+### Bug Fixes
+
+* make labels and radio buttons order consistent [#243](https://github.com/bayang/jelu/issues/243) ([ea4e21d](https://github.com/bayang/jelu/commit/ea4e21d7b23e253e15324cf504cb655f935bfe7b))
+* published date translation [#245](https://github.com/bayang/jelu/issues/245) ([485c90b](https://github.com/bayang/jelu/commit/485c90bdb5cb646392182f8c57ad93d4519d0de2))
+* search bar styling [#243](https://github.com/bayang/jelu/issues/243) ([6c4df2d](https://github.com/bayang/jelu/commit/6c4df2ddee9f3526bbd1959cafc91d8f63270ff2))
+* user permissions [#245](https://github.com/bayang/jelu/issues/245) ([ed290bb](https://github.com/bayang/jelu/commit/ed290bb44203076f9de9ed35a88cd06445cdb5d0))
+
+### [0.72.1](https://github.com/bayang/jelu/compare/v0.72.0...v0.72.1) (2025-08-20)
+
+
+### Bug Fixes
+
+* translators and narrators appear ax orphaned authors [#245](https://github.com/bayang/jelu/issues/245) ([294cd58](https://github.com/bayang/jelu/commit/294cd58dccfa980d44014399c1bcd1c2123fb903))
+* use user locale to search for author metadata [#244](https://github.com/bayang/jelu/issues/244) ([1a428ce](https://github.com/bayang/jelu/commit/1a428cefd151ad9034f7faf7f55c701348962b0a))
+* wrong yes no popups, prevent users from deleting books from DB [#245](https://github.com/bayang/jelu/issues/245) ([b2e2d56](https://github.com/bayang/jelu/commit/b2e2d56f7521e1fab9c5531d31d4c686ab62c81d))
+
+## [0.72.0](https://github.com/bayang/jelu/compare/v0.71.4...v0.72.0) (2025-08-01)
+
+
+### Features
+
+* add custom lists [#170](https://github.com/bayang/jelu/issues/170) ([af9d375](https://github.com/bayang/jelu/commit/af9d37576a614646b5ead3b7253114bdccf83146))
+
+### [0.71.4](https://github.com/bayang/jelu/compare/v0.71.3...v0.71.4) (2025-07-29)
+
+
+### Bug Fixes
+
+* Updated DatabazeKnihMetadataProvider ([#240](https://github.com/bayang/jelu/issues/240)) ([ada3bb0](https://github.com/bayang/jelu/commit/ada3bb0b5ae813fae34e0a6ce1fed6b76e3367d2))
+
+### [0.71.3](https://github.com/bayang/jelu/compare/v0.71.2...v0.71.3) (2025-07-23)
+
+
+### Bug Fixes
+
+* localize history months [#235](https://github.com/bayang/jelu/issues/235) ([075869b](https://github.com/bayang/jelu/commit/075869b6903d51ee13704934bae53bee06c3d194))
+* make import page more readable [#236](https://github.com/bayang/jelu/issues/236) ([18977c6](https://github.com/bayang/jelu/commit/18977c61f9216257d7b3b4f256519bc24425f9e1))
+* user login [#229](https://github.com/bayang/jelu/issues/229) ([573fe96](https://github.com/bayang/jelu/commit/573fe969c6f41fd2ead6774131365d138756c0b4))
+
+### [0.71.2](https://github.com/bayang/jelu/compare/v0.71.1...v0.71.2) (2025-07-21)
+
+
+### Bug Fixes
+
+* translations bugs [#229](https://github.com/bayang/jelu/issues/229) ([4a376a7](https://github.com/bayang/jelu/commit/4a376a74fedf8fd9885f0bf3bdd25d4dea29801d))
+
+### [0.71.1](https://github.com/bayang/jelu/compare/v0.71.0...v0.71.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* remove extra button on delete user choice popup [#227](https://github.com/bayang/jelu/issues/227) ([74bb33d](https://github.com/bayang/jelu/commit/74bb33d17742712824a299095129df9f3e43b70b))
+
+## [0.71.0](https://github.com/bayang/jelu/compare/v0.70.1...v0.71.0) (2025-07-15)
+
+
+### Features
+
+* Update to fetch ISBN from databazeknih ([#219](https://github.com/bayang/jelu/issues/219)) ([73e30dd](https://github.com/bayang/jelu/commit/73e30dd9b03c6086adfcd73c321990d57448254c))
+
+### [0.70.1](https://github.com/bayang/jelu/compare/v0.70.0...v0.70.1) (2025-07-07)
+
+
+### Bug Fixes
+
+* some dates are not translated [#221](https://github.com/bayang/jelu/issues/221) ([7b1c5b5](https://github.com/bayang/jelu/commit/7b1c5b50e5175f02bc1057e6c869f06ee30e3d24))
+
+## [0.70.0](https://github.com/bayang/jelu/compare/v0.69.0...v0.70.0) (2025-07-03)
+
+
+### Features
+
+* Add DatabazeKnihMetadataProvider.kt ([#218](https://github.com/bayang/jelu/issues/218)) [#211](https://github.com/bayang/jelu/issues/211) ([05b99b0](https://github.com/bayang/jelu/commit/05b99b06343b3ef31510a17804d36e944ee39656))
+
+
+### Bug Fixes
+
+* linting ([2654475](https://github.com/bayang/jelu/commit/26544759d5419cd9039920ce4181f2e44d94ded7))
+
+## [0.69.0](https://github.com/bayang/jelu/compare/v0.68.0...v0.69.0) (2025-06-30)
+
+
+### Features
+
+* add error message to AutoImportFormModal ([#209](https://github.com/bayang/jelu/issues/209)) ([a74d557](https://github.com/bayang/jelu/commit/a74d557291a216c7cb24ad9cf5629bb5f1f9310f))
+
+## [0.68.0](https://github.com/bayang/jelu/compare/v0.67.0...v0.68.0) (2025-06-09)
+
+
+### Features
+
+* migrate to tailwind 4 and daisy ui 5 ([3c05afd](https://github.com/bayang/jelu/commit/3c05afd863a519be31dd68cfabf6606c49b6a777))
+* Update Calibre Version ([#208](https://github.com/bayang/jelu/issues/208)) ([ef6648f](https://github.com/bayang/jelu/commit/ef6648f30be453a74baf6a302e819b2d760ea6aa))
+
+
+### Bug Fixes
+
+* frontend build ([91e0161](https://github.com/bayang/jelu/commit/91e0161729246fbc147ccf7180613a3d9037cfb6))
+
+## [0.67.0](https://github.com/bayang/jelu/compare/v0.66.3...v0.67.0) (2025-03-24)
+
+
+### Features
+
+* also display dropped count in stats [#202](https://github.com/bayang/jelu/issues/202) ([c3d3360](https://github.com/bayang/jelu/commit/c3d3360bd5db077907f74f01f30771d29cdbdf37))
+
+
+### Bug Fixes
+
+* identifiers could not be filled [#201](https://github.com/bayang/jelu/issues/201) ([834d633](https://github.com/bayang/jelu/commit/834d63369738f2628930358bf6c183b7e41e62a2))
+* remove broken series sort option [#195](https://github.com/bayang/jelu/issues/195) ([c975597](https://github.com/bayang/jelu/commit/c9755978ea93badd34c50f0a72e482b39d4a6ab2))
+* stats tables not displaying on chrome [#203](https://github.com/bayang/jelu/issues/203) ([c409a88](https://github.com/bayang/jelu/commit/c409a88a4af4b645ee0044c9744e0608759ae371))
+
+### [0.66.3](https://github.com/bayang/jelu/compare/v0.66.2...v0.66.3) (2025-02-26)
+
+
+### Bug Fixes
+
+* initial user creation [#184](https://github.com/bayang/jelu/issues/184) ([5a30ff9](https://github.com/bayang/jelu/commit/5a30ff9925921867e297ee0fb9ecccca3e10000e))
+* missing space after publisher on detail page [#196](https://github.com/bayang/jelu/issues/196) ([65d77c3](https://github.com/bayang/jelu/commit/65d77c39dd17780780dc7f09a188e9ca2c00d0a5))
+
+### [0.66.2](https://github.com/bayang/jelu/compare/v0.66.1...v0.66.2) (2025-02-06)
+
+
+### Bug Fixes
+
+* try to come back to manual calibre install ([c000232](https://github.com/bayang/jelu/commit/c000232f002e3adf41079847aafebf415bd1bc0a))
+* try to come back to manual calibre install ([3d7b646](https://github.com/bayang/jelu/commit/3d7b6465103d6c719123c3f297987f770b413f9f))
+* try to come back to manual calibre install ([c9d9664](https://github.com/bayang/jelu/commit/c9d9664fff5e3fffce4ed4b1c31bcfc3fbeed909))
+* try to restore arm64 build ([5ae0587](https://github.com/bayang/jelu/commit/5ae05877f9353a0efbcc6b44a42a1ab41f02b009))
+* try to temporarily remove cache for docker build ([bf8840e](https://github.com/bayang/jelu/commit/bf8840e5e762f81e2a7d56249c029b0cdd83637b))
+* try to update docker actions ([2fe2bf9](https://github.com/bayang/jelu/commit/2fe2bf9563a4bcfa35dbcea1a0e6caafeba13c58))
+* upgrade docker login ([71454ca](https://github.com/bayang/jelu/commit/71454cadf89f9b99b5e49f110a92e60512ed2f4c))
+
+### [0.66.1](https://github.com/bayang/jelu/compare/v0.66.0...v0.66.1) (2025-01-31)
+
+
+### Bug Fixes
+
+* calibre provider broken [#185](https://github.com/bayang/jelu/issues/185) ([9307080](https://github.com/bayang/jelu/commit/93070805e4d46a5d4c5a931a13ced6c6f1527a11))
+* do not install python3 in docker ([3b1c2af](https://github.com/bayang/jelu/commit/3b1c2af0e316d10d15af6ad09ba80a93396eb719))
+* remove arm64, python 3.12 does not build ([c03c812](https://github.com/bayang/jelu/commit/c03c812d13a09b34f9fc5c484f4696719ba4ff1b))
+* simplify calibre install ([dae4fac](https://github.com/bayang/jelu/commit/dae4fac6ae45020cc214983cfe2c1f419044b053))
+
+## [0.66.0](https://github.com/bayang/jelu/compare/v0.65.1...v0.66.0) (2025-01-23)
+
+
+### Features
+
+* add activity page ([01a99bd](https://github.com/bayang/jelu/commit/01a99bd99eabf79ad2c729bd33b61d19cfe78141))
+* also display pagination at the top [#183](https://github.com/bayang/jelu/issues/183) ([4d14bf6](https://github.com/bayang/jelu/commit/4d14bf64ee95ffda90c4c82f7ab000af1c4efb99))
+* display total read and unread [#171](https://github.com/bayang/jelu/issues/171) ([04e0bfe](https://github.com/bayang/jelu/commit/04e0bfe0d271fcb7e3a7f3693bdf772c71509fa9))
+
+
+### Bug Fixes
+
+* upgrade upload action ([af9b64e](https://github.com/bayang/jelu/commit/af9b64e9b2efdb628b64ff4a12efee91845e7c69))
+
+### [0.65.1](https://github.com/bayang/jelu/compare/v0.65.0...v0.65.1) (2025-01-21)
+
+
+### Bug Fixes
+
+* npe in google provider [#182](https://github.com/bayang/jelu/issues/182) ([8dd4491](https://github.com/bayang/jelu/commit/8dd44915f37e65f4d55e394cba723ee1c2971e19))
+
+## [0.65.0](https://github.com/bayang/jelu/compare/v0.64.0...v0.65.0) (2025-01-17)
+
+
+### Features
+
+* orphan authors and series management [#148](https://github.com/bayang/jelu/issues/148) ([9061b88](https://github.com/bayang/jelu/commit/9061b88efb36cfa7cd8df2d9a5b55fb058ee29f4))
+
+
+### Bug Fixes
+
+* google api provider [#161](https://github.com/bayang/jelu/issues/161) ([ba3cb81](https://github.com/bayang/jelu/commit/ba3cb81ef99cd238b90eca97313f8c1e46cfb047))
+* less disturbing taginput css [#179](https://github.com/bayang/jelu/issues/179) ([f64990d](https://github.com/bayang/jelu/commit/f64990ddcb2d00b7a83805fb9466962f7ec32a7e))
+
+## [0.64.0](https://github.com/bayang/jelu/compare/v0.63.0...v0.64.0) (2025-01-13)
+
+
+### Features
+
+* add oidc [#131](https://github.com/bayang/jelu/issues/131) ([07288a8](https://github.com/bayang/jelu/commit/07288a88367b6434628d15869889a9052e7131d5))
+
+
+### Bug Fixes
+
+* better taginput css ([3b6ea31](https://github.com/bayang/jelu/commit/3b6ea316df5669d21a1a3263847949f4c9ebd9eb))
+
+## [0.63.0](https://github.com/bayang/jelu/compare/v0.62.1...v0.63.0) (2025-01-13)
+
+
+### Features
+
+* add narrator field [#139](https://github.com/bayang/jelu/issues/139) ([804121b](https://github.com/bayang/jelu/commit/804121ba371b64065bbdb7c8be21c0bb68271d81))
+* improve search and add none event type [#145](https://github.com/bayang/jelu/issues/145) ([842b719](https://github.com/bayang/jelu/commit/842b7194e2deeceac540df120d3457fea9baed99))
+
+
+### Bug Fixes
+
+* unable to set progress [#169](https://github.com/bayang/jelu/issues/169) ([dcf23a3](https://github.com/bayang/jelu/commit/dcf23a3c5df560ccc3cc3a20d9c311076f7153e3))
+
+### [0.62.1](https://github.com/bayang/jelu/compare/v0.62.0...v0.62.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* always display link to other user library on profile page ([8aac2a2](https://github.com/bayang/jelu/commit/8aac2a21bf31909221ed55d410b637a2c2646338))
+* change barcode scanner lib ([55e0c5a](https://github.com/bayang/jelu/commit/55e0c5acb4934e12a3b9c075c3a022b777f4bcc7))
+
 ## [0.62.0](https://github.com/bayang/jelu/compare/v0.61.3...v0.62.0) (2025-01-06)
 
 

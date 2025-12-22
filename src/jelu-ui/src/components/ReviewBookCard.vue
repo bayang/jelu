@@ -44,11 +44,11 @@ getBook()
   <div class="card card-side bg-base-100 shadow-2xl shadow-base-300 review-book-card">
     <figure
       v-if="book != null"
-      class="place-self-start"
+      class="place-self-start h-full"
     >
       <img
         :src="'/files/' + book.image"
-        alt="Movie"
+        alt=""
       >
     </figure>
     <div class="card-body p-1 m-1">

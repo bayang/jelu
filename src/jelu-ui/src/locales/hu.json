@@ -16,7 +16,9 @@
         "search": "keres",
         "history": "előzények",
         "shelves": "polcok",
-        "tags-admin": "tagek kezelése"
+        "tags-admin": "tagek kezelése",
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Keresés",
@@ -113,7 +115,17 @@
         "add_quote": "könyvidézet hozzáadása",
         "description": "leírás",
         "user_rating": "saját értékelésem: {rating}",
-        "apply": "alkalmaz"
+        "apply": "alkalmaz",
+        "loading": "loading",
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator",
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Nyelv kiválasztása",
@@ -137,7 +149,8 @@
         "stats": "Statisztikák",
         "shelves": "Polcok",
         "shelves_max_number_reached": "Elérte a polcok maximális számát. Töröljön a meglévőkből újabbak hozzáadásához.",
-        "shelf_choose_tag": "Tag kiválasztása a megfelelő polc létrehozásához"
+        "shelf_choose_tag": "Tag kiválasztása a megfelelő polc létrehozásához",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Először jelentkezz be"
@@ -176,7 +189,8 @@
         "edit_event": "esemény szerkesztése",
         "reading": "olvasás",
         "start_date": "kezdő dátum",
-        "end_date": "végső dátum"
+        "end_date": "végső dátum",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "A könyv az elolvasandó listában",
@@ -221,7 +235,8 @@
         "in_read_list": "olvasó listán",
         "translator": "fordító | fordítók",
         "borrowed": "kölcsönözve",
-        "current_page_number": "jelenlegi oldalszám"
+        "current_page_number": "jelenlegi oldalszám",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Szerzők Összefésülésének eszköze",
@@ -232,7 +247,8 @@
         "author_right_description": "Majd válassza ki a szerzőket akiket össze szeretne fésülni másokkal.",
         "authors_merge_subtitle": "Összefésülés",
         "authors_merge_description": "Használja a jobboldali mezőket a bal oldali szerzők kiegészítéséhez, majd fésülje össze őket.",
-        "search_message": "Szerzők keresése az Összefésüléshez"
+        "search_message": "Szerzők keresése az Összefésüléshez",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "név",
@@ -243,6 +259,7 @@
         "wikipedia_page": "wikipedia oldal",
         "goodreads_page": "goodreads oldal",
         "twitter_page": "twitter oldal",
+        "x_page": "X page",
         "facebook_page": "facebook oldal",
         "instagram_page": "instagram oldal",
         "personal_notes": "személyes jegyzetek",
@@ -276,7 +293,8 @@
         "login_not_match": "nem ugyanaz a felhasználónév",
         "password_not_match": "nem ugyanaz a jelszó",
         "login_length": "a felhasználónév legalább 3 karakter kell legyen",
-        "password_length": "a jelszó legalább 3 karakter kell legyen"
+        "password_length": "a jelszó legalább 3 karakter kell legyen",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "új felhasználó",
@@ -309,7 +327,10 @@
         "choose_year": "Válassz évet",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "évek"
@@ -324,7 +345,9 @@
         "add_or_remove": "Tag hozzáad/töröl",
         "add": "Hozzáad",
         "remove": "Töröl",
-        "choose_tag": "Hozzáadandó/törlendő tag kiválasztása"
+        "choose_tag": "Hozzáadandó/törlendő tag kiválasztása",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Értékelés hozzáadása",
@@ -368,5 +391,26 @@
         "source": "forrás",
         "last_activity": "utolsó aktivitás",
         "activity": "login aktivitás"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
+            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+        },
+        "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

@@ -16,7 +16,9 @@
         "search": "hledat",
         "history": "historie",
         "shelves": "police",
-        "tags-admin": "tags management"
+        "tags-admin": "tags management",
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Hledat",
@@ -113,7 +115,17 @@
         "add_quote": "add book quote",
         "description": "description",
         "user_rating": "my rating : {rating}",
-        "apply": "apply"
+        "apply": "apply",
+        "loading": "loading",
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator",
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Zvolte jazyk",
@@ -137,7 +149,8 @@
         "stats": "Statistiky",
         "shelves": "Police",
         "shelves_max_number_reached": "Dosažen maximální počet polic. Chcete-li přidat další, smažte některý ze stávajících.",
-        "shelf_choose_tag": "Vyberte tag pro vytvoření odpovídající police"
+        "shelf_choose_tag": "Vyberte tag pro vytvoření odpovídající police",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Nejprve se prosím přihlaste"
@@ -176,7 +189,8 @@
         "edit_event": "upravit událost",
         "reading": "čtu",
         "start_date": "počáteční datum",
-        "end_date": "datum ukončení"
+        "end_date": "datum ukončení",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Kniha je v seznamu k přečtení",
@@ -221,7 +235,8 @@
         "in_read_list": "v listu k přečtení",
         "translator": "překladatel | překladatelé",
         "borrowed": "zapůjčené",
-        "current_page_number": "current page number"
+        "current_page_number": "current page number",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Nástroj k sloučení autorů",
@@ -232,7 +247,8 @@
         "author_right_description": "Zvolte dalšího autora sloučení.",
         "authors_merge_subtitle": "Sloučit",
         "authors_merge_description": "Použijte pole autora vpravo k vyplnění autora vlevo, pak je slučte.",
-        "search_message": "Hledat autory pro sloučení"
+        "search_message": "Hledat autory pro sloučení",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "jméno",
@@ -243,6 +259,7 @@
         "wikipedia_page": "wikipedie stránka",
         "goodreads_page": "goodreads stránka",
         "twitter_page": "twitter stránka",
+        "x_page": "X page",
         "facebook_page": "facebook stránka",
         "instagram_page": "instagram stránka",
         "personal_notes": "osobní poznámky",
@@ -276,7 +293,8 @@
         "login_not_match": "pole přihlášení se neshodují",
         "password_not_match": "hesla se neshodují",
         "login_length": "přihlášení musí být minimálně 3 znaky",
-        "password_length": "heslo musí být minimálně 3 znaky"
+        "password_length": "heslo musí být minimálně 3 znaky",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "vytvořit uživatele",
@@ -309,7 +327,10 @@
         "choose_year": "Vyberte rok",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "roky"
@@ -324,7 +345,9 @@
         "add_or_remove": "Přidat nebo odebrat tagy",
         "add": "Přidat",
         "remove": "Odstranit",
-        "choose_tag": "Vyberte tag, který chcete přidat nebo odebrat"
+        "choose_tag": "Vyberte tag, který chcete přidat nebo odebrat",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Vytvořit recenzi",
@@ -368,5 +391,26 @@
         "source": "source",
         "last_activity": "last activity",
         "activity": "login activity"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
+            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+        },
+        "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

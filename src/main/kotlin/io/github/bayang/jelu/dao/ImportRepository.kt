@@ -2,7 +2,7 @@ package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.ImportDto
 import io.github.bayang.jelu.utils.nowInstant
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere

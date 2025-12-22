@@ -7,6 +7,10 @@ import io.github.bayang.jelu.errors.JeluException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.oauth2.core.oidc.OidcIdToken
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
+import org.springframework.security.oauth2.core.user.OAuth2User
 
 const val ROLE_PREFIX: String = "ROLE_"
 
@@ -30,15 +34,38 @@ fun assertIsJeluUser(target: Any) {
 @JsonSubTypes(
     Type(value = JeluUser::class, name = "jeluUser"),
 )
-class JeluUser(val user: UserDto) : UserDetails {
+class JeluUser(
+    val user: UserDto,
+    val oAuth2User: OAuth2User? = null,
+    val oidcUser: OidcUser? = null,
+    val initialSetup: Boolean = false,
+) : UserDetails, OAuth2User, OidcUser {
+    override fun getName(): String {
+        return user.login
+    }
+
+    override fun getAttributes(): MutableMap<String, Any> {
+        return oAuth2User?.attributes ?: mutableMapOf()
+    }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        val basicRoles: MutableCollection<GrantedAuthority> = mutableSetOf(SimpleGrantedAuthority(ROLE_USER))
-        if (user.isAdmin) {
-            basicRoles.add(SimpleGrantedAuthority(ROLE_ADMIN))
+        val basicRoles: MutableCollection<GrantedAuthority> = mutableSetOf()
+        if (initialSetup) {
+            basicRoles.add(SimpleGrantedAuthority(ROLE_INITIAL_SETUP))
+        } else {
+            basicRoles.add(SimpleGrantedAuthority(ROLE_USER))
+            if (user.isAdmin) {
+                basicRoles.add(SimpleGrantedAuthority(ROLE_ADMIN))
+            }
         }
         return basicRoles
     }
+
+    override fun getClaims(): MutableMap<String, Any> = oidcUser?.claims ?: mutableMapOf()
+
+    override fun getUserInfo(): OidcUserInfo? = oidcUser?.userInfo
+
+    override fun getIdToken(): OidcIdToken? = oidcUser?.idToken
 
     override fun getPassword(): String {
         return user.password.orEmpty()

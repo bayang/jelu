@@ -16,7 +16,9 @@
         "search": "pesquisar",
         "history": "história",
         "shelves": "prateleiras",
-        "tags-admin": "gestão de etiquetas"
+        "tags-admin": "gestão de etiquetas",
+        "data-admin": "gestão de dados",
+        "activity": "atividade"
     },
     "labels": {
         "search": "Pesquisar",
@@ -111,9 +113,19 @@
         "user_avg_rating": "minha classificação média: {rating}",
         "avg_rating": "classificação média : {rating}",
         "add_quote": "adicionar citação de livro",
-        "description": "description",
-        "user_rating": "my rating : {rating}",
-        "apply": "apply"
+        "description": "descrição",
+        "user_rating": "a minha classificação: {rating}",
+        "apply": "aplicar",
+        "loading": "carregando",
+        "pick_camera": "selecionar câmara",
+        "add_narrator": "Adicionar um narrador",
+        "social_login": "iniciar sessão com {provider}",
+        "delete_this_series": "Apagar esta série de {nb} livro(s) e da base de dados?",
+        "orphan-series": "séries órfãs",
+        "find-series": "encontrar uma série",
+        "delete_this_author": "Excluir este autor de {nb} livro(s) e da base de dados?",
+        "orphan_authors": "autores órfãos",
+        "find-authors": "encontrar autores"
     },
     "settings": {
         "pick_language": "Escolha o seu idioma",
@@ -137,7 +149,8 @@
         "stats": "Estatísticas",
         "shelves": "Prateleiras",
         "shelves_max_number_reached": "O número máximo de prateleiras foi atingido. Apague já existentes para adicionar mais.",
-        "shelf_choose_tag": "Escolha uma etiqueta para criar a prateleira correspondente"
+        "shelf_choose_tag": "Escolha uma etiqueta para criar a prateleira correspondente",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Por favor, inicie sessão primeiro"
@@ -176,7 +189,8 @@
         "edit_event": "editar evento",
         "reading": "lendo",
         "start_date": "data de início",
-        "end_date": "data de término"
+        "end_date": "data de término",
+        "started": "iniciado"
     },
     "filtering": {
         "book_in_list": "O livro está na lista de leitura",
@@ -203,10 +217,10 @@
         "goodreads_id": "ID de Goodreads",
         "amazon_id": "ID de Amazon",
         "librarything_id": "ID de Librarything",
-        "isfdb_id": "ISFDB Id",
-        "openlibrary_id": "Openlibrary Id",
-        "noosfere_id": "Noosfere Id",
-        "inventaire_id": "inventaire id",
+        "isfdb_id": "Id ISFDB",
+        "openlibrary_id": "Id Openlibrary",
+        "noosfere_id": "Id Noosfere",
+        "inventaire_id": "id inventaire",
         "publisher": "editor",
         "published_date": "data de publicação",
         "page_count": "número de páginas",
@@ -221,7 +235,8 @@
         "in_read_list": "na lista de leitura",
         "translator": "tradutor | tradutores",
         "borrowed": "emprestado",
-        "current_page_number": "número da página atual"
+        "current_page_number": "número da página atual",
+        "narrator": "narrador | narradores"
     },
     "authors_merge": {
         "authors_merging_utility": "Ferramenta de fusão de autores",
@@ -232,7 +247,8 @@
         "author_right_description": "Escolha o autor que deseja fundir com o outro.",
         "authors_merge_subtitle": "Fundir",
         "authors_merge_description": "Utilizar os campos na direita por completar o autor da esquerda, depois fundir.",
-        "search_message": "Procurar autores para fundir"
+        "search_message": "Procurar autores para fundir",
+        "merge_authors": "fundir autores"
     },
     "author": {
         "name": "nome",
@@ -243,6 +259,7 @@
         "wikipedia_page": "página wikipédia",
         "goodreads_page": "página goodreads",
         "twitter_page": "página twitter",
+        "x_page": "X page",
         "facebook_page": "página facebook",
         "instagram_page": "página instagram",
         "personal_notes": "notas pessoais",
@@ -263,7 +280,7 @@
         "export_ko": "Ocorreu um erro e provavelmente o seu pedido de exportação não foi registado.",
         "import_help": "Primeiro escolha o tipo de ficheiro que deseja importar, depois escolha um ficheiro abaixo e finalmente clique no botão importar. Quando a importação for iniciada, poderá sair desta página e ir para a secção de mensagens.",
         "import_ok": "A sua solicitação de importação foi salva. Pode deixar esta página, o resultado de importação estará disponível na secção de mensagens.",
-        "isbn_list": "List of ISBN in a file"
+        "isbn_list": "Lista ISBN em um ficheiro"
     },
     "login": {
         "login": "iniciar sessão",
@@ -276,7 +293,8 @@
         "login_not_match": "o campo de utilizador não coincide",
         "password_not_match": "o campos de palavra-passe não coincide",
         "login_length": "o utilizador deve ter no mínimo 3 caracteres",
-        "password_length": "a palavra-passe deve ter no mínimo 3 caracteres"
+        "password_length": "a palavra-passe deve ter no mínimo 3 caracteres",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "criar utilizador",
@@ -307,9 +325,12 @@
         "all_time": "Estatísticas globais",
         "yearly_stats": "Estatísticas anuais",
         "choose_year": "Escolha um ano",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped"
+        "pages_read": "páginas lidas",
+        "finished": "terminado",
+        "dropped": "abandonado",
+        "total": "total",
+        "read": "lido",
+        "unread": "não lido"
     },
     "history": {
         "years": "anos"
@@ -324,7 +345,9 @@
         "add_or_remove": "Adicionar ou remover etiqueta",
         "add": "Adicionar",
         "remove": "Remover",
-        "choose_tag": "Escolha a etiqueta que deseja adicionar ou remover"
+        "choose_tag": "Escolha a etiqueta que deseja adicionar ou remover",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Criar avaliação",
@@ -346,9 +369,9 @@
     },
     "metadata": {
         "reorder_plugins": "reordenar extensões",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "description": "As extensões serão utilizadas de cima para baixo, as extensões desativadas não serão usadas.",
         "default_priority": "prioridade padrão",
-        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
+        "note": "Esta alteração é apenas temporária, se quiser reordenar permanentemente as extensões, tem que editar a configuração."
     },
     "book_quotes": {
         "edit_quote": "Editar citação do livro",
@@ -358,15 +381,36 @@
         "delete_quote": "apagar esta citação?"
     },
     "series": {
-        "edit_series": "edit series",
-        "create_series": "create series",
-        "name": "name"
+        "edit_series": "modificar a série",
+        "create_series": "criar uma série",
+        "name": "nome"
     },
     "login_info": {
         "ip": "ip",
         "user_agent": "user agent",
-        "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "source": "fonte",
+        "last_activity": "última atividade",
+        "activity": "histórico de sessões"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "o plugin de metadados terminou anormalmente",
+            "EXCEPTION_CAUGHT": "uma exceção foi gerada durante a chamada do plugin de metadados"
+        },
+        "details": "detalhes do erro"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

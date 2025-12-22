@@ -3,7 +3,7 @@ package io.github.bayang.jelu.service.metadata
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.errors.JeluValidationException
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jsoup.Jsoup
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile

@@ -10,19 +10,21 @@ import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.ReadingEventTypeFilter
 import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.SeriesDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.TotalsStatsDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.assertIsJeluUser
 import io.github.bayang.jelu.service.BookService
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.validation.Valid
-import mu.KotlinLogging
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -57,6 +59,10 @@ class BooksController(
     fun books(
         @RequestParam(name = "q", required = false) query: String?,
         @RequestParam(name = "libraryFilter", required = false) libraryFilter: LibraryFilter?,
+        @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventTypeFilter>?,
+        @RequestParam(name = "toRead", required = false) toRead: Boolean?,
+        @RequestParam(name = "owned", required = false) owned: Boolean?,
+        @RequestParam(name = "borrowed", required = false) borrowed: Boolean?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["title"]) @ParameterObject pageable: Pageable,
         principal: Authentication,
     ): Page<BookDto> {
@@ -64,6 +70,10 @@ class BooksController(
             query,
             pageable,
             (principal.principal as JeluUser).user,
+            eventTypes,
+            toRead,
+            owned,
+            borrowed,
             libraryFilter ?: LibraryFilter.ANY,
         )
     }
@@ -105,6 +115,13 @@ class BooksController(
         return ResponseEntity.noContent().build()
     }
 
+    @ApiResponse(responseCode = "204", description = "Deleted the series")
+    @DeleteMapping(path = ["/series/{seriesId}"])
+    fun deleteSeriesById(@PathVariable("seriesId") seriesId: UUID): ResponseEntity<Unit> {
+        repository.deleteSeriesById(seriesId)
+        return ResponseEntity.noContent().build()
+    }
+
     @ApiResponse(responseCode = "204", description = "Deleted the author from the book")
     @DeleteMapping(path = ["/books/{bookId}/authors/{authorId}"])
     fun deleteAuthorFromBook(
@@ -122,6 +139,16 @@ class BooksController(
         @PathVariable("translatorId") translatorId: UUID,
     ): ResponseEntity<Unit> {
         repository.deleteTranslatorFromBook(bookId, translatorId)
+        return ResponseEntity.noContent().build()
+    }
+
+    @ApiResponse(responseCode = "204", description = "Deleted the narrator from the book")
+    @DeleteMapping(path = ["/books/{bookId}/narrators/{narratorId}"])
+    fun deleteNarratorFromBook(
+        @PathVariable("bookId") bookId: UUID,
+        @PathVariable("narratorId") narratorId: UUID,
+    ): ResponseEntity<Unit> {
+        repository.deleteNarratorFromBook(bookId, narratorId)
         return ResponseEntity.noContent().build()
     }
 
@@ -145,7 +172,7 @@ class BooksController(
     @GetMapping(path = ["/userbooks"])
     fun userbooks(
         principal: Authentication,
-        @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventType>?,
+        @RequestParam(name = "lastEventTypes", required = false) eventTypes: List<ReadingEventTypeFilter>?,
         @RequestParam(name = "bookId", required = false) bookId: UUID?,
         @RequestParam(name = "toRead", required = false) toRead: Boolean?,
         @RequestParam(name = "owned", required = false) owned: Boolean?,
@@ -205,6 +232,16 @@ class BooksController(
     fun orphanTags(
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
     ): Page<TagDto> = repository.findOrphanTags(pageable)
+
+    @GetMapping(path = ["/authors/orphans"])
+    fun orphanAuthors(
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
+    ): Page<AuthorDto> = repository.findOrphanAuthors(pageable)
+
+    @GetMapping(path = ["/series/orphans"])
+    fun orphanSeries(
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
+    ): Page<SeriesDto> = repository.findOrphanSeries(pageable)
 
     @GetMapping(path = ["/series"])
     fun series(
@@ -372,5 +409,13 @@ class BooksController(
     ): SeriesDto {
         assertIsJeluUser(principal.principal)
         return repository.updateSeries(seriesId, seriesUpdate, (principal.principal as JeluUser).user)
+    }
+
+    @GetMapping(path = ["/stats/total"])
+    fun totalStats(
+        principal: Authentication,
+    ): TotalsStatsDto {
+        assertIsJeluUser(principal.principal)
+        return repository.stats((principal.principal as JeluUser).user.id!!)
     }
 }

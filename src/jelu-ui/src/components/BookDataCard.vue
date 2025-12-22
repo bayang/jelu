@@ -29,14 +29,18 @@ const router = useRouter()
 const oruga = useOruga();
 console.log(oruga)
 
-const { formatDate, formatDateString } = useDates()
+const { stringToDate } = useDates()
 
 const getBookIsLoading: Ref<boolean> = ref(false)
 
 const hasExternalLink = computed(() => props.book.amazonId != null
   || props.book.goodreadsId != null
   || props.book.googleId != null
-  || props.book.librarythingId != null)
+  || props.book.librarythingId != null
+  || props.book.inventaireId != null
+  || props.book.isfdbId != null
+  || props.book.noosfereId != null
+  || props.book.openlibraryId != null)
 
 const userbookId: Ref<string|null> = ref(null)
 const bookCanBeAdded: Ref<boolean> = ref(false)
@@ -70,7 +74,7 @@ watch(() => props.book.id, (newVal, oldVal) => {
   console.log("props.book.id ")
   console.log(newVal + " " + oldVal)
   bookCanBeAdded.value = false
-  if (newVal !== oldVal && props.book.id != null) {
+  if (props.addBook && newVal !== oldVal && props.book.id != null) {
     getUserbookId()
   }
 })
@@ -99,6 +103,15 @@ function modalClosed() {
   router.push({ name: 'book-reviews', params: { bookId: props.book.id } })
 }
 
+const getIsbn = (): string|null => {
+  if (props.book.isbn13 && props.book.isbn13.length > 0) {
+    return props.book.isbn13.replaceAll("-", "")
+  }
+  if (props.book.isbn10 && props.book.isbn10.length > 0) {
+    return props.book.isbn10.replaceAll("-", "")
+  }
+  return null
+}
 </script>
 
 <template>
@@ -175,6 +188,54 @@ function modalClosed() {
             </p>
           </li>
         </ul>
+        <p
+          v-if="props.book != null && props.book.translators != null && props.book.translators?.length > 0"
+        >
+          <span class="font-semibold capitalize">{{ t('book.translator', 2) }} :</span>
+        </p>
+        <ul
+          v-if="props.book != null && props.book.translators != null && props.book.translators?.length > 0"
+        >
+          <li
+            v-for="translator in props.book.translators"
+            :key="translator.id"
+          >
+            <router-link
+              v-if="links != null && links === true"
+              class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+              :to="{ name: 'author-detail', params: { authorId: translator.id } }"
+            >
+              {{ translator.name }}&nbsp;
+            </router-link>
+            <p v-else>
+              {{ translator.name }}
+            </p>
+          </li>
+        </ul>
+        <p
+          v-if="props.book != null && props.book.narrators != null && props.book.narrators?.length > 0"
+        >
+          <span class="font-semibold capitalize">{{ t('book.narrator', 2) }} :</span>
+        </p>
+        <ul
+          v-if="props.book != null && props.book.narrators != null && props.book.narrators?.length > 0"
+        >
+          <li
+            v-for="narrator in props.book.narrators"
+            :key="narrator.id"
+          >
+            <router-link
+              v-if="links != null && links === true"
+              class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+              :to="{ name: 'author-detail', params: { authorId: narrator.id } }"
+            >
+              {{ narrator.name }}&nbsp;
+            </router-link>
+            <p v-else>
+              {{ narrator.name }}
+            </p>
+          </li>
+        </ul>
         <p v-if="props.book.publisher">
           <span class="font-semibold capitalize">{{ t('book.publisher') }} :&nbsp;</span>
           <router-link
@@ -202,7 +263,7 @@ function modalClosed() {
         </p>
         <p v-if="props.book.publishedDate">
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
-          {{ formatDateString(props.book.publishedDate) }}
+          {{ d(stringToDate(props.book.publishedDate)!!, 'short') }}
         </p>
         <div v-if="props.book.series && props.book.series.length > 0">
           <span class="font-semibold capitalize">{{ t('book.series') }} :&nbsp;</span>
@@ -255,7 +316,7 @@ function modalClosed() {
     </div>
     <div
       v-if="props.book.summary"
-      class="flex flex-row justify-center mt-4 prose-base dark:prose-invert sm:w-10/12"
+      class="flex flex-row justify-center mt-4 prose prose-base dark:prose-invert sm:w-10/12"
     >
       <div
         v-if="props.book.summary"
@@ -326,6 +387,51 @@ function modalClosed() {
           :href="'https://www.librarything.com/work/' + props.book.librarythingId"
           target="_blank"
         >librarything</a>
+      </span>
+      <span
+        v-if="props.book.isfdbId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://www.isfdb.org/cgi-bin/title.cgi?' + props.book.isfdbId"
+          target="_blank"
+        >ISFDB</a>
+      </span>
+      <span
+        v-if="props.book.openlibraryId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="`https://openlibrary.org/works/${props.book.openlibraryId}?mode=all`"
+          target="_blank"
+        >Openlibrary</a>
+      </span>
+      <span
+        v-if="props.book.noosfereId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://www.noosfere.org/livres/EditionsLivre.asp?numitem=' + props.book.noosfereId"
+          target="_blank"
+        >Noosfere</a>
+      </span>
+      <span
+        v-if="getIsbn() != null"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://inventaire.io/entity/isbn:' + getIsbn()"
+          target="_blank"
+        >inventaire</a>
+      </span>
+      <span
+        v-else-if="props.book.inventaireId"
+        class="badge badge-warning hover:font-bold"
+      >
+        <a
+          :href="'https://inventaire.io/entity/inv:' + props.book.inventaireId"
+          target="_blank"
+        >inventaire</a>
       </span>
     </div>
   </div>

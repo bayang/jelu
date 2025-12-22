@@ -69,7 +69,7 @@ class ReadingEventServiceTest(
         bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
         }
-        bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).forEach {
+        bookService.findAll(null, null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).forEach {
             bookService.deleteBookById(it.id!!)
         }
     }
@@ -90,7 +90,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(0, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -150,7 +150,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -211,7 +211,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -263,7 +263,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -303,7 +303,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -355,7 +355,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(0, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -397,7 +397,7 @@ class ReadingEventServiceTest(
         val user = user()
         val createBook = bookDto()
         val savedBook = bookService.save(createBook, null)
-        val nbBooks = bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
+        val nbBooks = bookService.findAll(null, null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(1, nbBooks)
 
         var nbUserBooks = bookService.findUserBookByCriteria(user.id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
@@ -425,7 +425,7 @@ class ReadingEventServiceTest(
     @Test
     fun newEventWithoutBookIdShouldThrowException() {
         val user = user()
-        val nbBooks = bookService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
+        val nbBooks = bookService.findAll(null, null, null, null, null, null, null, null, Pageable.ofSize(30), user(), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(0, nbBooks)
 
         val nbUserBooks = bookService.findUserBookByCriteria(user.id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
@@ -462,7 +462,8 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
+        Assertions.assertEquals(50, saved.currentPageNumber)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -487,6 +488,8 @@ class ReadingEventServiceTest(
         var userbook = bookService.findUserBookById(saved.id!!)
         Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, userbook.lastReadingEvent)
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().plus(29, ChronoUnit.DAYS))!!)
+        Assertions.assertEquals(0, userbook.percentRead)
+        Assertions.assertEquals(0, userbook.currentPageNumber)
 
         Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
@@ -506,6 +509,8 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(ReadingEventType.FINISHED, userbook.lastReadingEvent)
         Assertions.assertNull(userbook.toRead)
         Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().plus(39, ChronoUnit.DAYS))!!)
+        Assertions.assertEquals(100, saved.percentRead)
+        Assertions.assertEquals(50, saved.currentPageNumber)
     }
 
     @Test
@@ -524,7 +529,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -586,7 +591,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -648,7 +653,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)
@@ -710,7 +715,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(createUserBookDto.owned, saved.owned)
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
-        Assertions.assertNull(saved.percentRead)
+        Assertions.assertEquals(100, saved.percentRead)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
         Assertions.assertNotNull(saved.book.creationDate)

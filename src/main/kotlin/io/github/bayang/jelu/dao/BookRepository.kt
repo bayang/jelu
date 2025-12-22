@@ -8,11 +8,13 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.ReadingEventTypeFilter
 import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesOrderDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.dto.TotalsStatsDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserDto
@@ -20,7 +22,7 @@ import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.service.FileManager
 import io.github.bayang.jelu.utils.nowInstant
 import io.github.bayang.jelu.utils.sanitizeHtml
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Expression
@@ -41,6 +43,7 @@ import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.avg
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.count
+import org.jetbrains.exposed.sql.countDistinct
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.lowerCase
 import org.jetbrains.exposed.sql.or
@@ -49,6 +52,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
@@ -107,18 +111,30 @@ class BookRepository(
     val fileManager: FileManager,
 ) {
 
-    fun findAll(bookIds: List<String>?, pageable: Pageable, user: UserDto, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAll(
+        bookIds: List<String>?,
+        pageable: Pageable,
+        user: UserDto,
+        eventTypes: List<ReadingEventTypeFilter>?,
+        toRead: Boolean?,
+        owned: Boolean?,
+        borrowed: Boolean?,
+        filter: LibraryFilter = LibraryFilter.ANY,
+    ): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .select(BookTable.id)
             .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
-        // required to avoir ambiguous column name "author.id" in joins below
+        // required to avoid ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
+        val narratorAlias = AuthorTable.alias("narr")
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
             .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookNarrators.book)
+            .join(narratorAlias, JoinType.LEFT, onColumn = narratorAlias[AuthorTable.id], otherColumn = BookNarrators.narrator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
@@ -129,10 +145,49 @@ class BookRepository(
             val uuids = bookIds.map { UUID.fromString(it) }
             query.andWhere { BookTable.id inList uuids }
         }
-        if (filter == LibraryFilter.ONLY_USER_BOOKS) {
-            // only books where user has an userbook
+        if (filter == LibraryFilter.ONLY_USER_BOOKS || toRead != null || owned != null || borrowed != null || !eventTypes.isNullOrEmpty()) {
             query.andWhere { UserBookTable.user eq user.id }
-        } else if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
+        }
+        if (toRead != null) {
+            if (toRead) {
+                query.andWhere { UserBookTable.toRead eq toRead }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with toRead == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.toRead eq toRead or (UserBookTable.toRead.isNull()) }
+            }
+        }
+        if (owned != null) {
+            if (owned) {
+                query.andWhere { UserBookTable.owned eq owned }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with owned == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.owned eq owned or (UserBookTable.owned.isNull()) }
+            }
+        }
+        if (borrowed != null) {
+            if (borrowed) {
+                query.andWhere { UserBookTable.borrowed eq borrowed }
+            } else {
+                // default value if checkbox not set is null, so if caller asks explicitly with borrowed == false,
+                // try to return everything that is not true
+                query.andWhere { UserBookTable.borrowed eq borrowed or (UserBookTable.borrowed.isNull()) }
+            }
+        }
+        if (!eventTypes.isNullOrEmpty()) {
+            val daoTypes = eventTypes.stream().filter { it != ReadingEventTypeFilter.NONE }.map { ReadingEventType.valueOf(it.name) }.toList()
+            // user specifically asked for userBooks without any event type so return those
+            // with other selected ones.
+            // eg if we receive NONE and DROPPED the user wants books that have never
+            // been read or those which have been dropped
+            if (eventTypes.contains(ReadingEventTypeFilter.NONE)) {
+                query.andWhere { UserBookTable.lastReadingEvent inList daoTypes or (UserBookTable.lastReadingEvent.isNull()) }
+            } else {
+                query.andWhere { UserBookTable.lastReadingEvent inList daoTypes }
+            }
+        }
+        if (filter == LibraryFilter.ONLY_NON_USER_BOOKS) {
             // only books where there are no userbooks or only other users have userbooks
             query.andWhere { BookTable.id notInSubQuery booksWithSameIdAndUserHasUserbook }
         }
@@ -153,14 +208,17 @@ class BookRepository(
         )
     }
 
-    fun findAllNoFilters(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable): Page<Book> {
+    fun findAllNoFilters(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, narrators: List<String>?, tags: List<String>?, pageable: Pageable): Page<Book> {
         // required to avoir ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
+        val narratorAlias = AuthorTable.alias("narr")
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
             .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookNarrators.book)
+            .join(narratorAlias, JoinType.LEFT, onColumn = narratorAlias[AuthorTable.id], otherColumn = BookNarrators.narrator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
@@ -199,6 +257,17 @@ class BookRepository(
                     query.andWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
                 } else {
                     query.orWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
+                }
+            }
+        }
+        if (!narrators.isNullOrEmpty()) {
+            var first = true
+            narrators.forEach { narrator: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { narratorAlias[AuthorTable.name] like(formatLike(narrator)) }
+                } else {
+                    query.orWhere { narratorAlias[AuthorTable.name] like(formatLike(narrator)) }
                 }
             }
         }
@@ -224,18 +293,21 @@ class BookRepository(
         )
     }
 
-    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, tags: List<String>?, pageable: Pageable, user: UserDto, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
+    fun findAll(title: String?, isbn10: String?, isbn13: String?, series: String?, authors: List<String>?, translators: List<String>?, narrators: List<String>?, tags: List<String>?, pageable: Pageable, user: UserDto, filter: LibraryFilter = LibraryFilter.ANY): Page<Book> {
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
             .select(BookTable.id)
             .where { UserBookTable.book eq BookTable.id and (UserBookTable.user eq user.id) }
             .withDistinct()
         // required to avoir ambiguous column name "author.id" in joins below
         val translatorsAlias = AuthorTable.alias("trn")
+        val narratorAlias = AuthorTable.alias("narr")
         val query = BookTable.join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .join(BookAuthors, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookAuthors.book)
             .join(AuthorTable, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookAuthors.author)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTranslators.book)
             .join(translatorsAlias, JoinType.LEFT, onColumn = translatorsAlias[AuthorTable.id], otherColumn = BookTranslators.translator)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookNarrators.book)
+            .join(narratorAlias, JoinType.LEFT, onColumn = narratorAlias[AuthorTable.id], otherColumn = BookNarrators.narrator)
             .join(BookTags, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookTags.book)
             .join(TagTable, JoinType.LEFT, onColumn = TagTable.id, otherColumn = BookTags.tag)
             .join(BookSeries, JoinType.LEFT, onColumn = BookTable.id, otherColumn = BookSeries.book)
@@ -274,6 +346,17 @@ class BookRepository(
                     query.andWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
                 } else {
                     query.orWhere { translatorsAlias[AuthorTable.name] like(formatLike(translator)) }
+                }
+            }
+        }
+        if (!narrators.isNullOrEmpty()) {
+            var first = true
+            narrators.forEach { narrator: String ->
+                if (first) {
+                    first = false
+                    query.andWhere { narratorAlias[AuthorTable.name] like(formatLike(narrator)) }
+                } else {
+                    query.orWhere { narratorAlias[AuthorTable.name] like(formatLike(narrator)) }
                 }
             }
         }
@@ -519,6 +602,46 @@ class BookRepository(
         )
     }
 
+    fun findOrphanAuthors(pageable: Pageable): Page<Author> {
+        val query = AuthorTable.join(BookAuthors, JoinType.LEFT)
+            .join(BookTranslators, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookTranslators.translator)
+            .join(BookNarrators, JoinType.LEFT, onColumn = AuthorTable.id, otherColumn = BookNarrators.narrator)
+            .selectAll()
+            .groupBy(AuthorTable.name)
+            .having {
+                BookAuthors.author.count() eq(0) and(BookTranslators.translator.count() eq(0)) and(BookNarrators.narrator.count() eq(0))
+            }
+
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(AuthorTable.name, SortOrder.ASC_NULLS_LAST), AuthorTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> Author.wrapRow(resultRow) },
+            pageable,
+            total,
+        )
+    }
+
+    fun findOrphanSeries(pageable: Pageable): Page<Series> {
+        val query = SeriesTable.join(BookSeries, JoinType.LEFT)
+            .selectAll()
+            .groupBy(SeriesTable.name)
+            .having { BookSeries.series.count() eq(0) }
+
+        query.withDistinct(true)
+        val total = query.count()
+        query.limit(pageable.pageSize, pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(SeriesTable.name, SortOrder.ASC_NULLS_LAST), SeriesTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> Series.wrapRow(resultRow) },
+            pageable,
+            total,
+        )
+    }
+
     fun findAuthorBooksById(authorId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter = LibraryFilter.ANY, role: Role = Role.ANY): Page<Book> {
         logger.trace { "role $role" }
         val booksWithSameIdAndUserHasUserbook = BookTable.join(UserBookTable, JoinType.LEFT)
@@ -527,13 +650,15 @@ class BookRepository(
             .withDistinct()
         val query = BookTable.join(BookAuthors, JoinType.LEFT)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.book, otherColumn = BookTable.id)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookNarrators.book, otherColumn = BookTable.id)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .select(BookTable.columns)
             .where {
                 when (role) {
-                    Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId)
+                    Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId) or(BookNarrators.narrator eq authorId)
                     Role.AUTHOR -> BookAuthors.author eq authorId
                     Role.TRANSLATOR -> BookTranslators.translator eq authorId
+                    Role.NARRATOR -> BookNarrators.narrator eq authorId
                 }
             }
         if (libaryFilter == LibraryFilter.ONLY_USER_BOOKS) {
@@ -559,6 +684,7 @@ class BookRepository(
         logger.trace { "role $role" }
         val query = BookTable.join(BookAuthors, JoinType.LEFT)
             .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.book, otherColumn = BookTable.id)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookNarrators.book, otherColumn = BookTable.id)
             .join(UserBookTable, JoinType.LEFT, onColumn = UserBookTable.book, otherColumn = BookTable.id)
             .select(BookTable.columns)
             .where {
@@ -566,6 +692,7 @@ class BookRepository(
                     Role.ANY -> BookAuthors.author eq authorId or(BookTranslators.translator eq authorId)
                     Role.AUTHOR -> BookAuthors.author eq authorId
                     Role.TRANSLATOR -> BookTranslators.translator eq authorId
+                    Role.NARRATOR -> BookNarrators.narrator eq authorId
                 }
             }
         query.withDistinct(true)
@@ -654,9 +781,7 @@ class BookRepository(
         book.isbn13?.let {
             updated.isbn13 = book.isbn13.trim()
         }
-        book.pageCount?.let {
-            updated.pageCount = book.pageCount
-        }
+        updated.pageCount = book.pageCount
         book.publisher?.let {
             updated.publisher = book.publisher.trim()
         }
@@ -730,9 +855,24 @@ class BookRepository(
                 translatorsList.add(save(it))
             }
         }
-        if (translatorsList.isNotEmpty()) {
-            updated.translators = SizedCollection(translatorsList)
+        updated.translators = SizedCollection(translatorsList)
+        val narratorsList = mutableListOf<Author>()
+        book.narrators?.forEach {
+            // first try to find exact match by id
+            var authorEntity: Author? = if (it.id != null) {
+                findAuthorsById(it.id)
+            }
+            // if no id provided or research by id doesn't return anything try to find by name
+            else {
+                findAuthorsByName(it.name.trim()).firstOrNull()
+            }
+            if (authorEntity != null) {
+                narratorsList.add(authorEntity)
+            } else {
+                narratorsList.add(save(it))
+            }
         }
+        updated.narrators = SizedCollection(narratorsList)
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
             // first try to find exact match by id
@@ -801,19 +941,29 @@ class BookRepository(
         if (book.toRead != null) {
             found.toRead = book.toRead
         }
-        if (book.percentRead != null) {
-            found.percentRead = book.percentRead
+        var bookFinished = false
+        if (book.percentRead != null && book.percentRead >= 100) {
+            bookFinished = true
         }
-        if (book.currentPageNumber != null) {
-            found.currentPageNumber = book.currentPageNumber
-            val current = book.currentPageNumber
-            val total = found.book.pageCount
-            if (total != null) {
-                if (current >= total) {
-                    found.percentRead = 100
+        found.percentRead = book.percentRead
+        val current = book.currentPageNumber
+        found.currentPageNumber = current
+        var total = found.book.pageCount
+        if (total == null && book.book?.pageCount != null) {
+            total = book.book.pageCount
+        }
+        if (total != null) {
+            if (current == null) {
+                if (found.percentRead != null) {
+                    found.currentPageNumber = total.times(found.percentRead!!).div(100)
                 } else {
-                    found.percentRead = current.times(100).div(total)
+                    found.percentRead = 0
                 }
+            } else if (current >= total) {
+                bookFinished = true
+                found.percentRead = 100
+            } else {
+                found.percentRead = current.times(100).div(total)
             }
         }
         if (book.book != null) {
@@ -824,6 +974,22 @@ class BookRepository(
                 found,
                 CreateReadingEventDto(
                     eventType = book.lastReadingEvent,
+                    bookId = null,
+                    eventDate = null,
+                    startDate = null,
+                ),
+            )
+            if (bookFinished && book.lastReadingEvent == ReadingEventType.FINISHED) {
+                bookFinished = false
+            }
+        }
+        // the book was set as finished vioa current page number or percent read
+        // and an event was not already sent above
+        if (bookFinished) {
+            readingEventRepository.save(
+                found,
+                CreateReadingEventDto(
+                    eventType = ReadingEventType.FINISHED,
                     bookId = null,
                     eventDate = null,
                     startDate = null,
@@ -930,6 +1096,20 @@ class BookRepository(
                 translatorsList.add(save(authorDto))
             }
         }
+        val narratorsList = mutableListOf<Author>()
+        book.narrators?.forEach { authorDto ->
+            val authorEntity: Author? = findAuthorsByName(authorDto.name.trim()).firstOrNull()
+            if (authorEntity != null) {
+                // we can receive the same author or the same but
+                // with only one letter with a different case
+                // so do not put twice the same entity in the list
+                if (!narratorsList.contains(authorEntity)) {
+                    narratorsList.add(authorEntity)
+                }
+            } else {
+                narratorsList.add(save(authorDto))
+            }
+        }
         val tagsList = mutableListOf<Tag>()
         book.tags?.forEach {
             val tagEntity: Tag? = findTagsByName(it.name.trim()).firstOrNull()
@@ -976,10 +1156,12 @@ class BookRepository(
         created.authors = SizedCollection(authorsList)
         created.tags = SizedCollection(tagsList)
         created.translators = SizedCollection(translatorsList)
+        created.narrators = SizedCollection(narratorsList)
 
         // eager loading, see if we keep this in the long term
         created.load(Book::authors)
         created.load(Book::translators)
+        created.load(Book::narrators)
         created.load(Book::tags)
         return created
     }
@@ -1112,7 +1294,7 @@ class BookRepository(
     fun findUserBookByCriteria(
         userID: UUID,
         bookId: UUID?,
-        eventTypes: List<ReadingEventType>?,
+        eventTypes: List<ReadingEventTypeFilter>?,
         toRead: Boolean?,
         owned: Boolean?,
         borrowed: Boolean?,
@@ -1139,7 +1321,16 @@ class BookRepository(
             query.andWhere { UserBookTable.book eq bookId }
         }
         if (!eventTypes.isNullOrEmpty()) {
-            query.andWhere { UserBookTable.lastReadingEvent inList eventTypes }
+            val daoTypes = eventTypes.stream().filter { it != ReadingEventTypeFilter.NONE }.map { ReadingEventType.valueOf(it.name) }.toList()
+            // user specifically asked for userBooks without any event type so return those
+            // with other selected ones.
+            // eg if we receive NONE and DROPPED the user wants books that have never
+            // been read or those which have been dropped
+            if (eventTypes.contains(ReadingEventTypeFilter.NONE)) {
+                query.andWhere { UserBookTable.lastReadingEvent inList daoTypes or (UserBookTable.lastReadingEvent.isNull()) }
+            } else {
+                query.andWhere { UserBookTable.lastReadingEvent inList daoTypes }
+            }
         }
         if (toRead != null) {
             if (toRead) {
@@ -1318,6 +1509,16 @@ class BookRepository(
         }
     }
 
+    /**
+     * Removes a narrator from a book without deleting the narrator from the database.
+     * Used to clean the composite table
+     */
+    fun deleteNarratorFromBook(bookId: UUID, narratorId: UUID) {
+        BookNarrators.deleteWhere {
+            BookNarrators.book eq bookId and(BookNarrators.narrator eq narratorId)
+        }
+    }
+
     fun booksWithSeries(pageable: Pageable): Page<Book> {
         val query = BookTable
             .select(BookTable.columns)
@@ -1358,5 +1559,41 @@ class BookRepository(
                 )
             }
         }
+    }
+
+    fun stats(userId: UUID): TotalsStatsDto {
+        val query = UserBookTable.join(ReadingEventTable, JoinType.LEFT, onColumn = UserBookTable.id, otherColumn = ReadingEventTable.userBook)
+            .select(UserBookTable.id.countDistinct())
+            .andWhere { UserBookTable.user eq userId }
+            .andWhere { ReadingEventTable.eventType eq ReadingEventType.FINISHED }
+            .distinct()
+        val resultRow = query.single()
+        val readCount = resultRow[UserBookTable.id.countDistinct()]
+        val droppedQuery = UserBookTable.join(ReadingEventTable, JoinType.LEFT, onColumn = UserBookTable.id, otherColumn = ReadingEventTable.userBook)
+            .select(UserBookTable.id.countDistinct())
+            .andWhere { UserBookTable.user eq userId }
+            .andWhere { ReadingEventTable.eventType eq ReadingEventType.DROPPED }
+            .distinct()
+        val droppedCount = droppedQuery.single()[UserBookTable.id.countDistinct()]
+        val totalUserBooks = UserBook.count(UserBookTable.user eq userId)
+
+        var books: Page<UserBook>
+        val pageSize = 100
+        var pageNumber = 0
+        var unread = 0L
+        // ugly perf wise, but have not found a way to get all userbooks with only
+        // one readingevent which is currently reading (to avoid counting books already
+        // read or dropped thata are being re-read)
+        do {
+            books = findUserBookByCriteria(userId, null, listOf(ReadingEventTypeFilter.CURRENTLY_READING, ReadingEventTypeFilter.NONE), null, null, null, PageRequest.of(pageNumber, pageSize))
+            books.forEach {
+                if (it.readingEvents.empty() || it.readingEvents.count() < 2) {
+                    unread++
+                }
+            }
+            pageNumber++
+        }
+        while (books.hasNext())
+        return TotalsStatsDto(read = readCount, unread = unread, dropped = droppedCount, total = totalUserBooks)
     }
 }

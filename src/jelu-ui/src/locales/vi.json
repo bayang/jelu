@@ -16,7 +16,9 @@
         "search": "search",
         "history": "history",
         "shelves": "shelves",
-        "tags-admin": "tags management"
+        "tags-admin": "tags management",
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Search",
@@ -113,7 +115,17 @@
         "add_quote": "add book quote",
         "description": "description",
         "user_rating": "my rating : {rating}",
-        "apply": "apply"
+        "apply": "apply",
+        "loading": "loading",
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator",
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Pick your language",
@@ -137,7 +149,8 @@
         "stats": "Stats",
         "shelves": "Shelves",
         "shelves_max_number_reached": "Maximum number of shelves is reached. Delete existing ones to add more.",
-        "shelf_choose_tag": "Pick a tag to create the corresponding shelf"
+        "shelf_choose_tag": "Pick a tag to create the corresponding shelf",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Please log in first"
@@ -176,7 +189,8 @@
         "edit_event": "edit event",
         "reading": "reading",
         "start_date": "start date",
-        "end_date": "end date"
+        "end_date": "end date",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Book is in to-read list",
@@ -221,7 +235,8 @@
         "in_read_list": "in read list",
         "translator": "translator | translators",
         "borrowed": "borrowed",
-        "current_page_number": "current page number"
+        "current_page_number": "current page number",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Authors merging utility",
@@ -232,7 +247,8 @@
         "author_right_description": "Choose next the author you want to merge with the other.",
         "authors_merge_subtitle": "Merge",
         "authors_merge_description": "Use fields on the right author to complete the author on the left one, then merge.",
-        "search_message": "Search authors to merge"
+        "search_message": "Search authors to merge",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "name",
@@ -243,6 +259,7 @@
         "wikipedia_page": "wikipedia page",
         "goodreads_page": "goodreads page",
         "twitter_page": "twitter page",
+        "x_page": "X page",
         "facebook_page": "facebook page",
         "instagram_page": "instagram page",
         "personal_notes": "personal notes",
@@ -276,7 +293,8 @@
         "login_not_match": "login fields do not match",
         "password_not_match": "password fields do not match",
         "login_length": "login must be 3 chars long minimum",
-        "password_length": "password must be 3 chars long minimum"
+        "password_length": "password must be 3 chars long minimum",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "create user",
@@ -309,7 +327,10 @@
         "choose_year": "Choose a year",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "years"
@@ -324,7 +345,9 @@
         "add_or_remove": "Add or remove tag",
         "add": "Add",
         "remove": "Remove",
-        "choose_tag": "Choose the tag you want to add or remove"
+        "choose_tag": "Choose the tag you want to add or remove",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Create review",
@@ -368,5 +391,26 @@
         "source": "source",
         "last_activity": "last activity",
         "activity": "login activity"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
+            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+        },
+        "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

@@ -12,3 +12,10 @@ export interface MonthStats {
     month: number,
     pageCount: number
 }
+
+export interface TotalsStats {
+    read: number,
+    unread: number,
+    dropped: number,
+    total: number,
+}

@@ -51,6 +51,7 @@ export default function usePagination(pageSize = 24) {
         perPage,
         updatePage,
         getPageIsLoading,
-        updatePageLoading
+        updatePageLoading,
+        pageCount
     }
 }

@@ -16,7 +16,9 @@
         "search": "iskanje",
         "history": "zgodovina",
         "shelves": "police",
-        "tags-admin": "upravljanje oznak"
+        "tags-admin": "upravljanje oznak",
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Iskanje",
@@ -113,7 +115,17 @@
         "add_quote": "add book quote",
         "description": "description",
         "user_rating": "my rating : {rating}",
-        "apply": "apply"
+        "apply": "apply",
+        "loading": "loading",
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator",
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Izberite svoj jezik",
@@ -137,7 +149,8 @@
         "stats": "Statistika",
         "shelves": "Police",
         "shelves_max_number_reached": "Dosegli ste maksimalno število polic. Odstranite obstoječe police preden dodate nove.",
-        "shelf_choose_tag": "Izberite oznako, da ustvarite ustrezno polico"
+        "shelf_choose_tag": "Izberite oznako, da ustvarite ustrezno polico",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Prosim, najprej se prijavite"
@@ -176,7 +189,8 @@
         "edit_event": "uredi dogodek",
         "reading": "branje",
         "start_date": "začetni datum",
-        "end_date": "končni datum"
+        "end_date": "končni datum",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Knjiga je na seznamu za branje",
@@ -221,7 +235,8 @@
         "in_read_list": "za prebrati",
         "translator": "prevajalec | prevajalci",
         "borrowed": "izposojeno",
-        "current_page_number": "current page number"
+        "current_page_number": "current page number",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Združevanje avtorjev",
@@ -232,7 +247,8 @@
         "author_right_description": "Izberite avtorja, ki ga želite združiti z ostalimi.",
         "authors_merge_subtitle": "Združi",
         "authors_merge_description": "Uporabite polja desnega avtorja za dopolnitev levega avtorja, nato jih združite.",
-        "search_message": "Iskanje avtorjev za združitev"
+        "search_message": "Iskanje avtorjev za združitev",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "ime",
@@ -243,6 +259,7 @@
         "wikipedia_page": "wikipedia stran",
         "goodreads_page": "goodreads stran",
         "twitter_page": "twitter stran",
+        "x_page": "X page",
         "facebook_page": "facebook stran",
         "instagram_page": "instagram stran",
         "personal_notes": "lastna opomba",
@@ -276,7 +293,8 @@
         "login_not_match": "polja za vpis se ne ujemajo",
         "password_not_match": "gesli se ne ujemata",
         "login_length": "uporabniško ime mora biti dolgo vsaj 3 znake",
-        "password_length": "geslo mora biti dolgo vsaj 3 znake"
+        "password_length": "geslo mora biti dolgo vsaj 3 znake",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "ustvari uporabnika",
@@ -309,7 +327,10 @@
         "choose_year": "Izberite leto",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "let"
@@ -324,7 +345,9 @@
         "add_or_remove": "Dodaj/Odstrani oznake",
         "add": "Dodaj",
         "remove": "Odstrani",
-        "choose_tag": "Izberite oznako, ki jo želite dodati ali odstraniti"
+        "choose_tag": "Izberite oznako, ki jo želite dodati ali odstraniti",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Dodajte mnenje",
@@ -368,5 +391,26 @@
         "source": "source",
         "last_activity": "last activity",
         "activity": "login activity"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
+            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+        },
+        "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

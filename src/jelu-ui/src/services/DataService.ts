@@ -16,7 +16,7 @@ import { LibraryFilter } from "../model/LibraryFilter";
 import { WikipediaSearchResult } from "../model/WikipediaSearchResult";
 import { WikipediaPageResult } from "../model/WikipediaPageResult";
 import { MessageCategory, UpdateUserMessage, UserMessage } from "../model/UserMessage";
-import { MonthStats, YearStats } from "../model/YearStats";
+import { MonthStats, TotalsStats, YearStats } from "../model/YearStats";
 import { Shelf } from "../model/Shelf";
 import { CreateReviewDto, Review, UpdateReviewDto, Visibility } from "../model/Review";
 import { Role } from "../model/Role";
@@ -25,6 +25,9 @@ import { MetadataRequest } from "../model/MetadataRequest";
 import { Series, SeriesUpdate } from "../model/Series";
 import { DirectoryListing } from "../model/DirectoryListing";
 import { BookQuote, CreateBookQuoteDto, UpdateBookQuoteDto } from "../model/BookQuote";
+import urls from "../urls";
+import { OAuth2ClientDto } from "../model/oauth-client-dto";
+import { CustomList, CustomListRemoveDto } from "../model/custom-list";
 
 class DataService {
 
@@ -79,26 +82,12 @@ class DataService {
   private API_REVIEWS = '/reviews';
   
   private API_BOOK_QUOTES = '/book-quotes';
-
-  private MODE: string;
-
-  private BASE_URL: string;
+  
+  private API_CUSTOM_LISTS = '/custom-lists';
 
   constructor() {
-    if (import.meta.env.DEV) {
-      this.MODE = "dev"
-      this.BASE_URL = import.meta.env.VITE_API_URL as string
-    }
-    else {
-      this.MODE = "prod"
-      this.BASE_URL = window.location.origin
-      this.BASE_URL.endsWith("/") ? this.BASE_URL = this.BASE_URL + "api/v1"
-        : this.BASE_URL = this.BASE_URL + "/api/v1"
-    }
-    console.log(`running in ${this.MODE} mode at ${this.BASE_URL}`)
-
     this.apiClient = axios.create({
-      baseURL: this.BASE_URL,
+      baseURL: urls.API_URL,
       headers: {
         "Content-type": "application/json",
         'X-Requested-With': 'XMLHttpRequest'
@@ -727,6 +716,50 @@ class DataService {
       throw new Error("error get tag orphans " + error)
     }
   }
+  
+  getOrphanAuthors = async (page?: number, size?: number, sort?: string) => {
+    try {
+      const response = await this.apiClient.get<Page<Author>>(`${this.API_AUTHOR}/orphans`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort,
+        }
+      });
+      console.log("called orphan authors")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error author orphans " + (error as AxiosError).code)
+      throw new Error("error get author orphans " + error)
+    }
+  }
+
+  getOrphanSeries = async (page?: number, size?: number, sort?: string) => {
+    try {
+      const response = await this.apiClient.get<Page<Series>>(`${this.API_SERIES}/orphans`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort,
+        }
+      });
+      console.log("called series orphans")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error series orphans " + (error as AxiosError).code)
+      throw new Error("error get series orphans " + error)
+    }
+  }
 
   getSeriesBooksById = async (seriesId: string,
     page?: number, size?: number, sort?: string, libraryFilter?: LibraryFilter) => {
@@ -836,7 +869,8 @@ class DataService {
   }
 
   findBooksDetailed = async (title?: string, isbn10?: string, isbn13?: string,
-    series?: string, authors?: Array<string>, translators?: Array<string>, 
+    series?: string, authors?: Array<string>, translators?: Array<string>,
+    narrators?: Array<string>, 
     tags?: Array<string>, page?: number, size?: number, sort?: string,
     libraryFilter?: LibraryFilter) => {
     try {
@@ -848,6 +882,7 @@ class DataService {
           series: series,
           authors: authors,
           translators: translators,
+          narrators: narrators,
           tags: tags,
           page: page,
           size: size,
@@ -873,7 +908,8 @@ class DataService {
   }
 
   findBooks = async (query?: string, page?: number, size?: number, sort?: string,
-    libraryFilter?: LibraryFilter) => {
+    libraryFilter?: LibraryFilter, lastEventTypes?: Array<ReadingEventType> | null, 
+    toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null,) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_BOOK}`, {
         params: {
@@ -881,7 +917,11 @@ class DataService {
           page: page,
           size: size,
           sort: sort,
-          libraryFilter: libraryFilter
+          libraryFilter: libraryFilter,
+          lastEventTypes: lastEventTypes,
+          toRead: toRead,
+          owned: owned,
+          borrowed: borrowed,
         },
         paramsSerializer: {
           serialize : (params) => {
@@ -946,6 +986,38 @@ class DataService {
       }
       console.log("error delete event " + (error as AxiosError).code)
       throw new Error("error delete event " + error)
+    }
+  }
+  
+  deleteAuthor = async (authorId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_AUTHOR}/${authorId}`);
+      console.log("delete author")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete author " + (error as AxiosError).code)
+      throw new Error("error delete author " + error)
+    }
+  }
+  
+  deleteSeries = async (seriesId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_SERIES}/${seriesId}`);
+      console.log("delete series")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete series " + (error as AxiosError).code)
+      throw new Error("error delete series " + error)
     }
   }
 
@@ -1386,6 +1458,22 @@ class DataService {
     }
   }
 
+  totalsStats = async () => {
+    try {
+      const response = await this.apiClient.get<TotalsStats>(`${this.API_STATS}/total`);
+      console.log("called stats total")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error stats total " + (error as AxiosError).code)
+      throw new Error("error stats total " + error)
+    }
+  }
+
   shelves = async (name?: string, targetId?: string) => {
     try {
       const response = await this.apiClient.get<Array<Shelf>>(`${this.API_SHELVES}`, {
@@ -1636,7 +1724,7 @@ class DataService {
 
   usernameById = async (userId: string) => {
     try {
-      const response = await this.apiClient.get(`${this.API_USER}/${userId}/name`);
+      const response = await this.apiClient.get(`/username/${userId}`);
       console.log("called username by id")
       console.log(response)
       return response.data.username;
@@ -1848,6 +1936,128 @@ class DataService {
       }
       console.log("error update quote " + (error as AxiosError).code)
       throw new Error("error update quote " + error)
+    }
+  }
+
+  oauth2Providers = async () => {
+    try {
+      const response = await this.apiClient.get<Array<OAuth2ClientDto>>("/oauth2/providers");
+      console.log("called oauth providers")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error oauth providers " + (error as AxiosError).code)
+      throw new Error("error oauth providers " + error)
+    }
+  }
+  
+  saveCustomList = async (list: CustomList) => {
+    try {
+      const resp = await this.apiClient.post<CustomList>(`${this.API_CUSTOM_LISTS}`, list)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error creating custom list " + error.response.status + " " + error.response.data.error)
+        throw new Error("error creating custom list " + error.response.status + " " + error)
+      }
+      console.log("error creating custom list " + (error as AxiosError).code)
+      throw new Error("error creating custom list " + error)
+    }
+  }
+  
+  findCustomLists = async (name?: string,
+    page?: number, size?: number, sort: string | null = null) => {
+    try {
+      const response = await this.apiClient.get<Page<CustomList>>(`${this.API_CUSTOM_LISTS}`, {
+        params: {
+          name: name,
+          page: page,
+          size: size,
+          sort: sort
+        },
+      });
+      console.log("called custom lists")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error custom lists " + (error as AxiosError).code)
+      throw new Error("error custom lists " + error)
+    }
+  }
+  
+  findCustomListById = async (listId: string) => {
+    try {
+      const response = await this.apiClient.get<CustomList>(`${this.API_CUSTOM_LISTS}/${listId}`);
+      console.log("called custom lists")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error custom list " + (error as AxiosError).code)
+      throw new Error("error custom list " + error)
+    }
+  }
+
+  deleteCustomList = async (listId: string) => {
+    try {
+      const response = await this.apiClient.delete(`${this.API_CUSTOM_LISTS}/${listId}`);
+      console.log("delete list")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete list " + (error as AxiosError).code)
+      throw new Error("error delete list " + error)
+    }
+  }
+  
+  booksForList = async (listId: string, page?: number, size?: number, sort: string | null = null) => {
+    try {
+      const response = await this.apiClient.get<Page<Book>>(`${this.API_CUSTOM_LISTS}/${listId}/books`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort
+        },
+      });
+      console.log("called custom lists books")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error custom list books " + (error as AxiosError).code)
+      throw new Error("error custom list books " + error)
+    }
+  }
+
+  removeBooksFromList = async (customListRemoveDto: CustomListRemoveDto) => {
+    try {
+      const resp = await this.apiClient.post(`${this.API_CUSTOM_LISTS}/remove`, customListRemoveDto)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error remove from list " + error.response.status + " " + error.response.data.error)
+        throw new Error("error remove from list " + error.response.status + " " + error)
+      }
+      console.log("error remove from list " + (error as AxiosError).code)
+      throw new Error("error remove from list " + error)
     }
   }
 

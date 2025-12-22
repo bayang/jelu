@@ -36,14 +36,12 @@ const filtered = computed(() => {
 
 const deleteUser = async (user: User) => {
     let abort = false
-    await ObjectUtils.swalMixin.fire({
+    await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('admin_user.delete_user')} ?</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
       confirmButtonText: t('labels.delete'),
-      cancelButtonText: t('labels.dont_delete'),
-      denyButtonText: t('labels.delete'),
+      cancelButtonText: t('labels.dont_delete')
     }).then((result) => {
       if (result.isDismissed) {
         abort = true

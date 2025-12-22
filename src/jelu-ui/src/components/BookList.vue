@@ -21,7 +21,7 @@ useTitle('Jelu | ' + t('nav.my_books'))
 
 const books: Ref<Array<UserBook>> = ref([]);
 
-const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading } = usePagination()
+const { total, page, pageAsNumber, perPage, updatePage, getPageIsLoading, updatePageLoading, pageCount } = usePagination()
 
 const { sortQuery, sortOrder, sortBy, sortOrderUpdated } = useSort('lastReadingEventDate,desc')
 
@@ -31,14 +31,66 @@ const open = ref(false)
 
 const getBookIsLoading: Ref<boolean> = ref(false)
 
+// Filters
 const toRead: Ref<string|null> = useRouteQuery('toRead', "null")
 const owned: Ref<string|null> = useRouteQuery('owned', "null")
 const borrowed: Ref<string|null> = useRouteQuery('borrowed', "null")
-
 const userId: Ref<string|null> = useRouteQuery('userId', null)
-
 const eventTypes: Ref<Array<ReadingEventType>> = useRouteQuery('lastEventTypes', [])
 const username = ref("")
+
+// --- LocalStorage keys ---
+const SORT_BY_KEY = "bookSortBy";
+const SORT_ORDER_KEY = "bookSortOrder";
+const EVENT_TYPES_KEY = "bookEventTypes";
+const TO_READ_KEY = "bookToRead";
+const OWNED_KEY = "bookOwned";
+const BORROWED_KEY = "bookBorrowed";
+
+// Restore saved settings
+onMounted(() => {
+  const savedSortBy = localStorage.getItem(SORT_BY_KEY);
+  const savedSortOrder = localStorage.getItem(SORT_ORDER_KEY);
+  if (savedSortBy) sortBy.value = savedSortBy;
+  if (savedSortOrder) sortOrder.value = savedSortOrder;
+
+  const savedEventTypes = localStorage.getItem(EVENT_TYPES_KEY);
+  if (savedEventTypes) {
+    try {
+      eventTypes.value = JSON.parse(savedEventTypes);
+    } catch {}
+  }
+
+  const savedToRead = localStorage.getItem(TO_READ_KEY);
+  if (savedToRead) toRead.value = savedToRead;
+
+  const savedOwned = localStorage.getItem(OWNED_KEY);
+  if (savedOwned) owned.value = savedOwned;
+
+  const savedBorrowed = localStorage.getItem(BORROWED_KEY);
+  if (savedBorrowed) borrowed.value = savedBorrowed;
+});
+
+// Persist changes
+watch(sortBy, (newVal) => {
+  localStorage.setItem(SORT_BY_KEY, newVal);
+});
+watch(sortOrder, (newVal) => {
+  localStorage.setItem(SORT_ORDER_KEY, newVal);
+});
+watch(eventTypes, (newVal) => {
+  localStorage.setItem(EVENT_TYPES_KEY, JSON.stringify(newVal));
+}, { deep: true });
+watch(toRead, (newVal) => {
+  localStorage.setItem(TO_READ_KEY, newVal ?? "null");
+});
+watch(owned, (newVal) => {
+  localStorage.setItem(OWNED_KEY, newVal ?? "null");
+});
+watch(borrowed, (newVal) => {
+  localStorage.setItem(BORROWED_KEY, newVal ?? "null");
+});
+
 
 const getUsername = async () => {
   if (userId.value != null) {
@@ -98,7 +150,7 @@ const borrowedAsBool = computed(() => {
 
 const getBooks = () => {
   getBookIsLoading.value = true
-  dataService.findUserBookByCriteria(eventTypes.value, null, userId.value, 
+  dataService.findUserBookByCriteria(eventTypes.value, null, userId.value,
   toReadAsBool.value, ownedAsBool.value, borrowedAsBool.value,
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
@@ -113,14 +165,21 @@ const getBooks = () => {
         }
         getBookIsLoading.value = false
         updatePageLoading(false)
+        removeIds()
     }
     )
     .catch(e => {
       getBookIsLoading.value = false
       updatePageLoading(false)
     })
-  
+
 };
+
+const removeIds = () => {
+  if (userId.value != null) {
+    books.value.forEach(b => b.id = undefined)
+  }
+}
 
 // watches set above sometimes called twice
 // so getBooks was sometimes called twice at the same instant
@@ -154,196 +213,239 @@ try {
     @update:sort-order="sortOrderUpdated"
   >
     <template #sort-fields>
+      <label class="label">{{ t('sorting.sort_by') }} : </label>
       <div class="field">
-        <label class="label">{{ t('sorting.sort_by') }} : </label>
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="lastReadingEventDate"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary my-2"
+          value="lastReadingEventDate"
         >
-          {{ t('sorting.last_reading_event_date') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.last_reading_event_date') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="creationDate"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="creationDate"
         >
-          {{ t('sorting.date_added') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.date_added') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="title"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="title"
         >
-          {{ t('sorting.title') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.title') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="publisher"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="publisher"
         >
-          {{ t('sorting.publisher') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.publisher') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="series"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="pageCount"
         >
-          {{ t('sorting.series') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.page_count') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="pageCount"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="usrAvgRating"
         >
-          {{ t('sorting.page_count') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.user_avg_rating') }}</span>
       </div>
       <div class="field">
-        <o-radio
+        <input
           v-model="sortBy"
-          native-value="usrAvgRating"
+          type="radio"
+          name="radio-20"
+          class="radio radio-primary mb-2"
+          value="avgRating"
         >
-          {{ t('sorting.user_avg_rating') }}
-        </o-radio>
-      </div>
-      <div class="field">
-        <o-radio
-          v-model="sortBy"
-          native-value="avgRating"
-        >
-          {{ t('sorting.avg_rating') }}
-        </o-radio>
+        <span class="label-text">{{ t('sorting.avg_rating') }}</span>
         <div class="field">
-          <o-radio
+          <input
             v-model="sortBy"
-            native-value="random"
+            type="radio"
+            name="radio-20"
+            class="radio radio-primary"
+            value="random"
           >
-            {{ t('sorting.random') }}
-          </o-radio>
+          <span class="label-text">{{ t('sorting.random') }}</span>
         </div>
       </div>
     </template>
     <template #filters>
       <div class="field capitalize flex flex-col gap-1">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="FINISHED"
-        >
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="FINISHED"
+          >
           {{ t('reading_events.finished') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="CURRENTLY_READING"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="CURRENTLY_READING"
+          >
           {{ t('reading_events.currently_reading') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="DROPPED"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="DROPPED"
+          >
           {{ t('reading_events.dropped') }}
-        </o-checkbox>
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="NONE"
+          >
+          {{ t('reading_events.none') }}
+        </label>
       </div>
       <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.book_in_list') }} : </label>
         <div class="field">
-          <o-radio
+          <input
             v-model="toRead"
-            native-value="null"
+            type="radio"
+            name="radio-28"
+            class="radio radio-primary my-2"
+            value="null"
           >
-            {{ t('filtering.unset') }}
-          </o-radio>
+          <span class="label-text">{{ t('filtering.unset') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="toRead"
-            native-value="false"
+            type="radio"
+            name="radio-28"
+            class="radio radio-primary mb-2"
+            value="false"
           >
-            {{ t('labels.false') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.false') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="toRead"
-            native-value="true"
+            type="radio"
+            name="radio-28"
+            class="radio radio-primary"
+            value="true"
           >
-            {{ t('labels.true') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.true') }}</span>
         </div>
       </div>
       <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.owned') }} : </label>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="null"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary my-2"
+            value="null"
           >
-            {{ t('filtering.unset') }}
-          </o-radio>
+          <span class="label-text">{{ t('filtering.unset') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="false"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary mb-2"
+            value="false"
           >
-            {{ t('labels.false') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.false') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="owned"
-            native-value="true"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary"
+            value="true"
           >
-            {{ t('labels.true') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.true') }}</span>
         </div>
       </div>
       <div class="field flex flex-col items-start">
         <label class="label">{{ t('filtering.borrowed') }} : </label>
         <div class="field">
-          <o-radio
+          <input
             v-model="borrowed"
-            native-value="null"
+            type="radio"
+            name="radio-34"
+            class="radio radio-primary my-2"
+            value="null"
           >
-            {{ t('filtering.unset') }}
-          </o-radio>
+          <span class="label-text">{{ t('filtering.unset') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="borrowed"
-            native-value="false"
+            type="radio"
+            name="radio-34"
+            class="radio radio-primary mb-2"
+            value="false"
           >
-            {{ t('labels.false') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.false') }}</span>
         </div>
         <div class="field">
-          <o-radio
+          <input
             v-model="borrowed"
-            native-value="true"
+            type="radio"
+            name="radio-34"
+            class="radio radio-primary"
+            value="true"
           >
-            {{ t('labels.true') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.true') }}</span>
         </div>
       </div>
     </template>
   </sort-filter-bar-vue>
-  <div class="flex flex-row justify-between">
+  <div class="flex flex-row justify-between mb-2">
     <div class="flex flex-row gap-1 order-last sm:order-first">
-      <o-button
-        variant="success"
-        outlined
+      <button
+        class="btn btn-outline btn-success"
         @click="open = !open"
       >
         <span class="icon text-lg">
           <i class="mdi mdi-filter-variant" />
         </span>
-      </o-button>
+      </button>
       <button
         v-tooltip="t('bulk.toggle')"
         class="btn btn-outline btn-primary"
@@ -382,9 +484,17 @@ try {
     </h2>
     <div />
   </div>
+  <o-pagination
+    v-if="books.length > 0 && pageCount > 1"
+    :current="pageAsNumber"
+    :total="total"
+    order="centered"
+    :per-page="perPage"
+    @change="updatePage"
+  />
   <div
     v-if="books.length > 0"
-    class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-0 my-3 shrink-0 grow-0"
+    class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-0 my-3 shrink-0 grow-0 mt-2"
   >
     <TransitionGroup name="list">
       <div
@@ -396,7 +506,8 @@ try {
           :book="book"
           :force-select="selectAll"
           :show-select="showSelect"
-          :propose-add="true"
+          :public="false"
+          :propose-add="userId == null"
           class="h-full"
           @update:modal-closed="modalClosed"
           @update:checked="cardChecked"

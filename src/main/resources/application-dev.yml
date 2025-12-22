@@ -15,9 +15,13 @@ jelu:
       is-enabled: false
       order: 200000
       config: "fr"
+    - name: "databazeknih"
+      is-enabled: false
+      order: 200001
   metadata:
     calibre:
       path: /usr/bin/fetch-ebook-metadata
+      timeout: 30
 #  cors.allowed-origins:
 #    - http://127.0.0.1:5173
 #    - http://localhost:5173

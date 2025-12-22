@@ -1,10 +1,8 @@
 package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.config.UserAgentWebAuthenticationDetails
-import io.github.bayang.jelu.dao.Provider
 import io.github.bayang.jelu.dto.AuthenticationDto
 import io.github.bayang.jelu.dto.CreateUserDto
-import io.github.bayang.jelu.dto.DummyUser
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LoginHistoryInfoDto
 import io.github.bayang.jelu.dto.ROLE_ADMIN
@@ -14,11 +12,11 @@ import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.errors.JeluValidationException
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.utils.stringFormat
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.servlet.http.HttpSession
 import jakarta.validation.Valid
-import mu.KotlinLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -60,21 +58,6 @@ class UsersController(
     @GetMapping(path = ["/users/me"])
     fun authenticatedUser(principal: Authentication, session: HttpSession): AuthenticationDto {
         when (principal.principal) {
-            is DummyUser -> {
-                logger.trace { "dummy user $principal" }
-                return AuthenticationDto(
-                    UserDto(
-                        login = principal.name,
-                        isAdmin = true,
-                        id = null,
-                        password = "****",
-                        modificationDate = null,
-                        creationDate = null,
-                        provider = Provider.JELU_DB,
-                    ),
-                    token = session.id,
-                )
-            }
             is JeluUser -> {
                 logger.trace { "jelu user $principal" }
                 logger.trace { "session ${session.id}" }
@@ -114,7 +97,7 @@ class UsersController(
     @GetMapping(path = ["/users/{id}"])
     fun userById(@PathVariable("id") userId: UUID): UserDto = repository.findUserById(userId)
 
-    @GetMapping(path = ["/users/{id}/name"])
+    @GetMapping(path = ["/username/{id}"])
     fun usernameById(@PathVariable("id") userId: UUID) = mapOf<String, String>("username" to repository.findUserById(userId).login)
 
     @PutMapping(path = ["/users/{id}"])

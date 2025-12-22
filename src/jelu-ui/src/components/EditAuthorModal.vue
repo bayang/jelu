@@ -5,6 +5,7 @@ import { WikipediaSearchResult, WikipediaSearchResultElement } from "../model/Wi
 import dataService from "../services/DataService";
 import { StringUtils } from "../utils/StringUtils";
 import { useI18n } from 'vue-i18n'
+import { useLocalStorage } from '@vueuse/core'
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -18,9 +19,9 @@ const props = defineProps<{
 const currentAuthor: Ref<Author> = ref(props.author)
 console.log(currentAuthor.value)
 const progress: Ref<boolean> = ref(false)
-let deleteImage: Ref<boolean> = ref(false)
+const deleteImage: Ref<boolean> = ref(false)
 const uploadFromWeb = ref(true);
-let uploadlabel = computed(() => {
+const uploadlabel = computed(() => {
   if (uploadFromWeb.value) {
     return t('labels.upload_from_web')
   } else {
@@ -30,7 +31,9 @@ let uploadlabel = computed(() => {
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
 const uploadPercentage = ref(0);
-const searchlanguage = ref("en");
+
+const storedLanguage = useLocalStorage("jelu_language", "en")
+const searchlanguage = ref(storedLanguage.value);
 const FORM = "FORM"
 const SEARCH = "SEARCH"
 const currentPhase = ref(FORM)
@@ -40,7 +43,7 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-let hasImage = computed(() => {
+const hasImage = computed(() => {
   return StringUtils.isNotBlank(currentAuthor.value.image)
 })
 
@@ -62,7 +65,7 @@ const update = () => {
     currentAuthor.value.image = imageUrl.value
   }
   dataService.updateAuthor(currentAuthor.value, file.value, (event: { loaded: number; total: number }) => {
-          let percent = Math.round((100 * event.loaded) / event.total);
+          const percent = Math.round((100 * event.loaded) / event.total);
           console.log("percent " + percent);
           uploadPercentage.value = percent;
         })
@@ -123,248 +126,274 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
       </div>
       <div class="form-control">
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.name')"
-            class="capitalize"
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.name') }}
+          </legend>
+          <input
+            v-model="currentAuthor.name"
+            type="text"
+            maxlength="1000"
+            name="name"
+            class="input focus:input-accent w-full"
           >
-            <o-input
-              v-model="currentAuthor.name"
-              maxlength="1000"
-              name="name"
-              class="input focus:input-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.date_of_birth')"
-            class="capitalize"
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.date_of_birth') }}
+          </legend>
+          <o-datepicker
+            ref="datepicker"
+            v-model="currentAuthor.dateOfBirth"
+            :show-week-number="false"
+            :locale="undefined"
+            :placeholder="t('labels.click_to_select')"
+            expanded
+            icon="calendar"
+            icon-right="close"
+            :icon-right-clickable="true"
+            :mobile-native="false"
+            :mobile-modal="false"
+            trap-focus
+            @icon-right-click="currentAuthor.dateOfBirth = undefined"
+          />
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.date_of_death') }}
+          </legend>
+          <o-datepicker
+            ref="datepicker"
+            v-model="currentAuthor.dateOfDeath"
+            :show-week-number="false"
+            :locale="undefined"
+            :placeholder="t('labels.click_to_select')"
+            expanded
+            icon="calendar"
+            icon-right="close"
+            :icon-right-clickable="true"
+            :mobile-native="false"
+            :mobile-modal="false"
+            trap-focus
+            @icon-right-click="currentAuthor.dateOfDeath = undefined"
+          />
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.biography') }}
+          </legend>
+          <textarea
+            v-model="currentAuthor.biography"
+            maxlength="5000"
+            type="textarea"
+            class="textarea focus:textarea-accent w-full"
+          />
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.official_page') }}
+          </legend>
+          <input
+            v-model="currentAuthor.officialPage"
+            type="text"
+            maxlength="5000"
+            class="input focus:input-accent w-full"
           >
-            <o-datepicker
-              ref="datepicker"
-              v-model="currentAuthor.dateOfBirth"
-              :show-week-number="false"
-              :locale="undefined"
-              :placeholder="t('labels.click_to_select')"
-              :expanded="true"
-              icon="calendar"
-              icon-right="close"
-              :icon-right-clickable="true"
-              :mobile-native="false"
-              :mobile-modal="false"
-              trap-focus
-              class="input focus:input-accent"
-              @icon-right-click="currentAuthor.dateOfBirth = undefined"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.date_of_death')"
-            class="capitalize"
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.wikipedia_page') }}
+          </legend>
+          <input
+            v-model="currentAuthor.wikipediaPage"
+            type="text"
+            maxlength="5000"
+            class="input focus:input-accent w-full"
           >
-            <o-datepicker
-              ref="datepicker"
-              v-model="currentAuthor.dateOfDeath"
-              :show-week-number="false"
-              :locale="undefined"
-              :placeholder="t('labels.click_to_select')"
-              :expanded="true"
-              icon="calendar"
-              icon-right="close"
-              :icon-right-clickable="true"
-              :mobile-native="false"
-              :mobile-modal="false"
-              trap-focus
-              class="input focus:input-accent"
-              @icon-right-click="currentAuthor.dateOfDeath = undefined"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.biography')"
-            class="capitalize"
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.goodreads_page') }}
+          </legend>
+          <input
+            v-model="currentAuthor.goodreadsPage"
+            maxlength="5000"
+            type="text"
+            class="input focus:input-accent w-full"
           >
-            <o-input
-              v-model="currentAuthor.biography"
-              maxlength="5000"
-              type="textarea"
-              class="textarea focus:textarea-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.official_page')"
-            class="capitalize"
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.x_page') }}
+          </legend>
+          <input
+            v-model="currentAuthor.twitterPage"
+            maxlength="5000"
+            type="text"
+            class="input focus:input-accent w-full"
           >
-            <o-input
-              v-model="currentAuthor.officialPage"
-              maxlength="5000"
-              class="input focus:input-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.wikipedia_page')"
-            class="capitalize"
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.facebook_page') }}
+          </legend>
+          <input
+            v-model="currentAuthor.facebookPage"
+            maxlength="5000"
+            type="text"
+            class="input focus:input-accent w-full"
           >
-            <o-input
-              v-model="currentAuthor.wikipediaPage"
-              maxlength="5000"
-              class="input focus:input-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.goodreads_page')"
-            class="capitalize"
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.instagram_page') }}
+          </legend>
+          <input
+            v-model="currentAuthor.instagramPage"
+            maxlength="5000"
+            type="text"
+            class="input focus:input-accent w-full"
           >
-            <o-input
-              v-model="currentAuthor.goodreadsPage"
-              maxlength="5000"
-              class="input focus:input-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.twitter_page')"
-            class="capitalize"
-          >
-            <o-input
-              v-model="currentAuthor.twitterPage"
-              maxlength="5000"
-              class="input focus:input-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.facebook_page')"
-            class="capitalize"
-          >
-            <o-input
-              v-model="currentAuthor.facebookPage"
-              maxlength="5000"
-              class="input focus:input-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.instagram_page')"
-            class="capitalize"
-          >
-            <o-input
-              v-model="currentAuthor.instagramPage"
-              maxlength="5000"
-              class="input focus:input-accent"
-            />
-          </o-field>
-        </div>
-        <div class="field pb-2">
-          <o-field
-            :label="t('author.personal_notes')"
-            class="capitalize"
-          >
-            <o-input
-              v-model="currentAuthor.notes"
-              maxlength="5000"
-              type="textarea"
-              class="textarea focus:textarea-accent"
-            />
-          </o-field>
-        </div>
-        <div v-if="hasImage">
-          <o-field class="pb-6">
-            <template #label>
-              {{ t('labels.actual_cover') }} :
-              <o-tooltip
-                v-if="!deleteImage"
-                :label="t('labels.click_bin_to_remove')"
-                multiline
-                position="right"
-              >
-                <span class="icon">
-                  <i class="mdi mdi-information-outline" />
-                </span>
-              </o-tooltip>
-              <o-tooltip
-                v-if="deleteImage"
-                :label="t('labels.refresh_to_restore')"
-                position="right"
-              >
-                <span class="icon">
-                  <i class="mdi mdi-information-outline" />
-                </span>
-              </o-tooltip>
-            </template>
-            <div class="indicator">
-              <span
-                v-if="!deleteImage"
-                class="badge indicator-item indicator-bottom indicator-start"
-                @click="toggleRemoveImage"
-              >
-                <i class="mdi mdi-delete" />
+        </fieldset>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('author.personal_notes') }}
+          </legend>
+          <textarea
+            v-model="currentAuthor.notes"
+            maxlength="5000"
+            type="textarea"
+            class="textarea focus:textarea-accent w-full"
+          />
+        </fieldset>
+        <fieldset
+          v-if="hasImage"
+          class="fieldset"
+        >
+          <legend class="fieldset-legend capitalize">
+            {{ t('labels.actual_cover') }} :
+            <o-tooltip
+              v-if="!deleteImage"
+              :label="t('labels.click_bin_to_remove')"
+              multiline
+              position="right"
+            >
+              <span class="icon">
+                <i class="mdi mdi-information-outline" />
               </span>
-              <span
-                v-if="deleteImage"
-                class="badge indicator-item indicator-bottom indicator-start"
-                @click="toggleRemoveImage"
-              >
-                <i class="mdi mdi-autorenew" />
+            </o-tooltip>
+            <o-tooltip
+              v-if="deleteImage"
+              :label="t('labels.refresh_to_restore')"
+              position="right"
+            >
+              <span class="icon">
+                <i class="mdi mdi-information-outline" />
               </span>
-              <figure class="small-cover">
-                <img
-                  :src="'/files/' + author.image"
-                  :class="deleteImage ? 'altered' : ''"
-                  alt="cover image"
-                >
-              </figure>
-            </div>
-          </o-field>
-        </div>
+            </o-tooltip>
+          </legend>
+          <div class="indicator">
+            <span
+              v-if="!deleteImage"
+              class="badge indicator-item indicator-bottom indicator-start"
+              @click="toggleRemoveImage"
+            >
+              <i class="mdi mdi-delete" />
+            </span>
+            <span
+              v-if="deleteImage"
+              class="badge indicator-item indicator-bottom indicator-start"
+              @click="toggleRemoveImage"
+            >
+              <i class="mdi mdi-autorenew" />
+            </span>
+            <figure class="small-cover">
+              <img
+                :src="'/files/' + author.image"
+                :class="deleteImage ? 'altered' : ''"
+                alt="cover image"
+              >
+            </figure>
+          </div>
+        </fieldset>
         <div
           v-if="!hasImage || deleteImage"
           class="py-2"
         >
-          <o-field
-            :label="t('labels.upload_image')"
-            class="capitalize"
-          >
-            <o-switch
-              v-model="uploadFromWeb"
-              position="left"
-            >
+          <fieldset class="fieldset">
+            <legend class="fieldset-legend capitalize">
+              {{ t('labels.upload_image') }}
+            </legend>
+            <label class="label">
+              <input
+                v-model="uploadFromWeb"
+                type="checkbox"
+                class="toggle toggle-primary"
+              >
               {{ uploadlabel }}
-            </o-switch>
-          </o-field>
-          <o-field
+            </label>
+          </fieldset>
+          <fieldset
             v-if="uploadFromWeb"
-            :label="t('labels.enter_image_address')"
+            class="fieldset"
           >
-            <o-input
-              v-model="imageUrl"
-              type="url"
-              pattern="https?://.*"
-              :clearable="true"
-              icon-right-clickable
-              title="Url must start with http or https"
-              :placeholder="t('labels.url_must_start')"
-              class="input focus:input-accent"
-              @icon-right-click="clearImageField"
-            />
-          </o-field>
-          <o-field
+            <legend class="fieldset-legend capitalize">
+              {{ t('labels.enter_image_address') }}
+            </legend>
+            <label class="input validator w-full">
+              <svg
+                class="h-[1em] opacity-50"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  stroke-width="2.5"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </g>
+              </svg>
+              <input
+                v-model="imageUrl"
+                type="url"
+                required
+                class="w-full"
+                :placeholder="t('labels.url_must_start')"
+                pattern="https?://.*"
+              >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6 hover:cursor-pointer"
+                @click="clearImageField"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+            </label>
+            <p class="validator-hint">
+              {{ t('labels.url_must_start') }}
+            </p>
+          </fieldset>
+          <fieldset
             v-else
-            :label="t('labels.choose_file')"
-            class="file"
+            class="file fieldset"
           >
+            <legend
+              class="file fieldset-legend"
+            >
+              {{ t('labels.choose_file') }}
+            </legend>
             <input
               type="file"
               accept="image/*"
@@ -378,7 +407,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
               class="progress progress-primary"
             />
             <br>
-          </o-field>
+          </fieldset>
         </div>
         <div class="mt-2 flex flex-row justify-center space-x-8">
           <button
@@ -423,18 +452,18 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
         </div>
       </div>
       <div class="mt-2">
-        <div class="field">
-          <o-field
-            :label="t('labels.short_language_code')"
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('labels.short_language_code') }}
+          </legend>
+          <input
+            v-model="searchlanguage"
+            type="text"
+            maxlength="4"
+            name="language"
+            class="input focus:input-accent"
           >
-            <o-input
-              v-model="searchlanguage"
-              maxlength="4"
-              name="language"
-              class="input focus:input-accent"
-            />
-          </o-field>
-        </div>
+        </fieldset>
         <div class="mb-2 flex flex-row justify-center space-x-8 my-4">
           <button
             class="btn btn-info btn-outline uppercase"

@@ -98,14 +98,6 @@ function modalClosed() {
   throttledGetRandom()
 }
 
-const message = computed(() => {
-  if (userId.value != null) {
-    return t('labels.reading_list_from_name', { name: username.value })
-  } else {
-    return "Random"
-  }
-} )
-
 getRandom()
 
 </script>
@@ -119,67 +111,81 @@ getRandom()
     @update:sort-order="sortOrderUpdated"
   >
     <template #filters>
-      <div class="field flex flex-col capitalize gap-1">
+      <div class="flex flex-col capitalize gap-1 field">
         <label class="label">{{ t('reading_events.last_event_type') }} : </label>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="FINISHED"
-        >
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="FINISHED"
+          >
           {{ t('reading_events.finished') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="CURRENTLY_READING"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="CURRENTLY_READING"
+          >
           {{ t('reading_events.currently_reading') }}
-        </o-checkbox>
-        <o-checkbox
-          v-model="eventTypes"
-          native-value="DROPPED"
-        >
+        </label>
+        <label class="label">
+          <input
+            v-model="eventTypes"
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            value="DROPPED"
+          >
           {{ t('reading_events.dropped') }}
-        </o-checkbox>
+        </label>
       </div>
-      <div class="field">
+      <div class="">
         <label class="label">{{ t('filtering.owned') }} : </label>
-        <div class="field">
-          <o-radio
+        <div class="">
+          <input
             v-model="owned"
-            native-value="null"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary my-2"
+            value="null"
           >
-            {{ t('filtering.unset') }}
-          </o-radio>
+          <span class="label-text">{{ t('filtering.unset') }}</span>
         </div>
-        <div class="field">
-          <o-radio
+        <div class="">
+          <input
             v-model="owned"
-            native-value="false"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary mb-2"
+            value="false"
           >
-            {{ t('labels.false') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.false') }}</span>
         </div>
-        <div class="field">
-          <o-radio
+        <div class="">
+          <input
             v-model="owned"
-            native-value="true"
+            type="radio"
+            name="radio-31"
+            class="radio radio-primary"
+            value="true"
           >
-            {{ t('labels.true') }}
-          </o-radio>
+          <span class="label-text">{{ t('labels.true') }}</span>
         </div>
       </div>
     </template>
   </sort-filter-bar-vue>
   <div class="flex flex-row justify-between">
     <div class="flex flex-row gap-1 order-last sm:order-first">
-      <o-button
-        variant="success"
-        outlined
+      <button
+        class="btn btn-outline btn-success"
         @click="open = !open"
       >
         <span class="icon text-lg">
           <i class="mdi mdi-filter-variant" />
         </span>
-      </o-button>
+      </button>
       <button
         v-tooltip="t('bulk.toggle')"
         class="btn btn-outline btn-primary"
@@ -211,7 +217,7 @@ getRandom()
       </button>
     </div>
     <h2 class="text-3xl typewriter capitalize">
-      {{ message }} :
+      {{ t('nav.random') }} :
     </h2>
     <div />
   </div>
@@ -227,6 +233,7 @@ getRandom()
       <book-card
         :book="book"
         :force-select="selectAll"
+        :public="false"
         :show-select="showSelect"
         :propose-add="true"
         class="h-full"
@@ -257,7 +264,7 @@ getRandom()
   </div>
   <div v-else>
     <h2 class="text-3xl typewriter">
-      "Random"
+      {{ t('nav.random') }}
     </h2>
     <span class="icon">
       <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />

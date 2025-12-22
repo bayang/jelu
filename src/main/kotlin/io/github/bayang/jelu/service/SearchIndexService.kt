@@ -5,7 +5,7 @@ import io.github.bayang.jelu.dao.BookRepository
 import io.github.bayang.jelu.search.LuceneEntity
 import io.github.bayang.jelu.search.LuceneHelper
 import io.github.bayang.jelu.search.toDocument
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.lucene.document.Document
 import org.apache.lucene.index.Term
 import org.springframework.data.domain.Page
@@ -17,7 +17,7 @@ import java.util.UUID
 import kotlin.math.ceil
 import kotlin.time.measureTime
 
-const val INDEX_VERSION = 2
+const val INDEX_VERSION = 5
 private val logger = KotlinLogging.logger {}
 
 @Component
@@ -41,7 +41,7 @@ class SearchIndexService(
                     it,
                     {
                             p: Pageable ->
-                        bookRepository.findAllNoFilters(null, null, null, null, null, null, null, p)
+                        bookRepository.findAllNoFilters(null, null, null, null, null, null, null, null, p)
                     },
                     { e: Book -> e.toDocument() },
                 )

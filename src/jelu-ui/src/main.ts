@@ -6,10 +6,6 @@ import SidebarMenu from 'vuejs-sidebar-menu'
 import router from './router'
 import store, { key } from './store'
 import VueSplide from '@splidejs/vue-splide';
-import { plugin, defaultConfig } from '@formkit/vue'
-import { ar, hr, cs, da, nl, fi, fy, he, id, it, ko, fa, pl, pt, ru, es, tr, vi, de, fr, zh } from '@formkit/i18n'
-import { generateClasses } from '@formkit/tailwindcss'
-import formkitTheme from './formkit-theme'
 import VueMarkdownEditor from '@kangc/v-md-editor';
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 
@@ -74,15 +70,6 @@ createApp(App)
     })
     .use(SidebarMenu)
     .use(VueSplide)
-    .use(plugin, defaultConfig({
-      config : {
-        classes: generateClasses(formkitTheme)
-      },
-      // Define additional locales
-      locales: { ar, hr, cs, da, nl, fi, fy, he, id, it, ko, fa, pl, pt, ru, es, tr, vi, de, fr, zh },
-      // Define the active locale
-      locale: storedLanguage.value,
-    }))
     .use(VueMarkdownEditor)
     .use(VMdPreview)
     .mount('#app')

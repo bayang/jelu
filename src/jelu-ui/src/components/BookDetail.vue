@@ -8,24 +8,24 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import useDates from '../composables/dates'
 import { Book, UserBook } from '../model/Book'
+import { BookQuote } from "../model/BookQuote"
 import { Metadata } from "../model/Metadata"
 import { CreateReadingEvent, ReadingEvent, ReadingEventType } from '../model/ReadingEvent'
 import { Review } from '../model/Review'
+import { Series } from '../model/Series'
 import { User } from '../model/User'
 import dataService from "../services/DataService"
 import { key } from '../store'
 import { ObjectUtils } from '../utils/ObjectUtils'
 import AutoImportFormModalVue from "./AutoImportFormModal.vue"
+import BookQuoteCard from "./BookQuoteCard.vue"
+import BookQuoteModalVue from './BookQuoteModal.vue'
 import EditBookModal from "./EditBookModal.vue"
 import MergeBookModal from './MergeBookModal.vue'
 import ReadingEventModalVue from './ReadingEventModal.vue'
 import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewCard from "./ReviewCard.vue"
 import ReviewModalVue from './ReviewModal.vue'
-import BookQuoteModalVue from './BookQuoteModal.vue'
-import { BookQuote } from "../model/BookQuote"
-import BookQuoteCard from "./BookQuoteCard.vue"
-import { Series } from '../model/Series'
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -42,7 +42,7 @@ const store = useStore(key)
 const router = useRouter()
 const oruga = useOruga();
 
-const { formatDate, formatDateString } = useDates()
+const { stringToDate } = useDates()
 
 const isAdmin = computed(() => {
   return store !== undefined && store.getters.isAdmin
@@ -272,7 +272,7 @@ const toggleReadProgressModal = (userBookId: string, pageCount: number|null, cur
 const deleteBook = async () => {
   let deleteForUserOnly = true
   let abort = false
-  if (isAdmin.value) {
+  if (isAdmin.value === true) {
     await ObjectUtils.swalMixin.fire({
       html: `<p>${t('labels.delete_for_all_or_only_you')}</p>`,
       showDenyButton: true,
@@ -290,14 +290,13 @@ const deleteBook = async () => {
     })
   }
   else {
-    await ObjectUtils.swalMixin.fire({
+    await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('labels.delete_this_book')}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
       cancelButtonText: t('labels.dont_delete'),
-      denyButtonText: t('labels.delete'),
     }).then((result) => {
       if (result.isDismissed) {
         abort = true
@@ -419,11 +418,11 @@ function copyToClipboard(content: string) {
 const deleteReview = async (reviewId: string) => {
   console.log("delete " + reviewId)
   let abort = false
-  await ObjectUtils.swalMixin.fire({
+  await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('reviews.delete_review')}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
       cancelButtonText: t('labels.dont_delete'),
       denyButtonText: t('labels.delete'),
@@ -449,11 +448,11 @@ const deleteReview = async (reviewId: string) => {
 const deleteBookQuote = async (bookQuoteId: string) => {
   console.log("delete " + bookQuoteId)
   let abort = false
-  await ObjectUtils.swalMixin.fire({
+  await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('book_quotes.delete_quote')}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
       cancelButtonText: t('labels.dont_delete'),
       denyButtonText: t('labels.delete'),
@@ -545,7 +544,7 @@ getBook()
   <div class="grid grid-cols-1 justify-center justify-items-center">
     <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12">
       <div />
-      <div>
+      <div class="grow">
         <h3 class="typewriter text-3xl">
           {{ book?.book?.title }}
         </h3>
@@ -615,7 +614,7 @@ getBook()
           </label>
           <ul
             tabindex="0"
-            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+            class="dropdown-content menu p-2 shadow-sm bg-base-100 rounded-box w-52"
           >
             <li>
               <button
@@ -704,7 +703,7 @@ getBook()
       </div>
     </div>
     <div
-      class="justify-center justify-items-center sm:gap-10 grid grid-cols-1 sm:grid-cols-2 sm:w-10/12"
+      class="justify-center justify-items-center sm:gap-10 grid grid-cols-1 sm:grid-cols-2 sm:w-10/12 w-full"
     >
       <div class="sm:justify-self-end">
         <figure>
@@ -762,8 +761,28 @@ getBook()
             </router-link>
           </li>
         </ul>
+        <p
+          v-if="book != null && book.book != null && book.book.narrators != null && book?.book?.narrators?.length > 0"
+        >
+          <span class="font-semibold capitalize">{{ t('book.narrator', 2) }} :</span>
+        </p>
+        <ul
+          v-if="book != null && book.book != null && book.book.narrators != null && book?.book?.narrators?.length > 0"
+        >
+          <li
+            v-for="narrator in book?.book?.narrators"
+            :key="narrator.id"
+          >
+            <router-link
+              class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+              :to="{ name: 'author-detail', params: { authorId: narrator.id } }"
+            >
+              {{ narrator.name }}&nbsp;
+            </router-link>
+          </li>
+        </ul>
         <p v-if="book?.book?.publisher">
-          <span class="font-semibold capitalize">{{ t('book.publisher') }} :</span>
+          <span class="font-semibold capitalize">{{ t('book.publisher') }} :&nbsp;</span>
           <router-link
             class="link hover:underline hover:decoration-4 hover:decoration-secondary"
             :to="{ name: 'search', query: { q: `publisher:` + publisherQuery } }"
@@ -786,9 +805,15 @@ getBook()
           </span>
           <span v-if="book?.currentPageNumber">&nbsp;(<span class="font-semibold capitalize">{{ t('labels.current') }}</span> : {{ book.currentPageNumber }})</span>
         </p>
+        <p
+          v-if="book?.book.pageCount == null && book?.currentPageNumber == null && book?.percentRead != null"
+          class="capitalize"
+        >
+          {{ t('book.percent_read') }} {{ book.percentRead }} %
+        </p>
         <p v-if="book?.book?.publishedDate">
           <span class="font-semibold capitalize">{{ t('book.published_date') }} :</span>
-          {{ formatDateString(book.book.publishedDate) }}
+          {{ d(stringToDate(book.book.publishedDate)!!, 'short') }}
         </p>
         <p v-if="book?.book?.series && book?.book?.series != null && book?.book?.series.length > 0">
           <span class="font-semibold capitalize">{{ t('book.series') }} :&nbsp;</span>
@@ -834,7 +859,7 @@ getBook()
     </div>
     <div
       v-if="book?.book?.summary"
-      class="flex flex-row justify-center mt-4 prose-base dark:prose-invert sm:w-10/12"
+      class="flex flex-row justify-center mt-4 prose prose-base dark:prose-invert sm:w-10/12"
     >
       <div
         v-if="book?.book?.summary"
@@ -993,7 +1018,7 @@ getBook()
     </div>
     <div
       v-if="bookQuotes != null && bookQuotes.length > 0"
-      class="w-11/12 sm:w-10/12 flex flex-row flex-wrap justify-center mt-4 gap-4"
+      class="w-11/12 sm:w-10/12"
     >
       <router-link
         class="link text-2xl typewriter"
@@ -1001,6 +1026,11 @@ getBook()
       >
         {{ t('book_quotes.quote', 2) }}
       </router-link>
+    </div>
+    <div
+      v-if="bookQuotes != null && bookQuotes.length > 0"
+      class="w-11/12 sm:w-10/12 flex flex-row flex-wrap justify-center mt-4 gap-4"
+    >
       <div
         v-for="quote in bookQuotes"
         :key="quote.id"
@@ -1046,21 +1076,21 @@ getBook()
               class="sm:flex sm:gap-2"
             >
               <h3 class="font-semibold">
-                {{ formatDate(event.endDate) }}
+                {{ d(event.endDate, 'short') }}
               </h3>
               <p class="capitalize">
                 {{ eventLabel(event.eventType) }}&nbsp;-
               </p>
               <h3 class="font-semibold">
-                {{ formatDate(event.startDate) }}
+                {{ d(event.startDate!!, 'short') }}
               </h3>
               <p class="capitalize">
-                started
+                {{ t('reading_events.started') }}
               </p>
             </div>
             <div v-else>
               <h3 class="font-semibold">
-                {{ formatDate(event.startDate) }}
+                {{ d(event.startDate!!, 'short') }}
               </h3>
               <p class="capitalize">
                 {{ eventLabel(event.eventType) }}
@@ -1120,21 +1150,21 @@ getBook()
               class="sm:flex sm:gap-2"
             >
               <h3 class="font-semibold">
-                {{ formatDate(event.endDate) }}
+                {{ d(event.endDate, 'short') }}
               </h3>
               <p class="capitalize">
                 {{ eventLabel(event.eventType) }}&nbsp;-
               </p>
               <h3 class="font-semibold">
-                {{ formatDate(event.startDate) }}
+                {{ d(event.startDate!!, 'short') }}
               </h3>
               <p class="capitalize">
-                started
+                {{ t('reading_events.started') }}
               </p>
             </div>
             <div v-else>
               <h3 class="font-semibold">
-                {{ formatDate(event.startDate) }}
+                {{ d(event.startDate!!, 'short') }}
               </h3>
               <p class="capitalize">
                 {{ eventLabel(event.eventType) }}

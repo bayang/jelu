@@ -8,7 +8,7 @@
     "nav": {
         "my_books": "Meine Bücher",
         "to_read": "Leseliste",
-        "random": "random",
+        "random": "zufällig",
         "add_book": "Neues Buch",
         "dashboard": "Übersicht",
         "login": "Anmelden",
@@ -16,7 +16,9 @@
         "search": "Suche",
         "history": "Verlauf",
         "shelves": "Regale",
-        "tags-admin": "tag Verwaltung"
+        "tags-admin": "Tagverwaltung",
+        "data-admin": "Datenverwaltung",
+        "activity": "Aktivität"
     },
     "labels": {
         "search": "Suche",
@@ -24,7 +26,7 @@
         "true": "Ja",
         "false": "Nein",
         "library_empty": "Bibliothek ist leer",
-        "nothing_to_read": "Leseliste ist leer",
+        "nothing_to_read": "Nichts zum Lesen",
         "book_will_be_added": "Buch wird zur Leseliste hinzugefügt",
         "save": "Speichern",
         "dont_save": "Nicht speichern",
@@ -34,19 +36,19 @@
         "book_title_saved": "Buch {title} wurde importiert!",
         "book_title_updated": "Buch {title} wurde aktualisiert!",
         "error_message": "Fehler {msg}",
-        "provide_title": "Zumindest Titel eingeben",
+        "provide_title": "Gib zumindest einen Titel ein",
         "invalid_isbn10": "Ungültige ISBN10",
         "invalid_isbn13": "Ungültige ISBN13",
         "auto_fill_doc": "Versuche einige Felder aus dem Web automatisch auszufüllen, wenn ISBN oder Titel angegeben wird",
-        "auto_fill_book": "Try to auto fill some fields from an epub or opf file",
+        "auto_fill_book": "Versuche, einige Felder aus einer epub oder opf Datei automatisch auszufüllen",
         "auto_import_disabled": "Auto Import erfordert die Installation eines Metadaten-Plugins",
         "auto_fill": "Automatisch ausfüllen",
         "add_author": "Autor:in hinzufügen",
         "add_tag": "Tag hinzufügen",
         "click_to_select": "Zum Auswählen klicken...",
-        "event_date": "Datum",
+        "event_date": "Ereignis-Datum",
         "upload_cover": "Titelbild hochladen",
-        "enter_image_address": "Adresse des Titelbildes eingeben",
+        "enter_image_address": "Titelbildadresse eingeben",
         "url_must_start": "URL muss mit http oder https beginnen",
         "choose_file": "Datei auswählen",
         "import_book": "Buch importieren",
@@ -61,7 +63,7 @@
         "books_from_name": "Bücher von {name}",
         "delete_for_all_or_only_you": "Buch für alle Benutzer löschen oder nur für Dich?",
         "only_me": "Nur für mich",
-        "all_users": "Für alle Benutzer",
+        "all_users": "Alle Benutzer",
         "dont_delete": "Nicht löschen",
         "delete": "Löschen",
         "delete_this_book": "Dieses Buch löschen?",
@@ -84,40 +86,50 @@
         "books_tagged_name": "Bücher mit #{tag} getaggt",
         "upload_from_web": "Aus dem Web hochladen",
         "upload_from_file": "Aus Datei hochladen",
-        "upload_from_computer": "Von Ihrem Computer hochladen",
+        "upload_from_computer": "Vom Computer hochladen",
         "upload_from_server": "Vom Jelu Server",
         "double_click_to_edit": "Zum Bearbeiten doppelklicken",
         "mark_read_or_drop": "Als gelesen markieren oder aufgeben",
         "preview": "Vorschau",
         "copy_paste_code": "Diesen Code kopieren und einfügen",
-        "get_embed_code": "Embed-Code erhalten",
+        "get_embed_code": "Einbettungscode abrufen",
         "saved": "Gespeichert",
         "yes": "Ja",
         "no": "Nein",
         "do_nothing": "Nichts tun",
         "add": "Hinzufügen",
-        "add_to_my_books": "Noch nicht in deinen Büchern, klicke um es hinzuzufügen",
+        "add_to_my_books": "Noch nicht in deinen Büchern, zum Hinzufügen klicken",
         "add_translator": "Übersetzer:in hinzufügen",
         "reading_list_from_name": "Leseliste von {name}",
         "search_query": "Suchanfrage eingeben...",
-        "search_documentation": "Go to search documentation",
+        "search_documentation": "Zur Such-Dokumentation gehen",
         "orphan-tags": "verwaiste Tags",
-        "find-tag": "tag finden",
-        "associated-books": "assoziiertes Buch/Bücher",
-        "operation-success": "Operation erfolgreich",
-        "delete_this_tag": "Delete this tag from {nb} book(s) and from database ?",
+        "find-tag": "Tag finden",
+        "associated-books": "zugeordnete(s) Buch/Bücher",
+        "operation-success": "Aktion erfolgreich",
+        "delete_this_tag": "Diesen Tag aus {nb} Buch/Büchern und aus der Datenbank löschen?",
         "current": "aktuell",
         "set_progress": "aktuellen Fortschritt festlegen",
         "user_avg_rating": "Meine durchschnittliche Bewertung: {rating}",
         "avg_rating": "durchschnittliche Bewertung: {rating}",
-        "add_quote": "add book quote",
-        "description": "description",
-        "user_rating": "my rating : {rating}",
-        "apply": "apply"
+        "add_quote": "Buchzitat hinzufügen",
+        "description": "Beschreibung",
+        "user_rating": "meine Bewertung : {rating}",
+        "apply": "übernehmen",
+        "loading": "Lädt",
+        "pick_camera": "Kamera auswählen",
+        "add_narrator": "Erzähler:in hinzufügen",
+        "social_login": "Einloggen mit {provider}",
+        "delete_this_series": "Diese Serie aus {nb} Buch/Büchern und aus der Datenbank löschen?",
+        "orphan-series": "verwaiste Serie",
+        "find-series": "eine Serie finden",
+        "delete_this_author": "Diese(n) Autor:in aus {nb} Buch/Büchern und aus der Datenbank löschen?",
+        "orphan_authors": "verwaiste Autor:innen",
+        "find-authors": "Autor:innen finden"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
-        "pick_theme": "Erscheinungsbild auswählen",
+        "pick_theme": "Theme auswählen",
         "theme_warning": "Beta. Standard-Theme ist 'dark' (dunkel)",
         "profile": "Profil",
         "my_profile": "Mein Profil",
@@ -127,25 +139,26 @@
         "csv_import": "Csv-Import",
         "authors": "Autor:innen",
         "username": "Benutzername",
-        "role": "Benutzergruppe | Benutzergruppen",
+        "role": "Rolle | Rollen",
         "users": "Benutzer",
         "add_users": "Benutzer hinzufügen",
         "users_management": "Benutzerverwaltung",
-        "shortcuts": "Kurzbefehle",
+        "shortcuts": "Tastaturkürzel",
         "shortcuts_tooltip": "Tastaturkürzel",
         "messages": "Mitteilungen",
         "stats": "Statistik",
         "shelves": "Regale",
         "shelves_max_number_reached": "Maximale Anzahl an Regalen ist erreicht. Lösche vorhandene Regale, um mehr hinzuzufügen.",
-        "shelf_choose_tag": "Wähle ein Tag, um das entsprechende Regal zu erstellen"
+        "shelf_choose_tag": "Tag wählen, um das zugehörige Regal zu erstellen",
+        "custom_lists": "Eigene Listen"
     },
     "user": {
         "log_first": "Bitte zuerst anmelden"
     },
     "sorting": {
         "sort_by": "Sortieren nach",
-        "sort_order": "Sortieren",
-        "last_reading_event_date": "Letztes Lese-Ereignis",
+        "sort_order": "Sortierreihenfolge",
+        "last_reading_event_date": "Letztes Leseereignisdatum",
         "date_added": "Hinzugefügt",
         "date_added_to_list": "Zur Liste hinzugefügt",
         "title": "Titel",
@@ -162,8 +175,8 @@
         "avg_rating": "durchschnittliche Bewertung"
     },
     "reading_events": {
-        "finished": "Fertig gelesen",
-        "currently_reading": "Am lesen",
+        "finished": "beendet",
+        "currently_reading": "Aktuell gelesen",
         "dropped": "Aufgegeben",
         "last_event_type": "Letzter Ereignistyp",
         "none": "keine",
@@ -174,9 +187,10 @@
         "event_type": "Ereignis-Typ",
         "event_date": "Ereignis-Datum",
         "edit_event": "Ereignis bearbeiten",
-        "reading": "am lesen",
+        "reading": "Aktuelle Lektüre",
         "start_date": "Beginn",
-        "end_date": "Ende"
+        "end_date": "Ende",
+        "started": "begonnen"
     },
     "filtering": {
         "book_in_list": "Buch ist in der Leseliste",
@@ -185,12 +199,12 @@
         "any": "Beliebig",
         "only_in_my_list": "Nur Bücher in meinen Listen",
         "only_not_in_my_list": "Nur Bücher außerhalb meiner Listen",
-        "owned": "Besitze ich",
+        "owned": "Buch im Besitz",
         "role": "Rolle",
-        "borrowed": "Buch ist geliehen"
+        "borrowed": "Buch ist verliehen"
     },
     "book": {
-        "owned": "Besitze ich",
+        "owned": "Im Besitz",
         "author": "Autor:in | Autor:innen",
         "title": "Titel",
         "tag": "Tag | Tags",
@@ -209,7 +223,7 @@
         "inventaire_id": "inventaire id",
         "publisher": "Verlag",
         "published_date": "Veröffentlichungsdatum",
-        "page_count": "Seitenanzahl",
+        "page_count": "Seitenzahl",
         "language": "Sprache",
         "series": "Serie",
         "status": "Status",
@@ -220,19 +234,21 @@
         "nb_in_series": "# in Serie",
         "in_read_list": "In der Leseliste",
         "translator": "Übersetzer:in | Übersetzer:innen",
-        "borrowed": "Geliehen",
-        "current_page_number": "aktuelle Seitenzahl"
+        "borrowed": "Verliehen",
+        "current_page_number": "aktuelle Seitenzahl",
+        "narrator": "Erzähler:in | Erzähler:innen"
     },
     "authors_merge": {
         "authors_merging_utility": "Autor:innen zusammenführen",
         "author_nb": "Autor:in {nb}",
-        "author_left_subtitle": "Zu behaltende Autor:in",
-        "author_left_description": "Wähle als Erstes die Autor:in, die geändert und in der Datenbank behalten wird",
+        "author_left_subtitle": "Zu behaltende(r) Autor:in",
+        "author_left_description": "Wähle als Erstes die/den Autor:in, die/der geändert und in der Datenbank behalten wird",
         "author_right_subtitle": "Autor:in zum Zusammenführen in 1",
-        "author_right_description": "Wähle als Nächstes die Autor:in, die mit der ersten zusammengeführt wird.",
+        "author_right_description": "Wähle als Nächstes die/den Autor:in, die/der mit der/dem ersten zusammengeführt wird.",
         "authors_merge_subtitle": "Zusammenführen",
-        "authors_merge_description": "Verwende die Felder der rechten Autor:in um die linke Autor:in zu vervollständigen, dann zusammenführen.",
-        "search_message": "Suche Autor:innen zum Zusammenführen"
+        "authors_merge_description": "Verwende die Felder der/des rechten Autor:in um die/den linke(n) Autor:in zu vervollständigen, dann zusammenführen.",
+        "search_message": "Suche Autor:innen zum Zusammenführen",
+        "merge_authors": "Autor:innen zusammenführen"
     },
     "author": {
         "name": "Name",
@@ -243,6 +259,7 @@
         "wikipedia_page": "Wikipedia-Seite",
         "goodreads_page": "Goodreads-Seite",
         "twitter_page": "Twitter-Seite",
+        "x_page": "X-Seite",
         "facebook_page": "Facebook-Seite",
         "instagram_page": "Instagram-Seite",
         "personal_notes": "Eigene Notizen",
@@ -251,9 +268,9 @@
     },
     "csv_import": {
         "import_csv": "csv-Datei importieren",
-        "import_source": "Quelle importieren",
+        "import_source": "Importquelle",
         "auto_fetch_online": "Metadaten automatisch online abrufen",
-        "fetch_covers": "Titelbilder abrufen",
+        "fetch_covers": "Auch Titelbilder abrufen",
         "choose_file": "Datei zum Importieren auswählen",
         "import_file": "Datei importieren",
         "export": "Deine Daten exportieren",
@@ -261,9 +278,9 @@
         "export_message": "Ein Klick auf den Button unten löst eine Exportanfrage aus. Im Mitteilungsbereich erscheint eine Warnung, sobald der Datenexport abgeschlossen ist.",
         "export_ok": "Die Exportanfrage wurde gespeichert. Diese Seite kann verlassen werden, der Bericht wird im Mitteilungsbereich verfügbar sein.",
         "export_ko": "Ein Fehler ist aufgetreten und die Exportanfrage wurde wahrscheinlich nicht registriert.",
-        "import_help": "Wähle zuerst den Dateityp aus, den Du importieren möchtest, dann wähle unten eine Datei aus und klicke auf den Import-Button. Sobald der Import gestartet ist, kannst Du diese Seite verlassen und zum Nachrichten-Abschnitt gehen.",
-        "import_ok": "Deine Importanfrage wurde gespeichert. Du kannst diese Seite verlassen, das Importresultat wird im Nachrichten-Abschnitt verfügbar sein.",
-        "isbn_list": "List of ISBN in a file"
+        "import_help": "Wähle zuerst den Dateityp aus, den Du importieren möchtest, dann wähle unten eine Datei aus und klicke auf den Import-Button. Sobald der Import gestartet ist, kannst Du diese Seite verlassen und zum Mitteilungsbereich gehen.",
+        "import_ok": "Deine Importanfrage wurde gespeichert. Du kannst diese Seite verlassen, das Importresultat wird im Mitteilungsbereich verfügbar sein.",
+        "isbn_list": "ISBN Liste in einer Datei"
     },
     "login": {
         "login": "Anmelden",
@@ -276,7 +293,8 @@
         "login_not_match": "Benutzernamen stimmen nicht überein",
         "password_not_match": "Passwörter stimmen nicht überein",
         "login_length": "Benutzername muss mindestens 3 Zeichen lang sein",
-        "password_length": "Passwort muss mindestens 3 Zeichen lang sein"
+        "password_length": "Passwort muss mindestens 3 Zeichen lang sein",
+        "username": "Benutzername"
     },
     "admin_user": {
         "create_user": "Benutzer erstellen",
@@ -307,24 +325,29 @@
         "all_time": "Ewige Statistik",
         "yearly_stats": "Jährliche Statistik",
         "choose_year": "Jahr auswählen",
-        "pages_read": "pages read",
-        "finished": "finished",
-        "dropped": "dropped"
+        "pages_read": "gelesene Seiten",
+        "finished": "Beendet",
+        "dropped": "aufgegeben",
+        "total": "Gesamt",
+        "read": "gelesen",
+        "unread": "ungelesen"
     },
     "history": {
         "years": "Jahre"
     },
     "bulk": {
-        "bulk_edit_books": "Massenbearbeitung der Bücher",
-        "owned": "Alle als \"Besitze ich\" markieren/Markierung entfernen",
-        "toRead": "Alle als gelesen markieren/Markierung entfernen ",
-        "toggle": "Massenbearbeitung aktivieren/deaktivieren",
-        "select_all": "Alles auswählen / Auswahl aufheben",
+        "bulk_edit_books": "Bücher-Massenbearbeitung",
+        "owned": "Alle als \"Im Besitz\" markieren/Markierung entfernen",
+        "toRead": "Alle als \"In Leseliste\" markieren/Markierung entfernen",
+        "toggle": "Massenbearbeitungsmodus umschalten",
+        "select_all": "Alle aus-/abwählen",
         "edit": "Bearbeitung starten",
-        "add_or_remove": "Tags hinzufügen oder entfernen",
+        "add_or_remove": "Tag hinzufügen oder entfernen",
         "add": "Hinzufügen",
         "remove": "Entfernen",
-        "choose_tag": "Tag zum hinzufügen/entfernen auswählen "
+        "choose_tag": "Tag auswählen, der hinzugefügt oder entfernt werden soll",
+        "add_tag": "Tag hinzufügen",
+        "remove_tag": "Tag entfernen"
     },
     "reviews": {
         "create_review": "Rezension erstellen",
@@ -332,13 +355,13 @@
         "visibility": "Sichtbarkeit",
         "private": "Privat",
         "public": "Öffentlich",
-        "review": "Bewertung | Bewertungen",
+        "review": "Rezension | Rezensionen",
         "rating": "Bewertung",
         "my_reviews": "Meine Rezensionen",
         "all_reviews": "Alle Rezensionen",
         "delete_review": "Diese Rezension löschen?",
-        "review_detail": "Go to review detail",
-        "book_all_reviews": "Alle Bewertungen für dieses Buch"
+        "review_detail": "Zur Rezension",
+        "book_all_reviews": "Alle Rezensionen für dieses Buch"
     },
     "book_merge": {
         "merge_books": "Bücher zusammenführen",
@@ -346,27 +369,48 @@
     },
     "metadata": {
         "reorder_plugins": "Plugins neu sortieren",
-        "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
+        "description": "Plugins werden von oben nach unten ausgeführt, deaktivierte Plugins werden nicht verwendet.",
         "default_priority": "Standardpriorität",
-        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
+        "note": "Diese Änderung ist nur vorübergehend, wenn du die Plugins permanent neu ordnen möchtest, musst du die Konfiguration ändern."
     },
     "book_quotes": {
-        "edit_quote": "Edit book quote",
-        "create": "Post a quote",
-        "quote": "quote | quotes",
-        "position": "position",
-        "delete_quote": "delete this quote ?"
+        "edit_quote": "Buchzitat bearbeiten",
+        "create": "Zitat posten",
+        "quote": "Zitat | Zitate",
+        "position": "Position",
+        "delete_quote": "Dieses Zitat löschen?"
     },
     "series": {
-        "edit_series": "edit series",
-        "create_series": "create series",
-        "name": "name"
+        "edit_series": "Serie bearbeiten",
+        "create_series": "Serie erstellen",
+        "name": "Name"
     },
     "login_info": {
         "ip": "ip",
-        "user_agent": "user agent",
-        "source": "source",
-        "last_activity": "last activity",
-        "activity": "login activity"
+        "user_agent": "User-Agent",
+        "source": "Quelle",
+        "last_activity": "Letzte Aktivität",
+        "activity": "Login Aktivität"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "Fetch-Metadaten-Plug-In fehlerhaft beendet",
+            "EXCEPTION_CAUGHT": "Ausnahme beim Aufruf des Metadaten-Plug-Ins"
+        },
+        "details": "Fehlerdetails"
+    },
+    "lists": {
+        "create_list": "eigene Liste erstellen",
+        "name": "Name",
+        "public": "Öffentlich",
+        "actionable": "aktionsfähig",
+        "actionable_desc": "Elemente in einer aktionsfähigen Liste können entfernt werden.",
+        "tags": "Tags",
+        "tags_desc": "Die Liste zeigt die Elemente, die zu allen ausgewählten Tags passen.",
+        "create": "Erstellen",
+        "remove": "Auswahl entfernen",
+        "empty": "Liste ist leer",
+        "edit_list": "Liste bearbeiten",
+        "update_list": "Liste aktualisieren"
     }
 }

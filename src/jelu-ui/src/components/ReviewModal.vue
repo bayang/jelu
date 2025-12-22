@@ -116,7 +116,7 @@ const editReview = () => {
           <div class="flex gap-1">
             <v-md-editor
               v-model="reviewText"
-              :disabled-menus="['image/upload-image', 'toc', 'save']"
+              disabled-menus="['image/upload-image', 'toc', 'save']"
               class="w-full"
               rows="6"
             />
@@ -204,5 +204,5 @@ const editReview = () => {
   </section>
 </template>
 
-<style lang="scss">
+<style scoped>
 </style>

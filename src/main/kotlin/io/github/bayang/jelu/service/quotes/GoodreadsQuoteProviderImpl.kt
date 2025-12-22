@@ -4,8 +4,8 @@ import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.github.bayang.jelu.dto.QuoteDto
 import io.github.bayang.jelu.service.BookService
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.annotation.Resource
-import mu.KotlinLogging
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements

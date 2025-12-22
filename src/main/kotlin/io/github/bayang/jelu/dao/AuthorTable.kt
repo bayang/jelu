@@ -73,3 +73,8 @@ object BookTranslators : Table(name = "book_translators") {
     val translator = reference("translator", AuthorTable, fkName = "fk_booktranslators_translator_id", onUpdate = ReferenceOption.CASCADE)
     override val primaryKey = PrimaryKey(book, translator, name = "pk_booktranslator_act")
 }
+object BookNarrators : Table(name = "book_narrators") {
+    val book = reference("book", BookTable, fkName = "fk_booknarrators_book_id", onUpdate = ReferenceOption.CASCADE, onDelete = ReferenceOption.CASCADE)
+    val narrator = reference("narrator", AuthorTable, fkName = "fk_booknarrators_narrator_id", onUpdate = ReferenceOption.CASCADE)
+    override val primaryKey = PrimaryKey(book, narrator, name = "pk_booknarrator_act")
+}

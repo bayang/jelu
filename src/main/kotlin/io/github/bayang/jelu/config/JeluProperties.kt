@@ -50,6 +50,7 @@ data class JeluProperties(
     data class Calibre(
         var path: String?,
         var order: Int = 1000,
+        var timeout: Int = 30,
     )
 
     data class Metadata(
@@ -59,6 +60,8 @@ data class JeluProperties(
     data class Auth(
         var ldap: Ldap,
         var proxy: Proxy,
+        var oauth2AccountCreation: Boolean = false,
+        var oidcEmailVerification: Boolean = true,
     )
 
     data class Ldap(

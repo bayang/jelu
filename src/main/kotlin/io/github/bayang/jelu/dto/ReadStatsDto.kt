@@ -14,3 +14,10 @@ data class MonthStatsDto(
     val month: Int,
     val pageCount: Int = 0,
 )
+
+data class TotalsStatsDto(
+    val read: Long = 0,
+    val unread: Long = 0,
+    val dropped: Long = 0,
+    val total: Long = 0,
+)

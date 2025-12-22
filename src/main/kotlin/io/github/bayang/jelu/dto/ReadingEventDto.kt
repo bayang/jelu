@@ -37,3 +37,9 @@ data class UpdateReadingEventDto(
     val eventDate: Instant?,
     val startDate: Instant?,
 )
+enum class ReadingEventTypeFilter {
+    FINISHED,
+    DROPPED,
+    CURRENTLY_READING,
+    NONE,
+}

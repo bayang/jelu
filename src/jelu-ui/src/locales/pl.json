@@ -16,7 +16,9 @@
         "search": "szukaj",
         "history": "historia",
         "shelves": "półki",
-        "tags-admin": "zarządzanie znacznikami"
+        "tags-admin": "zarządzanie znacznikami",
+        "data-admin": "data management",
+        "activity": "activity"
     },
     "labels": {
         "search": "Szukaj",
@@ -113,7 +115,17 @@
         "add_quote": "add book quote",
         "description": "description",
         "user_rating": "my rating : {rating}",
-        "apply": "apply"
+        "apply": "apply",
+        "loading": "loading",
+        "pick_camera": "pick camera",
+        "add_narrator": "Add a narrator",
+        "social_login": "sign in with {provider}",
+        "delete_this_series": "Delete this series from {nb} book(s) and from database ?",
+        "orphan-series": "orphan series",
+        "find-series": "find a series",
+        "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
+        "orphan_authors": "orphan authors",
+        "find-authors": "find authors"
     },
     "settings": {
         "pick_language": "Wybierz język",
@@ -137,7 +149,8 @@
         "stats": "Statystyki",
         "shelves": "Półki",
         "shelves_max_number_reached": "Osiągnięto maksymalną liczbę półek. Usuń istniejące, aby dodać więcej.",
-        "shelf_choose_tag": "Wybierz znacznik do utworzenia odpowiedniej półki"
+        "shelf_choose_tag": "Wybierz znacznik do utworzenia odpowiedniej półki",
+        "custom_lists": "custom lists"
     },
     "user": {
         "log_first": "Należy być zalogowanym"
@@ -176,7 +189,8 @@
         "edit_event": "edytuj zdarzenie",
         "reading": "czytane",
         "start_date": "data rozpoczęcia",
-        "end_date": "data zakończenia"
+        "end_date": "data zakończenia",
+        "started": "started"
     },
     "filtering": {
         "book_in_list": "Książka jest na liście do przeczytania",
@@ -221,7 +235,8 @@
         "in_read_list": "na liście czytania",
         "translator": "tłumacz | tłumaczy",
         "borrowed": "pożyczona",
-        "current_page_number": "numer bieżącej strony"
+        "current_page_number": "numer bieżącej strony",
+        "narrator": "narrator | narrators"
     },
     "authors_merge": {
         "authors_merging_utility": "Narzędzie scalania autorów",
@@ -232,7 +247,8 @@
         "author_right_description": "Wybierz autora, którego chcesz scalić z wcześniej wybranym.",
         "authors_merge_subtitle": "Scal",
         "authors_merge_description": "Użyj pól autora po prawej, aby uzupełnić pola autora po lewej, a następnie scal.",
-        "search_message": "Szukaj autorów do scalenia"
+        "search_message": "Szukaj autorów do scalenia",
+        "merge_authors": "merge authors"
     },
     "author": {
         "name": "nazwa",
@@ -243,6 +259,7 @@
         "wikipedia_page": "strona wikipedii",
         "goodreads_page": "strona goodreads",
         "twitter_page": "strona twittera",
+        "x_page": "X page",
         "facebook_page": "strona facebooka",
         "instagram_page": "strona instagrama",
         "personal_notes": "osobiste uwagi",
@@ -276,7 +293,8 @@
         "login_not_match": "loginy nie są identyczne",
         "password_not_match": "hasła nie są identyczne",
         "login_length": "login musi zawierać co najmniej 3 znaki",
-        "password_length": "hasło musi zawierać co najmniej 3 znaki"
+        "password_length": "hasło musi zawierać co najmniej 3 znaki",
+        "username": "username"
     },
     "admin_user": {
         "create_user": "utwórz użytkownika",
@@ -309,7 +327,10 @@
         "choose_year": "Wybierz rok",
         "pages_read": "pages read",
         "finished": "finished",
-        "dropped": "dropped"
+        "dropped": "dropped",
+        "total": "total",
+        "read": "read",
+        "unread": "unread"
     },
     "history": {
         "years": "lata"
@@ -324,7 +345,9 @@
         "add_or_remove": "Dodaj lub usuń znacznik",
         "add": "Dodaj",
         "remove": "Usuń",
-        "choose_tag": "Wybierz znacznik, który chcesz dodać lub usunąć"
+        "choose_tag": "Wybierz znacznik, który chcesz dodać lub usunąć",
+        "add_tag": "add tag",
+        "remove_tag": "remove tag"
     },
     "reviews": {
         "create_review": "Napisz recenzję",
@@ -368,5 +391,26 @@
         "source": "source",
         "last_activity": "last activity",
         "activity": "login activity"
+    },
+    "errors": {
+        "metadata": {
+            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
+            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+        },
+        "details": "error details"
+    },
+    "lists": {
+        "create_list": "create a custom list",
+        "name": "name",
+        "public": "public",
+        "actionable": "actionable",
+        "actionable_desc": "Items in an actionable list can be clicked to be removed.",
+        "tags": "tags",
+        "tags_desc": "The list will display the items that match all the chosen tags.",
+        "create": "create",
+        "remove": "remove selected",
+        "empty": "list is empty",
+        "edit_list": "edit the list",
+        "update_list": "update the list"
     }
 }

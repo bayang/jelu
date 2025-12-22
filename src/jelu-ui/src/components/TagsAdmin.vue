@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useOruga } from "@oruga-ui/oruga-next"
 import { useTitle } from '@vueuse/core'
-import { ref, Ref, watch } from 'vue'
+import { computed, ref, Ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import usePagination from "../composables/pagination"
 import useSort from "../composables/sort"
@@ -31,10 +31,10 @@ watch([page, sortQuery], (newVal, oldVal) => {
   }
 })
 
-let orphanTags: Ref<Array<Tag>> = ref([]);
+const orphanTags: Ref<Array<Tag>> = ref([]);
 const isOrphanFetching = ref(false)
 
-let filteredTags: Ref<Array<Tag>> = ref([]);
+const filteredTags: Ref<Array<Tag>> = ref([]);
 const isFetching = ref(false)
 
 const tag: Ref<Tag> = ref({name: ""})
@@ -88,14 +88,13 @@ const deleteTag = async (target: Tag) => {
 
 const promptDeleteTag = async (tag: Tag, numberOfBooks: number|undefined) => {
   let abort = false
-  await ObjectUtils.swalMixin.fire({
+  await ObjectUtils.swalYesNoMixin.fire({
       html: `<p>${t('labels.delete_this_tag', {nb: numberOfBooks})}</p>`,
       showCancelButton: true,
-      showConfirmButton: false,
-      showDenyButton: true,
+      showConfirmButton: true,
+      showDenyButton: false,
       confirmButtonText: t('labels.delete'),
       cancelButtonText: t('labels.dont_delete'),
-      denyButtonText: t('labels.delete'),
     }).then((result) => {
       if (result.isDismissed) {
         abort = true
@@ -136,6 +135,9 @@ const selectTag = (selected: Tag) => {
 
 getOrphanTags()
 
+const options = computed(() => {
+  return filteredTags.value.map(t => ObjectUtils.wrapForOptions(t))
+})
 </script>
 
 <template>
@@ -190,18 +192,24 @@ getOrphanTags()
       <h1 class="typewriter text-2xl mb-3 capitalize">
         {{ t('labels.find-tag') }} :
       </h1>
-      <div class="field border-2 border-accent">
-        <o-field>
-          <o-autocomplete
-            :data="filteredTags"
-            :clear-on-select="true"
-            field="name"
-            :loading="isFetching"
-            :debounce="100"
-            @input="getFilteredTags"
-            @select="selectTag"
-          />
-        </o-field>
+      <div class="field">
+        <o-autocomplete
+          :options="options"
+          clear-on-select
+          :loading="isFetching"
+          :input-classes="{rootClass:'border-2 border-accent w-full'}"
+          class="w-full"
+          backend-filtering
+          :debounce="100"
+          @input="getFilteredTags"
+          @select="selectTag"
+        >
+          <template #default="{ value }">
+            <div class="jl-taginput-item">
+              {{ value.name }}
+            </div>
+          </template>
+        </o-autocomplete>
       </div>
       <div
         v-if="tag.id != null"
@@ -239,5 +247,9 @@ getOrphanTags()
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
+    @apply w-full;
+  }
 </style>
