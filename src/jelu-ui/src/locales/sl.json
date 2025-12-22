@@ -125,7 +125,8 @@
         "find-series": "find a series",
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
-        "find-authors": "find authors"
+        "find-authors": "find authors",
+        "list_empty": "list is empty"
     },
     "settings": {
         "pick_language": "Izberite svoj jezik",
@@ -172,7 +173,8 @@
         "modification_date": "Datum spremembe",
         "page_count": "Page count",
         "user_avg_rating": "my average rating",
-        "avg_rating": "average rating"
+        "avg_rating": "average rating",
+        "name": "name"
     },
     "reading_events": {
         "finished": "končano",
@@ -201,7 +203,9 @@
         "only_not_in_my_list": "Samo knjige, ki niso na mojih seznamih",
         "owned": "Knjiga je v lasti",
         "role": "Vloga",
-        "borrowed": "Knjiga je izposojena"
+        "borrowed": "Knjiga je izposojena",
+        "filter": "filter",
+        "type_to_filter": "type to filter"
     },
     "book": {
         "owned": "v lasti",
