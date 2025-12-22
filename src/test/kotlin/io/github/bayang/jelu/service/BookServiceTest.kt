@@ -14,6 +14,7 @@ import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
+import io.github.bayang.jelu.dto.Role
 import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesDto
 import io.github.bayang.jelu.dto.SeriesOrderDto
@@ -90,7 +91,7 @@ class BookServiceTest(
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findUserBookByCriteria(user2().id!!, null, null, null, null, null, Pageable.ofSize(100))
             .forEach { bookService.deleteUserBookById(it.id!!) }
-        bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
+        bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
         }
         bookService.findAllTags(null, Pageable.ofSize(20)).content.forEach {
@@ -2312,7 +2313,7 @@ class BookServiceTest(
         Assertions.assertEquals(2, nb)
         var eventsNb = readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, eventsNb)
-        var authorsNb = bookService.findAllAuthors(null, Pageable.ofSize(30)).totalElements
+        var authorsNb = bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, authorsNb)
         var tagsNb = bookService.findAllTags(null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, tagsNb)
@@ -2320,8 +2321,8 @@ class BookServiceTest(
         bookService.deleteBookById(savedBook.id!!)
         nb = bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, nb)
-        authorsNb = bookService.findAllAuthors(null, Pageable.ofSize(30)).totalElements
-        Assertions.assertEquals(1, authorsNb)
+        authorsNb = bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).totalElements
+        Assertions.assertEquals(0, authorsNb)
         eventsNb = readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(0, eventsNb)
         tagsNb = bookService.findAllTags(null, Pageable.ofSize(30)).totalElements
@@ -2749,7 +2750,7 @@ class BookServiceTest(
         val author2BooksNb = bookService.findAuthorBooksById(authorId2!!, user(), Pageable.ofSize(30), LibraryFilter.ANY).totalElements
         Assertions.assertEquals(2, author1BooksNb)
         Assertions.assertEquals(3, author2BooksNb)
-        var authorsNb = bookService.findAllAuthors(null, Pageable.ofSize(30)).totalElements
+        var authorsNb = bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(2, authorsNb)
         val update = AuthorUpdateDto(biography = null, name = "author3", dateOfBirth = "2000-12-12", dateOfDeath = null, facebookPage = null, goodreadsPage = null, image = null, instagramPage = null, officialPage = null, twitterPage = null, wikipediaPage = null, notes = null, creationDate = null, id = null, modificationDate = null)
         val merged = bookService.mergeAuthors(authorId1, authorId2, update, user())
@@ -2760,7 +2761,7 @@ class BookServiceTest(
             Assertions.assertTrue(titles.contains(it.title))
         }
         Assertions.assertEquals(3, mergedBooks.totalElements)
-        authorsNb = bookService.findAllAuthors(null, Pageable.ofSize(30)).totalElements
+        authorsNb = bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).totalElements
         Assertions.assertEquals(1, authorsNb)
         val book1AfterMerge = bookService.findBookById(savedBook1.id!!)
         Assertions.assertEquals(1, book1AfterMerge.translators?.size)
@@ -2774,6 +2775,50 @@ class BookServiceTest(
         Assertions.assertEquals(0, entitiesIds?.size)
         entitiesIds = luceneHelper.searchEntitiesIds("author:author3", LuceneEntity.Book)
         Assertions.assertEquals(3, entitiesIds?.size)
+    }
+
+    @Test
+    fun testGetAuthors() {
+        val authorDto1 = authorDto(name = "author1")
+        val authorDto2 = authorDto(name = "toto")
+        val book1 = BookCreateDto(
+            id = null,
+            title = "book 1",
+            isbn10 = "1566199093",
+            isbn13 = "9781566199094 ",
+            summary = "This is a test summary\nwith a newline",
+            image = "",
+            publisher = "test-publisher",
+            pageCount = 50,
+            publishedDate = "",
+            // seriesBak = "",
+            authors = mutableListOf(authorDto1),
+            translators = mutableListOf(authorDto2),
+            // numberInSeries = null,
+            tags = tags(),
+            goodreadsId = "4321abc",
+            googleId = "1234",
+            librarythingId = "",
+            language = "",
+            amazonId = "",
+        )
+        val savedBook1 = bookService.save(book1, null)
+        Assertions.assertNotNull(savedBook1)
+        Assertions.assertEquals(authorDto1.name, savedBook1.authors?.get(0)?.name)
+        // find by name only
+        var allAuthors = bookService.findAllAuthors("toto", Role.ANY, PageRequest.of(0, 30))
+        Assertions.assertEquals(1, allAuthors.totalElements)
+        // name and role must match
+        allAuthors = bookService.findAllAuthors("toto", Role.AUTHOR, PageRequest.of(0, 30))
+        Assertions.assertEquals(0, allAuthors.totalElements)
+        allAuthors = bookService.findAllAuthors("toto", Role.TRANSLATOR, PageRequest.of(0, 30))
+        Assertions.assertEquals(1, allAuthors.totalElements)
+        // no name criteria and any role should bring everyone
+        allAuthors = bookService.findAllAuthors(null, Role.ANY, PageRequest.of(0, 30))
+        Assertions.assertEquals(2, allAuthors.totalElements)
+        // role only, no match
+        allAuthors = bookService.findAllAuthors(null, Role.NARRATOR, PageRequest.of(0, 30))
+        Assertions.assertEquals(0, allAuthors.totalElements)
     }
 
     fun user(): UserDto {

@@ -390,15 +390,33 @@ class BookRepository(
         )
     }
 
-    fun findAllAuthors(name: String?, pageable: Pageable): Page<Author> {
-        val query: Query = AuthorTable.selectAll()
+    fun findAllAuthors(name: String?, role: Role = Role.ANY, pageable: Pageable): Page<Author> {
+        val query = AuthorTable.join(BookAuthors, JoinType.LEFT)
+            .join(BookTranslators, JoinType.LEFT, onColumn = BookTranslators.translator, otherColumn = AuthorTable.id)
+            .join(BookNarrators, JoinType.LEFT, onColumn = BookNarrators.narrator, otherColumn = AuthorTable.id)
+            .select(AuthorTable.columns)
+            .where {
+                when (role) {
+                    Role.ANY -> BookAuthors.author eq AuthorTable.id or(BookTranslators.translator eq AuthorTable.id) or(BookNarrators.narrator eq AuthorTable.id)
+                    Role.AUTHOR -> BookAuthors.author eq AuthorTable.id
+                    Role.TRANSLATOR -> BookTranslators.translator eq AuthorTable.id
+                    Role.NARRATOR -> BookNarrators.narrator eq AuthorTable.id
+                }
+            }
         name?.let {
             query.andWhere { AuthorTable.name like "%$name%" }
         }
+        query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
-        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(AuthorTable.name, SortOrder.ASC_NULLS_LAST), AuthorTable)
-        query.orderBy(*orders)
+        if (checkIfRandomSorting(pageable)) {
+            query.limit(pageable.pageSize)
+            query.orderBy(Random())
+        } else {
+            query.limit(pageable.pageSize, pageable.offset)
+            // val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+            val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(AuthorTable.name, SortOrder.ASC_NULLS_LAST), AuthorTable)
+            query.orderBy(*orders)
+        }
         return PageImpl(
             query.map { resultRow -> Author.wrapRow(resultRow) },
             pageable,

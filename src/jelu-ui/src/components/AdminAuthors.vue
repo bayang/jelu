@@ -11,6 +11,7 @@ import useDates from '../composables/dates'
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { useI18n } from 'vue-i18n'
 import FormField from "./FormField.vue";
+import { Role } from "../model/Role"
 
 useTitle('Jelu | Authors admin')
 
@@ -34,7 +35,7 @@ const filteredAuthors: Ref<Array<Author>> = ref([]);
 
 function getFilteredAuthors(text: string) {
   isFetching.value = true
-  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
+  dataService.findAuthorByCriteria(Role.ANY, text).then((data) => filteredAuthors.value = data.content)
   isFetching.value = false
 }
 

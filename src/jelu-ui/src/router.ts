@@ -93,6 +93,12 @@ const router = createRouter({
             beforeEnter: [isLogged],
         },
         {
+            path: '/authors',
+            component: () => import(/* webpackChunkName: "recommend" */ './components/AuthorsList.vue'),
+            name: 'authors',
+            beforeEnter: [isLogged],
+        },
+        {
             path: '/reviews/:reviewId',
             component: () => import(/* webpackChunkName: "recommend" */ './components/ReviewDetail.vue'),
             name: 'review-detail',

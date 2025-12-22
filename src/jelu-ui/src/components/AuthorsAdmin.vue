@@ -11,6 +11,7 @@ import { LibraryFilter } from "../model/LibraryFilter"
 import { Page } from "../model/Page"
 import dataService from "../services/DataService"
 import { ObjectUtils } from "../utils/ObjectUtils"
+import { Role } from "../model/Role"
 
 const oruga = useOruga()
 
@@ -43,7 +44,7 @@ const getBooksIsLoading: Ref<boolean> = ref(false)
 
 function getFilteredAuthors(text: string) {
   isFetching.value = true
-  dataService.findAuthorByCriteria(text).then((data) => filteredAuthors.value = data.content)
+  dataService.findAuthorByCriteria(Role.ANY, text).then((data) => filteredAuthors.value = data.content)
   isFetching.value = false
 }
 

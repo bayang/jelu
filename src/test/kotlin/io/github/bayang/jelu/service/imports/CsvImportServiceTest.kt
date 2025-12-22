@@ -70,7 +70,7 @@ class CsvImportServiceTest(
         }
         bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
-        bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
+        bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
         }
     }

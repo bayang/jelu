@@ -521,11 +521,15 @@ class DataService {
     }
   }
 
-  findAuthorByCriteria = async (query?: string | null) => {
+  findAuthorByCriteria = async (role: Role, query?: string | null, page: number = 0, size: number = 0, sort: string | null = null) => {
     try {
       const response = await this.apiClient.get<Page<Author>>(`${this.API_AUTHOR}`, {
         params: {
-          name: query
+          name: query,
+          role: role,
+          page: page,
+          size: size,
+          sort: sort
         }
       });
       console.log("called author by criteria")

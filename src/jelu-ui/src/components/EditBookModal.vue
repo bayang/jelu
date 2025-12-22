@@ -19,6 +19,7 @@ import ImagePickerModal from "./ImagePickerModal.vue";
 import SeriesCompleteInput from "./SeriesCompleteInput.vue";
 import ClosableBadge from "./ClosableBadge.vue";
 import FormField from "./FormField.vue";
+import { Role } from "../model/Role";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -149,7 +150,7 @@ const importBook = () => {
 }
 
 function getFilteredData(text: string, target: Array<Wrapper>) {
-  dataService.findAuthorByCriteria(text).then((data) => {
+  dataService.findAuthorByCriteria(Role.ANY, text).then((data) => {
     target.splice(0, target.length)
     data.content.forEach(a => target.push(ObjectUtils.wrapForOptions(a)))
   })

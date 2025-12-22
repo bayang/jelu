@@ -69,7 +69,7 @@ class GoodreadsQuoteProviderImpl(
     }
 
     private fun randomAuthor(): String {
-        val page = bookService.findAllAuthors(null, Pageable.ofSize(20))
+        val page = bookService.findAllAuthors(null, pageable = Pageable.ofSize(20))
         return if (page.isEmpty) {
             ""
         } else {

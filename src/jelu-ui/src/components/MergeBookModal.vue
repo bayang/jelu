@@ -10,6 +10,7 @@ import { Tag } from "../model/Tag";
 import dataService from "../services/DataService";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import SeriesCompleteInput from "./SeriesCompleteInput.vue";
+import { Role } from "../model/Role";
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -156,7 +157,7 @@ function createTag(item: Tag | string) {
 
 function getFilteredAuthors(text: string) {
   console.log("option " + text)
-  dataService.findAuthorByCriteria(text).then((data) => {
+  dataService.findAuthorByCriteria(Role.ANY, text).then((data) => {
     filteredAuthors.value.splice(filteredAuthors.value.length)
     data.content.forEach(a => filteredAuthors.value.push(ObjectUtils.wrapForOptions(a)))
   })

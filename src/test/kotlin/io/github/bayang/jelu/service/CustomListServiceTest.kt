@@ -46,7 +46,7 @@ class CustomListServiceTest(
     fun cleanTest() {
         bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(100))
             .forEach { bookService.deleteUserBookById(it.id!!) }
-        bookService.findAllAuthors(null, Pageable.ofSize(30)).forEach {
+        bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
         }
         bookService.findAllTags(null, Pageable.ofSize(20)).content.forEach {

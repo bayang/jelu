@@ -107,7 +107,7 @@ class BookService(
         bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, narrators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
 
     @Transactional
-    fun findAllAuthors(name: String?, pageable: Pageable): Page<AuthorDto> = bookRepository.findAllAuthors(name, pageable).map { it.toAuthorDto() }
+    fun findAllAuthors(name: String?, role: Role = Role.ANY, pageable: Pageable): Page<AuthorDto> = bookRepository.findAllAuthors(name, role = role, pageable = pageable).map { it.toAuthorDto() }
 
     @Transactional
     fun findAllTags(name: String?, pageable: Pageable): Page<TagDto> = bookRepository.findAllTags(name, pageable).map { it.toTagDto() }

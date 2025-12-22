@@ -188,9 +188,10 @@ class BooksController(
     @GetMapping(path = ["/authors"])
     fun authors(
         @RequestParam(name = "name", required = false) name: String?,
+        @RequestParam(name = "role", required = false) role: Role = Role.ANY,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
     ): Page<AuthorDto> {
-        return repository.findAllAuthors(name, pageable)
+        return repository.findAllAuthors(name, role = role, pageable = pageable)
     }
 
     @GetMapping(path = ["/tags"])

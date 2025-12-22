@@ -259,6 +259,15 @@ function scanModalClosed() {
                 {{ t('nav.activity') }}
               </router-link>
             </li>
+            <li>
+              <router-link
+                v-if="isLogged"
+                :to="{ name: 'authors' }"
+                class="font-sans capitalize"
+              >
+                {{ t('book.author', 2) }}
+              </router-link>
+            </li>
             <li @click="collapseDropdown()">
               <router-link
                 v-if="isLogged"
@@ -416,6 +425,15 @@ function scanModalClosed() {
               class="font-sans text-xl capitalize"
             >
               {{ t('nav.activity') }}
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              v-if="isLogged"
+              :to="{ name: 'authors' }"
+              class="font-sans text-xl capitalize"
+            >
+              {{ t('book.author', 2) }}
             </router-link>
           </li>
           <li
