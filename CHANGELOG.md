@@ -1,3 +1,10 @@
+## [0.77.0](https://github.com/bayang/jelu/compare/v0.76.0...v0.77.0) (2025-12-29)
+
+
+### Features
+
+* add price and original title fields [#269](https://github.com/bayang/jelu/issues/269) [#270](https://github.com/bayang/jelu/issues/270) ([f3bbdf9](https://github.com/bayang/jelu/commit/f3bbdf9118edbfba9906b5d7100c7d456fdef2e5))
+
 ## [0.76.0](https://github.com/bayang/jelu/compare/v0.75.2...v0.76.0) (2025-12-22)
 
 
