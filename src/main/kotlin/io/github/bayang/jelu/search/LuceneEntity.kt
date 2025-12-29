@@ -19,6 +19,7 @@ enum class LuceneEntity(val type: String, val id: String, val defaultFields: Arr
 fun Book.toDocument() =
     Document().apply {
         add(TextField("title", title, Field.Store.NO))
+        if (!originalTitle.isNullOrBlank()) add(TextField("original_title", originalTitle, Field.Store.NO))
         if (!isbn10.isNullOrBlank()) add(TextField("isbn", isbn10, Field.Store.NO))
         if (!isbn13.isNullOrBlank()) add(TextField("isbn", isbn13, Field.Store.NO))
         tags.forEach {

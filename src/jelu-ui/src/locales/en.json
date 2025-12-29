@@ -240,7 +240,9 @@
         "translator" : "translator | translators",
         "borrowed" : "borrowed",
         "current_page_number" : "current page number",
-        "narrator": "narrator | narrators"
+        "narrator": "narrator | narrators",
+        "original_title" : "original title",
+        "price": "price"
     },
     "authors_merge" : {
         "authors_merging_utility" : "Authors merging utility",
@@ -334,8 +336,8 @@
         "dropped" : "dropped",
         "total": "total",
         "read": "read",
-        "unread": "unread"
-
+        "unread": "unread",
+        "prices_sum": "prices sum"
     },
     "history" : {
         "years" : "years"
@@ -402,7 +404,8 @@
             "EXIT_CODE_NOT_ZERO" : "fetch metadata plugin exited abnormally",
             "EXCEPTION_CAUGHT" : "exception was raised while calling metadata plugin"
         },
-        "details" : "error details"
+        "details" : "error details",
+        "positive_only" : "must be positive"
     },
     "lists" : {
         "create_list" : "create a custom list",

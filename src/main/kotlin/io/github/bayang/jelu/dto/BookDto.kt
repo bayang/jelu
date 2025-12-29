@@ -31,6 +31,7 @@ data class BookDto(
     val language: String?,
     val userBookId: UUID?,
     val userbook: UserBookLightWithoutBookDto?,
+    val originalTitle: String?,
 )
 
 data class BookCreateDto(
@@ -57,6 +58,7 @@ data class BookCreateDto(
     var noosfereId: String? = null,
     var inventaireId: String? = null,
     var language: String? = null,
+    val originalTitle: String? = null,
 )
 
 data class BookUpdateDto(
@@ -82,6 +84,7 @@ data class BookUpdateDto(
     val inventaireId: String?,
     val language: String?,
     var series: List<SeriesOrderDto>?,
+    val originalTitle: String?,
 )
 
 data class AuthorDto(
@@ -151,6 +154,7 @@ fun fromBookCreateDto(dto: BookCreateDto): BookUpdateDto {
         inventaireId = dto.inventaireId,
         language = dto.language,
         series = dto.series,
+        originalTitle = dto.originalTitle,
     )
 }
 

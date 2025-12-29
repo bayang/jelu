@@ -32,6 +32,7 @@ object BookTable : UUIDTable("book") {
     val noosfereId: Column<String?> = varchar("noosfere_id", 128).nullable()
     val inventaireId: Column<String?> = varchar("inventaire_id", 128).nullable()
     val language: Column<String?> = varchar("language", 30).nullable()
+    val originalTitle: Column<String?> = varchar("original_title", 1000).nullable()
 }
 class Book(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Book>(BookTable)
@@ -64,6 +65,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
     val userBooks by UserBook referrersOn UserBookTable.book
     var userBookId: UUID? = null
     var userBook: UserBook? = null
+    var originalTitle by BookTable.originalTitle
 
     fun toBookDto(): BookDto =
         BookDto(
@@ -96,6 +98,7 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             userBookId = this.userBookId,
             series = this.seriesAndOrder.map { it.toSeriesOrderDto() },
             userbook = this.userBook?.toUserBookLightWithoutBookDto(),
+            originalTitle = this.originalTitle,
         )
 
     fun toBookUpdateDto(): BookUpdateDto =
@@ -124,5 +127,6 @@ class Book(id: EntityID<UUID>) : UUIDEntity(id) {
             narrators = this.narrators.map { it.toAuthorDto() },
             tags = this.tags.map { it.toTagDto() },
             series = this.seriesAndOrder.map { it.toSeriesOrderDto() },
+            originalTitle = this.originalTitle,
         )
 }

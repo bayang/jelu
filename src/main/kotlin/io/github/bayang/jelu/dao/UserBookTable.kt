@@ -28,6 +28,7 @@ object UserBookTable : UUIDTable("user_book") {
     val percentRead: Column<Int?> = integer(name = "percent_read").nullable()
     val currentPageNumber: Column<Int?> = integer(name = "current_page_number").nullable()
     val borrowed: Column<Boolean?> = bool("is_borrowed").nullable()
+    val priceInCents: Column<Long?> = long("price_in_cents").nullable()
 }
 
 class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -47,6 +48,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
     var borrowed by UserBookTable.borrowed
     var avgRating: Double? = null
     var userAvgRating: Double? = null
+    var priceInCents by UserBookTable.priceInCents
 
     fun toUserBookDto(): UserBookDto =
         UserBookDto(
@@ -64,6 +66,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
+            priceInCents = this.priceInCents,
         )
     fun toUserBookLightDto(): UserBookLightDto =
         UserBookLightDto(
@@ -80,6 +83,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
+            priceInCents = this.priceInCents,
         )
     fun toUserBookLightWithoutBookDto(): UserBookLightWithoutBookDto =
         UserBookLightWithoutBookDto(
@@ -95,6 +99,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
+            priceInCents = this.priceInCents,
         )
     fun toUserBookWthoutEventsAndUserDto(): UserBookWithoutEventsAndUserDto =
         UserBookWithoutEventsAndUserDto(
@@ -112,6 +117,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             borrowed = this.borrowed,
             avgRating = this.avgRating,
             userAvgRating = this.userAvgRating,
+            priceInCents = this.priceInCents,
         )
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto =
         UserBookWithoutEventsDto(
@@ -126,5 +132,6 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             percentRead = this.percentRead,
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
+            priceInCents = this.priceInCents,
         )
 }

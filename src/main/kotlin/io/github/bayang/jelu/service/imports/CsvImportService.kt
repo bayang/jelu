@@ -240,6 +240,7 @@ class CsvImportService(
                             null,
                             null,
                             null,
+                            priceInCents = null,
                         ),
                         null,
                     )
@@ -255,6 +256,7 @@ class CsvImportService(
                         null,
                         null,
                         null,
+                        priceInCents = null,
                     )
                     bookService.save(userbook, userEntity, null)
                 }
@@ -269,6 +271,7 @@ class CsvImportService(
                     null,
                     null,
                     null,
+                    priceInCents = null,
                 )
                 bookService.save(userbook, userEntity, null)
             }

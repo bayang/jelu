@@ -128,6 +128,7 @@ class ReadingEventsController(
         var currentPage = 0
         val pageSize = 200
         val yearStats = mutableMapOf<Int, YearStatsDto>()
+        val pricesAlreadyAdded = mutableMapOf<Int, MutableSet<UUID>>()
         do {
             events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id, null, null, null, null, null, PageRequest.of(currentPage, pageSize, Sort.by("endDate, asc")))
             currentPage++
@@ -137,13 +138,20 @@ class ReadingEventsController(
                     if (it.eventType == ReadingEventType.DROPPED) {
                         yearStats[year] = yearStats[year]!!.copy(dropped = yearStats[year]!!.dropped + 1)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
-                        yearStats[year] = yearStats[year]!!.copy(finished = yearStats[year]!!.finished + 1, pageCount = yearStats[year]!!.pageCount + (it.userBook.book.pageCount ?: 0))
+                        var price: Long = 0
+                        if (it.userBook.id != null && !pricesAlreadyAdded[year]!!.contains(it.userBook.id)) {
+                            pricesAlreadyAdded[year]!!.add(it.userBook.id)
+                            price = it.userBook.priceInCents ?: 0
+                        }
+                        yearStats[year] = yearStats[year]!!.copy(finished = yearStats[year]!!.finished + 1, pageCount = yearStats[year]!!.pageCount + (it.userBook.book.pageCount ?: 0), priceInCents = yearStats[year]!!.priceInCents + price)
                     }
                 } else {
                     if (it.eventType == ReadingEventType.DROPPED) {
                         yearStats[year] = YearStatsDto(year = year, dropped = 1)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
-                        yearStats[year] = YearStatsDto(year = year, finished = 1, pageCount = it.userBook.book.pageCount ?: 0)
+                        val price = it.userBook.priceInCents ?: 0
+                        pricesAlreadyAdded[year] = mutableSetOf(it.userBook.id!!)
+                        yearStats[year] = YearStatsDto(year = year, finished = 1, pageCount = it.userBook.book.pageCount ?: 0, priceInCents = price)
                     }
                 }
             }
@@ -160,6 +168,7 @@ class ReadingEventsController(
         var currentPage = 0
         val pageSize = 200
         val monthStats = mutableMapOf<Int, MonthStatsDto>()
+        val pricesAlreadyAdded = mutableMapOf<Int, MutableSet<UUID>>()
         do {
             events = repository.findAll(listOf(ReadingEventType.FINISHED, ReadingEventType.DROPPED), (principal.principal as JeluUser).user.id, null, null, null, null, null, PageRequest.of(currentPage, pageSize))
             currentPage++
@@ -171,13 +180,20 @@ class ReadingEventsController(
                     if (it.eventType == ReadingEventType.DROPPED) {
                         monthStats[month] = monthStats[month]!!.copy(dropped = monthStats[month]!!.dropped + 1)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
-                        monthStats[month] = monthStats[month]!!.copy(finished = monthStats[month]!!.finished + 1, pageCount = monthStats[month]!!.pageCount + (it.userBook.book.pageCount ?: 0))
+                        var price: Long = 0
+                        if (it.userBook.id != null && !pricesAlreadyAdded[year]!!.contains(it.userBook.id)) {
+                            pricesAlreadyAdded[year]!!.add(it.userBook.id)
+                            price = it.userBook.priceInCents ?: 0
+                        }
+                        monthStats[month] = monthStats[month]!!.copy(finished = monthStats[month]!!.finished + 1, pageCount = monthStats[month]!!.pageCount + (it.userBook.book.pageCount ?: 0), priceInCents = monthStats[month]!!.priceInCents + price)
                     }
                 } else {
                     if (it.eventType == ReadingEventType.DROPPED) {
                         monthStats[month] = MonthStatsDto(year = year, dropped = 1, month = month)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
-                        monthStats[month] = MonthStatsDto(year = year, finished = 1, month = month, pageCount = it.userBook.book.pageCount ?: 0)
+                        val price = it.userBook.priceInCents ?: 0
+                        pricesAlreadyAdded[year] = mutableSetOf(it.userBook.id!!)
+                        monthStats[month] = MonthStatsDto(year = year, finished = 1, month = month, pageCount = it.userBook.book.pageCount ?: 0, priceInCents = price)
                     }
                 }
             }

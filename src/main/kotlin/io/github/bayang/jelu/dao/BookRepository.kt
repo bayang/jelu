@@ -837,6 +837,9 @@ class BookRepository(
         book.language?.let {
             updated.language = book.language.trim()
         }
+        book.originalTitle?.let {
+            updated.originalTitle = book.originalTitle.trim()
+        }
         updated.modificationDate = nowInstant()
         val authorsList = mutableListOf<Author>()
         book.authors?.forEach {
@@ -958,6 +961,9 @@ class BookRepository(
         }
         if (book.toRead != null) {
             found.toRead = book.toRead
+        }
+        if (book.priceInCents != null) {
+            found.priceInCents = book.priceInCents
         }
         var bookFinished = false
         if (book.percentRead != null && book.percentRead >= 100) {
@@ -1161,6 +1167,7 @@ class BookRepository(
             this.noosfereId = cleanString(book.noosfereId)
             this.inventaireId = cleanString(book.inventaireId)
             this.language = cleanString(book.language)
+            this.originalTitle = cleanString(book.originalTitle)
         }
         book.series?.forEach {
             val seriesEntity: Series? = findSeriesByName(it.name.trim()).firstOrNull()
@@ -1302,6 +1309,7 @@ class BookRepository(
             this.personalNotes = cleanString(createUserBookDto.personalNotes)
             this.percentRead = createUserBookDto.percentRead
             this.borrowed = createUserBookDto.borrowed
+            this.priceInCents = createUserBookDto.priceInCents
         }
     }
 
@@ -1594,6 +1602,9 @@ class BookRepository(
             .distinct()
         val droppedCount = droppedQuery.single()[UserBookTable.id.countDistinct()]
         val totalUserBooks = UserBook.count(UserBookTable.user eq userId)
+        val totalUserBooksPrice = UserBookTable.selectAll()
+            .where { UserBookTable.user eq userId }
+            .sumOf { row -> row[UserBookTable.priceInCents] ?: 0L }
 
         var books: Page<UserBook>
         val pageSize = 100
@@ -1612,6 +1623,6 @@ class BookRepository(
             pageNumber++
         }
         while (books.hasNext())
-        return TotalsStatsDto(read = readCount, unread = unread, dropped = droppedCount, total = totalUserBooks)
+        return TotalsStatsDto(read = readCount, unread = unread, dropped = droppedCount, total = totalUserBooks, priceInCents = totalUserBooksPrice)
     }
 }

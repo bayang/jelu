@@ -663,4 +663,10 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="add_price_original_title" author="byng">
+        <sql>
+            ALTER TABLE user_book ADD price_in_cents INTEGER;
+            ALTER TABLE book ADD original_title varchar(1000);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

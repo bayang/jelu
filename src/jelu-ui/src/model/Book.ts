@@ -7,6 +7,7 @@ export interface Book {
     id?: string,
     creationDate?: string,
     title: string,
+    originalTitle?: string,
     isbn10?:string,
     isbn13?: string,
     summary?: string,
@@ -48,6 +49,7 @@ export interface UserBook {
     currentPageNumber?: number|null,
     avgRating?: number|null,
     userAvgRating?: number|null,
+    priceInCents?: number|null,
   }
 export interface UserBookBulkUpdate {
     ids: Array<string>,

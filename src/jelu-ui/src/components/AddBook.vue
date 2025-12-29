@@ -60,7 +60,9 @@ const form = reactive({
   openlibraryId: "",
   noosfereId: "",
   inventaireId: "",
-  language: ""
+  language: "",
+  originalTitle: "",
+  priceInCents: null
 });
 const eventType = ref(null);
 const eventDate: Ref<Date|null> = ref(new Date());
@@ -234,14 +236,16 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
       authors: [],
       translators: [],
       narrators: [],
-      tags: []
+      tags: [],
+      originalTitle: formdata.originalTitle.length > 0 ? formdata.originalTitle : null
     },
     owned: formdata.owned,
     personalNotes: formdata.personalNotes,
     toRead: formdata.toRead,
     percentRead: formdata.percentRead,
     currentPageNumber: formdata.currentPageNumber,
-    borrowed: formdata.borrowed
+    borrowed: formdata.borrowed,
+    priceInCents: (formdata.priceInCents == null || formdata.priceInCents < 0) ? null : formdata.priceInCents * 100
   }
   return userBook
 }
@@ -277,6 +281,8 @@ const clearForm = () => {
   form.inventaireId = ""
   form.percentRead = null
   form.currentPageNumber = null
+  form.originalTitle = ""
+  form.priceInCents = null
 };
 
 const clearDatePicker = () => {
@@ -531,6 +537,11 @@ const displayDatepicker = computed(() => {
         <FormField
           v-model="form.title"
           :legend="t('book.title')"
+          placeholder=""
+        />
+        <FormField
+          v-model="form.originalTitle"
+          :legend="t('book.original_title')"
           placeholder=""
         />
         <fieldset class="fieldset jelu-authorinput">
@@ -983,6 +994,36 @@ const displayDatepicker = computed(() => {
             </label>
           </fieldset>
         </div>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('book.price') }}
+          </legend>
+          <label class="input w-full">
+            <input
+              v-model="form.priceInCents"
+              type="number"
+              class="input focus:input-accent validator"
+              step="0.01"
+              min="0"
+            >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6 hover:cursor-pointer"
+              @click="form.priceInCents = null"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <p class="validator-hint hidden">{{ t('errors.positive_only') }}</p>
+          </label>
+        </fieldset>
         <fieldset class="fieldset">
           <legend class="fieldset-legend capitalize">
             {{ t('book.current_page_number') }}

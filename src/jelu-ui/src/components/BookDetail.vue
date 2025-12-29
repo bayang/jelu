@@ -548,6 +548,12 @@ getBook()
         <h3 class="typewriter text-3xl">
           {{ book?.book?.title }}
         </h3>
+        <h4
+          v-if="book?.book.originalTitle"
+          class="typewriter"
+        >
+          {{ book.book.originalTitle }}
+        </h4>
       </div>
       <div
         v-if="book != null"
@@ -840,6 +846,10 @@ getBook()
         <p v-if="book?.book?.language">
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>
           {{ book.book.language }}
+        </p>
+        <p v-if="book?.priceInCents">
+          <span class="font-semibold capitalize">{{ t('book.price') }} :</span>
+          {{ book.priceInCents / 100.0 }}
         </p>
         <div v-if="book?.owned || book?.toRead || book?.borrowed">
           <span

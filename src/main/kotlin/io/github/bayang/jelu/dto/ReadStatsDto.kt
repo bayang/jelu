@@ -5,6 +5,7 @@ data class YearStatsDto(
     val finished: Int = 0,
     val year: Int,
     val pageCount: Int = 0,
+    val priceInCents: Long = 0,
 )
 
 data class MonthStatsDto(
@@ -13,6 +14,7 @@ data class MonthStatsDto(
     val year: Int,
     val month: Int,
     val pageCount: Int = 0,
+    val priceInCents: Long = 0,
 )
 
 data class TotalsStatsDto(
@@ -20,4 +22,5 @@ data class TotalsStatsDto(
     val unread: Long = 0,
     val dropped: Long = 0,
     val total: Long = 0,
+    val priceInCents: Long = 0,
 )

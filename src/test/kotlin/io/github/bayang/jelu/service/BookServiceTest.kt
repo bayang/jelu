@@ -1080,6 +1080,7 @@ class BookServiceTest(
                 librarythingId = "",
                 language = "",
                 amazonId = "",
+                originalTitle = "my original title",
             ),
             null,
         )
@@ -1088,6 +1089,7 @@ class BookServiceTest(
         Assertions.assertEquals(found.id, res.id)
         Assertions.assertEquals(found.authors, res.authors)
         Assertions.assertEquals(found.title, res.title)
+        Assertions.assertEquals(found.originalTitle, res.originalTitle)
         Assertions.assertEquals(found.isbn10, res.isbn10)
         Assertions.assertEquals(found.pageCount, res.pageCount)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
@@ -1463,7 +1465,7 @@ class BookServiceTest(
         var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)
         val createBook = bookDto()
-        val createUserBookDto = createUserBookDto(createBook, borrowed = true)
+        val createUserBookDto = createUserBookDto(createBook, borrowed = true, priceInCents = 1250L)
         val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), null)
         Assertions.assertEquals(createBook.title, saved.book.title)
         Assertions.assertEquals(createBook.isbn10, saved.book.isbn10)
@@ -1478,6 +1480,7 @@ class BookServiceTest(
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
         Assertions.assertEquals(createUserBookDto.percentRead, saved.percentRead)
+        Assertions.assertEquals(createUserBookDto.priceInCents, saved.priceInCents)
         Assertions.assertEquals(createUserBookDto.currentPageNumber, saved.currentPageNumber)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
@@ -1526,42 +1529,42 @@ class BookServiceTest(
         entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(1, entitiesIds?.size)
 
-        var update = UserBookUpdateDto(percentRead = 50, book = null, toRead = null, currentPageNumber = null, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        var update = UserBookUpdateDto(percentRead = 50, book = null, toRead = null, currentPageNumber = null, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null, priceInCents = null)
         var updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(update.percentRead, updated.percentRead)
         Assertions.assertEquals(update.currentPageNumber, updated.currentPageNumber)
         Assertions.assertNull(updated.book.pageCount)
         Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
-        update = UserBookUpdateDto(percentRead = null, book = null, toRead = null, currentPageNumber = 20, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        update = UserBookUpdateDto(percentRead = null, book = null, toRead = null, currentPageNumber = 20, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null, priceInCents = null)
         updated = bookService.update(saved.id!!, update)
         Assertions.assertNull(updated.percentRead)
         Assertions.assertEquals(update.currentPageNumber, updated.currentPageNumber)
         Assertions.assertNull(updated.book.pageCount)
         Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
-        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = null, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = null, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null, priceInCents = null)
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(0, updated.percentRead)
         Assertions.assertNull(updated.currentPageNumber)
         Assertions.assertEquals(update.book?.pageCount, updated.book.pageCount)
         Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
-        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 40, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 40, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null, priceInCents = null)
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(40, updated.percentRead)
         Assertions.assertEquals(40, updated.currentPageNumber)
         Assertions.assertEquals(100, updated.book.pageCount)
         Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
-        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 100, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 100, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null, priceInCents = null)
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(100, updated.percentRead)
         Assertions.assertEquals(100, updated.currentPageNumber)
         Assertions.assertEquals(100, updated.book.pageCount)
         Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
 
-        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 0, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null)
+        update = UserBookUpdateDto(percentRead = null, book = BookCreateDto(pageCount = 100), toRead = null, currentPageNumber = 0, lastReadingEvent = null, owned = null, personalNotes = null, borrowed = null, priceInCents = null)
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(0, updated.percentRead)
         Assertions.assertEquals(0, updated.currentPageNumber)
@@ -1932,6 +1935,7 @@ class BookServiceTest(
             percentRead = 50,
             borrowed = null,
             currentPageNumber = null,
+            priceInCents = null,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -2001,6 +2005,7 @@ class BookServiceTest(
             percentRead = 50,
             borrowed = true,
             currentPageNumber = null,
+            priceInCents = null,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -2058,6 +2063,7 @@ class BookServiceTest(
             percentRead = 50,
             borrowed = true,
             currentPageNumber = null,
+            priceInCents = null,
         )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(ReadingEventType.DROPPED, updated.lastReadingEvent)
@@ -2086,6 +2092,7 @@ class BookServiceTest(
             percentRead = 50,
             borrowed = true,
             currentPageNumber = null,
+            priceInCents = null,
         )
         val updated2 = bookService.update(saved2.id!!, updater2, null)
         Assertions.assertEquals(ReadingEventType.FINISHED, updated2.lastReadingEvent)
@@ -2137,6 +2144,7 @@ class BookServiceTest(
             percentRead = 50,
             borrowed = false,
             currentPageNumber = null,
+            priceInCents = null,
         )
         // val replacementFile = MockMultipartFile("test-replace-cover.jpg", "test-replace-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
         val updated = bookService.update(saved.id!!, updater, null)
@@ -2208,6 +2216,7 @@ class BookServiceTest(
             percentRead = 50,
             borrowed = null,
             currentPageNumber = null,
+            priceInCents = null,
         )
         val replacementFile = MockMultipartFile("test-replace-cover.jpg", "test-replace-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
         val updated = bookService.update(saved.id!!, updater, replacementFile)
@@ -2557,6 +2566,7 @@ class BookServiceTest(
                 inventaireId = null,
                 language = null,
                 series = null,
+                originalTitle = null,
             ),
         )
         Assertions.assertEquals(1, updated.authors?.size)

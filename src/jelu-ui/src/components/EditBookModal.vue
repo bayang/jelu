@@ -90,6 +90,8 @@ const toReadDisplay = computed(() => {
   return ""
 })
 
+const priceChanged = ref(false)
+
 const seriesCopy: Array<SeriesOrder> = userbook.value.book.series ?? []
 
 const importBook = () => {
@@ -105,6 +107,15 @@ const importBook = () => {
       userbook.value.book.image = imagePath.value
   } else if (deleteImage.value) {
     userbook.value.book.image = null
+  }
+  if (userbook.value.priceInCents != null) {
+    if (userbook.value.priceInCents <= 0) {
+      userbook.value.priceInCents = null
+    } else {
+      if (priceChanged.value === true) {
+        userbook.value.priceInCents = userbook.value.priceInCents * 100
+      }
+    }
   }
 
   console.log(`push book ` + userbook.value);
@@ -265,6 +276,12 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
     }
 })
 
+watch(()=>userbook.value.priceInCents, (newVal, oldVal) => {
+  if (newVal != null) {
+    priceChanged.value = true
+  }
+})
+
 if (userbook.value.book.publisher != null) {
   filteredPublishers.value.push(userbook.value.book.publisher as string) // prefill editor autocomplete. oruga workaround
 }
@@ -277,6 +294,11 @@ if (userbook.value.book.publisher != null) {
         <FormField
           v-model="userbook.book.title"
           :legend="t('book.title')"
+          placeholder=""
+        />
+        <FormField
+          v-model="userbook.book.originalTitle"
+          :legend="t('book.original_title')"
           placeholder=""
         />
         <fieldset class="fieldset jelu-authorinput">
@@ -688,7 +710,7 @@ if (userbook.value.book.publisher != null) {
                 v-model="userbook.toRead"
                 type="checkbox"
                 class="checkbox checkbox-primary"
-              ></input>
+              >
               {{ toReadDisplay }}
             </label>
           </fieldset>
@@ -701,11 +723,41 @@ if (userbook.value.book.publisher != null) {
                 v-model="userbook.borrowed"
                 type="checkbox"
                 class="checkbox checkbox-primary"
-              ></input>
+              >
               {{ borrowedDisplay }}
             </label>
           </fieldset>
         </div>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend capitalize">
+            {{ t('book.price') }}
+          </legend>
+          <label class="input w-full">
+            <input
+              v-model="userbook.priceInCents"
+              type="number"
+              class="input focus:input-accent validator"
+              step="0.01"
+              min="0"
+            >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6 hover:cursor-pointer"
+              @click="userbook.priceInCents = null"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <p class="validator-hint hidden">{{ t('errors.positive_only') }}</p>
+          </label>
+        </fieldset>
         <fieldset class="fieldset">
           <legend class="fieldset-legend capitalize">
             {{ t('book.current_page_number') }}

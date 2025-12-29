@@ -2,7 +2,8 @@ export interface YearStats {
     dropped: number,
     finished: number,
     year: number,
-    pageCount: number
+    pageCount: number,
+    priceInCents: number,
 }
 
 export interface MonthStats {
@@ -10,7 +11,8 @@ export interface MonthStats {
     finished: number,
     year: number,
     month: number,
-    pageCount: number
+    pageCount: number,
+    priceInCents: number,
 }
 
 export interface TotalsStats {
@@ -18,4 +20,5 @@ export interface TotalsStats {
     unread: number,
     dropped: number,
     total: number,
+    priceInCents: number,
 }
