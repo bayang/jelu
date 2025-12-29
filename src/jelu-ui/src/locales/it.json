@@ -240,7 +240,9 @@
         "translator": "traduttore | traduttori",
         "borrowed": "preso in prestito",
         "current_page_number": "numero di pagina attuale",
-        "narrator": "narratore | narratori"
+        "narrator": "narratore | narratori",
+        "original_title": "original title",
+        "price": "price"
     },
     "authors_merge": {
         "authors_merging_utility": "Utilità per l'unione di due autori",
@@ -334,7 +336,8 @@
         "dropped": "abbandonati",
         "total": "totale",
         "read": "letti",
-        "unread": "da leggere"
+        "unread": "da leggere",
+        "prices_sum": "prices sum"
     },
     "history": {
         "years": "anni"
@@ -401,7 +404,8 @@
             "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
             "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
         },
-        "details": "error details"
+        "details": "error details",
+        "positive_only": "must be positive"
     },
     "lists": {
         "create_list": "create a custom list",
