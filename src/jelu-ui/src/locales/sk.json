@@ -241,8 +241,8 @@
         "borrowed": "požičané",
         "current_page_number": "Aktuálne číslo strany",
         "narrator": "Rozprávač | Rozprávači",
-        "original_title": "original title",
-        "price": "price"
+        "original_title": "Pôvodný názov",
+        "price": "Cena"
     },
     "authors_merge": {
         "authors_merging_utility": "Nástroj na zlúčenie autorov",
@@ -337,7 +337,7 @@
         "total": "Celkom",
         "read": "Prečítané",
         "unread": "Neprečítané",
-        "prices_sum": "prices sum"
+        "prices_sum": "Cena spolu"
     },
     "history": {
         "years": "roky"
@@ -405,7 +405,7 @@
             "EXCEPTION_CAUGHT": "Pri volaní zásuvného modulu metadát bola vyvolaná výnimka"
         },
         "details": "Podrobnosti o chybe",
-        "positive_only": "must be positive"
+        "positive_only": "Musí byť kladné číslo"
     },
     "lists": {
         "create_list": "Vytvoriť vlastný zoznam",
