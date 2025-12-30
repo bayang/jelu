@@ -241,8 +241,8 @@
         "borrowed": "Emprunté",
         "current_page_number": "Numéro de page actuel",
         "narrator": "narrateur | narrateurs",
-        "original_title": "original title",
-        "price": "price"
+        "original_title": "Titre original",
+        "price": "prix"
     },
     "authors_merge": {
         "authors_merging_utility": "Outil de fusion d'auteurs",
@@ -337,7 +337,7 @@
         "total": "total",
         "read": "lu",
         "unread": "non lu",
-        "prices_sum": "prices sum"
+        "prices_sum": "Somme des prix"
     },
     "history": {
         "years": "années"
@@ -405,7 +405,7 @@
             "EXCEPTION_CAUGHT": "une exception a été interceptée lors de l'appel au plugin de métadonnées"
         },
         "details": "Détail de l'erreur",
-        "positive_only": "must be positive"
+        "positive_only": "doit être positif"
     },
     "lists": {
         "create_list": "créer une liste personnalisée",
