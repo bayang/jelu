@@ -50,7 +50,8 @@ class BookQuoteRepository {
             query.andWhere { BookQuoteTable.visibility eq visibility }
         }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> =
             parseSorts(pageable.sort, Pair(BookQuoteTable.creationDate, SortOrder.DESC_NULLS_LAST), BookQuoteTable)
         query.orderBy(*orders)

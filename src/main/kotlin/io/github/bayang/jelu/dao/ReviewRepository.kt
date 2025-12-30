@@ -72,7 +72,8 @@ class ReviewRepository {
             query.andWhere { ReviewTable.reviewDate greaterEq instant }
         }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(ReviewTable.reviewDate, SortOrder.DESC_NULLS_LAST), ReviewTable)
         query.orderBy(*orders)
         return PageImpl(

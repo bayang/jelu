@@ -26,7 +26,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Expression
-import org.jetbrains.exposed.sql.ExpressionAlias
+import org.jetbrains.exposed.sql.ExpressionWithColumnTypeAlias
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.Random
@@ -72,7 +72,7 @@ fun parseSorts(sort: Sort, defaultSort: Pair<Expression<*>, SortOrder>, columns:
         val found = columns.find { column ->
             when (column) {
                 is Column -> column.name.replace("_", "", true).equals(o.property, true)
-                is ExpressionAlias -> column.alias.replace("_", "", true).equals(o.property, true)
+                is ExpressionWithColumnTypeAlias -> column.alias.replace("_", "", true).equals(o.property, true)
                 else -> false
             }
         }
@@ -197,7 +197,8 @@ class BookRepository(
             query.limit(pageable.pageSize)
             query.orderBy(Random())
         } else {
-            query.limit(pageable.pageSize, pageable.offset)
+            query.limit(pageable.pageSize)
+            query.offset(pageable.offset)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
             query.orderBy(*orders)
         }
@@ -283,7 +284,8 @@ class BookRepository(
             }
         }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -380,7 +382,8 @@ class BookRepository(
         }
 
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -412,7 +415,8 @@ class BookRepository(
             query.limit(pageable.pageSize)
             query.orderBy(Random())
         } else {
-            query.limit(pageable.pageSize, pageable.offset)
+            query.limit(pageable.pageSize)
+            query.offset(pageable.offset)
             // val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(AuthorTable.name, SortOrder.ASC_NULLS_LAST), AuthorTable)
             query.orderBy(*orders)
@@ -430,7 +434,8 @@ class BookRepository(
             query.andWhere { TagTable.name like "%$name%" }
         }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(TagTable.name, SortOrder.ASC_NULLS_LAST), TagTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -456,7 +461,8 @@ class BookRepository(
             query.andWhere { SeriesTable.name like "%$name%" }
         }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(SeriesTable.name, SortOrder.ASC_NULLS_LAST), SeriesTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -468,7 +474,7 @@ class BookRepository(
 
     private fun wrapSeriesRow(
         resultRow: ResultRow,
-        ratingAlias: ExpressionAlias<BigDecimal?>,
+        ratingAlias: ExpressionWithColumnTypeAlias<BigDecimal?>,
     ): Series {
         val s = Series.wrapRow(resultRow)
         val rating = resultRow[ratingAlias]
@@ -545,7 +551,8 @@ class BookRepository(
             query.limit(pageable.pageSize)
             query.orderBy(Random())
         } else {
-            query.limit(pageable.pageSize, pageable.offset)
+            query.limit(pageable.pageSize)
+            query.offset(pageable.offset)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
             query.orderBy(*orders)
         }
@@ -574,7 +581,8 @@ class BookRepository(
         }
         query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookSeries, BookTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -592,7 +600,8 @@ class BookRepository(
 
         query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -610,7 +619,8 @@ class BookRepository(
 
         query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(TagTable.name, SortOrder.ASC_NULLS_LAST), TagTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -632,7 +642,8 @@ class BookRepository(
 
         query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(AuthorTable.name, SortOrder.ASC_NULLS_LAST), AuthorTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -650,7 +661,8 @@ class BookRepository(
 
         query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(SeriesTable.name, SortOrder.ASC_NULLS_LAST), SeriesTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -688,7 +700,8 @@ class BookRepository(
         }
         query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -715,7 +728,8 @@ class BookRepository(
             }
         query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -734,7 +748,8 @@ class BookRepository(
             }
         query.withDistinct(true)
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
@@ -751,7 +766,8 @@ class BookRepository(
         }
         query.withDistinct()
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         query.orderBy(BookTable.publisher, SortOrder.ASC)
         val res = query.map { it[BookTable.publisher] }.stream().filter { it != null }.toList()
         return PageImpl(
@@ -1390,7 +1406,8 @@ class BookRepository(
             query.limit(pageable.pageSize)
             query.orderBy(Random())
         } else {
-            query.limit(pageable.pageSize, pageable.offset)
+            query.limit(pageable.pageSize)
+            query.offset(pageable.offset)
             val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(UserBookTable.lastReadingEventDate, SortOrder.DESC_NULLS_LAST), cols)
             query.orderBy(*orders)
         }
@@ -1404,8 +1421,8 @@ class BookRepository(
 
     private fun wrapUserBookRow(
         resultRow: ResultRow,
-        ratingAlias: ExpressionAlias<BigDecimal?>,
-        userRatingAlias: ExpressionAlias<BigDecimal?>,
+        ratingAlias: ExpressionWithColumnTypeAlias<BigDecimal?>,
+        userRatingAlias: ExpressionWithColumnTypeAlias<BigDecimal?>,
     ): UserBook {
         val r = UserBook.wrapRow(resultRow)
         val rating = resultRow[ratingAlias]
@@ -1552,7 +1569,8 @@ class BookRepository(
             .withDistinct()
 
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(

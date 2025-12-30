@@ -68,7 +68,8 @@ class ReadingEventRepository {
             query.andWhere { ReadingEventTable.startDate greaterEq instant }
         }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(ReadingEventTable.modificationDate, SortOrder.DESC_NULLS_LAST), ReadingEventTable)
         query.orderBy(*orders)
         return PageImpl(

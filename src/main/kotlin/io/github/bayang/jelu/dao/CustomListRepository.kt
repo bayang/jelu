@@ -59,7 +59,8 @@ class CustomListRepository {
             query.andWhere { CustomListTable.name eq name }
         }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(
             pageable.sort,
             Pair(
@@ -86,7 +87,8 @@ class CustomListRepository {
             .withDistinct()
             .where { BookTable.id inList uuids }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(

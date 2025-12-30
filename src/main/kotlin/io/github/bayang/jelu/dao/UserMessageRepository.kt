@@ -50,7 +50,8 @@ class UserMessageRepository {
             query.andWhere { UserMessageTable.messageCategory inList messageCategories }
         }
         val total = query.count()
-        query.limit(pageable.pageSize, pageable.offset)
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
         val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(UserMessageTable.modificationDate, SortOrder.DESC_NULLS_LAST), UserMessageTable)
         query.orderBy(*orders)
         val res = UserMessage.wrapRows(query).toList()
