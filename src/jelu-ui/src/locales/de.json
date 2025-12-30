@@ -240,7 +240,9 @@
         "translator": "Übersetzer:in | Übersetzer:innen",
         "borrowed": "Verliehen",
         "current_page_number": "aktuelle Seitenzahl",
-        "narrator": "Erzähler:in | Erzähler:innen"
+        "narrator": "Erzähler:in | Erzähler:innen",
+        "original_title": "original title",
+        "price": "price"
     },
     "authors_merge": {
         "authors_merging_utility": "Autor:innen zusammenführen",
@@ -334,7 +336,8 @@
         "dropped": "aufgegeben",
         "total": "Gesamt",
         "read": "gelesen",
-        "unread": "ungelesen"
+        "unread": "ungelesen",
+        "prices_sum": "prices sum"
     },
     "history": {
         "years": "Jahre"
@@ -401,7 +404,8 @@
             "EXIT_CODE_NOT_ZERO": "Fetch-Metadaten-Plug-In fehlerhaft beendet",
             "EXCEPTION_CAUGHT": "Ausnahme beim Aufruf des Metadaten-Plug-Ins"
         },
-        "details": "Fehlerdetails"
+        "details": "Fehlerdetails",
+        "positive_only": "must be positive"
     },
     "lists": {
         "create_list": "eigene Liste erstellen",

@@ -240,7 +240,9 @@
         "translator": "traducteur | traducteurs",
         "borrowed": "Emprunté",
         "current_page_number": "Numéro de page actuel",
-        "narrator": "narrateur | narrateurs"
+        "narrator": "narrateur | narrateurs",
+        "original_title": "Titre original",
+        "price": "prix"
     },
     "authors_merge": {
         "authors_merging_utility": "Outil de fusion d'auteurs",
@@ -334,7 +336,8 @@
         "dropped": "abandonné",
         "total": "total",
         "read": "lu",
-        "unread": "non lu"
+        "unread": "non lu",
+        "prices_sum": "Somme des prix"
     },
     "history": {
         "years": "années"
@@ -401,7 +404,8 @@
             "EXIT_CODE_NOT_ZERO": "le plugin de métadonnées s'est terminé anormalement",
             "EXCEPTION_CAUGHT": "une exception a été interceptée lors de l'appel au plugin de métadonnées"
         },
-        "details": "Détail de l'erreur"
+        "details": "Détail de l'erreur",
+        "positive_only": "doit être positif"
     },
     "lists": {
         "create_list": "créer une liste personnalisée",

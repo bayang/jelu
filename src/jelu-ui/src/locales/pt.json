@@ -240,7 +240,9 @@
         "translator": "tradutor | tradutores",
         "borrowed": "emprestado",
         "current_page_number": "número da página atual",
-        "narrator": "narrador | narradores"
+        "narrator": "narrador | narradores",
+        "original_title": "original title",
+        "price": "price"
     },
     "authors_merge": {
         "authors_merging_utility": "Ferramenta de fusão de autores",
@@ -334,7 +336,8 @@
         "dropped": "abandonado",
         "total": "total",
         "read": "lido",
-        "unread": "não lido"
+        "unread": "não lido",
+        "prices_sum": "prices sum"
     },
     "history": {
         "years": "anos"
@@ -401,7 +404,8 @@
             "EXIT_CODE_NOT_ZERO": "o plugin de metadados terminou anormalmente",
             "EXCEPTION_CAUGHT": "uma exceção foi gerada durante a chamada do plugin de metadados"
         },
-        "details": "detalhes do erro"
+        "details": "detalhes do erro",
+        "positive_only": "must be positive"
     },
     "lists": {
         "create_list": "criar uma lista personalizada",
