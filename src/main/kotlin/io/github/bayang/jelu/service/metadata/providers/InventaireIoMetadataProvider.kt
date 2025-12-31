@@ -163,21 +163,33 @@ class InventaireIoMetadataProvider(
         val parsingDto = ParsingDto(dto, "")
         if (node.has("isbn:$isbn")) {
             val data = node.get("isbn:$isbn")
-            if (data.has("claims")) {
-                val claims = data["claims"]
-                parseClaims(claims, parsingDto)
-            }
-            if (data.has("originalLang")) {
-                dto.language = data["originalLang"].asText()
-            }
-            if (data.has("image") && data.get("image").get("url") != null) {
-                dto.image = imagePath(data["image"]["url"].asText())
-            }
-            if (data.has("invId")) {
-                dto.inventaireId = data["invId"].asText()
+            extractIsbnData(data, dto, parsingDto)
+        } else {
+            for (entry in node.properties()) {
+                if (entry.key.startsWith("isbn:")) {
+                    val data = entry.value
+                    extractIsbnData(data, dto, parsingDto)
+                    break
+                }
             }
         }
         return parsingDto
+    }
+
+    fun extractIsbnData(data: JsonNode, dto: MetadataDto, parsingDto: ParsingDto) {
+        if (data.has("claims")) {
+            val claims = data["claims"]
+            parseClaims(claims, parsingDto)
+        }
+        if (data.has("originalLang")) {
+            dto.language = data["originalLang"].asText()
+        }
+        if (data.has("image") && data.get("image").get("url") != null) {
+            dto.image = imagePath(data["image"]["url"].asText())
+        }
+        if (data.has("invId")) {
+            dto.inventaireId = data["invId"].asText()
+        }
     }
 
     /**
