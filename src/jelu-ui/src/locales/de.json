@@ -241,8 +241,8 @@
         "borrowed": "Verliehen",
         "current_page_number": "aktuelle Seitenzahl",
         "narrator": "Erzähler:in | Erzähler:innen",
-        "original_title": "original title",
-        "price": "price"
+        "original_title": "Originaltitel",
+        "price": "Preis"
     },
     "authors_merge": {
         "authors_merging_utility": "Autor:innen zusammenführen",
@@ -337,7 +337,7 @@
         "total": "Gesamt",
         "read": "gelesen",
         "unread": "ungelesen",
-        "prices_sum": "prices sum"
+        "prices_sum": "Preissumme"
     },
     "history": {
         "years": "Jahre"
@@ -405,7 +405,7 @@
             "EXCEPTION_CAUGHT": "Ausnahme beim Aufruf des Metadaten-Plug-Ins"
         },
         "details": "Fehlerdetails",
-        "positive_only": "must be positive"
+        "positive_only": "Muss positiv sein"
     },
     "lists": {
         "create_list": "eigene Liste erstellen",
