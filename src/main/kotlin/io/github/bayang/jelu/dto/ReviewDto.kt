@@ -15,12 +15,14 @@ data class ReviewDto(
     val user: UUID?,
     val book: UUID?,
 )
+
 data class UpdateReviewDto(
     val reviewDate: Instant?,
     val text: String?,
     val rating: Double?,
     val visibility: Visibility?,
 )
+
 data class CreateReviewDto(
     val reviewDate: Instant?,
     val text: String,

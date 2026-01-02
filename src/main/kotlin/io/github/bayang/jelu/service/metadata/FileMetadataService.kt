@@ -17,8 +17,9 @@ import kotlin.io.path.deleteIfExists
 private val logger = KotlinLogging.logger {}
 
 @Service
-class FileMetadataService(private val opfParser: OpfParser) {
-
+class FileMetadataService(
+    private val opfParser: OpfParser,
+) {
     fun extractMetadata(filePath: String): MetadataDto? {
         val file = File(filePath)
         if (!file.exists()) {
@@ -28,9 +29,10 @@ class FileMetadataService(private val opfParser: OpfParser) {
             ZipFile(file).use { zip ->
                 try {
                     val opfFile = getPackagePath(zip)
-                    val metadata = zip.getInputStream(zip.getEntry(opfFile)).use {
-                        opfParser.parseOpf(it.bufferedReader().use(BufferedReader::readText))
-                    }
+                    val metadata =
+                        zip.getInputStream(zip.getEntry(opfFile)).use {
+                            opfParser.parseOpf(it.bufferedReader().use(BufferedReader::readText))
+                        }
                     return metadata
                 } catch (e: Exception) {
                     logger.error(e) { "Failed to parse epub" }
@@ -55,9 +57,10 @@ class FileMetadataService(private val opfParser: OpfParser) {
                     file.transferTo(tempFile)
                     ZipFile(tempFile.toFile()).use { zip ->
                         val opfFile = getPackagePath(zip)
-                        val metadata = zip.getInputStream(zip.getEntry(opfFile)).use {
-                            opfParser.parseOpf(it.bufferedReader().use(BufferedReader::readText))
-                        }
+                        val metadata =
+                            zip.getInputStream(zip.getEntry(opfFile)).use {
+                                opfParser.parseOpf(it.bufferedReader().use(BufferedReader::readText))
+                            }
                         return metadata
                     }
                 } catch (e: Exception) {

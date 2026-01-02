@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class OpenApiConfig {
-
     @Bean
     fun openApi(): OpenAPI {
         val server = Server()
@@ -23,19 +22,16 @@ class OpenApiConfig {
                     .title("Jelu API")
                     .version("v1.0")
                     .license(License().name("MIT").url("https://github.com/bayang/jelu/blob/main/LICENSE")),
-            )
-            .externalDocs(
+            ).externalDocs(
                 ExternalDocumentation()
                     .description("jelu documentation")
                     .url("https://github.com/bayang/jelu"),
-            )
-            .components(
+            ).components(
                 Components()
                     .addSecuritySchemes(
                         "basicAuth",
                         SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic"),
                     ),
-            )
-            .servers(mutableListOf(server))
+            ).servers(mutableListOf(server))
     }
 }

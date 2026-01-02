@@ -31,40 +31,40 @@ class GoodreadsQuoteProviderImpl(
     val bookService: BookService,
     @Resource(name = "restClient") val restClient: WebClient,
 ) : IQuoteProvider {
+    var cache: Cache<String, List<QuoteDto>> =
+        Caffeine
+            .newBuilder()
+            .expireAfterWrite(60, TimeUnit.MINUTES)
+            .maximumSize(100)
+            .build()
 
-    var cache: Cache<String, List<QuoteDto>> = Caffeine.newBuilder()
-        .expireAfterWrite(60, TimeUnit.MINUTES)
-        .maximumSize(100)
-        .build()
-
-    override fun quotes(query: String?): Mono<List<QuoteDto>> {
-        return if (!query.isNullOrBlank()) {
+    override fun quotes(query: String?): Mono<List<QuoteDto>> =
+        if (!query.isNullOrBlank()) {
             fetch(query)
         } else {
             val res: List<QuoteDto>? = cache.getIfPresent(KEY)
             res?.toMono() ?: fetch(randomAuthor())
         }
-    }
 
     override fun random(): Mono<List<QuoteDto>> {
-        val mono: Mono<List<QuoteDto>> = restClient.get()
-            .uri { uriBuilder: UriBuilder ->
-                uriBuilder
-                    .scheme("https")
-                    .host("www.goodreads.com")
-                    .path("/quotes")
-                    .build()
-            }
-            .exchangeToMono {
-                if (it.statusCode() == HttpStatus.OK) {
-                    it.bodyToMono(String::class.java).map {
-                            body ->
-                        parse(body)
+        val mono: Mono<List<QuoteDto>> =
+            restClient
+                .get()
+                .uri { uriBuilder: UriBuilder ->
+                    uriBuilder
+                        .scheme("https")
+                        .host("www.goodreads.com")
+                        .path("/quotes")
+                        .build()
+                }.exchangeToMono {
+                    if (it.statusCode() == HttpStatus.OK) {
+                        it.bodyToMono(String::class.java).map { body ->
+                            parse(body)
+                        }
+                    } else {
+                        it.createException().flatMap { Mono.error { it } }
                     }
-                } else {
-                    it.createException().flatMap { Mono.error { it } }
                 }
-            }
         return mono
     }
 
@@ -78,27 +78,27 @@ class GoodreadsQuoteProviderImpl(
     }
 
     fun fetch(query: String): Mono<List<QuoteDto>> {
-        val mono: Mono<List<QuoteDto>> = restClient.get()
-            .uri { uriBuilder: UriBuilder ->
-                uriBuilder
-                    .scheme("https")
-                    .host("www.goodreads.com")
-                    .path("/quotes/search")
-                    .queryParam("utf8", "✓")
-                    .queryParam("commit", "Search")
-                    .queryParam("q", query)
-                    .build()
-            }
-            .exchangeToMono {
-                if (it.statusCode() == HttpStatus.OK) {
-                    it.bodyToMono(String::class.java).map {
-                            bodyString ->
-                        parse(bodyString).also { quoteDtos -> cache.put(KEY, quoteDtos) }
+        val mono: Mono<List<QuoteDto>> =
+            restClient
+                .get()
+                .uri { uriBuilder: UriBuilder ->
+                    uriBuilder
+                        .scheme("https")
+                        .host("www.goodreads.com")
+                        .path("/quotes/search")
+                        .queryParam("utf8", "✓")
+                        .queryParam("commit", "Search")
+                        .queryParam("q", query)
+                        .build()
+                }.exchangeToMono {
+                    if (it.statusCode() == HttpStatus.OK) {
+                        it.bodyToMono(String::class.java).map { bodyString ->
+                            parse(bodyString).also { quoteDtos -> cache.put(KEY, quoteDtos) }
+                        }
+                    } else {
+                        it.createException().flatMap { Mono.error { it } }
                     }
-                } else {
-                    it.createException().flatMap { Mono.error { it } }
                 }
-            }
         return mono
     }
 

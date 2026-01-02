@@ -19,8 +19,12 @@ object UserMessageTable : UUIDTable("user_message") {
     val link: Column<String?> = varchar("link", 50000).nullable()
     val read: Column<Boolean> = bool("read")
 }
-class UserMessage(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class UserMessage(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<UserMessage>(UserMessageTable)
+
     var creationDate by UserMessageTable.creationDate
     var modificationDate by UserMessageTable.modificationDate
     var user by User referencedOn UserMessageTable.user
@@ -29,16 +33,18 @@ class UserMessage(id: EntityID<UUID>) : UUIDEntity(id) {
     var link by UserMessageTable.link
     var read by UserMessageTable.read
 
-    fun toUserMessageDto(): UserMessageDto = UserMessageDto(
-        id = this.id.value,
-        message = this.message,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        link = this.link,
-        read = this.read,
-        category = this.messageCategory,
-    )
+    fun toUserMessageDto(): UserMessageDto =
+        UserMessageDto(
+            id = this.id.value,
+            message = this.message,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            link = this.link,
+            read = this.read,
+            category = this.messageCategory,
+        )
 }
+
 enum class MessageCategory {
     SUCCESS,
     INFO,

@@ -84,10 +84,13 @@ class CsvImportService(
     private val userMessageService: UserMessageService,
     private val reviewService: ReviewService,
 ) {
-
     // maybe later : use coroutines ?
     @Async
-    fun import(file: File, user: UUID, importConfig: ImportConfigurationDto) {
+    fun import(
+        file: File,
+        user: UUID,
+        importConfig: ImportConfigurationDto,
+    ) {
         val start = System.currentTimeMillis()
         val userEntity = userService.findUserEntityById(user).toUserDto()
         val nowString: String = OffsetDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
@@ -131,7 +134,10 @@ class CsvImportService(
         }
     }
 
-    fun importFromDb(user: UUID, importConfig: ImportConfigurationDto): Pair<Long, Long> {
+    fun importFromDb(
+        user: UUID,
+        importConfig: ImportConfigurationDto,
+    ): Pair<Long, Long> {
         var importEntities: List<ImportEntity>? = mutableListOf()
         var success: Long = 0
         var failures: Long = 0
@@ -153,19 +159,27 @@ class CsvImportService(
     }
 
     @Transactional
-    private fun importEntity(importEntity: ImportEntity, user: UUID, importConfig: ImportConfigurationDto): ProcessingStatus {
+    private fun importEntity(
+        importEntity: ImportEntity,
+        user: UUID,
+        importConfig: ImportConfigurationDto,
+    ): ProcessingStatus {
         Thread.sleep(Random.nextLong(from = 200, until = 800))
         try {
             importService.updateStatus(importEntity.id.value, ProcessingStatus.PROCESSING)
             var metadata = MetadataDto()
-            if (importEntity.shouldFetchMetadata && !properties.metadata.calibre.path.isNullOrBlank()) {
+            if (importEntity.shouldFetchMetadata &&
+                !properties.metadata.calibre.path
+                    .isNullOrBlank()
+            ) {
                 val isbn: String = getIsbn(importEntity)
                 if (isbn.isNotBlank()) {
                     var config = mutableMapOf<String, String>()
-                    config[CalibreMetadataProvider.onlyUseCorePlugins] = "true"
-                    config[CalibreMetadataProvider.fetchCover] = importConfig.shouldFetchCovers.toString()
-                    metadata = fetchMetadataService
-                        .fetchMetadata(MetadataRequestDto(isbn), config)
+                    config[CalibreMetadataProvider.ONLY_USE_CORE_PLUGINS] = "true"
+                    config[CalibreMetadataProvider.FETCH_COVER] = importConfig.shouldFetchCovers.toString()
+                    metadata =
+                        fetchMetadataService
+                            .fetchMetadata(MetadataRequestDto(isbn), config)
                 } else {
                     logger.debug { "no isbn on entity ${importEntity.id}, not fetching metadata" }
                 }
@@ -173,7 +187,9 @@ class CsvImportService(
             val userEntity = userService.findUserEntityById(user).toUserDto()
             val book: BookCreateDto = fillBook(importEntity, metadata)
             if (book.title.isBlank() && (book.authors == null || book.authors!!.isEmpty())) {
-                logger.error { "no title nor authors on entity ${importEntity.id} ${importEntity.isbn10} ${importEntity.isbn13} , not saving" }
+                logger.error {
+                    "no title nor authors on entity ${importEntity.id} ${importEntity.isbn10} ${importEntity.isbn13} , not saving"
+                }
                 importService.updateStatus(importEntity.id.value, ProcessingStatus.IMPORTED)
                 if (importConfig.importSource == ImportSource.ISBN_LIST) {
                     try {
@@ -218,63 +234,97 @@ class CsvImportService(
             }
             val readStatusEnum: ReadingEventType? = readingStatus(readStatusFromShelves)
             book.tags = tags
-            val booksPage: Page<BookDto> = bookService.findAll(null, importEntity.isbn10, importEntity.isbn13, null, null, null, null, null, Pageable.ofSize(20), userEntity, LibraryFilter.ANY)
+            val booksPage: Page<BookDto> =
+                bookService.findAll(
+                    null,
+                    importEntity.isbn10,
+                    importEntity.isbn13,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    Pageable.ofSize(20),
+                    userEntity,
+                    LibraryFilter.ANY,
+                )
             // first case : the book we try to import from csv already exists in DB,
             // try to see if user already has it attached to his account (and only update userbook), or create new userbook if not
-            val savedUserBook: UserBookLightDto = if (!booksPage.isEmpty) {
-                val bookFromDb: BookDto = booksPage.content[0]
-                // user already have an userbook for this book
-                if (bookFromDb.userBookId != null) {
-                    // update userbook and book
-                    // val userbook: UserBookWithoutBookDto = bookWithUserbook.userBooks[0]
-                    val userbook: UserBookLightDto = bookService.findUserBookById(bookFromDb.userBookId)
-                    // only update fields if they are not filled yet, do not overwrite previously manually filled data
-                    bookService.update(
-                        userbook.id!!,
-                        UserBookUpdateDto(
-                            if ((readStatusEnum == ReadingEventType.CURRENTLY_READING || readStatusEnum == ReadingEventType.DROPPED) && userbook.lastReadingEvent == null) readStatusEnum else null,
-                            if (userbook.personalNotes.isNullOrBlank()) importEntity.personalNotes else null,
-                            if (userbook.owned == null) importEntity.owned else null,
-                            merge(book, bookFromDb),
-                            if (readStatusFromShelves.equals(TO_READ, true) && userbook.toRead == null) true else null,
+            val savedUserBook: UserBookLightDto =
+                if (!booksPage.isEmpty) {
+                    val bookFromDb: BookDto = booksPage.content[0]
+                    // user already have an userbook for this book
+                    if (bookFromDb.userBookId != null) {
+                        // update userbook and book
+                        // val userbook: UserBookWithoutBookDto = bookWithUserbook.userBooks[0]
+                        val userbook: UserBookLightDto = bookService.findUserBookById(bookFromDb.userBookId)
+                        // only update fields if they are not filled yet, do not overwrite previously manually filled data
+                        bookService.update(
+                            userbook.id!!,
+                            UserBookUpdateDto(
+                                if ((readStatusEnum == ReadingEventType.CURRENTLY_READING || readStatusEnum == ReadingEventType.DROPPED) &&
+                                    userbook.lastReadingEvent == null
+                                ) {
+                                    readStatusEnum
+                                } else {
+                                    null
+                                },
+                                if (userbook.personalNotes.isNullOrBlank()) importEntity.personalNotes else null,
+                                if (userbook.owned == null) importEntity.owned else null,
+                                merge(book, bookFromDb),
+                                if (readStatusFromShelves.equals(TO_READ, true) && userbook.toRead == null) true else null,
+                                null,
+                                null,
+                                null,
+                                priceInCents = null,
+                            ),
+                            null,
+                        )
+                    } else {
+                        // update book only and create userbook
+                        val userbook =
+                            CreateUserBookDto(
+                                if (readStatusEnum == ReadingEventType.CURRENTLY_READING ||
+                                    readStatusEnum == ReadingEventType.DROPPED
+                                ) {
+                                    readStatusEnum
+                                } else {
+                                    null
+                                },
+                                null,
+                                importEntity.personalNotes,
+                                importEntity.owned,
+                                merge(book, bookFromDb),
+                                if (readStatusFromShelves.equals(TO_READ, true)) true else null,
+                                null,
+                                null,
+                                null,
+                                priceInCents = null,
+                            )
+                        bookService.save(userbook, userEntity, null)
+                    }
+                } else {
+                    val userbook =
+                        CreateUserBookDto(
+                            if (readStatusEnum == ReadingEventType.CURRENTLY_READING ||
+                                readStatusEnum == ReadingEventType.DROPPED
+                            ) {
+                                readStatusEnum
+                            } else {
+                                null
+                            },
+                            null,
+                            importEntity.personalNotes,
+                            importEntity.owned,
+                            book,
+                            if (readStatusFromShelves.equals(TO_READ, true)) true else null,
                             null,
                             null,
                             null,
                             priceInCents = null,
-                        ),
-                        null,
-                    )
-                } else {
-                    // update book only and create userbook
-                    val userbook = CreateUserBookDto(
-                        if (readStatusEnum == ReadingEventType.CURRENTLY_READING || readStatusEnum == ReadingEventType.DROPPED) readStatusEnum else null,
-                        null,
-                        importEntity.personalNotes,
-                        importEntity.owned,
-                        merge(book, bookFromDb),
-                        if (readStatusFromShelves.equals(TO_READ, true)) true else null,
-                        null,
-                        null,
-                        null,
-                        priceInCents = null,
-                    )
+                        )
                     bookService.save(userbook, userEntity, null)
                 }
-            } else {
-                val userbook = CreateUserBookDto(
-                    if (readStatusEnum == ReadingEventType.CURRENTLY_READING || readStatusEnum == ReadingEventType.DROPPED) readStatusEnum else null,
-                    null,
-                    importEntity.personalNotes,
-                    importEntity.owned,
-                    book,
-                    if (readStatusFromShelves.equals(TO_READ, true)) true else null,
-                    null,
-                    null,
-                    null,
-                    priceInCents = null,
-                )
-                bookService.save(userbook, userEntity, null)
-            }
             // csv exports are inconsistents, sometimes readDates are filled but not the
             // associated bookshelves or the read number field...
             // so take everything into account and try to avoid duplicates
@@ -287,7 +337,10 @@ class CsvImportService(
                         // in case of multiple import of the same file
                         // do not create the same finished event twice if possible
                         if (!alreadyHasFinishedEventAtSameDate(savedUserBook, parsedDate)) {
-                            readingEventService.save(CreateReadingEventDto(ReadingEventType.FINISHED, savedUserBook.book.id, toInstant(parsedDate), null), userEntity)
+                            readingEventService.save(
+                                CreateReadingEventDto(ReadingEventType.FINISHED, savedUserBook.book.id, toInstant(parsedDate), null),
+                                userEntity,
+                            )
                         }
                         readsSaved++
                     } catch (e: Exception) {
@@ -307,7 +360,18 @@ class CsvImportService(
                 remainingToSave++
             }
             // bookService.findUserBookById(savedUserBook.id)
-            val nbAlreadyFinishedEvents = if (savedUserBook.readingEvents != null) savedUserBook.readingEvents.stream().filter { it.eventType == ReadingEventType.FINISHED }.count().toInt() else 0
+            val nbAlreadyFinishedEvents =
+                if (savedUserBook.readingEvents !=
+                    null
+                ) {
+                    savedUserBook.readingEvents
+                        .stream()
+                        .filter { it.eventType == ReadingEventType.FINISHED }
+                        .count()
+                        .toInt()
+                } else {
+                    0
+                }
             remainingToSave -= nbAlreadyFinishedEvents
             // we know the book has been read 3 times for example but don't have dates
             // just create reading events in the past at an arbitrary date
@@ -330,14 +394,15 @@ class CsvImportService(
             }
             val rating: Int = if (importEntity.rating != null) (importEntity.rating!! * 2) else 0
             if (!importEntity.review.isNullOrEmpty() || rating > 0) {
-                val existing = reviewService.find(
-                    userEntity.id,
-                    savedUserBook.book.id!!,
-                    null,
-                    null,
-                    null,
-                    Pageable.ofSize(10),
-                )
+                val existing =
+                    reviewService.find(
+                        userEntity.id,
+                        savedUserBook.book.id!!,
+                        null,
+                        null,
+                        null,
+                        Pageable.ofSize(10),
+                    )
                 if (existing.isEmpty) {
                     reviewService.save(
                         CreateReviewDto(
@@ -360,20 +425,25 @@ class CsvImportService(
         }
     }
 
-    fun alreadyHasFinishedEventAtSameDate(userBook: UserBookLightDto, date: LocalDate): Boolean {
+    fun alreadyHasFinishedEventAtSameDate(
+        userBook: UserBookLightDto,
+        date: LocalDate,
+    ): Boolean {
         if (userBook.readingEvents == null) {
             return false
         }
-        return userBook.readingEvents.stream()
+        return userBook.readingEvents
+            .stream()
             .filter { it.eventType == ReadingEventType.FINISHED }
             .filter { it.creationDate != null }
             .map { LocalDate.ofInstant(it.creationDate, ZoneId.systemDefault()) }
             .filter { it.year == date.year && it.monthValue == date.monthValue && it.dayOfMonth == date.dayOfMonth }
-            .count().toInt() > 0
+            .count()
+            .toInt() > 0
     }
 
-    private fun readingStatus(readStatusFromShelves: String): ReadingEventType? {
-        return if (readStatusFromShelves.equals(CURRENTLY_READING, true)) {
+    private fun readingStatus(readStatusFromShelves: String): ReadingEventType? =
+        if (readStatusFromShelves.equals(CURRENTLY_READING, true)) {
             ReadingEventType.CURRENTLY_READING
         } else if (readStatusFromShelves.equals(DROPPED, true)) {
             ReadingEventType.DROPPED
@@ -382,42 +452,65 @@ class CsvImportService(
         } else {
             null
         }
-    }
 
     /**
      * only update fields if they are not filled yet, do not overwrite previously manually filled data
      */
-    private fun merge(incoming: BookCreateDto, dbBook: BookDto): BookCreateDto {
+    private fun merge(
+        incoming: BookCreateDto,
+        dbBook: BookDto,
+    ): BookCreateDto {
         val authors = mutableListOf<AuthorDto>()
         // only save authors not already in db
         if (incoming.authors != null) {
-            val existingAuthorsNames: Set<String> = if (dbBook.authors != null) {
-                dbBook.authors.stream().map { it.name }.map { it.lowercase() }.collect(Collectors.toSet())
-            } else {
-                setOf()
-            }
-            incoming.authors!!.filter { authorDto -> !existingAuthorsNames.contains(authorDto.name.lowercase()) }.forEach { authorDto -> authors.add(authorDto) }
+            val existingAuthorsNames: Set<String> =
+                if (dbBook.authors != null) {
+                    dbBook.authors
+                        .stream()
+                        .map { it.name }
+                        .map { it.lowercase() }
+                        .collect(Collectors.toSet())
+                } else {
+                    setOf()
+                }
+            incoming.authors!!
+                .filter { authorDto ->
+                    !existingAuthorsNames.contains(authorDto.name.lowercase())
+                }.forEach { authorDto -> authors.add(authorDto) }
         }
 
         val tags = mutableListOf<TagDto>()
         // only save tags not already in db
         if (incoming.tags != null) {
-            val existingTagsNames: Set<String> = if (dbBook.tags != null) {
-                dbBook.tags.stream().map { it.name }.map { it.lowercase() }.collect(Collectors.toSet())
-            } else {
-                setOf()
-            }
+            val existingTagsNames: Set<String> =
+                if (dbBook.tags != null) {
+                    dbBook.tags
+                        .stream()
+                        .map { it.name }
+                        .map { it.lowercase() }
+                        .collect(Collectors.toSet())
+                } else {
+                    setOf()
+                }
             incoming.tags!!.filter { tagDto -> !existingTagsNames.contains(tagDto.name.lowercase()) }.forEach { tagDto -> tags.add(tagDto) }
         }
         val series = mutableListOf<SeriesOrderDto>()
         // only save series not already in db
         if (incoming.series != null) {
-            val existingSeriesNames: Set<String> = if (dbBook.series != null) {
-                dbBook.series.stream().map { it.name }.map { it.lowercase() }.collect(Collectors.toSet())
-            } else {
-                setOf()
-            }
-            incoming.series!!.filter { seriesDto -> !existingSeriesNames.contains(seriesDto.name.lowercase()) }.forEach { seriesDto -> series.add(seriesDto) }
+            val existingSeriesNames: Set<String> =
+                if (dbBook.series != null) {
+                    dbBook.series
+                        .stream()
+                        .map { it.name }
+                        .map { it.lowercase() }
+                        .collect(Collectors.toSet())
+                } else {
+                    setOf()
+                }
+            incoming.series!!
+                .filter { seriesDto ->
+                    !existingSeriesNames.contains(seriesDto.name.lowercase())
+                }.forEach { seriesDto -> series.add(seriesDto) }
         }
         return incoming.copy(
             id = dbBook.id,
@@ -444,7 +537,10 @@ class CsvImportService(
         )
     }
 
-    fun fillBook(importEntity: ImportEntity, metadata: MetadataDto): BookCreateDto {
+    fun fillBook(
+        importEntity: ImportEntity,
+        metadata: MetadataDto,
+    ): BookCreateDto {
         val book = BookCreateDto()
         book.title = testValues(importEntity.title, metadata.title)
         book.language = metadata.language
@@ -486,22 +582,24 @@ class CsvImportService(
                     bookshelf.equals(CURRENTLY_READING, true) ||
                     bookshelf.equals(READ, true) ||
                     bookshelf.equals(DROPPED, true)
-                )
+            )
         ) {
             return true
         }
         return false
     }
 
-    fun testValues(first: String?, second: String?): String {
-        return if (!first.isNullOrBlank()) {
+    fun testValues(
+        first: String?,
+        second: String?,
+    ): String =
+        if (!first.isNullOrBlank()) {
             first
         } else if (!second.isNullOrBlank()) {
             second
         } else {
             ""
         }
-    }
 
     private fun getIsbn(importEntity: ImportEntity): String {
         if (!importEntity.isbn13.isNullOrBlank()) {
@@ -549,7 +647,11 @@ class CsvImportService(
      *
      */
 
-    fun parse(file: File, user: UUID, importConfig: ImportConfigurationDto) {
+    fun parse(
+        file: File,
+        user: UUID,
+        importConfig: ImportConfigurationDto,
+    ) {
         if (importConfig.importSource == ImportSource.ISBN_LIST) {
             val validator: ISBNValidator = ISBNValidator.getInstance(false)
             val counter = AtomicLong()
@@ -576,7 +678,11 @@ class CsvImportService(
         }
     }
 
-    fun parseCsv(file: File, user: UUID, importConfig: ImportConfigurationDto) {
+    fun parseCsv(
+        file: File,
+        user: UUID,
+        importConfig: ImportConfigurationDto,
+    ) {
         val parser = CSVFormat.DEFAULT
         val reader = file.bufferedReader(Charsets.UTF_8)
 
@@ -604,14 +710,16 @@ class CsvImportService(
         logger.debug { "parsing finished, $count entries recorded" }
     }
 
-    private fun parseLine(record: CSVRecord, importSource: ImportSource): ImportDto? {
-        return when (importSource) {
+    private fun parseLine(
+        record: CSVRecord,
+        importSource: ImportSource,
+    ): ImportDto? =
+        when (importSource) {
             ImportSource.GOODREADS -> parseGoodreadsLine(record)
             ImportSource.STORYGRAPH -> parseStorygraphLine(record)
             ImportSource.LIBRARYTHING -> parseLibrarythingLine(record)
             ImportSource.ISBN_LIST -> null
         }
-    }
 
     // TODO
     private fun parseLibrarythingLine(record: CSVRecord): ImportDto? {
@@ -638,7 +746,9 @@ class CsvImportService(
         val goodreadsId = cleanString(record.get(0))
         // we want at least an isbn
         if (parsedIsbn10.isBlank() && parsedIsbn13.isBlank()) {
-            logger.debug { "Missing isbn for line with goodreadsId $goodreadsId, title $title and author $author, import it yourself manually" }
+            logger.debug {
+                "Missing isbn for line with goodreadsId $goodreadsId, title $title and author $author, import it yourself manually"
+            }
             return null
         } else {
             val additionalAuthors = cleanString(record.get(4))
@@ -673,11 +783,12 @@ class CsvImportService(
             dto.readDates = cleanString(record.get(14))
             // goodreads csv export changed columns in 2022 apparently
             // new exports have only 24 columns, older ones have 31
-            val ownedCopies = if (record.size() > 24 && record.isSet(25)) {
-                parseNumber(record.get(25))
-            } else {
-                parseNumber(record.get(23))
-            }
+            val ownedCopies =
+                if (record.size() > 24 && record.isSet(25)) {
+                    parseNumber(record.get(25))
+                } else {
+                    parseNumber(record.get(23))
+                }
             if (ownedCopies != null && ownedCopies > 0) {
                 dto.owned = true
             }
@@ -713,8 +824,8 @@ class CsvImportService(
         }
     }
 
-    private fun parseNumber(input: String): Int? {
-        return if (input.isBlank()) {
+    private fun parseNumber(input: String): Int? =
+        if (input.isBlank()) {
             null
         } else {
             try {
@@ -724,5 +835,4 @@ class CsvImportService(
                 null
             }
         }
-    }
 }

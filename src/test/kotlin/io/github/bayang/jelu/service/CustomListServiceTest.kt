@@ -31,7 +31,6 @@ class CustomListServiceTest(
     @Autowired private val bookService: BookService,
     @Autowired private val luceneHelper: LuceneHelper,
 ) {
-
     @BeforeAll
     fun setupUser() {
         userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
@@ -44,7 +43,8 @@ class CustomListServiceTest(
 
     @AfterEach
     fun cleanTest() {
-        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(100))
+        bookService
+            .findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(100))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -66,15 +66,16 @@ class CustomListServiceTest(
 
     @Test
     fun testCreateList() {
-        val customListDto = CustomListDto(
-            name = "the list",
-            tags = "education,test space",
-            actionable = false,
-            public = true,
-            id = null,
-            creationDate = null,
-            modificationDate = null,
-        )
+        val customListDto =
+            CustomListDto(
+                name = "the list",
+                tags = "education,test space",
+                actionable = false,
+                public = true,
+                id = null,
+                creationDate = null,
+                modificationDate = null,
+            )
         val created = customListService.save(customListDto, user().id!!)
         Assertions.assertEquals(customListDto.name, created.name)
         Assertions.assertEquals(customListDto.tags, created.tags)
@@ -84,15 +85,16 @@ class CustomListServiceTest(
         Assertions.assertNotNull(created.modificationDate)
         Assertions.assertNotNull(created.creationDate)
         val creationDate = created.creationDate
-        val updateDto = CustomListDto(
-            name = customListDto.name,
-            tags = "education,test space",
-            actionable = true,
-            public = false,
-            id = created.id,
-            creationDate = created.creationDate,
-            modificationDate = null,
-        )
+        val updateDto =
+            CustomListDto(
+                name = customListDto.name,
+                tags = "education,test space",
+                actionable = true,
+                public = false,
+                id = created.id,
+                creationDate = created.creationDate,
+                modificationDate = null,
+            )
         val updated = customListService.update(updateDto)
         Assertions.assertEquals(updateDto.name, updated.name)
         Assertions.assertEquals(updateDto.tags, updated.tags)
@@ -121,15 +123,16 @@ class CustomListServiceTest(
 
     @Test
     fun testFetchListBooks() {
-        val customListDto = CustomListDto(
-            name = "the list",
-            tags = "History,owned-physical",
-            actionable = false,
-            public = true,
-            id = null,
-            creationDate = null,
-            modificationDate = null,
-        )
+        val customListDto =
+            CustomListDto(
+                name = "the list",
+                tags = "History,owned-physical",
+                actionable = false,
+                public = true,
+                id = null,
+                creationDate = null,
+                modificationDate = null,
+            )
         val created = customListService.save(customListDto, user().id!!)
         Assertions.assertEquals(customListDto.name, created.name)
         Assertions.assertEquals(customListDto.tags, created.tags)
@@ -145,26 +148,27 @@ class CustomListServiceTest(
         val tags = mutableListOf<TagDto>()
         tags.add(tagDto("History"))
         tags.add(tagDto("owned-physical"))
-        val createBook = BookCreateDto(
-            id = null,
-            title = "title 1",
-            isbn10 = "1566199093",
-            isbn13 = "9781566199094 ",
-            summary = "This is a test summary\nwith a newline",
-            image = "",
-            publisher = "test-publisher",
-            pageCount = 50,
-            publishedDate = "",
-            // seriesBak = "",
-            authors = mutableListOf(authorDto()),
-            // numberInSeries = null,
-            tags = tags,
-            goodreadsId = "4321abc",
-            googleId = "1234",
-            librarythingId = "",
-            language = "",
-            amazonId = "",
-        )
+        val createBook =
+            BookCreateDto(
+                id = null,
+                title = "title 1",
+                isbn10 = "1566199093",
+                isbn13 = "9781566199094 ",
+                summary = "This is a test summary\nwith a newline",
+                image = "",
+                publisher = "test-publisher",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = mutableListOf(authorDto()),
+                // numberInSeries = null,
+                tags = tags,
+                goodreadsId = "4321abc",
+                googleId = "1234",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+            )
         val savedBook1 = bookService.save(createBook, null)
         Assertions.assertEquals(2, savedBook1.tags?.size)
         var entitiesIds = luceneHelper.searchEntitiesIds("tag:History", LuceneEntity.Book)
@@ -174,26 +178,27 @@ class CustomListServiceTest(
         books = customListService.findListBooks(created.id!!, PageRequest.of(20, 20), null)
         Assertions.assertEquals(1, books.totalElements)
 
-        val createBook1 = BookCreateDto(
-            id = null,
-            title = "title 2",
-            isbn10 = "1566199093",
-            isbn13 = "9781566199094 ",
-            summary = "This is a test summary\nwith a newline",
-            image = "",
-            publisher = "test-publisher",
-            pageCount = 50,
-            publishedDate = "",
-            // seriesBak = "",
-            authors = mutableListOf(authorDto()),
-            // numberInSeries = null,
-            tags = tags.drop(1),
-            goodreadsId = "4321abc",
-            googleId = "1234",
-            librarythingId = "",
-            language = "",
-            amazonId = "",
-        )
+        val createBook1 =
+            BookCreateDto(
+                id = null,
+                title = "title 2",
+                isbn10 = "1566199093",
+                isbn13 = "9781566199094 ",
+                summary = "This is a test summary\nwith a newline",
+                image = "",
+                publisher = "test-publisher",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = mutableListOf(authorDto()),
+                // numberInSeries = null,
+                tags = tags.drop(1),
+                goodreadsId = "4321abc",
+                googleId = "1234",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+            )
         val savedBook2 = bookService.save(createBook1, null)
         Assertions.assertEquals(1, savedBook2.tags?.size)
 
@@ -204,26 +209,27 @@ class CustomListServiceTest(
         moreTags.add(tagDto("History"))
         moreTags.add(tagDto("owned-physical"))
         moreTags.add(tagDto("other_tag"))
-        val createBook2 = BookCreateDto(
-            id = null,
-            title = "title 3",
-            isbn10 = "1566199093",
-            isbn13 = "9781566199094 ",
-            summary = "This is a test summary\nwith a newline",
-            image = "",
-            publisher = "test-publisher",
-            pageCount = 50,
-            publishedDate = "",
-            // seriesBak = "",
-            authors = mutableListOf(authorDto()),
-            // numberInSeries = null,
-            tags = moreTags,
-            goodreadsId = "4321abc",
-            googleId = "1234",
-            librarythingId = "",
-            language = "",
-            amazonId = "",
-        )
+        val createBook2 =
+            BookCreateDto(
+                id = null,
+                title = "title 3",
+                isbn10 = "1566199093",
+                isbn13 = "9781566199094 ",
+                summary = "This is a test summary\nwith a newline",
+                image = "",
+                publisher = "test-publisher",
+                pageCount = 50,
+                publishedDate = "",
+                // seriesBak = "",
+                authors = mutableListOf(authorDto()),
+                // numberInSeries = null,
+                tags = moreTags,
+                goodreadsId = "4321abc",
+                googleId = "1234",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+            )
         val savedBook3 = bookService.save(createBook2, null)
         Assertions.assertEquals(3, savedBook3.tags?.size)
 

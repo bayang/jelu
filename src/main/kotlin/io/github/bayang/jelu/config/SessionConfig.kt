@@ -25,17 +25,18 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.time.Duration
 
+const val UPDATE_SESSION_ATTRIBUTE_QUERY: String =
+    "UPDATE %TABLE_NAME%_ATTRIBUTES\nSET ATTRIBUTE_BYTES = json(?)\nWHERE SESSION_PRIMARY_ID = ?\nAND ATTRIBUTE_NAME = ?\n"
+
+const val CREATE_SESSION_ATTRIBUTE_QUERY: String =
+    "INSERT INTO %TABLE_NAME%_ATTRIBUTES (SESSION_PRIMARY_ID, ATTRIBUTE_NAME, ATTRIBUTE_BYTES)\nVALUES (?, ?, json(?))\n"
+
+const val DELETE_SESSIONS_BY_EXPIRY_TIME_QUERY: String =
+    "DELETE FROM %TABLE_NAME% WHERE PRIMARY_ID IN (SELECT SESSION_PRIMARY_ID FROM %TABLE_NAME%_ATTRIBUTES WHERE ATTRIBUTE_NAME = 'org.springframework.session.security.SpringSessionBackedSessionInformation.EXPIRED' AND ATTRIBUTE_BYTES = 'true') OR EXPIRY_TIME < ?\n"
+
 @EnableJdbcHttpSession
 @Configuration
 class SessionConfig : BeanClassLoaderAware {
-
-    val CREATE_SESSION_ATTRIBUTE_QUERY: String =
-        "INSERT INTO %TABLE_NAME%_ATTRIBUTES (SESSION_PRIMARY_ID, ATTRIBUTE_NAME, ATTRIBUTE_BYTES)\nVALUES (?, ?, json(?))\n"
-    val UPDATE_SESSION_ATTRIBUTE_QUERY: String =
-        "UPDATE %TABLE_NAME%_ATTRIBUTES\nSET ATTRIBUTE_BYTES = json(?)\nWHERE SESSION_PRIMARY_ID = ?\nAND ATTRIBUTE_NAME = ?\n"
-    val DELETE_SESSIONS_BY_EXPIRY_TIME_QUERY: String =
-        "DELETE FROM %TABLE_NAME% WHERE PRIMARY_ID IN (SELECT SESSION_PRIMARY_ID FROM %TABLE_NAME%_ATTRIBUTES WHERE ATTRIBUTE_NAME = 'org.springframework.session.security.SpringSessionBackedSessionInformation.EXPIRED' AND ATTRIBUTE_BYTES = 'true') OR EXPIRY_TIME < ?\n"
-
     @Bean
     fun sessionCookieName() = "SESSION"
 
@@ -60,7 +61,7 @@ class SessionConfig : BeanClassLoaderAware {
 
     @Bean
     fun customizeSessionRepository(properties: JeluProperties) =
-        SessionRepositoryCustomizer<JdbcIndexedSessionRepository>() {
+        SessionRepositoryCustomizer<JdbcIndexedSessionRepository> {
             it.setDefaultMaxInactiveInterval(Duration.ofSeconds(properties.session.duration))
             it.setCreateSessionAttributeQuery(CREATE_SESSION_ATTRIBUTE_QUERY)
             it.setUpdateSessionAttributeQuery(UPDATE_SESSION_ATTRIBUTE_QUERY)
@@ -93,19 +94,22 @@ class SessionConfig : BeanClassLoaderAware {
         this.classLoader = classLoader
     }
 
-    class JsonSerializer internal constructor(private val objectMapper: ObjectMapper) :
-        Serializer<Any?> {
+    class JsonSerializer internal constructor(
+        private val objectMapper: ObjectMapper,
+    ) : Serializer<Any?> {
         @Throws(IOException::class)
-        override fun serialize(`object`: Any, outputStream: OutputStream) {
+        override fun serialize(
+            `object`: Any,
+            outputStream: OutputStream,
+        ) {
             objectMapper.writeValue(outputStream, `object`)
         }
     }
 
-    class JsonDeserializer internal constructor(private val objectMapper: ObjectMapper) :
-        Deserializer<Any?> {
+    class JsonDeserializer internal constructor(
+        private val objectMapper: ObjectMapper,
+    ) : Deserializer<Any?> {
         @Throws(IOException::class)
-        override fun deserialize(inputStream: InputStream): Any {
-            return objectMapper.readValue(inputStream, Any::class.java)
-        }
+        override fun deserialize(inputStream: InputStream): Any = objectMapper.readValue(inputStream, Any::class.java)
     }
 }

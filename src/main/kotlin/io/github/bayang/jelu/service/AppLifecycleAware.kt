@@ -21,7 +21,6 @@ class AppLifecycleAware(
     private val lifeCycleService: LifeCycleService,
     private val bookService: BookService,
 ) {
-
     @EventListener
     fun onApplicationEvent(event: ContextRefreshedEvent?) {
         val assetsDir = File(properties.files.images)

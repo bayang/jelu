@@ -25,27 +25,28 @@ class InventaireIoMetadataProvider(
     private val objectMapper: ObjectMapper,
     private val buildProperties: BuildProperties,
 ) : IMetaDataProvider {
-
-    private val _name = "inventaireio"
+    private val name = "inventaireio"
 
     private val inventaireHost = "https://inventaire.io"
     private val inventaireApi = "$inventaireHost/api/"
 
     private val defaultLanguageCode: String = "en"
 
-    override fun fetchMetadata(metadataRequestDto: MetadataRequestDto, config: Map<String, String>): Optional<MetadataDto>? {
+    override fun fetchMetadata(
+        metadataRequestDto: MetadataRequestDto,
+        config: Map<String, String>,
+    ): Optional<MetadataDto>? {
         if (!metadataRequestDto.isbn.isNullOrBlank()) {
             val isbn = metadataRequestDto.isbn.replace("-", "", true)
-            return restClient.get()
-                .uri(inventaireApi) {
-                        uriBuilder ->
+            return restClient
+                .get()
+                .uri(inventaireApi) { uriBuilder ->
                     uriBuilder
                         .path("entities")
                         .queryParam("action", "by-uris")
                         .queryParam("uris", "isbn:$isbn")
                         .build()
-                }
-                .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
+                }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
                 .exchange { clientRequest, clientResponse ->
                     if (clientResponse.statusCode == HttpStatus.OK) {
                         val bodyString = clientResponse.bodyTo(String::class.java)
@@ -75,17 +76,16 @@ class InventaireIoMetadataProvider(
         return Optional.empty()
     }
 
-    private fun searchAuthorsTitles(author: String): Optional<MetadataDto>? {
-        return restClient.get()
-            .uri(inventaireApi) {
-                    uriBuilder ->
+    private fun searchAuthorsTitles(author: String): Optional<MetadataDto>? =
+        restClient
+            .get()
+            .uri(inventaireApi) { uriBuilder ->
                 uriBuilder
                     .path("search")
                     .queryParam("types", "humans")
                     .queryParam("search", author)
                     .build()
-            }
-            .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
+            }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
             .exchange { clientRequest, clientResponse ->
                 if (clientResponse.statusCode == HttpStatus.OK) {
                     val bodyString = clientResponse.bodyTo(String::class.java)
@@ -102,19 +102,17 @@ class InventaireIoMetadataProvider(
                     Optional.empty()
                 }
             }
-    }
 
-    private fun searchByTitle(title: String): ParsingDto? {
-        return restClient.get()
-            .uri(inventaireApi) {
-                    uriBuilder ->
+    private fun searchByTitle(title: String): ParsingDto? =
+        restClient
+            .get()
+            .uri(inventaireApi) { uriBuilder ->
                 uriBuilder
                     .path("search")
                     .queryParam("types", "works")
                     .queryParam("search", title)
                     .build()
-            }
-            .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
+            }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
             .exchange { clientRequest, clientResponse ->
                 if (clientResponse.statusCode == HttpStatus.OK) {
                     val bodyString = clientResponse.bodyTo(String::class.java)
@@ -125,7 +123,6 @@ class InventaireIoMetadataProvider(
                     ParsingDto(MetadataDto(), "")
                 }
             }
-    }
 
     private fun parseSearchResults(node: JsonNode): ParsingDto {
         val firstResult = node.asIterable().first()
@@ -158,7 +155,10 @@ class InventaireIoMetadataProvider(
         return ""
     }
 
-    private fun parseIsbnResult(node: JsonNode, isbn: String): ParsingDto {
+    private fun parseIsbnResult(
+        node: JsonNode,
+        isbn: String,
+    ): ParsingDto {
         val dto = MetadataDto()
         val parsingDto = ParsingDto(dto, "")
         if (node.has("isbn:$isbn")) {
@@ -176,7 +176,11 @@ class InventaireIoMetadataProvider(
         return parsingDto
     }
 
-    fun extractIsbnData(data: JsonNode, dto: MetadataDto, parsingDto: ParsingDto) {
+    fun extractIsbnData(
+        data: JsonNode,
+        dto: MetadataDto,
+        parsingDto: ParsingDto,
+    ) {
         if (data.has("claims")) {
             val claims = data["claims"]
             parseClaims(claims, parsingDto)
@@ -202,15 +206,17 @@ class InventaireIoMetadataProvider(
      * (ex: https://commons.wikimedia.org/wiki/Special:FilePath/Les%20Deux%20Nigauds%20Comtesse%20de%20S%C3%A9gur.jpg?width=300,
      * be sure to URL-encode the filename)
      */
-    fun imagePath(url: String): String {
-        return if (url.startsWith("/img/")) {
+    fun imagePath(url: String): String =
+        if (url.startsWith("/img/")) {
             inventaireHost + url
         } else {
             "https://commons.wikimedia.org/wiki/Special:FilePath/$url"
         }
-    }
 
-    fun parseClaims(node: JsonNode, dto: ParsingDto?) {
+    fun parseClaims(
+        node: JsonNode,
+        dto: ParsingDto?,
+    ) {
         parseClaims(node, dto?.metadataDto)
         if (node.has(Wikidata.AUTHOR)) {
             val authors = node[Wikidata.AUTHOR].asIterable()
@@ -229,7 +235,10 @@ class InventaireIoMetadataProvider(
         }
     }
 
-    private fun parseClaims(node: JsonNode, dto: MetadataDto?) {
+    private fun parseClaims(
+        node: JsonNode,
+        dto: MetadataDto?,
+    ) {
         if (dto?.title == null) {
             dto?.title = getFieldOrNull(Wikidata.TITLE, node)
         }
@@ -265,7 +274,10 @@ class InventaireIoMetadataProvider(
         }
     }
 
-    private fun getFieldOrNull(fieldName: String, node: JsonNode): String? {
+    private fun getFieldOrNull(
+        fieldName: String,
+        node: JsonNode,
+    ): String? {
         if (node.has(fieldName)) {
             return node[fieldName][0].asText()
         }
@@ -274,16 +286,15 @@ class InventaireIoMetadataProvider(
 
     private fun getAuthorBooks(authorUri: String): ParsingDto? {
         if (authorUri.isNotBlank()) {
-            return restClient.get()
-                .uri(inventaireApi) {
-                        uriBuilder ->
+            return restClient
+                .get()
+                .uri(inventaireApi) { uriBuilder ->
                     uriBuilder
                         .path("entities")
                         .queryParam("action", "author-works")
                         .queryParam("uri", authorUri)
                         .build()
-                }
-                .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
+                }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
                 .exchange { clientRequest, clientResponse ->
                     if (clientResponse.statusCode == HttpStatus.OK) {
                         val bodyString = clientResponse.bodyTo(String::class.java)
@@ -312,16 +323,15 @@ class InventaireIoMetadataProvider(
 
     private fun enrichWithEditionResult(dto: ParsingDto?): ParsingDto? {
         if (dto?.editionClaim != null && dto.editionClaim.isNotBlank()) {
-            return restClient.get()
-                .uri(inventaireApi) {
-                        uriBuilder ->
+            return restClient
+                .get()
+                .uri(inventaireApi) { uriBuilder ->
                     uriBuilder
                         .path("entities")
                         .queryParam("action", "by-uris")
                         .queryParam("uris", dto.editionClaim)
                         .build()
-                }
-                .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
+                }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
                 .exchange { clientRequest, clientResponse ->
                     if (clientResponse.statusCode == HttpStatus.OK) {
                         val bodyString = clientResponse.bodyTo(String::class.java)
@@ -338,7 +348,8 @@ class InventaireIoMetadataProvider(
 
     fun enrichWithAuhors(dto: ParsingDto?): ParsingDto? {
         if (dto?.authorsClaims != null && dto.authorsClaims.isNotEmpty()) {
-            dto.authorsClaims.stream()
+            dto.authorsClaims
+                .stream()
                 .forEach { author ->
                     val res = fetchDataPage(author)
                     if (res != null) {
@@ -351,7 +362,8 @@ class InventaireIoMetadataProvider(
 
     fun enrichWithSeries(dto: ParsingDto?): ParsingDto? {
         if (dto?.seriesClaims != null && dto.seriesClaims.isNotEmpty()) {
-            dto.seriesClaims.stream()
+            dto.seriesClaims
+                .stream()
                 .forEach { series ->
                     val res = fetchDataPage(series)
                     dto.metadataDto.series = res
@@ -362,7 +374,8 @@ class InventaireIoMetadataProvider(
 
     fun enrichWithGenres(dto: ParsingDto?): ParsingDto? {
         if (dto?.genresClaims != null && dto.genresClaims.isNotEmpty()) {
-            dto.genresClaims.stream()
+            dto.genresClaims
+                .stream()
                 .forEach { genre ->
                     val res = fetchDataPage(genre)
                     if (res != null) {
@@ -373,17 +386,16 @@ class InventaireIoMetadataProvider(
         return dto
     }
 
-    fun fetchDataPage(dataId: String): String? {
-        return restClient.get()
-            .uri(inventaireApi) {
-                    uriBuilder ->
+    fun fetchDataPage(dataId: String): String? =
+        restClient
+            .get()
+            .uri(inventaireApi) { uriBuilder ->
                 uriBuilder
                     .path("entities")
                     .queryParam("action", "by-uris")
                     .queryParam("uris", dataId)
                     .build()
-            }
-            .header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
+            }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
             .exchange { clientRequest, clientResponse ->
                 if (clientResponse.statusCode == HttpStatus.OK) {
                     val bodyString = clientResponse.bodyTo(String::class.java)
@@ -394,12 +406,14 @@ class InventaireIoMetadataProvider(
                     ""
                 }
             }
-    }
 
     /**
      * author page, genre page, series page
      */
-    fun parseDataBody(node: JsonNode, dataId: String?): String {
+    fun parseDataBody(
+        node: JsonNode,
+        dataId: String?,
+    ): String {
         var res = ""
         if (dataId != null && node.has(dataId)) {
             val data = node.get(dataId)
@@ -417,7 +431,10 @@ class InventaireIoMetadataProvider(
         return res
     }
 
-    private fun parseEditionResult(node: JsonNode, dto: ParsingDto?): ParsingDto? {
+    private fun parseEditionResult(
+        node: JsonNode,
+        dto: ParsingDto?,
+    ): ParsingDto? {
         if (node.has(dto?.editionClaim)) {
             val data = node.get(dto?.editionClaim)
             if (data.has("descriptions")) {
@@ -451,14 +468,13 @@ class InventaireIoMetadataProvider(
         return MetadataDto()
     }
 
-    override fun name(): String {
-        return _name
-    }
+    override fun name(): String = name
 
-    private fun getPreferredLanguage(): String? = properties
-        .metadataProviders
-        ?.find { it.isEnabled && it.name == _name }
-        ?.config
+    private fun getPreferredLanguage(): String? =
+        properties
+            .metadataProviders
+            ?.find { it.isEnabled && it.name == name }
+            ?.config
 }
 
 data class ParsingDto(

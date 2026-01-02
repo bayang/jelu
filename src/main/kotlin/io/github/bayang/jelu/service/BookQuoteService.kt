@@ -16,11 +16,11 @@ import java.util.UUID
 class BookQuoteService(
     private val bookQuoteRepository: BookQuoteRepository,
 ) {
-
     @Transactional
-    fun save(bookQuoteDto: CreateBookQuoteDto, user: UserDto): BookQuoteDto {
-        return bookQuoteRepository.save(bookQuoteDto, user).toBookQuoteDto()
-    }
+    fun save(
+        bookQuoteDto: CreateBookQuoteDto,
+        user: UserDto,
+    ): BookQuoteDto = bookQuoteRepository.save(bookQuoteDto, user).toBookQuoteDto()
 
     @Transactional
     fun findById(bookQuoteId: UUID): BookQuoteDto = bookQuoteRepository.findById(bookQuoteId).toBookQuoteDto()
@@ -31,14 +31,13 @@ class BookQuoteService(
         bookId: UUID?,
         visibility: Visibility?,
         pageable: Pageable,
-    ): Page<BookQuoteDto> {
-        return bookQuoteRepository.find(userId, bookId, visibility, pageable).map { it.toBookQuoteDto() }
-    }
+    ): Page<BookQuoteDto> = bookQuoteRepository.find(userId, bookId, visibility, pageable).map { it.toBookQuoteDto() }
 
     @Transactional
-    fun update(bookQuoteId: UUID, updateBookQuoteDto: UpdateBookQuoteDto): BookQuoteDto {
-        return bookQuoteRepository.update(bookQuoteId, updateBookQuoteDto).toBookQuoteDto()
-    }
+    fun update(
+        bookQuoteId: UUID,
+        updateBookQuoteDto: UpdateBookQuoteDto,
+    ): BookQuoteDto = bookQuoteRepository.update(bookQuoteId, updateBookQuoteDto).toBookQuoteDto()
 
     @Transactional
     fun delete(bookQuoteId: UUID) = bookQuoteRepository.delete(bookQuoteId)

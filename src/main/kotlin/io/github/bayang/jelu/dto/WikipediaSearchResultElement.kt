@@ -3,7 +3,6 @@ package io.github.bayang.jelu.dto
 import com.fasterxml.jackson.annotation.JsonAlias
 
 data class WikipediaSearchResultElement(
-
     val id: Long,
     val key: String,
     val title: String,

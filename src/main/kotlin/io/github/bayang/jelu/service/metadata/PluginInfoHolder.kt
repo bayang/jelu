@@ -9,27 +9,28 @@ import org.springframework.stereotype.Service
 class PluginInfoHolder(
     private val properties: JeluProperties,
 ) {
-
     companion object {
-        const val calibre = "calibre"
-        const val jelu_debug = "jelu-debug"
+        const val CALIBRE = "calibre"
+        const val JELU_DEBUG = "jelu-debug"
     }
 
     private var pluginsList: List<PluginInfo> = listOf()
     private var pluginsComputed = false
     private var calibreComputed = false
-    private var _calibreEnabled = false
+    private var calibreEnabled = false
 
     fun plugins(): List<PluginInfo> {
         // return cached computation
         if (pluginsComputed) return pluginsList
         // compute plugins list and cache it
         val pluginInfoList: List<PluginInfo>? =
-            properties.metadataProviders?.filter { it.isEnabled }?.map { PluginInfo(name = it.name, order = it.order) }
+            properties.metadataProviders
+                ?.filter { it.isEnabled }
+                ?.map { PluginInfo(name = it.name, order = it.order) }
                 ?.toList()
         val plugins = mutableListOf<PluginInfo>()
         if (calibreEnabled()) {
-            plugins.add(PluginInfo(name = calibre, order = properties.metadata.calibre.order))
+            plugins.add(PluginInfo(name = CALIBRE, order = properties.metadata.calibre.order))
         }
         if (!pluginInfoList.isNullOrEmpty()) {
             plugins.addAll(pluginInfoList)
@@ -41,9 +42,11 @@ class PluginInfoHolder(
     }
 
     fun calibreEnabled(): Boolean {
-        if (calibreComputed) return _calibreEnabled
-        _calibreEnabled = !properties.metadata.calibre.path.isNullOrEmpty()
+        if (calibreComputed) return calibreEnabled
+        calibreEnabled =
+            !properties.metadata.calibre.path
+                .isNullOrEmpty()
         calibreComputed = true
-        return _calibreEnabled
+        return calibreEnabled
     }
 }

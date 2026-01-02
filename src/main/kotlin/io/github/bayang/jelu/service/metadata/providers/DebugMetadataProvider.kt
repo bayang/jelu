@@ -11,7 +11,6 @@ private val logger = KotlinLogging.logger {}
 
 @Service
 class DebugMetadataProvider : IMetaDataProvider {
-
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String>,
@@ -23,5 +22,5 @@ class DebugMetadataProvider : IMetaDataProvider {
         return Optional.empty()
     }
 
-    override fun name(): String = PluginInfoHolder.jelu_debug
+    override fun name(): String = PluginInfoHolder.JELU_DEBUG
 }

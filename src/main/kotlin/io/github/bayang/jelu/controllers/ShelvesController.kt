@@ -23,36 +23,31 @@ import java.util.UUID
 class ShelvesController(
     private val shelvesService: ShelfService,
 ) {
-
     @GetMapping(path = ["/shelves"])
     fun shelves(
         @RequestParam(name = "name", required = false) name: String?,
         @RequestParam(name = "targetId", required = false) targetId: UUID?,
         principal: Authentication,
-    ): List<ShelfDto> {
-        return shelvesService.find((principal.principal as JeluUser).user, name, targetId)
-    }
+    ): List<ShelfDto> = shelvesService.find((principal.principal as JeluUser).user, name, targetId)
 
     @GetMapping(path = ["/shelves/{id}"])
     fun shelfById(
         @PathVariable("id") shelfId: UUID,
         principal: Authentication,
-    ): ShelfDto {
-        return shelvesService.findById(shelfId)
-    }
+    ): ShelfDto = shelvesService.findById(shelfId)
 
     @PostMapping(path = ["/shelves"])
     fun saveShelf(
         @RequestBody @Valid
         createShelfDto: CreateShelfDto,
         principal: Authentication,
-    ): ShelfDto {
-        return shelvesService.save(createShelfDto, (principal.principal as JeluUser).user)
-    }
+    ): ShelfDto = shelvesService.save(createShelfDto, (principal.principal as JeluUser).user)
 
     @ApiResponse(responseCode = "204", description = "Deleted the shelf")
     @DeleteMapping(path = ["/shelves/{id}"])
-    fun deleteShelfById(@PathVariable("id") shelfId: UUID): ResponseEntity<Unit> {
+    fun deleteShelfById(
+        @PathVariable("id") shelfId: UUID,
+    ): ResponseEntity<Unit> {
         shelvesService.delete(shelfId)
         return ResponseEntity.noContent().build()
     }

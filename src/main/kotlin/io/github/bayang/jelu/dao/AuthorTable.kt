@@ -27,8 +27,12 @@ object AuthorTable : UUIDTable("author") {
     val facebookPage: Column<String?> = varchar("facebook_page", 5000).nullable()
     val instagramPage: Column<String?> = varchar("instagram_page", 5000).nullable()
 }
-class Author(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class Author(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Author>(AuthorTable)
+
     var name by AuthorTable.name
     var creationDate by AuthorTable.creationDate
     var modificationDate by AuthorTable.modificationDate
@@ -63,18 +67,42 @@ class Author(id: EntityID<UUID>) : UUIDEntity(id) {
             instagramPage = this.instagramPage,
         )
 }
+
 object BookAuthors : Table(name = "book_authors") {
-    val book = reference("book", BookTable, fkName = "fk_bookauthors_book_id", onUpdate = ReferenceOption.CASCADE, onDelete = ReferenceOption.CASCADE)
+    val book =
+        reference(
+            "book",
+            BookTable,
+            fkName = "fk_bookauthors_book_id",
+            onUpdate = ReferenceOption.CASCADE,
+            onDelete = ReferenceOption.CASCADE,
+        )
     val author = reference("author", AuthorTable, fkName = "fk_bookauthors_author_id", onUpdate = ReferenceOption.CASCADE)
     override val primaryKey = PrimaryKey(book, author, name = "pk_bookauthor_act")
 }
+
 object BookTranslators : Table(name = "book_translators") {
-    val book = reference("book", BookTable, fkName = "fk_booktranslators_book_id", onUpdate = ReferenceOption.CASCADE, onDelete = ReferenceOption.CASCADE)
+    val book =
+        reference(
+            "book",
+            BookTable,
+            fkName = "fk_booktranslators_book_id",
+            onUpdate = ReferenceOption.CASCADE,
+            onDelete = ReferenceOption.CASCADE,
+        )
     val translator = reference("translator", AuthorTable, fkName = "fk_booktranslators_translator_id", onUpdate = ReferenceOption.CASCADE)
     override val primaryKey = PrimaryKey(book, translator, name = "pk_booktranslator_act")
 }
+
 object BookNarrators : Table(name = "book_narrators") {
-    val book = reference("book", BookTable, fkName = "fk_booknarrators_book_id", onUpdate = ReferenceOption.CASCADE, onDelete = ReferenceOption.CASCADE)
+    val book =
+        reference(
+            "book",
+            BookTable,
+            fkName = "fk_booknarrators_book_id",
+            onUpdate = ReferenceOption.CASCADE,
+            onDelete = ReferenceOption.CASCADE,
+        )
     val narrator = reference("narrator", AuthorTable, fkName = "fk_booknarrators_narrator_id", onUpdate = ReferenceOption.CASCADE)
     override val primaryKey = PrimaryKey(book, narrator, name = "pk_booknarrator_act")
 }

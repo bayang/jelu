@@ -9,8 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
 
 @SpringBootTest
-class FileMetadataServiceTest(@Autowired private val fileMetadataService: FileMetadataService) {
-
+class FileMetadataServiceTest(
+    @Autowired private val fileMetadataService: FileMetadataService,
+) {
     @Test
     fun testParseEpub() {
         val metadata =

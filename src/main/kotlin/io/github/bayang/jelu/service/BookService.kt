@@ -63,7 +63,6 @@ class BookService(
     private val searchIndexService: SearchIndexService,
     private val luceneHelper: LuceneHelper,
 ) {
-
     @Transactional
     fun findAll(
         query: String?,
@@ -86,7 +85,17 @@ class BookService(
                 0,
             )
         } else {
-            return bookRepository.findAll(entitiesIds, pageable, user, eventTypes, toRead, owned, borrowed, libraryFilter).map { it.toBookDto() }
+            return bookRepository
+                .findAll(
+                    entitiesIds,
+                    pageable,
+                    user,
+                    eventTypes,
+                    toRead,
+                    owned,
+                    borrowed,
+                    libraryFilter,
+                ).map { it.toBookDto() }
         }
     }
 
@@ -104,16 +113,29 @@ class BookService(
         user: UserDto,
         libraryFilter: LibraryFilter,
     ): Page<BookDto> =
-        bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, narrators, tags, pageable, user, libraryFilter).map { it.toBookDto() }
+        bookRepository.findAll(title, isbn10, isbn13, series, authors, translators, narrators, tags, pageable, user, libraryFilter).map {
+            it.toBookDto()
+        }
 
     @Transactional
-    fun findAllAuthors(name: String?, role: Role = Role.ANY, pageable: Pageable): Page<AuthorDto> = bookRepository.findAllAuthors(name, role = role, pageable = pageable).map { it.toAuthorDto() }
+    fun findAllAuthors(
+        name: String?,
+        role: Role = Role.ANY,
+        pageable: Pageable,
+    ): Page<AuthorDto> = bookRepository.findAllAuthors(name, role = role, pageable = pageable).map { it.toAuthorDto() }
 
     @Transactional
-    fun findAllTags(name: String?, pageable: Pageable): Page<TagDto> = bookRepository.findAllTags(name, pageable).map { it.toTagDto() }
+    fun findAllTags(
+        name: String?,
+        pageable: Pageable,
+    ): Page<TagDto> = bookRepository.findAllTags(name, pageable).map { it.toTagDto() }
 
     @Transactional
-    fun findAllSeries(name: String?, userId: UUID?, pageable: Pageable): Page<SeriesDto> = bookRepository.findAllSeries(name, userId, pageable).map { it.toSeriesDto() }
+    fun findAllSeries(
+        name: String?,
+        userId: UUID?,
+        pageable: Pageable,
+    ): Page<SeriesDto> = bookRepository.findAllSeries(name, userId, pageable).map { it.toSeriesDto() }
 
     @Transactional
     fun findBookById(bookId: UUID): BookDto = bookRepository.findBookById(bookId).toBookDto()
@@ -122,31 +144,45 @@ class BookService(
     fun findAuthorsById(authorId: UUID): AuthorDto = bookRepository.findAuthorsById(authorId).toAuthorDto()
 
     @Transactional
-    fun findPublishers(name: String?, pageable: Pageable): Page<String> = bookRepository.findAllPublishers(name, pageable)
+    fun findPublishers(
+        name: String?,
+        pageable: Pageable,
+    ): Page<String> = bookRepository.findAllPublishers(name, pageable)
 
     /**
      * Image not updated, to add or update an image call the variant which accepts a MultiPartFile
      */
     @Transactional
-    fun update(bookId: UUID, book: BookUpdateDto): BookDto {
+    fun update(
+        bookId: UUID,
+        book: BookUpdateDto,
+    ): BookDto {
         val res = bookRepository.update(bookId, book)
         searchIndexService.bookUpdated(res)
         return res.toBookDto()
     }
 
     // call saveImages in case image url is set ?
+
     /**
      * Image not updated, to add or update an image call the variant which accepts a MultiPartFile
      */
     @Transactional
-    fun update(userBookId: UUID, book: UserBookUpdateDto): UserBookLightDto {
+    fun update(
+        userBookId: UUID,
+        book: UserBookUpdateDto,
+    ): UserBookLightDto {
         val res = bookRepository.update(userBookId, book)
         searchIndexService.bookUpdated(res.book)
         return res.toUserBookLightDto()
     }
 
     @Transactional
-    fun update(userBookId: UUID, book: UserBookUpdateDto, file: MultipartFile?): UserBookLightDto {
+    fun update(
+        userBookId: UUID,
+        book: UserBookUpdateDto,
+        file: MultipartFile?,
+    ): UserBookLightDto {
         val updated: UserBook = bookRepository.update(userBookId, book)
         val previousImage: String? = updated.book.image
         var backup: File? = null
@@ -164,7 +200,11 @@ class BookService(
                     fileManager.deleteImage(previousImage)
                 }
             }
-        } else if (file == null && !book.book?.image.isNullOrBlank() && !previousImage.isNullOrBlank() && previousImage.equals(book.book?.image, false)) {
+        } else if (file == null &&
+            !book.book?.image.isNullOrBlank() &&
+            !previousImage.isNullOrBlank() &&
+            previousImage.equals(book.book?.image, false)
+        ) {
             // no multipart file and image field in update dto is the same as in BDD -> no change
             skipSave = true
         }
@@ -177,7 +217,8 @@ class BookService(
                     Files.move(currentImage.toPath(), backup.toPath())
                 }
             }
-            val savedImage: String? = saveImages(file, updated.book.title, updated.book.id.toString(), book.book?.image, properties.files.images)
+            val savedImage: String? =
+                saveImages(file, updated.book.title, updated.book.id.toString(), book.book?.image, properties.files.images)
             updated.book.image = savedImage
             // we had a previous image and we saved a new one : delete the old one
             if (backup != null && backup.exists() && savedImage != null && savedImage.isNotBlank()) {
@@ -189,13 +230,18 @@ class BookService(
     }
 
     @Transactional
-    fun save(userBook: CreateUserBookDto, user: UserDto, file: MultipartFile?): UserBookLightDto {
+    fun save(
+        userBook: CreateUserBookDto,
+        user: UserDto,
+        file: MultipartFile?,
+    ): UserBookLightDto {
         var newBook = false
-        val book: Book = if (userBook.book.id != null) {
-            bookRepository.update(userBook.book.id, fromBookCreateDto(userBook.book))
-        } else {
-            bookRepository.save(userBook.book).also { newBook = true }
-        }
+        val book: Book =
+            if (userBook.book.id != null) {
+                bookRepository.update(userBook.book.id, fromBookCreateDto(userBook.book))
+            } else {
+                bookRepository.save(userBook.book).also { newBook = true }
+            }
         val created: UserBook = bookRepository.save(book, user, userBook)
         if (userBook.lastReadingEvent != null) {
             eventRepository.save(
@@ -243,14 +289,23 @@ class BookService(
     }
 
     @Transactional
-    fun save(book: BookCreateDto, file: MultipartFile?): BookDto {
+    fun save(
+        book: BookCreateDto,
+        file: MultipartFile?,
+    ): BookDto {
         val saved: Book = bookRepository.save(book)
         saved.image = saveImages(file, saved.title, saved.id.toString(), book.image, properties.files.images)
         searchIndexService.bookAdded(saved)
         return saved.toBookDto()
     }
 
-    fun saveImages(file: MultipartFile?, title: String, id: String, dtoImage: String?, targetDir: String): String? {
+    fun saveImages(
+        file: MultipartFile?,
+        title: String,
+        id: String,
+        dtoImage: String?,
+        targetDir: String,
+    ): String? {
         var importedFile = false
         var savedImage: String? = null
         if (file != null) {
@@ -270,11 +325,12 @@ class BookService(
             try {
                 // file already exists in the right folder, just rename it
                 if (dtoImage.startsWith(CalibreMetadataProvider.FILE_PREFIX)) {
-                    val targetFilename: String = imageName(
-                        slugify(title),
-                        id,
-                        FilenameUtils.getExtension(dtoImage),
-                    )
+                    val targetFilename: String =
+                        imageName(
+                            slugify(title),
+                            id,
+                            FilenameUtils.getExtension(dtoImage),
+                        )
                     val currentFile = File(targetDir, "$dtoImage.bak")
                     val targetFile = File(currentFile.parent, targetFilename)
                     val succeeded = currentFile.renameTo(targetFile)
@@ -282,12 +338,13 @@ class BookService(
                     savedImage = targetFilename
                 } else if (dtoImage.startsWith("http://", true) || dtoImage.startsWith("https://", true)) {
                     // file is from the internet
-                    val destFileName: String = downloadService.download(
-                        dtoImage,
-                        slugify(title),
-                        id,
-                        targetDir,
-                    )
+                    val destFileName: String =
+                        downloadService.download(
+                            dtoImage,
+                            slugify(title),
+                            id,
+                            targetDir,
+                        )
                     savedImage = destFileName
                 } else {
                     // file was picked on the server
@@ -296,11 +353,12 @@ class BookService(
                         logger.debug { "invalid file $dtoImage" }
                         return null
                     }
-                    val targetFilename: String = imageName(
-                        slugify(title),
-                        id,
-                        FilenameUtils.getExtension(dtoImage),
-                    )
+                    val targetFilename: String =
+                        imageName(
+                            slugify(title),
+                            id,
+                            FilenameUtils.getExtension(dtoImage),
+                        )
                     val targetFile = File(targetDir, targetFilename)
                     file.copyTo(targetFile)
                     savedImage = targetFilename
@@ -320,21 +378,32 @@ class BookService(
 
     // call saveImages in case image url is set
     @Transactional
-    fun updateAuthor(authorId: UUID, author: AuthorUpdateDto): AuthorDto {
+    fun updateAuthor(
+        authorId: UUID,
+        author: AuthorUpdateDto,
+    ): AuthorDto {
         val res = bookRepository.updateAuthor(authorId, author)
         searchIndexService.authorUpdated(authorId)
         return res.toAuthorDto()
     }
 
     @Transactional
-    fun updateAuthor(authorId: UUID, author: AuthorUpdateDto, file: MultipartFile?): AuthorDto {
+    fun updateAuthor(
+        authorId: UUID,
+        author: AuthorUpdateDto,
+        file: MultipartFile?,
+    ): AuthorDto {
         var updated: Author = bookRepository.updateAuthor(authorId, author)
         val previousImage: String? = updated.image
         var skipSave = false
         // no multipart image and url image field is empty in udate dto
         if (file == null && author.image.isNullOrBlank()) {
             skipSave = true
-        } else if (file == null && !author.image.isNullOrBlank() && !previousImage.isNullOrBlank() && previousImage.equals(author.image, false)) {
+        } else if (file == null &&
+            !author.image.isNullOrBlank() &&
+            !previousImage.isNullOrBlank() &&
+            previousImage.equals(author.image, false)
+        ) {
             // no multipart file and image field in update dto is the same as in BDD -> no change
             skipSave = true
         }
@@ -361,7 +430,11 @@ class BookService(
     }
 
     @Transactional
-    fun updateSeries(seriesId: UUID, series: SeriesUpdateDto, user: UserDto): SeriesDto {
+    fun updateSeries(
+        seriesId: UUID,
+        series: SeriesUpdateDto,
+        user: UserDto,
+    ): SeriesDto {
         val res = bookRepository.updateSeries(seriesId, series, user)
         searchIndexService.seriesUpdated(seriesId)
         return res.toSeriesDto()
@@ -379,64 +452,68 @@ class BookService(
         owned: Boolean? = null,
         borrowed: Boolean? = null,
         pageable: Pageable,
-    ): Page<UserBookWithoutEventsAndUserDto> {
-        return bookRepository.findUserBookByCriteria(userId, bookId, eventTypes, toRead, owned, borrowed, pageable).map { it.toUserBookWthoutEventsAndUserDto() }
-    }
+    ): Page<UserBookWithoutEventsAndUserDto> =
+        bookRepository.findUserBookByCriteria(userId, bookId, eventTypes, toRead, owned, borrowed, pageable).map {
+            it.toUserBookWthoutEventsAndUserDto()
+        }
 
     @Transactional
-    fun findOrphanTags(pageable: Pageable): Page<TagDto> {
-        return bookRepository.findOrphanTags(pageable).map { tag -> tag.toTagDto() }
-    }
+    fun findOrphanTags(pageable: Pageable): Page<TagDto> = bookRepository.findOrphanTags(pageable).map { tag -> tag.toTagDto() }
 
     @Transactional
-    fun findOrphanAuthors(pageable: Pageable): Page<AuthorDto> {
-        return bookRepository.findOrphanAuthors(pageable).map { author -> author.toAuthorDto() }
-    }
+    fun findOrphanAuthors(pageable: Pageable): Page<AuthorDto> =
+        bookRepository.findOrphanAuthors(pageable).map { author -> author.toAuthorDto() }
 
     @Transactional
-    fun findOrphanSeries(pageable: Pageable): Page<SeriesDto> {
-        return bookRepository.findOrphanSeries(pageable).map { series -> series.toSeriesDto() }
-    }
+    fun findOrphanSeries(pageable: Pageable): Page<SeriesDto> =
+        bookRepository.findOrphanSeries(pageable).map { series -> series.toSeriesDto() }
 
     @Transactional
-    fun findTagById(tagId: UUID, user: UserDto): TagDto {
-        return bookRepository.findTagById(tagId).toTagDto()
-    }
+    fun findTagById(
+        tagId: UUID,
+        user: UserDto,
+    ): TagDto = bookRepository.findTagById(tagId).toTagDto()
 
     @Transactional
-    fun findTagBooksById(tagId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter, eventTypes: List<ReadingEventType>?): Page<BookDto> {
-        return bookRepository.findTagBooksById(tagId, user, pageable, libaryFilter, eventTypes).map { book -> book.toBookDto() }
-    }
+    fun findTagBooksById(
+        tagId: UUID,
+        user: UserDto,
+        pageable: Pageable,
+        libaryFilter: LibraryFilter,
+        eventTypes: List<ReadingEventType>?,
+    ): Page<BookDto> = bookRepository.findTagBooksById(tagId, user, pageable, libaryFilter, eventTypes).map { book -> book.toBookDto() }
 
     @Transactional
-    fun findSeriesBooksById(seriesId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter): Page<BookDto> {
-        return bookRepository.findSeriesBooksById(seriesId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
-    }
+    fun findSeriesBooksById(
+        seriesId: UUID,
+        user: UserDto,
+        pageable: Pageable,
+        libaryFilter: LibraryFilter,
+    ): Page<BookDto> = bookRepository.findSeriesBooksById(seriesId, user, pageable, libaryFilter).map { book -> book.toBookDto() }
 
     @Transactional
-    fun findSeriesById(seriesId: UUID): SeriesDto {
-        return bookRepository.findSeriesById(seriesId).toSeriesDto()
-    }
+    fun findSeriesById(seriesId: UUID): SeriesDto = bookRepository.findSeriesById(seriesId).toSeriesDto()
 
     @Transactional
-    fun findSeriesById(seriesId: UUID, userId: UUID): SeriesDto {
-        return bookRepository.findSeriesById(seriesId, userId).toSeriesDto()
-    }
+    fun findSeriesById(
+        seriesId: UUID,
+        userId: UUID,
+    ): SeriesDto = bookRepository.findSeriesById(seriesId, userId).toSeriesDto()
 
     @Transactional
-    fun findSeriesRating(seriesId: UUID, userId: UUID): SeriesRatingDto? {
-        return bookRepository.findSeriesRating(seriesId, userId)?.toSeriesRatingDto()
-    }
+    fun findSeriesRating(
+        seriesId: UUID,
+        userId: UUID,
+    ): SeriesRatingDto? = bookRepository.findSeriesRating(seriesId, userId)?.toSeriesRatingDto()
 
     @Transactional
-    fun save(tag: TagDto): TagDto {
-        return bookRepository.save(tag).toTagDto()
-    }
+    fun save(tag: TagDto): TagDto = bookRepository.save(tag).toTagDto()
 
     @Transactional
-    fun saveSeries(series: SeriesCreateDto, user: UserDto): SeriesDto {
-        return bookRepository.saveSeries(series, user).toSeriesDto()
-    }
+    fun saveSeries(
+        series: SeriesCreateDto,
+        user: UserDto,
+    ): SeriesDto = bookRepository.saveSeries(series, user).toSeriesDto()
 
     @Transactional
     fun deleteUserBookById(userbookId: UUID) {
@@ -450,13 +527,19 @@ class BookService(
     }
 
     @Transactional
-    fun deleteTagFromBook(bookId: UUID, tagId: UUID) {
+    fun deleteTagFromBook(
+        bookId: UUID,
+        tagId: UUID,
+    ) {
         bookRepository.deleteTagFromBook(bookId, tagId)
         searchIndexService.bookUpdated(bookId)
     }
 
     @Transactional
-    fun deleteTagsFromBook(bookId: UUID, tagIds: List<UUID>) {
+    fun deleteTagsFromBook(
+        bookId: UUID,
+        tagIds: List<UUID>,
+    ) {
         bookRepository.deleteTagsFromBook(bookId, tagIds)
         searchIndexService.bookUpdated(bookId)
     }
@@ -504,7 +587,10 @@ class BookService(
     }
 
     @Transactional
-    fun deleteSeriesFromBook(bookId: UUID, seriesId: UUID) {
+    fun deleteSeriesFromBook(
+        bookId: UUID,
+        seriesId: UUID,
+    ) {
         bookRepository.deleteSeriesFromBook(bookId, seriesId)
         searchIndexService.bookUpdated(bookId)
     }
@@ -514,7 +600,10 @@ class BookService(
      * The author is removed only from that book.
      */
     @Transactional
-    fun deleteAuthorFromBook(bookId: UUID, authorId: UUID) {
+    fun deleteAuthorFromBook(
+        bookId: UUID,
+        authorId: UUID,
+    ) {
         bookRepository.deleteAuthorFromBook(bookId, authorId)
         searchIndexService.bookUpdated(bookId)
     }
@@ -524,7 +613,10 @@ class BookService(
      * The translator is removed only from that book.
      */
     @Transactional
-    fun deleteTranslatorFromBook(bookId: UUID, translatorId: UUID) {
+    fun deleteTranslatorFromBook(
+        bookId: UUID,
+        translatorId: UUID,
+    ) {
         bookRepository.deleteTranslatorFromBook(bookId, translatorId)
         searchIndexService.bookUpdated(bookId)
     }
@@ -534,7 +626,10 @@ class BookService(
      * The narrator is removed only from that book.
      */
     @Transactional
-    fun deleteNarratorFromBook(bookId: UUID, narratorId: UUID) {
+    fun deleteNarratorFromBook(
+        bookId: UUID,
+        narratorId: UUID,
+    ) {
         bookRepository.deleteNarratorFromBook(bookId, narratorId)
         searchIndexService.bookUpdated(bookId)
     }
@@ -556,9 +651,13 @@ class BookService(
     }
 
     @Transactional
-    fun findAuthorBooksById(authorId: UUID, user: UserDto, pageable: Pageable, libaryFilter: LibraryFilter, role: Role = Role.ANY): Page<BookDto> {
-        return bookRepository.findAuthorBooksById(authorId, user, pageable, libaryFilter, role).map { book -> book.toBookDto() }
-    }
+    fun findAuthorBooksById(
+        authorId: UUID,
+        user: UserDto,
+        pageable: Pageable,
+        libaryFilter: LibraryFilter,
+        role: Role = Role.ANY,
+    ): Page<BookDto> = bookRepository.findAuthorBooksById(authorId, user, pageable, libaryFilter, role).map { book -> book.toBookDto() }
 
     @Transactional
     fun bulkEditUserbooks(userBookBulkUpdateDto: UserBookBulkUpdateDto): Int {
@@ -572,19 +671,28 @@ class BookService(
     }
 
     @Transactional
-    fun addTagsToBook(bookId: UUID, tagIds: List<UUID>): Int {
+    fun addTagsToBook(
+        bookId: UUID,
+        tagIds: List<UUID>,
+    ): Int {
         val res = bookRepository.addTagsToBook(bookId, tagIds)
         searchIndexService.bookUpdated(bookId)
         return res
     }
 
     @Transactional
-    fun save(seriesRatingDto: CreateSeriesRatingDto, user: UserDto): SeriesRatingDto {
-        return bookRepository.save(seriesRatingDto, user).toSeriesRatingDto()
-    }
+    fun save(
+        seriesRatingDto: CreateSeriesRatingDto,
+        user: UserDto,
+    ): SeriesRatingDto = bookRepository.save(seriesRatingDto, user).toSeriesRatingDto()
 
     @Transactional
-    fun mergeAuthors(authorId: UUID, otherId: UUID, authorUpdateDto: AuthorUpdateDto, user: UserDto): AuthorDto {
+    fun mergeAuthors(
+        authorId: UUID,
+        otherId: UUID,
+        authorUpdateDto: AuthorUpdateDto,
+        user: UserDto,
+    ): AuthorDto {
         val pageNum = 0
         val size = 30
         val author = bookRepository.findAuthorsById(authorId)
@@ -650,7 +758,5 @@ class BookService(
     }
 
     @Transactional
-    fun stats(userId: UUID): TotalsStatsDto {
-        return bookRepository.stats(userId)
-    }
+    fun stats(userId: UUID): TotalsStatsDto = bookRepository.stats(userId)
 }

@@ -24,10 +24,12 @@ private val logger = KotlinLogging.logger {}
 
 @Repository
 class ReviewRepository {
-
     fun findById(reviewId: UUID): Review = Review[reviewId]
 
-    fun save(reviewDto: CreateReviewDto, user: UserDto): Review {
+    fun save(
+        reviewDto: CreateReviewDto,
+        user: UserDto,
+    ): Review {
         val instant: Instant = nowInstant()
         return Review.new {
             this.creationDate = instant
@@ -74,7 +76,8 @@ class ReviewRepository {
         val total = query.count()
         query.limit(pageable.pageSize)
         query.offset(pageable.offset)
-        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(ReviewTable.reviewDate, SortOrder.DESC_NULLS_LAST), ReviewTable)
+        val orders: Array<Pair<Expression<*>, SortOrder>> =
+            parseSorts(pageable.sort, Pair(ReviewTable.reviewDate, SortOrder.DESC_NULLS_LAST), ReviewTable)
         query.orderBy(*orders)
         return PageImpl(
             Review.wrapRows(query).toList(),
@@ -83,8 +86,11 @@ class ReviewRepository {
         )
     }
 
-    fun update(reviewId: UUID, updateReviewDto: UpdateReviewDto): Review {
-        return Review[reviewId].apply {
+    fun update(
+        reviewId: UUID,
+        updateReviewDto: UpdateReviewDto,
+    ): Review =
+        Review[reviewId].apply {
             this.modificationDate = nowInstant()
             if (updateReviewDto.reviewDate != null) {
                 this.reviewDate = updateReviewDto.reviewDate
@@ -99,7 +105,6 @@ class ReviewRepository {
                 this.visibility = updateReviewDto.visibility
             }
         }
-    }
 
     fun delete(reviewId: UUID) {
         Review[reviewId].delete()

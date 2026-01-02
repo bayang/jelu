@@ -42,7 +42,6 @@ class CsvImportServiceTest(
     @Autowired private val csvImportService: CsvImportService,
     @Autowired private val importService: ImportService,
 ) {
-
     companion object {
         @TempDir
         lateinit var tempDir: File
@@ -68,7 +67,8 @@ class CsvImportServiceTest(
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
+        bookService
+            .findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
@@ -127,10 +127,16 @@ class CsvImportServiceTest(
                 Assertions.assertEquals("9780141973821", it.isbn13)
                 Assertions.assertEquals("Robert Louis Stevenson", it.authors)
                 Assertions.assertEquals(5, it.rating)
-                Assertions.assertTrue(it.review?.equals("Despite knowing the twist, I still enjoyed the book greatly. Excellently written.")!!)
+                Assertions.assertTrue(
+                    it.review?.equals("Despite knowing the twist, I still enjoyed the book greatly. Excellently written.")!!,
+                )
             } else if (it.title.equals("Povídky I")) {
                 Assertions.assertEquals(3, it.rating)
-                Assertions.assertTrue(it.review?.contains("Josefine (die Sängerin, oder Das Volk der Mäuse), and First Sorrow (Erstes Leid).<br/><br/>It should come as no surprise, then, that I like Kafka's more narrative-driven works better. In this collection, that would be:<br/><br/>(longer ones)<br/>* In the Penal Colony (In der Strafkolonie)<br/>* The Metamorphosis (Die Verwandlung)<br/>* The Stoker (Der Heizer)<br/>(shorter ones)<br/>* Before the Law (Vor dem Gesetz, amazing!)<br/>* The Dream (Ein Traum)<br/>* The Bucket")!!)
+                Assertions.assertTrue(
+                    it.review?.contains(
+                        "Josefine (die Sängerin, oder Das Volk der Mäuse), and First Sorrow (Erstes Leid).<br/><br/>It should come as no surprise, then, that I like Kafka's more narrative-driven works better. In this collection, that would be:<br/><br/>(longer ones)<br/>* In the Penal Colony (In der Strafkolonie)<br/>* The Metamorphosis (Die Verwandlung)<br/>* The Stoker (Der Heizer)<br/>(shorter ones)<br/>* Before the Law (Vor dem Gesetz, amazing!)<br/>* The Dream (Ein Traum)<br/>* The Bucket",
+                    )!!,
+                )
             }
         }
     }
@@ -139,7 +145,11 @@ class CsvImportServiceTest(
     fun testParseIsbnList() {
         val userId = user().id!!
         val csv = File(this::class.java.getResource("/csv-import/isbns-import.txt").file)
-        csvImportService.parse(csv, userId, ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = true, ImportSource.ISBN_LIST))
+        csvImportService.parse(
+            csv,
+            userId,
+            ImportConfigurationDto(shouldFetchMetadata = true, shouldFetchCovers = true, ImportSource.ISBN_LIST),
+        )
         val nb = importService.countByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
         Assertions.assertEquals(2, nb)
         val dtos = importService.getByprocessingStatusAndUser(ProcessingStatus.SAVED, userId)
@@ -219,19 +229,20 @@ class CsvImportServiceTest(
         var imported = userbooksPage.content[0]
         Assertions.assertEquals("2018", imported.book.publishedDate)
         Assertions.assertNull(imported.book.image)
-        val u = UserBookUpdateDto(
-            null,
-            null,
-            null,
-            BookCreateDto(
-                image = CalibreMetadataProvider.FILE_PREFIX + "test.jpg",
-            ),
-            null,
-            null,
-            null,
-            null,
-            priceInCents = null,
-        )
+        val u =
+            UserBookUpdateDto(
+                null,
+                null,
+                null,
+                BookCreateDto(
+                    image = CalibreMetadataProvider.FILE_PREFIX + "test.jpg",
+                ),
+                null,
+                null,
+                null,
+                null,
+                priceInCents = null,
+            )
         bookService.update(imported.id!!, u, null)
         userbooksPage = bookService.findUserBookByCriteria(userId, null, null, null, null, null, Pageable.ofSize(30))
         Assertions.assertEquals(1, userbooksPage.content.size)

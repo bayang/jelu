@@ -34,8 +34,12 @@ object BookTable : UUIDTable("book") {
     val language: Column<String?> = varchar("language", 30).nullable()
     val originalTitle: Column<String?> = varchar("original_title", 1000).nullable()
 }
-class Book(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class Book(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Book>(BookTable)
+
     var title by BookTable.title
     var creationDate by BookTable.creationDate
     var modificationDate by BookTable.modificationDate

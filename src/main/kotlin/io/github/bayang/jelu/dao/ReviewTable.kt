@@ -20,8 +20,12 @@ object ReviewTable : UUIDTable("review") {
     val rating: Column<Double> = double(name = "rating")
     val visibility = enumerationByName("visibility", 200, Visibility::class)
 }
-class Review(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class Review(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Review>(ReviewTable)
+
     var creationDate by ReviewTable.creationDate
     var modificationDate by ReviewTable.modificationDate
     var reviewDate by ReviewTable.reviewDate
@@ -31,18 +35,20 @@ class Review(id: EntityID<UUID>) : UUIDEntity(id) {
     var rating by ReviewTable.rating
     var visibility by ReviewTable.visibility
 
-    fun toReviewDto(): ReviewDto = ReviewDto(
-        id = this.id.value,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        reviewDate = this.reviewDate,
-        text = this.text,
-        visibility = this.visibility,
-        rating = this.rating,
-        user = this.user.id.value,
-        book = this.book.id.value,
-    )
+    fun toReviewDto(): ReviewDto =
+        ReviewDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            reviewDate = this.reviewDate,
+            text = this.text,
+            visibility = this.visibility,
+            rating = this.rating,
+            user = this.user.id.value,
+            book = this.book.id.value,
+        )
 }
+
 enum class Visibility {
     PUBLIC,
     PRIVATE,

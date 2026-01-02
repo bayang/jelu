@@ -11,9 +11,7 @@ fun nowInstant(): Instant = OffsetDateTime.now(ZoneId.systemDefault()).toInstant
 
 fun toInstant(date: LocalDate): Instant = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()
 
-fun lastEventDate(dto: ReadingEventDto): Instant? {
-    return dto.endDate ?: dto.startDate
-}
+fun lastEventDate(dto: ReadingEventDto): Instant? = dto.endDate ?: dto.startDate
 
 fun stringFormat(instant: Instant?): String {
     if (instant == null) {

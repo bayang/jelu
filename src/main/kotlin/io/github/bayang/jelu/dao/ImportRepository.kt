@@ -16,7 +16,6 @@ const val DEFAULT_BLOCK_SIZE: Int = 50
 
 @Repository
 class ImportRepository {
-
     fun deleteByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
         userId: UUID,
@@ -30,24 +29,24 @@ class ImportRepository {
     fun getByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
         userId: UUID,
-    ): List<ImportEntity> {
-        return ImportEntity.find { ImportEntityTable.processingStatus eq processingStatus and (ImportEntityTable.userId eq userId) }
+    ): List<ImportEntity> =
+        ImportEntity
+            .find { ImportEntityTable.processingStatus eq processingStatus and (ImportEntityTable.userId eq userId) }
             .limit(DEFAULT_BLOCK_SIZE)
             .toList()
-    }
 
     fun countByprocessingStatusAndUser(
         processingStatus: ProcessingStatus,
         userId: UUID,
-    ): Long = ImportEntity.count(ImportEntityTable.processingStatus eq processingStatus and(ImportEntityTable.userId eq userId))
+    ): Long = ImportEntity.count(ImportEntityTable.processingStatus eq processingStatus and (ImportEntityTable.userId eq userId))
 
     fun save(
         entity: ImportDto,
         processingStatus: ProcessingStatus,
         userId: UUID,
         shouldFetchMetadata: Boolean,
-    ): ImportEntity {
-        return ImportEntity.new {
+    ): ImportEntity =
+        ImportEntity.new {
             this.processingStatus = processingStatus
             val instant: Instant = nowInstant()
             this.creationDate = instant
@@ -72,21 +71,21 @@ class ImportRepository {
             this.rating = entity.rating
             this.review = entity.review
         }
-    }
 
     fun updateStatus(
         oldStatus: ProcessingStatus,
         newStatus: ProcessingStatus,
         userId: UUID,
-    ): Int {
-        return ImportEntityTable.update({ ImportEntityTable.processingStatus eq oldStatus and (ImportEntityTable.userId eq userId) }) {
+    ): Int =
+        ImportEntityTable.update({ ImportEntityTable.processingStatus eq oldStatus and (ImportEntityTable.userId eq userId) }) {
             it[processingStatus] = newStatus
         }
-    }
 
-    fun updateStatus(entityId: UUID, newStatus: ProcessingStatus): Int {
-        return ImportEntityTable.update({ ImportEntityTable.id eq entityId }) {
+    fun updateStatus(
+        entityId: UUID,
+        newStatus: ProcessingStatus,
+    ): Int =
+        ImportEntityTable.update({ ImportEntityTable.id eq entityId }) {
             it[processingStatus] = newStatus
         }
-    }
 }

@@ -33,8 +33,11 @@ object ImportEntityTable : UUIDTable("import_entity") {
     var review: Column<String?> = varchar("review", 500000).nullable()
 }
 
-class ImportEntity(id: EntityID<UUID>) : UUIDEntity(id) {
+class ImportEntity(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<ImportEntity>(ImportEntityTable)
+
     var creationDate by ImportEntityTable.creationDate
     var modificationDate by ImportEntityTable.modificationDate
     var processingStatus by ImportEntityTable.processingStatus
@@ -65,6 +68,7 @@ enum class ProcessingStatus {
     IMPORTED,
     ERROR,
 }
+
 enum class ImportSource {
     GOODREADS,
     STORYGRAPH,

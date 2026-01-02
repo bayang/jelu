@@ -13,7 +13,11 @@ import org.apache.lucene.analysis.standard.StandardTokenizer
  * see https://github.com/gotson/komga/tree/master/komga/src/main/kotlin/org/gotson/komga/infrastructure/search
  * for all the lucene related stuff
  */
-class MultiLingualNGramAnalyzer(private val minGram: Int, private val maxGram: Int, private val preserveOriginal: Boolean) : MultiLingualAnalyzer() {
+class MultiLingualNGramAnalyzer(
+    private val minGram: Int,
+    private val maxGram: Int,
+    private val preserveOriginal: Boolean,
+) : MultiLingualAnalyzer() {
     override fun createComponents(fieldName: String): TokenStreamComponents {
         val source: Tokenizer = StandardTokenizer()
         // run the widthfilter first before bigramming, it sometimes combines characters.

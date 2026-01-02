@@ -18,18 +18,22 @@ object UserTable : UUIDTable("user") {
     val provider = enumerationByName("provider", 200, Provider::class)
 }
 
-class User(id: EntityID<UUID>) : UUIDEntity(id) {
-    fun toUserDto(): UserDto = UserDto(
-        id = this.id.value,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        login = this.login,
-        password = "****",
-        isAdmin = this.isAdmin,
-        provider = this.provider,
-    )
+class User(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
+    fun toUserDto(): UserDto =
+        UserDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            login = this.login,
+            password = "****",
+            isAdmin = this.isAdmin,
+            provider = this.provider,
+        )
 
     companion object : UUIDEntityClass<User>(UserTable)
+
     var creationDate by UserTable.creationDate
     var modificationDate by UserTable.modificationDate
     var login by UserTable.login

@@ -46,7 +46,6 @@ class UsersController(
     private val sessionsRepo: FindByIndexNameSessionRepository<out Session>,
     private val sessionRegistry: SessionRegistry,
 ) {
-
     @Operation(description = "get the current session token that the caller should provide in the X-Auth-Token header")
     @GetMapping(path = ["/token"])
     fun getToken(session: HttpSession) = mapOf<String, String>("token" to session.id)
@@ -56,7 +55,10 @@ class UsersController(
     fun setupStatus(session: HttpSession) = mapOf<String, Boolean>("isInitialSetup" to repository.isInitialSetup())
 
     @GetMapping(path = ["/users/me"])
-    fun authenticatedUser(principal: Authentication, session: HttpSession): AuthenticationDto {
+    fun authenticatedUser(
+        principal: Authentication,
+        session: HttpSession,
+    ): AuthenticationDto {
         when (principal.principal) {
             is JeluUser -> {
                 logger.trace { "jelu user $principal" }
@@ -92,13 +94,19 @@ class UsersController(
     }
 
     @GetMapping(path = ["/users"])
-    fun users(@RequestParam(name = "q", required = false) searchTerm: String?): List<UserDto> = repository.findAll(searchTerm)
+    fun users(
+        @RequestParam(name = "q", required = false) searchTerm: String?,
+    ): List<UserDto> = repository.findAll(searchTerm)
 
     @GetMapping(path = ["/users/{id}"])
-    fun userById(@PathVariable("id") userId: UUID): UserDto = repository.findUserById(userId)
+    fun userById(
+        @PathVariable("id") userId: UUID,
+    ): UserDto = repository.findUserById(userId)
 
     @GetMapping(path = ["/username/{id}"])
-    fun usernameById(@PathVariable("id") userId: UUID) = mapOf<String, String>("username" to repository.findUserById(userId).login)
+    fun usernameById(
+        @PathVariable("id") userId: UUID,
+    ) = mapOf<String, String>("username" to repository.findUserById(userId).login)
 
     @PutMapping(path = ["/users/{id}"])
     fun updateUser(
@@ -113,11 +121,12 @@ class UsersController(
         if (principal.principal is JeluUser) {
             if ((principal.principal as JeluUser).user.isAdmin || (principal.principal as JeluUser).user.id == userId) {
                 // only admin user can remove or add admin rights
-                val cleanedUpdateUserDto: UpdateUserDto = if ((principal.principal as JeluUser).user.isAdmin) {
-                    user
-                } else {
-                    user.copy(isAdmin = null)
-                }
+                val cleanedUpdateUserDto: UpdateUserDto =
+                    if ((principal.principal as JeluUser).user.isAdmin) {
+                        user
+                    } else {
+                        user.copy(isAdmin = null)
+                    }
                 val res = repository.updateUser(userId, cleanedUpdateUserDto)
                 sessionRegistry.getAllSessions(res.login, false).forEach {
                     it.expireNow()
@@ -150,9 +159,7 @@ class UsersController(
     fun saveUser(
         @RequestBody @Valid
         user: CreateUserDto,
-    ): UserDto {
-        return repository.save(user)
-    }
+    ): UserDto = repository.save(user)
 
     @GetMapping(path = ["/users/history"])
     fun getUserHistory(principal: Authentication): MutableList<LoginHistoryInfoDto> {
@@ -167,7 +174,10 @@ class UsersController(
         return history
     }
 
-    private fun mapToHistoryDto(entry: Map.Entry<String, Session>, ctx: SecurityContextImpl?): LoginHistoryInfoDto {
+    private fun mapToHistoryDto(
+        entry: Map.Entry<String, Session>,
+        ctx: SecurityContextImpl?,
+    ): LoginHistoryInfoDto {
         val details = ctx?.authentication?.details as UserAgentWebAuthenticationDetails
         val jeluUser = ctx.authentication.principal as JeluUser
         return LoginHistoryInfoDto(

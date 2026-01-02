@@ -32,15 +32,12 @@ import java.util.UUID
 class BookQuoteController(
     private val bookQuoteService: BookQuoteService,
 ) {
-
     @PostMapping(path = ["/book-quotes"])
     fun createBookQuote(
         @RequestBody @Valid
         createBookQuoteDto: CreateBookQuoteDto,
         principal: Authentication,
-    ): BookQuoteDto {
-        return bookQuoteService.save(createBookQuoteDto, (principal.principal as JeluUser).user)
-    }
+    ): BookQuoteDto = bookQuoteService.save(createBookQuoteDto, (principal.principal as JeluUser).user)
 
     @GetMapping(path = ["/book-quotes"])
     fun bookQuotes(
@@ -48,18 +45,14 @@ class BookQuoteController(
         @RequestParam(name = "bookId", required = false) bookId: UUID?,
         @RequestParam(name = "visibility", required = false) visibility: Visibility?,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["creationDate"]) @ParameterObject pageable: Pageable,
-    ): Page<BookQuoteDto> {
-        return bookQuoteService.find(userId, bookId, visibility, pageable)
-    }
+    ): Page<BookQuoteDto> = bookQuoteService.find(userId, bookId, visibility, pageable)
 
     @PutMapping(path = ["/book-quotes/{id}"])
     fun updateBookQuote(
         @PathVariable("id") bookQuoteId: UUID,
         @RequestBody @Valid
         updateBookQuoteDto: UpdateBookQuoteDto,
-    ): BookQuoteDto {
-        return bookQuoteService.update(bookQuoteId, updateBookQuoteDto)
-    }
+    ): BookQuoteDto = bookQuoteService.update(bookQuoteId, updateBookQuoteDto)
 
     @GetMapping(path = ["/book-quotes/{id}"])
     fun getBookQuote(
@@ -75,7 +68,9 @@ class BookQuoteController(
 
     @ApiResponse(responseCode = "204", description = "Deleted the book quote")
     @DeleteMapping(path = ["/book-quotes/{id}"])
-    fun deleteBookQuoteById(@PathVariable("id") bookQuoteId: UUID): ResponseEntity<Unit> {
+    fun deleteBookQuoteById(
+        @PathVariable("id") bookQuoteId: UUID,
+    ): ResponseEntity<Unit> {
         bookQuoteService.delete(bookQuoteId)
         return ResponseEntity.noContent().build()
     }

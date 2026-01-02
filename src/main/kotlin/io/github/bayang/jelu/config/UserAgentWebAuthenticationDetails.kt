@@ -10,7 +10,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.security.web.authentication.WebAuthenticationDetails
 
 class UserAgentWebAuthenticationDetails : WebAuthenticationDetails {
-
     var userAgent: String = ""
 
     constructor(remoteAddress: String?, sessionId: String?, userAgent: String?) : super(remoteAddress, sessionId) {
@@ -41,8 +40,10 @@ class UserAgentWebAuthenticationDetails : WebAuthenticationDetails {
     isGetterVisibility = JsonAutoDetect.Visibility.NONE,
     creatorVisibility = JsonAutoDetect.Visibility.ANY,
 )
-class UserAgentWebAuthenticationDetailsMixin @JsonCreator constructor(
-    @JsonProperty("remoteAddress") remoteAddress: String?,
-    @JsonProperty("sessionId") sessionId: String?,
-    @JsonProperty("userAgent") userAgent: String?,
-)
+class UserAgentWebAuthenticationDetailsMixin
+    @JsonCreator
+    constructor(
+        @JsonProperty("remoteAddress") remoteAddress: String?,
+        @JsonProperty("sessionId") sessionId: String?,
+        @JsonProperty("userAgent") userAgent: String?,
+    )

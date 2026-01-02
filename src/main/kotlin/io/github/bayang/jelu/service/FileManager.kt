@@ -21,7 +21,6 @@ private val logger = KotlinLogging.logger {}
 class FileManager(
     private val jeluProperties: JeluProperties,
 ) {
-
     @Scheduled(cron = "\${files.metadataImportCleanCron:0 0 */6 * * *}")
     fun cleanMetadataImportFiles() {
         doCleanMetadataImportFiles()
@@ -37,14 +36,17 @@ class FileManager(
      */
     fun doCleanTemporaryImageFiles() {
         val now = OffsetDateTime.now(ZoneId.systemDefault()).toInstant()
-        Files.walk(Paths.get(jeluProperties.files.images)).use {
-                paths ->
-            paths.filter {
-                it.name.endsWith(".bak", true) &&
-                    it.getLastModifiedTime() != null &&
-                    it.getLastModifiedTime().toInstant().plus(4, ChronoUnit.DAYS).isBefore(now)
-            }
-                .forEach { deletePath(it) }
+        Files.walk(Paths.get(jeluProperties.files.images)).use { paths ->
+            paths
+                .filter {
+                    it.name.endsWith(".bak", true) &&
+                        it.getLastModifiedTime() != null &&
+                        it
+                            .getLastModifiedTime()
+                            .toInstant()
+                            .plus(4, ChronoUnit.DAYS)
+                            .isBefore(now)
+                }.forEach { deletePath(it) }
         }
     }
 
@@ -53,14 +55,17 @@ class FileManager(
      */
     fun doCleanMetadataImportFiles() {
         val now = OffsetDateTime.now(ZoneId.systemDefault()).toInstant()
-        Files.walk(Paths.get(jeluProperties.files.images)).use {
-                paths ->
-            paths.filter {
-                it.name.startsWith(CalibreMetadataProvider.FILE_PREFIX, true) &&
-                    it.getLastModifiedTime() != null &&
-                    it.getLastModifiedTime().toInstant().plus(1, ChronoUnit.HOURS).isBefore(now)
-            }
-                .forEach { deletePath(it) }
+        Files.walk(Paths.get(jeluProperties.files.images)).use { paths ->
+            paths
+                .filter {
+                    it.name.startsWith(CalibreMetadataProvider.FILE_PREFIX, true) &&
+                        it.getLastModifiedTime() != null &&
+                        it
+                            .getLastModifiedTime()
+                            .toInstant()
+                            .plus(1, ChronoUnit.HOURS)
+                            .isBefore(now)
+                }.forEach { deletePath(it) }
         }
     }
 

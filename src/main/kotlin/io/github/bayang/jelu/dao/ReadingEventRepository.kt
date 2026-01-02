@@ -29,7 +29,6 @@ private val logger = KotlinLogging.logger {}
 
 @Repository
 class ReadingEventRepository {
-
     fun findAll(
         eventTypes: List<ReadingEventType>?,
         userId: UUID?,
@@ -40,8 +39,10 @@ class ReadingEventRepository {
         endedBefore: LocalDate?,
         pageable: Pageable,
     ): Page<ReadingEvent> {
-        val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
-            .selectAll()
+        val query =
+            ReadingEventTable
+                .join(UserBookTable, JoinType.LEFT)
+                .selectAll()
         if (eventTypes != null && eventTypes.isNotEmpty()) {
             query.andWhere { ReadingEventTable.eventType inList eventTypes }
         }
@@ -70,7 +71,8 @@ class ReadingEventRepository {
         val total = query.count()
         query.limit(pageable.pageSize)
         query.offset(pageable.offset)
-        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(ReadingEventTable.modificationDate, SortOrder.DESC_NULLS_LAST), ReadingEventTable)
+        val orders: Array<Pair<Expression<*>, SortOrder>> =
+            parseSorts(pageable.sort, Pair(ReadingEventTable.modificationDate, SortOrder.DESC_NULLS_LAST), ReadingEventTable)
         query.orderBy(*orders)
         return PageImpl(
             ReadingEvent.wrapRows(query).toList(),
@@ -84,8 +86,10 @@ class ReadingEventRepository {
         userId: UUID?,
         bookId: UUID?,
     ): List<Int> {
-        val query = ReadingEventTable.join(UserBookTable, JoinType.LEFT)
-            .select(ReadingEventTable.endDate.year())
+        val query =
+            ReadingEventTable
+                .join(UserBookTable, JoinType.LEFT)
+                .select(ReadingEventTable.endDate.year())
         if (eventTypes != null && eventTypes.isNotEmpty()) {
             query.andWhere { ReadingEventTable.eventType inList eventTypes }
         }
@@ -100,7 +104,10 @@ class ReadingEventRepository {
         return query.map { resultRow -> resultRow[ReadingEventTable.endDate.year()] }.toList()
     }
 
-    fun save(createReadingEventDto: CreateReadingEventDto, targetUser: UserDto): ReadingEvent {
+    fun save(
+        createReadingEventDto: CreateReadingEventDto,
+        targetUser: UserDto,
+    ): ReadingEvent {
         if (createReadingEventDto.bookId == null) {
             throw JeluException("Missing bookId to create reading event")
         }
@@ -108,22 +115,30 @@ class ReadingEventRepository {
         return save(createReadingEventDto, foundBook, targetUser)
     }
 
-    fun save(createReadingEventDto: CreateReadingEventDto, book: Book, targetUser: UserDto): ReadingEvent {
+    fun save(
+        createReadingEventDto: CreateReadingEventDto,
+        book: Book,
+        targetUser: UserDto,
+    ): ReadingEvent {
         var found: UserBook? =
             UserBook.find { UserBookTable.user eq targetUser.id and (UserBookTable.book.eq(book.id)) }.firstOrNull()
         val instant: Instant = nowInstant()
         if (found == null) {
-            found = UserBook.new {
-                this.creationDate = instant
-                this.user = User[targetUser.id!!]
-                this.book = book
-            }
+            found =
+                UserBook.new {
+                    this.creationDate = instant
+                    this.user = User[targetUser.id!!]
+                    this.book = book
+                }
         }
         found.modificationDate = instant
         return save(found, createReadingEventDto)
     }
 
-    fun save(userBook: UserBook, createReadingEventDto: CreateReadingEventDto): ReadingEvent {
+    fun save(
+        userBook: UserBook,
+        createReadingEventDto: CreateReadingEventDto,
+    ): ReadingEvent {
         if (createReadingEventDto.startDate != null &&
             createReadingEventDto.eventDate != null &&
             createReadingEventDto.eventDate.isBefore(createReadingEventDto.startDate)
@@ -154,7 +169,9 @@ class ReadingEventRepository {
         }
         if (alreadyReadingEvent != null) {
             if (createReadingEventDto.eventDate == null || createReadingEventDto.eventDate.isAfter(alreadyReadingEvent.startDate)) {
-                logger.debug { "found ${userBook.readingEvents.count()} older events in CURRENTLY_READING state for book ${userBook.book.id}" }
+                logger.debug {
+                    "found ${userBook.readingEvents.count()} older events in CURRENTLY_READING state for book ${userBook.book.id}"
+                }
                 alreadyReadingEvent.eventType = createReadingEventDto.eventType
                 alreadyReadingEvent.modificationDate = instant
                 if (createReadingEventDto.eventType != ReadingEventType.CURRENTLY_READING) {
@@ -184,7 +201,10 @@ class ReadingEventRepository {
         }
     }
 
-    private fun synchronizeReadingProgress(createReadingEventDto: CreateReadingEventDto, userBook: UserBook) {
+    private fun synchronizeReadingProgress(
+        createReadingEventDto: CreateReadingEventDto,
+        userBook: UserBook,
+    ) {
         if (createReadingEventDto.eventType == ReadingEventType.CURRENTLY_READING) {
             // we start a book, for the first time or it is a re-read
             // set the progress to zero
@@ -199,15 +219,20 @@ class ReadingEventRepository {
         }
     }
 
-    private fun computeEndDate(createReadingEventDto: CreateReadingEventDto, instant: Instant): Instant? {
-        return if (createReadingEventDto.eventType != ReadingEventType.CURRENTLY_READING) {
+    private fun computeEndDate(
+        createReadingEventDto: CreateReadingEventDto,
+        instant: Instant,
+    ): Instant? =
+        if (createReadingEventDto.eventType != ReadingEventType.CURRENTLY_READING) {
             createReadingEventDto.eventDate ?: instant
         } else {
             null
         }
-    }
 
-    private fun computeStartDate(createReadingEventDto: CreateReadingEventDto, fallback: Instant): Instant {
+    private fun computeStartDate(
+        createReadingEventDto: CreateReadingEventDto,
+        fallback: Instant,
+    ): Instant {
         if (createReadingEventDto.startDate != null) {
             return createReadingEventDto.startDate
         }
@@ -227,7 +252,10 @@ class ReadingEventRepository {
         return fallback
     }
 
-    fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEvent {
+    fun updateReadingEvent(
+        readingEventId: UUID,
+        updateReadingEventDto: UpdateReadingEventDto,
+    ): ReadingEvent {
         val entity = ReadingEvent[readingEventId]
         if (updateReadingEventDto.startDate != null &&
             updateReadingEventDto.eventDate != null &&
@@ -256,8 +284,9 @@ class ReadingEventRepository {
                 this.startDate = updateReadingEventDto.startDate
             }
             this.eventType = updateReadingEventDto.eventType
-            val lastEvent = this.userBook.readingEvents
-                .maxByOrNull { e -> e.lastEventDate }
+            val lastEvent =
+                this.userBook.readingEvents
+                    .maxByOrNull { e -> e.lastEventDate }
             if (updateReadingEventDto.eventType == ReadingEventType.FINISHED && this.userBook.toRead == true) {
                 this.userBook.toRead = null
             }
@@ -279,8 +308,9 @@ class ReadingEventRepository {
         val entity: ReadingEvent = ReadingEvent[eventId]
         val userbook = entity.userBook
         entity.delete()
-        val lastEvent = userbook.readingEvents
-            .maxByOrNull { e -> e.modificationDate }
+        val lastEvent =
+            userbook.readingEvents
+                .maxByOrNull { e -> e.modificationDate }
         if (lastEvent == null) {
             userbook.lastReadingEvent = null
             userbook.lastReadingEventDate = null

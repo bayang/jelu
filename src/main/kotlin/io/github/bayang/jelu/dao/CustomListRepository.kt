@@ -20,8 +20,10 @@ private val logger = KotlinLogging.logger {}
 
 @Repository
 class CustomListRepository {
-
-    fun save(createCustomListDto: CustomListDto, userId: UUID): CustomList {
+    fun save(
+        createCustomListDto: CustomListDto,
+        userId: UUID,
+    ): CustomList {
         val instant: Instant = nowInstant()
         return CustomList.new {
             this.creationDate = instant
@@ -53,22 +55,26 @@ class CustomListRepository {
         name: String?,
         pageable: Pageable,
     ): Page<CustomList> {
-        val query = CustomListTable.join(UserTable, JoinType.LEFT)
-            .selectAll().where { CustomListTable.user eq user }
+        val query =
+            CustomListTable
+                .join(UserTable, JoinType.LEFT)
+                .selectAll()
+                .where { CustomListTable.user eq user }
         if (name != null) {
             query.andWhere { CustomListTable.name eq name }
         }
         val total = query.count()
         query.limit(pageable.pageSize)
         query.offset(pageable.offset)
-        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(
-            pageable.sort,
-            Pair(
-                CustomListTable.modificationDate,
-                SortOrder.DESC_NULLS_LAST,
-            ),
-            CustomListTable,
-        )
+        val orders: Array<Pair<Expression<*>, SortOrder>> =
+            parseSorts(
+                pageable.sort,
+                Pair(
+                    CustomListTable.modificationDate,
+                    SortOrder.DESC_NULLS_LAST,
+                ),
+                CustomListTable,
+            )
         query.orderBy(*orders)
         val res = CustomList.wrapRows(query).toList()
         return PageImpl(
@@ -83,13 +89,16 @@ class CustomListRepository {
         pageable: Pageable,
     ): Page<Book> {
         val uuids = bookIds.map { UUID.fromString(it) }
-        val query = BookTable.selectAll()
-            .withDistinct()
-            .where { BookTable.id inList uuids }
+        val query =
+            BookTable
+                .selectAll()
+                .withDistinct()
+                .where { BookTable.id inList uuids }
         val total = query.count()
         query.limit(pageable.pageSize)
         query.offset(pageable.offset)
-        val orders: Array<Pair<Expression<*>, SortOrder>> = parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
+        val orders: Array<Pair<Expression<*>, SortOrder>> =
+            parseSorts(pageable.sort, Pair(BookTable.title, SortOrder.ASC_NULLS_LAST), BookTable)
         query.orderBy(*orders)
         return PageImpl(
             query.map { resultRow -> Book.wrapRow(resultRow) },

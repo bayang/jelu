@@ -9,8 +9,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Component
-class ImportService(private val importRepository: ImportRepository) {
-
+class ImportService(
+    private val importRepository: ImportRepository,
+) {
     @Transactional
     fun save(
         entity: ImportDto,
@@ -35,7 +36,10 @@ class ImportService(private val importRepository: ImportRepository) {
     ): List<ImportEntity> = importRepository.getByprocessingStatusAndUser(processingStatus, userId)
 
     @Transactional
-    fun updateStatus(entityId: UUID, newStatus: ProcessingStatus): Int = importRepository.updateStatus(entityId, newStatus)
+    fun updateStatus(
+        entityId: UUID,
+        newStatus: ProcessingStatus,
+    ): Int = importRepository.updateStatus(entityId, newStatus)
 
     @Transactional
     fun countByprocessingStatusAndUser(

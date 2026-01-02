@@ -34,15 +34,12 @@ import java.util.UUID
 class ReviewsController(
     private val reviewService: ReviewService,
 ) {
-
     @PostMapping(path = ["/reviews"])
     fun createReview(
         @RequestBody @Valid
         createReviewDto: CreateReviewDto,
         principal: Authentication,
-    ): ReviewDto {
-        return reviewService.save(createReviewDto, (principal.principal as JeluUser).user)
-    }
+    ): ReviewDto = reviewService.save(createReviewDto, (principal.principal as JeluUser).user)
 
     @GetMapping(path = ["/reviews"])
     fun reviews(
@@ -67,9 +64,7 @@ class ReviewsController(
         @PathVariable("id") reviewId: UUID,
         @RequestBody @Valid
         updateReviewDto: UpdateReviewDto,
-    ): ReviewDto {
-        return reviewService.update(reviewId, updateReviewDto)
-    }
+    ): ReviewDto = reviewService.update(reviewId, updateReviewDto)
 
     @GetMapping(path = ["/reviews/{id}"])
     fun getReview(
@@ -85,7 +80,9 @@ class ReviewsController(
 
     @ApiResponse(responseCode = "204", description = "Deleted the review")
     @DeleteMapping(path = ["/reviews/{id}"])
-    fun deleteReviewById(@PathVariable("id") reviewId: UUID): ResponseEntity<Unit> {
+    fun deleteReviewById(
+        @PathVariable("id") reviewId: UUID,
+    ): ResponseEntity<Unit> {
         reviewService.delete(reviewId)
         return ResponseEntity.noContent().build()
     }

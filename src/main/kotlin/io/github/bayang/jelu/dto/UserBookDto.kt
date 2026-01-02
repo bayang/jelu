@@ -21,6 +21,7 @@ data class UserBookDto(
     val borrowed: Boolean?,
     val priceInCents: Long?,
 )
+
 data class UserBookLightDto(
     val id: UUID?,
     val creationDate: Instant?,
@@ -37,6 +38,7 @@ data class UserBookLightDto(
     val borrowed: Boolean?,
     val priceInCents: Long?,
 )
+
 data class UserBookLightWithoutBookDto(
     val id: UUID?,
     val creationDate: Instant?,
@@ -52,6 +54,7 @@ data class UserBookLightWithoutBookDto(
     val borrowed: Boolean?,
     val priceInCents: Long?,
 )
+
 data class UserBookWithoutEventsAndUserDto(
     val id: UUID?,
     val creationDate: Instant?,
@@ -69,6 +72,7 @@ data class UserBookWithoutEventsAndUserDto(
     val userAvgRating: Double? = null,
     val priceInCents: Long?,
 )
+
 data class UserBookWithoutEventsDto(
     val id: UUID?,
     val creationDate: Instant?,
@@ -83,6 +87,7 @@ data class UserBookWithoutEventsDto(
     val borrowed: Boolean?,
     val priceInCents: Long?,
 )
+
 data class CreateUserBookDto(
     val lastReadingEvent: ReadingEventType?,
     val lastReadingEventDate: Instant?,
@@ -95,6 +100,7 @@ data class CreateUserBookDto(
     val borrowed: Boolean?,
     val priceInCents: Long?,
 )
+
 data class UserBookUpdateDto(
     val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
@@ -106,6 +112,7 @@ data class UserBookUpdateDto(
     val borrowed: Boolean?,
     val priceInCents: Long?,
 )
+
 data class UserBookBulkUpdateDto(
     val ids: List<UUID>,
     val toRead: Boolean?,

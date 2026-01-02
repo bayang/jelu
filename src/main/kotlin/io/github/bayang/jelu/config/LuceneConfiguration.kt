@@ -14,7 +14,6 @@ import java.nio.file.Paths
 class LuceneConfiguration(
     private val jeluProperties: JeluProperties,
 ) {
-
     @Bean
     fun indexAnalyzer() =
         with(jeluProperties.lucene.indexAnalyzer) {
@@ -22,16 +21,13 @@ class LuceneConfiguration(
         }
 
     @Bean
-    fun searchAnalyzer() =
-        MultiLingualAnalyzer()
+    fun searchAnalyzer() = MultiLingualAnalyzer()
 
     @Bean
     @Profile("test")
-    fun memoryDirectory(): Directory =
-        ByteBuffersDirectory()
+    fun memoryDirectory(): Directory = ByteBuffersDirectory()
 
     @Bean
     @Profile("!test")
-    fun diskDirectory(): Directory =
-        FSDirectory.open(Paths.get(jeluProperties.lucene.dataDirectory))
+    fun diskDirectory(): Directory = FSDirectory.open(Paths.get(jeluProperties.lucene.dataDirectory))
 }

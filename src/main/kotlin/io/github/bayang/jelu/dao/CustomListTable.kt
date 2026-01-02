@@ -19,8 +19,12 @@ object CustomListTable : UUIDTable("custom_list") {
     val public: Column<Boolean> = bool("public")
     val actionable: Column<Boolean> = bool("actionable")
 }
-class CustomList(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class CustomList(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<CustomList>(CustomListTable)
+
     var creationDate by CustomListTable.creationDate
     var modificationDate by CustomListTable.modificationDate
     var user by User referencedOn CustomListTable.user
@@ -29,13 +33,14 @@ class CustomList(id: EntityID<UUID>) : UUIDEntity(id) {
     var public by CustomListTable.public
     var actionable by CustomListTable.actionable
 
-    fun toCustomListDto(): CustomListDto = CustomListDto(
-        id = this.id.value,
-        name = this.name,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        tags = this.tags,
-        public = this.public,
-        actionable = this.actionable,
-    )
+    fun toCustomListDto(): CustomListDto =
+        CustomListDto(
+            id = this.id.value,
+            name = this.name,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            tags = this.tags,
+            public = this.public,
+            actionable = this.actionable,
+        )
 }

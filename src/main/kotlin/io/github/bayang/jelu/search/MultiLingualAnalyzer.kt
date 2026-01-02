@@ -24,7 +24,10 @@ open class MultiLingualAnalyzer : Analyzer() {
         return TokenStreamComponents(source, filter)
     }
 
-    override fun normalize(fieldName: String?, `in`: TokenStream): TokenStream {
+    override fun normalize(
+        fieldName: String?,
+        `in`: TokenStream,
+    ): TokenStream {
         var filter: TokenStream = CJKWidthFilter(`in`)
         filter = LowerCaseFilter(filter)
         filter = ASCIIFoldingFilter(filter)

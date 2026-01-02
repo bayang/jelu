@@ -14,11 +14,13 @@ data class BookQuoteDto(
     val book: UUID?,
     val position: String?,
 )
+
 data class UpdateBookQuoteDto(
     val text: String?,
     val visibility: Visibility?,
     val position: String?,
 )
+
 data class CreateBookQuoteDto(
     val text: String,
     val visibility: Visibility,

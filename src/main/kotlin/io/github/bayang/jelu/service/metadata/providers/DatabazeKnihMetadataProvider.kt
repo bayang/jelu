@@ -11,7 +11,6 @@ import java.util.Optional
 
 @Service
 class DatabazeKnihMetadataProvider : IMetaDataProvider {
-
     private val logger = LoggerFactory.getLogger(DatabazeKnihMetadataProvider::class.java)
 
     override fun name(): String = "databazeknih"
@@ -24,16 +23,17 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         config: Map<String, String>,
     ): Optional<MetadataDto> {
         // Build search query from ISBN or title+author or just title
-        val query = when {
-            !metadataRequestDto.isbn.isNullOrBlank() -> metadataRequestDto.isbn
-            !metadataRequestDto.title.isNullOrBlank() && !metadataRequestDto.authors.isNullOrBlank() ->
-                "${metadataRequestDto.title} ${metadataRequestDto.authors}"
-            !metadataRequestDto.title.isNullOrBlank() -> metadataRequestDto.title
-            else -> {
-                logger.debug("No valid query for DatabazeKnih")
-                return Optional.empty()
+        val query =
+            when {
+                !metadataRequestDto.isbn.isNullOrBlank() -> metadataRequestDto.isbn
+                !metadataRequestDto.title.isNullOrBlank() && !metadataRequestDto.authors.isNullOrBlank() ->
+                    "${metadataRequestDto.title} ${metadataRequestDto.authors}"
+                !metadataRequestDto.title.isNullOrBlank() -> metadataRequestDto.title
+                else -> {
+                    logger.debug("No valid query for DatabazeKnih")
+                    return Optional.empty()
+                }
             }
-        }
 
         logger.debug("Searching DatabazeKnih with query: \"$query\"")
 
@@ -113,7 +113,11 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
     /**
      * Fetch and populate extended book details (fallbacks included)
      */
-    private fun fetchExtendedDetails(sid: String, dto: MetadataDto, searchedIsbn: String?) {
+    private fun fetchExtendedDetails(
+        sid: String,
+        dto: MetadataDto,
+        searchedIsbn: String?,
+    ) {
         val detailUrl = "https://www.databazeknih.cz/book-detail-more-info/$sid"
         logger.debug("Fetching extended details from: $detailUrl")
         val doc = fetchDocument(detailUrl) ?: return
@@ -132,8 +136,10 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
                 val cleaned = raw.replace("-", "").replace(" ", "")
 
                 // Check if searched ISBN matches any candidate
-                if (searchedIsbn != null && cleaned.equals(
-                        searchedIsbn.replace("-", "").replace(" ", ""), true,
+                if (searchedIsbn != null &&
+                    cleaned.equals(
+                        searchedIsbn.replace("-", "").replace(" ", ""),
+                        true,
                     )
                 ) {
                     foundMatch = true
@@ -160,8 +166,9 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         }
 
         // Language
-        val langElement = doc.select("[itemprop=language]").firstOrNull()
-            ?: doc.select("span.category:contains(Jazyk vydání:) + span").firstOrNull()
+        val langElement =
+            doc.select("[itemprop=language]").firstOrNull()
+                ?: doc.select("span.category:contains(Jazyk vydání:) + span").firstOrNull()
         langElement?.text()?.trim()?.let {
             dto.language = mapLanguage(it)
         }
@@ -170,7 +177,12 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         doc.select("[itemprop=numberOfPages]").firstOrNull()?.text()?.toIntOrNull()?.let {
             dto.pageCount = it
         } ?: run {
-            val fallbackPage = doc.select("span.category:contains(Počet stran:) + span").firstOrNull()?.text()?.trim()
+            val fallbackPage =
+                doc
+                    .select("span.category:contains(Počet stran:) + span")
+                    .firstOrNull()
+                    ?.text()
+                    ?.trim()
             fallbackPage?.toIntOrNull()?.let {
                 dto.pageCount = it
             }
@@ -184,11 +196,23 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         val dto = MetadataDto()
 
         // Title
-        doc.select("meta[property=og:title]").firstOrNull()?.attr("content")?.let { dto.title = it }
+        doc
+            .select("meta[property=og:title]")
+            .firstOrNull()
+            ?.attr("content")
+            ?.let { dto.title = it }
 
         // Image (prefer inline high-res cover image if available)
-        doc.select("meta[property=og:image]").firstOrNull()?.attr("content")?.let { dto.image = it }
-        doc.select("#icover_mid img.kniha_img.coverOnDetail").firstOrNull()?.attr("src")?.let { dto.image = it }
+        doc
+            .select("meta[property=og:image]")
+            .firstOrNull()
+            ?.attr("content")
+            ?.let { dto.image = it }
+        doc
+            .select("#icover_mid img.kniha_img.coverOnDetail")
+            .firstOrNull()
+            ?.attr("src")
+            ?.let { dto.image = it }
 
         // Authors
         val authors = mutableSetOf<String>()
@@ -203,27 +227,52 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
         }
 
         // Publisher
-        doc.select("a[href*='/nakladatelstvi/']").firstOrNull()?.text()?.let { dto.publisher = it }
+        doc
+            .select("a[href*='/nakladatelstvi/']")
+            .firstOrNull()
+            ?.text()
+            ?.let { dto.publisher = it }
 
         // Year published
-        doc.select("span.category:contains(Vydáno:)").firstOrNull()
-            ?.nextElementSibling()?.text()?.trim()?.let { raw ->
+        doc
+            .select("span.category:contains(Vydáno:)")
+            .firstOrNull()
+            ?.nextElementSibling()
+            ?.text()
+            ?.trim()
+            ?.let { raw ->
                 dto.publishedDate = raw.replace("[^0-9]".toRegex(), "")
             }
 
         // Page count (basic info on book page)
-        doc.select("#more_book_info span.category:contains(Počet stran:)").firstOrNull()
-            ?.nextElementSibling()?.text()?.trim()?.toIntOrNull()?.let { dto.pageCount = it }
+        doc
+            .select("#more_book_info span.category:contains(Počet stran:)")
+            .firstOrNull()
+            ?.nextElementSibling()
+            ?.text()
+            ?.trim()
+            ?.toIntOrNull()
+            ?.let { dto.pageCount = it }
 
         // Language
-        doc.select("#more_book_info span.category:contains(Jazyk vydání:)").firstOrNull()
-            ?.nextElementSibling()?.text()?.trim()?.let {
+        doc
+            .select("#more_book_info span.category:contains(Jazyk vydání:)")
+            .firstOrNull()
+            ?.nextElementSibling()
+            ?.text()
+            ?.trim()
+            ?.let {
                 dto.language = mapLanguage(it)
             }
 
         // ISBN
-        doc.select("#more_book_info span.category:contains(ISBN:)").firstOrNull()
-            ?.nextElementSibling()?.text()?.trim()?.let { raw ->
+        doc
+            .select("#more_book_info span.category:contains(ISBN:)")
+            .firstOrNull()
+            ?.nextElementSibling()
+            ?.text()
+            ?.trim()
+            ?.let { raw ->
                 val (isbn10, isbn13) = parseIsbn(raw)
                 dto.isbn10 = isbn10
                 dto.isbn13 = isbn13
@@ -253,28 +302,34 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
     }
 
     /** Map Czech language names to ISO code */
-    private val languageMap = mapOf(
-        "český" to "cs", "česká" to "cs",
-        "slovenský" to "sk", "slovenská" to "sk",
-        "německý" to "de",
-        "polský" to "pl",
-        "anglický" to "en",
-        "francouzský" to "fr",
-        "španělský" to "es",
-        "italský" to "it",
-    )
+    private val languageMap =
+        mapOf(
+            "český" to "cs",
+            "česká" to "cs",
+            "slovenský" to "sk",
+            "slovenská" to "sk",
+            "německý" to "de",
+            "polský" to "pl",
+            "anglický" to "en",
+            "francouzský" to "fr",
+            "španělský" to "es",
+            "italský" to "it",
+        )
 
-    private fun mapLanguage(dbLang: String): String? =
-        languageMap[dbLang.lowercase()] ?: dbLang
+    private fun mapLanguage(dbLang: String): String? = languageMap[dbLang.lowercase()] ?: dbLang
 
     /**
      * Fetch and parse a document from URL using Jsoup.
      * Includes retries and user-agent header.
      */
-    private fun fetchDocument(url: String, retries: Int = 3): Document? {
+    private fun fetchDocument(
+        url: String,
+        retries: Int = 3,
+    ): Document? {
         repeat(retries - 1) {
             try {
-                return Jsoup.connect(url)
+                return Jsoup
+                    .connect(url)
                     .userAgent("Mozilla/5.0 (compatible; JeluBot/1.0; +https://github.com/bayang/jelu)")
                     .timeout(10_000)
                     .followRedirects(true)
@@ -284,7 +339,8 @@ class DatabazeKnihMetadataProvider : IMetaDataProvider {
             }
         }
         return try {
-            Jsoup.connect(url)
+            Jsoup
+                .connect(url)
                 .userAgent("Mozilla/5.0 (compatible; JeluBot/1.0; +https://github.com/bayang/jelu)")
                 .timeout(10_000)
                 .followRedirects(true)

@@ -31,8 +31,11 @@ object UserBookTable : UUIDTable("user_book") {
     val priceInCents: Column<Long?> = long("price_in_cents").nullable()
 }
 
-class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
+class UserBook(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<UserBook>(UserBookTable)
+
     var creationDate by UserBookTable.creationDate
     var modificationDate by UserBookTable.modificationDate
     var user by User referencedOn UserBookTable.user
@@ -68,6 +71,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
             priceInCents = this.priceInCents,
         )
+
     fun toUserBookLightDto(): UserBookLightDto =
         UserBookLightDto(
             id = this.id.value,
@@ -85,6 +89,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
             priceInCents = this.priceInCents,
         )
+
     fun toUserBookLightWithoutBookDto(): UserBookLightWithoutBookDto =
         UserBookLightWithoutBookDto(
             id = this.id.value,
@@ -101,6 +106,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
             priceInCents = this.priceInCents,
         )
+
     fun toUserBookWthoutEventsAndUserDto(): UserBookWithoutEventsAndUserDto =
         UserBookWithoutEventsAndUserDto(
             id = this.id.value,
@@ -119,6 +125,7 @@ class UserBook(id: EntityID<UUID>) : UUIDEntity(id) {
             userAvgRating = this.userAvgRating,
             priceInCents = this.priceInCents,
         )
+
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto =
         UserBookWithoutEventsDto(
             id = this.id.value,

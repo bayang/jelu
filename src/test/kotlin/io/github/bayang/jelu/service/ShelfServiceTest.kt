@@ -24,7 +24,6 @@ class ShelfServiceTest(
     @Autowired private val userService: UserService,
     @Autowired private val bookService: BookService,
 ) {
-
     @BeforeAll
     fun setupUser() {
         userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
@@ -32,14 +31,16 @@ class ShelfServiceTest(
 
     @AfterAll
     fun teardDown() {
-        shelfService.find(user(), null, null)
+        shelfService
+            .find(user(), null, null)
             .forEach { shelfService.delete(it.id!!) }
         userService.findAll(null).forEach { userService.deleteUser(it.id!!) }
     }
 
     @Test
     fun testSaveFindDelete() {
-        shelfService.find(user(), null, null)
+        shelfService
+            .find(user(), null, null)
             .forEach { shelfService.delete(it.id!!) }
         val saved = shelfService.save(CreateShelfDto("to-buy", UUID.randomUUID()), user())
         Assertions.assertEquals("to-buy", saved.name)
@@ -81,7 +82,8 @@ class ShelfServiceTest(
 
     @Test
     fun testTooManyShelves() {
-        shelfService.find(user(), null, null)
+        shelfService
+            .find(user(), null, null)
             .forEach { shelfService.delete(it.id!!) }
         for (i in 1..10) {
             val saved = shelfService.save(CreateShelfDto("shelf-$i", UUID.randomUUID()), user())
@@ -93,7 +95,8 @@ class ShelfServiceTest(
 
     @Test
     fun testDeletingTagDeletesCorrespondingShelves() {
-        shelfService.find(user(), null, null)
+        shelfService
+            .find(user(), null, null)
             .forEach { shelfService.delete(it.id!!) }
         var tags = bookService.findAllTags(null, Pageable.ofSize(200))
         tags.forEach { bookService.deleteTagById(it.id!!) }

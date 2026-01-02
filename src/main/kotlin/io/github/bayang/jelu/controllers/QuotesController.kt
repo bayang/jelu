@@ -18,7 +18,6 @@ import reactor.core.publisher.Mono
 class QuotesController(
     private val quotesProvider: IQuoteProvider,
 ) {
-
     @ApiResponses(
         value = [
             ApiResponse(
@@ -30,20 +29,22 @@ class QuotesController(
                             mediaType = "application/json",
                             array = (
                                 ArraySchema(
-                                    schema = Schema(
-                                        implementation = QuoteDto::class,
-                                    ),
+                                    schema =
+                                        Schema(
+                                            implementation = QuoteDto::class,
+                                        ),
                                 )
-                                ),
+                            ),
                         )
-                        ),
+                    ),
                 ],
             ),
         ],
     )
     @GetMapping(path = ["/quotes"])
-    fun quotes(@RequestParam(name = "query", required = false) query: String?): Mono<List<QuoteDto>> =
-        quotesProvider.quotes(query)
+    fun quotes(
+        @RequestParam(name = "query", required = false) query: String?,
+    ): Mono<List<QuoteDto>> = quotesProvider.quotes(query)
 
     @ApiResponses(
         value = [
@@ -56,13 +57,14 @@ class QuotesController(
                             mediaType = "application/json",
                             array = (
                                 ArraySchema(
-                                    schema = Schema(
-                                        implementation = QuoteDto::class,
-                                    ),
+                                    schema =
+                                        Schema(
+                                            implementation = QuoteDto::class,
+                                        ),
                                 )
-                                ),
+                            ),
                         )
-                        ),
+                    ),
                 ],
             ),
         ],

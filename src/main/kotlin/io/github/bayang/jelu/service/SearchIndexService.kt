@@ -25,7 +25,6 @@ class SearchIndexService(
     private val luceneHelper: LuceneHelper,
     private val bookRepository: BookRepository,
 ) {
-
     fun upgradeIndex() {
         luceneHelper.upgradeIndex()
         luceneHelper.setIndexVersion(INDEX_VERSION)
@@ -37,21 +36,25 @@ class SearchIndexService(
         logger.info { "Rebuild index for: ${targetEntities.map { it.type }}" }
         targetEntities.forEach {
             when (it) {
-                LuceneEntity.Book -> rebuildIndex(
-                    it,
-                    {
-                            p: Pageable ->
-                        bookRepository.findAllNoFilters(null, null, null, null, null, null, null, null, p)
-                    },
-                    { e: Book -> e.toDocument() },
-                )
+                LuceneEntity.Book ->
+                    rebuildIndex(
+                        it,
+                        { p: Pageable ->
+                            bookRepository.findAllNoFilters(null, null, null, null, null, null, null, null, p)
+                        },
+                        { e: Book -> e.toDocument() },
+                    )
                 LuceneEntity.Author -> logger.debug { "no authors index yet" }
             }
         }
         luceneHelper.setIndexVersion(INDEX_VERSION)
     }
 
-    private fun <T> rebuildIndex(entity: LuceneEntity, provider: (Pageable) -> Page<out T>, toDoc: (T) -> Document) {
+    private fun <T> rebuildIndex(
+        entity: LuceneEntity,
+        provider: (Pageable) -> Page<out T>,
+        toDoc: (T) -> Document,
+    ) {
         logger.info { "Rebuilding index for ${entity.name}" }
 
         val count = provider(Pageable.ofSize(1)).totalElements
@@ -65,8 +68,10 @@ class SearchIndexService(
 
                 (0 until pages).forEach { page ->
                     logger.info { "Processing page ${page + 1} of $pages ($batchSize elements)" }
-                    val entityDocs = provider(PageRequest.of(page, batchSize)).content
-                        .map { toDoc(it) }
+                    val entityDocs =
+                        provider(PageRequest.of(page, batchSize))
+                            .content
+                            .map { toDoc(it) }
                     indexWriter.addDocuments(entityDocs)
                 }
             }.also { duration ->
@@ -121,13 +126,20 @@ class SearchIndexService(
         }
     }
 
-    private fun updateEntity(entity: LuceneEntity, entityId: String, newDoc: Document) {
+    private fun updateEntity(
+        entity: LuceneEntity,
+        entityId: String,
+        newDoc: Document,
+    ) {
         luceneHelper.getIndexWriter().use { indexWriter ->
             indexWriter.updateDocument(Term(entity.id, entityId), newDoc)
         }
     }
 
-    private fun deleteEntity(entity: LuceneEntity, entityId: String) {
+    private fun deleteEntity(
+        entity: LuceneEntity,
+        entityId: String,
+    ) {
         luceneHelper.getIndexWriter().use { indexWriter ->
             indexWriter.deleteDocuments(Term(entity.id, entityId))
         }

@@ -19,8 +19,12 @@ object ReadingEventTable : UUIDTable("reading_event") {
     val startDate = timestamp("start_date")
     val endDate = timestamp("end_date").nullable()
 }
-class ReadingEvent(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class ReadingEvent(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<ReadingEvent>(ReadingEventTable)
+
     var creationDate by ReadingEventTable.creationDate
     var modificationDate by ReadingEventTable.modificationDate
     var userBook by UserBook referencedOn ReadingEventTable.userBook
@@ -35,24 +39,28 @@ class ReadingEvent(id: EntityID<UUID>) : UUIDEntity(id) {
             return startDate
         }
 
-    fun toReadingEventDto(): ReadingEventDto = ReadingEventDto(
-        id = this.id.value,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        userBook = this.userBook.toUserBookWithoutEventsDto(),
-        eventType = this.eventType,
-        startDate = this.startDate,
-        endDate = this.endDate,
-    )
-    fun toReadingEventWithoutUserBookDto(): ReadingEventWithoutUserBookDto = ReadingEventWithoutUserBookDto(
-        id = this.id.value,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        eventType = this.eventType,
-        startDate = this.startDate,
-        endDate = this.endDate,
-    )
+    fun toReadingEventDto(): ReadingEventDto =
+        ReadingEventDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            userBook = this.userBook.toUserBookWithoutEventsDto(),
+            eventType = this.eventType,
+            startDate = this.startDate,
+            endDate = this.endDate,
+        )
+
+    fun toReadingEventWithoutUserBookDto(): ReadingEventWithoutUserBookDto =
+        ReadingEventWithoutUserBookDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            eventType = this.eventType,
+            startDate = this.startDate,
+            endDate = this.endDate,
+        )
 }
+
 enum class ReadingEventType {
     FINISHED,
     DROPPED,

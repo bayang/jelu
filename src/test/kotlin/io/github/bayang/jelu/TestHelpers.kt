@@ -9,8 +9,16 @@ import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.TagDto
 import java.time.Instant
 
-fun createUserBookDto(bookDto: BookCreateDto, lastReadingEvent: ReadingEventType? = null, lastreadingEventDate: Instant? = null, toRead: Boolean = false, owned: Boolean? = true, borrowed: Boolean = false, priceInCents: Long? = null): CreateUserBookDto {
-    return CreateUserBookDto(
+fun createUserBookDto(
+    bookDto: BookCreateDto,
+    lastReadingEvent: ReadingEventType? = null,
+    lastreadingEventDate: Instant? = null,
+    toRead: Boolean = false,
+    owned: Boolean? = true,
+    borrowed: Boolean = false,
+    priceInCents: Long? = null,
+): CreateUserBookDto =
+    CreateUserBookDto(
         personalNotes = "test personal notes\nwith a newline",
         lastReadingEvent = lastReadingEvent,
         lastReadingEventDate = lastreadingEventDate,
@@ -22,10 +30,12 @@ fun createUserBookDto(bookDto: BookCreateDto, lastReadingEvent: ReadingEventType
         currentPageNumber = null,
         priceInCents = priceInCents,
     )
-}
 
-fun bookDto(title: String = "title1", withTags: Boolean = false): BookCreateDto {
-    return BookCreateDto(
+fun bookDto(
+    title: String = "title1",
+    withTags: Boolean = false,
+): BookCreateDto =
+    BookCreateDto(
         id = null,
         title = title,
         isbn10 = "1566199093",
@@ -43,11 +53,25 @@ fun bookDto(title: String = "title1", withTags: Boolean = false): BookCreateDto 
         language = "",
         amazonId = "",
     )
-}
 
-fun authorDto(name: String = "test author"): AuthorDto {
-    return AuthorDto(id = null, creationDate = null, modificationDate = null, name = name, image = "", dateOfBirth = "", dateOfDeath = "", biography = "author bio", facebookPage = null, goodreadsPage = null, instagramPage = null, notes = null, officialPage = null, twitterPage = null, wikipediaPage = "https://wikipedia.org")
-}
+fun authorDto(name: String = "test author"): AuthorDto =
+    AuthorDto(
+        id = null,
+        creationDate = null,
+        modificationDate = null,
+        name = name,
+        image = "",
+        dateOfBirth = "",
+        dateOfDeath = "",
+        biography = "author bio",
+        facebookPage = null,
+        goodreadsPage = null,
+        instagramPage = null,
+        notes = null,
+        officialPage = null,
+        twitterPage = null,
+        wikipediaPage = "https://wikipedia.org",
+    )
 
 fun tags(): List<TagDto> {
     val tags = mutableListOf<TagDto>()
@@ -56,10 +80,7 @@ fun tags(): List<TagDto> {
     return tags
 }
 
-fun tagDto(name: String = "science fiction"): TagDto {
-    return TagDto(id = null, creationDate = null, modificationDate = null, name)
-}
+fun tagDto(name: String = "science fiction"): TagDto = TagDto(id = null, creationDate = null, modificationDate = null, name)
 
-fun importConfigurationDto(): ImportConfigurationDto {
-    return ImportConfigurationDto(shouldFetchMetadata = false, shouldFetchCovers = false, ImportSource.GOODREADS)
-}
+fun importConfigurationDto(): ImportConfigurationDto =
+    ImportConfigurationDto(shouldFetchMetadata = false, shouldFetchCovers = false, ImportSource.GOODREADS)

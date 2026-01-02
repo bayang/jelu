@@ -25,7 +25,6 @@ private val logger = KotlinLogging.logger {}
 @RestController
 @RequestMapping("api/v1/filesystem", produces = [MediaType.APPLICATION_JSON_VALUE])
 class FileSystemController {
-
     private val fs = FileSystems.getDefault()
 
     @PostMapping
@@ -47,14 +46,16 @@ class FileSystemController {
             try {
                 DirectoryListingDto(
                     parent = (p.parent ?: "").toString(),
-                    directories = Files.list(p).use { dirStream ->
-                        dirStream.asSequence()
-                            .filter { !Files.isHidden(it) }
-                            .filter { filterReason(it, request.reason) }
-                            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.toString() })
-                            .map { it.toDto() }
-                            .toList()
-                    },
+                    directories =
+                        Files.list(p).use { dirStream ->
+                            dirStream
+                                .asSequence()
+                                .filter { !Files.isHidden(it) }
+                                .filter { filterReason(it, request.reason) }
+                                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.toString() })
+                                .map { it.toDto() }
+                                .toList()
+                        },
                 )
             } catch (e: Exception) {
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Path does not exist")
@@ -62,7 +63,10 @@ class FileSystemController {
         }
 }
 
-fun filterReason(p: Path, reason: String): Boolean {
+fun filterReason(
+    p: Path,
+    reason: String,
+): Boolean {
     if (reason == METADATA) {
         return isSupportedExtension(p)
     }
@@ -71,15 +75,15 @@ fun filterReason(p: Path, reason: String): Boolean {
             p.name.endsWith(".jpg", true) ||
                 p.name.endsWith(".jpeg", true) ||
                 p.name.endsWith(".png", true)
-            )
-}
-
-fun isSupportedExtension(p: Path): Boolean {
-    return p.isDirectory() || (
-        p.name.endsWith(".epub", true) ||
-            p.name.endsWith(".opf", true)
         )
 }
+
+fun isSupportedExtension(p: Path): Boolean =
+    p.isDirectory() ||
+        (
+            p.name.endsWith(".epub", true) ||
+                p.name.endsWith(".opf", true)
+        )
 
 data class DirectoryRequestDto(
     val path: String = "",

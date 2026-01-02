@@ -18,11 +18,11 @@ class ReviewService(
     private val reviewRepository: ReviewRepository,
     private val bookService: BookService,
 ) {
-
     @Transactional
-    fun save(reviewDto: CreateReviewDto, user: UserDto): ReviewDto {
-        return reviewRepository.save(reviewDto, user).toReviewDto()
-    }
+    fun save(
+        reviewDto: CreateReviewDto,
+        user: UserDto,
+    ): ReviewDto = reviewRepository.save(reviewDto, user).toReviewDto()
 
     @Transactional
     fun findById(reviewId: UUID): ReviewDto = reviewRepository.findById(reviewId).toReviewDto()
@@ -35,14 +35,13 @@ class ReviewService(
         after: LocalDate?,
         before: LocalDate?,
         pageable: Pageable,
-    ): Page<ReviewDto> {
-        return reviewRepository.find(userId, bookId, visibility, after, before, pageable).map { it.toReviewDto() }
-    }
+    ): Page<ReviewDto> = reviewRepository.find(userId, bookId, visibility, after, before, pageable).map { it.toReviewDto() }
 
     @Transactional
-    fun update(reviewId: UUID, updateReviewDto: UpdateReviewDto): ReviewDto {
-        return reviewRepository.update(reviewId, updateReviewDto).toReviewDto()
-    }
+    fun update(
+        reviewId: UUID,
+        updateReviewDto: UpdateReviewDto,
+    ): ReviewDto = reviewRepository.update(reviewId, updateReviewDto).toReviewDto()
 
     @Transactional
     fun delete(reviewId: UUID) = reviewRepository.delete(reviewId)

@@ -36,10 +36,9 @@ class CalibreMetadataProvider(
     private val opfParser: OpfParser,
     private val processBuilderFactory: ProcessBuilderFactory = DefaultProcessBuilderFactory(),
 ) : IMetaDataProvider {
-
     companion object {
-        const val fetchCover = "fetchCover"
-        const val onlyUseCorePlugins = "onlyUseCorePlugins"
+        const val FETCH_COVER = "fetchCover"
+        const val ONLY_USE_CORE_PLUGINS = "onlyUseCorePlugins"
         const val FILE_PREFIX = "meta-import-"
     }
 
@@ -50,24 +49,28 @@ class CalibreMetadataProvider(
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String>,
     ): Optional<MetadataDto> {
-        if (metadataRequestDto.isbn.isNullOrBlank() && metadataRequestDto.title.isNullOrBlank() &&
+        if (metadataRequestDto.isbn.isNullOrBlank() &&
+            metadataRequestDto.title.isNullOrBlank() &&
             metadataRequestDto.authors.isNullOrBlank()
         ) {
             logger.error { "At least one of isbn, authors or title is required to fetch metadata" }
             return Optional.empty()
         }
-        val onlyUseCorePlugins: Boolean = if (config.containsKey(CalibreMetadataProvider.onlyUseCorePlugins)) {
-            config[CalibreMetadataProvider.onlyUseCorePlugins].toBoolean()
-        } else {
-            false
-        }
-        val fetchCover: Boolean = if (config.containsKey(CalibreMetadataProvider.fetchCover)) {
-            config[CalibreMetadataProvider.fetchCover].toBoolean()
-        } else {
-            true
-        }
+        val onlyUseCorePlugins: Boolean =
+            if (config.containsKey(CalibreMetadataProvider.ONLY_USE_CORE_PLUGINS)) {
+                config[CalibreMetadataProvider.ONLY_USE_CORE_PLUGINS].toBoolean()
+            } else {
+                false
+            }
+        val fetchCover: Boolean =
+            if (config.containsKey(CalibreMetadataProvider.FETCH_COVER)) {
+                config[CalibreMetadataProvider.FETCH_COVER].toBoolean()
+            } else {
+                true
+            }
         var bookFileName: String = FILE_PREFIX
-        val commandArray: MutableList<String> = mutableListOf(properties.metadata.calibre.path!!, "-o", "-d ${properties.metadata.calibre.timeout}")
+        val commandArray: MutableList<String> =
+            mutableListOf(properties.metadata.calibre.path!!, "-o", "-d ${properties.metadata.calibre.timeout}")
         var fileNameComplete = false
         if (!metadataRequestDto.isbn.isNullOrBlank()) {
             bookFileName += metadataRequestDto.isbn
@@ -121,11 +124,17 @@ class CalibreMetadataProvider(
         }
         val builder = processBuilderFactory.createProcessBuilder()
         logger.trace { "fetch metadata command : $commandArray" }
-        builder.command(commandArray)
+        builder
+            .command(commandArray)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
         try {
             val process: Process = builder.start()
-            val exitVal = process.waitFor(properties.metadata.calibre.timeout.toLong(), TimeUnit.SECONDS)
+            val exitVal =
+                process.waitFor(
+                    properties.metadata.calibre.timeout
+                        .toLong(),
+                    TimeUnit.SECONDS,
+                )
             if (exitVal) {
                 var output: String = process.inputStream.bufferedReader().use(BufferedReader::readText)
                 // on ARM the fetch-ebook-metadata binary outputs a python byte string instead of a regular string
@@ -169,9 +178,7 @@ class CalibreMetadataProvider(
         }
     }
 
-    override fun name(): String {
-        return PluginInfoHolder.calibre
-    }
+    override fun name(): String = PluginInfoHolder.CALIBRE
 
     private fun removeTrailingAndLeadingChars(output: String): String {
         if (output.isNullOrBlank()) {

@@ -15,7 +15,6 @@ class FetchMetadataService(
     private val providers: List<IMetaDataProvider>,
     private val pluginInfoHolder: PluginInfoHolder,
 ) {
-
     fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String> = mapOf(),

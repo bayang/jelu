@@ -23,7 +23,6 @@ private val logger = KotlinLogging.logger {}
 class JeluLdapUserDetailsContextMapper(
     private val userRepository: UserRepository,
 ) : UserDetailsContextMapper {
-
     @Transactional
     override fun mapUserFromContext(
         ctx: DirContextOperations?,
@@ -66,7 +65,10 @@ class JeluLdapUserDetailsContextMapper(
         return isAdmin
     }
 
-    override fun mapUserToContext(user: UserDetails?, ctx: DirContextAdapter?) {
+    override fun mapUserToContext(
+        user: UserDetails?,
+        ctx: DirContextAdapter?,
+    ) {
         TODO("Not yet implemented")
     }
 

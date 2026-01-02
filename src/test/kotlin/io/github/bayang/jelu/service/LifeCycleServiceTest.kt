@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest
 class LifeCycleServiceTest(
     @Autowired private val lifeCycleService: LifeCycleService,
 ) {
-
     @Test
     fun testGetLifeCycle() {
         var lifeCycle = lifeCycleService.getLifeCycle()

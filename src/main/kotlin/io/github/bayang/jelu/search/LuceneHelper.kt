@@ -28,7 +28,6 @@ class LuceneHelper(
     private val indexAnalyzer: Analyzer,
     private val searchAnalyzer: Analyzer,
 ) {
-
     private fun getIndexWriterConfig() = IndexWriterConfig(indexAnalyzer)
 
     fun getIndexWriter() = IndexWriter(directory, getIndexWriterConfig())
@@ -39,10 +38,11 @@ class LuceneHelper(
 
     fun setIndexVersion(version: Int) {
         getIndexWriter().use { indexWriter ->
-            val doc = Document().apply {
-                add(StringField("index_version", version.toString(), Field.Store.YES))
-                add(StringField("type", "index_version", Field.Store.NO))
-            }
+            val doc =
+                Document().apply {
+                    add(StringField("index_version", version.toString(), Field.Store.YES))
+                    add(StringField("type", "index_version", Field.Store.NO))
+                }
             indexWriter.updateDocument(Term("type", "index_version"), doc)
         }
         logger.info { "Lucene index version: ${getIndexVersion()}" }
@@ -52,22 +52,32 @@ class LuceneHelper(
         getIndexReader().use { index ->
             val searcher = IndexSearcher(index)
             val topDocs = searcher.search(TermQuery(Term("type", "index_version")), 1)
-            topDocs.scoreDocs.map { searcher.storedFields().document(it.doc)["index_version"] }.firstOrNull()?.toIntOrNull() ?: 1
+            topDocs.scoreDocs
+                .map { searcher.storedFields().document(it.doc)["index_version"] }
+                .firstOrNull()
+                ?.toIntOrNull() ?: 1
         }
 
-    fun searchEntitiesIds(searchTerm: String?, entity: LuceneEntity): List<String>? {
-        return if (!searchTerm.isNullOrBlank()) {
+    fun searchEntitiesIds(
+        searchTerm: String?,
+        entity: LuceneEntity,
+    ): List<String>? =
+        if (!searchTerm.isNullOrBlank()) {
             try {
-                val fieldsQuery = MultiFieldQueryParser(entity.defaultFields, searchAnalyzer).apply {
-                    defaultOperator = QueryParser.Operator.AND
-                }.parse("$searchTerm *:*")
+                val fieldsQuery =
+                    MultiFieldQueryParser(entity.defaultFields, searchAnalyzer)
+                        .apply {
+                            defaultOperator = QueryParser.Operator.AND
+                        }.parse("$searchTerm *:*")
 
                 val typeQuery = TermQuery(Term(LuceneEntity.TYPE, entity.type))
 
-                val booleanQuery = BooleanQuery.Builder()
-                    .add(fieldsQuery, BooleanClause.Occur.MUST)
-                    .add(typeQuery, BooleanClause.Occur.MUST)
-                    .build()
+                val booleanQuery =
+                    BooleanQuery
+                        .Builder()
+                        .add(fieldsQuery, BooleanClause.Occur.MUST)
+                        .add(typeQuery, BooleanClause.Occur.MUST)
+                        .build()
 
                 getIndexReader().use { index ->
                     val searcher = IndexSearcher(index)
@@ -83,9 +93,12 @@ class LuceneHelper(
         } else {
             null
         }
-    }
-    fun searchEntitiesIdsForTags(searchTerms: List<String>, entity: LuceneEntity): List<String>? {
-        return if (searchTerms.isNotEmpty()) {
+
+    fun searchEntitiesIdsForTags(
+        searchTerms: List<String>,
+        entity: LuceneEntity,
+    ): List<String>? =
+        if (searchTerms.isNotEmpty()) {
             try {
                 val terms = mutableListOf<Term>()
                 for (term in searchTerms) {
@@ -93,8 +106,10 @@ class LuceneHelper(
                 }
                 val typeQuery = TermQuery(Term(LuceneEntity.TYPE, entity.type))
 
-                val booleanIntermQuery = BooleanQuery.Builder()
-                    .add(typeQuery, BooleanClause.Occur.MUST)
+                val booleanIntermQuery =
+                    BooleanQuery
+                        .Builder()
+                        .add(typeQuery, BooleanClause.Occur.MUST)
 
                 for (t in terms) {
                     booleanIntermQuery.add(TermQuery(t), BooleanClause.Occur.MUST)
@@ -114,7 +129,6 @@ class LuceneHelper(
         } else {
             null
         }
-    }
 
     fun upgradeIndex() {
         IndexUpgrader(directory, getIndexWriterConfig(), true).upgrade()

@@ -16,11 +16,16 @@ object TagTable : UUIDTable("tag") {
     val creationDate = timestamp("creation_date")
     val modificationDate = timestamp("modification_date")
 }
-class Tag(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class Tag(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Tag>(TagTable)
+
     var name by TagTable.name
     var creationDate by TagTable.creationDate
     var modificationDate by TagTable.modificationDate
+
     fun toTagDto(): TagDto =
         TagDto(
             id = this.id.value,
@@ -29,6 +34,7 @@ class Tag(id: EntityID<UUID>) : UUIDEntity(id) {
             name = this.name,
         )
 }
+
 object BookTags : Table(name = "book_tags") {
     val book = reference("book", BookTable, fkName = "fk_booktags_book_id", onDelete = ReferenceOption.CASCADE)
     val tag = reference("tag", TagTable, fkName = "fk_booktags_tag_id", onDelete = ReferenceOption.CASCADE)

@@ -17,19 +17,24 @@ object ShelfTable : UUIDTable("shelf") {
     val name: Column<String> = varchar("name", 5000)
     val targetId: Column<UUID> = uuid("target_id")
 }
-class Shelf(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class Shelf(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Shelf>(ShelfTable)
+
     var creationDate by ShelfTable.creationDate
     var modificationDate by ShelfTable.modificationDate
     var user by User referencedOn ShelfTable.user
     var name by ShelfTable.name
     var targetId by ShelfTable.targetId
 
-    fun toShelfDto(): ShelfDto = ShelfDto(
-        id = this.id.value,
-        name = this.name,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        targetId = this.targetId,
-    )
+    fun toShelfDto(): ShelfDto =
+        ShelfDto(
+            id = this.id.value,
+            name = this.name,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            targetId = this.targetId,
+        )
 }

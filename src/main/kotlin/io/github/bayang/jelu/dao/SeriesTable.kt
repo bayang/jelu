@@ -19,14 +19,19 @@ object SeriesTable : UUIDTable("series") {
     val modificationDate = timestamp("modification_date")
     val description: Column<String?> = varchar("description", 500000).nullable()
 }
-class Series(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class Series(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Series>(SeriesTable)
+
     var name by SeriesTable.name
     var creationDate by SeriesTable.creationDate
     var modificationDate by SeriesTable.modificationDate
     var avgRating: Double? = null
     var userRating: Double? = null
     var description by SeriesTable.description
+
     fun toSeriesDto(): SeriesDto =
         SeriesDto(
             id = this.id.value,
@@ -38,20 +43,29 @@ class Series(id: EntityID<UUID>) : UUIDEntity(id) {
             description = this.description,
         )
 }
+
 object BookSeries : UUIDTable(name = "book_series") {
     val book = reference("book", BookTable, fkName = "fk_bookseries_book_id", onDelete = ReferenceOption.CASCADE)
     val series = reference("series", SeriesTable, fkName = "fk_bookseries_series_id", onDelete = ReferenceOption.CASCADE)
     val numberInSeries: Column<Double?> = double(name = "number_in_series").nullable()
+
     init {
         // actually the work is done in the liquibase part
         // this is only to convey the intent
         uniqueIndex(book, series, numberInSeries)
     }
 }
-class BookSeriesItem(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class BookSeriesItem(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<BookSeriesItem>(BookSeries) {
         override val dependsOnTables: ColumnSet = BookTable.innerJoin(BookSeries).innerJoin(SeriesTable)
-        override fun createInstance(entityId: EntityID<UUID>, row: ResultRow?): BookSeriesItem {
+
+        override fun createInstance(
+            entityId: EntityID<UUID>,
+            row: ResultRow?,
+        ): BookSeriesItem {
             row?.getOrNull(BookTable.id)?.let {
                 Book.wrap(it, row)
             }
@@ -61,12 +75,15 @@ class BookSeriesItem(id: EntityID<UUID>) : UUIDEntity(id) {
             return super.createInstance(entityId, row)
         }
     }
+
     var book by Book referencedOn BookSeries.book
     var series by Series referencedOn BookSeries.series
     var numberInSeries by BookSeries.numberInSeries
-    fun toSeriesOrderDto(): SeriesOrderDto = SeriesOrderDto(
-        seriesId = this.series.id.value,
-        name = this.series.name,
-        numberInSeries = this.numberInSeries,
-    )
+
+    fun toSeriesOrderDto(): SeriesOrderDto =
+        SeriesOrderDto(
+            seriesId = this.series.id.value,
+            name = this.series.name,
+            numberInSeries = this.numberInSeries,
+        )
 }

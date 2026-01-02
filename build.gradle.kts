@@ -1,29 +1,36 @@
 import com.github.gradle.node.npm.task.NpmTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("org.springframework.boot") version "3.5.8"
     id("io.spring.dependency-management") version "1.1.7"
-    val kotlinVersion = "1.9.21"
+    val kotlinVersion = "2.2.0"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("com.github.node-gradle.node") version "7.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+    id("org.jlleitschuh.gradle.ktlint") version "13.0.0"
 }
 
 kotlin {
     jvmToolchain(17)
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+        freeCompilerArgs =
+            listOf(
+                "-Xjsr305=strict",
+                "-Xemit-jvm-type-annotations",
+                "-opt-in=kotlin.time.ExperimentalTime",
+                "-Xannotation-default-target=param-property",
+            )
+    }
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-    version.set("0.50.0")
     outputToConsole.set(true)
     coloredOutput.set(true)
-    disabledRules.set(setOf("no-wildcard-imports", "parameter-list-wrapping"))
 }
 
 allOpen {
@@ -103,15 +110,15 @@ tasks.withType<Test> {
     systemProperty("spring.profiles.active", "test")
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf(
-            "-Xjsr305=strict",
-            "-opt-in=kotlin.time.ExperimentalTime",
-        )
-        jvmTarget = "17"
-    }
-}
+// tasks.withType<KotlinCompile> {
+//     kotlinOptions {
+//         freeCompilerArgs = listOf(
+//             "-Xjsr305=strict",
+//             "-opt-in=kotlin.time.ExperimentalTime",
+//         )
+//         jvmTarget = "17"
+//     }
+// }
 
 tasks.getByName<BootJar>("bootJar") {
     manifest {
@@ -145,12 +152,13 @@ node {
     download.set(true)
 }
 
-val buildTaskUsingNpm = tasks.register<NpmTask>("npmBuild") {
-    npmCommand.set(listOf("run", "install-build"))
-    args.set(listOf("--", "--out-dir", "${layout.buildDirectory.get()}/npm-output"))
-    inputs.dir("src")
-    outputs.dir("${layout.buildDirectory.get()}/npm-output")
-}
+val buildTaskUsingNpm =
+    tasks.register<NpmTask>("npmBuild") {
+        npmCommand.set(listOf("run", "install-build"))
+        args.set(listOf("--", "--out-dir", "${layout.buildDirectory.get()}/npm-output"))
+        inputs.dir("src")
+        outputs.dir("${layout.buildDirectory.get()}/npm-output")
+    }
 
 tasks.register<Sync>("copyWebDist") {
     dependsOn("npmBuild")

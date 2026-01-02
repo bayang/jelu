@@ -42,7 +42,6 @@ class CsvExportServiceTest(
     @Autowired private val readingEventService: ReadingEventService,
     @Autowired private val userMessageService: UserMessageService,
 ) {
-
     companion object {
         @TempDir
         lateinit var tempDir: File
@@ -68,67 +67,72 @@ class CsvExportServiceTest(
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {
             readingEventService.deleteReadingEventById(it.id!!)
         }
-        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
+        bookService
+            .findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         bookService.findAllAuthors(null, pageable = Pageable.ofSize(30)).forEach {
             bookService.deleteAuthorById(it.id!!)
         }
-        userMessageService.find(user(), null, null, Pageable.ofSize(200))
+        userMessageService
+            .find(user(), null, null, Pageable.ofSize(200))
             .forEach { userMessageDto -> userMessageService.delete(userMessageDto.id!!) }
     }
 
     @Test
     fun testExport() {
-        val book1 = BookCreateDto(
-            id = null,
-            title = "book1",
-            isbn10 = "1566199093",
-            isbn13 = "9781566199094 ",
-            summary = "This is a test summary\nwith a newline",
-            image = "",
-            publisher = "test-publisher",
-            pageCount = 50,
-            publishedDate = "",
-            authors = mutableListOf(authorDto(), authorDto("author2 name")),
-            tags = tags(),
-            goodreadsId = "4321abc",
-            googleId = "1234",
-            librarythingId = "",
-            language = "",
-            amazonId = "",
-        )
-        val createUserBookDto1 = CreateUserBookDto(
-            personalNotes = "test personal notes\nwith a newline",
-            lastReadingEvent = null,
-            lastReadingEventDate = null,
-            owned = false,
-            toRead = true,
-            percentRead = null,
-            book = book1,
-            borrowed = null,
-            currentPageNumber = null,
-            priceInCents = null,
-        )
+        val book1 =
+            BookCreateDto(
+                id = null,
+                title = "book1",
+                isbn10 = "1566199093",
+                isbn13 = "9781566199094 ",
+                summary = "This is a test summary\nwith a newline",
+                image = "",
+                publisher = "test-publisher",
+                pageCount = 50,
+                publishedDate = "",
+                authors = mutableListOf(authorDto(), authorDto("author2 name")),
+                tags = tags(),
+                goodreadsId = "4321abc",
+                googleId = "1234",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+            )
+        val createUserBookDto1 =
+            CreateUserBookDto(
+                personalNotes = "test personal notes\nwith a newline",
+                lastReadingEvent = null,
+                lastReadingEventDate = null,
+                owned = false,
+                toRead = true,
+                percentRead = null,
+                book = book1,
+                borrowed = null,
+                currentPageNumber = null,
+                priceInCents = null,
+            )
         val saved1: UserBookLightDto = bookService.save(createUserBookDto1, user(), null)
 
-        val book2 = BookCreateDto(
-            id = null,
-            title = "book2",
-            isbn10 = "1566199093",
-            isbn13 = "9781566199094 ",
-            summary = "This is a test summary\nwith a newline",
-            image = "",
-            publisher = "test-publisher",
-            pageCount = 50,
-            publishedDate = "",
-            authors = mutableListOf(authorDto()),
-            tags = emptyList(),
-            goodreadsId = "4321abc",
-            googleId = "1234",
-            librarythingId = "",
-            language = "",
-            amazonId = "",
-        )
+        val book2 =
+            BookCreateDto(
+                id = null,
+                title = "book2",
+                isbn10 = "1566199093",
+                isbn13 = "9781566199094 ",
+                summary = "This is a test summary\nwith a newline",
+                image = "",
+                publisher = "test-publisher",
+                pageCount = 50,
+                publishedDate = "",
+                authors = mutableListOf(authorDto()),
+                tags = emptyList(),
+                goodreadsId = "4321abc",
+                googleId = "1234",
+                librarythingId = "",
+                language = "",
+                amazonId = "",
+            )
         val offset = OffsetDateTime.now(ZoneId.systemDefault()).offset
         val date1 = OffsetDateTime.of(2022, 2, 10, 6, 30, 0, 0, offset)
         val createUserBookDto2 = createUserBookDto(book2, ReadingEventType.FINISHED, date1.toInstant())

@@ -31,7 +31,6 @@ class ImportController(
     val csvExportService: CsvExportService,
     private val properties: JeluProperties,
 ) {
-
     @ApiResponse(responseCode = "201", description = "Imported the csv file")
     @Operation(description = "Trigger a csv import")
     @PostMapping(path = ["/imports"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])

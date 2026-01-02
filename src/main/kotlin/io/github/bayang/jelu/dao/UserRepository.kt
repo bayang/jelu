@@ -14,14 +14,12 @@ private val logger = KotlinLogging.logger {}
 
 @Repository
 class UserRepository {
-
-    fun findAll(searchTerm: String?): SizedIterable<User> {
-        return if (!searchTerm.isNullOrBlank()) {
+    fun findAll(searchTerm: String?): SizedIterable<User> =
+        if (!searchTerm.isNullOrBlank()) {
             User.find { UserTable.login like searchTerm }
         } else {
             User.all()
         }
-    }
 
     fun deleteUser(userId: UUID) {
         User[userId].delete()
@@ -29,29 +27,34 @@ class UserRepository {
 
     fun countUsers(): Long = User.count()
 
-    fun findByLogin(login: String): SizedIterable<User> =
-        User.find { UserTable.login eq login }
+    fun findByLogin(login: String): SizedIterable<User> = User.find { UserTable.login eq login }
 
-    fun findByLoginAndProvider(login: String, provider: Provider): SizedIterable<User> =
-        User.find { UserTable.login eq login and(UserTable.provider eq provider) }
+    fun findByLoginAndProvider(
+        login: String,
+        provider: Provider,
+    ): SizedIterable<User> = User.find { UserTable.login eq login and (UserTable.provider eq provider) }
 
     fun findUserById(id: UUID): User = User[id]
 
     fun save(user: CreateUserDto): User {
-        val created = User.new {
-            login = user.login
-            val instant: Instant = nowInstant()
-            creationDate = instant
-            modificationDate = instant
-            password = user.password
-            isAdmin = user.isAdmin
-            provider = user.provider
-        }
+        val created =
+            User.new {
+                login = user.login
+                val instant: Instant = nowInstant()
+                creationDate = instant
+                modificationDate = instant
+                password = user.password
+                isAdmin = user.isAdmin
+                provider = user.provider
+            }
         return created
     }
 
-    fun updateUser(userId: UUID, updateUserDto: UpdateUserDto): User {
-        return User[userId].apply {
+    fun updateUser(
+        userId: UUID,
+        updateUserDto: UpdateUserDto,
+    ): User =
+        User[userId].apply {
             this.modificationDate = nowInstant()
             this.password = updateUserDto.password
             if (updateUserDto.isAdmin != null) {
@@ -61,5 +64,4 @@ class UserRepository {
                 this.provider = updateUserDto.provider
             }
         }
-    }
 }

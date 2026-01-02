@@ -1,2 +1,3 @@
 [{*.kts,*.kt}]
 ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_multiline-if-else=disabled

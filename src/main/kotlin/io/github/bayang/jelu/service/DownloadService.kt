@@ -15,8 +15,12 @@ private val logger = KotlinLogging.logger {}
 
 @Service
 class DownloadService {
-
-    fun download(sourceUrl: String, title: String, bookId: String, targetFolder: String): String {
+    fun download(
+        sourceUrl: String,
+        title: String,
+        bookId: String,
+        targetFolder: String,
+    ): String {
         try {
             val url: URL = URL(sourceUrl)
             logger.debug { "path ${url.path} file ${url.file}" }

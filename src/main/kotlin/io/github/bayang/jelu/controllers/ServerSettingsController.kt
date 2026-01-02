@@ -16,7 +16,6 @@ class ServerSettingsController(
     private val properties: JeluProperties,
     private val buildProperties: BuildProperties,
 ) {
-
     @Operation(description = "Get the capabilities configured for this server, eg : is the metadata binary installed etc...")
     @GetMapping(path = ["/server-settings"])
     fun getServerSettings(): ServerSettingsDto {

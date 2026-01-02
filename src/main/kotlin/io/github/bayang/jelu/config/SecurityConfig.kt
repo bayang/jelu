@@ -36,7 +36,6 @@ class SecurityConfig(
     private val oidcUserService: OAuth2UserService<OidcUserRequest, OidcUser>,
     clientRegistrationRepository: InMemoryClientRegistrationRepository?,
 ) {
-
     private val oauth2Enabled = clientRegistrationRepository != null
 
     @Bean
@@ -46,27 +45,27 @@ class SecurityConfig(
             .cors { }
             .csrf { it.disable() }
             .logout {
-                it.logoutUrl("/api/v1/logout")
+                it
+                    .logoutUrl("/api/v1/logout")
                     .invalidateHttpSession(true)
-            }
-            .securityMatchers {
+            }.securityMatchers {
                 // only apply security to those endpoints
                 it.requestMatchers(
                     "/api/**",
                     "/oauth2/authorization/**",
                     "/login/oauth2/code/**",
                 )
-            }
-            .authorizeHttpRequests {
-                it.requestMatchers(
-                    "/api/v1/token",
-                    "/api/v1/setup/status",
-                    "/api/v1/server-settings",
-                    "/api/v1/reviews/**",
-                    "/api/v1/oauth2/providers",
-                    "/api/v1/username/**",
-                    "/api/v1/custom-lists/remove",
-                ).permitAll()
+            }.authorizeHttpRequests {
+                it
+                    .requestMatchers(
+                        "/api/v1/token",
+                        "/api/v1/setup/status",
+                        "/api/v1/server-settings",
+                        "/api/v1/reviews/**",
+                        "/api/v1/oauth2/providers",
+                        "/api/v1/username/**",
+                        "/api/v1/custom-lists/remove",
+                    ).permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/custom-lists/**").permitAll()
@@ -74,28 +73,31 @@ class SecurityConfig(
                 it.requestMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
                 it.requestMatchers(HttpMethod.POST, "/api/v1/users").hasAnyRole("ADMIN", "INITIAL_SETUP")
                 it.requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("USER")
-                it.requestMatchers(
-                    HttpMethod.GET,
-                    "/api/v1/users/me",
-                ).hasRole("USER")
-                it.requestMatchers(
-                    "/api/v1/users/**",
-                ).hasRole("USER")
-                it.requestMatchers(
-                    "/api/v1/users",
-                ).hasRole("USER")
-                it.requestMatchers(
-                    HttpMethod.POST,
-                    "/api/v1/user-messages",
-                ).hasRole("ADMIN")
-                it.requestMatchers(
-                    "/api/**",
-                ).hasRole("USER")
-            }
-            .httpBasic {
+                it
+                    .requestMatchers(
+                        HttpMethod.GET,
+                        "/api/v1/users/me",
+                    ).hasRole("USER")
+                it
+                    .requestMatchers(
+                        "/api/v1/users/**",
+                    ).hasRole("USER")
+                it
+                    .requestMatchers(
+                        "/api/v1/users",
+                    ).hasRole("USER")
+                it
+                    .requestMatchers(
+                        HttpMethod.POST,
+                        "/api/v1/user-messages",
+                    ).hasRole("ADMIN")
+                it
+                    .requestMatchers(
+                        "/api/**",
+                    ).hasRole("USER")
+            }.httpBasic {
                 it.authenticationDetailsSource(userAgentWebAuthenticationDetailsSource)
-            }
-            .sessionManagement {
+            }.sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             }
         if (properties.auth.ldap.enabled) {

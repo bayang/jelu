@@ -19,8 +19,12 @@ object BookQuoteTable : UUIDTable("book_quote") {
     val visibility = enumerationByName("visibility", 200, Visibility::class)
     val position: Column<String?> = varchar("position", 300).nullable()
 }
-class BookQuote(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class BookQuote(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<BookQuote>(BookQuoteTable)
+
     var creationDate by BookQuoteTable.creationDate
     var modificationDate by BookQuoteTable.modificationDate
     var user by User referencedOn BookQuoteTable.user
@@ -29,14 +33,15 @@ class BookQuote(id: EntityID<UUID>) : UUIDEntity(id) {
     var visibility by BookQuoteTable.visibility
     var position by BookQuoteTable.position
 
-    fun toBookQuoteDto(): BookQuoteDto = BookQuoteDto(
-        id = this.id.value,
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        text = this.text,
-        visibility = this.visibility,
-        user = this.user.id.value,
-        book = this.book.id.value,
-        position = this.position,
-    )
+    fun toBookQuoteDto(): BookQuoteDto =
+        BookQuoteDto(
+            id = this.id.value,
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            text = this.text,
+            visibility = this.visibility,
+            user = this.user.id.value,
+            book = this.book.id.value,
+            position = this.position,
+        )
 }

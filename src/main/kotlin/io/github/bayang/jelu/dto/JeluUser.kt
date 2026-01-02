@@ -39,14 +39,12 @@ class JeluUser(
     val oAuth2User: OAuth2User? = null,
     val oidcUser: OidcUser? = null,
     val initialSetup: Boolean = false,
-) : UserDetails, OAuth2User, OidcUser {
-    override fun getName(): String {
-        return user.login
-    }
+) : UserDetails,
+    OAuth2User,
+    OidcUser {
+    override fun getName(): String = user.login
 
-    override fun getAttributes(): MutableMap<String, Any> {
-        return oAuth2User?.attributes ?: mutableMapOf()
-    }
+    override fun getAttributes(): MutableMap<String, Any> = oAuth2User?.attributes ?: mutableMapOf()
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val basicRoles: MutableCollection<GrantedAuthority> = mutableSetOf()
@@ -67,9 +65,7 @@ class JeluUser(
 
     override fun getIdToken(): OidcIdToken? = oidcUser?.idToken
 
-    override fun getPassword(): String {
-        return user.password.orEmpty()
-    }
+    override fun getPassword(): String = user.password.orEmpty()
 
     override fun getUsername(): String = user.login
 

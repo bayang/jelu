@@ -22,8 +22,7 @@ class GoogleBooksIMetaDataProvider(
     private val properties: JeluProperties,
     private val objectMapper: ObjectMapper,
 ) : IMetaDataProvider {
-
-    private val _name = "google"
+    private val name = "google"
 
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
@@ -34,35 +33,36 @@ class GoogleBooksIMetaDataProvider(
             logger.warn { "missing google books API key" }
             return Optional.empty()
         }
-        val res = restClient.get()
-            .uri { uriBuilder: UriBuilder ->
-                uriBuilder
-                    .scheme("https")
-                    .host("www.googleapis.com")
-                    .path("/books/v1/volumes")
-                    .queryParam("q", query(metadataRequestDto))
-                    .queryParam("key", googleProviderApiKey)
-                    .build()
-            }.exchangeToMono {
-                if (it.statusCode() == HttpStatus.OK) {
-                    it.bodyToMono(String::class.java).map { bodyString ->
-                        val r = objectMapper.readTree(bodyString).get("items")
-                        if (r == null) {
-                            Optional.empty()
-                        } else {
-                            Optional.of(
-                                parseBook(
-                                    r.get(0),
-                                ),
-                            )
+        val res =
+            restClient
+                .get()
+                .uri { uriBuilder: UriBuilder ->
+                    uriBuilder
+                        .scheme("https")
+                        .host("www.googleapis.com")
+                        .path("/books/v1/volumes")
+                        .queryParam("q", query(metadataRequestDto))
+                        .queryParam("key", googleProviderApiKey)
+                        .build()
+                }.exchangeToMono {
+                    if (it.statusCode() == HttpStatus.OK) {
+                        it.bodyToMono(String::class.java).map { bodyString ->
+                            val r = objectMapper.readTree(bodyString).get("items")
+                            if (r == null) {
+                                Optional.empty()
+                            } else {
+                                Optional.of(
+                                    parseBook(
+                                        r.get(0),
+                                    ),
+                                )
+                            }
                         }
+                    } else {
+                        logger.error { "error fetching metadata from google : ${it.statusCode()}" }
+                        null
                     }
-                } else {
-                    logger.error { "error fetching metadata from google : ${it.statusCode()}" }
-                    null
-                }
-            }
-            .block(Duration.ofSeconds(60))
+                }.block(Duration.ofSeconds(60))
         if (res == null) {
             return Optional.empty()
         }
@@ -84,14 +84,13 @@ class GoogleBooksIMetaDataProvider(
         return ""
     }
 
-    override fun name(): String {
-        return _name
-    }
+    override fun name(): String = name
 
-    private fun getGoogleProviderApiKey(): String? = properties
-        .metadataProviders
-        ?.find { it.isEnabled && it.name == _name }
-        ?.apiKey
+    private fun getGoogleProviderApiKey(): String? =
+        properties
+            .metadataProviders
+            ?.find { it.isEnabled && it.name == name }
+            ?.apiKey
 
     private fun parseBook(node: JsonNode): MetadataDto {
         val volumeInfo = node.get("volumeInfo")
@@ -109,13 +108,16 @@ class GoogleBooksIMetaDataProvider(
         )
     }
 
-    private fun extractAuthors(node: JsonNode): MutableSet<String> {
-        return if (node.get("authors") != null) {
-            node.get("authors").asIterable().map { it.asText() }.toMutableSet()
+    private fun extractAuthors(node: JsonNode): MutableSet<String> =
+        if (node.get("authors") != null) {
+            node
+                .get("authors")
+                .asIterable()
+                .map { it.asText() }
+                .toMutableSet()
         } else {
             mutableSetOf()
         }
-    }
 
     private fun extractImage(node: JsonNode): String? {
         if (node.get("imageLinks") != null && node.get("imageLinks").get("thumbnail") != null) {

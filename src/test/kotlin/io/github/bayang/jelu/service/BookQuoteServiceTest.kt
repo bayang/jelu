@@ -24,12 +24,12 @@ class BookQuoteServiceTest(
     @Autowired private val bookService: BookService,
     @Autowired private val bookQuoteService: BookQuoteService,
 ) {
-
-    val quoteText = """
+    val quoteText =
+        """
         |This is a review, I liked this book, because stuff.
         |I especially liked this thing on page 26
         |It was awesome
-    """.trimMargin()
+        """.trimMargin()
 
     @BeforeAll
     fun setupUser() {
@@ -39,9 +39,11 @@ class BookQuoteServiceTest(
 
     @AfterAll
     fun teardDown() {
-        bookQuoteService.find(null, null, null, Pageable.ofSize(200))
+        bookQuoteService
+            .find(null, null, null, Pageable.ofSize(200))
             .forEach { quoteDto -> bookQuoteService.delete(quoteDto.id!!) }
-        bookService.findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
+        bookService
+            .findUserBookByCriteria(user().id!!, null, null, null, null, null, Pageable.ofSize(30))
             .forEach { bookService.deleteUserBookById(it.id!!) }
         userService.findAll(null).forEach { userService.deleteUser(it.id!!) }
     }
@@ -49,24 +51,27 @@ class BookQuoteServiceTest(
     @Test
     fun testLifeCycle() {
         val bookDto: BookDto = bookService.save(bookDto(), null)
-        val createBookQuoteDto = CreateBookQuoteDto(
-            quoteText,
-            Visibility.PUBLIC,
-            bookDto.id!!,
-            null,
-        )
-        val saved = bookQuoteService.save(
-            createBookQuoteDto,
-            user(),
-        )
+        val createBookQuoteDto =
+            CreateBookQuoteDto(
+                quoteText,
+                Visibility.PUBLIC,
+                bookDto.id!!,
+                null,
+            )
+        val saved =
+            bookQuoteService.save(
+                createBookQuoteDto,
+                user(),
+            )
         Assertions.assertNotNull(saved.id)
         Assertions.assertEquals(createBookQuoteDto.visibility, saved.visibility)
         Assertions.assertEquals(createBookQuoteDto.text, saved.text)
-        val update = UpdateBookQuoteDto(
-            text = "new text",
-            visibility = null,
-            position = "page 225",
-        )
+        val update =
+            UpdateBookQuoteDto(
+                text = "new text",
+                visibility = null,
+                position = "page 225",
+            )
         val updated = bookQuoteService.update(saved.id!!, update)
         Assertions.assertEquals(update.position, updated.position)
         Assertions.assertEquals(update.text, updated.text)

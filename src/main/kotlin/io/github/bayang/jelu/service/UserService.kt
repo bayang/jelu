@@ -32,7 +32,6 @@ class UserService(
     private val passwordEncoder: PasswordEncoder,
     private val bookRepository: BookRepository,
 ) : UserDetailsService {
-
     @Transactional
     fun findAll(searchTerm: String?): List<UserDto> = userRepository.findAll(searchTerm).map { it.toUserDto() }
 
@@ -40,7 +39,10 @@ class UserService(
     fun findByLogin(login: String): List<UserDto> = userRepository.findByLogin(login).map { it.toUserDto() }
 
     @Transactional
-    fun findByLoginAndProvider(login: String, provider: Provider): List<UserDto> = userRepository.findByLoginAndProvider(login, provider).map { it.toUserDto() }
+    fun findByLoginAndProvider(
+        login: String,
+        provider: Provider,
+    ): List<UserDto> = userRepository.findByLoginAndProvider(login, provider).map { it.toUserDto() }
 
     @Transactional
     fun findUserById(id: UUID): UserDto = User[id].toUserDto()
@@ -68,15 +70,16 @@ class UserService(
         val res = userRepository.findByLogin(username)
         if (!res.empty()) {
             val found = res.first()
-            val dto = UserDto(
-                id = found.id.value,
-                creationDate = found.creationDate,
-                modificationDate = found.modificationDate,
-                login = found.login,
-                password = found.password,
-                isAdmin = found.isAdmin,
-                provider = found.provider,
-            )
+            val dto =
+                UserDto(
+                    id = found.id.value,
+                    creationDate = found.creationDate,
+                    modificationDate = found.modificationDate,
+                    login = found.login,
+                    password = found.password,
+                    isAdmin = found.isAdmin,
+                    provider = found.provider,
+                )
             return JeluUser(dto)
         }
         throw UsernameNotFoundException("user $username not found in db")
@@ -84,14 +87,15 @@ class UserService(
 
     fun dummyUser(): JeluUser {
         val date = nowInstant()
-        val dto = UserDto(
-            id = UUID.randomUUID(),
-            creationDate = date,
-            modificationDate = date,
-            login = "setup",
-            password = passwordEncoder.encode("initial"),
-            isAdmin = false,
-        )
+        val dto =
+            UserDto(
+                id = UUID.randomUUID(),
+                creationDate = date,
+                modificationDate = date,
+                login = "setup",
+                password = passwordEncoder.encode("initial"),
+                isAdmin = false,
+            )
         return JeluUser(dto, initialSetup = true)
     }
 
@@ -102,8 +106,16 @@ class UserService(
     }
 
     @Transactional
-    fun updateUser(userId: UUID, userDto: UpdateUserDto): UserDto {
-        val updated = userRepository.updateUser(userId, userDto.copy(password = passwordEncoder.encode(userDto.password.trim()))).toUserDto()
+    fun updateUser(
+        userId: UUID,
+        userDto: UpdateUserDto,
+    ): UserDto {
+        val updated =
+            userRepository
+                .updateUser(
+                    userId,
+                    userDto.copy(password = passwordEncoder.encode(userDto.password.trim())),
+                ).toUserDto()
         val jeluUser: JeluUser = this.loadUserByUsername(updated.login) as JeluUser
         // sessionRegistry.getAllSessions(jeluUser, false).forEach {
         //     it.expireNow()

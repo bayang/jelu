@@ -130,8 +130,8 @@ data class TagDto(
     val name: String,
 )
 
-fun fromBookCreateDto(dto: BookCreateDto): BookUpdateDto {
-    return BookUpdateDto(
+fun fromBookCreateDto(dto: BookCreateDto): BookUpdateDto =
+    BookUpdateDto(
         title = dto.title,
         isbn10 = dto.isbn10,
         isbn13 = dto.isbn13,
@@ -156,7 +156,6 @@ fun fromBookCreateDto(dto: BookCreateDto): BookUpdateDto {
         series = dto.series,
         originalTitle = dto.originalTitle,
     )
-}
 
 data class SeriesDto(
     val id: UUID?,
@@ -167,6 +166,7 @@ data class SeriesDto(
     var userRating: Double? = null,
     var description: String?,
 )
+
 data class SeriesOrderDto(
     val seriesId: UUID? = null,
     var name: String,
@@ -189,6 +189,7 @@ data class CreateSeriesRatingDto(
     val seriesId: UUID,
     var rating: Double,
 )
+
 data class SeriesRatingDto(
     val seriesId: UUID,
     val userId: UUID,

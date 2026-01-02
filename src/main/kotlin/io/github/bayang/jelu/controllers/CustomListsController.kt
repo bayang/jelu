@@ -35,11 +35,11 @@ class CustomListsController(
     private val customListService: CustomListService,
     private val properties: JeluProperties,
 ) {
-
     @GetMapping(path = ["/custom-lists"])
     fun userMessages(
         @RequestParam(name = "name", required = false) name: String?,
-        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable: Pageable,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["modificationDate"]) @ParameterObject pageable:
+            Pageable,
         principal: Authentication,
     ): Page<CustomListDto> = customListService.find((principal.principal as JeluUser).user.id!!, name, pageable)
 
@@ -48,13 +48,12 @@ class CustomListsController(
         @RequestBody @Valid
         customListDto: CustomListDto,
         principal: Authentication,
-    ): CustomListDto {
-        return if (customListDto.id != null) {
+    ): CustomListDto =
+        if (customListDto.id != null) {
             customListService.update(customListDto)
         } else {
             customListService.save(customListDto, (principal.principal as JeluUser).user.id!!)
         }
-    }
 
     @PostMapping(path = ["/custom-lists/remove"])
     fun removeBooksFromList(
@@ -82,13 +81,13 @@ class CustomListsController(
         @PathVariable("id") listId: UUID,
         @PageableDefault(page = 0, size = 20, direction = Sort.Direction.DESC, sort = ["title"]) @ParameterObject pageable: Pageable,
         principal: Authentication?,
-    ): Page<BookDto> {
-        return customListService.findListBooks(listId, pageable, principal)
-    }
+    ): Page<BookDto> = customListService.findListBooks(listId, pageable, principal)
 
     @ApiResponse(responseCode = "204", description = "Deleted the Custom list")
     @DeleteMapping(path = ["/custom-lists/{id}"])
-    fun deleteListById(@PathVariable("id") listId: UUID): ResponseEntity<Unit> {
+    fun deleteListById(
+        @PathVariable("id") listId: UUID,
+    ): ResponseEntity<Unit> {
         customListService.delete(listId)
         return ResponseEntity.noContent().build()
     }

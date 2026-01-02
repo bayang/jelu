@@ -17,19 +17,24 @@ object SeriesRatingTable : UUIDTable("series_rating") {
     val series = reference("series", SeriesTable, onDelete = ReferenceOption.CASCADE)
     val rating: Column<Double> = double(name = "rating")
 }
-class SeriesRating(id: EntityID<UUID>) : UUIDEntity(id) {
+
+class SeriesRating(
+    id: EntityID<UUID>,
+) : UUIDEntity(id) {
     companion object : UUIDEntityClass<SeriesRating>(SeriesRatingTable)
+
     var creationDate by SeriesRatingTable.creationDate
     var modificationDate by SeriesRatingTable.modificationDate
     var user by User referencedOn SeriesRatingTable.user
     var series by Series referencedOn SeriesRatingTable.series
     var rating by SeriesRatingTable.rating
 
-    fun toSeriesRatingDto(): SeriesRatingDto = SeriesRatingDto(
-        creationDate = this.creationDate,
-        modificationDate = this.modificationDate,
-        rating = this.rating,
-        userId = this.user.id.value,
-        seriesId = this.series.id.value,
-    )
+    fun toSeriesRatingDto(): SeriesRatingDto =
+        SeriesRatingDto(
+            creationDate = this.creationDate,
+            modificationDate = this.modificationDate,
+            rating = this.rating,
+            userId = this.user.id.value,
+            seriesId = this.series.id.value,
+        )
 }

@@ -3,7 +3,6 @@ package io.github.bayang.jelu.dto
 import io.github.bayang.jelu.dao.ImportSource
 
 class ImportDto {
-
     var goodreadsId: String? = null
     var librarythingId: String? = null
     var title: String? = null
@@ -22,6 +21,7 @@ class ImportDto {
     var review: String? = null
     var rating: Int? = null
 }
+
 data class ImportConfigurationDto(
     var shouldFetchMetadata: Boolean,
     var shouldFetchCovers: Boolean,

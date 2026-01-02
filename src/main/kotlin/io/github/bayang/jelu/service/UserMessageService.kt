@@ -13,12 +13,14 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Component
-class UserMessageService(private val userMessageRepository: UserMessageRepository) {
-
+class UserMessageService(
+    private val userMessageRepository: UserMessageRepository,
+) {
     @Transactional
-    fun save(createUserMessageDto: CreateUserMessageDto, user: UserDto): UserMessageDto {
-        return userMessageRepository.save(createUserMessageDto, user).toUserMessageDto()
-    }
+    fun save(
+        createUserMessageDto: CreateUserMessageDto,
+        user: UserDto,
+    ): UserMessageDto = userMessageRepository.save(createUserMessageDto, user).toUserMessageDto()
 
     @Transactional
     fun find(
@@ -26,14 +28,13 @@ class UserMessageService(private val userMessageRepository: UserMessageRepositor
         read: Boolean?,
         messageCategories: List<MessageCategory>?,
         pageable: Pageable,
-    ): Page<UserMessageDto> {
-        return userMessageRepository.find(user, read, messageCategories, pageable).map { it.toUserMessageDto() }
-    }
+    ): Page<UserMessageDto> = userMessageRepository.find(user, read, messageCategories, pageable).map { it.toUserMessageDto() }
 
     @Transactional
-    fun update(userMessageId: UUID, updateDto: UpdateUserMessageDto): UserMessageDto {
-        return userMessageRepository.update(userMessageId, updateDto).toUserMessageDto()
-    }
+    fun update(
+        userMessageId: UUID,
+        updateDto: UpdateUserMessageDto,
+    ): UserMessageDto = userMessageRepository.update(userMessageId, updateDto).toUserMessageDto()
 
     @Transactional
     fun delete(userMessageId: UUID) {

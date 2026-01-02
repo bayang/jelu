@@ -13,9 +13,11 @@ import java.util.UUID
 class ShelfService(
     private val shelfRepository: ShelfRepository,
 ) {
-
     @Transactional
-    fun save(createShelfDto: CreateShelfDto, user: UserDto): ShelfDto {
+    fun save(
+        createShelfDto: CreateShelfDto,
+        user: UserDto,
+    ): ShelfDto {
         val userShelves = find(user, null, null)
         if (userShelves.size >= 10) {
             throw JeluValidationException("Maximum number of shelves reaches")
@@ -28,14 +30,10 @@ class ShelfService(
         user: UserDto?,
         name: String?,
         targetId: UUID?,
-    ): List<ShelfDto> {
-        return shelfRepository.find(user, name, targetId).map { it.toShelfDto() }
-    }
+    ): List<ShelfDto> = shelfRepository.find(user, name, targetId).map { it.toShelfDto() }
 
     @Transactional
-    fun findById(
-        id: UUID,
-    ): ShelfDto = shelfRepository.findById(id).toShelfDto()
+    fun findById(id: UUID): ShelfDto = shelfRepository.findById(id).toShelfDto()
 
     @Transactional
     fun delete(shelfId: UUID) {

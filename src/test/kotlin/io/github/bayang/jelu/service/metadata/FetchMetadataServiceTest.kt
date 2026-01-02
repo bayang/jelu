@@ -13,24 +13,24 @@ import org.junit.jupiter.api.Test
 import java.util.Optional
 
 class FetchMetadataServiceTest {
-
     @Test
     fun fetchMetadataTest() {
-        val jeluProperties = JeluProperties(
-            JeluProperties.Database(""),
-            JeluProperties.Files("", "", true),
-            JeluProperties.Session(1),
-            JeluProperties.Cors(),
-            JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
-            JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
-        )
+        val jeluProperties =
+            JeluProperties(
+                JeluProperties.Database(""),
+                JeluProperties.Files("", "", true),
+                JeluProperties.Session(1),
+                JeluProperties.Cors(),
+                JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
+                JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
+                listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.JELU_DEBUG, true, "", order = 10)),
+            )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
-        every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
+        every { jeluDebug.name() } returns PluginInfoHolder.JELU_DEBUG
         every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
-        every { calibre.name() } returns PluginInfoHolder.calibre
+        every { calibre.name() } returns PluginInfoHolder.CALIBRE
         every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
@@ -43,21 +43,22 @@ class FetchMetadataServiceTest {
 
     @Test
     fun fetchMetadataTestFilteredByCaller() {
-        val jeluProperties = JeluProperties(
-            JeluProperties.Database(""),
-            JeluProperties.Files("", "", true),
-            JeluProperties.Session(1),
-            JeluProperties.Cors(),
-            JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
-            JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
-        )
+        val jeluProperties =
+            JeluProperties(
+                JeluProperties.Database(""),
+                JeluProperties.Files("", "", true),
+                JeluProperties.Session(1),
+                JeluProperties.Cors(),
+                JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
+                JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
+                listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.JELU_DEBUG, true, "", order = 10)),
+            )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
-        every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
+        every { jeluDebug.name() } returns PluginInfoHolder.JELU_DEBUG
         every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
-        every { calibre.name() } returns PluginInfoHolder.calibre
+        every { calibre.name() } returns PluginInfoHolder.CALIBRE
         every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
@@ -66,12 +67,13 @@ class FetchMetadataServiceTest {
         service.fetchMetadata(
             MetadataRequestDto(
                 isbn = "1566199093",
-                plugins = listOf(
-                    PluginInfo(
-                        name = PluginInfoHolder.jelu_debug,
-                        order = 1,
+                plugins =
+                    listOf(
+                        PluginInfo(
+                            name = PluginInfoHolder.JELU_DEBUG,
+                            order = 1,
+                        ),
                     ),
-                ),
             ),
         )
         verify { jeluDebug.fetchMetadata(any(), any()) }
@@ -80,21 +82,22 @@ class FetchMetadataServiceTest {
 
     @Test
     fun fetchMetadataTestFilteredByCallerButListIsEmpty() {
-        val jeluProperties = JeluProperties(
-            JeluProperties.Database(""),
-            JeluProperties.Files("", "", true),
-            JeluProperties.Session(1),
-            JeluProperties.Cors(),
-            JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
-            JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
-        )
+        val jeluProperties =
+            JeluProperties(
+                JeluProperties.Database(""),
+                JeluProperties.Files("", "", true),
+                JeluProperties.Session(1),
+                JeluProperties.Cors(),
+                JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
+                JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
+                listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.JELU_DEBUG, true, "", order = 10)),
+            )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
-        every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
+        every { jeluDebug.name() } returns PluginInfoHolder.JELU_DEBUG
         every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
-        every { calibre.name() } returns PluginInfoHolder.calibre
+        every { calibre.name() } returns PluginInfoHolder.CALIBRE
         every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
@@ -107,21 +110,22 @@ class FetchMetadataServiceTest {
 
     @Test
     fun fetchMetadataTestFilteredByCallerButNoPluginExists() {
-        val jeluProperties = JeluProperties(
-            JeluProperties.Database(""),
-            JeluProperties.Files("", "", true),
-            JeluProperties.Session(1),
-            JeluProperties.Cors(),
-            JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
-            JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
-        )
+        val jeluProperties =
+            JeluProperties(
+                JeluProperties.Database(""),
+                JeluProperties.Files("", "", true),
+                JeluProperties.Session(1),
+                JeluProperties.Cors(),
+                JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
+                JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
+                listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.JELU_DEBUG, true, "", order = 10)),
+            )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
-        every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
+        every { jeluDebug.name() } returns PluginInfoHolder.JELU_DEBUG
         every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
-        every { calibre.name() } returns PluginInfoHolder.calibre
+        every { calibre.name() } returns PluginInfoHolder.CALIBRE
         every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
@@ -130,16 +134,17 @@ class FetchMetadataServiceTest {
         service.fetchMetadata(
             MetadataRequestDto(
                 isbn = "1566199093",
-                plugins = listOf(
-                    PluginInfo(
-                        name = "not-existing",
-                        order = 1,
+                plugins =
+                    listOf(
+                        PluginInfo(
+                            name = "not-existing",
+                            order = 1,
+                        ),
+                        PluginInfo(
+                            name = "not-existing2",
+                            order = 2,
+                        ),
                     ),
-                    PluginInfo(
-                        name = "not-existing2",
-                        order = 2,
-                    ),
-                ),
             ),
         )
         verify(exactly = 0) { jeluDebug.fetchMetadata(any(), any()) }
@@ -148,21 +153,22 @@ class FetchMetadataServiceTest {
 
     @Test
     fun fetchMetadataTestFilteredByCallerButOnePluginDoesNotExists() {
-        val jeluProperties = JeluProperties(
-            JeluProperties.Database(""),
-            JeluProperties.Files("", "", true),
-            JeluProperties.Session(1),
-            JeluProperties.Cors(),
-            JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
-            JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
-            listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.jelu_debug, true, "", order = 10)),
-        )
+        val jeluProperties =
+            JeluProperties(
+                JeluProperties.Database(""),
+                JeluProperties.Files("", "", true),
+                JeluProperties.Session(1),
+                JeluProperties.Cors(),
+                JeluProperties.Metadata(JeluProperties.Calibre("/path", order = 1)),
+                JeluProperties.Auth(JeluProperties.Ldap(), JeluProperties.Proxy()),
+                listOf(JeluProperties.MetaDataProvider(PluginInfoHolder.JELU_DEBUG, true, "", order = 10)),
+            )
         val providers = mutableListOf<IMetaDataProvider>()
         val jeluDebug = mockk<DebugMetadataProvider>()
-        every { jeluDebug.name() } returns PluginInfoHolder.jelu_debug
+        every { jeluDebug.name() } returns PluginInfoHolder.JELU_DEBUG
         every { jeluDebug.fetchMetadata(any(), any()) } returns Optional.empty()
         val calibre = mockk<CalibreMetadataProvider>()
-        every { calibre.name() } returns PluginInfoHolder.calibre
+        every { calibre.name() } returns PluginInfoHolder.CALIBRE
         every { calibre.fetchMetadata(any(), any()) } returns Optional.empty()
         providers.add(jeluDebug)
         providers.add(calibre)
@@ -171,16 +177,17 @@ class FetchMetadataServiceTest {
         service.fetchMetadata(
             MetadataRequestDto(
                 isbn = "1566199093",
-                plugins = listOf(
-                    PluginInfo(
-                        name = "not-existing",
-                        order = 1,
+                plugins =
+                    listOf(
+                        PluginInfo(
+                            name = "not-existing",
+                            order = 1,
+                        ),
+                        PluginInfo(
+                            name = PluginInfoHolder.JELU_DEBUG,
+                            order = 2,
+                        ),
                     ),
-                    PluginInfo(
-                        name = PluginInfoHolder.jelu_debug,
-                        order = 2,
-                    ),
-                ),
             ),
         )
         verify { jeluDebug.fetchMetadata(any(), any()) }

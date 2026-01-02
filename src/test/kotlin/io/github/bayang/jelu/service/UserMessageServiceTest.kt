@@ -21,7 +21,6 @@ class UserMessageServiceTest(
     @Autowired private val userMessageService: UserMessageService,
     @Autowired private val userService: UserService,
 ) {
-
     @BeforeAll
     fun setupUser() {
         userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
@@ -29,21 +28,23 @@ class UserMessageServiceTest(
 
     @AfterAll
     fun teardDown() {
-        userMessageService.find(user(), null, null, Pageable.ofSize(200))
+        userMessageService
+            .find(user(), null, null, Pageable.ofSize(200))
             .forEach { userMessageDto -> userMessageService.delete(userMessageDto.id!!) }
         userService.findAll(null).forEach { userService.deleteUser(it.id!!) }
     }
 
     @Test
     fun testSaveFindAndUpdate() {
-        val saved = userMessageService.save(
-            CreateUserMessageDto(
-                "this is a message",
-                "/test/myfile.csv",
-                MessageCategory.INFO,
-            ),
-            user(),
-        )
+        val saved =
+            userMessageService.save(
+                CreateUserMessageDto(
+                    "this is a message",
+                    "/test/myfile.csv",
+                    MessageCategory.INFO,
+                ),
+                user(),
+            )
         Assertions.assertEquals("this is a message", saved.message)
         Assertions.assertEquals(MessageCategory.INFO, saved.category)
         Assertions.assertNotNull(saved.creationDate)
@@ -82,7 +83,13 @@ class UserMessageServiceTest(
         val notFoundCategory = userMessageService.find(user(), null, listOf(MessageCategory.ERROR), Pageable.ofSize(30))
         Assertions.assertEquals(0, notFoundCategory.totalElements)
 
-        val foundSeveralCategories = userMessageService.find(user(), null, listOf(MessageCategory.ERROR, MessageCategory.INFO), Pageable.ofSize(30))
+        val foundSeveralCategories =
+            userMessageService.find(
+                user(),
+                null,
+                listOf(MessageCategory.ERROR, MessageCategory.INFO),
+                Pageable.ofSize(30),
+            )
         Assertions.assertEquals(1, foundSeveralCategories.totalElements)
     }
 

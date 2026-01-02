@@ -25,6 +25,7 @@ data class MetadataDto(
     var errorType: MetadataError? = null,
     var pluginErrorMessage: String? = null,
 )
+
 data class MetadataRequestDto(
     val isbn: String? = null,
     val title: String? = null,

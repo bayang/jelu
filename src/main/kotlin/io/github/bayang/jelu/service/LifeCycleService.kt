@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional
 class LifeCycleService(
     private val lifeCycleRepository: LifeCycleRepository,
 ) {
-
     @Transactional
     fun getLifeCycle(): LifeCycleDto = lifeCycleRepository.findLifeCycle().toLifeCycleDto()
 

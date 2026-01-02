@@ -13,8 +13,9 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Component
-class ReadingEventService(private val readingEventRepository: ReadingEventRepository) {
-
+class ReadingEventService(
+    private val readingEventRepository: ReadingEventRepository,
+) {
     @Transactional
     fun findAll(
         eventTypes: List<ReadingEventType>?,
@@ -25,21 +26,28 @@ class ReadingEventService(private val readingEventRepository: ReadingEventReposi
         endedAfter: LocalDate?,
         endedBefore: LocalDate?,
         pageable: Pageable,
-    ) =
-        readingEventRepository.findAll(eventTypes, userId, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable).map { it.toReadingEventDto() }
-
-    @Transactional
-    fun findYears(eventTypes: List<ReadingEventType>?, userId: UUID?, bookId: UUID?) =
-        readingEventRepository.findYears(eventTypes, userId, bookId)
-
-    @Transactional
-    fun save(createReadingEventDto: CreateReadingEventDto, user: UserDto): ReadingEventDto {
-        return readingEventRepository.save(createReadingEventDto, user).toReadingEventDto()
+    ) = readingEventRepository.findAll(eventTypes, userId, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable).map {
+        it.toReadingEventDto()
     }
 
     @Transactional
-    fun updateReadingEvent(readingEventId: UUID, updateReadingEventDto: UpdateReadingEventDto): ReadingEventDto =
-        readingEventRepository.updateReadingEvent(readingEventId, updateReadingEventDto).toReadingEventDto()
+    fun findYears(
+        eventTypes: List<ReadingEventType>?,
+        userId: UUID?,
+        bookId: UUID?,
+    ) = readingEventRepository.findYears(eventTypes, userId, bookId)
+
+    @Transactional
+    fun save(
+        createReadingEventDto: CreateReadingEventDto,
+        user: UserDto,
+    ): ReadingEventDto = readingEventRepository.save(createReadingEventDto, user).toReadingEventDto()
+
+    @Transactional
+    fun updateReadingEvent(
+        readingEventId: UUID,
+        updateReadingEventDto: UpdateReadingEventDto,
+    ): ReadingEventDto = readingEventRepository.updateReadingEvent(readingEventId, updateReadingEventDto).toReadingEventDto()
 
     @Transactional
     fun deleteReadingEventById(eventId: UUID) {

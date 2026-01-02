@@ -13,14 +13,14 @@ data class JeluProperties(
     val session: Session,
     val cors: Cors = Cors(),
     val metadata: Metadata = Metadata(Calibre(null)),
-    val auth: Auth = Auth(
-        Ldap(),
-        Proxy(),
-    ),
+    val auth: Auth =
+        Auth(
+            Ldap(),
+            Proxy(),
+        ),
     val metadataProviders: List<MetaDataProvider>?,
     val lucene: Lucene = Lucene(indexAnalyzer = IndexAnalyzer()),
 ) {
-
     data class MetaDataProvider(
         var name: String,
         var isEnabled: Boolean = false,
@@ -91,8 +91,6 @@ data class JeluProperties(
     data class Lucene(
         @get:NotBlank
         var dataDirectory: String = "",
-
         var indexAnalyzer: IndexAnalyzer,
-
     )
 }

@@ -10,6 +10,7 @@ data class ShelfDto(
     val name: String,
     val targetId: UUID,
 )
+
 data class CreateShelfDto(
     val name: String,
     val targetId: UUID,

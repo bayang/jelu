@@ -34,7 +34,6 @@ class MetadataController(
     private val pluginInfoHolder: PluginInfoHolder,
     private val fileMetadataService: FileMetadataService,
 ) {
-
     @Operation(description = "fetch metadata from the configured providers")
     @GetMapping(path = ["/metadata"])
     fun fetchMetadata(
@@ -83,16 +82,12 @@ class MetadataController(
     fun searchWikipedia(
         @RequestParam(name = "query", required = true) query: String,
         @RequestParam(name = "language", defaultValue = "en") language: String,
-    ): Mono<WikipediaSearchResult> {
-        return wikipediaService.search(query, language)
-    }
+    ): Mono<WikipediaSearchResult> = wikipediaService.search(query, language)
 
     @Operation(description = "retrieve page from wikipedia for given page title")
     @GetMapping(path = ["/wikipedia/page"])
     fun wikipediaPage(
         @RequestParam(name = "pageTitle", required = true) pageTitle: String,
         @RequestParam(name = "language", defaultValue = "en") language: String,
-    ): Mono<WikipediaPageResult> {
-        return wikipediaService.fetchPage(pageTitle, language)
-    }
+    ): Mono<WikipediaPageResult> = wikipediaService.fetchPage(pageTitle, language)
 }

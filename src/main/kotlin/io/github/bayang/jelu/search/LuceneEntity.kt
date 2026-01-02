@@ -6,7 +6,11 @@ import org.apache.lucene.document.Field
 import org.apache.lucene.document.StringField
 import org.apache.lucene.document.TextField
 
-enum class LuceneEntity(val type: String, val id: String, val defaultFields: Array<String>) {
+enum class LuceneEntity(
+    val type: String,
+    val id: String,
+    val defaultFields: Array<String>,
+) {
     Book("book", "book_id", arrayOf("title", "isbn")),
     Author("author", "author_id", arrayOf("name")),
     ;

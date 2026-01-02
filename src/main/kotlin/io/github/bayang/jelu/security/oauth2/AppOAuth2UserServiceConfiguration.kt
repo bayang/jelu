@@ -63,7 +63,11 @@ class AppOAuth2UserServiceConfiguration(
 
             if (oidcUser.email == null) throw OAuth2AuthenticationException("ERR_1028")
             if (jeluProperties.auth.oidcEmailVerification && oidcUser.emailVerified == null) throw OAuth2AuthenticationException("ERR_1027")
-            if (jeluProperties.auth.oidcEmailVerification && oidcUser.emailVerified == false) throw OAuth2AuthenticationException("ERR_1026")
+            if (jeluProperties.auth.oidcEmailVerification &&
+                oidcUser.emailVerified == false
+            ) {
+                throw OAuth2AuthenticationException("ERR_1026")
+            }
 
             val existingUser = userRepository.findByLogin(oidcUser.email)
             if (existingUser.isEmpty()) {
@@ -77,7 +81,15 @@ class AppOAuth2UserServiceConfiguration(
     private fun tryCreateNewUser(email: String) =
         if (jeluProperties.auth.oauth2AccountCreation) {
             logger.info { "Creating new user from OAuth2 login: $email" }
-            val saved = userRepository.save(CreateUserDto(login = email, password = RandomStringUtils.secure().nextAlphanumeric(12), isAdmin = false, Provider.OIDC))
+            val saved =
+                userRepository.save(
+                    CreateUserDto(
+                        login = email,
+                        password = RandomStringUtils.secure().nextAlphanumeric(12),
+                        isAdmin = false,
+                        Provider.OIDC,
+                    ),
+                )
             JeluUser(saved)
         } else {
             throw OAuth2AuthenticationException("ERR_1025")

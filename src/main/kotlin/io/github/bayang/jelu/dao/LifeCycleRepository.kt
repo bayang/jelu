@@ -5,10 +5,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class LifeCycleRepository {
-
-    fun findLifeCycle(): LifeCycle {
-        return LifeCycle.all().first()
-    }
+    fun findLifeCycle(): LifeCycle = LifeCycle.all().first()
 
     fun setSeriesMigrated(newValue: Boolean): LifeCycle {
         val lifeCycle = findLifeCycle()

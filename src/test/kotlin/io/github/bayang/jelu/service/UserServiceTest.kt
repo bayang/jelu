@@ -12,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class UserServiceTest(@Autowired private val userService: UserService) {
-
+class UserServiceTest(
+    @Autowired private val userService: UserService,
+) {
     @BeforeEach
     fun emptyTable() {
         userService.findAll(null).forEach { it.id?.let { it1 -> userService.deleteUser(it1) } }
