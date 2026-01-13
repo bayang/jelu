@@ -1,3 +1,10 @@
+### [0.77.1](https://github.com/bayang/jelu/compare/v0.77.0...v0.77.1) (2026-01-13)
+
+
+### Bug Fixes
+
+* improve inventaire extraction when only isbn 10 is provided ([b18b21e](https://github.com/bayang/jelu/commit/b18b21e7ce5948d2eca3447ee768fcd26c41b245))
+
 ## [0.77.0](https://github.com/bayang/jelu/compare/v0.76.0...v0.77.0) (2025-12-29)
 
 
