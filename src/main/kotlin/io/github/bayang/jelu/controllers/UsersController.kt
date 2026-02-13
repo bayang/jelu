@@ -178,12 +178,17 @@ class UsersController(
         entry: Map.Entry<String, Session>,
         ctx: SecurityContextImpl?,
     ): LoginHistoryInfoDto {
-        val details = ctx?.authentication?.details as UserAgentWebAuthenticationDetails
-        val jeluUser = ctx.authentication.principal as JeluUser
+        val details = ctx?.authentication?.details as? UserAgentWebAuthenticationDetails
+        val jeluUser = ctx?.authentication?.principal as? JeluUser
         return LoginHistoryInfoDto(
-            ip = details.remoteAddress.orEmpty(),
-            userAgent = details.userAgent,
-            source = jeluUser.user.provider.name,
+            ip = details?.remoteAddress.orEmpty(),
+            userAgent = details?.userAgent.orEmpty(),
+            source =
+                jeluUser
+                    ?.user
+                    ?.provider
+                    ?.name
+                    .orEmpty(),
             date = stringFormat(entry.value.lastAccessedTime),
         )
     }

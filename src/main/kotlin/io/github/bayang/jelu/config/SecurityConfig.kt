@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.config
 
+import io.github.bayang.jelu.security.BearerTokenAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -31,6 +32,7 @@ class SecurityConfig(
     private val userDetailsService: UserDetailsService,
     private val passwordEncoder: PasswordEncoder,
     private val authHeaderFilter: AuthHeaderFilter?,
+    private val bearerTokenAuthenticationFilter: BearerTokenAuthenticationFilter,
     private val userAgentWebAuthenticationDetailsSource: WebAuthenticationDetailsSource,
     private val oauth2UserService: OAuth2UserService<OAuth2UserRequest, OAuth2User>,
     private val oidcUserService: OAuth2UserService<OidcUserRequest, OidcUser>,
@@ -65,6 +67,7 @@ class SecurityConfig(
                         "/api/v1/oauth2/providers",
                         "/api/v1/username/**",
                         "/api/v1/custom-lists/remove",
+                        "/api/v1/api-tokens/scopes",
                     ).permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
                 it.requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
@@ -100,6 +103,8 @@ class SecurityConfig(
             }.sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             }
+        // Add Bearer token authentication filter (always enabled)
+        http.addFilterBefore(bearerTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         if (properties.auth.ldap.enabled) {
             val dao = DaoAuthenticationProvider()
             dao.setUserDetailsService(userDetailsService)

@@ -97,6 +97,7 @@
       "yes" : "Yes",
       "no" : "No",
       "do_nothing" : "Do nothing",
+      "cancel" : "Cancel",
       "add" : "Add",
       "add_to_my_books" : "Not yet in your books, click to add it",
       "add_translator": "Add a translator",
@@ -152,7 +153,8 @@
         "shelves_max_number_reached" : "Maximum number of shelves is reached. Delete existing ones to add more.",
         "shelf_choose_tag" : "Pick a tag to create the corresponding shelf",
         "custom_lists" : "custom lists",
-        "choose_currency": "Select your currency"
+        "choose_currency": "Select your currency",
+        "api_tokens" : "API Tokens"
     },
     "user" : {
         "log_first" : "Please log in first"
@@ -421,5 +423,45 @@
         "empty" : "list is empty",
         "edit_list" : "edit the list",
         "update_list" : "update the list"
+    },
+    "api_tokens" : {
+        "title" : "API Tokens",
+        "description" : "Create API tokens to enable programmatic access to the Jelu API. Tokens can be used for automation scripts, third-party integrations, and CI/CD pipelines.",
+        "create" : "Create Token",
+        "create_new" : "Create New API Token",
+        "no_tokens" : "No API tokens yet. Create one to get started.",
+        "token_name" : "Token Name",
+        "name_placeholder" : "e.g., Backup Script, Home Assistant",
+        "select_scopes" : "Select Scopes",
+        "expiration" : "Expiration",
+        "never_expires" : "Never expires",
+        "expires_30days" : "30 days",
+        "expires_90days" : "90 days",
+        "expires_1year" : "1 year",
+        "expires_custom" : "Custom date",
+        "created" : "API token created successfully",
+        "create_error" : "Failed to create API token",
+        "token_created" : "Token Created",
+        "copy_warning" : "Make sure to copy your token now. You won't be able to see it again!",
+        "your_token" : "Your Token",
+        "copied" : "Token copied to clipboard",
+        "done" : "Done",
+        "scopes" : "Scopes",
+        "created_at" : "Created",
+        "last_used" : "Last used",
+        "usage_count" : "Uses",
+        "expires_at" : "Expires",
+        "inactive" : "Inactive",
+        "expired" : "Expired",
+        "activate" : "Activate",
+        "deactivate" : "Deactivate",
+        "activated" : "Token activated",
+        "deactivated" : "Token deactivated",
+        "revoke" : "Revoke",
+        "revoke_confirm" : "Are you sure you want to revoke the token '{name}'? This action cannot be undone.",
+        "revoked" : "Token revoked successfully",
+        "revoke_error" : "Failed to revoke token",
+        "load_error" : "Failed to load API tokens",
+        "update_error" : "Failed to update token"
     }
 }
