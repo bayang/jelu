@@ -151,7 +151,8 @@
         "shelves": "Lentynos",
         "shelves_max_number_reached": "Pasiektas maksimalus lentynų skaičius. Ištrinkite esamas ir pridėkite daugiau.",
         "shelf_choose_tag": "Pasirinkite žymą, kad sukurtumėte atitinkamą lentyną",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Prašome pirma prisijungti"
