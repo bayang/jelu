@@ -151,7 +151,8 @@
         "shelves": "Estantes",
         "shelves_max_number_reached": "Se ha alcanzado el número máximo de estanterías. Elimina las existentes para añadir más.",
         "shelf_choose_tag": "Escoge una etiqueta para crear el estante correspondiente",
-        "custom_lists": "listas personalizadas"
+        "custom_lists": "listas personalizadas",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Por favor, inicie sesión primero"
