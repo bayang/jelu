@@ -15,6 +15,11 @@ const { t } = useI18n({
 
 useTitle('Jelu | Stats')
 
+let currency = localStorage.getItem("JL_CURRENCY")
+if (currency == null) {
+  currency = "$"
+}
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, LineController, PointElement, LineElement)
 
 const getYears = () => {
@@ -175,7 +180,7 @@ totalStats()
       {{ t('stats.total') }}:&nbsp;{{ totals.total }}
     </h1>
     <div class="mb-2">
-      {{ t('stats.read') }}:&nbsp;{{ totals.read }} / {{ t('stats.unread') }}:&nbsp;{{ totals.unread }} / {{ t('stats.dropped') }}:&nbsp;{{ totals.dropped }} / {{ t('stats.prices_sum') }}&nbsp;{{ totals.priceInCents / 100.0 }}
+      {{ t('stats.read') }}:&nbsp;{{ totals.read }} / {{ t('stats.unread') }}:&nbsp;{{ totals.unread }} / {{ t('stats.dropped') }}:&nbsp;{{ totals.dropped }} / {{ t('stats.prices_sum') }}&nbsp;{{ totals.price }}&nbsp;{{ currency }}
     </div>
     <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
       {{ t('stats.all_time') }}

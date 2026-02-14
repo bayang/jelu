@@ -151,7 +151,8 @@
         "shelves": "Shelves",
         "shelves_max_number_reached" : "Maximum number of shelves is reached. Delete existing ones to add more.",
         "shelf_choose_tag" : "Pick a tag to create the corresponding shelf",
-        "custom_lists" : "custom lists"
+        "custom_lists" : "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user" : {
         "log_first" : "Please log in first"

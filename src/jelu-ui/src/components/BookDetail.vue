@@ -51,6 +51,11 @@ const user: ComputedRef<User> = computed(() => {
   return store !== undefined && store.getters.getUser
 })
 
+let currency = localStorage.getItem("JL_CURRENCY")
+if (currency == null) {
+  currency = "$"
+}
+
 const book: Ref<UserBook | null> = ref(null)
 const edit: Ref<boolean> = ref(false)
 const showModal: Ref<boolean> = ref(false)
@@ -849,7 +854,7 @@ getBook()
         </p>
         <p v-if="book?.price">
           <span class="font-semibold capitalize">{{ t('book.price') }} :</span>
-          {{ book.price }}
+          {{ book.price }}&nbsp;{{ currency }}
         </p>
         <div v-if="book?.owned || book?.toRead || book?.borrowed">
           <span

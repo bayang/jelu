@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useLocalStorage, useTitle } from '@vueuse/core'
 import { themeChange } from 'theme-change'
-import { inject, onMounted, watch } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 useTitle('Jelu | User settings')
@@ -64,6 +64,17 @@ watch(() => locale.value,(newValue, oldValue) => {
   storedLanguage.value = newValue
 })
 
+const currency = ref("$")
+const saved = localStorage.getItem("JL_CURRENCY")
+if (saved != null) {
+  currency.value = saved
+}
+
+watch(() => currency.value, (newVal, oldVal) => {
+  console.log('currency changed ' + currency.value)
+  localStorage.setItem("JL_CURRENCY", currency.value)
+})
+
 </script>
 
 <template>
@@ -84,7 +95,7 @@ watch(() => locale.value,(newValue, oldValue) => {
             d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
           />
         </svg>
-        {{ t('settings.pick_theme') }} : 
+        {{ t('settings.pick_theme') }} :
       </span>
     </label>
     <select
@@ -141,6 +152,15 @@ watch(() => locale.value,(newValue, oldValue) => {
         {{ loc }}
       </option>
     </select>
+    <label class="label">
+      <span class="label-text text-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+
+        {{ t('settings.choose_currency') }} : </span>
+    </label>
+    <input type="text" class="input input-accent" v-model="currency" />
   </div>
 </template>
 
