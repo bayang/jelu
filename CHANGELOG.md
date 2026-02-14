@@ -1,3 +1,15 @@
+## [0.78.0](https://github.com/bayang/jelu/compare/v0.77.1...v0.78.0) (2026-02-14)
+
+
+### Features
+
+* add currency [#285](https://github.com/bayang/jelu/issues/285) ([74f65c9](https://github.com/bayang/jelu/commit/74f65c90bca77c7a74336e8c982ba1eeada0dfa4))
+
+
+### Bug Fixes
+
+* price display and rounding [#282](https://github.com/bayang/jelu/issues/282) [#277](https://github.com/bayang/jelu/issues/277) ([31ce05d](https://github.com/bayang/jelu/commit/31ce05d93a851afb78df062bdda1d0415e642994))
+
 ### [0.77.1](https://github.com/bayang/jelu/compare/v0.77.0...v0.77.1) (2026-01-13)
 
 
