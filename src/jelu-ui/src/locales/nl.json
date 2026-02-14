@@ -151,7 +151,8 @@
         "shelves": "Boekenplanken",
         "shelves_max_number_reached": "Maximum aantal boekenplanken is bereikt. Verwijder bestaande om er meer toe te voegen.",
         "shelf_choose_tag": "Kies een label om de corresponderende boekenplank te maken",
-        "custom_lists": "aangepaste lijsten"
+        "custom_lists": "aangepaste lijsten",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Eerst inloggen a.u.b."

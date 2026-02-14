@@ -151,7 +151,8 @@
         "shelves": "Police",
         "shelves_max_number_reached": "Dosažen maximální počet polic. Chcete-li přidat další, smažte některý ze stávajících.",
         "shelf_choose_tag": "Vyberte tag pro vytvoření odpovídající police",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Nejprve se prosím přihlaste"

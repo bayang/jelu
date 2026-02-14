@@ -151,7 +151,8 @@
         "shelves": "Prateleiras",
         "shelves_max_number_reached": "O número máximo de prateleiras foi atingido. Apague já existentes para adicionar mais.",
         "shelf_choose_tag": "Escolha uma etiqueta para criar a prateleira correspondente",
-        "custom_lists": "listas personalizadas"
+        "custom_lists": "listas personalizadas",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Por favor, inicie sessão primeiro"

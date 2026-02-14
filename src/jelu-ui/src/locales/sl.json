@@ -151,7 +151,8 @@
         "shelves": "Police",
         "shelves_max_number_reached": "Dosegli ste maksimalno število polic. Odstranite obstoječe police preden dodate nove.",
         "shelf_choose_tag": "Izberite oznako, da ustvarite ustrezno polico",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Prosim, najprej se prijavite"

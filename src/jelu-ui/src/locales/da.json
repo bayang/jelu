@@ -151,7 +151,8 @@
         "shelves": "Reoler",
         "shelves_max_number_reached": "Maksimalt antal hylder er opnået. Slet eksisterende for at tilføje flere.",
         "shelf_choose_tag": "Vælg et mærkat for at oprette den tilsvarende hylde",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Log venligst ind først"

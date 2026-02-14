@@ -151,7 +151,8 @@
         "shelves": "Półki",
         "shelves_max_number_reached": "Osiągnięto maksymalną liczbę półek. Usuń istniejące, aby dodać więcej.",
         "shelf_choose_tag": "Wybierz znacznik do utworzenia odpowiedniej półki",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Należy być zalogowanym"

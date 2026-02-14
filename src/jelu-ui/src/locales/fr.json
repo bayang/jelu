@@ -151,7 +151,8 @@
         "shelves": "Étagères",
         "shelves_max_number_reached": "Le nombre maximum d'étagères est atteint. Supprimez-en pour en ajouter d'autres.",
         "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante",
-        "custom_lists": "listes personnalisées"
+        "custom_lists": "listes personnalisées",
+        "choose_currency": "Choisissez votre devise"
     },
     "user": {
         "log_first": "Veuillez vous identifier"

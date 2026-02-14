@@ -151,7 +151,8 @@
         "shelves": "Polcok",
         "shelves_max_number_reached": "Elérte a polcok maximális számát. Töröljön a meglévőkből újabbak hozzáadásához.",
         "shelf_choose_tag": "Tag kiválasztása a megfelelő polc létrehozásához",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Először jelentkezz be"

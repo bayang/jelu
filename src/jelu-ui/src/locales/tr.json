@@ -151,7 +151,8 @@
         "shelves": "Raflar",
         "shelves_max_number_reached": "Maksimum raf sayısına ulaşıldı. Daha fazla eklemek için bir tane sil.",
         "shelf_choose_tag": "Raf oluşturmak için bir etiket seçin",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Lütfen önce giriş yapın"

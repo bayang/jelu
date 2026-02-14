@@ -151,7 +151,8 @@
         "shelves": "Rak",
         "shelves_max_number_reached": "Jumlah rak sudah maksimal. Hapus rak saat ini untuk menambahkan lagi.",
         "shelf_choose_tag": "Pilih penanda untuk membuat rak",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Silakan masuk dahulu"
