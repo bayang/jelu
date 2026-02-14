@@ -203,7 +203,7 @@ class BookService(
         } else if (file == null &&
             !book.book?.image.isNullOrBlank() &&
             !previousImage.isNullOrBlank() &&
-            previousImage.equals(book.book?.image, false)
+            previousImage.equals(book.book.image, false)
         ) {
             // no multipart file and image field in update dto is the same as in BDD -> no change
             skipSave = true
@@ -221,7 +221,7 @@ class BookService(
                 saveImages(file, updated.book.title, updated.book.id.toString(), book.book?.image, properties.files.images)
             updated.book.image = savedImage
             // we had a previous image and we saved a new one : delete the old one
-            if (backup != null && backup.exists() && savedImage != null && savedImage.isNotBlank()) {
+            if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
                 Files.deleteIfExists(backup.toPath())
             }
         }
@@ -758,5 +758,5 @@ class BookService(
     }
 
     @Transactional
-    fun stats(userId: UUID): TotalsStatsDto = bookRepository.stats(userId)
+    fun stats(userId: UUID): TotalsStatsDto = bookRepository.stats(userId).toTotalsStatsDto()
 }

@@ -31,6 +31,20 @@ class ReadingEventService(
     }
 
     @Transactional
+    fun findAllForStats(
+        eventTypes: List<ReadingEventType>?,
+        userId: UUID?,
+        bookId: UUID?,
+        startedAfter: LocalDate?,
+        startedBefore: LocalDate?,
+        endedAfter: LocalDate?,
+        endedBefore: LocalDate?,
+        pageable: Pageable,
+    ) = readingEventRepository.findAll(eventTypes, userId, bookId, startedAfter, startedBefore, endedAfter, endedBefore, pageable).map {
+        it.toReadingEventStatsDto()
+    }
+
+    @Transactional
     fun findYears(
         eventTypes: List<ReadingEventType>?,
         userId: UUID?,

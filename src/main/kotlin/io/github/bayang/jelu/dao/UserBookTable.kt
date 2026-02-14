@@ -5,6 +5,7 @@ import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookLightWithoutBookDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsDto
+import io.github.bayang.jelu.utils.centsToDouble
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -69,7 +70,7 @@ class UserBook(
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
-            priceInCents = this.priceInCents,
+            price = centsToDouble(this.priceInCents),
         )
 
     fun toUserBookLightDto(): UserBookLightDto =
@@ -87,7 +88,7 @@ class UserBook(
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
-            priceInCents = this.priceInCents,
+            price = centsToDouble(this.priceInCents),
         )
 
     fun toUserBookLightWithoutBookDto(): UserBookLightWithoutBookDto =
@@ -104,7 +105,7 @@ class UserBook(
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
-            priceInCents = this.priceInCents,
+            price = centsToDouble(this.priceInCents),
         )
 
     fun toUserBookWthoutEventsAndUserDto(): UserBookWithoutEventsAndUserDto =
@@ -123,7 +124,7 @@ class UserBook(
             borrowed = this.borrowed,
             avgRating = this.avgRating,
             userAvgRating = this.userAvgRating,
-            priceInCents = this.priceInCents,
+            price = centsToDouble(this.priceInCents),
         )
 
     fun toUserBookWithoutEventsDto(): UserBookWithoutEventsDto =
@@ -139,6 +140,6 @@ class UserBook(
             percentRead = this.percentRead,
             currentPageNumber = this.currentPageNumber,
             borrowed = this.borrowed,
-            priceInCents = this.priceInCents,
+            price = centsToDouble(this.priceInCents),
         )
 }

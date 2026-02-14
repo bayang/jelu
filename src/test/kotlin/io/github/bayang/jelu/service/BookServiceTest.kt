@@ -1546,7 +1546,7 @@ class BookServiceTest(
         Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
         Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
         Assertions.assertEquals(createUserBookDto.percentRead, saved.percentRead)
-        Assertions.assertEquals(createUserBookDto.priceInCents, saved.priceInCents)
+        Assertions.assertEquals(createUserBookDto.price, saved.price)
         Assertions.assertEquals(createUserBookDto.currentPageNumber, saved.currentPageNumber)
         Assertions.assertNotNull(saved.creationDate)
         Assertions.assertNotNull(saved.modificationDate)
@@ -1605,7 +1605,7 @@ class BookServiceTest(
                 owned = null,
                 personalNotes = null,
                 borrowed = null,
-                priceInCents = null,
+                price = null,
             )
         var updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(update.percentRead, updated.percentRead)
@@ -1623,7 +1623,7 @@ class BookServiceTest(
                 owned = null,
                 personalNotes = null,
                 borrowed = null,
-                priceInCents = null,
+                price = null,
             )
         updated = bookService.update(saved.id!!, update)
         Assertions.assertNull(updated.percentRead)
@@ -1641,7 +1641,7 @@ class BookServiceTest(
                 owned = null,
                 personalNotes = null,
                 borrowed = null,
-                priceInCents = null,
+                price = null,
             )
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(0, updated.percentRead)
@@ -1659,7 +1659,7 @@ class BookServiceTest(
                 owned = null,
                 personalNotes = null,
                 borrowed = null,
-                priceInCents = null,
+                price = null,
             )
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(40, updated.percentRead)
@@ -1677,7 +1677,7 @@ class BookServiceTest(
                 owned = null,
                 personalNotes = null,
                 borrowed = null,
-                priceInCents = null,
+                price = null,
             )
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(100, updated.percentRead)
@@ -1695,7 +1695,7 @@ class BookServiceTest(
                 owned = null,
                 personalNotes = null,
                 borrowed = null,
-                priceInCents = null,
+                price = null,
             )
         updated = bookService.update(saved.id!!, update)
         Assertions.assertEquals(0, updated.percentRead)
@@ -2083,7 +2083,7 @@ class BookServiceTest(
                 percentRead = 50,
                 borrowed = null,
                 currentPageNumber = null,
-                priceInCents = null,
+                price = null,
             )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -2155,7 +2155,7 @@ class BookServiceTest(
                 percentRead = 50,
                 borrowed = true,
                 currentPageNumber = null,
-                priceInCents = null,
+                price = null,
             )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(createBook.title, updated.book.title)
@@ -2215,7 +2215,7 @@ class BookServiceTest(
                 percentRead = 50,
                 borrowed = true,
                 currentPageNumber = null,
-                priceInCents = null,
+                price = null,
             )
         val updated = bookService.update(saved.id!!, updater, null)
         Assertions.assertEquals(ReadingEventType.DROPPED, updated.lastReadingEvent)
@@ -2246,7 +2246,7 @@ class BookServiceTest(
                 percentRead = 50,
                 borrowed = true,
                 currentPageNumber = null,
-                priceInCents = null,
+                price = null,
             )
         val updated2 = bookService.update(saved2.id!!, updater2, null)
         Assertions.assertEquals(ReadingEventType.FINISHED, updated2.lastReadingEvent)
@@ -2300,7 +2300,7 @@ class BookServiceTest(
                 percentRead = 50,
                 borrowed = false,
                 currentPageNumber = null,
-                priceInCents = null,
+                price = null,
             )
         // val replacementFile = MockMultipartFile("test-replace-cover.jpg", "test-replace-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
         val updated = bookService.update(saved.id!!, updater, null)
@@ -2374,7 +2374,7 @@ class BookServiceTest(
                 percentRead = 50,
                 borrowed = null,
                 currentPageNumber = null,
-                priceInCents = null,
+                price = null,
             )
         val replacementFile =
             MockMultipartFile(

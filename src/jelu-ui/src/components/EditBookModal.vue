@@ -90,8 +90,6 @@ const toReadDisplay = computed(() => {
   return ""
 })
 
-const priceChanged = ref(false)
-
 const seriesCopy: Array<SeriesOrder> = userbook.value.book.series ?? []
 
 const importBook = () => {
@@ -108,13 +106,9 @@ const importBook = () => {
   } else if (deleteImage.value) {
     userbook.value.book.image = null
   }
-  if (userbook.value.priceInCents != null) {
-    if (userbook.value.priceInCents <= 0) {
-      userbook.value.priceInCents = null
-    } else {
-      if (priceChanged.value === true) {
-        userbook.value.priceInCents = userbook.value.priceInCents * 100
-      }
+  if (userbook.value.price != null) {
+    if (userbook.value.price <= 0) {
+      userbook.value.price = null
     }
   }
 
@@ -274,12 +268,6 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
         const formatted = dayjs(newVal).format('YYYY-MM-DD')
         userbook.value.book.publishedDate = formatted
     }
-})
-
-watch(()=>userbook.value.priceInCents, (newVal, oldVal) => {
-  if (newVal != null) {
-    priceChanged.value = true
-  }
 })
 
 if (userbook.value.book.publisher != null) {
@@ -734,7 +722,7 @@ if (userbook.value.book.publisher != null) {
           </legend>
           <label class="input w-full">
             <input
-              v-model="userbook.priceInCents"
+              v-model="userbook.price"
               type="number"
               class="input focus:input-accent validator"
               step="0.01"
@@ -747,7 +735,7 @@ if (userbook.value.book.publisher != null) {
               stroke-width="1.5"
               stroke="currentColor"
               class="size-6 hover:cursor-pointer"
-              @click="userbook.priceInCents = null"
+              @click="userbook.price = null"
             >
               <path
                 stroke-linecap="round"

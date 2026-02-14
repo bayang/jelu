@@ -62,7 +62,7 @@ const form = reactive({
   inventaireId: "",
   language: "",
   originalTitle: "",
-  priceInCents: null
+  price: null
 });
 const eventType = ref(null);
 const eventDate: Ref<Date|null> = ref(new Date());
@@ -245,7 +245,7 @@ const fillBook = (formdata: any, publishedDate: Date | null): UserBook => {
     percentRead: formdata.percentRead,
     currentPageNumber: formdata.currentPageNumber,
     borrowed: formdata.borrowed,
-    priceInCents: (formdata.priceInCents == null || formdata.priceInCents < 0) ? null : formdata.priceInCents * 100
+    price: (formdata.price == null || formdata.price < 0) ? null : formdata.price
   }
   return userBook
 }
@@ -282,7 +282,7 @@ const clearForm = () => {
   form.percentRead = null
   form.currentPageNumber = null
   form.originalTitle = ""
-  form.priceInCents = null
+  form.price= null
 };
 
 const clearDatePicker = () => {
@@ -1000,7 +1000,7 @@ const displayDatepicker = computed(() => {
           </legend>
           <label class="input w-full">
             <input
-              v-model="form.priceInCents"
+              v-model="form.price"
               type="number"
               class="input focus:input-accent validator"
               step="0.01"
@@ -1013,7 +1013,7 @@ const displayDatepicker = computed(() => {
               stroke-width="1.5"
               stroke="currentColor"
               class="size-6 hover:cursor-pointer"
-              @click="form.priceInCents = null"
+              @click="form.price = null"
             >
               <path
                 stroke-linecap="round"

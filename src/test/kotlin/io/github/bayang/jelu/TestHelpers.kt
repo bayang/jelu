@@ -7,6 +7,7 @@ import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.TagDto
+import io.github.bayang.jelu.utils.centsToDouble
 import java.time.Instant
 
 fun createUserBookDto(
@@ -28,7 +29,7 @@ fun createUserBookDto(
         book = bookDto,
         borrowed = borrowed,
         currentPageNumber = null,
-        priceInCents = priceInCents,
+        price = centsToDouble(priceInCents),
     )
 
 fun bookDto(

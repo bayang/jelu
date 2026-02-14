@@ -20,7 +20,7 @@ export interface Book {
     translators?: Array<Author>,
     narrators?: Array<Author>,
     tags?: Array<Tag>,
-    series?: Array<SeriesOrder>, 
+    series?: Array<SeriesOrder>,
     googleId?: string,
     amazonId?: string,
     goodreadsId?: string,
@@ -49,7 +49,7 @@ export interface UserBook {
     currentPageNumber?: number|null,
     avgRating?: number|null,
     userAvgRating?: number|null,
-    priceInCents?: number|null,
+    price?: number|null,
   }
 export interface UserBookBulkUpdate {
     ids: Array<string>,

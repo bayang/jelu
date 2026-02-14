@@ -241,7 +241,7 @@ class CsvImportServiceTest(
                 null,
                 null,
                 null,
-                priceInCents = null,
+                price = null,
             )
         bookService.update(imported.id!!, u, null)
         userbooksPage = bookService.findUserBookByCriteria(userId, null, null, null, null, null, Pageable.ofSize(30))

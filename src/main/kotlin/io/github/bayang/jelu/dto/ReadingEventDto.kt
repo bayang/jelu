@@ -14,6 +14,17 @@ data class ReadingEventDto(
     val endDate: Instant?,
 )
 
+data class ReadingEventStatsDto(
+    val id: UUID?,
+    val creationDate: Instant?,
+    val modificationDate: Instant?,
+    val eventType: ReadingEventType,
+    val priceInCents: Long?,
+    val startDate: Instant?,
+    val userBook: UserBookWithoutEventsDto,
+    val endDate: Instant?,
+)
+
 data class ReadingEventWithoutUserBookDto(
     val id: UUID?,
     val creationDate: Instant?,

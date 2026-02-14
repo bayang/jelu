@@ -847,9 +847,9 @@ getBook()
           <span class="font-semibold capitalize">{{ t('book.language') }} :</span>
           {{ book.book.language }}
         </p>
-        <p v-if="book?.priceInCents">
+        <p v-if="book?.price">
           <span class="font-semibold capitalize">{{ t('book.price') }} :</span>
-          {{ book.priceInCents / 100.0 }}
+          {{ book.price }}
         </p>
         <div v-if="book?.owned || book?.toRead || book?.borrowed">
           <span

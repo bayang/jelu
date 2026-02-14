@@ -14,7 +14,7 @@ import io.github.bayang.jelu.dto.SeriesCreateDto
 import io.github.bayang.jelu.dto.SeriesOrderDto
 import io.github.bayang.jelu.dto.SeriesUpdateDto
 import io.github.bayang.jelu.dto.TagDto
-import io.github.bayang.jelu.dto.TotalsStatsDto
+import io.github.bayang.jelu.dto.TotalsStatsCentsDto
 import io.github.bayang.jelu.dto.UserBookBulkUpdateDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserDto
@@ -61,6 +61,7 @@ import java.time.Instant
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
+public val ONE_HUNDRED = BigDecimal(100)
 
 fun parseSorts(
     sort: Sort,
@@ -1126,6 +1127,8 @@ class BookRepository(
         return update(found, book)
     }
 
+    fun floatingPriceToLong(price: Double): Long? = BigDecimal.valueOf(price).multiply(ONE_HUNDRED).toLong()
+
     fun update(
         userBookId: UUID,
         book: UserBookUpdateDto,
@@ -1140,8 +1143,8 @@ class BookRepository(
         if (book.toRead != null) {
             found.toRead = book.toRead
         }
-        if (book.priceInCents != null) {
-            found.priceInCents = book.priceInCents
+        if (book.price != null) {
+            found.priceInCents = floatingPriceToLong(book.price)
         }
         var bookFinished = false
         if (book.percentRead != null && book.percentRead >= 100) {
@@ -1521,6 +1524,10 @@ class BookRepository(
         createUserBookDto: CreateUserBookDto,
     ): UserBook {
         val instant: Instant = nowInstant()
+        var toCents: Long? = null
+        if (createUserBookDto.price != null) {
+            toCents = floatingPriceToLong(createUserBookDto.price)
+        }
         return UserBook.new(UUID.randomUUID()) {
             this.creationDate = instant
             this.modificationDate = instant
@@ -1531,7 +1538,7 @@ class BookRepository(
             this.personalNotes = cleanString(createUserBookDto.personalNotes)
             this.percentRead = createUserBookDto.percentRead
             this.borrowed = createUserBookDto.borrowed
-            this.priceInCents = createUserBookDto.priceInCents
+            this.priceInCents = toCents
         }
     }
 
@@ -1849,7 +1856,7 @@ class BookRepository(
         }
     }
 
-    fun stats(userId: UUID): TotalsStatsDto {
+    fun stats(userId: UUID): TotalsStatsCentsDto {
         val query =
             UserBookTable
                 .join(ReadingEventTable, JoinType.LEFT, onColumn = UserBookTable.id, otherColumn = ReadingEventTable.userBook)
@@ -1900,7 +1907,7 @@ class BookRepository(
             pageNumber++
         }
         while (books.hasNext())
-        return TotalsStatsDto(
+        return TotalsStatsCentsDto(
             read = readCount,
             unread = unread,
             dropped = droppedCount,

@@ -63,7 +63,7 @@ const getAllStats = () => {
             label: t('book.price'),
             yAxisID: 'y1',
             backgroundColor: '#a5dd2c',
-            data: res.map(r => r.priceInCents / 100)
+            data: res.map(r => r.price)
           },
         ]
       } as any // mixed charts typing is broken
@@ -111,7 +111,7 @@ const getYearStats = () => {
               label: t('book.price'),
               yAxisID: 'y1',
               backgroundColor: '#a5dd2c',
-              data: res.map(r => r.priceInCents / 100)
+              data: res.map(r => r.price)
             },
           ]
         } as any // mixed charts typing is broken
@@ -153,7 +153,7 @@ const chartOptions = ref({
 
 const years: Ref<Array<number>> = ref([])
 const currentYear: Ref<number|null> = ref(null)
-const totals: Ref<TotalsStats> = ref({"read": 0, "unread": 0, "dropped": 0, "total" : 0, "priceInCents": 0})
+const totals: Ref<TotalsStats> = ref({"read": 0, "unread": 0, "dropped": 0, "total" : 0, "price": 0})
 
 watch(currentYear, (newVal, oldVal) => {
   console.log("year " + newVal + " " + oldVal)
