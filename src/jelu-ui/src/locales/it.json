@@ -151,7 +151,8 @@
         "shelves": "Scaffali",
         "shelves_max_number_reached": "Il numero massimo di scaffali è stato raggiunto. Elimina quelli esistenti per aggiungerne altri.",
         "shelf_choose_tag": "Scegli un'etichetta per creare lo scaffale corrispondente",
-        "custom_lists": "custom lists"
+        "custom_lists": "custom lists",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Effettua prima l'accesso"
