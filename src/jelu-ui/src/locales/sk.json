@@ -151,7 +151,8 @@
         "shelves": "Poličky",
         "shelves_max_number_reached": "Maximálny počet poličiek je dosiahnutý. Ak chcete pridať ďalšie, odstráňte existujúce.",
         "shelf_choose_tag": "Výberom štítku vytvoríte príslušnú poličku",
-        "custom_lists": "Vlastné zoznamy"
+        "custom_lists": "Vlastné zoznamy",
+        "choose_currency": "Select your currency"
     },
     "user": {
         "log_first": "Najskôr sa prihláste, prosím"
