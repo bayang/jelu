@@ -669,4 +669,42 @@
             ALTER TABLE book ADD original_title varchar(1000);
         </sql>
     </changeSet>
+    <changeSet id="add_api_token" author="byng">
+        <createTable tableName="api_token">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="user_id" type="binary(16)" remarks="User ID">
+                <constraints foreignKeyName="fk_api_token_user_id" references="user(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="token_hash" type="varchar(64)" remarks="SHA-256 hash of token">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="name" type="varchar(100)" remarks="User-friendly name">
+                <constraints nullable="false" />
+            </column>
+            <column name="scopes" type="varchar(500)" remarks="Comma-separated scopes">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="timestamp" remarks="Date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_used_at" type="timestamp" remarks="Date of last use">
+            </column>
+            <column name="usage_count" type="bigint" remarks="Number of times used" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="expires_at" type="timestamp" remarks="Optional expiration date">
+            </column>
+            <column name="is_active" type="boolean" remarks="Token active status" defaultValueBoolean="true">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createIndex tableName="api_token" indexName="idx_api_token_hash">
+            <column name="token_hash" />
+        </createIndex>
+        <createIndex tableName="api_token" indexName="idx_api_token_user_id">
+            <column name="user_id" />
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

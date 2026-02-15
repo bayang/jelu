@@ -2,6 +2,7 @@ package io.github.bayang.jelu.controllers
 
 import io.github.bayang.jelu.errors.JeluAuthenticationException
 import io.github.bayang.jelu.errors.JeluException
+import io.github.bayang.jelu.errors.JeluNotFoundException
 import io.github.bayang.jelu.errors.JeluValidationException
 import jakarta.validation.ConstraintViolationException
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
@@ -57,6 +58,11 @@ class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleJeluValidationException(e: JeluValidationException): ApiError = ApiError(e.message)
+
+    @ExceptionHandler(JeluNotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    fun handleJeluNotFoundException(e: JeluNotFoundException): ApiError = ApiError(e.message)
 }
 
 data class ApiError(

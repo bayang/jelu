@@ -21,7 +21,8 @@ const items = ref([{ name:t('settings.profile'), tooltip:t('settings.my_profile'
                 { name:t('settings.imports'), icon:"bxs-file-plus", href:"/profile/imports", tooltip: t('settings.csv_import') },
                 { name:t('settings.messages'), icon:"bxs-message-alt-detail", href:"/profile/messages" },
                 { name:t('settings.stats'), icon:"bxs-chart", href:"/profile/stats", tooltip: t('settings.stats') },
-                { name:t('settings.users'), icon:"bxs-user-detail", href:"/profile/users", tooltip: t('settings.users') }
+                { name:t('settings.users'), icon:"bxs-user-detail", href:"/profile/users", tooltip: t('settings.users') },
+                { name:t('settings.api_tokens'), icon:"bxs-key", href:"/profile/api-tokens", tooltip: t('settings.api_tokens') }
                 ])
 
 if (store.getters.isAdmin && store.getters.getUser != null && store.getters.getUser.provider !== Provider.PROXY) {

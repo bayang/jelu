@@ -2,6 +2,8 @@ package io.github.bayang.jelu.config
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.bayang.jelu.security.ApiTokenAuthentication
+import io.github.bayang.jelu.security.ApiTokenAuthenticationMixin
 import org.springframework.beans.factory.BeanClassLoaderAware
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -84,6 +86,7 @@ class SessionConfig : BeanClassLoaderAware {
         copy.registerModules(SecurityJackson2Modules.getModules(this.classLoader))
         copy.disable(MapperFeature.USE_GETTERS_AS_SETTERS) // mandatory to deserialize setterless authorities on user
         copy.addMixIn(UserAgentWebAuthenticationDetails::class.java, UserAgentWebAuthenticationDetailsMixin::class.java)
+        copy.addMixIn(ApiTokenAuthentication::class.java, ApiTokenAuthenticationMixin::class.java)
         val converter = GenericConversionService()
         converter.addConverter(Any::class.java, ByteArray::class.java, SerializingConverter(JsonSerializer(copy)))
         converter.addConverter(ByteArray::class.java, Any::class.java, DeserializingConverter(JsonDeserializer(copy)))
