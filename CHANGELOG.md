@@ -1,3 +1,10 @@
+### [0.78.1](https://github.com/bayang/jelu/compare/v0.78.0...v0.78.1) (2026-03-02)
+
+
+### Bug Fixes
+
+* stats breaking on dropped event [#290](https://github.com/bayang/jelu/issues/290) ([3e87ee7](https://github.com/bayang/jelu/commit/3e87ee7db4ad55bbb31828d5806fd6b19062577f))
+
 ## [0.78.0](https://github.com/bayang/jelu/compare/v0.77.1...v0.78.0) (2026-02-14)
 
 
