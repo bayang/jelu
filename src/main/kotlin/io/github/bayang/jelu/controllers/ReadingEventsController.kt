@@ -159,9 +159,14 @@ class ReadingEventsController(
                         yearStats[year] = yearStats[year]!!.copy(dropped = yearStats[year]!!.dropped + 1)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
                         var price: Long = 0
-                        if (it.userBook.id != null && !pricesAlreadyAdded[year]!!.contains(it.userBook.id)) {
-                            pricesAlreadyAdded[year]!!.add(it.userBook.id)
-                            price = it.priceInCents ?: 0
+                        if (it.userBook.id != null) {
+                            if (!pricesAlreadyAdded.containsKey(year)) {
+                                pricesAlreadyAdded[year] = mutableSetOf()
+                            }
+                            if (!pricesAlreadyAdded[year]!!.contains(it.userBook.id)) {
+                                pricesAlreadyAdded[year]!!.add(it.userBook.id)
+                                price = it.priceInCents ?: 0
+                            }
                         }
                         yearStats[year] =
                             yearStats[year]!!.copy(
