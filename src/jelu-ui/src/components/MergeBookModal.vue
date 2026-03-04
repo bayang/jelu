@@ -23,6 +23,7 @@ const props = defineProps<{
 }>()
 
 const book: Ref<Book> = ref(props.book)
+const initialImage = props.book.image
 const initialIsbn10: Ref<string|undefined> = ref(book.value.isbn10)
 const initialIsbn13: Ref<string|undefined> = ref(book.value.isbn13)
 const seriesCopy: Array<SeriesOrder> = book.value.series ?? []
@@ -38,6 +39,7 @@ let filteredAuthors: Ref<Array<Wrapper>> = ref([]);
 let filteredTags: Ref<Array<Wrapper>> = ref([]);
 
 const progress: Ref<boolean> = ref(false)
+const replaceImage: Ref<boolean> = ref(false)
 
 const discard = () => {
   emit('close')
@@ -917,6 +919,48 @@ book.value.tags?.forEach(t => tags.value.push(t.name))
               class="jelu-cursor-text textarea textarea-secondary w-full join-item"
             />
           </div>
+        </div>
+        <div class="form-control w-full" v-if="props.metadata.image">
+          <div class="indicator">
+                        <span
+                        v-if="replaceImage"
+              class="badge indicator-item indicator-bottom indicator-start tooltip tooltip-bottom"
+              :data-tip="t('labels.discard')"
+              @click="book.image = initialImage; replaceImage = false;"
+            >
+              <i class="mdi mdi-autorenew" />
+            </span>
+
+            <figure>
+              <img v-if="book.image" :src="'/files/' + book.image" alt="Book Image" class="max-h-96" />
+              <img v-else src="../assets/placeholder_asset.jpg" class="max-h-96"/>
+            </figure>
+          </div>
+        </div>
+          <div class="form-control w-full">
+            <button
+              class="btn btn-square btn-ghost btn-outline btn-secondary join-item z-0"
+              @click="book.image = props.metadata.image; replaceImage = true;"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M11.03 3.97a.75.75 0 010 1.06l-6.22 6.22H21a.75.75 0 010 1.5H4.81l6.22 6.22a.75.75 0 11-1.06 1.06l-7.5-7.5a.75.75 0 010-1.06l7.5-7.5a.75.75 0 011.06 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+
+           <div class="">
+            <figure>
+              <img :src="'/files/' + props.metadata.image" alt="Book Image" class="max-h-96" />
+            </figure>
+           </div>
         </div>
       </div>
       <div

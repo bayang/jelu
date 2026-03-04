@@ -158,6 +158,44 @@ class BookService(
         book: BookUpdateDto,
     ): BookDto {
         val res = bookRepository.update(bookId, book)
+        val previousImage: String? = res.image
+        var backup: File? = null
+        var skipSave = false
+        // image field is empty in udate dto and previous book had an image
+        // it means image has been explicitely set to null in update dto -> remove existing image
+        // otherwise it is impossible to remove an image from the UI without replacing it by a new one
+        if (book.image.isNullOrBlank()) {
+            skipSave = true
+            // remove previous image
+            if (book.image.isNullOrBlank() && !previousImage.isNullOrBlank()) {
+                res.image = null
+                fileManager.deleteImage(previousImage)
+            }
+        } else if (
+            book.image.isNotBlank() &&
+            !previousImage.isNullOrBlank() &&
+            previousImage.equals(book.image, false)
+        ) {
+            // image field in update dto is the same as in BDD -> no change
+            skipSave = true
+        }
+        if (!skipSave) {
+            // if we need to update image and there is already one, backup it
+            if (!book.image.isNullOrBlank() && !previousImage.isNullOrBlank()) {
+                val currentImage = File(properties.files.images, previousImage)
+                if (currentImage.exists()) {
+                    backup = File(properties.files.images, "$previousImage.bak")
+                    Files.move(currentImage.toPath(), backup.toPath())
+                }
+            }
+            val savedImage: String? =
+                saveImages(null, res.title, res.id.toString(), book.image, properties.files.images)
+            res.image = savedImage
+            // we had a previous image and we saved a new one : delete the old one
+            if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
+                Files.deleteIfExists(backup.toPath())
+            }
+        }
         searchIndexService.bookUpdated(res)
         return res.toBookDto()
     }
@@ -331,7 +369,10 @@ class BookService(
                             id,
                             FilenameUtils.getExtension(dtoImage),
                         )
-                    val currentFile = File(targetDir, "$dtoImage.bak")
+                    var currentFile = File(targetDir, "$dtoImage.bak")
+                    if (!currentFile.exists()) {
+                        currentFile = File(targetDir, dtoImage)
+                    }
                     val targetFile = File(currentFile.parent, targetFilename)
                     val succeeded = currentFile.renameTo(targetFile)
                     logger.debug { "renaming of metadata imported file $dtoImage was successful: $succeeded" }

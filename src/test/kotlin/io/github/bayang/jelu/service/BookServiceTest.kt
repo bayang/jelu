@@ -2113,6 +2113,87 @@ class BookServiceTest(
     }
 
     @Test
+    fun testUpdateBookWithImage() {
+        var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        val createBook = bookDto()
+        val createUserBookDto = createUserBookDto(createBook, ReadingEventType.CURRENTLY_READING, nowInstant())
+        val uploadFile =
+            MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), uploadFile)
+        Assertions.assertEquals(createBook.title, saved.book.title)
+        Assertions.assertEquals(createBook.isbn10, saved.book.isbn10)
+        Assertions.assertEquals(createBook.isbn13?.trim(), saved.book.isbn13)
+        Assertions.assertEquals("This is a test summary with a newline", saved.book.summary)
+        Assertions.assertEquals(createBook.publisher, saved.book.publisher)
+        Assertions.assertEquals(createBook.pageCount, saved.book.pageCount)
+        Assertions.assertEquals(createBook.goodreadsId, saved.book.goodreadsId)
+        Assertions.assertNull(saved.book.librarythingId)
+        Assertions.assertEquals(createUserBookDto.owned, saved.owned)
+        Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
+        Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
+        Assertions.assertEquals(0, saved.percentRead)
+        Assertions.assertNotNull(saved.creationDate)
+        Assertions.assertNotNull(saved.modificationDate)
+        Assertions.assertNotNull(saved.book.creationDate)
+        Assertions.assertNotNull(saved.book.modificationDate)
+        Assertions.assertTrue(saved.book.image!!.contains(slugify(saved.book.title), true))
+        Assertions.assertEquals(ReadingEventType.CURRENTLY_READING, saved.lastReadingEvent)
+        Assertions.assertNotNull(saved.lastReadingEventDate)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+
+        val f = File(jeluProperties.files.images, "meta-import-new.jpg")
+        this::class.java.getResourceAsStream("test-cover.jpg").use { input ->
+            f.outputStream().use { output ->
+                input?.copyTo(output)
+            }
+        }
+        val updater =
+            BookUpdateDto(
+                image = "meta-import-new.jpg",
+                title = null,
+                isbn10 = null,
+                isbn13 = null,
+                summary = null,
+                publisher = null,
+                pageCount = null,
+                goodreadsId = null,
+                librarythingId = null,
+                publishedDate = null,
+                authors = null,
+                tags = null,
+                translators = null,
+                narrators = null,
+                googleId = null,
+                amazonId = null,
+                isfdbId = null,
+                openlibraryId = null,
+                noosfereId = null,
+                inventaireId = null,
+                language = null,
+                series = null,
+                originalTitle = null,
+            )
+        val updated = bookService.update(saved.book.id!!, updater)
+        Assertions.assertEquals(createBook.title, updated.title)
+        Assertions.assertEquals(createBook.isbn10, updated.isbn10)
+        Assertions.assertEquals(createBook.isbn13?.trim(), updated.isbn13)
+        Assertions.assertEquals("This is a test summary with a newline", updated.summary)
+        Assertions.assertEquals(createBook.publisher, updated.publisher)
+        Assertions.assertEquals(createBook.goodreadsId, updated.goodreadsId)
+        Assertions.assertNull(updated.librarythingId)
+        Assertions.assertNotNull(updated.creationDate)
+        Assertions.assertNotNull(updated.modificationDate)
+        Assertions.assertTrue(updated.image!!.contains(slugify(updated.title), true))
+        Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
+        entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+    }
+
+    @Test
     fun testUpdateUserbookWithImageAndEventNewEventRequired() {
         var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)
