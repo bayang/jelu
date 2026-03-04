@@ -1,3 +1,10 @@
+## [0.80.0](https://github.com/bayang/jelu/compare/v0.79.0...v0.80.0) (2026-03-04)
+
+
+### Features
+
+* also update the image when fetching metadata from detail page [#286](https://github.com/bayang/jelu/issues/286) ([1ede7a2](https://github.com/bayang/jelu/commit/1ede7a29a9457fad88b9163e68ba65a39e8241d7))
+
 ## [0.79.0](https://github.com/bayang/jelu/compare/v0.78.1...v0.79.0) (2026-03-04)
 
 
