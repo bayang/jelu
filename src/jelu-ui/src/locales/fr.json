@@ -97,6 +97,7 @@
         "yes": "Oui",
         "no": "Non",
         "do_nothing": "Ne rien faire",
+        "cancel": "Annuler",
         "add": "Ajouter",
         "add_to_my_books": "Pas encore dans vos lives, cliquer pour ajouter",
         "add_translator": "Ajouter un traducteur",
@@ -152,7 +153,8 @@
         "shelves_max_number_reached": "Le nombre maximum d'étagères est atteint. Supprimez-en pour en ajouter d'autres.",
         "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante",
         "custom_lists": "listes personnalisées",
-        "choose_currency": "Choisissez votre devise"
+        "choose_currency": "Choisissez votre devise",
+        "api_tokens": "Jetons d'API"
     },
     "user": {
         "log_first": "Veuillez vous identifier"
@@ -421,5 +423,45 @@
         "empty": "la liste est vide",
         "edit_list": "modifier la liste",
         "update_list": "mettre à jour la liste"
+    },
+    "api_tokens": {
+        "title": "Jetons API",
+        "description": "Créez des jetons API pour activer l'accès programmatique à l'API Jelu. Les jetons peuvent être utilisés pour les scripts d'automatisation, les intégrations tierces et les pipelines CI/CD.",
+        "create": "Créer Jeton",
+        "create_new": "Créer un nouveau jeton API",
+        "no_tokens": "Pas encore de jetons API. Créez-en un pour commencer.",
+        "token_name": "Nom du jeton",
+        "name_placeholder": "par ex: Script de sauvegarde, Home assistant",
+        "select_scopes": "Sélectionner les contextes",
+        "expiration": "Validité",
+        "never_expires": "N’expire jamais",
+        "expires_30days": "30 jours",
+        "expires_90days": "90 jours",
+        "expires_1year": "1 an",
+        "expires_custom": "Date personnalisée",
+        "created": "Jeton API créé avec succès",
+        "create_error": "Échec de la création du jeton API",
+        "token_created": "Jeton créé",
+        "copy_warning": "Assurez-vous de copier votre jeton maintenant. Vous ne pourrez plus le revoir !",
+        "your_token": "Votre jeton",
+        "copied": "Le jeton a été copié dans le presse-papiers.",
+        "done": "Terminé",
+        "scopes": "Contextes",
+        "created_at": "Créé",
+        "last_used": "Dernière utilisation",
+        "usage_count": "Utilisations",
+        "expires_at": "Expire le",
+        "inactive": "Désactivé",
+        "expired": "Expiré",
+        "activate": "Activer",
+        "deactivate": "désactiver",
+        "activated": "Jeton activé",
+        "deactivated": "Jeton désactivé",
+        "revoke": "Révoquer",
+        "revoke_confirm": "Êtes-vous sûr de vouloir révoquer le jeton '{name}' ? Cette action ne peut pas être annulée.",
+        "revoked": "Jeton révoqué avec succès",
+        "revoke_error": "Impossible de révoquer le jeton",
+        "load_error": "Impossible de charger les jetons API",
+        "update_error": "Échec de la mise à jour du jeton"
     }
 }
