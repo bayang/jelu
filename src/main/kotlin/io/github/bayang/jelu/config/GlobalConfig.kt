@@ -53,8 +53,10 @@ class GlobalConfig {
                         if (jeluProperties.cors.allowedOrigins.isNullOrEmpty()) listOf("*") else jeluProperties.cors.allowedOrigins
                     allowedMethods = HttpMethod.values().map { it.name() }
                     allowCredentials = true
+                    addAllowedHeader(HttpHeaders.AUTHORIZATION)
                     addExposedHeader(HttpHeaders.CONTENT_DISPOSITION)
                     addExposedHeader(SESSION_HEADER_NAME)
+                    addExposedHeader(HttpHeaders.AUTHORIZATION)
                 },
             )
         }

@@ -28,6 +28,7 @@ import { BookQuote, CreateBookQuoteDto, UpdateBookQuoteDto } from "../model/Book
 import urls from "../urls";
 import { OAuth2ClientDto } from "../model/oauth-client-dto";
 import { CustomList, CustomListRemoveDto } from "../model/custom-list";
+import { AdminApiToken, ApiToken, ApiTokenCreated, CreateApiToken, TokenScope, UpdateApiToken } from "../model/ApiToken";
 
 class DataService {
 
@@ -2062,6 +2063,127 @@ class DataService {
       }
       console.log("error remove from list " + (error as AxiosError).code)
       throw new Error("error remove from list " + error)
+    }
+  }
+
+  /*
+   * API Token methods
+   */
+  getApiTokens = async () => {
+    try {
+      const response = await this.apiClient.get<Array<ApiToken>>('/api-tokens');
+      console.log("called api tokens")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error api tokens " + (error as AxiosError).code)
+      throw new Error("error api tokens " + error)
+    }
+  }
+
+  createApiToken = async (token: CreateApiToken) => {
+    try {
+      const resp = await this.apiClient.post<ApiTokenCreated>('/api-tokens', token)
+      console.log("create api token")
+      console.log(resp.data)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error create api token " + error.response.status + " " + error.response.data)
+        throw new Error("Error ! " + error.response.data.message)
+      }
+      console.log("error create api token " + (error as AxiosError).code)
+      throw new Error("error create api token " + error)
+    }
+  }
+
+  updateApiToken = async (tokenId: string, token: UpdateApiToken) => {
+    try {
+      const resp = await this.apiClient.put<ApiToken>(`/api-tokens/${tokenId}`, token)
+      console.log("update api token")
+      console.log(resp.data)
+      return resp.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error update api token " + error.response.status + " " + error.response.data)
+        throw new Error("Error ! " + error.response.data.message)
+      }
+      console.log("error update api token " + (error as AxiosError).code)
+      throw new Error("error update api token " + error)
+    }
+  }
+
+  deleteApiToken = async (tokenId: string) => {
+    try {
+      const response = await this.apiClient.delete(`/api-tokens/${tokenId}`);
+      console.log("delete api token")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error delete api token " + (error as AxiosError).code)
+      throw new Error("error delete api token " + error)
+    }
+  }
+
+  getApiTokenScopes = async () => {
+    try {
+      const response = await this.apiClient.get<Array<TokenScope>>('/api-tokens/scopes');
+      console.log("called api token scopes")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error api token scopes " + (error as AxiosError).code)
+      throw new Error("error api token scopes " + error)
+    }
+  }
+
+  /*
+   * Currently these admin calls are not ever leveraged by the frontend. However, I'm leaving
+   * them here for posterity to allow for an admin interface to potentially be created that
+   * would allow admins control over all API tokens (not just user specific ones) for their
+   * administered Jelu instance.
+   */
+  getAdminApiTokens = async () => {
+    try {
+      const response = await this.apiClient.get<Array<AdminApiToken>>('/admin/api-tokens');
+      console.log("called admin api tokens")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error admin api tokens " + (error as AxiosError).code)
+      throw new Error("error admin api tokens " + error)
+    }
+  }
+
+  adminDeleteApiToken = async (tokenId: string) => {
+    try {
+      const response = await this.apiClient.delete(`/admin/api-tokens/${tokenId}`);
+      console.log("admin delete api token")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error admin delete api token " + (error as AxiosError).code)
+      throw new Error("error admin delete api token " + error)
     }
   }
 
