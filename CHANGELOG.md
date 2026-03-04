@@ -1,3 +1,10 @@
+## [0.79.0](https://github.com/bayang/jelu/compare/v0.78.1...v0.79.0) (2026-03-04)
+
+
+### Features
+
+* add token authentication [#281](https://github.com/bayang/jelu/issues/281) ([#289](https://github.com/bayang/jelu/issues/289)) ([ebcef02](https://github.com/bayang/jelu/commit/ebcef02a712445a115f3df45d4a3bed676f126e7))
+
 ### [0.78.1](https://github.com/bayang/jelu/compare/v0.78.0...v0.78.1) (2026-03-02)
 
 
