@@ -97,7 +97,7 @@
         "yes": "Ja",
         "no": "Nee",
         "do_nothing": "Niets doen",
-        "cancel": "Cancel",
+        "cancel": "Annuleren",
         "add": "Toevoegen",
         "add_to_my_books": "Nog niet in je boeken, klik om het toe te voegen",
         "add_translator": "Voeg een vertaler toe",
@@ -127,7 +127,7 @@
         "delete_this_author": "Delete this author from {nb} book(s) and from database ?",
         "orphan_authors": "orphan authors",
         "find-authors": "auteurs vinden",
-        "list_empty": "list is empty"
+        "list_empty": "lijst is leeg"
     },
     "settings": {
         "pick_language": "Kies een taal",
@@ -153,7 +153,7 @@
         "shelves_max_number_reached": "Maximum aantal boekenplanken is bereikt. Verwijder bestaande om er meer toe te voegen.",
         "shelf_choose_tag": "Kies een label om de corresponderende boekenplank te maken",
         "custom_lists": "aangepaste lijsten",
-        "choose_currency": "Select your currency",
+        "choose_currency": "Selecteer uw valuta",
         "api_tokens": "API Tokens"
     },
     "user": {
@@ -177,7 +177,7 @@
         "page_count": "Aantal pagina's",
         "user_avg_rating": "mijn gemiddelde beoordeling",
         "avg_rating": "gemiddelde beoordeling",
-        "name": "name"
+        "name": "naam"
     },
     "reading_events": {
         "finished": "voltooid",
@@ -208,7 +208,7 @@
         "role": "Rol",
         "borrowed": "Boek is geleend",
         "filter": "filter",
-        "type_to_filter": "type to filter"
+        "type_to_filter": "typ om te filteren"
     },
     "book": {
         "owned": "in bezit",
@@ -244,8 +244,8 @@
         "borrowed": "geleend",
         "current_page_number": "huidige pagina nummer",
         "narrator": "narrator | narrators",
-        "original_title": "original title",
-        "price": "price"
+        "original_title": "originele titel",
+        "price": "prijs"
     },
     "authors_merge": {
         "authors_merging_utility": "Hulpprogramma samenvoegen auteurs",
@@ -408,7 +408,7 @@
             "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
         },
         "details": "details van fout",
-        "positive_only": "must be positive"
+        "positive_only": "moet positief zijn"
     },
     "lists": {
         "create_list": "een aangepaste lijst maken",
@@ -430,38 +430,38 @@
         "create": "Create Token",
         "create_new": "Create New API Token",
         "no_tokens": "No API tokens yet. Create one to get started.",
-        "token_name": "Token Name",
+        "token_name": "Token Naam",
         "name_placeholder": "e.g., Backup Script, Home Assistant",
         "select_scopes": "Select Scopes",
         "expiration": "Expiration",
-        "never_expires": "Never expires",
-        "expires_30days": "30 days",
-        "expires_90days": "90 days",
-        "expires_1year": "1 year",
-        "expires_custom": "Custom date",
+        "never_expires": "Verloopt nooit",
+        "expires_30days": "30 dagen",
+        "expires_90days": "90 dagen",
+        "expires_1year": "1 jaar",
+        "expires_custom": "Aangepaste datum",
         "created": "API token created successfully",
         "create_error": "Failed to create API token",
-        "token_created": "Token Created",
+        "token_created": "Token aangemaakt",
         "copy_warning": "Make sure to copy your token now. You won't be able to see it again!",
-        "your_token": "Your Token",
-        "copied": "Token copied to clipboard",
-        "done": "Done",
+        "your_token": "Jouw Token",
+        "copied": "Token gekopieerd naar klembord",
+        "done": "Klaar",
         "scopes": "Scopes",
-        "created_at": "Created",
-        "last_used": "Last used",
+        "created_at": "Aangemaakt",
+        "last_used": "Laatst gebruikt",
         "usage_count": "Uses",
         "expires_at": "Expires",
-        "inactive": "Inactive",
-        "expired": "Expired",
-        "activate": "Activate",
-        "deactivate": "Deactivate",
-        "activated": "Token activated",
-        "deactivated": "Token deactivated",
-        "revoke": "Revoke",
+        "inactive": "Inactief",
+        "expired": "Verlopen",
+        "activate": "Activeren",
+        "deactivate": "Deactiveren",
+        "activated": "Token geactiveerd",
+        "deactivated": "Token gedeactiveerd",
+        "revoke": "Intrekken",
         "revoke_confirm": "Are you sure you want to revoke the token '{name}'? This action cannot be undone.",
         "revoked": "Token revoked successfully",
         "revoke_error": "Failed to revoke token",
         "load_error": "Failed to load API tokens",
-        "update_error": "Failed to update token"
+        "update_error": "Token bijwerken mislukt"
     }
 }
