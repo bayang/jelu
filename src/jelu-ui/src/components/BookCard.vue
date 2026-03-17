@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { UserBook } from "../model/Book";
 import { ReadingEventType } from "../model/ReadingEvent";
 import EditBookModal from "./EditBookModal.vue";
+import { ObjectUtils } from "../utils/ObjectUtils";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -12,9 +13,9 @@ const { t } = useI18n({
     })
 const oruga = useOruga();
 
-const props = defineProps<{ 
-  book: UserBook, 
-  size?: string, 
+const props = defineProps<{
+  book: UserBook,
+  size?: string,
   forceSelect: boolean,
   showSelect: boolean,
   proposeAdd: boolean,
@@ -78,9 +79,9 @@ const authorsText = computed(() => {
 });
 
 const showProgressBar = (book: UserBook) => {
-  return book.percentRead 
-      && book.percentRead > 0 
-      && book.lastReadingEvent != null 
+  return book.percentRead
+      && book.percentRead > 0
+      && book.lastReadingEvent != null
       && book.lastReadingEvent === ReadingEventType.CURRENTLY_READING
 }
 
@@ -101,6 +102,7 @@ const currentSeries = computed(() => {
 
 function modalClosed() {
   console.log("modal closed from card")
+  currentTimestamp = ObjectUtils.timestamp()
   emit("update:modalClosed", true)
 }
 
@@ -128,6 +130,7 @@ watch(checked, (newVal, oldVal) => {
   emit("update:checked", props.book.id != null ? props.book.id as string : props.book.book.id as string , checked.value)
 })
 
+let currentTimestamp = ObjectUtils.timestamp()
 
 </script>
 
@@ -144,7 +147,7 @@ watch(checked, (newVal, oldVal) => {
         <figure>
           <img
             v-if="book.book.image"
-            :src="'/files/' + book.book.image"
+            :src="'/files/' + book.book.image + '?timestamp=' + currentTimestamp"
             alt="cover image"
             class="object-fill"
             :class="props.size === 'xl' ? 'h-96' : 'h-72'"

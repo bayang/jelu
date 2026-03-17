@@ -136,7 +136,7 @@ const hasExternalLink = computed(() => book.value?.book.amazonId != null
 
 function modalClosed() {
   console.log("modal closed")
-  currentTimestamp = timestamp()
+  currentTimestamp = ObjectUtils.timestamp()
   getBook()
 }
 
@@ -528,8 +528,7 @@ const formatSeries = async (series: Series)  => {
     return txt
 }
 
-const timestamp = () => new Date().toISOString()
-let currentTimestamp = timestamp()
+let currentTimestamp = ObjectUtils.timestamp()
 
 const getIsbn = (): string|null => {
   if (book.value?.book.isbn13 && book.value.book.isbn13.length > 0) {
