@@ -5,12 +5,14 @@ import { useI18n } from 'vue-i18n';
 import { UserBook } from "../model/Book";
 import { ReadingEventType } from "../model/ReadingEvent";
 import EditBookModal from "./EditBookModal.vue";
+import useCacheBusting from "../composables/cacheBusting";
 
 const { t } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
 const oruga = useOruga();
+const { currentTimestamp, refreshTimestamp } = useCacheBusting();
 
 const props = defineProps<{ 
   book: UserBook, 
@@ -30,6 +32,12 @@ const checked: Ref<boolean> = ref(false)
 
 watch(() => props.forceSelect, (newVal, oldVal) => {
   checked.value = props.forceSelect
+})
+
+watch(() => props.book.book.image, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    refreshTimestamp()
+  }
 })
 
 const eventClass = computed(() => {
@@ -144,7 +152,7 @@ watch(checked, (newVal, oldVal) => {
         <figure>
           <img
             v-if="book.book.image"
-            :src="'/files/' + book.book.image"
+            :src="'/files/' + book.book.image + '?timestamp=' + currentTimestamp"
             alt="cover image"
             class="object-fill"
             :class="props.size === 'xl' ? 'h-96' : 'h-72'"
@@ -164,7 +172,7 @@ watch(checked, (newVal, oldVal) => {
         <figure>
           <img
             v-if="book.book.image"
-            :src="'/files/' + book.book.image"
+            :src="'/files/' + book.book.image + '?timestamp=' + currentTimestamp"
             alt="cover image"
             class="object-fill"
             :class="props.size === 'xl' ? 'h-96' : 'h-72'"
