@@ -14,6 +14,7 @@ import { Metadata } from "../model/Metadata";
 import { SeriesOrder } from "../model/Series";
 import { Tag } from "../model/Tag";
 import dataService from "../services/DataService";
+import useCacheBusting from '../composables/cacheBusting';
 import { key } from '../store';
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
@@ -35,6 +36,7 @@ useTitle('Jelu | ' + t('nav.add_book'))
 const store = useStore(key)
 const router = useRouter()
 const oruga = useOruga()
+const { currentTimestamp } = useCacheBusting()
 
 const datepicker = ref(null);
 const publishedDate: Ref<Date | null> = ref(null)
@@ -1110,7 +1112,7 @@ const displayDatepicker = computed(() => {
             </span>
             <figure class="small-cover">
               <img
-                :src="metadata?.image?.startsWith('http') ? metadata?.image : '/files/' + metadata?.image"
+                :src="metadata?.image?.startsWith('http') ? metadata?.image : '/files/' + metadata?.image + '?timestamp=' + currentTimestamp"
                 :class="deleteImage ? 'altered' : ''"
                 alt="cover image"
               >
