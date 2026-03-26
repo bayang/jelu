@@ -6,6 +6,11 @@ import io.github.bayang.jelu.dto.ShelfDto
 import io.github.bayang.jelu.service.ShelfService
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -27,8 +32,9 @@ class ShelvesController(
     fun shelves(
         @RequestParam(name = "name", required = false) name: String?,
         @RequestParam(name = "targetId", required = false) targetId: UUID?,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["name"]) @ParameterObject pageable: Pageable,
         principal: Authentication,
-    ): List<ShelfDto> = shelvesService.find((principal.principal as JeluUser).user, name, targetId)
+    ): Page<ShelfDto> = shelvesService.find((principal.principal as JeluUser).user, name, targetId, pageable)
 
     @GetMapping(path = ["/shelves/{id}"])
     fun shelfById(

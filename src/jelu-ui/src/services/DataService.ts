@@ -43,7 +43,7 @@ class DataService {
   private API_USERBOOK = '/userbooks';
 
   private API_USER = '/users';
-  
+
   private API_HISTORY = '/history';
 
   private API_AUTHOR = '/authors';
@@ -81,9 +81,9 @@ class DataService {
   private API_SHELVES = '/shelves';
 
   private API_REVIEWS = '/reviews';
-  
+
   private API_BOOK_QUOTES = '/book-quotes';
-  
+
   private API_CUSTOM_LISTS = '/custom-lists';
 
   constructor() {
@@ -489,7 +489,7 @@ class DataService {
   }
 
   findUserBookByCriteria = async (lastEventTypes?: Array<ReadingEventType> | null, bookId?: string|null,
-    userId?: string|null, toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null, 
+    userId?: string|null, toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null,
     page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<UserBook>>(`${this.API_USERBOOK}`, {
@@ -585,8 +585,8 @@ class DataService {
       throw new Error("error get series by criteria " + error)
     }
   }
-  
-  
+
+
   findPublisherByCriteria = async (query?: string | null) => {
     try {
       const response = await this.apiClient.get<Page<string>>(`${this.API_BOOK}/publishers`, {
@@ -721,7 +721,7 @@ class DataService {
       throw new Error("error get tag orphans " + error)
     }
   }
-  
+
   getOrphanAuthors = async (page?: number, size?: number, sort?: string) => {
     try {
       const response = await this.apiClient.get<Page<Author>>(`${this.API_AUTHOR}/orphans`, {
@@ -858,7 +858,7 @@ class DataService {
 
   fetchMetadataWithPlugins = async (metadataRequest: MetadataRequest) => {
     try {
-      
+
       const response = await this.apiClient.post<Metadata>(`${this.API_METADATA}`, metadataRequest)
       console.log("called metadata with plugins")
       console.log(response)
@@ -875,7 +875,7 @@ class DataService {
 
   findBooksDetailed = async (title?: string, isbn10?: string, isbn13?: string,
     series?: string, authors?: Array<string>, translators?: Array<string>,
-    narrators?: Array<string>, 
+    narrators?: Array<string>,
     tags?: Array<string>, page?: number, size?: number, sort?: string,
     libraryFilter?: LibraryFilter) => {
     try {
@@ -913,7 +913,7 @@ class DataService {
   }
 
   findBooks = async (query?: string, page?: number, size?: number, sort?: string,
-    libraryFilter?: LibraryFilter, lastEventTypes?: Array<ReadingEventType> | null, 
+    libraryFilter?: LibraryFilter, lastEventTypes?: Array<ReadingEventType> | null,
     toRead?: boolean | null, owned?: boolean | null, borrowed?: boolean | null,) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_BOOK}`, {
@@ -993,7 +993,7 @@ class DataService {
       throw new Error("error delete event " + error)
     }
   }
-  
+
   deleteAuthor = async (authorId: string) => {
     try {
       const response = await this.apiClient.delete(`${this.API_AUTHOR}/${authorId}`);
@@ -1009,7 +1009,7 @@ class DataService {
       throw new Error("error delete author " + error)
     }
   }
-  
+
   deleteSeries = async (seriesId: string) => {
     try {
       const response = await this.apiClient.delete(`${this.API_SERIES}/${seriesId}`);
@@ -1077,7 +1077,7 @@ class DataService {
       throw new Error("error random quotes " + error)
     }
   }
-  
+
   userLoginHistory = async () => {
     try {
       const response = await this.apiClient.get<Array<LoginHistoryInfo>>(`${this.API_USER}${this.API_HISTORY}`);
@@ -1479,12 +1479,15 @@ class DataService {
     }
   }
 
-  shelves = async (name?: string, targetId?: string) => {
+  shelves = async (name?: string, targetId?: string, page?: number, size?: number, sort?: string) => {
     try {
-      const response = await this.apiClient.get<Array<Shelf>>(`${this.API_SHELVES}`, {
+      const response = await this.apiClient.get<Page<Shelf>>(`${this.API_SHELVES}`, {
         params: {
           name: name,
-          targetId: targetId
+          targetId: targetId,
+          page: page,
+          size: size,
+          sort: sort,
         }
       });
       console.log("called shelves")
@@ -1678,7 +1681,7 @@ class DataService {
       throw new Error("error update review " + error)
     }
   }
-  
+
   updateSeries = async (seriesId: string, updateDto: SeriesUpdate) => {
     try {
       const response = await this.apiClient.put<Series>(`${this.API_SERIES}/${seriesId}`, updateDto);
@@ -1778,7 +1781,7 @@ class DataService {
       throw new Error("error directory " + path + " " + error)
     }
   }
-  
+
   getMetadataFromUploadedFile = async (file: File | null, onUploadProgress: any) => {
     try {
       const formData = new FormData()
@@ -1823,7 +1826,7 @@ class DataService {
       throw new Error("error metadata from path " + error)
     }
   }
-  
+
   saveBookQuote = async (quote: CreateBookQuoteDto) => {
     try {
       const resp = await this.apiClient.post<BookQuote>(`${this.API_BOOK_QUOTES}`, quote)
@@ -1893,7 +1896,7 @@ class DataService {
       throw new Error("error book quotes " + error)
     }
   }
-  
+
   findBookQuoteById = async (quoteId: string) => {
     try {
       const response = await this.apiClient.get<BookQuote>(`${this.API_BOOK_QUOTES}/${quoteId}`, {
@@ -1959,7 +1962,7 @@ class DataService {
       throw new Error("error oauth providers " + error)
     }
   }
-  
+
   saveCustomList = async (list: CustomList) => {
     try {
       const resp = await this.apiClient.post<CustomList>(`${this.API_CUSTOM_LISTS}`, list)
@@ -1973,7 +1976,7 @@ class DataService {
       throw new Error("error creating custom list " + error)
     }
   }
-  
+
   findCustomLists = async (name?: string,
     page?: number, size?: number, sort: string | null = null) => {
     try {
@@ -1997,7 +2000,7 @@ class DataService {
       throw new Error("error custom lists " + error)
     }
   }
-  
+
   findCustomListById = async (listId: string) => {
     try {
       const response = await this.apiClient.get<CustomList>(`${this.API_CUSTOM_LISTS}/${listId}`);
@@ -2029,7 +2032,7 @@ class DataService {
       throw new Error("error delete list " + error)
     }
   }
-  
+
   booksForList = async (listId: string, page?: number, size?: number, sort: string | null = null) => {
     try {
       const response = await this.apiClient.get<Page<Book>>(`${this.API_CUSTOM_LISTS}/${listId}/books`, {

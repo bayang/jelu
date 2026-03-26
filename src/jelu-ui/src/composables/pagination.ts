@@ -7,10 +7,10 @@ const keys = useMagicKeys()
 const shiftLeft = keys['Shift+Left']
 const shiftRight = keys['Shift+Right']
 
-export default function usePagination(pageSize = 24) {
+export default function usePagination(pageSize = 24, fromRoute = true) {
     const route = useRoute()
     console.log(route.query)
-    const page: Ref<string> = useRouteQuery('page', '1')
+    const page: Ref<string> = fromRoute ? useRouteQuery('page', '1'): ref('1')
     const total: Ref<number> = ref(0)
     const perPage: Ref<number> = ref(pageSize)
     const getPageIsLoading: Ref<boolean> = ref(false)

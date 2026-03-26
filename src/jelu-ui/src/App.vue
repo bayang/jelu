@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { useStore } from 'vuex'
-import { computed, onMounted, Ref, ref, watch } from 'vue'
-import { key } from './store'
 import { useOruga } from "@oruga-ui/oruga-next";
-import { useRoute, useRouter } from 'vue-router'
-import dataService from "./services/DataService";
-import Avatar from 'vue-avatar-sdh'
-import { themeChange } from 'theme-change'
-import { useI18n } from 'vue-i18n'
-import { StringUtils } from './utils/StringUtils';
+import { themeChange } from 'theme-change';
 import { useRegisterSW } from 'virtual:pwa-register/vue';
+import { computed, onMounted, Ref, ref, watch } from 'vue';
+import Avatar from 'vue-avatar-sdh';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import ScanModal from "./components/ScanModal.vue";
+import UserShelvesModal from './components/UserShelvesModal.vue';
+import dataService from "./services/DataService";
+import { key } from './store';
+import { StringUtils } from './utils/StringUtils';
 
 const {
   offlineReady,
@@ -50,12 +51,11 @@ store.dispatch('getUser')
     console.log("ok nav")
     initialLoad.value = false
     store.dispatch('getServerSettings')
-    store.dispatch('getUserShelves')
   })
   .catch(() => {
     if (store.state.route != null && (
-      store.state.route.name === "review-detail" || 
-      store.state.route.name === "list-detail"|| 
+      store.state.route.name === "review-detail" ||
+      store.state.route.name === "list-detail"||
       store.state.route.name === "book-reviews")) {
       router.push(store.state.route)
       initialLoad.value = false
@@ -71,9 +71,6 @@ const username = computed(() => {
 })
 const isLogged = computed(() => {
   return store.getters.getLogged
-})
-const shelves = computed(() => {
-  return store.getters.getShelves
 })
 
 onMounted(() => {
@@ -149,9 +146,21 @@ function toggleScanModal() {
     });
 }
 
+function toggleShelvesModal() {
+  oruga.modal.open({
+      component: UserShelvesModal,
+      trapFocus: true,
+      active: true,
+      canCancel: ['x', 'button', 'outside'],
+      scroll: 'keep',
+      onClose: scanModalClosed,
+    });
+}
+
 function scanModalClosed() {
   console.log("scan modal closed")
 }
+
 </script>
 
 <template>
@@ -437,51 +446,13 @@ function scanModalClosed() {
             </router-link>
           </li>
           <li
-            v-if="shelves !== null && shelves.length > 0 && isLogged"
+            v-if="isLogged"
             class="mr-1"
           >
-            <div class="dropdown dropdown-bottom">
-              <label
-                tabindex="0"
-              >
-                <div class="flex items-center">
-                  <a class="font-sans text-xl capitalize">
-                    {{ t('nav.shelves') }}
-                  </a>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6 swap-on"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                    />
-                  </svg>
-                </div>
-              </label>
-              <ul
-                tabindex="0"
-                class="mt-3 p-2 dropdown-content z-[1] bg-base-100 rounded-box w-52"
-              >
-                <li
-                  v-for="shelf in shelves"
-                  :key="shelf"
-                  @click="collapseDropdown()"
-                >
-                  <router-link
-                    v-if="isLogged"
-                    :to="{ name: 'tag-detail', params: { tagId: shelf.targetId }, query: {sort: 'modificationDate,desc'} }"
-                  >
-                    {{ shelf.name }}
-                  </router-link>
-                </li>
-              </ul>
-            </div>
+            <span
+              class="font-sans text-xl capitalize"
+              @click="toggleShelvesModal"
+            >{{ t('settings.shelves') }}</span>
           </li>
         </ul>
         <div
@@ -559,37 +530,15 @@ function scanModalClosed() {
       </div>
       <div class="navbar-end">
         <div
-          v-if="isLogged && shelves != null && shelves.length > 0"
-          class="dropdown lg:hidden"
+          v-if="isLogged"
+          class=""
         >
-          <label
-            tabindex="0"
-            class="btn btn-ghost rounded-btn lg:hidden"
-          >
-            <span class="h-fit"><i class="mdi mdi-bookshelf mdi-24px" /></span>
-          </label>
-          <div
-            tabindex="0"
-            class="dropdown-content z-[1] mt-2 -left-20"
-          >
-            <ul
-              tabindex="0"
-              class="menu menu-sm dropdown-content mt-3 p-2 shadow-sm bg-base-100 rounded-box w-52"
-            >
-              <li
-                v-for="shelf in shelves"
-                :key="shelf"
-                @click="collapseDropdown()"
-              >
-                <router-link
-                  v-if="isLogged"
-                  :to="{ name: 'tag-detail', params: { tagId: shelf.targetId }, query: {sort: 'modificationDate,desc'} }"
-                >
-                  {{ shelf.name }}
-                </router-link>
-              </li>
-            </ul>
-          </div>
+          <div>
+            <span
+              class="h-fit"
+              @click="toggleShelvesModal"
+            ><i class="mdi mdi-bookshelf mdi-24px" /></span>
+          </div>                            
         </div>
         <div class="dropdown dropdown-end">
           <label
@@ -649,7 +598,7 @@ function scanModalClosed() {
         </div>
       </div>
     </div>
-    <div class="divider mt-0" /> 
+    <div class="divider mt-0" />
 
     <router-view />
     <input

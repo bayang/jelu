@@ -2,25 +2,24 @@
 import { useTitle } from '@vueuse/core'
 import UserShelvesList from './UserShelvesList.vue'
 
-
 useTitle('Jelu | User page')
-
+const emit = defineEmits<{
+  (e: 'close'): void,
+  (e: 'shelves-changed'): void
+}>()
 
 </script>
 
 <template>
-  <div>
+  <div class="event-modal">
     <user-shelves-list
       class="mx-4"
-      :allow-delete="true"
-      :allow-create="true"
+      :allow-delete="false"
+      :allow-create="false"
+      @close="emit('close')"
     />
   </div>
 </template>
 
 <style scoped>
-.o-dropdown.o-dropdown--position-auto.o-autocomplete,
-.o-dropdown.o-dropdown--position-bottom.o-autocomplete {
-  @apply w-full;
-}
 </style>

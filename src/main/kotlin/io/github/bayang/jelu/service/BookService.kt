@@ -587,16 +587,23 @@ class BookService(
 
     @Transactional
     fun deleteTagById(tagId: UUID) {
-        val shelves = shelfService.find(null, null, tagId)
-        shelves.forEach {
-            if (it.id != null) {
-                try {
-                    shelfService.delete(it.id)
-                } catch (e: Exception) {
-                    logger.debug { "failed to delete shelf ${it.name} while deleting corresponding tag" }
+        var shouldContinue = true
+        do {
+            val shelves = shelfService.find(null, null, tagId, Pageable.ofSize(100))
+            if (shelves.totalElements > 0) {
+                shelves.content.forEach { shelf ->
+                    if (shelf.id != null) {
+                        try {
+                            shelfService.delete(shelf.id)
+                        } catch (e: Exception) {
+                            logger.debug { "failed to delete shelf ${shelf.name} while deleting corresponding tag" }
+                        }
+                    }
                 }
+            } else {
+                shouldContinue = false
             }
-        }
+        } while (shouldContinue)
         var books: Page<Book>
         val bookIds: MutableList<UUID> = mutableListOf()
         val pageSize = 30

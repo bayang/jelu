@@ -1,10 +1,13 @@
 package io.github.bayang.jelu.service
 
+import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dao.ShelfRepository
 import io.github.bayang.jelu.dto.CreateShelfDto
 import io.github.bayang.jelu.dto.ShelfDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluValidationException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -12,15 +15,16 @@ import java.util.UUID
 @Component
 class ShelfService(
     private val shelfRepository: ShelfRepository,
+    private val properties: JeluProperties,
 ) {
     @Transactional
     fun save(
         createShelfDto: CreateShelfDto,
         user: UserDto,
     ): ShelfDto {
-        val userShelves = find(user, null, null)
-        if (userShelves.size >= 10) {
-            throw JeluValidationException("Maximum number of shelves reaches")
+        val maybeDuplicate = find(user, createShelfDto.name, null, Pageable.ofSize(10))
+        if (maybeDuplicate.totalElements > 0) {
+            throw JeluValidationException("Shelf with name ${createShelfDto.name} already exists")
         }
         return shelfRepository.save(createShelfDto, user).toShelfDto()
     }
@@ -30,7 +34,8 @@ class ShelfService(
         user: UserDto?,
         name: String?,
         targetId: UUID?,
-    ): List<ShelfDto> = shelfRepository.find(user, name, targetId).map { it.toShelfDto() }
+        pageable: Pageable,
+    ): Page<ShelfDto> = shelfRepository.find(user, name, targetId, pageable).map { it.toShelfDto() }
 
     @Transactional
     fun findById(id: UUID): ShelfDto = shelfRepository.findById(id).toShelfDto()

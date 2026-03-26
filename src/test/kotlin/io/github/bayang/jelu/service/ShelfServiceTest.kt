@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
@@ -32,7 +31,7 @@ class ShelfServiceTest(
     @AfterAll
     fun teardDown() {
         shelfService
-            .find(user(), null, null)
+            .find(user(), null, null, Pageable.ofSize(50))
             .forEach { shelfService.delete(it.id!!) }
         userService.findAll(null).forEach { userService.deleteUser(it.id!!) }
     }
@@ -40,7 +39,7 @@ class ShelfServiceTest(
     @Test
     fun testSaveFindDelete() {
         shelfService
-            .find(user(), null, null)
+            .find(user(), null, null, Pageable.ofSize(100))
             .forEach { shelfService.delete(it.id!!) }
         val saved = shelfService.save(CreateShelfDto("to-buy", UUID.randomUUID()), user())
         Assertions.assertEquals("to-buy", saved.name)
@@ -49,9 +48,9 @@ class ShelfServiceTest(
         Assertions.assertNotNull(saved.id)
         Assertions.assertNotNull(saved.targetId)
 
-        var shelves = shelfService.find(user(), null, null)
-        Assertions.assertEquals(1, shelves.size)
-        Assertions.assertEquals("to-buy", shelves[0].name)
+        var shelves = shelfService.find(user(), null, null, Pageable.ofSize(100))
+        Assertions.assertEquals(1, shelves.totalElements)
+        Assertions.assertEquals("to-buy", shelves.content[0].name)
 
         val uuid = UUID.randomUUID()
         val saved1 = shelfService.save(CreateShelfDto("goncourt_2022", uuid), user())
@@ -61,42 +60,51 @@ class ShelfServiceTest(
         Assertions.assertNotNull(saved1.id)
         Assertions.assertNotNull(saved1.targetId)
 
-        shelves = shelfService.find(user(), null, null)
-        Assertions.assertEquals(2, shelves.size)
+        shelves = shelfService.find(user(), null, null, Pageable.ofSize(100))
+        Assertions.assertEquals(2, shelves.totalElements)
 
-        shelves = shelfService.find(user(), "gonc", null)
-        Assertions.assertEquals(1, shelves.size)
-        Assertions.assertEquals("goncourt_2022", shelves[0].name)
+        shelves = shelfService.find(user(), "gonc", null, Pageable.ofSize(100))
+        Assertions.assertEquals(1, shelves.totalElements)
+        Assertions.assertEquals("goncourt_2022", shelves.content[0].name)
 
-        shelves = shelfService.find(user(), null, uuid)
-        Assertions.assertEquals(1, shelves.size)
-        Assertions.assertEquals("goncourt_2022", shelves[0].name)
+        shelves = shelfService.find(user(), null, uuid, Pageable.ofSize(100))
+        Assertions.assertEquals(1, shelves.totalElements)
+        Assertions.assertEquals("goncourt_2022", shelves.content[0].name)
 
         shelfService.delete(saved1.id!!)
-        shelves = shelfService.find(user(), null, null)
-        Assertions.assertEquals(1, shelves.size)
-        Assertions.assertEquals("to-buy", shelves[0].name)
-        shelves = shelfService.find(user(), "gonc", null)
-        Assertions.assertEquals(0, shelves.size)
+        shelves = shelfService.find(user(), null, null, Pageable.ofSize(100))
+        Assertions.assertEquals(1, shelves.totalElements)
+        Assertions.assertEquals("to-buy", shelves.content[0].name)
+        shelves = shelfService.find(user(), "gonc", null, Pageable.ofSize(100))
+        Assertions.assertEquals(0, shelves.totalElements)
     }
 
     @Test
-    fun testTooManyShelves() {
+    fun testSaveDuplicate() {
         shelfService
-            .find(user(), null, null)
+            .find(user(), null, null, Pageable.ofSize(100))
             .forEach { shelfService.delete(it.id!!) }
-        for (i in 1..10) {
-            val saved = shelfService.save(CreateShelfDto("shelf-$i", UUID.randomUUID()), user())
+        val saved = shelfService.save(CreateShelfDto("to-buy", UUID.randomUUID()), user())
+        Assertions.assertEquals("to-buy", saved.name)
+        Assertions.assertNotNull(saved.creationDate)
+        Assertions.assertNotNull(saved.modificationDate)
+        Assertions.assertNotNull(saved.id)
+        Assertions.assertNotNull(saved.targetId)
+
+        val shelves = shelfService.find(user(), null, null, Pageable.ofSize(100))
+        Assertions.assertEquals(1, shelves.totalElements)
+        Assertions.assertEquals("to-buy", shelves.content[0].name)
+
+        val uuid = UUID.randomUUID()
+        Assertions.assertThrows(JeluValidationException::class.java) {
+            val saved1 = shelfService.save(CreateShelfDto("to-buy", uuid), user())
         }
-        val shelves = shelfService.find(user(), null, null)
-        Assertions.assertEquals(10, shelves.size)
-        assertThrows<JeluValidationException> { shelfService.save(CreateShelfDto("shelf-11", UUID.randomUUID()), user()) }
     }
 
     @Test
     fun testDeletingTagDeletesCorrespondingShelves() {
         shelfService
-            .find(user(), null, null)
+            .find(user(), null, null, Pageable.ofSize(100))
             .forEach { shelfService.delete(it.id!!) }
         var tags = bookService.findAllTags(null, Pageable.ofSize(200))
         tags.forEach { bookService.deleteTagById(it.id!!) }
@@ -123,14 +131,14 @@ class ShelfServiceTest(
         Assertions.assertNotNull(saved1.id)
         Assertions.assertEquals(tag.id, saved1.targetId)
 
-        var shelves = shelfService.find(null, null, null)
-        Assertions.assertEquals(2, shelves.size)
+        var shelves = shelfService.find(null, null, null, Pageable.ofSize(100))
+        Assertions.assertEquals(2, shelves.totalElements)
 
         bookService.deleteTagById(tag.id!!)
         tags = bookService.findAllTags(null, Pageable.ofSize(100))
         Assertions.assertEquals(0, tags.totalElements)
-        shelves = shelfService.find(null, null, null)
-        Assertions.assertEquals(0, shelves.size)
+        shelves = shelfService.find(null, null, null, Pageable.ofSize(100))
+        Assertions.assertEquals(0, shelves.totalElements)
     }
 
     fun user(): UserDto {
