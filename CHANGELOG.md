@@ -1,3 +1,18 @@
+## [0.81.0](https://github.com/bayang/jelu/compare/v0.80.0...v0.81.0) (2026-03-27)
+
+
+### Features
+
+* sort shelves and remove limit on number of shelves [#298](https://github.com/bayang/jelu/issues/298) [#268](https://github.com/bayang/jelu/issues/268) ([acfeea4](https://github.com/bayang/jelu/commit/acfeea4d552372ad4ab47cf19d0f595f6db4b86f))
+
+
+### Bug Fixes
+
+* also invalidate cache image on list pages [#299](https://github.com/bayang/jelu/issues/299) ([c1d0d8e](https://github.com/bayang/jelu/commit/c1d0d8eb5f3a65f37857f810bd5f2ee21aaacda7))
+* improve localization [#278](https://github.com/bayang/jelu/issues/278) [#235](https://github.com/bayang/jelu/issues/235) ([c591a31](https://github.com/bayang/jelu/commit/c591a31dbb450438fa413d05c612f158d7cc9ea6))
+* potential fix for [#297](https://github.com/bayang/jelu/issues/297) ([11a6ec2](https://github.com/bayang/jelu/commit/11a6ec23adc578f99ec31df0acff395c91dfd3c4))
+* remove unreachable event ([a9d8484](https://github.com/bayang/jelu/commit/a9d84846fafc9c1a998358c3c993d03c31625cc2))
+
 ## [0.80.0](https://github.com/bayang/jelu/compare/v0.79.0...v0.80.0) (2026-03-04)
 
 
