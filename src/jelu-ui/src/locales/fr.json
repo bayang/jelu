@@ -154,7 +154,8 @@
         "shelf_choose_tag": "Choisissez une étiquette pour créer l'étagère correspondante",
         "custom_lists": "listes personnalisées",
         "choose_currency": "Choisissez votre devise",
-        "api_tokens": "Jetons d'API"
+        "api_tokens": "Jetons d'API",
+        "currency_description": "Enter the 3 letters code of your currency, eg: EUR, USD, GBP. See https://en.wikipedia.org/wiki/ISO_4217."
     },
     "user": {
         "log_first": "Veuillez vous identifier"
@@ -463,5 +464,19 @@
         "revoke_error": "Impossible de révoquer le jeton",
         "load_error": "Impossible de charger les jetons API",
         "update_error": "Échec de la mise à jour du jeton"
+    },
+    "date": {
+        "January": "January",
+        "February": "February",
+        "March": "March",
+        "April": "April",
+        "May": "May",
+        "June": "June",
+        "July": "July",
+        "August": "August",
+        "September": "September",
+        "October": "October",
+        "November": "November",
+        "December": "December"
     }
 }
