@@ -64,7 +64,7 @@ watch(() => locale.value,(newValue, oldValue) => {
   storedLanguage.value = newValue
 })
 
-const currency = ref("$")
+const currency = ref("EUR")
 const saved = localStorage.getItem("JL_CURRENCY")
 if (saved != null) {
   currency.value = saved
@@ -72,7 +72,9 @@ if (saved != null) {
 
 watch(() => currency.value, (newVal, oldVal) => {
   console.log('currency changed ' + currency.value)
-  localStorage.setItem("JL_CURRENCY", currency.value)
+  if (currency.value.length === 3) {
+    localStorage.setItem("JL_CURRENCY", currency.value)
+  }
 })
 
 </script>
@@ -154,13 +156,33 @@ watch(() => currency.value, (newVal, oldVal) => {
     </select>
     <label class="label">
       <span class="label-text text-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
         </svg>
 
         {{ t('settings.choose_currency') }} : </span>
     </label>
-    <input type="text" class="input input-accent" v-model="currency" />
+    <input
+      v-model="currency"
+      type="text"
+      minlength="3"
+      maxlength="3"
+      class="input input-accent"
+    >
+    <p :class="currency.length != 3 ? 'text-error':''">
+      {{ t('settings.currency_description') }}
+    </p>
   </div>
 </template>
 

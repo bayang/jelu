@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useOruga } from "@oruga-ui/oruga-next"
-import { until, useClipboard, usePermission, useTitle } from '@vueuse/core'
+import { until, useClipboard, useLocalStorage, usePermission, useTitle } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { computed, ComputedRef, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -53,7 +53,7 @@ const user: ComputedRef<User> = computed(() => {
 
 let currency = localStorage.getItem("JL_CURRENCY")
 if (currency == null) {
-  currency = "$"
+  currency = "EUR"
 }
 
 const book: Ref<UserBook | null> = ref(null)
@@ -540,6 +540,8 @@ const getIsbn = (): string|null => {
   return null
 }
 
+const storedLanguage = useLocalStorage("jelu_language", "en")
+
 getBook()
 
 </script>
@@ -853,7 +855,7 @@ getBook()
         </p>
         <p v-if="book?.price">
           <span class="font-semibold capitalize">{{ t('book.price') }} :</span>
-          {{ book.price }}&nbsp;{{ currency }}
+          {{ ObjectUtils.amountInLocale(book.price, storedLanguage, currency) }}
         </p>
         <div v-if="book?.owned || book?.toRead || book?.borrowed">
           <span

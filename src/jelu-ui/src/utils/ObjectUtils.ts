@@ -163,4 +163,18 @@ export class ObjectUtils {
 // only take minutes to avoid invalidating cache too often
 public static timestamp = () => new Date().toISOString().substring(0,16)
 
+public static amountInLocale = (amount: number, locale: string, currency: string) => {
+  let localCurrency = currency
+  console.log("amount " + amount + " locale " + locale + " currency " + currency)
+  if (currency.length !== 3) {
+    console.log("wrong currency " + currency + " , go set it in the settings page, it should be the currency code, ie EUR")
+    localCurrency = "EUR"
+  }
+  return amount.toLocaleString(locale, {
+    maximumFractionDigits: 2,
+    style: "currency",
+    currency: localCurrency
+    })
+}
+
 }

@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { useTitle } from '@vueuse/core';
-import { BarElement, CategoryScale, Chart as ChartJS, ChartData, Legend, LinearScale, Title, Tooltip, LineController, PointElement, LineElement } from 'chart.js';
+import { useLocalStorage, useTitle } from '@vueuse/core';
+import { BarElement, CategoryScale, ChartData, Chart as ChartJS, Legend, LinearScale, LineController, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import dayjs from "dayjs";
 import { Ref, ref, watch } from "vue";
 import { Bar } from 'vue-chartjs';
 import { useI18n } from 'vue-i18n';
-import dataService from "../services/DataService";
 import { TotalsStats } from '../model/YearStats';
+import dataService from "../services/DataService";
+import { ObjectUtils } from '../utils/ObjectUtils';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -17,7 +18,7 @@ useTitle('Jelu | Stats')
 
 let currency = localStorage.getItem("JL_CURRENCY")
 if (currency == null) {
-  currency = "$"
+  currency = "EUR"
 }
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, LineController, PointElement, LineElement)
@@ -33,6 +34,8 @@ const getYears = () => {
   })
 
 }
+
+const storedLanguage = useLocalStorage("jelu_language", "en")
 
 const getAllStats = () => {
   loading.value = true
@@ -86,7 +89,10 @@ const getYearStats = () => {
     loading.value = true
     dataService.monthStatsForYear(currentYear.value)
     .then(res => {
-      let labels = res.map(r => r.month).map(m => dayjs(`2020-${m}-1`).format('MMMM'))
+      let labels = res.map(r => r.month).map(m => {
+        const d = dayjs(`2020-${m}-1`).format('MMMM')
+        return d
+      })
 
       const updatedChartData = {
           labels: labels,
@@ -143,6 +149,7 @@ const chartData = ref<ChartData<'bar'>>({
 const yearChartData = ref<ChartData<'bar'>>({
       datasets: []
 })
+const numbers = ["0", "1","2", "3", "4", "5", "6", "7", "8", "9"]
 const chartOptions = ref({
       responsive: true,
       maintainAspectRatio: true,
@@ -153,7 +160,31 @@ const chartOptions = ref({
         y2: {
           position: 'right'
         }
-      }
+      },
+      plugins: {
+        tooltip: {
+            callbacks: {
+                label: function(context) {
+                    let label = context.dataset.label || '';
+                    label += ': ';
+                    if (context.dataset.label === t('book.price') && context.parsed.y !== null) {
+                      label += ObjectUtils.amountInLocale(context.parsed.y, storedLanguage.value, currency)
+                    } else {
+                      label += context.parsed.y
+                    }
+                    return label;
+                },
+                title: function(ctx) {
+                  let label = ctx.length > 0 ? ctx[0].label : ""
+                  if (label.length > 0 && label[0] in numbers) {
+                    return label
+                  }
+                  label = t(`date.${label}`) ?? label
+                  return label
+                }
+            }
+        }
+    }
 })
 
 const years: Ref<Array<number>> = ref([])
