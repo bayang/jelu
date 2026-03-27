@@ -154,7 +154,8 @@
         "shelf_choose_tag": "Kies een label om de corresponderende boekenplank te maken",
         "custom_lists": "aangepaste lijsten",
         "choose_currency": "Selecteer uw valuta",
-        "api_tokens": "API Tokens"
+        "api_tokens": "API Tokens",
+        "currency_description": "Enter the 3 letters code of your currency, eg: EUR, USD, GBP. See https://en.wikipedia.org/wiki/ISO_4217."
     },
     "user": {
         "log_first": "Eerst inloggen a.u.b."
@@ -463,5 +464,19 @@
         "revoke_error": "Failed to revoke token",
         "load_error": "Failed to load API tokens",
         "update_error": "Token bijwerken mislukt"
+    },
+    "date": {
+        "January": "January",
+        "February": "February",
+        "March": "March",
+        "April": "April",
+        "May": "May",
+        "June": "June",
+        "July": "July",
+        "August": "August",
+        "September": "September",
+        "October": "October",
+        "November": "November",
+        "December": "December"
     }
 }
