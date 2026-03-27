@@ -154,7 +154,8 @@
         "shelf_choose_tag": "Výberom štítku vytvoríte príslušnú poličku",
         "custom_lists": "Vlastné zoznamy",
         "choose_currency": "Vyberte svoju menu",
-        "api_tokens": "API tokeny"
+        "api_tokens": "API tokeny",
+        "currency_description": "Enter the 3 letters code of your currency, eg: EUR, USD, GBP. See https://en.wikipedia.org/wiki/ISO_4217."
     },
     "user": {
         "log_first": "Najskôr sa prihláste, prosím"
@@ -463,5 +464,19 @@
         "revoke_error": "Odstránenie tokenu sa nepodarilo",
         "load_error": "Nepodarilo sa načítať API tokeny",
         "update_error": "Nepodarilo sa aktualizovať token"
+    },
+    "date": {
+        "January": "January",
+        "February": "February",
+        "March": "March",
+        "April": "April",
+        "May": "May",
+        "June": "June",
+        "July": "July",
+        "August": "August",
+        "September": "September",
+        "October": "October",
+        "November": "November",
+        "December": "December"
     }
 }

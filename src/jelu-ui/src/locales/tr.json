@@ -154,7 +154,8 @@
         "shelf_choose_tag": "Raf oluşturmak için bir etiket seçin",
         "custom_lists": "custom lists",
         "choose_currency": "Select your currency",
-        "api_tokens": "API Tokens"
+        "api_tokens": "API Tokens",
+        "currency_description": "Enter the 3 letters code of your currency, eg: EUR, USD, GBP. See https://en.wikipedia.org/wiki/ISO_4217."
     },
     "user": {
         "log_first": "Lütfen önce giriş yapın"
@@ -463,5 +464,19 @@
         "revoke_error": "Failed to revoke token",
         "load_error": "Failed to load API tokens",
         "update_error": "Failed to update token"
+    },
+    "date": {
+        "January": "January",
+        "February": "February",
+        "March": "March",
+        "April": "April",
+        "May": "May",
+        "June": "June",
+        "July": "July",
+        "August": "August",
+        "September": "September",
+        "October": "October",
+        "November": "November",
+        "December": "December"
     }
 }
