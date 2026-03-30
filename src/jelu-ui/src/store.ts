@@ -2,7 +2,6 @@ import { InjectionKey } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
 import { createLogger, createStore, Store } from 'vuex';
 import { ServerSettings } from './model/ServerSettings';
-import { Shelf } from './model/Shelf';
 import { User, UserAuthentication } from './model/User';
 import router from './router';
 import dataService from './services/DataService';

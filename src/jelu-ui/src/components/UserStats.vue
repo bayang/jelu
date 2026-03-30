@@ -8,6 +8,7 @@ import { useI18n } from 'vue-i18n';
 import { TotalsStats } from '../model/YearStats';
 import dataService from "../services/DataService";
 import { ObjectUtils } from '../utils/ObjectUtils';
+import useTypography from '../composables/typography';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -203,17 +204,24 @@ getAllStats()
 getYears()
 totalStats()
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center w-full">
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
+    <h1
+      class="text-2xl w-11/12 sm:w-8/12 pb-4 capitalize"
+      :class="typographyClasses"
+    >
       {{ t('stats.total') }}:&nbsp;{{ totals.total }}
     </h1>
     <div class="mb-2">
       {{ t('stats.read') }}:&nbsp;{{ totals.read }} / {{ t('stats.unread') }}:&nbsp;{{ totals.unread }} / {{ t('stats.dropped') }}:&nbsp;{{ totals.dropped }} / {{ t('stats.prices_sum') }}&nbsp;{{ totals.price }}&nbsp;{{ currency }}
     </div>
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
+    <h1
+      class="text-2xl w-11/12 sm:w-8/12 pb-4 capitalize"
+      :class="typographyClasses"
+    >
       {{ t('stats.all_time') }}
     </h1>
     <div
@@ -226,7 +234,8 @@ totalStats()
     </div>
     <h1
       v-if="years != null && years !== undefined && years.length > 0"
-      class="text-2xl typewriter w-11/12 sm:w-8/12 py-4 capitalize"
+      class="text-2xl w-11/12 sm:w-8/12 py-4 capitalize"
+      :class="typographyClasses"
     >
       {{ t('stats.yearly_stats') }}
     </h1>

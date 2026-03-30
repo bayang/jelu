@@ -17,6 +17,7 @@ import EditAuthorModalVue from "./EditAuthorModal.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
 import { useRoute } from 'vue-router';
 import { Role } from "../model/Role";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -73,8 +74,8 @@ const getAuthor = async () => {
 
 const getBooks = () => {
   getBooksIsLoading.value = true
-  dataService.getAuthorBooksById(route.params.authorId as string, 
-    pageAsNumber.value - 1, perPage.value, sortQuery.value, 
+  dataService.getAuthorBooksById(route.params.authorId as string,
+    pageAsNumber.value - 1, perPage.value, sortQuery.value,
     libraryFilter.value, roleFilter.value)
     .then(res => {
         console.log(res)
@@ -94,7 +95,7 @@ const getBooks = () => {
       getBooksIsLoading.value = false
       updatePageLoading(false)
     })
-  
+
 };
 
 const convertedBooks = computed(() => authorBooks.value?.map(b => ObjectUtils.toUserBook(b)))
@@ -125,6 +126,8 @@ const editAuthor = () => {
     onClose: authorModalClosed
   });
 }
+
+const { typographyClasses } = useTypography()
 
 getAuthor()
 getBooks()
@@ -276,7 +279,10 @@ getBooks()
     <div class="grid items-center justify-center justify-items-center justify-self-center sm:grid-cols-3 mb-4 sm:w-10/12">
       <div />
       <div class="level-item">
-        <h2 class="text-2xl inline mr-2 typewriter">
+        <h2
+          class="text-2xl inline mr-2"
+          :class="typographyClasses"
+        >
           {{ author.name }}
         </h2>
         <button
@@ -366,7 +372,7 @@ getBooks()
           >
         </figure>
       </div>
-    
+
       <div class="text-left w-11/12 sm:w-full justify-self-center sm:justify-self-start">
         <p
           v-if=" author.biography != null"
@@ -412,7 +418,10 @@ getBooks()
         <i class="mdi mdi-filter-variant" />
       </span>
     </button>
-    <h2 class="text-xl typewriter">
+    <h2
+      class="text-xl"
+      :class="typographyClasses"
+    >
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>

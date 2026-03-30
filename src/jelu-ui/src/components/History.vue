@@ -8,6 +8,7 @@ import { ReadingEventType, ReadingEventWithUserBook } from '../model/ReadingEven
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
 import localizedFormat from 'dayjs/plugin/localizedFormat'
+import useTypography from '../composables/typography';
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -33,7 +34,7 @@ const getYears = () => {
   .catch(e => {
     console.log(e)
   })
-  
+
 }
 
 const eventsForYear = () => {
@@ -104,6 +105,8 @@ const eventsByMonth: Ref<Map<number, Array<ReadingEventWithUserBook>>> = compute
   return monthEvents
 })
 
+const { typographyClasses } = useTypography()
+
 getYears()
 
 </script>
@@ -111,7 +114,8 @@ getYears()
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center mb-3">
     <h1
-      class="text-2xl typewriter w-11/12 sm:w-8/12 py-4 capitalize"
+      class="text-2xl w-11/12 sm:w-8/12 py-4 capitalize"
+      :class="typographyClasses"
     >
       {{ t('history.years') }}
     </h1>
@@ -164,7 +168,11 @@ getYears()
               stroke-linejoin="round"
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
-          </svg><h2 class="typewriter text-2xl text-left mx-2 my-2">
+          </svg>
+          <h2
+            class="text-2xl text-left mx-2 my-2"
+            :class="typographyClasses"
+          >
             <i18n-d
               tag="span"
               :value="dayjs(`2020-${month}-1`).toDate()"
@@ -197,7 +205,7 @@ getYears()
             </book-card>
           </div>
         </div>
-        <div class="divider" /> 
+        <div class="divider" />
       </div>
     </div>
   </div>

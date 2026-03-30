@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { UserBookUpdate } from "../model/Book";
 import dataService from "../services/DataService";
 import { ObjectUtils } from "../utils/ObjectUtils";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -43,6 +44,7 @@ watch(() => [userBookUpdate.value.currentPageNumber, userBookUpdate.value.percen
    }
  })
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -50,7 +52,10 @@ watch(() => [userBookUpdate.value.currentPageNumber, userBookUpdate.value.percen
     <div>
       <div>
         <div>
-          <h1 class="typewriter text-2xl first-letter:capitalize">
+          <h1
+            class="text-2xl first-letter:capitalize"
+            :class="typographyClasses"
+          >
             {{ t('labels.set_progress') }}
           </h1>
         </div>

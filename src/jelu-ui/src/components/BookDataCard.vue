@@ -9,13 +9,14 @@ import { Book, UserBook } from '../model/Book'
 import dataService from "../services/DataService"
 import { ObjectUtils } from '../utils/ObjectUtils'
 import EditBookModal from "./EditBookModal.vue"
+import useTypography from "../composables/typography"
 
 const { t, d } = useI18n({
       inheritLocale: true,
       useScope: 'global'
     })
 
-const props = defineProps<{ 
+const props = defineProps<{
   book: Book,
   owned: boolean|null,
   toRead: boolean|null,
@@ -112,6 +113,9 @@ const getIsbn = (): string|null => {
   }
   return null
 }
+
+const { typographyClasses } = useTypography()
+
 </script>
 
 <template>
@@ -121,14 +125,16 @@ const getIsbn = (): string|null => {
       <div class="flex justify-center gap-10">
         <router-link
           v-if="props.bookLink != null && props.bookLink === true && userbookId != null"
-          class="link hover:underline hover:decoration-4 hover:decoration-secondary text-3xl typewriter"
+          class="link hover:underline hover:decoration-4 hover:decoration-secondary text-3xl"
+          :class="typographyClasses"
           :to="{ name: 'book-detail', params: { bookId: userbookId } }"
         >
           {{ props.book.title }}&nbsp;
         </router-link>
         <h3
           v-else
-          class="typewriter text-3xl"
+          class="text-3xl"
+          :class="typographyClasses"
         >
           {{ props.book.title }}
         </h3>

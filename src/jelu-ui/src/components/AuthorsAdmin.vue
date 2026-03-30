@@ -12,6 +12,7 @@ import { Page } from "../model/Page"
 import dataService from "../services/DataService"
 import { ObjectUtils } from "../utils/ObjectUtils"
 import { Role } from "../model/Role"
+import useTypography from "../composables/typography"
 
 const oruga = useOruga()
 
@@ -74,7 +75,7 @@ function getOrphanAuthors() {
 const deleteAuthor = async (target: Author) => {
   if (target.id) {
     dataService.deleteAuthor(target.id)
-    .then(res => 
+    .then(res =>
       {
         author.value = {"name" : ""}
         ObjectUtils.toast(oruga, "success", t('labels.operation-success'), 4000);
@@ -117,7 +118,7 @@ const getAuthor = async (selected: Author) => {
 
 const getBooks = (author: Author) => {
     getBooksIsLoading.value = true
-    dataService.getAuthorBooksById(author.id as string, 
+    dataService.getAuthorBooksById(author.id as string,
       0, 2, "title:desc", LibraryFilter.ANY)
       .then(res => {
           authorBooks.value = res
@@ -136,6 +137,8 @@ const selectAuthor = (selected: Author) => {
 
 getOrphanAuthors()
 
+const { typographyClasses } = useTypography()
+
 const options = computed(() => {
   return filteredAuthors.value.map(t => ObjectUtils.wrapForOptions(t))
 })
@@ -144,7 +147,10 @@ const options = computed(() => {
 <template>
   <div class="w-fit sm:w-full flex flex-wrap justify-items-center justify-self-center gap-3 sm:gap-0">
     <div class="w-full sm:w-1/2 sm:p-3">
-      <h1 class="typewriter text-2xl mb-3 capitalize">
+      <h1
+        class="text-2xl mb-3 capitalize"
+        :class="typographyClasses"
+      >
         {{ t('labels.orphan_authors') }} :
       </h1>
       <div>
@@ -190,7 +196,10 @@ const options = computed(() => {
       />
     </div>
     <div class="w-full sm:w-1/2 sm:p-3">
-      <h1 class="typewriter text-2xl mb-3 capitalize">
+      <h1
+        class="text-2xl mb-3 capitalize"
+        :class="typographyClasses"
+      >
         {{ t('labels.find-authors') }} :
       </h1>
       <div class="field">
@@ -248,7 +257,7 @@ const options = computed(() => {
 </template>
 
 <style scoped>
-  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete,
   .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
     @apply w-full;
   }

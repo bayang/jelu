@@ -6,6 +6,7 @@ import dataService from "../services/DataService";
 import { StringUtils } from "../utils/StringUtils";
 import { useI18n } from 'vue-i18n'
 import { useLocalStorage } from '@vueuse/core'
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -27,7 +28,7 @@ const uploadlabel = computed(() => {
   } else {
     return t('labels.upload_from_file')
   }
-}) 
+})
 const imageUrl = ref<string | null>(null);
 const file = ref(null);
 const uploadPercentage = ref(0);
@@ -111,6 +112,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
   })
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -120,7 +122,10 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
     >
       <div>
         <div>
-          <h1 class="text-2xl typewriter first-letter:capitalize">
+          <h1
+            class="text-2xl first-letter:capitalize"
+            :class="typographyClasses"
+          >
             {{ t('labels.edit_author') }}
           </h1>
         </div>
@@ -446,7 +451,10 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
     >
       <div>
         <div>
-          <h1 class="text-2xl typewriter">
+          <h1
+            class="text-2xl"
+            :class="typographyClasses"
+          >
             {{ t('labels.search') }}
           </h1>
         </div>
@@ -485,7 +493,7 @@ const fillFormWithEntry = (entry: WikipediaSearchResultElement) => {
           </button>
         </div>
         <div v-if="searchResult.pages.length > 0">
-          <div 
+          <div
             v-for="res in searchResult.pages"
             :key="res.id"
             v-tooltip="t('labels.click_to_import')"

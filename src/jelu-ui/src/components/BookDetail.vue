@@ -26,6 +26,7 @@ import ReadingEventModalVue from './ReadingEventModal.vue'
 import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewCard from "./ReviewCard.vue"
 import ReviewModalVue from './ReviewModal.vue'
+import useTypography from "../composables/typography"
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -542,6 +543,8 @@ const getIsbn = (): string|null => {
 
 const storedLanguage = useLocalStorage("jelu_language", "en")
 
+const { typographyClasses } = useTypography()
+
 getBook()
 
 </script>
@@ -551,12 +554,15 @@ getBook()
     <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12">
       <div />
       <div class="grow">
-        <h3 class="typewriter text-3xl">
+        <h3
+          class="text-3xl"
+          :class="typographyClasses"
+        >
           {{ book?.book?.title }}
         </h3>
         <h4
           v-if="book?.book.originalTitle"
-          class="typewriter"
+          :class="typographyClasses"
         >
           {{ book.book.originalTitle }}
         </h4>
@@ -1004,7 +1010,8 @@ getBook()
     </div>
     <div class="mt-2">
       <router-link
-        class="link text-2xl typewriter"
+        class="link text-2xl"
+        :class="typographyClasses"
         :to="{ name: 'book-reviews', params: { bookId: book?.book.id } }"
       >
         {{ t('reviews.all_reviews') }}
@@ -1014,7 +1021,10 @@ getBook()
       v-if="userReviews != null && userReviews.length > 0"
       class="w-11/12 sm:w-10/12 flex flex-row flex-wrap justify-center mt-4 gap-4"
     >
-      <p class="typewriter text-2xl mb-3 capitalize sm:w-full">
+      <p
+        class="text-2xl mb-3 capitalize sm:w-full"
+        :class="typographyClasses"
+      >
         {{ t('reviews.my_reviews') }} :
       </p>
       <div
@@ -1037,7 +1047,8 @@ getBook()
       class="w-11/12 sm:w-10/12"
     >
       <router-link
-        class="link text-2xl typewriter"
+        class="link text-2xl"
+        :class="typographyClasses"
         :to="{ name: 'book-quotes', params: { bookId: book?.book.id } }"
       >
         {{ t('book_quotes.quote', 2) }}
@@ -1068,7 +1079,8 @@ getBook()
     >
       <p
         v-if="book?.readingEvents != null && book?.readingEvents?.length > 0"
-        class="typewriter text-2xl mb-3 capitalize"
+        class="text-2xl mb-3 capitalize"
+        :class="typographyClasses"
       >
         {{ t('reading_events.reading_events') }} :
       </p>

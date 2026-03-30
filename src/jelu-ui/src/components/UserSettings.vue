@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useLocalStorage, useTitle } from '@vueuse/core'
 import { themeChange } from 'theme-change'
-import { inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import StyledTitle from './StyledTitle.vue'
 
 useTitle('Jelu | User settings')
 
@@ -75,6 +76,22 @@ watch(() => currency.value, (newVal, oldVal) => {
   if (currency.value.length === 3) {
     localStorage.setItem("JL_CURRENCY", currency.value)
   }
+})
+
+const curr = localStorage.getItem("JL_FONT") ?? "typewriter"
+const font = ref(curr)
+
+const fontClasses = computed(() => {
+  if (font.value === 'cormorant') {
+    return "cormorant text-3xl"
+  } else if (font.value === 'typewriter') {
+    return "typewriter text-2xl"
+  }
+  return 'text-2xl'
+})
+
+watch(() => font.value, (newVal, oldVal) => {
+  localStorage.setItem("JL_FONT", font.value)
 })
 
 </script>
@@ -182,6 +199,48 @@ watch(() => currency.value, (newVal, oldVal) => {
     >
     <p :class="currency.length != 3 ? 'text-error':''">
       {{ t('settings.currency_description') }}
+    </p>
+    <label class="label">
+      <span class="label-text text-lg">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-type-icon lucide-type h-6"
+        ><path d="M12 4v16" /><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2" /><path d="M9 20h6" /></svg>
+        {{ t('settings.choose_font') }} : </span>
+    </label>
+    <select
+      v-model="font"
+      class="select select-bordered select-accent"
+    >
+      <option
+        disabled
+        selected
+      >
+        {{ t('settings.choose_font') }}
+      </option>
+      <option>
+        typewriter
+      </option>
+      <option>
+        cormorant
+      </option>
+      <option>
+        system
+      </option>
+    </select>
+    <p
+      :class="fontClasses"
+      class="mt-3"
+    >
+      {{ t('settings.choose_font') }}
     </p>
   </div>
 </template>

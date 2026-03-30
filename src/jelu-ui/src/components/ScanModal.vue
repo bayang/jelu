@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useI18n } from 'vue-i18n';
 import { DetectedBarcode, EmittedError, QrcodeStream } from 'vue-qrcode-reader';
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -59,13 +60,18 @@ onMounted(async () => {
     selected.value = devices.value[0]
   }
 })
+
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <section class="edit-modal">
     <div class="grid justify-center justify-items-center">
       <div class="mb-2">
-        <h1 class="text-2xl typewriter capitalize">
+        <h1
+          class="text-2xl capitalize"
+          :class="typographyClasses"
+        >
           {{ t('labels.import_book') }}
         </h1>
       </div>

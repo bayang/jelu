@@ -11,6 +11,7 @@ import dataService from "../services/DataService";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import SeriesCompleteInput from "./SeriesCompleteInput.vue";
 import { Role } from "../model/Role";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -227,6 +228,8 @@ book.value.authors?.forEach(a => authors.value.push(a.name))
 console.log("authors")
 console.log(authors.value)
 book.value.tags?.forEach(t => tags.value.push(t.name))
+
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -234,7 +237,8 @@ book.value.tags?.forEach(t => tags.value.push(t.name))
     <div class="w-full">
       <div>
         <h1
-          class="typewriter text-2xl first-letter:capitalize"
+          class="text-2xl first-letter:capitalize"
+          :class="typographyClasses"
         >
           {{ t('book_merge.merge_books') }}
         </h1>

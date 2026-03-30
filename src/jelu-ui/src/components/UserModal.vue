@@ -7,6 +7,7 @@ import { User } from "../model/User";
 import dataService from "../services/DataService";
 import { key } from '../store';
 import { ObjectUtils } from "../utils/ObjectUtils";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -46,12 +47,17 @@ async function editUser() {
 const isValid = computed(() => {
   return form.value.password.length >=3 && form.value.password_confirm.length >=3 && form.value.password === form.value.password_confirm
 })
+
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <section class="event-modal">
     <div>
-      <h1 class="typewriter text-2xl first-letter:capitalize">
+      <h1
+        class="text-2xl first-letter:capitalize"
+        :class="typographyClasses"
+      >
         {{ t('admin_user.edit_user', {name : props.currentUser.login}) }}
       </h1>
       <div>

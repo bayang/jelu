@@ -11,6 +11,7 @@ import { ReadingEventType } from "../model/ReadingEvent";
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
+import useTypography from '../composables/typography';
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -196,6 +197,7 @@ function modalClosed() {
   throttledGetBooks()
 }
 
+const { typographyClasses } = useTypography()
 
 try {
   getBooks();
@@ -476,7 +478,10 @@ try {
         </span>
       </button>
     </div>
-    <h2 class="text-3xl typewriter capitalize">
+    <h2
+      class="text-3xl capitalize"
+      :class="typographyClasses"
+    >
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
@@ -536,7 +541,10 @@ try {
     />
   </div>
   <div v-else>
-    <h2 class="text-3xl typewriter capitalize">
+    <h2
+      class="text-3xl capitalize"
+      :class="typographyClasses"
+    >
       {{ t('labels.library_empty') }}
     </h2>
     <span class="icon">

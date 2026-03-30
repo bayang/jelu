@@ -4,6 +4,7 @@ import { CreateReadingEvent, ReadingEvent, ReadingEventType } from "../model/Rea
 import dataService from "../services/DataService";
 import { useI18n } from 'vue-i18n'
 import Datepicker from 'vue3-datepicker'
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -78,6 +79,7 @@ const deleteEvent = () => {
   }
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -87,7 +89,10 @@ const deleteEvent = () => {
     >
       <div>
         <div>
-          <h1 class="typewriter text-2xl first-letter:capitalize">
+          <h1
+            class="text-2xl first-letter:capitalize"
+            :class="typographyClasses"
+          >
             {{ t('reading_events.edit_event') }}
           </h1>
         </div>
@@ -224,7 +229,10 @@ const deleteEvent = () => {
     >
       <div>
         <div>
-          <h1 class="typewriter text-2xl capitalize">
+          <h1
+            class="text-2xl capitalize"
+            :class="typographyClasses"
+          >
             {{ t('reading_events.choose_event') }}
           </h1>
         </div>

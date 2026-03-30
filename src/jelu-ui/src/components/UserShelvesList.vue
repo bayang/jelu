@@ -8,6 +8,7 @@ import { ObjectUtils } from "../utils/ObjectUtils";
 import { Tag } from "../model/Tag";
 import { useOruga } from "@oruga-ui/oruga-next";
 import { useTitle } from "@vueuse/core";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -106,10 +107,11 @@ watch([page, sortQuery], (newVal, oldVal) => {
 
 getShelves()
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
-  <div class="w-fit flex flex-col sm:flex-row-reverse">          
+  <div class="w-fit flex flex-col sm:flex-row-reverse">
     <div
       v-if="props.allowCreate"
       class="sm:mx-1 w-full sm:w-fit"
@@ -139,7 +141,10 @@ getShelves()
 
     <div>
       <div>
-        <h1 class="typewriter text-2xl first-letter:capitalize">
+        <h1
+          class="text-2xl first-letter:capitalize"
+          :class="typographyClasses"
+        >
           {{ t('settings.shelves') }}
         </h1>
       </div>
@@ -157,7 +162,7 @@ getShelves()
             stroke-linejoin="round"
             class="lucide lucide-arrow-down-az-icon lucide-arrow-down-a-z cursor-pointer"
             @click="sortQuery='name,asc'"
-          ><path d="m3 16 4 4 4-4" /><path d="M7 20V4" /><path d="M20 8h-5" /><path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10" /><path d="M15 14h5l-5 6h5" /></svg> 
+          ><path d="m3 16 4 4 4-4" /><path d="M7 20V4" /><path d="M20 8h-5" /><path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10" /><path d="M15 14h5l-5 6h5" /></svg>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

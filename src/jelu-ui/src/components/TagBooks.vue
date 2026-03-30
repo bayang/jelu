@@ -15,6 +15,7 @@ import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
 import { ReadingEventType } from '../model/ReadingEvent';
+import useTypography from '../composables/typography';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -65,8 +66,8 @@ const getTag = async () => {
 
 const getBooks = () => {
     getBooksIsLoading.value = true
-    dataService.getTagBooksById(route.params.tagId as string, 
-      pageAsNumber.value - 1, perPage.value, sortQuery.value, 
+    dataService.getTagBooksById(route.params.tagId as string,
+      pageAsNumber.value - 1, perPage.value, sortQuery.value,
       libraryFilter.value, eventTypes.value)
       .then(res => {
         console.log(res)
@@ -102,6 +103,7 @@ function modalClosed() {
 getTag()
 getBooks()
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -292,7 +294,10 @@ getBooks()
         </span>
       </button>
     </div>
-    <h2 class="text-3xl typewriter">
+    <h2
+      class="text-3xl"
+      :class="typographyClasses"
+    >
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>

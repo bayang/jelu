@@ -12,6 +12,7 @@ import UserShelvesModal from './components/UserShelvesModal.vue';
 import dataService from "./services/DataService";
 import { key } from './store';
 import { StringUtils } from './utils/StringUtils';
+import useTypography from "./composables/typography";
 
 const {
   offlineReady,
@@ -117,6 +118,8 @@ const collapseDropdown = () => {
     document.activeElement.blur();
   }
 }
+
+const { typographyClasses } = useTypography()
 
 let barcodeReader: any = null
 
@@ -538,7 +541,7 @@ function scanModalClosed() {
               class="h-fit"
               @click="toggleShelvesModal"
             ><i class="mdi mdi-bookshelf mdi-24px" /></span>
-          </div>                            
+          </div>
         </div>
         <div class="dropdown dropdown-end">
           <label
@@ -614,7 +617,10 @@ function scanModalClosed() {
         class="modal-box relative"
         for=""
       >
-        <h1 class="typewriter text-2xl mb-3 capitalize">
+        <h1
+          class="text-2xl mb-3 capitalize"
+          :class="typographyClasses"
+        >
           {{ t('settings.shortcuts') }} :
         </h1>
         <div class="flex flex-row flex-wrap justify-center basis-10/12 sm:basis-1/3">

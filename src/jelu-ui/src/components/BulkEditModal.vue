@@ -6,6 +6,7 @@ import { Tag } from "../model/Tag";
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { useOruga } from "@oruga-ui/oruga-next";
 import { Wrapper } from "../model/autocomplete-wrapper";
+import useTypography from "../composables/typography";
 
 const oruga = useOruga()
 
@@ -88,6 +89,7 @@ const submit = () => {
   }
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -95,7 +97,10 @@ const submit = () => {
     <div>
       <div>
         <div>
-          <h1 class="typewriter text-2xl first-letter:capitalize">
+          <h1
+            class="text-2xl first-letter:capitalize"
+            :class="typographyClasses"
+          >
             {{ t('bulk.bulk_edit_books') }}
           </h1>
         </div>
@@ -105,7 +110,7 @@ const submit = () => {
           <label class="label">
             <span class="label-text font-semibold">{{ t('bulk.owned') }} :</span>
           </label>
-          
+
           <div class="flex gap-2">
             <label>{{ t('labels.yes') }}</label>
             <input
@@ -265,7 +270,7 @@ const submit = () => {
 </template>
 
 <style scoped>
-  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete,
   .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
     @apply w-full;
   }

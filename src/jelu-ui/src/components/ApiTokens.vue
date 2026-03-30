@@ -9,6 +9,7 @@ import dataService from "../services/DataService"
 import { ObjectUtils } from "../utils/ObjectUtils"
 import { ApiToken, TokenScope, CreateApiToken } from "../model/ApiToken"
 import dayjs from "dayjs"
+import useTypography from "../composables/typography"
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -80,20 +81,20 @@ async function createToken() {
       scopes: form.value.scopes,
       expiresAt: expiresAt
     })
-    
+
     // Show the raw token
     createdRawToken.value = result.rawToken
     showCreateModal.value = false
     showTokenModal.value = true
-    
+
     // Reset form
     form.value = { name: '', scopes: [], expiresAt: undefined }
     expirationOption.value = 'never'
     customExpiration.value = ''
-    
+
     // Reload tokens list
     await loadTokens()
-    
+
     ObjectUtils.toast(oruga, "success", t('api_tokens.created'), 4000)
   } catch (err: any) {
     console.log('error creating token', err)
@@ -105,7 +106,7 @@ async function revokeToken(token: ApiToken) {
   if (!confirm(t('api_tokens.revoke_confirm', { name: token.name }))) {
     return
   }
-  
+
   try {
     await dataService.deleteApiToken(token.id)
     await loadTokens()
@@ -170,14 +171,18 @@ function toggleScope(scopeName: string) {
   }
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center">
-    <h1 class="typewriter text-2xl mb-3 capitalize">
+    <h1
+      class="text-2xl mb-3 capitalize"
+      :class="typographyClasses"
+    >
       {{ t('api_tokens.title') }}
     </h1>
-    
+
     <p class="text-base-content/70 mb-4 max-w-2xl text-center">
       {{ t('api_tokens.description') }}
     </p>
@@ -195,11 +200,11 @@ function toggleScope(scopeName: string) {
       <div v-if="loading" class="flex justify-center">
         <span class="loading loading-spinner loading-lg" />
       </div>
-      
+
       <div v-else-if="tokens.length === 0" class="text-center text-base-content/60">
         {{ t('api_tokens.no_tokens') }}
       </div>
-      
+
       <div v-else class="space-y-4">
         <div
           v-for="token in tokens"
@@ -245,7 +250,7 @@ function toggleScope(scopeName: string) {
                 </button>
               </div>
             </div>
-            
+
             <div class="flex flex-wrap gap-4 text-sm text-base-content/60 mt-2">
               <span>
                 <i class="bx bx-calendar mr-1" />
@@ -270,12 +275,15 @@ function toggleScope(scopeName: string) {
     </div>
 
     <!-- Create Token Modal -->
-    <div v-if="showCreateModal" class="modal modal-open">
+    <div
+      v-if="showCreateModal"
+      class="modal modal-open"
+    >
       <div class="modal-box max-w-2xl">
         <h3 class="font-bold text-lg mb-4">
           {{ t('api_tokens.create_new') }}
         </h3>
-        
+
         <div class="form-control mb-4">
           <label class="label">
             <span class="label-text">{{ t('api_tokens.token_name') }}</span>
@@ -357,7 +365,7 @@ function toggleScope(scopeName: string) {
         <h3 class="font-bold text-lg mb-4">
           {{ t('api_tokens.token_created') }}
         </h3>
-        
+
         <div class="alert alert-warning mb-4">
           <i class="bx bx-error-circle" />
           <span>{{ t('api_tokens.copy_warning') }}</span>

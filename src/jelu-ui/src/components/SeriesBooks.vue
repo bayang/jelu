@@ -16,6 +16,7 @@ import SortFilterBarVue from "./SortFilterBar.vue";
 import { Series } from '../model/Series';
 import SeriesModalVue from './SeriesModal.vue'
 import { useOruga } from "@oruga-ui/oruga-next"
+import useTypography from '../composables/typography';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -65,8 +66,8 @@ const getSeries = async () => {
 
 const getBooks = () => {
     getBooksIsLoading.value = true
-    dataService.getSeriesBooksById(route.params.seriesId as string, 
-      pageAsNumber.value - 1, perPage.value, sortQuery.value, 
+    dataService.getSeriesBooksById(route.params.seriesId as string,
+      pageAsNumber.value - 1, perPage.value, sortQuery.value,
       libraryFilter.value)
       .then(res => {
         console.log(res)
@@ -122,6 +123,7 @@ function toggleSeriesModal(series: Series, edit: boolean) {
 getSeries()
 getBooks()
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -272,11 +274,14 @@ getBooks()
         </span>
       </button>
     </div>
-    <h2 class="text-3xl typewriter">
+    <h2
+      class="text-3xl"
+      :class="typographyClasses"
+    >
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
-      {{ series.name }} : 
+      {{ series.name }} :
       <button
         v-tooltip="t('series.edit_series')"
         class="btn btn-circle btn-outline border-none"

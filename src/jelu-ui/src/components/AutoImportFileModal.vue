@@ -6,6 +6,7 @@ import { Metadata } from "../model/Metadata";
 import dataService from "../services/DataService";
 import MetadataDetail from "./MetadataDetail.vue";
 import FilePickerElement from "./FilePickerElement.vue";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -73,6 +74,8 @@ const selectPath = (elem: Path) => {
   }
 }
 
+const { typographyClasses } = useTypography()
+
 directories('/')
 
 </script>
@@ -81,7 +84,10 @@ directories('/')
   <section class="edit-modal">
     <div class="grid justify-center justify-items-center">
       <div class="mb-2">
-        <h1 class="text-2xl typewriter capitalize">
+        <h1
+          class="text-2xl capitalize"
+          :class="typographyClasses"
+        >
           {{ t('labels.import_book') }}
         </h1>
       </div>
@@ -169,7 +175,7 @@ directories('/')
             @choose="selectPath"
           />
           <div
-            v-if="directoryListing?.directories && 
+            v-if="directoryListing?.directories &&
               directoryListing?.directories.length < 1"
           >
             <div class="flex flex-row place-content-center mt-2">

@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import dataService from "../services/DataService"
 import { ObjectUtils } from "../utils/ObjectUtils"
+import useTypography from "../composables/typography"
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -37,11 +38,15 @@ const isValid = computed(() => {
   return form.value.login.length >=3 && form.value.password.length >=3 && form.value.password_confirm.length >=3 && form.value.password === form.value.password_confirm
 })
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center">
-    <h1 class="typewriter text-2xl mb-3 capitalize">
+    <h1
+      class="text-2xl mb-3 capitalize"
+      :class="typographyClasses"
+    >
       {{ t('admin_user.create_user') }} :
     </h1>
     <div class="flex flex-row justify-center basis-10/12 sm:basis-1/3">
@@ -85,7 +90,7 @@ const isValid = computed(() => {
           >
           <span class="validator-hint hidden">{{ t('login.password_length') }}</span>
         </label>
-        <label class="fieldset"> 
+        <label class="fieldset">
           <span class="label capitalize">{{ t('admin_user.admin_help') }}</span>
           <input
             v-model="form.admin"

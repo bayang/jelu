@@ -6,7 +6,7 @@
 
 @import '@oruga-ui/theme-oruga/dist/oruga.css';
 @theme{
-  
+
   --jelu_background: #262429;
   --jelu_background_accent: #262429;
   --jelu_background_contrast: #f7f5d1;
@@ -104,7 +104,7 @@
 
   --oruga-input-background-color: var(--color-base-100);
   --oruga-input-color: var(--color-base-content);
-  
+
   --oruga-taginput-border-color: var(--color-base-100);
 
   --oruga-autocomplete-item-color: var(--color-primary-content);
@@ -221,9 +221,27 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 
   }
 
+@font-face {
+  font-family: 'cormorant';
+  font-style: normal;
+  font-display: swap;
+  src: url("./Cormorant-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: 'cormorant';
+  font-style: italic;
+  font-display: swap;
+  src: url("./Cormorant-Italic-VariableFont_wght.ttf");
+}
+
 .typewriter {
     /* // font-family: $typewriter-font; */
-    font-family: AnotherTypewriter;
+    font-family: AnotherTypewriter, -apple-system, system-ui, serif;
+}
+
+.cormorant {
+    font-family: 'cormorant', -apple-system, system-ui, serif;
 }
 
 .edit-modal {

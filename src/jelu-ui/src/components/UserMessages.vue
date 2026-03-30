@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import usePagination from '../composables/pagination';
 import { MessageCategory, UserMessage } from "../model/UserMessage";
 import dataService from "../services/DataService";
+import useTypography from '../composables/typography';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -103,11 +104,16 @@ onMounted(() => {
     console.log("failed get messages : " + error);
   }
 });
+
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center">
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
+    <h1
+      class="text-2xl w-11/12 sm:w-8/12 pb-4 capitalize"
+      :class="typographyClasses"
+    >
       {{ t('settings.messages') }}
     </h1>
     <div

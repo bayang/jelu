@@ -9,6 +9,7 @@ import { LoginHistoryInfo, Provider } from "../model/User"
 import dataService from "../services/DataService"
 import { key } from '../store'
 import UserModalVue from './UserModal.vue'
+import useTypography from "../composables/typography"
 
 const oruga = useOruga()
 
@@ -57,12 +58,16 @@ const fetchHistoryInfo = async () => {
 
 fetchHistoryInfo()
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="w-fit flex flex-wrap justify-items-center justify-self-center">
     <div>
-      <h1 class="typewriter text-2xl mb-3 capitalize">
+      <h1
+        class="text-2xl mb-3 capitalize"
+        :class="typographyClasses"
+      >
         {{ t('settings.profile') }} :
       </h1>
       <div class="card card-side bg-base-200 shadow-2xl">
@@ -106,7 +111,10 @@ fetchHistoryInfo()
     </div>
   </div>
   <div class="overflow-x-auto mt-6">
-    <h1 class="text-2xl typewriter capitalize">
+    <h1
+      class="text-2xl capitalize"
+      :class="typographyClasses"
+    >
       {{ t('login_info.activity') }}
     </h1>
     <table class="table">

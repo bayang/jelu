@@ -8,6 +8,7 @@ import { User } from '../model/User'
 import dataService from "../services/DataService"
 import { key } from '../store'
 import { ObjectUtils } from '../utils/ObjectUtils'
+import useTypography from '../composables/typography'
 
 useTitle('Jelu | Users')
 
@@ -62,12 +63,17 @@ const deleteUser = async (user: User) => {
     }
 }
 
+const { typographyClasses } = useTypography()
+
 getUsers()
 
 </script>
 
 <template>
-  <h2 class="text-3xl typewriter capitalize mb-4">
+  <h2
+    class="text-3xl capitalize mb-4"
+    :class="typographyClasses"
+  >
     {{ t('settings.users') }}
   </h2>
   <div class="flex flex-row flex-wrap gap-3">

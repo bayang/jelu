@@ -5,6 +5,7 @@ import { Book } from "../model/Book";
 import { Visibility } from "../model/Review";
 import { BookQuote } from "../model/BookQuote"
 import dataService from "../services/DataService";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -72,6 +73,7 @@ const editBookQuote = () => {
   }
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -81,13 +83,15 @@ const editBookQuote = () => {
         <div>
           <h1
             v-if="props.edit === true"
-            class="typewriter text-2xl first-letter:capitalize"
+            class="text-2xl first-letter:capitalize"
+            :class="typographyClasses"
           >
             {{ t('book_quotes.edit_quote') }}
           </h1>
           <h1
             v-else
-            class="typewriter text-2xl first-letter:capitalize"
+            class="text-2xl first-letter:capitalize"
+            :class="typographyClasses"
           >
             {{ t('book_quotes.create') }}
           </h1>
