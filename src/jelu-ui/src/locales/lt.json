@@ -155,7 +155,8 @@
         "custom_lists": "custom lists",
         "choose_currency": "Select your currency",
         "api_tokens": "API Tokens",
-        "currency_description": "Enter the 3 letters code of your currency, eg: EUR, USD, GBP. See https://en.wikipedia.org/wiki/ISO_4217."
+        "currency_description": "Enter the 3 letters code of your currency, eg: EUR, USD, GBP. See https://en.wikipedia.org/wiki/ISO_4217.",
+        "choose_font": "Choose your favorite font for book titles."
     },
     "user": {
         "log_first": "Prašome pirma prisijungti"
