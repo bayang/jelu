@@ -1,3 +1,17 @@
+## [0.82.0](https://github.com/bayang/jelu/compare/v0.81.0...v0.82.0) (2026-04-11)
+
+
+### Features
+
+* add yearly stats [#291](https://github.com/bayang/jelu/issues/291) ([77aa067](https://github.com/bayang/jelu/commit/77aa0671bcc7d1ea965eb7749437943b33fa28ac))
+
+
+### Bug Fixes
+
+* filter bar not scrollable [#308](https://github.com/bayang/jelu/issues/308) ([87cf5f6](https://github.com/bayang/jelu/commit/87cf5f664e91f568d07cf2e5e830a6415b6ef8ba))
+* some tests fail because of exposed and DST ([7823ddc](https://github.com/bayang/jelu/commit/7823ddc1495fa1577ab5225098ed630bf1b71216))
+* typewriter font does not cover all languages [#278](https://github.com/bayang/jelu/issues/278) ([e97694a](https://github.com/bayang/jelu/commit/e97694ad94e2cc6b060ab7241cb096742f16e790))
+
 ## [0.81.0](https://github.com/bayang/jelu/compare/v0.80.0...v0.81.0) (2026-03-27)
 
 
