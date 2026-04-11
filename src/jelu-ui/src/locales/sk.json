@@ -155,7 +155,8 @@
         "custom_lists": "Vlastné zoznamy",
         "choose_currency": "Vyberte svoju menu",
         "api_tokens": "API tokeny",
-        "currency_description": "Zadajte trojmiestny kód vašej meny, napr.: EUR, USD, GBP. Pozrite si stránku https://en.wikipedia.org/wiki/ISO_4217."
+        "currency_description": "Zadajte trojmiestny kód vašej meny, napr.: EUR, USD, GBP. Pozrite si stránku https://en.wikipedia.org/wiki/ISO_4217.",
+        "choose_font": "Choose your favorite font for book titles."
     },
     "user": {
         "log_first": "Najskôr sa prihláste, prosím"

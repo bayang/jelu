@@ -155,7 +155,8 @@
         "custom_lists": "listes personnalisées",
         "choose_currency": "Choisissez votre devise",
         "api_tokens": "Jetons d'API",
-        "currency_description": "Entrez le code 3 lettres de votre devise. Ex : EUR, USD, GBP. Voir https://fr.wikipedia.org/wiki/ISO_4217."
+        "currency_description": "Entrez le code 3 lettres de votre devise. Ex : EUR, USD, GBP. Voir https://fr.wikipedia.org/wiki/ISO_4217.",
+        "choose_font": "Choisissez votre police favorite pour les titres de livres."
     },
     "user": {
         "log_first": "Veuillez vous identifier"
