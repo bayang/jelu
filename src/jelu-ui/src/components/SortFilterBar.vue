@@ -11,8 +11,6 @@ const { t } = useI18n({
 const keys = useMagicKeys()
 const shiftF = keys['Shift+F']
 
-const scroll = ref('clip')
-
 const props = defineProps<{
   order: string
   open: boolean
@@ -49,7 +47,6 @@ watch(shiftF, (v) => {
     :fullwidth="false"
     :overlay="false"
     class="jl-sidebar"
-    :scroll="scroll"
     :teleport="true"
     @close="emit('update:open', false)"
   >
