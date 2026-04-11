@@ -2,13 +2,13 @@
 import { useLocalStorage, useTitle } from '@vueuse/core';
 import { BarElement, CategoryScale, ChartData, Chart as ChartJS, Legend, LinearScale, LineController, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import dayjs from "dayjs";
-import { Ref, ref, watch } from "vue";
+import { computed, Ref, ref, watch } from "vue";
 import { Bar } from 'vue-chartjs';
 import { useI18n } from 'vue-i18n';
-import { TotalsStats } from '../model/YearStats';
+import useTypography from '../composables/typography';
+import { MonthStats, TotalsStats } from '../model/YearStats';
 import dataService from "../services/DataService";
 import { ObjectUtils } from '../utils/ObjectUtils';
-import useTypography from '../composables/typography';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -85,11 +85,14 @@ const getAllStats = () => {
   })
 }
 
+const monthStats: Ref<Array<MonthStats>> = ref([])
+
 const getYearStats = () => {
   if (currentYear.value != null) {
     loading.value = true
     dataService.monthStatsForYear(currentYear.value)
     .then(res => {
+      monthStats.value = res
       let labels = res.map(r => r.month).map(m => {
         const d = dayjs(`2020-${m}-1`).format('MMMM')
         return d
@@ -198,6 +201,25 @@ watch(currentYear, (newVal, oldVal) => {
 
 })
 
+const yearSums = computed(() => {
+  let read = 0
+  let dropped = 0
+  let priceTotal = 0
+  let pages = 0
+  monthStats.value.forEach(e => {
+    read += e.finished
+    dropped += e.dropped
+    pages += e.pageCount
+    priceTotal += e.price
+  })
+  return {
+    read,
+    dropped,
+    priceTotal,
+    pages
+  }
+})
+
 const loaderFullPage = ref(false)
 
 getAllStats()
@@ -239,6 +261,9 @@ const { typographyClasses } = useTypography()
     >
       {{ t('stats.yearly_stats') }}
     </h1>
+    <div class="mb-3">
+      {{ t('stats.read') }}:&nbsp;{{ yearSums.read }} / {{ t('stats.dropped') }}:&nbsp;{{ yearSums.dropped }} / {{ t('stats.prices_sum') }}&nbsp;{{ yearSums.priceTotal }}&nbsp;{{ currency }} / {{ t('stats.pages_read') }}&nbsp;{{ yearSums.pages }}
+    </div>
     <div
       v-if="years != null && years !== undefined && years.length > 0"
       class="w-11/12 sm:w-8/12"
