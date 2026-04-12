@@ -6,6 +6,7 @@ import { CustomList } from '../model/custom-list'
 import { Tag } from "../model/Tag"
 import dataService from "../services/DataService"
 import ClosableBadge from "./ClosableBadge.vue"
+import useTypography from '../composables/typography'
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -109,13 +110,18 @@ const editList = (list: CustomList) => {
   }
 }
 
+const { typographyClasses } = useTypography()
+
 getCustomLists()
 </script>
 
 <template>
   <div class="flex flex-wrap justify-self-center sm:w-8/12 w-fit">
     <div class="sm:mx-1 w-full sm:w-1/2">
-      <h1 class="typewriter text-2xl mb-3 capitalize">
+      <h1
+        class="text-2xl mb-3 capitalize"
+        :class="typographyClasses"
+      >
         {{ t('settings.custom_lists') }} :
       </h1>
       <div>
@@ -212,7 +218,7 @@ getCustomLists()
             :placeholder="t('lists.name')"
           >
 
-  
+
           <label class="label capitalize">{{ t("lists.tags") }}
             <svg
               v-tooltip="t('lists.tags_desc')"

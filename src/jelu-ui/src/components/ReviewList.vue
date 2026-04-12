@@ -7,6 +7,7 @@ import useSort from "../composables/sort";
 import { Review } from '../model/Review';
 import dataService from "../services/DataService";
 import ReviewBookCard from './ReviewBookCard.vue';
+import useTypography from '../composables/typography';
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -32,7 +33,7 @@ watch([page, sortQuery], (newVal, oldVal) => {
 
 const getReviews = () => {
   getBookIsLoading.value = true
-  dataService.findReviews(undefined, undefined, null, 
+  dataService.findReviews(undefined, undefined, null,
   null, null,
   pageAsNumber.value - 1, perPage.value, sortQuery.value)
   .then(res => {
@@ -53,7 +54,7 @@ const getReviews = () => {
       getBookIsLoading.value = false
       updatePageLoading(false)
     })
-  
+
 };
 
 // watches set above sometimes called twice
@@ -68,11 +69,15 @@ try {
   console.log("failed get reviews : " + error);
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="flex flex-row mb-2 justify-center">
-    <h2 class="text-3xl typewriter capitalize">
+    <h2
+      class="text-3xl capitalize"
+      :class="typographyClasses"
+    >
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
@@ -126,7 +131,10 @@ try {
     />
   </div>
   <div v-else>
-    <h2 class="text-3xl typewriter capitalize">
+    <h2
+      class="text-3xl capitalize"
+      :class="typographyClasses"
+    >
       {{ t('labels.library_empty') }}
     </h2>
     <span class="icon">

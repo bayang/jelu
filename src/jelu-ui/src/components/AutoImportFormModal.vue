@@ -13,6 +13,7 @@ import { StringUtils } from "../utils/StringUtils";
 import MetadataDetail from "./MetadataDetail.vue";
 import MetadataPluginsModal from "./MetadataPluginsModal.vue";
 import ScanModal from "./ScanModal.vue";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -71,7 +72,7 @@ const importData = () => {
     emit('close')
 }
 
-const isValid = computed(() => StringUtils.isNotBlank(form.title) 
+const isValid = computed(() => StringUtils.isNotBlank(form.title)
 || StringUtils.isNotBlank(form.isbn)
 || StringUtils.isNotBlank(form.authors))
 
@@ -133,13 +134,17 @@ function pluginsModalClosed() {
   console.log("plugins modal closed")
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <section class="edit-modal">
     <div class="flex flex-col items-center">
       <div class="mb-2">
-        <h1 class="text-2xl typewriter capitalize">
+        <h1
+          class="text-2xl capitalize"
+          :class="typographyClasses"
+        >
           {{ t('labels.import_book') }}
         </h1>
       </div>
@@ -254,7 +259,7 @@ function pluginsModalClosed() {
         />
       </div>
     </div>
-    <div 
+    <div
       class="flex flex-col items-center"
     >
       <div

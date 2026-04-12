@@ -11,6 +11,7 @@ import { ReadingEventType } from '../model/ReadingEvent';
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
 import SortFilterBarVue from "./SortFilterBar.vue";
+import useTypography from '../composables/typography';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -155,6 +156,7 @@ const message = computed(() => {
 
 getToRead()
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -353,7 +355,10 @@ getToRead()
         </span>
       </button>
     </div>
-    <h2 class="text-3xl typewriter capitalize">
+    <h2
+      class="text-3xl capitalize"
+      :class="typographyClasses"
+    >
       {{ message }} :
     </h2>
     <div />
@@ -408,7 +413,10 @@ getToRead()
     />
   </div>
   <div v-else>
-    <h2 class="text-3xl typewriter">
+    <h2
+      class="text-3xl"
+      :class="typographyClasses"
+    >
       {{ t('labels.nothing_to_read') }}
     </h2>
     <span class="icon">

@@ -12,6 +12,7 @@ import { ObjectUtils } from "../utils/ObjectUtils";
 import { useI18n } from 'vue-i18n'
 import FormField from "./FormField.vue";
 import { Role } from "../model/Role"
+import useTypography from "../composables/typography"
 
 useTitle('Jelu | Authors admin')
 
@@ -110,12 +111,16 @@ const rightDoD = computed(() => {
 const options = computed(() => {
   return filteredAuthors.value.map(t => ObjectUtils.wrapForOptions(t))
 })
+
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="grid grid-cols-2 gap-10 mr-2">
     <div class="col-span-2 justify-self-center">
-      <h1 class="text-2xl typewriter mb-4">
+      <h1
+        class="text-2xl mb-4"
+        :class="typographyClasses">
         {{ t('authors_merge.authors_merging_utility') }}
       </h1>
       <o-steps
@@ -171,7 +176,7 @@ const options = computed(() => {
           {{ t('authors_merge.search_message') }}
         </legend>
         <o-autocomplete
-          :options="options" 
+          :options="options"
           :input-classes="{rootClass:'border-2 border-accent w-full', inputClass: 'w-full'}"
           clear-on-select
           :loading="isFetching"
@@ -308,7 +313,7 @@ const options = computed(() => {
           {{ t('author.name') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.name"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -327,7 +332,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.name"
             type="text"
-            class="grow input" 
+            class="grow input"
             disabled
           >
         </label>
@@ -337,7 +342,7 @@ const options = computed(() => {
           {{ t('author.date_of_birth') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.dateOfBirth"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -356,7 +361,7 @@ const options = computed(() => {
           <input
             v-model="rightDoB"
             type="text"
-            class="grow input" 
+            class="grow input"
             disabled
           >
         </label>
@@ -366,7 +371,7 @@ const options = computed(() => {
           {{ t('author.date_of_death') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.dateOfDeath"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -385,7 +390,7 @@ const options = computed(() => {
           <input
             v-model="rightDoD"
             type="text"
-            class="grow input" 
+            class="grow input"
             disabled
           >
         </label>
@@ -395,7 +400,7 @@ const options = computed(() => {
           {{ t('author.biography') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.biography"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -414,7 +419,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.biography"
             type="text"
-            class="grow input" 
+            class="grow input"
             disabled
           >
         </label>
@@ -424,7 +429,7 @@ const options = computed(() => {
           {{ t('author.official_page') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.officialPage"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -443,7 +448,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.officialPage"
             type="text"
-            class="grow input" 
+            class="grow input"
             disabled
           >
         </label>
@@ -453,7 +458,7 @@ const options = computed(() => {
           {{ t('author.wikipedia_page') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.wikipediaPage"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -472,7 +477,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.wikipediaPage"
             type="text"
-            class="grow input" 
+            class="grow input"
             disabled
           >
         </label>
@@ -482,7 +487,7 @@ const options = computed(() => {
           {{ t('author.goodreads_page') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.goodreadsPage"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -501,7 +506,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.goodreadsPage"
             type="text"
-            class="input" 
+            class="input"
             disabled
           >
         </label>
@@ -511,7 +516,7 @@ const options = computed(() => {
           {{ t('author.x_page') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.twitterPage"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -530,7 +535,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.twitterPage"
             type="text"
-            class="input" 
+            class="input"
             disabled
           >
         </label>
@@ -540,7 +545,7 @@ const options = computed(() => {
           {{ t('author.facebook_page') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.facebookPage"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -559,7 +564,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.facebookPage"
             type="text"
-            class="input" 
+            class="input"
             disabled
           >
         </label>
@@ -569,7 +574,7 @@ const options = computed(() => {
           {{ t('author.instagram_page') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.instagramPage"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -588,7 +593,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.instagramPage"
             type="text"
-            class="input" 
+            class="input"
             disabled
           >
         </label>
@@ -598,7 +603,7 @@ const options = computed(() => {
           {{ t('author.personal_notes') }}
         </legend>
         <label class="input w-full">
-          <svg 
+          <svg
             v-if="rightAuthor.notes"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -617,7 +622,7 @@ const options = computed(() => {
           <input
             v-model="rightAuthor.notes"
             type="text"
-            class="input" 
+            class="input"
             disabled
           >
         </label>
@@ -664,7 +669,7 @@ const options = computed(() => {
 </template>
 
 <style scoped>
-  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete,
   .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
     @apply w-full;
   }

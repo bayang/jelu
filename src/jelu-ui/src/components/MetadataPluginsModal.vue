@@ -5,6 +5,7 @@ import draggable from "vuedraggable";
 import { useStore } from 'vuex';
 import { PluginInfo, PluginInfoOrder } from "../model/PluginInfo";
 import { key } from '../store';
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -65,13 +66,15 @@ function checkMove(evt: any){
     return (evt.draggedContext.element.enabled);
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <section class="metadata-modal">
     <div class="flex flex-col items-center justify-items-center">
       <h1
-        class="typewriter text-2xl first-letter:capitalize"
+        class="text-2xl first-letter:capitalize"
+        :class="typographyClasses"
       >
         {{ t('metadata.reorder_plugins') }}
       </h1>
@@ -93,7 +96,7 @@ function checkMove(evt: any){
             >
               <span class="mdi mdi-drag-vertical mdi-24 text-3xl" />
               <div class="flex flex-col">
-                <span 
+                <span
                   class="text font-semibold"
                 >{{ element.name }}</span>
                 <span class="text text-xs">({{ t('metadata.default_priority') }}:{{ element.order }}) </span>

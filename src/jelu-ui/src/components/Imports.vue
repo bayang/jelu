@@ -8,6 +8,7 @@ import { useTitle } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { ObjectUtils } from '../utils/ObjectUtils'
 import { useOruga } from "@oruga-ui/oruga-next";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -40,7 +41,7 @@ const importFile = async () => {
   }
   const importConfig = {
     shouldFetchMetadata: fetchMetadata.value,
-    shouldFetchCovers: fetchCovers.value, 
+    shouldFetchCovers: fetchCovers.value,
     importSource: importSource.value
     }
     if (importSource.value == ImportSource.ISBN_LIST) {
@@ -86,6 +87,8 @@ watch(file, (newVal, oldVal) => {
   console.log(oldVal)
 })
 
+const { typographyClasses } = useTypography()
+
 </script>
 
 <template>
@@ -94,7 +97,10 @@ watch(file, (newVal, oldVal) => {
       v-tooltip="t('csv_import.import_help')"
       class="w-11/12 sm:w-8/12 pb-4 flex justify-center items-center"
     >
-      <h1 class="text-2xl typewriter capitalize px-2">
+      <h1
+        class="text-2xl capitalize px-2"
+        :class="typographyClasses"
+      >
         {{ t('csv_import.import_csv') }}
       </h1>
       <svg
@@ -183,7 +189,7 @@ watch(file, (newVal, oldVal) => {
           </label>
         </fieldset>
       </div>
-        
+
       <div>
         <fieldset class="fieldset">
           <legend class="fieldset-legend capitalize text-lg">
@@ -225,7 +231,10 @@ watch(file, (newVal, oldVal) => {
         </p>
       </div>
     </div>
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 py-4 capitalize">
+    <h1
+      class="text-2xl w-11/12 sm:w-8/12 py-4 capitalize"
+      :class="typographyClasses"
+    >
       {{ t('csv_import.export') }}
     </h1>
     <div class="w-11/12 sm:w-8/12">

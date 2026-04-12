@@ -15,6 +15,7 @@ import QuotesDisplay from './QuotesDisplay.vue'
 import ReadingEventModalVue from './ReadingEventModal.vue'
 import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewBookCard from './ReviewBookCard.vue';
+import useTypography from "../composables/typography"
 
 useTitle('Jelu | Home')
 
@@ -121,7 +122,7 @@ function modalClosed() {
 
 function defaultCreateEvent(bookId: string): CreateReadingEvent {
   return {
-  eventType: ReadingEventType.FINISHED, 
+  eventType: ReadingEventType.FINISHED,
   eventDate: new Date(),
   bookId: bookId
 }
@@ -161,12 +162,16 @@ function toggleReadProgressModal(userBookId: string, pageCount: number|null, cur
   });
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div v-if="isLogged">
     <div v-if="hasBooks">
-      <h2 class="typewriter text-3xl pb-3">
+      <h2
+        class="text-3xl pb-3"
+        :class="typographyClasses"
+      >
         {{ t('home.currently_reading') }} :
       </h2>
       <div class="flex flex-row flex-wrap justify-center gap-3">
@@ -233,7 +238,10 @@ function toggleReadProgressModal(userBookId: string, pageCount: number|null, cur
     </div>
     <!-- logged, no books -->
     <div v-else>
-      <h2 class="text-3xl typewriter">
+      <h2
+        class="text-3xl"
+        :class="typographyClasses"
+      >
         {{ t('home.not_reading') }}
       </h2>
       <span class="icon">
@@ -242,7 +250,8 @@ function toggleReadProgressModal(userBookId: string, pageCount: number|null, cur
     </div>
     <h2
       v-if="events.length > 0"
-      class="text-3xl typewriter py-4"
+      class="text-3xl py-4"
+      :class="typographyClasses"
     >
       {{ t('home.recent_events') }} :
     </h2>
@@ -295,7 +304,8 @@ function toggleReadProgressModal(userBookId: string, pageCount: number|null, cur
     </div>
     <h2
       v-if="userReviews.length > 0"
-      class="text-3xl typewriter py-4 capitalize"
+      class="text-3xl py-4 capitalize"
+      :class="typographyClasses"
     >
       {{ t('reviews.review', 2) }}
     </h2>

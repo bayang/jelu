@@ -11,6 +11,7 @@ import { Page } from "../model/Page"
 import { Series } from "../model/Series"
 import dataService from "../services/DataService"
 import { ObjectUtils } from "../utils/ObjectUtils"
+import useTypography from "../composables/typography"
 
 const oruga = useOruga()
 
@@ -73,7 +74,7 @@ function getOrphanSeries() {
 const deleteSeries = async (target: Series) => {
   if (target.id) {
     dataService.deleteSeries(target.id)
-    .then(res => 
+    .then(res =>
       {
         series.value = {"name" : ""}
         ObjectUtils.toast(oruga, "success", t('labels.operation-success'), 4000);
@@ -116,7 +117,7 @@ const getSeries = async (selected: Series) => {
 
 const getBooks = (series: Series) => {
     getBooksIsLoading.value = true
-    dataService.getSeriesBooksById(series.id as string, 
+    dataService.getSeriesBooksById(series.id as string,
       0, 2, "title:desc", LibraryFilter.ANY)
       .then(res => {
           seriesBooks.value = res
@@ -138,12 +139,17 @@ getOrphanSeries()
 const options = computed(() => {
   return filteredSeries.value.map(t => ObjectUtils.wrapForOptions(t))
 })
+
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="w-fit sm:w-full flex flex-wrap justify-items-center justify-self-center gap-3 sm:gap-0">
     <div class="w-full sm:w-1/2 sm:p-3">
-      <h1 class="typewriter text-2xl mb-3 capitalize">
+      <h1
+        class="text-2xl mb-3 capitalize"
+        :class="typographyClasses"
+      >
         {{ t('labels.orphan-series') }} :
       </h1>
       <div>
@@ -189,7 +195,10 @@ const options = computed(() => {
       />
     </div>
     <div class="w-full sm:w-1/2 sm:p-3">
-      <h1 class="typewriter text-2xl mb-3 capitalize">
+      <h1
+        class="text-2xl mb-3 capitalize"
+        :class="typographyClasses"
+      >
         {{ t('labels.find-series') }} :
       </h1>
       <div class="field">
@@ -248,7 +257,7 @@ const options = computed(() => {
 </template>
 
 <style scoped>
-  .o-dropdown.o-dropdown--position-auto.o-autocomplete, 
+  .o-dropdown.o-dropdown--position-auto.o-autocomplete,
   .o-dropdown.o-dropdown--position-bottom.o-autocomplete {
     @apply w-full;
   }

@@ -2,7 +2,6 @@ import { InjectionKey } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
 import { createLogger, createStore, Store } from 'vuex';
 import { ServerSettings } from './model/ServerSettings';
-import { Shelf } from './model/Shelf';
 import { User, UserAuthentication } from './model/User';
 import router from './router';
 import dataService from './services/DataService';
@@ -13,7 +12,6 @@ export interface State {
   user : User | null,
   serverSettings: ServerSettings,
   route: RouteLocationNormalized | null,
-  shelves: Array<Shelf>
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -34,7 +32,6 @@ const store = createStore<State>({
         appVersion: "",
         metadataPlugins: []
       } as ServerSettings,
-      shelves: []
     }
   },
   mutations: {
@@ -52,9 +49,6 @@ const store = createStore<State>({
     },
     serverSettings(state, serverSettings: ServerSettings) {
       state.serverSettings = serverSettings
-    },
-    shelves(state, shelves: Array<Shelf>) {
-      state.shelves = shelves
     },
   },
   actions: {
@@ -84,7 +78,6 @@ const store = createStore<State>({
           commit('login', true)
           commit('user', user)
           dispatch('getServerSettings')
-          dispatch('getUserShelves')
           if (state.route != null) {
             await router.push(state.route)
           }
@@ -95,7 +88,7 @@ const store = createStore<State>({
           commit('login', false)
           throw error
         }
-      }, 
+      },
       async createInitialUser({dispatch, commit, state}, payload) {
         const user: User = await dataService.createInitialUser(payload.user, payload.password)
         console.log('created')
@@ -113,16 +106,6 @@ const store = createStore<State>({
           .then(res => {
             console.log(res)
             commit('serverSettings', res)
-          })
-          .catch(err => {
-            return err
-          })
-      },
-      async getUserShelves({commit}) {
-        dataService.shelves()
-          .then(res => {
-            console.log(res)
-            commit('shelves', res)
           })
           .catch(err => {
             return err
@@ -161,10 +144,7 @@ const store = createStore<State>({
     getDisplayInitialSetup(state, getters): boolean {
       return (getters.getInitialSetup && !getters.getLdapEnabled)
     },
-    getShelves(state): Array<Shelf> {
-      return state.shelves
-    }
-  }, 
+  },
   plugins : [createLogger()],
   strict: true
 })

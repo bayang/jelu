@@ -25,6 +25,7 @@ import SeriesCompleteInput from "./SeriesCompleteInput.vue";
 import ClosableBadge from "./ClosableBadge.vue";
 import FormField from "./FormField.vue";
 import { Role } from "../model/Role";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -449,6 +450,8 @@ const mergeMetadata = () => {
   }
 }
 
+const { typographyClasses } = useTypography()
+
 const isbn10ValidationMessage = ref("")
 
 const isbn13ValidationMessage = ref("")
@@ -460,6 +463,8 @@ const validateIsbn10 = (isbn: string) => {
       isbn10ValidationMessage.value = t('labels.invalid_isbn10')
     }
     else {
+
+
       isbn10ValidationMessage.value = ""
     }
   }
@@ -494,7 +499,9 @@ const displayDatepicker = computed(() => {
     <div class="grid">
       <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12 justify-center justify-items-center justify-self-center">
         <div />
-        <h1 class="text-2xl typewriter capitalize">
+        <h1
+          class="text-2xl capitalize"
+          :class="typographyClasses">
           {{ t('nav.add_book') }}
         </h1>
         <div class="flex gap-2">

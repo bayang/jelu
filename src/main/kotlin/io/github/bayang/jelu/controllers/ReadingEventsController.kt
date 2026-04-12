@@ -224,6 +224,9 @@ class ReadingEventsController(
                         monthStats[month] = monthStats[month]!!.copy(dropped = monthStats[month]!!.dropped + 1)
                     } else if (it.eventType == ReadingEventType.FINISHED) {
                         var price: Long = 0
+                        if (!pricesAlreadyAdded.containsKey(year)) {
+                            pricesAlreadyAdded[year] = mutableSetOf()
+                        }
                         if (it.userBook.id != null && !pricesAlreadyAdded[year]!!.contains(it.userBook.id)) {
                             pricesAlreadyAdded[year]!!.add(it.userBook.id)
                             price = it.priceInCents ?: 0

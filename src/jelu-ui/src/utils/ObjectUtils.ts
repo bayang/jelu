@@ -110,7 +110,7 @@ export class ObjectUtils {
   })
 
   /**
-   * 
+   *
    * @param newVals [currentPageNumber, percentRead, pageCount]
    * @param oldVals [currentPageNumber, percentRead, pageCount]
    * @param target userbook, or reactive form
@@ -137,7 +137,7 @@ export class ObjectUtils {
   public static range = (start: number, end: number, step: number) => {
     return Array.from(Array.from(Array(Math.ceil((end - start) / step)).keys()), x => start + x * step);
   }
-  
+
   public static wrapForOptions = (object: any) => {
     return {"label": object.name, "value": object}
   }
@@ -149,7 +149,7 @@ export class ObjectUtils {
         return a
       }
   }
-  
+
   public static createNamedItem(item: Author | Tag | string) {
   console.log("create")
   console.log(item)
@@ -159,4 +159,22 @@ export class ObjectUtils {
     return item
   }
 }
+
+// only take minutes to avoid invalidating cache too often
+public static timestamp = () => new Date().toISOString().substring(0,16)
+
+public static amountInLocale = (amount: number, locale: string, currency: string) => {
+  let localCurrency = currency
+  console.log("amount " + amount + " locale " + locale + " currency " + currency)
+  if (currency.length !== 3) {
+    console.log("wrong currency " + currency + " , go set it in the settings page, it should be the currency code, ie EUR")
+    localCurrency = "EUR"
+  }
+  return amount.toLocaleString(locale, {
+    maximumFractionDigits: 2,
+    style: "currency",
+    currency: localCurrency
+    })
+}
+
 }

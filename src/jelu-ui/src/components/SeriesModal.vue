@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { Series } from "../model/Series";
 import dataService from "../services/DataService";
 import { ObjectUtils } from "../utils/ObjectUtils";
+import useTypography from "../composables/typography";
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -70,6 +71,7 @@ const submit = () => {
     console.log("not implemented yet")
 }
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -79,13 +81,15 @@ const submit = () => {
         <div>
           <h1
             v-if="props.edit === true"
-            class="typewriter text-2xl first-letter:capitalize"
+            class="text-2xl first-letter:capitalize"
+            :class="typographyClasses"
           >
             {{ t('series.edit_series') }}
           </h1>
           <h1
             v-else
-            class="typewriter text-2xl first-letter:capitalize"
+            class="text-2xl first-letter:capitalize"
+            :class="typographyClasses"
           >
             {{ t('series.create_series') }}
           </h1>
@@ -160,7 +164,7 @@ const submit = () => {
             <span>{{ rating }}</span>
           </div>
         </div>
-        
+
         <div class="my-3">
           <button
             v-if="props.edit == null || props.edit === false"

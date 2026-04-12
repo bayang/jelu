@@ -12,6 +12,7 @@ import { User } from '../model/User';
 import dataService from "../services/DataService";
 import BookCard from "./BookCard.vue";
 import ReviewBookCard from './ReviewBookCard.vue';
+import useTypography from '../composables/typography';
 
 const route = useRoute()
 
@@ -114,6 +115,8 @@ getCurrentlyReading()
 getReadEvents()
 getToRead()
 getUserReviews()
+
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
@@ -126,14 +129,16 @@ getUserReviews()
     </div>
     <router-link
 
-      class="link text-3xl typewriter py-4"
+      class="link text-3xl py-4"
+      :class="typographyClasses"
       :to="{ name: 'my-books', query: { userId: route.params.userId } }"
     >
       {{ t('labels.books_from_name', { name: user.login }) }}
     </router-link>
     <h2
       v-if="currentlyReading.length > 0"
-      class="text-3xl typewriter py-4"
+      class="text-3xl py-4"
+      :class="typographyClasses"
     >
       {{ t('home.currently_reading') }}
     </h2>
@@ -178,7 +183,8 @@ getUserReviews()
     </div>
     <h2
       v-if="events.length > 0"
-      class="text-3xl typewriter py-4"
+      class="text-3xl py-4"
+      :class="typographyClasses"
     >
       {{ t('home.recent_events') }}
     </h2>
@@ -231,11 +237,13 @@ getUserReviews()
     </div>
     <h2
       v-if="toRead.length > 0"
-      class="text-3xl typewriter py-4"
+      class="text-3xl py-4"
+      :class="typographyClasses"
     >
       <router-link
 
-        class="link text-3xl typewriter py-4"
+        class="link text-3xl py-4"
+        :class="typographyClasses"
         :to="{ name: 'to-read', query: { userId: route.params.userId } }"
       >
         {{ t('nav.to_read') }}
@@ -282,7 +290,8 @@ getUserReviews()
     </div>
     <h2
       v-if="userReviews.length > 0"
-      class="text-3xl typewriter py-4"
+      class="text-3xl py-4"
+      :class="typographyClasses"
     >
       {{ t('reviews.review', 2) }}
     </h2>

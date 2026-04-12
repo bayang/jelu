@@ -11,6 +11,7 @@ import { ObjectUtils } from '../utils/ObjectUtils';
 import BookCard from "./BookCard.vue";
 import useBulkEdition from '../composables/bulkEdition';
 import { useI18n } from 'vue-i18n';
+import useTypography from '../composables/typography';
 
 const route = useRoute()
 const { t } = useI18n({
@@ -103,6 +104,8 @@ const remove = async () => {
   .catch(err => console.log("failed to remove books from list"))
 }
 
+const { typographyClasses } = useTypography()
+
 const convertedBooks = computed(() => books.value?.map(b => ObjectUtils.unwrapUserBook(b)))
 getList()
 </script>
@@ -131,11 +134,14 @@ getList()
     :per-page="perPage"
     @change="updatePage"
   />
-  <h2 class="text-3xl typewriter">
+  <h2
+    class="text-3xl"
+    :class="typographyClasses"
+  >
     <span class="icon">
       <i class="mdi mdi-bookshelf" />
     </span>
-    {{ list?.name }} : 
+    {{ list?.name }} :
   </h2>
   <div
     v-if="books.length > 0"

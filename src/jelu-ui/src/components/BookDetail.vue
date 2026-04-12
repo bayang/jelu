@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useOruga } from "@oruga-ui/oruga-next"
-import { until, useClipboard, usePermission, useTitle } from '@vueuse/core'
+import { until, useClipboard, useLocalStorage, usePermission, useTitle } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { computed, ComputedRef, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -26,6 +26,7 @@ import ReadingEventModalVue from './ReadingEventModal.vue'
 import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewCard from "./ReviewCard.vue"
 import ReviewModalVue from './ReviewModal.vue'
+import useTypography from "../composables/typography"
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -53,7 +54,7 @@ const user: ComputedRef<User> = computed(() => {
 
 let currency = localStorage.getItem("JL_CURRENCY")
 if (currency == null) {
-  currency = "$"
+  currency = "EUR"
 }
 
 const book: Ref<UserBook | null> = ref(null)
@@ -136,7 +137,7 @@ const hasExternalLink = computed(() => book.value?.book.amazonId != null
 
 function modalClosed() {
   console.log("modal closed")
-  currentTimestamp = timestamp()
+  currentTimestamp = ObjectUtils.timestamp()
   getBook()
 }
 
@@ -528,8 +529,7 @@ const formatSeries = async (series: Series)  => {
     return txt
 }
 
-const timestamp = () => new Date().toISOString()
-let currentTimestamp = timestamp()
+let currentTimestamp = ObjectUtils.timestamp()
 
 const getIsbn = (): string|null => {
   if (book.value?.book.isbn13 && book.value.book.isbn13.length > 0) {
@@ -541,6 +541,10 @@ const getIsbn = (): string|null => {
   return null
 }
 
+const storedLanguage = useLocalStorage("jelu_language", "en")
+
+const { typographyClasses } = useTypography()
+
 getBook()
 
 </script>
@@ -550,12 +554,15 @@ getBook()
     <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12">
       <div />
       <div class="grow">
-        <h3 class="typewriter text-3xl">
+        <h3
+          class="text-3xl"
+          :class="typographyClasses"
+        >
           {{ book?.book?.title }}
         </h3>
         <h4
           v-if="book?.book.originalTitle"
-          class="typewriter"
+          :class="typographyClasses"
         >
           {{ book.book.originalTitle }}
         </h4>
@@ -854,7 +861,7 @@ getBook()
         </p>
         <p v-if="book?.price">
           <span class="font-semibold capitalize">{{ t('book.price') }} :</span>
-          {{ book.price }}&nbsp;{{ currency }}
+          {{ ObjectUtils.amountInLocale(book.price, storedLanguage, currency) }}
         </p>
         <div v-if="book?.owned || book?.toRead || book?.borrowed">
           <span
@@ -1003,7 +1010,8 @@ getBook()
     </div>
     <div class="mt-2">
       <router-link
-        class="link text-2xl typewriter"
+        class="link text-2xl"
+        :class="typographyClasses"
         :to="{ name: 'book-reviews', params: { bookId: book?.book.id } }"
       >
         {{ t('reviews.all_reviews') }}
@@ -1013,7 +1021,10 @@ getBook()
       v-if="userReviews != null && userReviews.length > 0"
       class="w-11/12 sm:w-10/12 flex flex-row flex-wrap justify-center mt-4 gap-4"
     >
-      <p class="typewriter text-2xl mb-3 capitalize sm:w-full">
+      <p
+        class="text-2xl mb-3 capitalize sm:w-full"
+        :class="typographyClasses"
+      >
         {{ t('reviews.my_reviews') }} :
       </p>
       <div
@@ -1036,7 +1047,8 @@ getBook()
       class="w-11/12 sm:w-10/12"
     >
       <router-link
-        class="link text-2xl typewriter"
+        class="link text-2xl"
+        :class="typographyClasses"
         :to="{ name: 'book-quotes', params: { bookId: book?.book.id } }"
       >
         {{ t('book_quotes.quote', 2) }}
@@ -1067,7 +1079,8 @@ getBook()
     >
       <p
         v-if="book?.readingEvents != null && book?.readingEvents?.length > 0"
-        class="typewriter text-2xl mb-3 capitalize"
+        class="text-2xl mb-3 capitalize"
+        :class="typographyClasses"
       >
         {{ t('reading_events.reading_events') }} :
       </p>

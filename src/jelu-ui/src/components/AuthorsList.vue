@@ -9,6 +9,7 @@ import { Author } from '../model/Author';
 import { Role } from '../model/Role';
 import dataService from "../services/DataService";
 import SortFilterBarVue from "./SortFilterBar.vue";
+import useTypography from '../composables/typography';
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -90,6 +91,8 @@ const throttledGetAuthors = useThrottleFn(() => {
 onMounted(() => {
   console.log("Component is mounted!");
 });
+
+const { typographyClasses } = useTypography()
 
 try {
   getAuthors();
@@ -227,7 +230,10 @@ try {
         </span>
       </button>
     </div>
-    <h2 class="text-3xl typewriter capitalize">
+    <h2
+      class="text-3xl capitalize"
+      :class="typographyClasses"
+    >
       <span class="icon">
         <i class="mdi mdi-bookshelf" />
       </span>
@@ -301,7 +307,10 @@ try {
     />
   </div>
   <div v-else>
-    <h2 class="text-3xl typewriter capitalize">
+    <h2
+      class="text-3xl capitalize"
+      :class="typographyClasses"
+    >
       {{ t('labels.list_empty') }}
     </h2>
     <span class="icon">

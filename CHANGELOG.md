@@ -1,3 +1,32 @@
+## [0.82.0](https://github.com/bayang/jelu/compare/v0.81.0...v0.82.0) (2026-04-11)
+
+
+### Features
+
+* add yearly stats [#291](https://github.com/bayang/jelu/issues/291) ([77aa067](https://github.com/bayang/jelu/commit/77aa0671bcc7d1ea965eb7749437943b33fa28ac))
+
+
+### Bug Fixes
+
+* filter bar not scrollable [#308](https://github.com/bayang/jelu/issues/308) ([87cf5f6](https://github.com/bayang/jelu/commit/87cf5f664e91f568d07cf2e5e830a6415b6ef8ba))
+* some tests fail because of exposed and DST ([7823ddc](https://github.com/bayang/jelu/commit/7823ddc1495fa1577ab5225098ed630bf1b71216))
+* typewriter font does not cover all languages [#278](https://github.com/bayang/jelu/issues/278) ([e97694a](https://github.com/bayang/jelu/commit/e97694ad94e2cc6b060ab7241cb096742f16e790))
+
+## [0.81.0](https://github.com/bayang/jelu/compare/v0.80.0...v0.81.0) (2026-03-27)
+
+
+### Features
+
+* sort shelves and remove limit on number of shelves [#298](https://github.com/bayang/jelu/issues/298) [#268](https://github.com/bayang/jelu/issues/268) ([acfeea4](https://github.com/bayang/jelu/commit/acfeea4d552372ad4ab47cf19d0f595f6db4b86f))
+
+
+### Bug Fixes
+
+* also invalidate cache image on list pages [#299](https://github.com/bayang/jelu/issues/299) ([c1d0d8e](https://github.com/bayang/jelu/commit/c1d0d8eb5f3a65f37857f810bd5f2ee21aaacda7))
+* improve localization [#278](https://github.com/bayang/jelu/issues/278) [#235](https://github.com/bayang/jelu/issues/235) ([c591a31](https://github.com/bayang/jelu/commit/c591a31dbb450438fa413d05c612f158d7cc9ea6))
+* potential fix for [#297](https://github.com/bayang/jelu/issues/297) ([11a6ec2](https://github.com/bayang/jelu/commit/11a6ec23adc578f99ec31df0acff395c91dfd3c4))
+* remove unreachable event ([a9d8484](https://github.com/bayang/jelu/commit/a9d84846fafc9c1a998358c3c993d03c31625cc2))
+
 ## [0.80.0](https://github.com/bayang/jelu/compare/v0.79.0...v0.80.0) (2026-03-04)
 
 

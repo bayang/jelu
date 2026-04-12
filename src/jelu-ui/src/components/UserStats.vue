@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { useTitle } from '@vueuse/core';
-import { BarElement, CategoryScale, Chart as ChartJS, ChartData, Legend, LinearScale, Title, Tooltip, LineController, PointElement, LineElement } from 'chart.js';
+import { useLocalStorage, useTitle } from '@vueuse/core';
+import { BarElement, CategoryScale, ChartData, Chart as ChartJS, Legend, LinearScale, LineController, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import dayjs from "dayjs";
-import { Ref, ref, watch } from "vue";
+import { computed, Ref, ref, watch } from "vue";
 import { Bar } from 'vue-chartjs';
 import { useI18n } from 'vue-i18n';
+import useTypography from '../composables/typography';
+import { MonthStats, TotalsStats } from '../model/YearStats';
 import dataService from "../services/DataService";
-import { TotalsStats } from '../model/YearStats';
+import { ObjectUtils } from '../utils/ObjectUtils';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -17,7 +19,7 @@ useTitle('Jelu | Stats')
 
 let currency = localStorage.getItem("JL_CURRENCY")
 if (currency == null) {
-  currency = "$"
+  currency = "EUR"
 }
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, LineController, PointElement, LineElement)
@@ -33,6 +35,8 @@ const getYears = () => {
   })
 
 }
+
+const storedLanguage = useLocalStorage("jelu_language", "en")
 
 const getAllStats = () => {
   loading.value = true
@@ -81,12 +85,18 @@ const getAllStats = () => {
   })
 }
 
+const monthStats: Ref<Array<MonthStats>> = ref([])
+
 const getYearStats = () => {
   if (currentYear.value != null) {
     loading.value = true
     dataService.monthStatsForYear(currentYear.value)
     .then(res => {
-      let labels = res.map(r => r.month).map(m => dayjs(`2020-${m}-1`).format('MMMM'))
+      monthStats.value = res
+      let labels = res.map(r => r.month).map(m => {
+        const d = dayjs(`2020-${m}-1`).format('MMMM')
+        return d
+      })
 
       const updatedChartData = {
           labels: labels,
@@ -143,6 +153,7 @@ const chartData = ref<ChartData<'bar'>>({
 const yearChartData = ref<ChartData<'bar'>>({
       datasets: []
 })
+const numbers = ["0", "1","2", "3", "4", "5", "6", "7", "8", "9"]
 const chartOptions = ref({
       responsive: true,
       maintainAspectRatio: true,
@@ -153,7 +164,31 @@ const chartOptions = ref({
         y2: {
           position: 'right'
         }
-      }
+      },
+      plugins: {
+        tooltip: {
+            callbacks: {
+                label: function(context) {
+                    let label = context.dataset.label || '';
+                    label += ': ';
+                    if (context.dataset.label === t('book.price') && context.parsed.y !== null) {
+                      label += ObjectUtils.amountInLocale(context.parsed.y, storedLanguage.value, currency)
+                    } else {
+                      label += context.parsed.y
+                    }
+                    return label;
+                },
+                title: function(ctx) {
+                  let label = ctx.length > 0 ? ctx[0].label : ""
+                  if (label.length > 0 && label[0] in numbers) {
+                    return label
+                  }
+                  label = t(`date.${label}`) ?? label
+                  return label
+                }
+            }
+        }
+    }
 })
 
 const years: Ref<Array<number>> = ref([])
@@ -166,23 +201,49 @@ watch(currentYear, (newVal, oldVal) => {
 
 })
 
+const yearSums = computed(() => {
+  let read = 0
+  let dropped = 0
+  let priceTotal = 0
+  let pages = 0
+  monthStats.value.forEach(e => {
+    read += e.finished
+    dropped += e.dropped
+    pages += e.pageCount
+    priceTotal += e.price
+  })
+  return {
+    read,
+    dropped,
+    priceTotal,
+    pages
+  }
+})
+
 const loaderFullPage = ref(false)
 
 getAllStats()
 getYears()
 totalStats()
 
+const { typographyClasses } = useTypography()
 </script>
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center justify-self-center w-full">
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
+    <h1
+      class="text-2xl w-11/12 sm:w-8/12 pb-4 capitalize"
+      :class="typographyClasses"
+    >
       {{ t('stats.total') }}:&nbsp;{{ totals.total }}
     </h1>
     <div class="mb-2">
       {{ t('stats.read') }}:&nbsp;{{ totals.read }} / {{ t('stats.unread') }}:&nbsp;{{ totals.unread }} / {{ t('stats.dropped') }}:&nbsp;{{ totals.dropped }} / {{ t('stats.prices_sum') }}&nbsp;{{ totals.price }}&nbsp;{{ currency }}
     </div>
-    <h1 class="text-2xl typewriter w-11/12 sm:w-8/12 pb-4 capitalize">
+    <h1
+      class="text-2xl w-11/12 sm:w-8/12 pb-4 capitalize"
+      :class="typographyClasses"
+    >
       {{ t('stats.all_time') }}
     </h1>
     <div
@@ -195,10 +256,14 @@ totalStats()
     </div>
     <h1
       v-if="years != null && years !== undefined && years.length > 0"
-      class="text-2xl typewriter w-11/12 sm:w-8/12 py-4 capitalize"
+      class="text-2xl w-11/12 sm:w-8/12 py-4 capitalize"
+      :class="typographyClasses"
     >
       {{ t('stats.yearly_stats') }}
     </h1>
+    <div class="mb-3">
+      {{ t('stats.read') }}:&nbsp;{{ yearSums.read }} / {{ t('stats.dropped') }}:&nbsp;{{ yearSums.dropped }} / {{ t('stats.prices_sum') }}&nbsp;{{ yearSums.priceTotal }}&nbsp;{{ currency }} / {{ t('stats.pages_read') }}&nbsp;{{ yearSums.pages }}
+    </div>
     <div
       v-if="years != null && years !== undefined && years.length > 0"
       class="w-11/12 sm:w-8/12"

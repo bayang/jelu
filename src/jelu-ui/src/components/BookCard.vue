@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useOruga } from "@oruga-ui/oruga-next";
 import { computed, Ref, ref, watch } from "vue";
 import { useI18n } from 'vue-i18n';
 import { UserBook } from "../model/Book";
 import { ReadingEventType } from "../model/ReadingEvent";
 import EditBookModal from "./EditBookModal.vue";
 import useCacheBusting from "../composables/cacheBusting";
+import { ObjectUtils } from "../utils/ObjectUtils";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -14,9 +14,9 @@ const { t } = useI18n({
 const oruga = useOruga();
 const { currentTimestamp, refreshTimestamp } = useCacheBusting();
 
-const props = defineProps<{ 
-  book: UserBook, 
-  size?: string, 
+const props = defineProps<{
+  book: UserBook,
+  size?: string,
   forceSelect: boolean,
   showSelect: boolean,
   proposeAdd: boolean,
@@ -86,9 +86,9 @@ const authorsText = computed(() => {
 });
 
 const showProgressBar = (book: UserBook) => {
-  return book.percentRead 
-      && book.percentRead > 0 
-      && book.lastReadingEvent != null 
+  return book.percentRead
+      && book.percentRead > 0
+      && book.lastReadingEvent != null
       && book.lastReadingEvent === ReadingEventType.CURRENTLY_READING
 }
 
@@ -107,42 +107,18 @@ const currentSeries = computed(() => {
   return null
 })
 
-function modalClosed() {
-  console.log("modal closed from card")
-  emit("update:modalClosed", true)
-}
-
-const toggleEdit = (book: UserBook) => {
-  if (!props.public && book.id == null) {
-    console.log("book")
-    console.log(book)
-    oruga.modal.open({
-            component: EditBookModal,
-            trapFocus: true,
-            active: true,
-            canCancel: ['x', 'button', 'outside'],
-            scroll: 'clip',
-            props: {
-              "book" : book,
-              canAddEvent: true
-            },
-            onClose: modalClosed
-          });
-  }
-}
-
 watch(checked, (newVal, oldVal) => {
   console.log(props.book.id != null ? props.book.id : props.book.book.id + " " + checked.value)
   emit("update:checked", props.book.id != null ? props.book.id as string : props.book.book.id as string , checked.value)
 })
 
+const currentTimestamp = ObjectUtils.timestamp()
 
 </script>
 
 <template>
   <div
     class="card card-sm bg-base-100 shadow-2xl shadow-base-300"
-    @dblclick="toggleEdit(book)"
   >
     <div>
       <router-link

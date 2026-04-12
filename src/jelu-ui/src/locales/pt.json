@@ -154,7 +154,9 @@
         "shelf_choose_tag": "Escolha uma etiqueta para criar a prateleira correspondente",
         "custom_lists": "listas personalizadas",
         "choose_currency": "Select your currency",
-        "api_tokens": "API Tokens"
+        "api_tokens": "API Tokens",
+        "currency_description": "Enter the 3 letters code of your currency, eg: EUR, USD, GBP. See https://en.wikipedia.org/wiki/ISO_4217.",
+        "choose_font": "Choose your favorite font for book titles."
     },
     "user": {
         "log_first": "Por favor, inicie sessão primeiro"
@@ -463,5 +465,19 @@
         "revoke_error": "Failed to revoke token",
         "load_error": "Failed to load API tokens",
         "update_error": "Failed to update token"
+    },
+    "date": {
+        "January": "January",
+        "February": "February",
+        "March": "March",
+        "April": "April",
+        "May": "May",
+        "June": "June",
+        "July": "July",
+        "August": "August",
+        "September": "September",
+        "October": "October",
+        "November": "November",
+        "December": "December"
     }
 }

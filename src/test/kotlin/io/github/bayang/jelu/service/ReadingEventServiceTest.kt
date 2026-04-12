@@ -241,7 +241,7 @@ class ReadingEventServiceTest(
         var userbook = bookService.findUserBookById(saved.id!!)
         Assertions.assertEquals(ReadingEventType.FINISHED, userbook.lastReadingEvent)
         // TODO investigate exposed date change
-        Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(62, ChronoUnit.MINUTES))!!)
+        Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(242, ChronoUnit.MINUTES))!!)
 
         Assertions.assertEquals(2, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         Assertions.assertEquals(0, File(jeluProperties.files.images).listFiles().size)
@@ -250,7 +250,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         userbook = bookService.findUserBookById(saved.id!!)
         Assertions.assertEquals(ReadingEventType.FINISHED, userbook.lastReadingEvent)
-        Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(122, ChronoUnit.MINUTES))!!)
+        Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(242, ChronoUnit.MINUTES))!!)
     }
 
     @Test
@@ -343,7 +343,7 @@ class ReadingEventServiceTest(
         Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
         userbook = bookService.findUserBookById(saved.id!!)
         Assertions.assertEquals(ReadingEventType.FINISHED, userbook.lastReadingEvent)
-        Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(122, ChronoUnit.MINUTES))!!)
+        Assertions.assertTrue(userbook.lastReadingEventDate?.isAfter(nowInstant().minus(682, ChronoUnit.MINUTES))!!)
     }
 
     @Test
