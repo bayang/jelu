@@ -428,7 +428,7 @@
     },
     "api_tokens": {
         "title": "API-Token",
-        "description": "Erstelle API-Token, um programmatischen Zugriff auf die Jelu API zu ermöglichen. Tokens können für Automatisierungsskripte, Integrationen von Drittanbietern und CI/CD-Pipelines verwendet werden.",
+        "description": "Erstellen Sie API-Token, um programmatischen Zugriff auf die Jelu API zu ermöglichen. Tokens können für Automatisierungsskripte, Integrationen von Drittanbietern und CI/CD-Pipelines verwendet werden.",
         "create": "Token erstellen",
         "create_new": "Neuen API-Token erstellen",
         "no_tokens": "Noch keine API-Token. Erstelle einen, um loszulegen.",
