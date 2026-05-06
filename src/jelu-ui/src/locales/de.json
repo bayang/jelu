@@ -183,7 +183,7 @@
     },
     "reading_events": {
         "finished": "beendet",
-        "currently_reading": "Aktuell gelesen",
+        "currently_reading": "lese gerade",
         "dropped": "Aufgegeben",
         "last_event_type": "Letzter Ereignistyp",
         "none": "keine",
