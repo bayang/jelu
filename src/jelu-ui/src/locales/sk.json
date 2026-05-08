@@ -127,7 +127,8 @@
         "delete_this_author": "Vymazať tohto autora z {nb} knihy (kníh) a z databázy?",
         "orphan_authors": "Osamotení autori",
         "find-authors": "Nájsť autorov",
-        "list_empty": "Zoznam je prázdny"
+        "list_empty": "Zoznam je prázdny",
+        "filter_pattern": "Vzor filtra"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",

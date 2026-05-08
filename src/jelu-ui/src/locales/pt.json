@@ -127,7 +127,8 @@
         "delete_this_author": "Excluir este autor de {nb} livro(s) e da base de dados?",
         "orphan_authors": "autores órfãos",
         "find-authors": "encontrar autores",
-        "list_empty": "list is empty"
+        "list_empty": "list is empty",
+        "filter_pattern": "filter pattern"
     },
     "settings": {
         "pick_language": "Escolha o seu idioma",

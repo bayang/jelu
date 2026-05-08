@@ -127,7 +127,8 @@
         "delete_this_author": "Diese(n) Autor:in aus {nb} Buch/Büchern und aus der Datenbank löschen?",
         "orphan_authors": "verwaiste Autor:innen",
         "find-authors": "Autor:innen finden",
-        "list_empty": "Liste ist leer"
+        "list_empty": "Liste ist leer",
+        "filter_pattern": "filter pattern"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
