@@ -438,7 +438,7 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 }
 
 .v-md-editor-preview  {
-  @apply text-black;
+  @apply text-base-content;
 }
 
 .card-body .v-md-editor-preview {
