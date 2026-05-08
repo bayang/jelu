@@ -5,6 +5,7 @@ import { DirectoryListing, Path } from "../model/DirectoryListing";
 import dataService from "../services/DataService";
 import FilePickerElement from "./FilePickerElement.vue";
 import useTypography from "../composables/typography";
+import FormField from "./FormField.vue";
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -12,6 +13,7 @@ const { t } = useI18n({
     })
 
 const directoryListing:Ref<DirectoryListing|null> = ref(null)
+const pattern = ref("")
 
 const directories = (root: string|undefined) => {
   if (root != null) {
@@ -96,8 +98,20 @@ directories('/')
               />
             </svg> {{ directoryListing.parent }}
           </div>
+          <div>
+            <FormField
+              v-model="pattern"
+              :legend="t('labels.filter_pattern')"
+              placeholder=""
+            />
+          </div>
           <FilePickerElement
-            v-for="elem of directoryListing?.directories"
+            v-for="elem of directoryListing?.directories.filter(d => {
+              if (pattern != null && pattern.trim().length > 0) {
+                return d.name.toLowerCase().includes(pattern.toLowerCase())
+              }
+              return d
+            })"
             :key="elem.path"
             :elem="elem"
             @choose="elem => selectPath(elem)"
