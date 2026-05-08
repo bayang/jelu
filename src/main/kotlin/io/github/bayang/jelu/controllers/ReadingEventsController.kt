@@ -35,8 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
-import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
@@ -153,7 +151,7 @@ class ReadingEventsController(
                 )
             currentPage++
             events.forEach {
-                val year = OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault()).year
+                val year = it.endDate!!.year
                 if (yearStats.containsKey(year)) {
                     if (it.eventType == ReadingEventType.DROPPED) {
                         yearStats[year] = yearStats[year]!!.copy(dropped = yearStats[year]!!.dropped + 1)
@@ -216,9 +214,8 @@ class ReadingEventsController(
                 )
             currentPage++
             // FIXME use date filtering in repository method now
-            events.filter { OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault()).year == year }.forEach {
-                val toDate = OffsetDateTime.ofInstant(it.endDate, ZoneId.systemDefault())
-                val month = toDate.monthValue
+            events.filter { it.endDate != null && it.endDate.year == year }.forEach {
+                val month = it.endDate!!.monthValue
                 if (monthStats.containsKey(month)) {
                     if (it.eventType == ReadingEventType.DROPPED) {
                         monthStats[month] = monthStats[month]!!.copy(dropped = monthStats[month]!!.dropped + 1)

@@ -1,5 +1,7 @@
 package io.github.bayang.jelu.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
@@ -14,6 +16,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 
 const val SESSION_HEADER_NAME: String = "X-Auth-Token"
 
@@ -35,6 +39,12 @@ class GlobalConfig {
                     HttpClient.create().compress(true).followRedirect(true),
                 ),
             ).build()
+    }
+
+    @Autowired
+    fun configureJackson(objectMapper: ObjectMapper) {
+        objectMapper.setTimeZone(TimeZone.getDefault())
+        objectMapper.serializationConfig.with(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
     }
 
     @Bean("springRestClient")

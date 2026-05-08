@@ -25,8 +25,6 @@ import org.springframework.stereotype.Service
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
-import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -182,11 +180,9 @@ class CsvExportService(
             ""
         }
 
-    fun toDateString(instant: Instant?): String =
+    fun toDateString(instant: OffsetDateTime?): String =
         if (instant != null) {
-            LocalDate.ofInstant(instant, ZoneId.systemDefault()).format(
-                goodreadsDateFormatter,
-            )
+            instant.format(goodreadsDateFormatter)
         } else {
             ""
         }

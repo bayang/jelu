@@ -13,7 +13,8 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.javatime.timestamp
-import java.time.Instant
+import org.jetbrains.exposed.sql.javatime.timestampWithTimeZone
+import java.time.OffsetDateTime
 import java.util.UUID
 
 object UserBookTable : UUIDTable("user_book") {
@@ -22,7 +23,7 @@ object UserBookTable : UUIDTable("user_book") {
     val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
     val book = reference("book", BookTable, onDelete = ReferenceOption.CASCADE)
     val lastReadingEvent: Column<ReadingEventType?> = enumerationByName("last_reading_event", 200, ReadingEventType::class).nullable()
-    val lastReadingEventDate: Column<Instant?> = timestamp("last_reading_event_date").nullable()
+    val lastReadingEventDate: Column<OffsetDateTime?> = timestampWithTimeZone("last_reading_event_date").nullable()
     val personalNotes: Column<String?> = varchar("notes", 5000).nullable()
     val owned: Column<Boolean?> = bool("is_owned").nullable()
     val toRead: Column<Boolean?> = bool("to_read").nullable()

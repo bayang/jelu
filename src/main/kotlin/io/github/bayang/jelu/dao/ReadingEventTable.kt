@@ -8,17 +8,17 @@ import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.javatime.timestamp
-import java.time.Instant
+import org.jetbrains.exposed.sql.javatime.timestampWithTimeZone
+import java.time.OffsetDateTime
 import java.util.UUID
 
 object ReadingEventTable : UUIDTable("reading_event") {
-    val creationDate = timestamp("creation_date")
-    val modificationDate = timestamp("modification_date")
+    val creationDate = timestampWithTimeZone("creation_date")
+    val modificationDate = timestampWithTimeZone("modification_date")
     val userBook = reference("user_book", UserBookTable, onDelete = ReferenceOption.CASCADE)
     val eventType = enumerationByName("event_type", 200, ReadingEventType::class)
-    val startDate = timestamp("start_date")
-    val endDate = timestamp("end_date").nullable()
+    val startDate = timestampWithTimeZone("start_date")
+    val endDate = timestampWithTimeZone("end_date").nullable()
 }
 
 class ReadingEvent(
@@ -32,11 +32,9 @@ class ReadingEvent(
     var eventType by ReadingEventTable.eventType
     var startDate by ReadingEventTable.startDate
     var endDate by ReadingEventTable.endDate
-    val lastEventDate: Instant
+    val lastEventDate: OffsetDateTime
         get() {
-            if (endDate != null) {
-                return endDate as Instant
-            }
+            endDate?.let { return it }
             return startDate
         }
 

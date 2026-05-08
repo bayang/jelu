@@ -4,7 +4,9 @@ import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.UpdateReadingEventDto
 import io.github.bayang.jelu.dto.UserDto
 import io.github.bayang.jelu.errors.JeluException
+import io.github.bayang.jelu.utils.nowDateTime
 import io.github.bayang.jelu.utils.nowInstant
+import io.github.bayang.jelu.utils.offset
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.JoinType
@@ -21,7 +23,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.OffsetDateTime
-import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 
@@ -53,19 +54,19 @@ class ReadingEventRepository {
             query.andWhere { UserBookTable.book eq bookId }
         }
         if (endedBefore != null) {
-            val instant = OffsetDateTime.of(endedBefore, LocalTime.MAX, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            val instant = OffsetDateTime.of(endedBefore, LocalTime.MAX, offset())
             query.andWhere { ReadingEventTable.endDate lessEq instant }
         }
         if (endedAfter != null) {
-            val instant = OffsetDateTime.of(endedAfter, LocalTime.MIN, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            val instant = OffsetDateTime.of(endedAfter, LocalTime.MIN, offset())
             query.andWhere { ReadingEventTable.endDate greaterEq instant }
         }
         if (startedBefore != null) {
-            val instant = OffsetDateTime.of(startedBefore, LocalTime.MAX, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            val instant = OffsetDateTime.of(startedBefore, LocalTime.MAX, offset())
             query.andWhere { ReadingEventTable.startDate lessEq instant }
         }
         if (startedAfter != null) {
-            val instant = OffsetDateTime.of(startedAfter, LocalTime.MIN, ZoneId.systemDefault().rules.getOffset(nowInstant())).toInstant()
+            val instant = OffsetDateTime.of(startedAfter, LocalTime.MIN, offset())
             query.andWhere { ReadingEventTable.startDate greaterEq instant }
         }
         val total = query.count()
@@ -147,7 +148,7 @@ class ReadingEventRepository {
         }
         val alreadyReadingEvent: ReadingEvent? =
             userBook.readingEvents.find { it.eventType == ReadingEventType.CURRENTLY_READING }
-        val instant: Instant = nowInstant()
+        val instant = nowDateTime()
 
         // we have a previous event,
         // only update lastReadingEvent if the new one has a date and is effectively after the one already existing
@@ -221,8 +222,8 @@ class ReadingEventRepository {
 
     private fun computeEndDate(
         createReadingEventDto: CreateReadingEventDto,
-        instant: Instant,
-    ): Instant? =
+        instant: OffsetDateTime,
+    ): OffsetDateTime? =
         if (createReadingEventDto.eventType != ReadingEventType.CURRENTLY_READING) {
             createReadingEventDto.eventDate ?: instant
         } else {
@@ -231,8 +232,8 @@ class ReadingEventRepository {
 
     private fun computeStartDate(
         createReadingEventDto: CreateReadingEventDto,
-        fallback: Instant,
-    ): Instant {
+        fallback: OffsetDateTime,
+    ): OffsetDateTime {
         if (createReadingEventDto.startDate != null) {
             return createReadingEventDto.startDate
         }
@@ -275,7 +276,7 @@ class ReadingEventRepository {
             throw JeluException("start date cannot be after end date")
         }
         return entity.apply {
-            val instant = nowInstant()
+            val instant = nowDateTime()
             this.modificationDate = instant
             if (updateReadingEventDto.eventDate != null) {
                 this.endDate = updateReadingEventDto.eventDate

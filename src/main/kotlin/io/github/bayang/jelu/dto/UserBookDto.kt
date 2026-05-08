@@ -2,6 +2,7 @@ package io.github.bayang.jelu.dto
 
 import io.github.bayang.jelu.dao.ReadingEventType
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.util.UUID
 
 data class UserBookDto(
@@ -11,7 +12,7 @@ data class UserBookDto(
     val user: UserDto,
     val book: BookDto,
     val readingEvents: List<ReadingEventWithoutUserBookDto>?,
-    val lastReadingEventDate: Instant?,
+    val lastReadingEventDate: OffsetDateTime?,
     val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
     val owned: Boolean?,
@@ -28,7 +29,7 @@ data class UserBookLightDto(
     val modificationDate: Instant?,
     val book: BookDto,
     val readingEvents: List<ReadingEventWithoutUserBookDto>?,
-    val lastReadingEventDate: Instant?,
+    val lastReadingEventDate: OffsetDateTime?,
     val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
     val owned: Boolean?,
@@ -44,7 +45,7 @@ data class UserBookLightWithoutBookDto(
     val creationDate: Instant?,
     val modificationDate: Instant?,
     val readingEvents: List<ReadingEventWithoutUserBookDto>?,
-    val lastReadingEventDate: Instant?,
+    val lastReadingEventDate: OffsetDateTime?,
     val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
     val owned: Boolean?,
@@ -60,7 +61,7 @@ data class UserBookWithoutEventsAndUserDto(
     val creationDate: Instant?,
     val modificationDate: Instant?,
     val book: BookDto,
-    val lastReadingEventDate: Instant?,
+    val lastReadingEventDate: OffsetDateTime?,
     val lastReadingEvent: ReadingEventType?,
     val personalNotes: String?,
     val owned: Boolean?,
@@ -90,7 +91,7 @@ data class UserBookWithoutEventsDto(
 
 data class CreateUserBookDto(
     val lastReadingEvent: ReadingEventType?,
-    val lastReadingEventDate: Instant?,
+    val lastReadingEventDate: OffsetDateTime?,
     val personalNotes: String?,
     val owned: Boolean?,
     val book: BookCreateDto,

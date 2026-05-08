@@ -252,6 +252,7 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 .event-modal {
   margin: 30px;
   height: min(600px, 70vh);
+  width: min(350px, 90vw);
 }
 
 .author-modal {

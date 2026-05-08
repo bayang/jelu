@@ -1,37 +1,37 @@
 package io.github.bayang.jelu.dto
 
 import io.github.bayang.jelu.dao.ReadingEventType
-import java.time.Instant
-import java.util.*
+import java.time.OffsetDateTime
+import java.util.UUID
 
 data class ReadingEventDto(
     val id: UUID?,
-    val creationDate: Instant?,
-    val modificationDate: Instant?,
+    val creationDate: OffsetDateTime?,
+    val modificationDate: OffsetDateTime?,
     val eventType: ReadingEventType,
     val userBook: UserBookWithoutEventsDto,
-    val startDate: Instant?,
-    val endDate: Instant?,
+    val startDate: OffsetDateTime?,
+    val endDate: OffsetDateTime?,
 )
 
 data class ReadingEventStatsDto(
     val id: UUID?,
-    val creationDate: Instant?,
-    val modificationDate: Instant?,
+    val creationDate: OffsetDateTime?,
+    val modificationDate: OffsetDateTime?,
     val eventType: ReadingEventType,
     val priceInCents: Long?,
-    val startDate: Instant?,
+    val startDate: OffsetDateTime?,
     val userBook: UserBookWithoutEventsDto,
-    val endDate: Instant?,
+    val endDate: OffsetDateTime?,
 )
 
 data class ReadingEventWithoutUserBookDto(
     val id: UUID?,
-    val creationDate: Instant?,
-    val modificationDate: Instant?,
+    val creationDate: OffsetDateTime?,
+    val modificationDate: OffsetDateTime?,
     val eventType: ReadingEventType,
-    val startDate: Instant?,
-    val endDate: Instant?,
+    val startDate: OffsetDateTime?,
+    val endDate: OffsetDateTime?,
 )
 
 data class CreateReadingEventWithUserInfoDto(
@@ -43,14 +43,14 @@ data class CreateReadingEventWithUserInfoDto(
 data class CreateReadingEventDto(
     val eventType: ReadingEventType,
     val bookId: UUID?,
-    val eventDate: Instant?,
-    val startDate: Instant?,
+    val eventDate: OffsetDateTime?,
+    val startDate: OffsetDateTime?,
 )
 
 data class UpdateReadingEventDto(
     val eventType: ReadingEventType,
-    val eventDate: Instant?,
-    val startDate: Instant?,
+    val eventDate: OffsetDateTime?,
+    val startDate: OffsetDateTime?,
 )
 
 enum class ReadingEventTypeFilter {

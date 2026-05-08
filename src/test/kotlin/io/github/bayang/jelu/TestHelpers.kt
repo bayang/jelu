@@ -8,12 +8,12 @@ import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.ImportConfigurationDto
 import io.github.bayang.jelu.dto.TagDto
 import io.github.bayang.jelu.utils.centsToDouble
-import java.time.Instant
+import java.time.OffsetDateTime
 
 fun createUserBookDto(
     bookDto: BookCreateDto,
     lastReadingEvent: ReadingEventType? = null,
-    lastreadingEventDate: Instant? = null,
+    lastreadingEventDate: OffsetDateTime? = null,
     toRead: Boolean = false,
     owned: Boolean? = true,
     borrowed: Boolean = false,

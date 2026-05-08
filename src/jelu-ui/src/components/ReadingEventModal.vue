@@ -39,6 +39,10 @@ const emit = defineEmits<{
 
 const create = () => {
   progress.value = true
+  if (currentCreateEvent.value.eventType === ReadingEventType.CURRENTLY_READING) {
+    console.log("cleaning event date if currently reading")
+    currentCreateEvent.value.eventDate = undefined
+  }
   dataService.createReadingEvent(currentCreateEvent.value)
     .then(res => {
       progress.value = false
