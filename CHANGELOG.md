@@ -1,3 +1,11 @@
+### [0.83.1](https://github.com/bayang/jelu/compare/v0.83.0...v0.83.1) (2026-05-08)
+
+
+### Bug Fixes
+
+* potential lock in index update ([fb2af12](https://github.com/bayang/jelu/commit/fb2af1227db9436b795ce590e1dcc31a42f71779))
+* series description color [#318](https://github.com/bayang/jelu/issues/318) ([0a37ec3](https://github.com/bayang/jelu/commit/0a37ec393dacdeaf79f5c56514663049e73a3e75))
+
 ## [0.83.0](https://github.com/bayang/jelu/compare/v0.82.0...v0.83.0) (2026-05-08)
 
 
