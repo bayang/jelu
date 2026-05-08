@@ -128,7 +128,7 @@
         "orphan_authors": "Osamotení autori",
         "find-authors": "Nájsť autorov",
         "list_empty": "Zoznam je prázdny",
-        "filter_pattern": "filter pattern"
+        "filter_pattern": "Vzor filtra"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
