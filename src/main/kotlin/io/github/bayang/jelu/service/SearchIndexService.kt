@@ -102,22 +102,32 @@ class SearchIndexService(
 
     fun authorUpdated(authorId: UUID) {
         var books: Page<Book>
+        var page = PageRequest.of(0, 100)
         do {
-            books = bookRepository.findAuthorBooksByIdNoFilters(authorId, Pageable.ofSize(30))
+            books = bookRepository.findAuthorBooksByIdNoFilters(authorId, page)
+            if (!books.hasContent()) {
+                break
+            }
             books.forEach { deleteEntity(LuceneEntity.Book, it.id.value.toString()) }
             books.forEach { addEntity(it.toDocument()) }
+            page = page.next()
         }
-        while (books.hasNext())
+        while (books.hasContent())
     }
 
     fun seriesUpdated(seriesId: UUID) {
         var books: Page<Book>
+        var page = PageRequest.of(0, 100)
         do {
-            books = bookRepository.findSeriesBooksByIdNoFilters(seriesId, Pageable.ofSize(30))
+            books = bookRepository.findSeriesBooksByIdNoFilters(seriesId, page)
+            if (!books.hasContent()) {
+                break
+            }
             books.forEach { deleteEntity(LuceneEntity.Book, it.id.value.toString()) }
             books.forEach { addEntity(it.toDocument()) }
+            page = page.next()
         }
-        while (books.hasNext())
+        while (books.hasContent())
     }
 
     private fun addEntity(doc: Document) {
