@@ -128,7 +128,7 @@
         "orphan_authors": "auteurs orphelins",
         "find-authors": "rechercher des auteurs",
         "list_empty": "la liste est vide",
-        "filter_pattern": "filter pattern"
+        "filter_pattern": "Filtre à appliquer"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
