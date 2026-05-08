@@ -1,3 +1,16 @@
+## [0.83.0](https://github.com/bayang/jelu/compare/v0.82.0...v0.83.0) (2026-05-08)
+
+
+### Features
+
+* provide a filter pattern in the directory list ([6a6233e](https://github.com/bayang/jelu/commit/6a6233eba209b3b658bd081626783a36a57df1a0))
+
+
+### Bug Fixes
+
+* apply breaking changes in inventaire API ([f94680a](https://github.com/bayang/jelu/commit/f94680a7534666f601b78bece04b73e9c97d32d5))
+* dates sometimes appearing in the past and event modal too narrow [#310](https://github.com/bayang/jelu/issues/310) ([15a712b](https://github.com/bayang/jelu/commit/15a712b90c13e5f1124686562d2cfbfc6977dd5f))
+
 ## [0.82.0](https://github.com/bayang/jelu/compare/v0.81.0...v0.82.0) (2026-04-11)
 
 
