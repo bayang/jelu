@@ -42,15 +42,14 @@ class InventaireIoMetadataProvider(
                 .get()
                 .uri(inventaireApi) { uriBuilder ->
                     uriBuilder
-                        .path("entities")
-                        .queryParam("action", "by-uris")
+                        .path("entities/by-uris")
                         .queryParam("uris", "isbn:$isbn")
                         .build()
                 }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
                 .exchange { clientRequest, clientResponse ->
                     if (clientResponse.statusCode == HttpStatus.OK) {
                         val bodyString = clientResponse.bodyTo(String::class.java)
-                        val node = objectMapper.readTree(bodyString).get("entities")
+                        val node = objectMapper.readTree(bodyString)
                         var p: ParsingDto? = parseIsbnResult(node, isbn)
                         p = enrichWithEditionResult(p)
                         p = enrichWithAuhors(p)
@@ -161,9 +160,18 @@ class InventaireIoMetadataProvider(
     ): ParsingDto {
         val dto = MetadataDto()
         val parsingDto = ParsingDto(dto, "")
-        if (node.has("isbn:$isbn")) {
-            val data = node.get("isbn:$isbn")
+        if (node.has("entities") && node.get("entities").has("isbn:$isbn")) {
+            val data = node.get("entities").get("isbn:$isbn")
             extractIsbnData(data, dto, parsingDto)
+        } else if (node.has("redirects")) {
+            val redirect = node.get("redirects")
+            if (redirect.has("isbn:$isbn")) {
+                val inv = redirect.get("isbn:$isbn").asText()
+                if (node.get("entities").has(inv)) {
+                    val data = node.get("entities").get(inv)
+                    extractIsbnData(data, dto, parsingDto)
+                }
+            }
         } else {
             for (entry in node.properties()) {
                 if (entry.key.startsWith("isbn:")) {
@@ -290,8 +298,7 @@ class InventaireIoMetadataProvider(
                 .get()
                 .uri(inventaireApi) { uriBuilder ->
                     uriBuilder
-                        .path("entities")
-                        .queryParam("action", "author-works")
+                        .path("entities/author-works")
                         .queryParam("uri", authorUri)
                         .build()
                 }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
@@ -327,8 +334,7 @@ class InventaireIoMetadataProvider(
                 .get()
                 .uri(inventaireApi) { uriBuilder ->
                     uriBuilder
-                        .path("entities")
-                        .queryParam("action", "by-uris")
+                        .path("entities/by-uris")
                         .queryParam("uris", dto.editionClaim)
                         .build()
                 }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
@@ -391,8 +397,7 @@ class InventaireIoMetadataProvider(
             .get()
             .uri(inventaireApi) { uriBuilder ->
                 uriBuilder
-                    .path("entities")
-                    .queryParam("action", "by-uris")
+                    .path("entities/by-uris")
                     .queryParam("uris", dataId)
                     .build()
             }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
