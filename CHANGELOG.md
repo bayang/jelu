@@ -1,3 +1,15 @@
+## [0.84.0](https://github.com/bayang/jelu/compare/v0.83.1...v0.84.0) (2026-05-09)
+
+
+### Features
+
+* show other users who own the book on detail page [#247](https://github.com/bayang/jelu/issues/247) [#244](https://github.com/bayang/jelu/issues/244) ([f4435d0](https://github.com/bayang/jelu/commit/f4435d07429fc6545176002b3135f9671e80ac7a))
+
+
+### Bug Fixes
+
+* publisher not saved on import [#304](https://github.com/bayang/jelu/issues/304) ([7bfeee5](https://github.com/bayang/jelu/commit/7bfeee56b25d9fb18146e7489565f591c306ffc0))
+
 ### [0.83.1](https://github.com/bayang/jelu/compare/v0.83.0...v0.83.1) (2026-05-08)
 
 
