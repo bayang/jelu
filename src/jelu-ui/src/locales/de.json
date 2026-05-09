@@ -128,7 +128,8 @@
         "orphan_authors": "verwaiste Autor:innen",
         "find-authors": "Autor:innen finden",
         "list_empty": "Liste ist leer",
-        "filter_pattern": "filter pattern"
+        "filter_pattern": "filter pattern",
+        "other_owners": "Other users who also have this book in their library"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
