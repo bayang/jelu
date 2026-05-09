@@ -128,7 +128,8 @@
         "orphan_authors": "auteurs orphelins",
         "find-authors": "rechercher des auteurs",
         "list_empty": "la liste est vide",
-        "filter_pattern": "Filtre à appliquer"
+        "filter_pattern": "Filtre à appliquer",
+        "other_owners": "Autres utilisateurs qui ont également ce livre dans leur bibliothèque"
     },
     "settings": {
         "pick_language": "Choisissez votre langue",
