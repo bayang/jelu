@@ -11,6 +11,7 @@ import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.BookUpdateDto
 import io.github.bayang.jelu.dto.CreateSeriesRatingDto
+import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.CreateUserDto
 import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.dto.LibraryFilter
@@ -1985,6 +1986,58 @@ class BookServiceTest(
         Assertions.assertTrue(readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).isEmpty)
         Assertions.assertTrue(saved.book.image!!.contains(slugify(savedBook.title), true))
         Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
+    }
+
+    @Test
+    fun testGetBooksUsers() {
+        var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
+        Assertions.assertEquals(0, entitiesIds?.size)
+        val createBook = bookDto()
+        val uploadFile =
+            MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+        val createUserBookDto = createUserBookDto(createBook)
+        val saved: UserBookLightDto = bookService.save(createUserBookDto, user(), uploadFile)
+        entitiesIds = luceneHelper.searchEntitiesIds("title", LuceneEntity.Book)
+        Assertions.assertEquals(1, entitiesIds?.size)
+        Assertions.assertEquals(createBook.title, saved.book.title)
+        Assertions.assertEquals(createBook.isbn10, saved.book.isbn10)
+        Assertions.assertEquals(createBook.isbn13?.trim(), saved.book.isbn13)
+        Assertions.assertEquals("This is a test summary with a newline", saved.book.summary)
+        Assertions.assertEquals(createBook.publisher, saved.book.publisher)
+        Assertions.assertEquals(createBook.pageCount, saved.book.pageCount)
+        Assertions.assertEquals(createBook.goodreadsId, saved.book.goodreadsId)
+        Assertions.assertNull(saved.book.librarythingId)
+        Assertions.assertEquals(createUserBookDto.owned, saved.owned)
+        Assertions.assertEquals(createUserBookDto.toRead, saved.toRead)
+        Assertions.assertEquals(createUserBookDto.personalNotes, saved.personalNotes)
+        Assertions.assertNotNull(saved.creationDate)
+        Assertions.assertNotNull(saved.modificationDate)
+        Assertions.assertNotNull(saved.book.creationDate)
+        Assertions.assertNotNull(saved.book.modificationDate)
+        Assertions.assertNull(saved.lastReadingEvent)
+        Assertions.assertNull(saved.lastReadingEventDate)
+        Assertions.assertTrue(readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).isEmpty)
+        // Assertions.assertTrue(saved.book.image!!.contains(slugify(savedBook.title), true))
+        Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
+        val c2 =
+            CreateUserBookDto(
+                book = BookCreateDto(id = saved.book.id, title = saved.book.title),
+                lastReadingEvent = null,
+                lastReadingEventDate = null,
+                personalNotes = null,
+                owned = null,
+                toRead = null,
+                percentRead = null,
+                currentPageNumber = null,
+                borrowed = null,
+                price = null,
+            )
+        val savedUser2: UserBookLightDto = bookService.save(c2, user2(), null)
+        val page = bookService.findBookUsersById(saved.book.id!!, Pageable.ofSize(30))
+        Assertions.assertEquals(2, page.totalElements)
+        page.content.forEach {
+            Assertions.assertTrue(it.id == user().id || it.id == user2().id)
+        }
     }
 
     @Test

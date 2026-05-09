@@ -522,6 +522,28 @@ class DataService {
     }
   }
 
+  findBookUsers = async (bookId: string, page?: number, size?: number, sort?: string) => {
+    try {
+      const response = await this.apiClient.get<Page<User>>(`${this.API_BOOK}/${bookId}${this.API_USER}`, {
+        params: {
+          page: page,
+          size: size,
+          sort: sort
+        },
+      });
+      console.log("called book users")
+      console.log(response)
+      return response.data;
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error book users " + (error as AxiosError).code)
+      throw new Error("error get book users " + error)
+    }
+  }
+
   findAuthorByCriteria = async (role: Role, query?: string | null, page: number = 0, size: number = 0, sort: string | null = null) => {
     try {
       const response = await this.apiClient.get<Page<Author>>(`${this.API_AUTHOR}`, {

@@ -66,6 +66,7 @@ const getBookIsLoading: Ref<boolean> = ref(false)
 const userReviews: Ref<Array<Review>> = ref([])
 
 const bookQuotes: Ref<Array<BookQuote>> = ref([])
+const users: Ref<Array<User>> = ref([])
 
 const getBook = async () => {
   try {
@@ -76,11 +77,26 @@ const getBook = async () => {
     getUserReviewsForBook()
     getBookQuotesForBook()
     getAllSeriesInfo()
+    getBookUsers()
   } catch (error) {
     console.log("failed get book : " + error);
     getBookIsLoading.value = false
   }
 };
+
+const getBookUsers = async () => {
+  await until(book.value).not.toBeNull()
+  if (book.value?.book.id != null) {
+    dataService.findBookUsers(book.value?.book.id, 0, 20, "login,desc")
+      .then(res => {
+        console.log(res)
+        users.value = res.content
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
 
 const getAllSeriesInfo = async () => {
   book.value?.book.series?.forEach(s => {
@@ -1210,6 +1226,20 @@ getBook()
           {{ t('reading_events.before') }}
         </div>
       </div>
+    </div>
+    <div v-if="users != null && users.filter(u => u.id !== user.id).length > 0" class="mt-2">
+        <div class="text-xl " :class="typographyClasses" >{{ t("labels.other_owners")}}&nbsp;:</div>
+        <p
+          v-for="ppl in users.filter(u => u.id !== user.id)"
+          :key="ppl.id"
+        >
+              <router-link
+                class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+                :to="{ name: 'user-detail', params: { userId: ppl.id } }"
+              >
+                <strong>{{ ppl.login }}</strong>&nbsp;
+              </router-link>
+        </p>
     </div>
   </div>
   <o-loading

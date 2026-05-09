@@ -807,4 +807,10 @@ class BookService(
 
     @Transactional
     fun stats(userId: UUID): TotalsStatsDto = bookRepository.stats(userId).toTotalsStatsDto()
+
+    @Transactional
+    fun findBookUsersById(
+        bookId: UUID,
+        pageable: Pageable,
+    ): Page<UserDto> = bookRepository.findBookUsersById(bookId, pageable).map { it.toUserDto() }
 }

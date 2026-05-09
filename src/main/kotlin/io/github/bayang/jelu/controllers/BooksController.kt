@@ -81,6 +81,12 @@ class BooksController(
         @PathVariable("id") bookId: UUID,
     ) = repository.findBookById(bookId)
 
+    @GetMapping(path = ["/books/{id}/users"])
+    fun bookUsersById(
+        @PathVariable("id") bookId: UUID,
+        @PageableDefault(page = 0, size = 20, direction = Sort.Direction.ASC, sort = ["login"]) @ParameterObject pageable: Pageable,
+    ) = repository.findBookUsersById(bookId, pageable)
+
     @GetMapping(path = ["/userbooks/{id}"])
     fun userbookById(
         @PathVariable("id") userbookId: UUID,
