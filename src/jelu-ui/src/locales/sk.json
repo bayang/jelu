@@ -128,7 +128,8 @@
         "orphan_authors": "Osamotení autori",
         "find-authors": "Nájsť autorov",
         "list_empty": "Zoznam je prázdny",
-        "filter_pattern": "Vzor filtra"
+        "filter_pattern": "Vzor filtra",
+        "other_owners": "Other users who also have this book in their library"
     },
     "settings": {
         "pick_language": "Vyberte svoj jazyk",
