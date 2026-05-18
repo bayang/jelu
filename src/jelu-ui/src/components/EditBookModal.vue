@@ -13,6 +13,7 @@ import { ReadingEventType } from "../model/ReadingEvent";
 import { SeriesOrder } from "../model/Series";
 import { Tag } from "../model/Tag";
 import dataService from "../services/DataService";
+import useCacheBusting from '../composables/cacheBusting'
 import { ObjectUtils } from "../utils/ObjectUtils";
 import { StringUtils } from "../utils/StringUtils";
 import ImagePickerModal from "./ImagePickerModal.vue";
@@ -29,6 +30,7 @@ const { t } = useI18n({
 const props = defineProps<{ bookId: string, book: UserBook | null, canAddEvent: boolean }>()
 const oruga = useOruga()
 const emit = defineEmits(['close']);
+const { currentTimestamp, refreshTimestamp } = useCacheBusting();
 
 const filteredAuthors: Ref<Array<Wrapper>> = ref([]);
 const filteredTags: Ref<Array<Wrapper>> = ref([]);
@@ -268,6 +270,12 @@ watch(() => publishedDate.value, (newVal, oldVal) => {
         const formatted = dayjs(newVal).format('YYYY-MM-DD')
         userbook.value.book.publishedDate = formatted
     }
+})
+
+watch(() => userbook.value.book.image, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    refreshTimestamp()
+  }
 })
 
 if (userbook.value.book.publisher != null) {
