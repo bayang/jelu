@@ -1915,4 +1915,17 @@ class BookRepository(
             priceInCents = totalUserBooksPrice,
         )
     }
+
+    // method to update to-read list
+    fun updateCustomToRead(
+        userBookId: UUID,
+        order: Int,
+    ) {
+        UserBookTable.update(
+            where = { UserBookTable.id eq userBookId },
+        ) {
+            it[UserBookTable.customToReadOrder] = order
+            it[UserBookTable.modificationDate] = nowInstant()
+        }
+    }
 }

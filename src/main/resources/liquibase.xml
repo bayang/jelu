@@ -707,4 +707,9 @@
             <column name="user_id" />
         </createIndex>
     </changeSet>
+    <changeSet id="add_custom_toread_order" author="aspa">
+    <sql>
+        ALTER TABLE user_book ADD custom_toread INTEGER;
+    </sql>
+    </changeSet>
 </databaseChangeLog>

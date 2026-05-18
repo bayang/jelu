@@ -807,4 +807,12 @@ class BookService(
 
     @Transactional
     fun stats(userId: UUID): TotalsStatsDto = bookRepository.stats(userId).toTotalsStatsDto()
+
+    // method to update custom to-read list order
+    @Transactional
+    fun updateCustomToRead(sortOrders: Map<UUID, Int>) {
+        sortOrders.forEach { (userBookId, order) ->
+            bookRepository.updateCustomToRead(userBookId, order)
+        }
+    }
 }

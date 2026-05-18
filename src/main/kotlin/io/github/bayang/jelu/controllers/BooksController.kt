@@ -421,4 +421,12 @@ class BooksController(
         assertIsJeluUser(principal.principal)
         return repository.stats((principal.principal as JeluUser).user.id!!)
     }
+
+    @PutMapping(path = ["/userbooks/sortorder"], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun updateUserBooksCustomToReadOrder(
+        @RequestBody sortOrders: Map<UUID, Int>,
+    ): ResponseEntity<Unit> {
+        repository.updateCustomToRead(sortOrders)
+        return ResponseEntity.noContent().build()
+    }
 }
