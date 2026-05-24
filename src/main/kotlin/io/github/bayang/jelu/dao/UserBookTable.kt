@@ -31,6 +31,7 @@ object UserBookTable : UUIDTable("user_book") {
     val currentPageNumber: Column<Int?> = integer(name = "current_page_number").nullable()
     val borrowed: Column<Boolean?> = bool("is_borrowed").nullable()
     val priceInCents: Column<Long?> = long("price_in_cents").nullable()
+    val customToReadOrder: Column<Int?> = integer(name = "custom_toread").nullable()
 }
 
 class UserBook(
@@ -54,6 +55,7 @@ class UserBook(
     var avgRating: Double? = null
     var userAvgRating: Double? = null
     var priceInCents by UserBookTable.priceInCents
+    var customToReadOrder by UserBookTable.customToReadOrder
 
     fun toUserBookDto(): UserBookDto =
         UserBookDto(
@@ -90,6 +92,7 @@ class UserBook(
             borrowed = this.borrowed,
             readingEvents = this.readingEvents.map { it.toReadingEventWithoutUserBookDto() },
             price = centsToDouble(this.priceInCents),
+            customToReadOrder = this.customToReadOrder,
         )
 
     fun toUserBookLightWithoutBookDto(): UserBookLightWithoutBookDto =

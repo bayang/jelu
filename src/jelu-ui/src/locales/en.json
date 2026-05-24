@@ -181,7 +181,9 @@
         "page_count" : "Page count",
         "user_avg_rating" : "my average rating",
         "avg_rating" : "average rating",
-        "name": "name"
+        "name": "name",
+        "drag_to_reorder" : "drag to reorder",
+        "custom_order" : "Custom order"
     },
     "reading_events" : {
         "finished" : "finished",

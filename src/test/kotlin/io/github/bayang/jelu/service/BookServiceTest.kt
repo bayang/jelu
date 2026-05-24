@@ -3170,4 +3170,38 @@ class BookServiceTest(
         val userDetail = userService.loadUserByUsername("testuser2")
         return (userDetail as JeluUser).user
     }
+
+    @Test
+    fun testUpdateCustomToReadOrder() {
+        val ub1 =
+            bookService.save(
+                createUserBookDto(bookDto(title = "title1"), null, null, toRead = true),
+                user(),
+                null,
+            )
+        val ub2 =
+            bookService.save(
+                createUserBookDto(bookDto(title = "title2"), null, null, toRead = true),
+                user(),
+                null,
+            )
+        val ub3 =
+            bookService.save(
+                createUserBookDto(bookDto(title = "title3"), null, null, toRead = true),
+                user(),
+                null,
+            )
+
+        bookService.updateCustomToRead(
+            mapOf(
+                ub3.id!! to 0,
+                ub1.id!! to 1,
+                ub2.id!! to 2,
+            ),
+        )
+
+        Assertions.assertEquals(1, bookService.findUserBookById(ub1.id!!).customToReadOrder)
+        Assertions.assertEquals(2, bookService.findUserBookById(ub2.id!!).customToReadOrder)
+        Assertions.assertEquals(0, bookService.findUserBookById(ub3.id!!).customToReadOrder)
+    }
 }

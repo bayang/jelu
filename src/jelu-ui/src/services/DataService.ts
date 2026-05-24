@@ -2212,6 +2212,20 @@ class DataService {
     }
   }
 
+  updateUserBooksSortOrder = async (sortOrders: Record<string, number>): Promise<void> => {
+    try {
+      await this.apiClient.put(`${this.API_USERBOOK}/sortorder`, sortOrders)
+      console.log("updated userbooks sort order")
+    }
+    catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("error axios " + error.response.status + " " + error.response.data.error)
+      }
+      console.log("error updating sort order " + (error as AxiosError).code)
+      throw new Error("error updating sort order " + error)
+    }
+  }
+
 }
 
 export default new DataService()

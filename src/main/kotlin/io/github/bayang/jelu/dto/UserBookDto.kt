@@ -38,6 +38,7 @@ data class UserBookLightDto(
     val currentPageNumber: Int?,
     val borrowed: Boolean?,
     val price: Double?,
+    val customToReadOrder: Int?, // aspa
 )
 
 data class UserBookLightWithoutBookDto(
@@ -112,6 +113,7 @@ data class UserBookUpdateDto(
     val currentPageNumber: Int?,
     val borrowed: Boolean?,
     val price: Double?,
+    val customToReadOrder: Int? = null,
 )
 
 data class UserBookBulkUpdateDto(
