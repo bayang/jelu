@@ -133,6 +133,40 @@ An unofficial Helm-Chart to deploy Jelu to Kubernetes is available here:
 
 https://artifacthub.io/packages/helm/tibuntu/jelu
 
+### NixOS
+
+Jelu is available in NixOS (unstable channel or 25.05+). You can enable it in your `configuration.nix`.
+
+Basic usage:
+
+```nix
+services.jelu = {
+  enable = true;
+  openFirewall = true; # Opens port 11111
+};
+
+```
+
+To enable Calibre integration (for automatic metadata import) and customize settings:
+
+```nix
+services.jelu = {
+  enable = true;
+  openFirewall = true;
+
+  # Pulls in Calibre and configures the path automatically
+  calibreSupport = true;
+
+  # Configure application.yml settings here
+  settings = {
+    jelu.cors.allowed-origins = [ "https://jelu.myserver.org" ];
+  };
+};
+
+```
+
+For more personalization, check out directly the nixpkgs module.
+
 ## Screenshots
 
 Home page :
