@@ -815,4 +815,9 @@ class BookService(
             bookRepository.updateCustomToRead(userBookId, order)
         }
     }
+    @Transactional
+    fun findBookUsersById(
+        bookId: UUID,
+        pageable: Pageable,
+    ): Page<UserDto> = bookRepository.findBookUsersById(bookId, pageable).map { it.toUserDto() }
 }

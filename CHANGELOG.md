@@ -1,3 +1,36 @@
+## [0.84.0](https://github.com/bayang/jelu/compare/v0.83.1...v0.84.0) (2026-05-09)
+
+
+### Features
+
+* show other users who own the book on detail page [#247](https://github.com/bayang/jelu/issues/247) [#244](https://github.com/bayang/jelu/issues/244) ([f4435d0](https://github.com/bayang/jelu/commit/f4435d07429fc6545176002b3135f9671e80ac7a))
+
+
+### Bug Fixes
+
+* publisher not saved on import [#304](https://github.com/bayang/jelu/issues/304) ([7bfeee5](https://github.com/bayang/jelu/commit/7bfeee56b25d9fb18146e7489565f591c306ffc0))
+
+### [0.83.1](https://github.com/bayang/jelu/compare/v0.83.0...v0.83.1) (2026-05-08)
+
+
+### Bug Fixes
+
+* potential lock in index update ([fb2af12](https://github.com/bayang/jelu/commit/fb2af1227db9436b795ce590e1dcc31a42f71779))
+* series description color [#318](https://github.com/bayang/jelu/issues/318) ([0a37ec3](https://github.com/bayang/jelu/commit/0a37ec393dacdeaf79f5c56514663049e73a3e75))
+
+## [0.83.0](https://github.com/bayang/jelu/compare/v0.82.0...v0.83.0) (2026-05-08)
+
+
+### Features
+
+* provide a filter pattern in the directory list ([6a6233e](https://github.com/bayang/jelu/commit/6a6233eba209b3b658bd081626783a36a57df1a0))
+
+
+### Bug Fixes
+
+* apply breaking changes in inventaire API ([f94680a](https://github.com/bayang/jelu/commit/f94680a7534666f601b78bece04b73e9c97d32d5))
+* dates sometimes appearing in the past and event modal too narrow [#310](https://github.com/bayang/jelu/issues/310) ([15a712b](https://github.com/bayang/jelu/commit/15a712b90c13e5f1124686562d2cfbfc6977dd5f))
+
 ## [0.82.0](https://github.com/bayang/jelu/compare/v0.81.0...v0.82.0) (2026-04-11)
 
 

@@ -31,7 +31,7 @@ import io.github.bayang.jelu.service.UserMessageService
 import io.github.bayang.jelu.service.UserService
 import io.github.bayang.jelu.service.metadata.FetchMetadataService
 import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
-import io.github.bayang.jelu.utils.toInstant
+import io.github.bayang.jelu.utils.toOffsetDatetime
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
@@ -338,7 +338,12 @@ class CsvImportService(
                         // do not create the same finished event twice if possible
                         if (!alreadyHasFinishedEventAtSameDate(savedUserBook, parsedDate)) {
                             readingEventService.save(
-                                CreateReadingEventDto(ReadingEventType.FINISHED, savedUserBook.book.id, toInstant(parsedDate), null),
+                                CreateReadingEventDto(
+                                    ReadingEventType.FINISHED,
+                                    savedUserBook.book.id,
+                                    toOffsetDatetime(parsedDate),
+                                    null,
+                                ),
                                 userEntity,
                             )
                         }
@@ -382,7 +387,7 @@ class CsvImportService(
                     CreateReadingEventDto(
                         ReadingEventType.FINISHED,
                         savedUserBook.book.id,
-                        toInstant(
+                        toOffsetDatetime(
                             pastDate.plusDays(
                                 idx.toLong(),
                             ),
@@ -436,8 +441,8 @@ class CsvImportService(
             .stream()
             .filter { it.eventType == ReadingEventType.FINISHED }
             .filter { it.creationDate != null }
-            .map { LocalDate.ofInstant(it.creationDate, ZoneId.systemDefault()) }
-            .filter { it.year == date.year && it.monthValue == date.monthValue && it.dayOfMonth == date.dayOfMonth }
+            .map { it.creationDate }
+            .filter { it?.year == date.year && it.monthValue == date.monthValue && it.dayOfMonth == date.dayOfMonth }
             .count()
             .toInt() > 0
     }

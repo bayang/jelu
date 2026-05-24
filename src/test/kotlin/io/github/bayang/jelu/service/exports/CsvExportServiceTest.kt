@@ -135,7 +135,7 @@ class CsvExportServiceTest(
             )
         val offset = OffsetDateTime.now(ZoneId.systemDefault()).offset
         val date1 = OffsetDateTime.of(2022, 2, 10, 6, 30, 0, 0, offset)
-        val createUserBookDto2 = createUserBookDto(book2, ReadingEventType.FINISHED, date1.toInstant())
+        val createUserBookDto2 = createUserBookDto(book2, ReadingEventType.FINISHED, date1)
         val saved2: UserBookLightDto = bookService.save(createUserBookDto2, user(), null)
         val date3 = OffsetDateTime.of(2020, 2, 10, 6, 30, 0, 0, offset)
         val date2 = OffsetDateTime.of(2021, 2, 10, 6, 30, 0, 0, offset)
@@ -143,7 +143,7 @@ class CsvExportServiceTest(
             CreateReadingEventDto(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
-                date3.toInstant(),
+                date3,
                 null,
             ),
             user(),
@@ -152,7 +152,7 @@ class CsvExportServiceTest(
             CreateReadingEventDto(
                 ReadingEventType.FINISHED,
                 saved2.book.id,
-                date2.toInstant(),
+                date2,
                 null,
             ),
             user(),
@@ -162,7 +162,7 @@ class CsvExportServiceTest(
             CreateReadingEventDto(
                 ReadingEventType.DROPPED,
                 saved1.book.id,
-                date3.toInstant(),
+                date3,
                 null,
             ),
             user(),
@@ -171,7 +171,7 @@ class CsvExportServiceTest(
             CreateReadingEventDto(
                 ReadingEventType.DROPPED,
                 saved1.book.id,
-                date2.toInstant(),
+                date2,
                 null,
             ),
             user(),
@@ -180,7 +180,7 @@ class CsvExportServiceTest(
             CreateReadingEventDto(
                 ReadingEventType.CURRENTLY_READING,
                 saved1.book.id,
-                date1.toInstant(),
+                date1,
                 null,
             ),
             user(),

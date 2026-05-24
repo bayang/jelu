@@ -27,8 +27,66 @@ class InventaireIoMetadataProviderTest(
         val isbn =
             MockRestResponseCreators.withSuccess().body(
                 """
-                              {"entities":{"isbn:9782290349229":{"_id":"d59e3e64f92c6340fbb10c5dcf7c0abf","_rev":"4-2db713fd44c6ade760f623367ec7c33b","type":"edition","labels":{"fromclaims":"L'homme aux cercles bleus"},"claims":{"wdt:P31":["wd:Q3331189"],"wdt:P212":["978-2-290-34922-9"],"wdt:P957":["2-290-34922-4"],"wdt:P407":["wd:Q150"],"wdt:P1476":["L'homme aux cercles bleus"],"wdt:P629":["wd:Q3203603"],"wdt:P123":["wd:Q3156592"],"invp:P2":["57883743aa7c6ad25885a63e6e94349ec4f71562"],"wdt:P577":["2005-05-01"],"wdt:P1104":[220],"wdt:P2969":["1508217"]},"created":1485023383338,"updated":1668681738527,"version":6,"uri":"isbn:9782290349229","originalLang":"fr","image":{"url":"/img/entities/57883743aa7c6ad25885a63e6e94349ec4f71562"},"invId":"d59e3e64f92c6340fbb10c5dcf7c0abf"}},"redirects":{}}
-                        """,
+                    {
+  "entities": {
+    "inv:d59e3e64f92c6340fbb10c5dcf7c0abf": {
+      "_id": "d59e3e64f92c6340fbb10c5dcf7c0abf",
+      "_rev": "4-2db713fd44c6ade760f623367ec7c33b",
+      "type": "edition",
+      "labels": {
+        "fromclaims": "L'homme aux cercles bleus"
+      },
+      "claims": {
+        "wdt:P31": [
+          "wd:Q3331189"
+        ],
+        "wdt:P212": [
+          "978-2-290-34922-9"
+        ],
+        "wdt:P957": [
+          "2-290-34922-4"
+        ],
+        "wdt:P407": [
+          "wd:Q150"
+        ],
+        "wdt:P1476": [
+          "L'homme aux cercles bleus"
+        ],
+        "wdt:P629": [
+          "wd:Q3203603"
+        ],
+        "wdt:P123": [
+          "wd:Q3156592"
+        ],
+        "invp:P2": [
+          "57883743aa7c6ad25885a63e6e94349ec4f71562"
+        ],
+        "wdt:P577": [
+          "2005-05-01"
+        ],
+        "wdt:P1104": [
+          220
+        ],
+        "wdt:P2969": [
+          "1508217"
+        ]
+      },
+      "created": 1485023383338,
+      "updated": 1668681738527,
+      "version": 6,
+      "uri": "inv:d59e3e64f92c6340fbb10c5dcf7c0abf",
+      "originalLang": "fr",
+      "image": {
+        "url": "/img/entities/57883743aa7c6ad25885a63e6e94349ec4f71562"
+      },
+      "invId": "d59e3e64f92c6340fbb10c5dcf7c0abf"
+    }
+  },
+  "redirects": {
+    "isbn:9782290349229": "inv:d59e3e64f92c6340fbb10c5dcf7c0abf"
+  }
+}
+                """,
             )
         val edition =
             MockRestResponseCreators.withSuccess().body(
@@ -63,7 +121,7 @@ class InventaireIoMetadataProviderTest(
 
         serv
             .expect(
-                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=isbn:9782290349229"),
+                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities/by-uris?uris=isbn:9782290349229"),
             ).andExpect(
                 MockRestRequestMatchers.header(
                     HttpHeaders.USER_AGENT,
@@ -72,23 +130,23 @@ class InventaireIoMetadataProviderTest(
             ).andRespond(isbn)
         serv
             .expect(
-                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=wd:Q3203603"),
+                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities/by-uris?uris=wd:Q3203603"),
             ).andRespond(edition)
         serv
             .expect(
-                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=wd:Q237087"),
+                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities/by-uris?uris=wd:Q237087"),
             ).andRespond(author)
         serv
             .expect(
-                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=wd:Q182015"),
+                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities/by-uris?uris=wd:Q182015"),
             ).andRespond(genre1)
         serv
             .expect(
-                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=wd:Q5937792"),
+                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities/by-uris?uris=wd:Q5937792"),
             ).andRespond(genre2)
         serv
             .expect(
-                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities?action=by-uris&uris=wd:Q27536277"),
+                MockRestRequestMatchers.requestTo("https://inventaire.io/api/entities/by-uris?uris=wd:Q27536277"),
             ).andRespond(series)
         val jeluProperties =
             JeluProperties(

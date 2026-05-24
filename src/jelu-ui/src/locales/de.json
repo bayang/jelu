@@ -127,7 +127,9 @@
         "delete_this_author": "Diese(n) Autor:in aus {nb} Buch/Büchern und aus der Datenbank löschen?",
         "orphan_authors": "verwaiste Autor:innen",
         "find-authors": "Autor:innen finden",
-        "list_empty": "Liste ist leer"
+        "list_empty": "Liste ist leer",
+        "filter_pattern": "Filtermuster",
+        "other_owners": "Andere Benutzer, die dieses Buch auch in ihrer Bibliothek haben"
     },
     "settings": {
         "pick_language": "Sprache auswählen",
@@ -183,7 +185,7 @@
     },
     "reading_events": {
         "finished": "beendet",
-        "currently_reading": "Aktuell gelesen",
+        "currently_reading": "lese gerade",
         "dropped": "Aufgegeben",
         "last_event_type": "Letzter Ereignistyp",
         "none": "keine",

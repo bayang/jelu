@@ -51,7 +51,7 @@ const form = reactive({
   owned: null,
   borrowed: null,
   toRead: null,
-  percentRead: null,
+  percentRead: 0,
   currentPageNumber: null,
   googleId: "",
   amazonId: "",
@@ -280,7 +280,7 @@ const clearForm = () => {
   form.openlibraryId = ""
   form.noosfereId = ""
   form.inventaireId = ""
-  form.percentRead = null
+  form.percentRead = 0
   form.currentPageNumber = null
   form.originalTitle = ""
   form.price= null
@@ -312,7 +312,6 @@ function getFilteredTags(text: string) {
 }
 
 function getFilteredPublishers(text: string) {
-  form.publisher = text
   dataService.findPublisherByCriteria(text).then(data => filteredPublishers.value = data.content)
 }
 
@@ -380,7 +379,7 @@ const toggleModal = (file: boolean) => {
     canCancel: ['x', 'button', 'outside'],
     scroll: 'keep',
     props: {
-        "book": null,
+        "book": undefined,
       },
     events: {
       metadataReceived: (modalMetadata: Metadata) => {
@@ -445,6 +444,9 @@ const mergeMetadata = () => {
       "name": metadata.value?.series,
       "numberInSeries" : metadata.value.numberInSeries
     })
+  }
+  if (metadata.value?.publisher) {
+    selectPublisher(metadata.value.publisher)
   }
 }
 
@@ -796,27 +798,24 @@ const displayDatepicker = computed(() => {
             class="input focus:input-accent w-full"
           >
         </fieldset>
-        <fieldset class="fieldset">
+        <fieldset>
           <legend class="fieldset-legend capitalize">
             {{ t('book.publisher') }}
           </legend>
-          <o-autocomplete
+          <input
             v-model="form.publisher"
-            :root-class="'grow w-full'"
-            :input-classes="{rootClass:'w-full border-2 border-accent', inputClass:'w-full'}"
-            :clear-on-select="false"
-            backend-filtering
-            :debounce="100"
-            :options="filteredPublishers"
-            @input="getFilteredPublishers"
-            @select="selectPublisher"
+            type="text"
+            class="input w-full focus:input-accent"
+            list="publishers-list"
+            @input="getFilteredPublishers(($event.target as HTMLInputElement).value)"
           >
-            <template #default="{ value }">
-              <div class="jl-taginput-item">
-                {{ value }}
-              </div>
-            </template>
-          </o-autocomplete>
+          <datalist id="publishers-list">
+            <option
+              v-for="pub in filteredPublishers"
+              :key="pub"
+              :value="pub"
+            />
+          </datalist>
         </fieldset>
         <fieldset class="fieldset">
           <legend class="fieldset-legend capitalize">

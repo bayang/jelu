@@ -252,6 +252,7 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 .event-modal {
   margin: 30px;
   height: min(600px, 70vh);
+  width: min(350px, 90vw);
 }
 
 .author-modal {
@@ -437,7 +438,7 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 }
 
 .v-md-editor-preview  {
-  @apply text-black;
+  @apply text-base-content;
 }
 
 .card-body .v-md-editor-preview {

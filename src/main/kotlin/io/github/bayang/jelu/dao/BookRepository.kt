@@ -1927,5 +1927,26 @@ class BookRepository(
             it[UserBookTable.customToReadOrder] = order
             it[UserBookTable.modificationDate] = nowInstant()
         }
+    fun findBookUsersById(
+        bookId: UUID,
+        pageable: Pageable,
+    ): Page<User> {
+        val query =
+            UserBookTable
+                .join(UserTable, JoinType.LEFT, onColumn = UserBookTable.user, otherColumn = UserTable.id)
+                .select(UserTable.columns)
+                .where { UserBookTable.book eq bookId }
+                .withDistinct()
+        val total = query.count()
+        query.limit(pageable.pageSize)
+        query.offset(pageable.offset)
+        val orders: Array<Pair<Expression<*>, SortOrder>> =
+            parseSorts(pageable.sort, Pair(UserTable.login, SortOrder.ASC_NULLS_LAST), UserTable)
+        query.orderBy(*orders)
+        return PageImpl(
+            query.map { resultRow -> User.wrapRow(resultRow) },
+            pageable,
+            total,
+        )
     }
 }
