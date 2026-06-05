@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import io.github.bayang.jelu.dto.JeluUser
+import io.github.bayang.jelu.dto.ValidatedApiTokenDto
 import io.github.bayang.jelu.service.ApiTokenService
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.FilterChain
@@ -66,65 +67,9 @@ class BearerTokenAuthenticationFilter(
             return
         }
 
+        var validatedToken: ValidatedApiTokenDto? = null
         try {
-            val validatedToken = apiTokenService.validateToken(rawToken)
-
-            if (validatedToken != null) {
-                // Build authorities from scopes + base USER role
-                val authorities = buildAuthorities(validatedToken.scopes)
-
-                // Create JeluUser from the token's user
-                val jeluUser = JeluUser(validatedToken.user)
-
-                // Create authentication
-                val authentication =
-                    ApiTokenAuthentication(
-                        principal = jeluUser,
-                        credentials = null,
-                        authorities = authorities,
-                        tokenId = validatedToken.id,
-                        tokenName = validatedToken.name,
-                        scopes = validatedToken.scopes,
-                    )
-
-                // Create a new security context and set it (don't persist to session)
-                val securityContext = SecurityContextHolder.createEmptyContext()
-                securityContext.authentication = authentication
-                SecurityContextHolder.setContext(securityContext)
-
-                // Save context to request attributes only (not to session)
-                securityContextRepository.saveContext(securityContext, request, response)
-
-                logger.debug { "Authenticated via API token '${validatedToken.name}' for user '${jeluUser.username}'" }
-
-                // Update last used asynchronously
-                apiTokenService.updateLastUsedAsync(validatedToken.id)
-
-                // Check scope access for this request
-                val path = request.requestURI
-                val method = request.method
-
-                if (!ScopePathMatcher.hasRequiredScope(path, method, validatedToken.scopes)) {
-                    logger.debug { "Token '${validatedToken.name}' lacks required scope for $method $path" }
-                    response.sendError(
-                        HttpServletResponse.SC_FORBIDDEN,
-                        "Insufficient scope for this operation",
-                    )
-                    return
-                }
-
-                // Token is valid and has required scope, continue with filter chain
-                filterChain.doFilter(request, response)
-                return
-            } else {
-                // Bearer token was provided but is invalid/inactive/expired
-                logger.debug { "Invalid or expired API token" }
-                response.sendError(
-                    HttpServletResponse.SC_UNAUTHORIZED,
-                    "Invalid or expired API token",
-                )
-                return
-            }
+            validatedToken = apiTokenService.validateToken(rawToken)
         } catch (e: Exception) {
             logger.warn { "Error validating API token: ${e.message}" }
             response.sendError(
@@ -133,6 +78,58 @@ class BearerTokenAuthenticationFilter(
             )
             return
         }
+
+        if (validatedToken == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired API token")
+            return
+        }
+
+        // Build authorities from scopes + base USER role
+        val authorities = buildAuthorities(validatedToken.scopes)
+
+        // Create JeluUser from the token's user
+        val jeluUser = JeluUser(validatedToken.user)
+
+        // Create authentication
+        val authentication =
+            ApiTokenAuthentication(
+                principal = jeluUser,
+                credentials = null,
+                authorities = authorities,
+                tokenId = validatedToken.id,
+                tokenName = validatedToken.name,
+                scopes = validatedToken.scopes,
+            )
+
+        // Create a new security context and set it (don't persist to session)
+        val securityContext = SecurityContextHolder.createEmptyContext()
+        securityContext.authentication = authentication
+        SecurityContextHolder.setContext(securityContext)
+
+        // Save context to request attributes only (not to session)
+        securityContextRepository.saveContext(securityContext, request, response)
+
+        logger.debug { "Authenticated via API token '${validatedToken.name}' for user '${jeluUser.username}'" }
+
+        // Update last used
+        apiTokenService.updateLastUsed(validatedToken.id)
+
+        // Check scope access for this request
+        val path = request.requestURI
+        val method = request.method
+
+        if (!ScopePathMatcher.hasRequiredScope(path, method, validatedToken.scopes)) {
+            logger.debug { "Token '${validatedToken.name}' lacks required scope for $method $path" }
+            response.sendError(
+                HttpServletResponse.SC_FORBIDDEN,
+                "Insufficient scope for this operation",
+            )
+            return
+        }
+
+        // Token is valid and has required scope, continue with filter chain
+        filterChain.doFilter(request, response)
+        return
     }
 
     private fun buildAuthorities(scopes: List<String>): List<GrantedAuthority> {

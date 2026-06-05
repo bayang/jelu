@@ -11,7 +11,6 @@ import io.github.bayang.jelu.dto.ValidatedApiTokenDto
 import io.github.bayang.jelu.errors.JeluValidationException
 import io.github.bayang.jelu.security.TokenScope
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.security.MessageDigest
@@ -202,12 +201,8 @@ class ApiTokenService(
         )
     }
 
-    /**
-     * Update last used timestamp asynchronously
-     */
-    @Async
     @Transactional
-    fun updateLastUsedAsync(tokenId: UUID) {
+    fun updateLastUsed(tokenId: UUID) {
         try {
             apiTokenRepository.updateLastUsed(tokenId)
         } catch (e: Exception) {
