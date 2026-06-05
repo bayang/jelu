@@ -37,10 +37,9 @@ const isOpened = ref(false)
 <template>
   <div class="flex flex-row gap-4 w-full">
     <div class="justify-self-start">
-      <div class="jl-sidebar">
+      <div class="jl-menubar">
         <div
           v-if="isOpened"
-          class="jl-menu-icon jl-sidebar-item"
           @click="isOpened=!isOpened"
         >
           <svg
@@ -58,7 +57,6 @@ const isOpened = ref(false)
         </div>
         <div
           v-else
-          class="jl-menu-icon jl-sidebar-item"
           @click="isOpened=!isOpened"
         >
           <svg

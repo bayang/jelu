@@ -428,7 +428,7 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 
 /* jelu sidebar menu*/
 
-.jl-sidebar {
+.jl-menubar {
     transition: width .6s ease;
     height: 100vh;
     gap: 10px;
@@ -439,13 +439,13 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
     @apply hover:bg-accent/70 rounded-md py-2;
     height: 40px;
 }
-.jl-sidebar a {
+.jl-menubar a {
     @apply flex justify-items-start;
 }
-.jl-sidebar a:hover {
+.jl-menubar a:hover {
     transition: all .6s ease;
 }
-.jl-sidebar svg {
+.jl-menubar svg {
     min-width: 50px;
     font-size: 20px;
 }
