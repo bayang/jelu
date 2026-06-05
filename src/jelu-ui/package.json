@@ -34,7 +34,6 @@
     "vue-router": "4.6.4",
     "vue3-datepicker": "0.4.0",
     "vuedraggable": "4.1.0",
-    "vuejs-sidebar-menu": "1.0.0",
     "vuex": "4.0.2"
   },
   "devDependencies": {

@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import FloatingVue from 'floating-vue'
 import Oruga from '@oruga-ui/oruga-next'
-import SidebarMenu from 'vuejs-sidebar-menu'
 import router from './router'
 import store, { key } from './store'
 import VueSplide from '@splidejs/vue-splide';
@@ -13,7 +12,6 @@ import './assets/style.css'
 
 import '@oruga-ui/theme-oruga/dist/oruga.css'
 
-import 'vuejs-sidebar-menu/dist/vuejs-sidebar-menu.css'
 import '@mdi/font/css/materialdesignicons.min.css'
 import 'floating-vue/dist/style.css'
 import '@splidejs/splide/dist/css/splide.min.css';
@@ -68,7 +66,6 @@ createApp(App)
     .use(Oruga, {
         iconPack: 'mdi',
     })
-    .use(SidebarMenu)
     .use(VueSplide)
     .use(VueMarkdownEditor)
     .use(VMdPreview)
