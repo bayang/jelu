@@ -1,3 +1,10 @@
+### [0.84.2](https://github.com/bayang/jelu/compare/v0.84.1...v0.84.2) (2026-06-05)
+
+
+### Bug Fixes
+
+* class conflict preventing clicks [#329](https://github.com/bayang/jelu/issues/329) ([974fb42](https://github.com/bayang/jelu/commit/974fb42ada8623303e63130127c5004032ea5a2f))
+
 ### [0.84.1](https://github.com/bayang/jelu/compare/v0.84.0...v0.84.1) (2026-06-05)
 
 
