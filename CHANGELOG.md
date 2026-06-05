@@ -1,3 +1,14 @@
+### [0.84.1](https://github.com/bayang/jelu/compare/v0.84.0...v0.84.1) (2026-06-05)
+
+
+### Bug Fixes
+
+* hitting enter in login form should trigger login ([dc07b3c](https://github.com/bayang/jelu/commit/dc07b3cdaaa1d85a0ed24d8af19e412ebd4e2cf2))
+* import status error if metadata provider fails [#326](https://github.com/bayang/jelu/issues/326) ([1450bcf](https://github.com/bayang/jelu/commit/1450bcf9a50af71f0a593122d9347efffb5a6ed7))
+* remove deprecated dependency for menu [#321](https://github.com/bayang/jelu/issues/321) ([0c77e12](https://github.com/bayang/jelu/commit/0c77e1279df87052ce19bb2d91b4898b2167bba7))
+* remove deprecated menu bar, should fix [#321](https://github.com/bayang/jelu/issues/321) ([c237cc6](https://github.com/bayang/jelu/commit/c237cc6e0c4f91ec26be6e2b1e180cb16f76b0b4))
+* try to fix concurrency issues in bearer authentication [#328](https://github.com/bayang/jelu/issues/328) [#327](https://github.com/bayang/jelu/issues/327) ([e86c504](https://github.com/bayang/jelu/commit/e86c504a94913d5bc4b0d2e853105122819d7848))
+
 ## [0.84.0](https://github.com/bayang/jelu/compare/v0.83.1...v0.84.0) (2026-05-09)
 
 
