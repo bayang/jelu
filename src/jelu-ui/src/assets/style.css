@@ -309,30 +309,6 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
   box-shadow: 10px 10px 10px 0px var(--jelu_background);
 }
 
-
-/* dashboard sidebar customizing */
-
-.sidebar {
-  @apply h-fit!;
-}
-
-.sidebar-header {
-  @apply bg-base-100 text-base-content!;
-}
-
-.sidebar-content {
-   @apply bg-base-100!;
-}
-
-.sidebar-content ul li a {
-  @apply bg-base-100 rounded-lg text-base-content hover:bg-accent/50!;
-}
-
-.sidebar-content ul li span {
-  @apply capitalize truncate;
-}
-/* end dashboard sidebar */
-
 .jelu-authorinput .o-taginput__item {
   @apply bg-success rounded-sm mx-1;
 }
@@ -449,5 +425,31 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 .jelu-cursor-text {
   @apply cursor-text!;
 }
+
+/* jelu sidebar menu*/
+
+.jl-sidebar {
+    transition: width .6s ease;
+    height: 100vh;
+    gap: 10px;
+    @apply flex flex-col;
+    text-align: left;
+}
+.jl-menu-item {
+    @apply hover:bg-accent/70 rounded-md py-2;
+    height: 40px;
+}
+.jl-sidebar a {
+    @apply flex justify-items-start;
+}
+.jl-sidebar a:hover {
+    transition: all .6s ease;
+}
+.jl-sidebar svg {
+    min-width: 50px;
+    font-size: 20px;
+}
+
+/* end jelu sidebar menu*/
 
 }
