@@ -190,7 +190,7 @@ class CsvImportService(
                 logger.error {
                     "no title nor authors on entity ${importEntity.id} ${importEntity.isbn10} ${importEntity.isbn13} , not saving"
                 }
-                importService.updateStatus(importEntity.id.value, ProcessingStatus.IMPORTED)
+                importService.updateStatus(importEntity.id.value, ProcessingStatus.ERROR)
                 if (importConfig.importSource == ImportSource.ISBN_LIST) {
                     try {
                         val isbn10 = if (importEntity.isbn10.isNullOrBlank()) "" else importEntity.isbn10
