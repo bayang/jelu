@@ -83,6 +83,7 @@ const store = createStore<State>({
           }
           else {
             console.log("route is null")
+            await router.push({name: 'home'})
           }
         } catch (error) {
           commit('login', false)

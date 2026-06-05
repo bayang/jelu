@@ -77,7 +77,7 @@ const validateInputLight = (): boolean => {
     isValid = false
   }
   return isValid
-} 
+}
 
 const validateInput = (): boolean => {
   let isValid: boolean = validateInputLight()
@@ -99,7 +99,7 @@ const validateInput = (): boolean => {
     isValid = false
   }
   return isValid
-} 
+}
 
 const createInitialUser = async () => {
   if (validateInput()) {
@@ -111,7 +111,7 @@ const createInitialUser = async () => {
       progress.value = false
       console.log('failed to create user ' + error)
       console.log(`failed to create user ${error.message}`)
-  
+
       errorMessage.value = error.message
     }
   }
@@ -136,8 +136,8 @@ const url = `${urls.BASE_URL}/oauth2/authorization/${provider.registrationId}`
         height=${width}`,
       )
 }
-  
-const submit = () => {
+
+const submitLogin = () => {
   if (displayInitialSetup.value) {
     createInitialUser()
   }
@@ -184,12 +184,13 @@ getOauthproviders()
           v-model="form.password"
           type="password"
           maxlength="150"
-          class="input focus:input-accent" 
+          class="input focus:input-accent"
           :placeholder="t('login.password')"
+          @keyup.enter="submitLogin"
         >
         <label
           v-if="displayInitialSetup"
-        
+
           class="label"
         >
           {{ t('login.confirm_password') }}
@@ -201,7 +202,7 @@ getOauthproviders()
           :placeholder="t('login.confirm_password')"
           maxlength="150"
           class="input focus:input-accent"
-          @keyup.enter="submit"
+          @keyup.enter="submitLogin"
         >
         <p
           v-if="displayInitialSetup"
@@ -241,7 +242,7 @@ getOauthproviders()
         >
           {{ errorMessage }}
         </p>
-        
+
         <div
           v-if="!displayInitialSetup"
           class="mt-3"
