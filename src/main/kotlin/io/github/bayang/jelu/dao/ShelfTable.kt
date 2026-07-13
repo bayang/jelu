@@ -1,13 +1,14 @@
 package io.github.bayang.jelu.dao
 
 import io.github.bayang.jelu.dto.ShelfDto
-import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.v1.core.Column
+import org.jetbrains.exposed.v1.core.ReferenceOption
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
+import org.jetbrains.exposed.v1.core.java.javaUUID
+import org.jetbrains.exposed.v1.dao.java.UUIDEntity
+import org.jetbrains.exposed.v1.dao.java.UUIDEntityClass
+import org.jetbrains.exposed.v1.javatime.timestamp
 import java.util.UUID
 
 object ShelfTable : UUIDTable("shelf") {
@@ -15,7 +16,7 @@ object ShelfTable : UUIDTable("shelf") {
     val modificationDate = timestamp("modification_date")
     val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
     val name: Column<String> = varchar("name", 5000)
-    val targetId: Column<UUID> = uuid("target_id")
+    val targetId: Column<UUID> = javaUUID("target_id")
 }
 
 class Shelf(

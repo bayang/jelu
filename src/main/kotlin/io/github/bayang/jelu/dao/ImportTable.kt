@@ -1,11 +1,12 @@
 package io.github.bayang.jelu.dao
 
-import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.v1.core.Column
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
+import org.jetbrains.exposed.v1.core.java.javaUUID
+import org.jetbrains.exposed.v1.dao.java.UUIDEntity
+import org.jetbrains.exposed.v1.dao.java.UUIDEntityClass
+import org.jetbrains.exposed.v1.javatime.timestamp
 import java.util.UUID
 
 object ImportEntityTable : UUIDTable("import_entity") {
@@ -26,7 +27,7 @@ object ImportEntityTable : UUIDTable("import_entity") {
     var tags: Column<String?> = varchar("tags", 10000).nullable()
     var personalNotes: Column<String?> = varchar("personal_notes", 10000).nullable()
     var readCount: Column<Int?> = integer(name = "read_count").nullable()
-    var userId: Column<UUID> = uuid(name = "userId")
+    var userId: Column<UUID> = javaUUID(name = "userId")
     var shouldFetchMetadata: Column<Boolean> = bool("should_fetch_metadata")
     var owned: Column<Boolean?> = bool("owned").nullable()
     var rating: Column<Int?> = integer(name = "rating").nullable()

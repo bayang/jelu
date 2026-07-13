@@ -3,12 +3,12 @@ package io.github.bayang.jelu.dao
 import io.github.bayang.jelu.dto.ReadingEventDto
 import io.github.bayang.jelu.dto.ReadingEventStatsDto
 import io.github.bayang.jelu.dto.ReadingEventWithoutUserBookDto
-import org.jetbrains.exposed.dao.UUIDEntity
-import org.jetbrains.exposed.dao.UUIDEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.javatime.timestampWithTimeZone
+import org.jetbrains.exposed.v1.core.ReferenceOption
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
+import org.jetbrains.exposed.v1.dao.java.UUIDEntity
+import org.jetbrains.exposed.v1.dao.java.UUIDEntityClass
+import org.jetbrains.exposed.v1.javatime.timestampWithTimeZone
 import java.time.OffsetDateTime
 import java.util.UUID
 

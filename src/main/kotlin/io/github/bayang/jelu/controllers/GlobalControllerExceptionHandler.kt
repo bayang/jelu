@@ -5,7 +5,7 @@ import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.errors.JeluNotFoundException
 import io.github.bayang.jelu.errors.JeluValidationException
 import jakarta.validation.ConstraintViolationException
-import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
+import org.jetbrains.exposed.v1.dao.exceptions.EntityNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException

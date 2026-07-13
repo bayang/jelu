@@ -32,7 +32,7 @@ import io.github.bayang.jelu.tags
 import io.github.bayang.jelu.utils.nowDateTime
 import io.github.bayang.jelu.utils.slugify
 import org.apache.lucene.index.Term
-import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
+import org.jetbrains.exposed.v1.dao.exceptions.EntityNotFoundException
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions

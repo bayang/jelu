@@ -4,8 +4,9 @@ import io.github.bayang.jelu.dto.CreateApiTokenDto
 import io.github.bayang.jelu.dto.UpdateApiTokenDto
 import io.github.bayang.jelu.utils.nowInstant
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.jetbrains.exposed.sql.andWhere
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.andWhere
+import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.UUID
