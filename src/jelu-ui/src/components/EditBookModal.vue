@@ -39,6 +39,8 @@ const userbook: Ref<UserBook> = ref(copyInput(props.book))
 const hasImage: Ref<boolean> = ref(userbook.value.book.image != null)
 const deleteImage: Ref<boolean> = ref(false)
 
+const progressTouched: Ref<boolean> = ref(false)
+
 const progress: Ref<boolean> = ref(false)
 
 const publishedDate = ref(userbook.value.book.publishedDate ? new Date(userbook.value.book.publishedDate) : null)
@@ -110,6 +112,10 @@ const importBook = () => {
     if (userbook.value.price <= 0) {
       userbook.value.price = null
     }
+  }
+  // otherwise progress is filled and backend creates a new event
+  if (progressTouched.value == false) {
+    userbook.value.percentRead = null
   }
 
   console.log(`push book ` + userbook.value);
@@ -258,6 +264,12 @@ function toggleRemoveImage() {
 watch(() => [userbook.value.currentPageNumber, userbook.value.percentRead, userbook.value.book.pageCount],(newVal, oldVal) => {
   if (userbook.value.book.pageCount != null) {
     ObjectUtils.computePages(newVal, oldVal, userbook.value, userbook.value.book.pageCount)
+  }
+})
+
+watch(() => userbook.value.percentRead,(newVal, oldVal) => {
+  if (newVal != null) {
+    progressTouched.value = true
   }
 })
 
