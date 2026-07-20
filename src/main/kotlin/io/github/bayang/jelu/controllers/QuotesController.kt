@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/api/v1")
@@ -44,7 +43,7 @@ class QuotesController(
     @GetMapping(path = ["/quotes"])
     fun quotes(
         @RequestParam(name = "query", required = false) query: String?,
-    ): Mono<List<QuoteDto>> = quotesProvider.quotes(query)
+    ): List<QuoteDto> = quotesProvider.quotes(query)
 
     @ApiResponses(
         value = [
@@ -70,5 +69,5 @@ class QuotesController(
         ],
     )
     @GetMapping(path = ["/quotes/random"])
-    fun quotes(): Mono<List<QuoteDto>> = quotesProvider.random()
+    fun quotes(): List<QuoteDto> = quotesProvider.random()
 }

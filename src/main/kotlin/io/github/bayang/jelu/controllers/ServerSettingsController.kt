@@ -23,7 +23,7 @@ class ServerSettingsController(
         return ServerSettingsDto(
             metadataFetchEnabled = plugins.isNotEmpty(),
             metadataFetchCalibreEnabled = pluginInfoHolder.calibreEnabled(),
-            buildProperties.version,
+            buildProperties.version ?: "NA",
             ldapEnabled = properties.auth.ldap.enabled,
             metadataPlugins = plugins,
         )

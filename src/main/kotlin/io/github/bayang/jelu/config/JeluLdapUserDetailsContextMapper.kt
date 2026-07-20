@@ -25,13 +25,13 @@ class JeluLdapUserDetailsContextMapper(
 ) : UserDetailsContextMapper {
     @Transactional
     override fun mapUserFromContext(
-        ctx: DirContextOperations?,
-        username: String?,
-        authorities: MutableCollection<out GrantedAuthority>?,
+        ctx: DirContextOperations,
+        username: String,
+        authorities: MutableCollection<out GrantedAuthority>,
     ): UserDetails {
-        dumpAttributesForDebug(ctx?.attributes)
-        val isAdmin = findAdminMembership(ctx?.attributes)
-        val res = userRepository.findByLoginAndProvider(username!!, Provider.LDAP)
+        dumpAttributesForDebug(ctx.attributes)
+        val isAdmin = findAdminMembership(ctx.attributes)
+        val res = userRepository.findByLoginAndProvider(username, Provider.LDAP)
         if (res.empty()) {
             val saved = userRepository.save(CreateUserDto(login = username, password = "ldap", isAdmin = isAdmin, Provider.LDAP))
             return JeluUser(saved.toUserDto())
@@ -66,8 +66,8 @@ class JeluLdapUserDetailsContextMapper(
     }
 
     override fun mapUserToContext(
-        user: UserDetails?,
-        ctx: DirContextAdapter?,
+        user: UserDetails,
+        ctx: DirContextAdapter,
     ) {
         TODO("Not yet implemented")
     }

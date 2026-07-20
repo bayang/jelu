@@ -56,7 +56,7 @@ class UserService(
             logger.error { "user already exists ${user.login}" }
             throw JeluException("User already exists ${user.login}")
         }
-        return userRepository.save(user.copy(password = passwordEncoder.encode(user.password.trim()))).toUserDto()
+        return userRepository.save(user.copy(password = passwordEncoder.encode(user.password.trim())!!)).toUserDto()
     }
 
     @Transactional
@@ -114,7 +114,7 @@ class UserService(
             userRepository
                 .updateUser(
                     userId,
-                    userDto.copy(password = passwordEncoder.encode(userDto.password.trim())),
+                    userDto.copy(password = passwordEncoder.encode(userDto.password.trim())!!),
                 ).toUserDto()
         val jeluUser: JeluUser = this.loadUserByUsername(updated.login) as JeluUser
         // sessionRegistry.getAllSessions(jeluUser, false).forEach {

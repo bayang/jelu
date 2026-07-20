@@ -2,24 +2,27 @@ package io.github.bayang.jelu.service.metadata
 
 import io.github.bayang.jelu.dto.WikipediaPageResult
 import io.github.bayang.jelu.dto.WikipediaSearchResult
+import io.github.bayang.jelu.service.metadata.providers.USER_AGENT
 import jakarta.annotation.Resource
+import org.springframework.boot.info.BuildProperties
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.client.RestClient
 import org.springframework.web.util.UriBuilder
-import reactor.core.publisher.Mono
 
 @Service
 class WikipediaService(
-    @Resource(name = "restClient") val restClient: WebClient,
+    @Resource(name = "springRestClient") private val restClient: RestClient,
+    private val buildProperties: BuildProperties,
 ) {
     // curl https://fr.wikipedia.org/w/rest.php/v1/search/title\?q\=stefan%20platteau\&limit\=5
     fun search(
         query: String,
         language: String = "en",
         limit: Int = 10,
-    ): Mono<WikipediaSearchResult> {
-        val mono: Mono<WikipediaSearchResult> =
+    ): WikipediaSearchResult? {
+        val mono: WikipediaSearchResult? =
             restClient
                 .get()
                 .uri { uriBuilder: UriBuilder ->
@@ -30,11 +33,12 @@ class WikipediaService(
                         .queryParam("q", query)
                         .queryParam("limit", limit)
                         .build()
-                }.exchangeToMono {
-                    if (it.statusCode() == HttpStatus.OK) {
-                        it.bodyToMono(WikipediaSearchResult::class.java)
+                }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
+                .exchange { clientRequest, clientResponse ->
+                    if (clientResponse.statusCode == HttpStatus.OK) {
+                        clientResponse.bodyTo(WikipediaSearchResult::class.java)
                     } else {
-                        it.createException().flatMap { Mono.error { it } }
+                        throw clientResponse.createException()
                     }
                 }
         return mono
@@ -43,8 +47,8 @@ class WikipediaService(
     fun fetchPage(
         pageTitle: String,
         language: String = "en",
-    ): Mono<WikipediaPageResult> {
-        val mono: Mono<WikipediaPageResult> =
+    ): WikipediaPageResult? {
+        val mono: WikipediaPageResult? =
             restClient
                 .get()
                 .uri { uriBuilder: UriBuilder ->
@@ -54,11 +58,12 @@ class WikipediaService(
                         .pathSegment("api", "rest_v1", "page", "summary", "{title}")
                         .queryParam("redirect", false)
                         .build(pageTitle)
-                }.exchangeToMono {
-                    if (it.statusCode() == HttpStatus.OK) {
-                        it.bodyToMono(WikipediaPageResult::class.java)
+                }.header(HttpHeaders.USER_AGENT, USER_AGENT + buildProperties.version)
+                .exchange { clientRequest, clientResponse ->
+                    if (clientResponse.statusCode == HttpStatus.OK) {
+                        clientResponse.bodyTo(WikipediaPageResult::class.java)
                     } else {
-                        it.createException().flatMap { Mono.error { it } }
+                        throw clientResponse.createException()
                     }
                 }
         return mono

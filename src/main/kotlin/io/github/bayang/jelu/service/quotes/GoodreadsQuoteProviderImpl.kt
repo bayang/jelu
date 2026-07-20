@@ -12,10 +12,8 @@ import org.jsoup.select.Elements
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.client.RestClient
 import org.springframework.web.util.UriBuilder
-import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
@@ -29,7 +27,7 @@ const val KEY: String = "quotes"
 @Service
 class GoodreadsQuoteProviderImpl(
     val bookService: BookService,
-    @Resource(name = "restClient") val restClient: WebClient,
+    @Resource(name = "springRestClient") private val restClient: RestClient,
 ) : IQuoteProvider {
     var cache: Cache<String, List<QuoteDto>> =
         Caffeine
@@ -38,16 +36,16 @@ class GoodreadsQuoteProviderImpl(
             .maximumSize(100)
             .build()
 
-    override fun quotes(query: String?): Mono<List<QuoteDto>> =
+    override fun quotes(query: String?): List<QuoteDto> =
         if (!query.isNullOrBlank()) {
             fetch(query)
         } else {
             val res: List<QuoteDto>? = cache.getIfPresent(KEY)
-            res?.toMono() ?: fetch(randomAuthor())
+            res ?: fetch(randomAuthor())
         }
 
-    override fun random(): Mono<List<QuoteDto>> {
-        val mono: Mono<List<QuoteDto>> =
+    override fun random(): List<QuoteDto> {
+        val mono: List<QuoteDto> =
             restClient
                 .get()
                 .uri { uriBuilder: UriBuilder ->
@@ -56,13 +54,11 @@ class GoodreadsQuoteProviderImpl(
                         .host("www.goodreads.com")
                         .path("/quotes")
                         .build()
-                }.exchangeToMono {
-                    if (it.statusCode() == HttpStatus.OK) {
-                        it.bodyToMono(String::class.java).map { body ->
-                            parse(body)
-                        }
+                }.exchange { clientRequest, clientResponse ->
+                    if (clientResponse.statusCode == HttpStatus.OK) {
+                        parse(clientResponse.bodyTo(String::class.java))
                     } else {
-                        it.createException().flatMap { Mono.error { it } }
+                        throw clientResponse.createException()
                     }
                 }
         return mono
@@ -77,8 +73,8 @@ class GoodreadsQuoteProviderImpl(
         }
     }
 
-    fun fetch(query: String): Mono<List<QuoteDto>> {
-        val mono: Mono<List<QuoteDto>> =
+    fun fetch(query: String): List<QuoteDto> {
+        val mono: List<QuoteDto> =
             restClient
                 .get()
                 .uri { uriBuilder: UriBuilder ->
@@ -90,20 +86,19 @@ class GoodreadsQuoteProviderImpl(
                         .queryParam("commit", "Search")
                         .queryParam("q", query)
                         .build()
-                }.exchangeToMono {
-                    if (it.statusCode() == HttpStatus.OK) {
-                        it.bodyToMono(String::class.java).map { bodyString ->
-                            parse(bodyString).also { quoteDtos -> cache.put(KEY, quoteDtos) }
-                        }
+                }.exchange { clientRequest, clientResponse ->
+                    if (clientResponse.statusCode == HttpStatus.OK) {
+                        parse(clientResponse.bodyTo(String::class.java))
                     } else {
-                        it.createException().flatMap { Mono.error { it } }
+                        throw clientResponse.createException()
                     }
                 }
         return mono
     }
 
-    private fun parse(body: String): List<QuoteDto> {
+    private fun parse(body: String?): List<QuoteDto> {
         logger.trace { "body : $body" }
+        if (body.isNullOrBlank()) return mutableListOf()
         val doc = Jsoup.parse(body)
         val quotesElements: Elements = doc.select(".quoteText")
         val quotes = mutableListOf<QuoteDto>()

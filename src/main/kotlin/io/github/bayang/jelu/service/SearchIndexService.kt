@@ -50,7 +50,7 @@ class SearchIndexService(
         luceneHelper.setIndexVersion(INDEX_VERSION)
     }
 
-    private fun <T> rebuildIndex(
+    private fun <T : Any> rebuildIndex(
         entity: LuceneEntity,
         provider: (Pageable) -> Page<out T>,
         toDoc: (T) -> Document,

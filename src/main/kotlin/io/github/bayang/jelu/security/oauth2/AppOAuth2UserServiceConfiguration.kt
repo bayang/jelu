@@ -61,7 +61,7 @@ class AppOAuth2UserServiceConfiguration(
         return OAuth2UserService { userRequest: OidcUserRequest ->
             val oidcUser = delegate.loadUser(userRequest)
 
-            if (oidcUser.email == null) throw OAuth2AuthenticationException("ERR_1028")
+            if (oidcUser.email.isNullOrBlank()) throw OAuth2AuthenticationException("ERR_1028")
             if (jeluProperties.auth.oidcEmailVerification && oidcUser.emailVerified == null) throw OAuth2AuthenticationException("ERR_1027")
             if (jeluProperties.auth.oidcEmailVerification &&
                 oidcUser.emailVerified == false
@@ -69,9 +69,10 @@ class AppOAuth2UserServiceConfiguration(
                 throw OAuth2AuthenticationException("ERR_1026")
             }
 
-            val existingUser = userRepository.findByLogin(oidcUser.email)
+            // oidcUser.email is checked above
+            val existingUser = userRepository.findByLogin(oidcUser.email!!)
             if (existingUser.isEmpty()) {
-                tryCreateNewUser(oidcUser.email)
+                tryCreateNewUser(oidcUser.email!!)
             } else {
                 JeluUser(existingUser.first(), oidcUser = oidcUser)
             }

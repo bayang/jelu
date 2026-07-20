@@ -2,7 +2,7 @@ import com.github.gradle.node.npm.task.NpmTask
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    id("org.springframework.boot") version "3.5.8"
+    id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
     val kotlinVersion = "2.2.0"
     kotlin("jvm") version kotlinVersion
@@ -47,14 +47,15 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.springframework.data:spring-data-jdbc") // required since exposed 0.51.0
-    implementation("org.springframework.session:spring-session-core")
-    implementation("org.springframework.session:spring-session-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc") // required since exposed 0.51.0
+    implementation("org.springframework.boot:spring-boot-starter-session-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-ldap")
     implementation("org.springframework.security:spring-security-ldap")
+    runtimeOnly("org.springframework.boot:spring-boot-properties-migrator")
     // implementation("com.unboundid:unboundid-ldapsdk:6.0.5")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
@@ -72,9 +73,9 @@ dependencies {
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation("org.xerial:sqlite-jdbc")
-    implementation("org.liquibase:liquibase-core")
+    implementation("org.springframework.boot:spring-boot-starter-liquibase")
     val exposedVersion = "1.3.1"
-    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-spring-boot4-starter:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 // 	implementation("org.nuvito.spring.data:sqlite-dialect:1.0-SNAPSHOT")
@@ -95,6 +96,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.7")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("io.projectreactor:reactor-test")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
     val springdocVersion = "2.8.14"
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")

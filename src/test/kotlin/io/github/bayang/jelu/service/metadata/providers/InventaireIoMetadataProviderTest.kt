@@ -1,6 +1,5 @@
 package io.github.bayang.jelu.service.metadata.providers
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
@@ -14,6 +13,7 @@ import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.test.web.client.match.MockRestRequestMatchers
 import org.springframework.test.web.client.response.MockRestResponseCreators
 import org.springframework.web.client.RestClient
+import tools.jackson.databind.json.JsonMapper
 
 @SpringBootTest
 class InventaireIoMetadataProviderTest(
@@ -164,7 +164,7 @@ class InventaireIoMetadataProviderTest(
                     ),
                 ),
             )
-        val service = InventaireIoMetadataProvider(builder.build(), jeluProperties, ObjectMapper(), buildProperties)
+        val service = InventaireIoMetadataProvider(builder.build(), jeluProperties, JsonMapper(), buildProperties)
 
         // When
         val result: MetadataDto? =
@@ -207,7 +207,7 @@ class InventaireIoMetadataProviderTest(
                     ),
                 ),
             )
-        val objectMapper = ObjectMapper()
+        val objectMapper = JsonMapper()
         val service = InventaireIoMetadataProvider(springRestClient, jeluProperties, objectMapper, buildProperties)
         val res = """
             {

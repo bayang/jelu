@@ -1,7 +1,5 @@
 package io.github.bayang.jelu.service.metadata.providers
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
@@ -12,6 +10,8 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.json.JsonMapper
 import java.util.Optional
 
 private val logger = KotlinLogging.logger {}
@@ -22,7 +22,7 @@ const val USER_AGENT = "jelu/"
 class InventaireIoMetadataProvider(
     @Resource(name = "springRestClient") private val restClient: RestClient,
     private val properties: JeluProperties,
-    private val objectMapper: ObjectMapper,
+    private val objectMapper: JsonMapper,
     private val buildProperties: BuildProperties,
 ) : IMetaDataProvider {
     private val name = "inventaireio"
@@ -127,19 +127,19 @@ class InventaireIoMetadataProvider(
         val firstResult = node.asIterable().first()
         val dto = MetadataDto()
         if (firstResult.has("label")) {
-            dto.title = firstResult.get("label").asText()
+            dto.title = firstResult.get("label").asString()
         }
         if (firstResult.has("description")) {
-            dto.summary = firstResult.get("description").asText()
+            dto.summary = firstResult.get("description").asString()
         }
         val res = ParsingDto(dto, "")
         if (firstResult.has("uri")) {
-            res.editionClaim = firstResult.get("uri").asText()
+            res.editionClaim = firstResult.get("uri").asString()
         }
         if (firstResult.has("image")) {
             val imgParent = firstResult.get("image")
             if (!imgParent.isEmpty) {
-                val img = imgParent[0].asText()
+                val img = imgParent[0].asString()
                 dto.image = imagePath(img)
             }
         }
@@ -149,7 +149,7 @@ class InventaireIoMetadataProvider(
     private fun parseSearchAuthorsResults(node: JsonNode): String {
         val firstResult = node.asIterable().first()
         if (firstResult.has("uri")) {
-            return firstResult.get("uri").asText()
+            return firstResult.get("uri").asString()
         }
         return ""
     }
@@ -166,7 +166,7 @@ class InventaireIoMetadataProvider(
         } else if (node.has("redirects")) {
             val redirect = node.get("redirects")
             if (redirect.has("isbn:$isbn")) {
-                val inv = redirect.get("isbn:$isbn").asText()
+                val inv = redirect.get("isbn:$isbn").asString()
                 if (node.get("entities").has(inv)) {
                     val data = node.get("entities").get(inv)
                     extractIsbnData(data, dto, parsingDto)
@@ -194,13 +194,13 @@ class InventaireIoMetadataProvider(
             parseClaims(claims, parsingDto)
         }
         if (data.has("originalLang")) {
-            dto.language = data["originalLang"].asText()
+            dto.language = data["originalLang"].asString()
         }
         if (data.has("image") && data.get("image").get("url") != null) {
-            dto.image = imagePath(data["image"]["url"].asText())
+            dto.image = imagePath(data["image"]["url"].asString())
         }
         if (data.has("invId")) {
-            dto.inventaireId = data["invId"].asText()
+            dto.inventaireId = data["invId"].asString()
         }
     }
 
@@ -228,18 +228,18 @@ class InventaireIoMetadataProvider(
         parseClaims(node, dto?.metadataDto)
         if (node.has(Wikidata.AUTHOR)) {
             val authors = node[Wikidata.AUTHOR].asIterable()
-            authors.forEach { dto?.authorsClaims?.add(it.asText()) }
+            authors.forEach { dto?.authorsClaims?.add(it.asString()) }
         }
         if (dto?.editionClaim?.isBlank() == true && node.has(Wikidata.EDITION_OR_TRANSLATION)) {
             dto.editionClaim = getFieldOrNull(Wikidata.EDITION_OR_TRANSLATION, node).orEmpty()
         }
         if (node.has(Wikidata.SERIES)) {
             val series = node[Wikidata.SERIES].asIterable()
-            series.forEach { dto?.seriesClaims?.add(it.asText()) }
+            series.forEach { dto?.seriesClaims?.add(it.asString()) }
         }
         if (node.has(Wikidata.GENRE)) {
             val genres = node[Wikidata.GENRE].asIterable()
-            genres.forEach { dto?.genresClaims?.add(it.asText()) }
+            genres.forEach { dto?.genresClaims?.add(it.asString()) }
         }
     }
 
@@ -287,7 +287,7 @@ class InventaireIoMetadataProvider(
         node: JsonNode,
     ): String? {
         if (node.has(fieldName)) {
-            return node[fieldName][0].asText()
+            return node[fieldName][0].asString()
         }
         return null
     }
@@ -320,10 +320,10 @@ class InventaireIoMetadataProvider(
         val parsingDto = ParsingDto(MetadataDto(), "")
         val first = node.asIterable().first()
         if (first.has("uri")) {
-            parsingDto.editionClaim = first["uri"].asText()
+            parsingDto.editionClaim = first["uri"].asString()
         }
         if (first.has("serie")) {
-            parsingDto.seriesClaims.add(first["serie"].asText())
+            parsingDto.seriesClaims.add(first["serie"].asString())
         }
         return parsingDto
     }
@@ -425,11 +425,11 @@ class InventaireIoMetadataProvider(
             if (data.has("labels")) {
                 val dataLabels = data.get("labels")
                 if (!getPreferredLanguage().isNullOrBlank() && dataLabels.has(getPreferredLanguage())) {
-                    res = dataLabels.get(getPreferredLanguage()).asText()
+                    res = dataLabels.get(getPreferredLanguage()).asString()
                 } else if (dataLabels.has(defaultLanguageCode)) {
-                    res = dataLabels.get(defaultLanguageCode).asText()
+                    res = dataLabels.get(defaultLanguageCode).asString()
                 } else if (dataLabels.size() > 0) {
-                    res = dataLabels.first().asText()
+                    res = dataLabels.first().asString()
                 }
             }
         }
@@ -445,11 +445,11 @@ class InventaireIoMetadataProvider(
             if (data.has("descriptions")) {
                 val descs = data.get("descriptions")
                 if (!getPreferredLanguage().isNullOrBlank() && descs.has(getPreferredLanguage())) {
-                    dto?.metadataDto?.summary = descs.get(getPreferredLanguage()).asText()
+                    dto?.metadataDto?.summary = descs.get(getPreferredLanguage()).asString()
                 } else if (descs.has(defaultLanguageCode)) {
-                    dto?.metadataDto?.summary = descs.get(defaultLanguageCode).asText()
+                    dto?.metadataDto?.summary = descs.get(defaultLanguageCode).asString()
                 } else {
-                    dto?.metadataDto?.summary = descs.first().asText()
+                    dto?.metadataDto?.summary = descs.first().asString()
                 }
             }
             if (data.has("claims")) {
@@ -457,10 +457,10 @@ class InventaireIoMetadataProvider(
                 parseClaims(claims, dto)
             }
             if (dto?.metadataDto?.title == null) {
-                dto?.metadataDto?.title = parseDataBody(node, dto?.editionClaim)
+                dto?.metadataDto?.title = parseDataBody(node, dto.editionClaim)
             }
             if (data.has("invId") && dto?.metadataDto?.inventaireId == null) {
-                dto?.metadataDto?.inventaireId = data["invId"].asText()
+                dto?.metadataDto?.inventaireId = data["invId"].asString()
             }
         }
         return dto

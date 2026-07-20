@@ -19,9 +19,7 @@ class GithubOAuth2UserService : DefaultOAuth2UserService() {
 
     private val parameterizedResponseType = object : ParameterizedTypeReference<List<Map<String, Any>>>() {}
 
-    override fun loadUser(userRequest: OAuth2UserRequest?): OAuth2User {
-        requireNotNull(userRequest) { "userRequest cannot be null" }
-
+    override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
         var oAuth2User = super.loadUser(userRequest)
 
         if (userRequest.clientRegistration.scopes
@@ -53,8 +51,8 @@ class GithubOAuth2UserService : DefaultOAuth2UserService() {
                 oAuth2User =
                     DefaultOAuth2User(
                         oAuth2User.authorities,
-                        oAuth2User.attributes.toMutableMap().apply { put("email", email) },
-                        userRequest.clientRegistration.providerDetails.userInfoEndpoint.userNameAttributeName,
+                        oAuth2User.attributes.toMutableMap().apply { put("email", email!!) },
+                        userRequest.clientRegistration.providerDetails.userInfoEndpoint.userNameAttributeName!!,
                     )
             } catch (e: Exception) {
                 logger.warn { "Could not retrieve emails" }

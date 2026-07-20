@@ -106,10 +106,9 @@ class SecurityConfig(
         // Add Bearer token authentication filter (always enabled)
         http.addFilterBefore(bearerTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         if (properties.auth.ldap.enabled) {
-            val dao = DaoAuthenticationProvider()
-            dao.setUserDetailsService(userDetailsService)
+            val dao = DaoAuthenticationProvider(userDetailsService)
             dao.setPasswordEncoder(passwordEncoder)
-            http.authenticationManager(ProviderManager(authenticationProvider, dao))
+            http.authenticationManager(ProviderManager(authenticationProvider!!, dao))
         }
         if (properties.auth.proxy.enabled) {
             http.addFilterBefore(authHeaderFilter, UsernamePasswordAuthenticationFilter::class.java)

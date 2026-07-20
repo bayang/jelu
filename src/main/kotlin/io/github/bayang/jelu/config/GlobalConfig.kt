@@ -1,21 +1,21 @@
 package io.github.bayang.jelu.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
-import org.springframework.http.codec.ClientCodecConfigurer
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.client.RestClient
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.reactive.function.client.ExchangeStrategies
-import org.springframework.web.reactive.function.client.WebClient
-import reactor.netty.http.client.HttpClient
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.cfg.CoercionAction
+import tools.jackson.databind.cfg.CoercionInputShape
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.databind.type.LogicalType
 import java.text.SimpleDateFormat
 import java.util.TimeZone
 
@@ -23,32 +23,27 @@ const val SESSION_HEADER_NAME: String = "X-Auth-Token"
 
 @Configuration
 class GlobalConfig {
-    @Bean("restClient")
-    fun webClient(): WebClient {
-        val exchange =
-            ExchangeStrategies
-                .builder()
-                .codecs { c: ClientCodecConfigurer ->
-                    c.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)
-                }.build()
-        return WebClient
+    @Bean
+    @Primary
+    fun configureJackson(): JsonMapper =
+        JsonMapper
             .builder()
-            .exchangeStrategies(exchange)
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create().compress(true).followRedirect(true),
-                ),
-            ).build()
-    }
-
-    @Autowired
-    fun configureJackson(objectMapper: ObjectMapper) {
-        objectMapper.setTimeZone(TimeZone.getDefault())
-        objectMapper.serializationConfig.with(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
-    }
+            .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+            .defaultDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
+            .defaultTimeZone(TimeZone.getDefault())
+            .withCoercionConfig(LogicalType.Integer, { it.setAcceptBlankAsEmpty(true) })
+            .withCoercionConfig(LogicalType.Integer, { it.setCoercion(CoercionInputShape.EmptyString, CoercionAction.AsNull) })
+            .build()
 
     @Bean("springRestClient")
-    fun springRestClient(): RestClient = RestClient.create()
+    fun springRestClient(): RestClient =
+        RestClient
+            .builder()
+            .configureMessageConverters { converters ->
+                converters.registerDefaults().withJsonConverter(
+                    JacksonJsonHttpMessageConverter(configureJackson()),
+                )
+            }.build()
 
     @Bean("passwordEncoder")
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()

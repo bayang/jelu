@@ -82,12 +82,12 @@ class MetadataController(
     fun searchWikipedia(
         @RequestParam(name = "query", required = true) query: String,
         @RequestParam(name = "language", defaultValue = "en") language: String,
-    ): Mono<WikipediaSearchResult> = wikipediaService.search(query, language)
+    ): WikipediaSearchResult? = wikipediaService.search(query, language)
 
     @Operation(description = "retrieve page from wikipedia for given page title")
     @GetMapping(path = ["/wikipedia/page"])
     fun wikipediaPage(
         @RequestParam(name = "pageTitle", required = true) pageTitle: String,
         @RequestParam(name = "language", defaultValue = "en") language: String,
-    ): Mono<WikipediaPageResult> = wikipediaService.fetchPage(pageTitle, language)
+    ): WikipediaPageResult? = wikipediaService.fetchPage(pageTitle, language)
 }

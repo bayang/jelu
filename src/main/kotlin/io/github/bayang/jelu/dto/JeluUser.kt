@@ -1,5 +1,6 @@
 package io.github.bayang.jelu.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
 import com.fasterxml.jackson.annotation.JsonTypeInfo
@@ -20,7 +21,7 @@ const val ROLE_ADMIN: String = ROLE_PREFIX + "ADMIN"
 
 const val ROLE_INITIAL_SETUP: String = ROLE_PREFIX + "INITIAL_SETUP"
 
-fun assertIsJeluUser(target: Any) {
+fun assertIsJeluUser(target: Any?) {
     if (target !is JeluUser) {
         throw JeluException("Logged in user/provided credentials cannot access")
     }
@@ -63,7 +64,9 @@ class JeluUser(
 
     override fun getUserInfo(): OidcUserInfo? = oidcUser?.userInfo
 
-    override fun getIdToken(): OidcIdToken? = oidcUser?.idToken
+    // otherwise we get a NPE during session serialization
+    @JsonIgnore
+    override fun getIdToken(): OidcIdToken = oidcUser?.idToken!!
 
     override fun getPassword(): String = user.password.orEmpty()
 

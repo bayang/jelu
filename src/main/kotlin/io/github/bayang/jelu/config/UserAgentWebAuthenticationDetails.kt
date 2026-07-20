@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails
 class UserAgentWebAuthenticationDetails : WebAuthenticationDetails {
     var userAgent: String = ""
 
-    constructor(remoteAddress: String?, sessionId: String?, userAgent: String?) : super(remoteAddress, sessionId) {
+    constructor(remoteAddress: String, sessionId: String?, userAgent: String?) : super(remoteAddress, sessionId) {
         if (userAgent != null) {
             this.userAgent = userAgent
         }

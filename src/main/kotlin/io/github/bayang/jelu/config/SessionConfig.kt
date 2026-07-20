@@ -1,9 +1,9 @@
 package io.github.bayang.jelu.config
 
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.bayang.jelu.dto.JeluUser
 import io.github.bayang.jelu.security.ApiTokenAuthentication
 import io.github.bayang.jelu.security.ApiTokenAuthenticationMixin
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.BeanClassLoaderAware
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,7 +13,7 @@ import org.springframework.core.serializer.Serializer
 import org.springframework.core.serializer.support.DeserializingConverter
 import org.springframework.core.serializer.support.SerializingConverter
 import org.springframework.security.core.session.SessionRegistry
-import org.springframework.security.jackson2.SecurityJackson2Modules
+import org.springframework.security.jackson.SecurityJacksonModules
 import org.springframework.session.FindByIndexNameSessionRepository
 import org.springframework.session.config.SessionRepositoryCustomizer
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository
@@ -22,6 +22,8 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry
 import org.springframework.session.web.http.CookieSerializer
 import org.springframework.session.web.http.DefaultCookieSerializer
 import org.springframework.session.web.http.HttpSessionIdResolver
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -35,6 +37,8 @@ const val CREATE_SESSION_ATTRIBUTE_QUERY: String =
 
 const val DELETE_SESSIONS_BY_EXPIRY_TIME_QUERY: String =
     "DELETE FROM %TABLE_NAME% WHERE PRIMARY_ID IN (SELECT SESSION_PRIMARY_ID FROM %TABLE_NAME%_ATTRIBUTES WHERE ATTRIBUTE_NAME = 'org.springframework.session.security.SpringSessionBackedSessionInformation.EXPIRED' AND ATTRIBUTE_BYTES = 'true') OR EXPIRY_TIME < ?\n"
+
+private val logger = KotlinLogging.logger {}
 
 @EnableJdbcHttpSession
 @Configuration
@@ -79,17 +83,21 @@ class SessionConfig : BeanClassLoaderAware {
     private var classLoader: ClassLoader? = null
 
     @Bean("springSessionConversionService")
-    fun springSessionConversionService(objectMapper: ObjectMapper): GenericConversionService {
-        val copy = objectMapper.copy()
+    fun springSessionConversionService(objectMapper: JsonMapper): GenericConversionService {
+        val copy = objectMapper.rebuild()
         // https://docs.spring.io/spring-session/reference/configuration/jdbc.html#session-attributes-as-json
+        val builder: BasicPolymorphicTypeValidator.Builder? =
+            BasicPolymorphicTypeValidator
+                .builder()
+                .allowIfSubType(JeluUser::class.java)
         // Register Spring Security Jackson Modules
-        copy.registerModules(SecurityJackson2Modules.getModules(this.classLoader))
-        copy.disable(MapperFeature.USE_GETTERS_AS_SETTERS) // mandatory to deserialize setterless authorities on user
+        copy.addModules(SecurityJacksonModules.getModules(classLoader!!, builder))
         copy.addMixIn(UserAgentWebAuthenticationDetails::class.java, UserAgentWebAuthenticationDetailsMixin::class.java)
         copy.addMixIn(ApiTokenAuthentication::class.java, ApiTokenAuthenticationMixin::class.java)
         val converter = GenericConversionService()
-        converter.addConverter(Any::class.java, ByteArray::class.java, SerializingConverter(JsonSerializer(copy)))
-        converter.addConverter(ByteArray::class.java, Any::class.java, DeserializingConverter(JsonDeserializer(copy)))
+        val built = copy.build()
+        converter.addConverter(Any::class.java, ByteArray::class.java, SerializingConverter(JsonSerializer(built)))
+        converter.addConverter(ByteArray::class.java, Any::class.java, DeserializingConverter(JsonDeserializer(built)))
         return converter
     }
 
@@ -98,8 +106,8 @@ class SessionConfig : BeanClassLoaderAware {
     }
 
     class JsonSerializer internal constructor(
-        private val objectMapper: ObjectMapper,
-    ) : Serializer<Any?> {
+        private val objectMapper: JsonMapper,
+    ) : Serializer<Any> {
         @Throws(IOException::class)
         override fun serialize(
             `object`: Any,
@@ -110,9 +118,16 @@ class SessionConfig : BeanClassLoaderAware {
     }
 
     class JsonDeserializer internal constructor(
-        private val objectMapper: ObjectMapper,
-    ) : Deserializer<Any?> {
+        private val objectMapper: JsonMapper,
+    ) : Deserializer<Any> {
         @Throws(IOException::class)
-        override fun deserialize(inputStream: InputStream): Any = objectMapper.readValue(inputStream, Any::class.java)
+        override fun deserialize(inputStream: InputStream): Any {
+            try {
+                return objectMapper.readValue(inputStream, Any::class.java)
+            } catch (e: IOException) {
+                logger.error(e) { "Failed to deserialize JSON" }
+            }
+            return Unit
+        }
     }
 }

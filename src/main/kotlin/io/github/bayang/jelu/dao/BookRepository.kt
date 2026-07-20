@@ -924,12 +924,12 @@ class BookRepository(
         query.limit(pageable.pageSize)
         query.offset(pageable.offset)
         query.orderBy(BookTable.publisher, SortOrder.ASC)
-        val res =
+        val res: List<String> =
             query
                 .map { it[BookTable.publisher] }
                 .stream()
                 .filter { it != null }
-                .toList()
+                .toList() as List<String>
         return PageImpl(
             res,
             pageable,

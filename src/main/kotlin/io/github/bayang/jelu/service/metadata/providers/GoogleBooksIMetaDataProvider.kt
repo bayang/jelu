@@ -1,7 +1,5 @@
 package io.github.bayang.jelu.service.metadata.providers
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
@@ -9,20 +7,24 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.annotation.Resource
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.client.RestClient
 import org.springframework.web.util.UriBuilder
-import java.time.Duration
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.json.JsonMapper
 import java.util.Optional
 
 private val logger = KotlinLogging.logger {}
 
 @Service
 class GoogleBooksIMetaDataProvider(
-    @Resource(name = "restClient") private val restClient: WebClient,
+    @Resource(name = "springRestClient") private val restClient: RestClient,
     private val properties: JeluProperties,
-    private val objectMapper: ObjectMapper,
+    private val objectMapper: JsonMapper,
 ) : IMetaDataProvider {
     private val name = "google"
+    private val scheme = "https"
+    private val host = "www.googleapis.com"
+    private val port = 443
 
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
@@ -38,31 +40,25 @@ class GoogleBooksIMetaDataProvider(
                 .get()
                 .uri { uriBuilder: UriBuilder ->
                     uriBuilder
-                        .scheme("https")
-                        .host("www.googleapis.com")
+                        .scheme(scheme)
+                        .host(host)
+                        .port(port)
                         .path("/books/v1/volumes")
                         .queryParam("q", query(metadataRequestDto))
                         .queryParam("key", googleProviderApiKey)
                         .build()
-                }.exchangeToMono {
-                    if (it.statusCode() == HttpStatus.OK) {
-                        it.bodyToMono(String::class.java).map { bodyString ->
-                            val r = objectMapper.readTree(bodyString).get("items")
-                            if (r == null) {
-                                Optional.empty()
-                            } else {
-                                Optional.of(
-                                    parseBook(
-                                        r.get(0),
-                                    ),
-                                )
-                            }
+                }.exchange { request, response ->
+                    if (response.statusCode == HttpStatus.OK) {
+                        val b = response.bodyTo(String::class.java)
+                        if (b.isNullOrBlank()) {
+                            Optional.empty()
+                        } else {
+                            Optional.of(parseBook(objectMapper.readTree(b)["items"].get(0)))
                         }
                     } else {
-                        logger.error { "error fetching metadata from google : ${it.statusCode()}" }
                         null
                     }
-                }.block(Duration.ofSeconds(60))
+                }
         if (res == null) {
             return Optional.empty()
         }
@@ -96,14 +92,14 @@ class GoogleBooksIMetaDataProvider(
         val volumeInfo = node.get("volumeInfo")
         val identifiers = volumeInfo.get("industryIdentifiers").asIterable()
         return MetadataDto(
-            title = volumeInfo.get("title").asText(),
-            googleId = node.get("id").asText(),
-            isbn10 = identifiers.find { it.get("type").asText() == "ISBN_10" }?.get("identifier")?.asText(),
-            isbn13 = identifiers.find { it.get("type").asText() == "ISBN_13" }?.get("identifier")?.asText(),
+            title = volumeInfo.get("title").asString(),
+            googleId = node.get("id").asString(),
+            isbn10 = identifiers.find { it.get("type").asString() == "ISBN_10" }?.get("identifier")?.asString(),
+            isbn13 = identifiers.find { it.get("type").asString() == "ISBN_13" }?.get("identifier")?.asString(),
             authors = extractAuthors(volumeInfo),
             image = extractImage(volumeInfo),
-            language = volumeInfo.get("language").asText(),
-            publishedDate = volumeInfo.get("publishedDate").asText(),
+            language = volumeInfo.get("language").asString(),
+            publishedDate = volumeInfo.get("publishedDate").asString(),
             summary = summary(node),
         )
     }
@@ -113,7 +109,7 @@ class GoogleBooksIMetaDataProvider(
             node
                 .get("authors")
                 .asIterable()
-                .map { it.asText() }
+                .map { it.asString() }
                 .toMutableSet()
         } else {
             mutableSetOf()
@@ -121,14 +117,14 @@ class GoogleBooksIMetaDataProvider(
 
     private fun extractImage(node: JsonNode): String? {
         if (node.get("imageLinks") != null && node.get("imageLinks").get("thumbnail") != null) {
-            return node.get("imageLinks").get("thumbnail").asText()
+            return node.get("imageLinks").get("thumbnail").asString()
         }
         return null
     }
 
     private fun summary(node: JsonNode): String? {
         if (node.get("searchInfo") != null && node.get("searchInfo").get("textSnippet") != null) {
-            return node.get("searchInfo").get("textSnippet").asText()
+            return node.get("searchInfo").get("textSnippet").asString()
         }
         return null
     }
