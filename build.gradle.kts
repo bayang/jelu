@@ -141,8 +141,8 @@ tasks.getByName<Jar>("jar") {
 tasks.register<JavaExec>("unpack") {
     dependsOn(tasks.bootJar)
     classpath = files(tasks.bootJar)
-    jvmArgs = listOf("-Djarmode=layertools")
-    args = "extract --destination ${layout.buildDirectory.get()}/dependency".split(" ")
+    jvmArgs = listOf("-Djarmode=tools")
+    args = "extract --layers --destination ${layout.buildDirectory.get()}/dependency".split(" ")
     doFirst {
         delete("${layout.buildDirectory.get()}/dependency")
     }

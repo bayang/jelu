@@ -111,7 +111,7 @@ ARG DEPENDENCY=build/dependency
 COPY ${DEPENDENCY}/dependencies/ ./
 COPY ${DEPENDENCY}/spring-boot-loader/ ./
 COPY ${DEPENDENCY}/snapshot-dependencies/ ./
-COPY ${DEPENDENCY}/application/ ./
+COPY ${DEPENDENCY}/application/jelu-*.jar ./jelu.jar
 
-ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher", "--spring.config.additional-location=optional:file:/config/"]
+ENTRYPOINT ["java", "-jar", "jelu.jar", "--spring.config.additional-location=optional:file:/config/"]
 EXPOSE 11111
