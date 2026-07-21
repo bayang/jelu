@@ -1,3 +1,14 @@
+### [0.84.3](https://github.com/bayang/jelu/compare/v0.84.2...v0.84.3) (2026-07-21)
+
+
+### Bug Fixes
+
+* do not create a finished event when editing a finished book ([c6f1011](https://github.com/bayang/jelu/commit/c6f10117f34cf1a1a762790b45b6ea80414ee274))
+* upgrade frontend deps ([e3e4ffe](https://github.com/bayang/jelu/commit/e3e4ffeae1e775e1902c1a68dd18cf70da8af43e))
+* upgrade to exposed 1.3.1 ([f8f7fdd](https://github.com/bayang/jelu/commit/f8f7fddcb1202008ad81d51bd9d96359f6a578a2))
+* upgrade to spring boot 4 ([642c50d](https://github.com/bayang/jelu/commit/642c50d684faa5738e6b683ad21dcb00ef8352f9))
+* upgrade to spring boot 4 layers management ([3ad156c](https://github.com/bayang/jelu/commit/3ad156cb99685989630a2d6f56be5033b597d9a1))
+
 ### [0.84.2](https://github.com/bayang/jelu/compare/v0.84.1...v0.84.2) (2026-06-05)
 
 
