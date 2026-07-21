@@ -116,9 +116,6 @@
 
 }
 
-@layer components {
-
-
 /* oruga customization with daisyui */
 
 .o-sidebar__content.o-sidebar__content--left {
@@ -451,5 +448,3 @@ li.o-pagination__item button.o-pagination__button.o-pagination__button--current 
 }
 
 /* end jelu sidebar menu*/
-
-}

@@ -127,7 +127,8 @@ const currentTimestamp = ObjectUtils.timestamp()
             v-else
             src="../assets/placeholder_asset.jpg"
             alt="cover placeholder"
-            class="h-72 object-fill"
+            class="object-fill"
+            :class="props.size === 'xl' ? 'h-96' : 'h-72'"
           >
         </figure>
       </router-link>

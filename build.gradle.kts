@@ -150,7 +150,7 @@ tasks.register<JavaExec>("unpack") {
 
 node {
     nodeProjectDir.set(file("${project.projectDir}/src/jelu-ui"))
-    version.set("20.19.6")
+    version.set("22.23.1")
     npmInstallCommand.set("ci")
     download.set(true)
 }
