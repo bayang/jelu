@@ -56,7 +56,8 @@ class UserService(
             logger.error { "user already exists ${user.login}" }
             throw JeluException("User already exists ${user.login}")
         }
-        return userRepository.save(user.copy(password = passwordEncoder.encode(user.password.trim())!!)).toUserDto()
+        val copy = user.copy(password = passwordEncoder.encode(user.password.trim())!!)
+        return userRepository.save(copy).toUserDto()
     }
 
     @Transactional
