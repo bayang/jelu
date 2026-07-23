@@ -1,3 +1,10 @@
+### [0.84.4](https://github.com/bayang/jelu/compare/v0.84.3...v0.84.4) (2026-07-23)
+
+
+### Bug Fixes
+
+* initial user creation was broken [#334](https://github.com/bayang/jelu/issues/334) ([90346e6](https://github.com/bayang/jelu/commit/90346e65df15abf7e5e43db06fbf764a61cd2145))
+
 ### [0.84.3](https://github.com/bayang/jelu/compare/v0.84.2...v0.84.3) (2026-07-21)
 
 
