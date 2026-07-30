@@ -97,7 +97,7 @@
         "yes": "Sì",
         "no": "No",
         "do_nothing": "Non fare nulla",
-        "cancel": "Cancel",
+        "cancel": "Annulla",
         "add": "Aggiungi",
         "add_to_my_books": "Non ancora nei tuoi libri, clicca per aggiungerlo",
         "add_translator": "Aggiungi un traduttore",
@@ -128,8 +128,8 @@
         "orphan_authors": "autori orfani",
         "find-authors": "trova un autore",
         "list_empty": "la lista è vuota",
-        "filter_pattern": "filter pattern",
-        "other_owners": "Other users who also have this book in their library"
+        "filter_pattern": "filtro da applicare",
+        "other_owners": "Altri utenti che hanno anche questo libro nella loro libreria"
     },
     "settings": {
         "pick_language": "Scegli la tua lingua",
@@ -154,7 +154,7 @@
         "shelves": "Scaffali",
         "shelves_max_number_reached": "Il numero massimo di scaffali è stato raggiunto. Elimina quelli esistenti per aggiungerne altri.",
         "shelf_choose_tag": "Scegli un'etichetta per creare lo scaffale corrispondente",
-        "custom_lists": "custom lists",
+        "custom_lists": "lista personalizzate",
         "choose_currency": "Seleziona la tua valuta",
         "api_tokens": "API Tokens",
         "currency_description": "Inserisci il codice di 3 lettere della tua valuta, (es. EUR, USD, GBP). Vedi https://it.wikipedia.org/wiki/ISO_4217.",
@@ -181,7 +181,7 @@
         "page_count": "Numero di pagine",
         "user_avg_rating": "la mia valutazione media",
         "avg_rating": "valutazione media",
-        "name": "name"
+        "name": "nome"
     },
     "reading_events": {
         "finished": "terminato",
@@ -199,7 +199,7 @@
         "reading": "in lettura",
         "start_date": "data di inizio",
         "end_date": "data di fine",
-        "started": "started"
+        "started": "iniziato"
     },
     "filtering": {
         "book_in_list": "Il libro è nella lista da leggere",
@@ -211,8 +211,8 @@
         "owned": "Il libro è di proprietà",
         "role": "Ruolo",
         "borrowed": "Il libro è preso in prestito",
-        "filter": "filter",
-        "type_to_filter": "type to filter"
+        "filter": "filtro",
+        "type_to_filter": "digita per filtrare"
     },
     "book": {
         "owned": "posseduto",
@@ -248,7 +248,7 @@
         "borrowed": "preso in prestito",
         "current_page_number": "numero di pagina attuale",
         "narrator": "narratore | narratori",
-        "original_title": "original title",
+        "original_title": "titolo originale",
         "price": "prezzo"
     },
     "authors_merge": {
@@ -344,7 +344,7 @@
         "total": "totale",
         "read": "letti",
         "unread": "da leggere",
-        "prices_sum": "prices sum"
+        "prices_sum": "somma dei prezzi"
     },
     "history": {
         "years": "anni"
@@ -360,8 +360,8 @@
         "add": "Aggiungi",
         "remove": "Rimuovi",
         "choose_tag": "Scegli l'etichetta che vuoi aggiungere o rimuovere",
-        "add_tag": "add tag",
-        "remove_tag": "remove tag"
+        "add_tag": "aggiungi un'etichetta",
+        "remove_tag": "rimuovi un'etichetta"
     },
     "reviews": {
         "create_review": "Crea una recensione",
@@ -408,14 +408,14 @@
     },
     "errors": {
         "metadata": {
-            "EXIT_CODE_NOT_ZERO": "fetch metadata plugin exited abnormally",
-            "EXCEPTION_CAUGHT": "exception was raised while calling metadata plugin"
+            "EXIT_CODE_NOT_ZERO": "il plugin dei metadati è terminato in modo anomalo",
+            "EXCEPTION_CAUGHT": "si è creata un'eccezione mentre veniva chiamato il plugin dei metadati"
         },
-        "details": "error details",
-        "positive_only": "must be positive"
+        "details": "dettagli dell'errore",
+        "positive_only": "deve essere positivo"
     },
     "lists": {
-        "create_list": "create a custom list",
+        "create_list": "crea una lista personalizzata",
         "name": "nome",
         "public": "pubblica",
         "actionable": "interattiva",
