@@ -1,3 +1,10 @@
+### [0.84.5](https://github.com/bayang/jelu/compare/v0.84.4...v0.84.5) (2026-08-17)
+
+
+### Bug Fixes
+
+* respect javabean spec for boolean breaking roles [#338](https://github.com/bayang/jelu/issues/338) [#340](https://github.com/bayang/jelu/issues/340) ([05f1324](https://github.com/bayang/jelu/commit/05f1324e6a903d6f76bf07f7fd91c82178764f6f))
+
 ### [0.84.4](https://github.com/bayang/jelu/compare/v0.84.3...v0.84.4) (2026-07-23)
 
 
