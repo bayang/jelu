@@ -10,20 +10,20 @@ data class UserDto(
     val login: String,
     val password: String?,
     val modificationDate: Instant?,
-    val isAdmin: Boolean,
+    val admin: Boolean,
     val provider: Provider = Provider.JELU_DB,
 )
 
 data class CreateUserDto(
     val login: String,
     val password: String,
-    val isAdmin: Boolean,
+    val admin: Boolean,
     val provider: Provider = Provider.JELU_DB,
 )
 
 data class UpdateUserDto(
     val password: String,
-    val isAdmin: Boolean?,
+    val admin: Boolean?,
     val provider: Provider?,
 )
 

@@ -33,12 +33,12 @@ class JeluLdapUserDetailsContextMapper(
         val isAdmin = findAdminMembership(ctx.attributes)
         val res = userRepository.findByLoginAndProvider(username, Provider.LDAP)
         if (res.empty()) {
-            val saved = userRepository.save(CreateUserDto(login = username, password = "ldap", isAdmin = isAdmin, Provider.LDAP))
+            val saved = userRepository.save(CreateUserDto(login = username, password = "ldap", admin = isAdmin, Provider.LDAP))
             return JeluUser(saved.toUserDto())
         }
         var user = res.first()
-        if (user.isAdmin != isAdmin) {
-            user = userRepository.updateUser(user.id.value, UpdateUserDto(password = "ldap", isAdmin = isAdmin, provider = null))
+        if (user.admin != isAdmin) {
+            user = userRepository.updateUser(user.id.value, UpdateUserDto(password = "ldap", admin = isAdmin, provider = null))
         }
         return JeluUser(user.toUserDto())
     }

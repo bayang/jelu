@@ -103,7 +103,7 @@ class ApiTokenController(
     @GetMapping(path = ["/admin/api-tokens"])
     fun adminListAllTokens(principal: Authentication): List<AdminApiTokenDto> {
         val user = (principal.principal as JeluUser).user
-        if (!user.isAdmin) {
+        if (!user.admin) {
             throw org.springframework.security.access
                 .AccessDeniedException("Admin access required")
         }
@@ -118,7 +118,7 @@ class ApiTokenController(
         principal: Authentication,
     ): ResponseEntity<Unit> {
         val user = (principal.principal as JeluUser).user
-        if (!user.isAdmin) {
+        if (!user.admin) {
             throw org.springframework.security.access
                 .AccessDeniedException("Admin access required")
         }

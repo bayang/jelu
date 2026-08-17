@@ -355,7 +355,7 @@ class DataService {
       const resp = await this.apiClient.post<User>(`${this.API_USER}`, {
         'login': login,
         'password': password,
-        'isAdmin': true,
+        'admin': true,
         'provider': 'JELU_DB'
       },
         {

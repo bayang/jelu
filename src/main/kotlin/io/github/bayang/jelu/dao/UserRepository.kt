@@ -46,7 +46,7 @@ class UserRepository {
                 creationDate = instant
                 modificationDate = instant
                 password = user.password
-                isAdmin = user.isAdmin
+                admin = user.admin
                 provider = user.provider
             }
         return created
@@ -59,8 +59,8 @@ class UserRepository {
         User[userId].apply {
             this.modificationDate = nowInstant()
             this.password = updateUserDto.password
-            if (updateUserDto.isAdmin != null) {
-                this.isAdmin = updateUserDto.isAdmin
+            if (updateUserDto.admin != null) {
+                this.admin = updateUserDto.admin
             }
             if (updateUserDto.provider != null) {
                 this.provider = updateUserDto.provider

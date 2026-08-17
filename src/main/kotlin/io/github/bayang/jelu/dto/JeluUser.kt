@@ -53,7 +53,7 @@ class JeluUser(
             basicRoles.add(SimpleGrantedAuthority(ROLE_INITIAL_SETUP))
         } else {
             basicRoles.add(SimpleGrantedAuthority(ROLE_USER))
-            if (user.isAdmin) {
+            if (user.admin) {
                 basicRoles.add(SimpleGrantedAuthority(ROLE_ADMIN))
             }
         }

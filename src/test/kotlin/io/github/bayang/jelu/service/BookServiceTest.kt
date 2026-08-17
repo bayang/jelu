@@ -65,8 +65,8 @@ class BookServiceTest(
 
     @BeforeAll
     fun setupUser() {
-        userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
-        userService.save(CreateUserDto(login = "testuser2", password = "1234", isAdmin = false))
+        userService.save(CreateUserDto(login = "testuser", password = "1234", admin = true))
+        userService.save(CreateUserDto(login = "testuser2", password = "1234", admin = false))
         jeluProperties.files.images = tempDir.absolutePath
         luceneHelper.getIndexWriter().use { indexWriter ->
             indexWriter.deleteDocuments(Term(LuceneEntity.TYPE, LuceneEntity.Book.type))
@@ -1788,7 +1788,7 @@ class BookServiceTest(
 
     @Test
     fun testDeleteUserWithUserbookWithNewBookImageAndEvent() {
-        val userDto = userService.save(CreateUserDto(login = "testdelete", password = "1234", isAdmin = true))
+        val userDto = userService.save(CreateUserDto(login = "testdelete", password = "1234", admin = true))
         var entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(0, entitiesIds?.size)
         val createBook = bookDto()

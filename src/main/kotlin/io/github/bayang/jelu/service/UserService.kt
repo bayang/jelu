@@ -78,7 +78,7 @@ class UserService(
                     modificationDate = found.modificationDate,
                     login = found.login,
                     password = found.password,
-                    isAdmin = found.isAdmin,
+                    admin = found.admin,
                     provider = found.provider,
                 )
             return JeluUser(dto)
@@ -95,7 +95,7 @@ class UserService(
                 modificationDate = date,
                 login = "setup",
                 password = passwordEncoder.encode("initial"),
-                isAdmin = false,
+                admin = false,
             )
         return JeluUser(dto, initialSetup = true)
     }

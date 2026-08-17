@@ -28,7 +28,7 @@ class User(
             modificationDate = this.modificationDate,
             login = this.login,
             password = "****",
-            isAdmin = this.isAdmin,
+            admin = this.admin,
             provider = this.provider,
         )
 
@@ -38,7 +38,7 @@ class User(
     var modificationDate by UserTable.modificationDate
     var login by UserTable.login
     var password by UserTable.password
-    var isAdmin by UserTable.isAdmin
+    var admin by UserTable.isAdmin
     var provider by UserTable.provider
     val userBooks by UserBook referrersOn UserBookTable.book
 }

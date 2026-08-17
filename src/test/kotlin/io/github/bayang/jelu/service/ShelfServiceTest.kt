@@ -25,7 +25,7 @@ class ShelfServiceTest(
 ) {
     @BeforeAll
     fun setupUser() {
-        userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
+        userService.save(CreateUserDto(login = "testuser", password = "1234", admin = true))
     }
 
     @AfterAll
@@ -122,7 +122,7 @@ class ShelfServiceTest(
         Assertions.assertNotNull(saved.id)
         Assertions.assertEquals(tag.id, saved.targetId)
 
-        val userDto1 = userService.save(CreateUserDto(login = "testuser1", password = "1234", isAdmin = true))
+        val userDto1 = userService.save(CreateUserDto(login = "testuser1", password = "1234", admin = true))
         val user1 = userService.loadUserByUsername(userDto1.login)
         val saved1 = shelfService.save(CreateShelfDto(tag.name, tag.id!!), (user1 as JeluUser).user)
         Assertions.assertEquals(tag.name, saved1.name)

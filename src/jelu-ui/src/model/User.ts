@@ -2,7 +2,7 @@ export interface User {
     id?: string,
     creationDate?: string,
     login: string,
-    isAdmin: boolean,
+    admin: boolean,
     modificationDate?: string,
     provider?: Provider
   }
@@ -13,12 +13,12 @@ export interface UserAuthentication {
 export interface CreateUser {
   login: string,
   password: string,
-  isAdmin: boolean,
+  admin: boolean,
   provider?: Provider
 }
 export interface UpdateUser {
   password: string,
-  isAdmin?: boolean,
+  admin?: boolean,
   provider?: Provider
 }
 export enum Provider {

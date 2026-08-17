@@ -27,7 +27,7 @@ class ApiTokenServiceTest(
 
     @BeforeAll
     fun setupUser() {
-        testUser = userService.save(CreateUserDto(login = "apitokenuser", password = "1234", isAdmin = true))
+        testUser = userService.save(CreateUserDto(login = "apitokenuser", password = "1234", admin = true))
     }
 
     @AfterAll

@@ -22,7 +22,7 @@ const { t } = useI18n({
 })
 const { eventClass, eventLabel } = useEvents()
 
-const user: Ref<User> = ref({login: '', isAdmin: false})
+const user: Ref<User> = ref({login: '', admin: false})
 const currentlyReading: Ref<Array<UserBook>> = ref([]);
 const events: Ref<Array<ReadingEventWithUserBook>> = ref([]);
 const toRead: Ref<Array<UserBook>> = ref([]);

@@ -33,7 +33,7 @@ async function editUser() {
   console.log(form)
   if (props.currentUser.id != null) {
     try {
-      const modified = await dataService.updateUser(props.currentUser.id, {"isAdmin": undefined, "password": form.value.password})
+      const modified = await dataService.updateUser(props.currentUser.id, {"admin": undefined, "password": form.value.password})
       store.commit('user', modified)
       ObjectUtils.toast(oruga, "success", t('admin_user.user_updated', {name : props.currentUser.login}), 2500)
       emit('close')

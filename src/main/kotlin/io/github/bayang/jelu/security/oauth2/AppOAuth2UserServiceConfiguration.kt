@@ -87,7 +87,7 @@ class AppOAuth2UserServiceConfiguration(
                     CreateUserDto(
                         login = email,
                         password = RandomStringUtils.secure().nextAlphanumeric(12),
-                        isAdmin = false,
+                        admin = false,
                         Provider.OIDC,
                     ),
                 )

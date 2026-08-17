@@ -27,11 +27,11 @@ class UserServiceTest(
         val noUser = userService.loadUserByUsername("login1")
         Assertions.assertEquals("setup", noUser.username)
 
-        val created = userService.save(CreateUserDto(login = "login1", password = "password", isAdmin = true))
+        val created = userService.save(CreateUserDto(login = "login1", password = "password", admin = true))
         Assertions.assertEquals("login1", created.login)
-        Assertions.assertTrue(created.isAdmin)
+        Assertions.assertTrue(created.admin)
         Assertions.assertEquals(Provider.JELU_DB, created.provider)
-        assertThrows<JeluException> { userService.save(CreateUserDto(login = "login1", password = "password2", isAdmin = true)) }
+        assertThrows<JeluException> { userService.save(CreateUserDto(login = "login1", password = "password2", admin = true)) }
         Assertions.assertFalse(userService.isInitialSetup())
 
         var found = userService.findByLogin("login1")
@@ -40,15 +40,15 @@ class UserServiceTest(
         Assertions.assertEquals(1, userService.findByLoginAndProvider(created.login, Provider.JELU_DB).size)
         Assertions.assertEquals(0, userService.findByLoginAndProvider(created.login, Provider.LDAP).size)
 
-        val updated = userService.updateUser(created.id!!, UpdateUserDto(isAdmin = false, password = "newpass", provider = null))
-        Assertions.assertEquals(false, updated.isAdmin)
+        val updated = userService.updateUser(created.id!!, UpdateUserDto(admin = false, password = "newpass", provider = null))
+        Assertions.assertEquals(false, updated.admin)
 
         found = userService.findByLogin("login1")
-        Assertions.assertEquals(false, found[0].isAdmin)
+        Assertions.assertEquals(false, found[0].admin)
 
-        val createdLdap = userService.save(CreateUserDto(login = "loginldap", password = "password", isAdmin = true, Provider.LDAP))
+        val createdLdap = userService.save(CreateUserDto(login = "loginldap", password = "password", admin = true, Provider.LDAP))
         Assertions.assertEquals("loginldap", createdLdap.login)
-        Assertions.assertTrue(createdLdap.isAdmin)
+        Assertions.assertTrue(createdLdap.admin)
         Assertions.assertEquals(Provider.LDAP, createdLdap.provider)
 
         Assertions.assertEquals(1, userService.findByLoginAndProvider(createdLdap.login, Provider.LDAP).size)

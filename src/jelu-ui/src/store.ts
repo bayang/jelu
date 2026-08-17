@@ -122,7 +122,7 @@ const store = createStore<State>({
       return state.user
     },
     isAdmin(state): boolean {
-      return state.user != null && state.user.isAdmin
+      return state.user != null && state.user.admin
     },
     getSettings(state): ServerSettings {
       return state.serverSettings

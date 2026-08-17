@@ -33,8 +33,8 @@ class BookQuoteServiceTest(
 
     @BeforeAll
     fun setupUser() {
-        userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
-        userService.save(CreateUserDto(login = "testuser1", password = "1234", isAdmin = false))
+        userService.save(CreateUserDto(login = "testuser", password = "1234", admin = true))
+        userService.save(CreateUserDto(login = "testuser1", password = "1234", admin = false))
     }
 
     @AfterAll

@@ -47,7 +47,7 @@ class ReadingEventServiceTest(
 
     @BeforeAll
     fun setupUser() {
-        userService.save(CreateUserDto(login = "testuser", password = "1234", isAdmin = true))
+        userService.save(CreateUserDto(login = "testuser", password = "1234", admin = true))
         jeluProperties.files.images = tempDir.absolutePath
     }
 

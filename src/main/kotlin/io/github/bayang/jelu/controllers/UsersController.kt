@@ -66,7 +66,7 @@ class UsersController(
                 return AuthenticationDto(
                     UserDto(
                         login = principal.name,
-                        isAdmin = (principal.principal as JeluUser).user.isAdmin,
+                        admin = (principal.principal as JeluUser).user.admin,
                         id = (principal.principal as JeluUser).user.id,
                         password = "****",
                         modificationDate = null,
@@ -81,7 +81,7 @@ class UsersController(
                 return AuthenticationDto(
                     UserDto(
                         login = principal.name,
-                        isAdmin = principal.authorities.contains(SimpleGrantedAuthority(ROLE_ADMIN)),
+                        admin = principal.authorities.contains(SimpleGrantedAuthority(ROLE_ADMIN)),
                         id = null,
                         password = "****",
                         modificationDate = null,
@@ -119,13 +119,13 @@ class UsersController(
         session: HttpSession,
     ): UserDto {
         if (principal.principal is JeluUser) {
-            if ((principal.principal as JeluUser).user.isAdmin || (principal.principal as JeluUser).user.id == userId) {
+            if ((principal.principal as JeluUser).user.admin || (principal.principal as JeluUser).user.id == userId) {
                 // only admin user can remove or add admin rights
                 val cleanedUpdateUserDto: UpdateUserDto =
-                    if ((principal.principal as JeluUser).user.isAdmin) {
+                    if ((principal.principal as JeluUser).user.admin) {
                         user
                     } else {
-                        user.copy(isAdmin = null)
+                        user.copy(admin = null)
                     }
                 val res = repository.updateUser(userId, cleanedUpdateUserDto)
                 sessionRegistry.getAllSessions(res.login, false).forEach {
@@ -144,7 +144,7 @@ class UsersController(
         userId: UUID,
         principal: Authentication,
     ): ResponseEntity<Unit> {
-        if (principal.principal is JeluUser && (principal.principal as JeluUser).user.isAdmin) {
+        if (principal.principal is JeluUser && (principal.principal as JeluUser).user.admin) {
             if ((principal.principal as JeluUser).user.id == userId) {
                 // prevent admin from trying to delete itself
                 throw JeluValidationException("Principal ${principal.name} is deleting itself")

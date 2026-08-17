@@ -40,7 +40,7 @@ class AuthHeaderFilter(
                         properties.auth.proxy.adminName
                             .isNotBlank() &&
                             properties.auth.proxy.adminName == headerAuth
-                    val saved = userService.save(CreateUserDto(login = headerAuth, password = "proxy", isAdmin = isAdmin, Provider.PROXY))
+                    val saved = userService.save(CreateUserDto(login = headerAuth, password = "proxy", admin = isAdmin, Provider.PROXY))
                     JeluUser(userService.findUserEntityById(saved.id!!).toUserDto())
                 } else {
                     JeluUser(userService.findUserEntityById(res.first().id!!).toUserDto())
