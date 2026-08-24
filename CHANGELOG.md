@@ -1,3 +1,10 @@
+### [0.84.6](https://github.com/bayang/jelu/compare/v0.84.5...v0.84.6) (2026-08-24)
+
+
+### Bug Fixes
+
+* cannot create new user provider is missing [#345](https://github.com/bayang/jelu/issues/345) ([ab73931](https://github.com/bayang/jelu/commit/ab739317e640b402a4af1984af0bfe3616b45966))
+
 ### [0.84.5](https://github.com/bayang/jelu/compare/v0.84.4...v0.84.5) (2026-08-17)
 
 
