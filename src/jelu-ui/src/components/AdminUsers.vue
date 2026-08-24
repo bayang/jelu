@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import dataService from "../services/DataService"
 import { ObjectUtils } from "../utils/ObjectUtils"
 import useTypography from "../composables/typography"
+import { Provider } from "../model/User"
 
 const { t } = useI18n({
   inheritLocale: true,
@@ -22,7 +23,7 @@ async function createUser() {
   console.log("create user")
   console.log(form)
   try {
-    await dataService.createUser({"login" : form.value.login, "password": form.value.password, "admin" : form.value.admin})
+    await dataService.createUser({"login" : form.value.login, "password": form.value.password, "admin" : form.value.admin, "provider": Provider.JELU_DB})
     ObjectUtils.toast(oruga, "success", t('admin_user.user_saved', {name : form.value.login}), 4000)
     form.value.password = ''
     form.value.password_confirm = ''
