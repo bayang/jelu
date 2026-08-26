@@ -30,7 +30,8 @@ const store = createStore<State>({
         metadataFetchCalibreEnabled: false,
         ldapEnabled: false,
         appVersion: "",
-        metadataPlugins: []
+        metadataPlugins: [],
+        currency: ""
       } as ServerSettings,
     }
   },
@@ -145,6 +146,9 @@ const store = createStore<State>({
     getDisplayInitialSetup(state, getters): boolean {
       return (getters.getInitialSetup && !getters.getLdapEnabled)
     },
+    getCurrency(state): string {
+      return state.serverSettings.currency
+    }
   },
   plugins : [createLogger()],
   strict: true

@@ -5,5 +5,6 @@ export interface ServerSettings {
   metadataFetchCalibreEnabled: boolean,
   appVersion: string,
   ldapEnabled: boolean,
-  metadataPlugins: Array<PluginInfo>
+  metadataPlugins: Array<PluginInfo>,
+  currency: string
 }

@@ -26,6 +26,7 @@ class ServerSettingsController(
             buildProperties.version ?: "NA",
             ldapEnabled = properties.auth.ldap.enabled,
             metadataPlugins = plugins,
+            currency = properties.currency.code,
         )
     }
 }

@@ -3,9 +3,12 @@ import { useLocalStorage, useTitle } from '@vueuse/core'
 import { themeChange } from 'theme-change'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import StyledTitle from './StyledTitle.vue'
+import { key } from '../store'
+import { useStore } from 'vuex'
 
 useTitle('Jelu | User settings')
+
+const store = useStore(key)
 
 const { t, locale, availableLocales } = useI18n({
       inheritLocale: true,
@@ -65,7 +68,10 @@ watch(() => locale.value,(newValue, oldValue) => {
   storedLanguage.value = newValue
 })
 
-const currency = ref("EUR")
+const configCurrency = (store?.getters.getCurrency)
+const defaultCurrency = (configCurrency)?.length === 3 ? configCurrency : "EUR"
+const currency = ref(defaultCurrency)
+
 const saved = localStorage.getItem("JL_CURRENCY")
 if (saved != null) {
   currency.value = saved

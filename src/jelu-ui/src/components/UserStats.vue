@@ -9,6 +9,10 @@ import useTypography from '../composables/typography';
 import { MonthStats, TotalsStats } from '../model/YearStats';
 import dataService from "../services/DataService";
 import { ObjectUtils } from '../utils/ObjectUtils';
+import { key } from '../store'
+import { useStore } from 'vuex'
+
+const store = useStore(key)
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -19,7 +23,7 @@ useTitle('Jelu | Stats')
 
 let currency = localStorage.getItem("JL_CURRENCY")
 if (currency == null) {
-  currency = "EUR"
+  currency = (store?.getters.getCurrency)?.length === 3 ? store.getters.getCurrency : "EUR"
 }
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, LineController, PointElement, LineElement)

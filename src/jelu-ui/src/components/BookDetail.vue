@@ -54,7 +54,7 @@ const user: ComputedRef<User> = computed(() => {
 
 let currency = localStorage.getItem("JL_CURRENCY")
 if (currency == null) {
-  currency = "EUR"
+  currency = (store?.getters.getCurrency)?.length === 3 ? store.getters.getCurrency : "EUR"
 }
 
 const book: Ref<UserBook | null> = ref(null)

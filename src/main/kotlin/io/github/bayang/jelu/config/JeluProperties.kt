@@ -20,6 +20,7 @@ data class JeluProperties(
         ),
     val metadataProviders: List<MetaDataProvider>?,
     val lucene: Lucene = Lucene(indexAnalyzer = IndexAnalyzer()),
+    val currency: Currency = Currency(),
 ) {
     data class MetaDataProvider(
         var name: String,
@@ -93,4 +94,9 @@ data class JeluProperties(
         var dataDirectory: String = "",
         var indexAnalyzer: IndexAnalyzer,
     )
+
+    data class Currency(
+        var code: String = "",
+    )
+
 }

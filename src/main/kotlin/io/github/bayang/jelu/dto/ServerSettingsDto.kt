@@ -12,4 +12,5 @@ data class ServerSettingsDto(
     val appVersion: String,
     val ldapEnabled: Boolean,
     val metadataPlugins: List<PluginInfo> = listOf(),
+    val currency: String,
 )
