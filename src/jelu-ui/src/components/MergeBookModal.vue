@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ref, ref } from "vue";
+import { Ref, ref, watch } from "vue";
 import { useI18n } from 'vue-i18n';
 import { Author } from "../model/Author";
 import { Wrapper } from "../model/autocomplete-wrapper";
@@ -8,6 +8,7 @@ import { Metadata } from "../model/Metadata";
 import { SeriesOrder } from "../model/Series";
 import { Tag } from "../model/Tag";
 import dataService from "../services/DataService";
+import useCacheBusting from '../composables/cacheBusting';
 import { ObjectUtils } from "../utils/ObjectUtils";
 import SeriesCompleteInput from "./SeriesCompleteInput.vue";
 import { Role } from "../model/Role";
@@ -22,6 +23,8 @@ const props = defineProps<{
   book: Book,
   metadata: Metadata
 }>()
+
+const { currentTimestamp, refreshTimestamp } = useCacheBusting()
 
 const book: Ref<Book> = ref(props.book)
 const initialImage = props.book.image
@@ -45,6 +48,12 @@ const replaceImage: Ref<boolean> = ref(false)
 const discard = () => {
   emit('close')
 }
+
+watch(() => book.value.image, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    refreshTimestamp()
+  }
+})
 
 const isbnHasChanged = () => {
   return (book.value.isbn10 != undefined && book.value.isbn10 !== initialIsbn10.value) ||
@@ -936,7 +945,7 @@ const { typographyClasses } = useTypography()
             </span>
 
             <figure>
-              <img v-if="book.image" :src="'/files/' + book.image" alt="Book Image" class="max-h-96" />
+              <img v-if="book.image" :src="'/files/' + book.image + '?timestamp=' + currentTimestamp" alt="Book Image" class="max-h-96" />
               <img v-else src="../assets/placeholder_asset.jpg" class="max-h-96"/>
             </figure>
           </div>
@@ -962,7 +971,7 @@ const { typographyClasses } = useTypography()
 
            <div class="">
             <figure>
-              <img :src="'/files/' + props.metadata.image" alt="Book Image" class="max-h-96" />
+              <img :src="'/files/' + props.metadata.image + '?timestamp=' + currentTimestamp" alt="Book Image" class="max-h-96" />
             </figure>
            </div>
         </div>

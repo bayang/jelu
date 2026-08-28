@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { Book } from "../model/Book";
 import { Review } from "../model/Review";
 import dataService from "../services/DataService";
+import useCacheBusting from '../composables/cacheBusting';
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -16,6 +17,8 @@ const props = defineProps<{
   showUserName: boolean
 }>();
 
+const { currentTimestamp, refreshTimestamp } = useCacheBusting()
+
 const book: Ref<Book|null> = ref(null)
 
 const getBook = async () => {
@@ -26,6 +29,12 @@ const getBook = async () => {
     console.log("failed get book : " + error)
   }
 };
+
+watch(() => book.value?.image, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    refreshTimestamp()
+  }
+})
 
 const username = ref("")
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import useDates from '../composables/dates';
+import useCacheBusting from '../composables/cacheBusting';
 import { Metadata } from "../model/Metadata";
 
 const { t } = useI18n({
@@ -8,6 +9,7 @@ const { t } = useI18n({
       useScope: 'global'
     })
 const { formatDateString } = useDates()
+const { currentTimestamp } = useCacheBusting()
 
 defineProps<{
   metadata: Metadata,
@@ -23,7 +25,7 @@ defineProps<{
       >
         <figure>
           <img
-            :src="metadata?.image?.startsWith('http') ? metadata?.image : '/files/' + metadata?.image"
+            :src="metadata?.image?.startsWith('http') ? metadata?.image : '/files/' + metadata?.image + '?timestamp=' + currentTimestamp"
             alt="cover image"
           >
         </figure>
