@@ -1,31 +1,30 @@
 package io.github.bayang.jelu.service.metadata.providers
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.annotation.Resource
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.client.RestClient
 import org.springframework.web.util.UriBuilder
-import java.time.Duration
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.json.JsonMapper
 import java.util.Optional
 
 private val logger = KotlinLogging.logger {}
 
 @Service
 class OpenLibraryMetadataProvider(
-    @Resource(name = "restClient") private val restClient: WebClient,
-    private val objectMapper: ObjectMapper,
+    @Resource(name = "springRestClient") private val restClient: RestClient,
+    private val objectMapper: JsonMapper,
 ) : IMetaDataProvider {
     private val name = "openlibrary"
 
     override fun fetchMetadata(
         metadataRequestDto: MetadataRequestDto,
         config: Map<String, String>,
-    ): Optional<MetadataDto>? {
+    ): Optional<MetadataDto> {
         if (metadataRequestDto.isbn.isNullOrBlank()) {
             return Optional.empty()
         }
@@ -42,10 +41,13 @@ class OpenLibraryMetadataProvider(
                         .queryParam("format", "json")
                         .queryParam("jscmd", "data")
                         .build()
-                }.exchangeToMono {
-                    if (it.statusCode() == HttpStatus.OK) {
-                        it.bodyToMono(String::class.java).map { bodyString ->
-                            val root = objectMapper.readTree(bodyString)
+                }.exchange { request, response ->
+                    if (response.statusCode == HttpStatus.OK) {
+                        val b = response.bodyTo(String::class.java)
+                        if (b.isNullOrBlank()) {
+                            Optional.empty()
+                        } else {
+                            val root = objectMapper.readTree(b)
                             val book = root.get(bibKey)
                             if (book == null) {
                                 Optional.empty()
@@ -54,13 +56,10 @@ class OpenLibraryMetadataProvider(
                             }
                         }
                     } else {
-                        logger.error { "error fetching metadata from openlibrary : ${it.statusCode()}" }
-                        null
+                        logger.error { "error fetching metadata from openlibrary : ${response.statusCode}" }
+                        Optional.empty()
                     }
-                }.block(Duration.ofSeconds(60))
-        if (res == null) {
-            return Optional.empty()
-        }
+                }
         return res
     }
 
