@@ -21,6 +21,7 @@ jelu:
     - name: "openlibrary"
       is-enabled: false
       order: 200002
+#      config: "myapp (fake@email.com)"
   metadata:
     calibre:
       path: /usr/bin/fetch-ebook-metadata

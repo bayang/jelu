@@ -1,9 +1,11 @@
 package io.github.bayang.jelu.service.metadata.providers
 
+import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.annotation.Resource
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
@@ -18,6 +20,7 @@ private val logger = KotlinLogging.logger {}
 class OpenLibraryMetadataProvider(
     @Resource(name = "springRestClient") private val restClient: RestClient,
     private val objectMapper: JsonMapper,
+    private val properties: JeluProperties,
 ) : IMetaDataProvider {
     private val name = "openlibrary"
 
@@ -28,6 +31,7 @@ class OpenLibraryMetadataProvider(
         if (metadataRequestDto.isbn.isNullOrBlank()) {
             return Optional.empty()
         }
+        val config = getProviderConfig()
         val bibKey = "ISBN:${metadataRequestDto.isbn}"
         val res =
             restClient
@@ -41,6 +45,10 @@ class OpenLibraryMetadataProvider(
                         .queryParam("format", "json")
                         .queryParam("jscmd", "data")
                         .build()
+                }.headers { headers ->
+                    if (!config.isNullOrBlank()) {
+                        headers.set(HttpHeaders.USER_AGENT, config)
+                    }
                 }.exchange { request, response ->
                     if (response.statusCode == HttpStatus.OK) {
                         val b = response.bodyTo(String::class.java)
@@ -109,4 +117,10 @@ class OpenLibraryMetadataProvider(
         val publishers = node.get("publishers") ?: return null
         return if (publishers.isArray && publishers.size() > 0) publishers.get(0).get("name")?.asText() else null
     }
+
+    private fun getProviderConfig(): String? =
+        properties
+            .metadataProviders
+            ?.find { it.isEnabled && it.name == name }
+            ?.config
 }
