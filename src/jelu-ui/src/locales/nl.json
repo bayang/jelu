@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Kies een taal",
         "pick_theme": "Kies een thema",
-        "theme_warning": "Beta. Standaard thema is 'donker'",
+        "theme_warning": "Default theme is 'dark/light'",
         "profile": "Profiel",
         "my_profile": "Mijn profiel",
         "settings": "Instellingen",

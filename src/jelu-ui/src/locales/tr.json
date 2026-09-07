@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Dilini seç",
         "pick_theme": "Tema seç",
-        "theme_warning": "Beta. Varsayılan tema 'karanlık'",
+        "theme_warning": "Default theme is 'dark/light'",
         "profile": "Profil",
         "my_profile": "Profilim",
         "settings": "Ayarlar",

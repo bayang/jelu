@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Izberite svoj jezik",
         "pick_theme": "Izberite temo",
-        "theme_warning": "Beta. Privzeta tema je \"temna\"",
+        "theme_warning": "Default theme is 'dark/light'",
         "profile": "Profil",
         "my_profile": "Moj profil",
         "settings": "Nastavitve",
