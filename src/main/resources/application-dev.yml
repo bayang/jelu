@@ -18,6 +18,9 @@ jelu:
     - name: "databazeknih"
       is-enabled: false
       order: 200001
+    - name: "openlibrary"
+      is-enabled: false
+      order: 200002
   metadata:
     calibre:
       path: /usr/bin/fetch-ebook-metadata
