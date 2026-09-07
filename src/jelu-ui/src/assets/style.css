@@ -1,11 +1,11 @@
-@import "tailwindcss" important;
+@import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
   themes: all;
 }
 
 @import '@oruga-ui/theme-oruga/dist/oruga.css';
-@theme{
+/*@theme{
 
   --jelu_background: #262429;
   --jelu_background_accent: #262429;
@@ -15,7 +15,7 @@
   --jelu_text_secondary : #aaaaaa;
   --jelu_text_accent : #69ea7d;
 
-}
+}*/
 
 @plugin "daisyui/theme" {
   name: "jelu";

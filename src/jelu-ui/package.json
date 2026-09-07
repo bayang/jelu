@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@kangc/v-md-editor": "2.3.18",
+    "@lucide/vue": "^1.38.0",
     "@mdi/font": "7.4.47",
     "@oruga-ui/oruga-next": "0.11.6",
     "@oruga-ui/theme-oruga": "0.7.1",
@@ -21,7 +22,7 @@
     "@w0s/isbn-verify": "3.1.2",
     "axios": "1.18.1",
     "chart.js": "4.5.1",
-    "daisyui": "5.2.5",
+    "daisyui": "5.7.22",
     "dayjs": "1.11.19",
     "floating-vue": "5.2.2",
     "sweetalert2": "11.26.10",
