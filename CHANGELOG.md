@@ -1,3 +1,17 @@
+## [0.86.0](https://github.com/bayang/jelu/compare/v0.85.0...v0.86.0) (2026-09-07)
+
+
+### Features
+
+* allow tuning openlibrary provider [#313](https://github.com/bayang/jelu/issues/313) ([e8f6b76](https://github.com/bayang/jelu/commit/e8f6b7603d46abb79c959f29b413e147fc09d3b5))
+* refactor navbar ([9d81fe1](https://github.com/bayang/jelu/commit/9d81fe166de4cdee3bbfea401d28b088a806008a))
+
+
+### Bug Fixes
+
+* pagination styling ([f877ef0](https://github.com/bayang/jelu/commit/f877ef01f1e822bd40e056d59f38aca9f482ef21))
+* theme warning wording [#344](https://github.com/bayang/jelu/issues/344) ([0ba7651](https://github.com/bayang/jelu/commit/0ba7651d3cdd0ecbe9413b7b27e75799e4c0eae7))
+
 ## [0.85.0](https://github.com/bayang/jelu/compare/v0.84.6...v0.85.0) (2026-09-07)
 
 
