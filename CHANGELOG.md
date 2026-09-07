@@ -1,3 +1,10 @@
+## [0.85.0](https://github.com/bayang/jelu/compare/v0.84.6...v0.85.0) (2026-09-07)
+
+
+### Features
+
+* Add Open Library metadata provider [#313](https://github.com/bayang/jelu/issues/313) ([#350](https://github.com/bayang/jelu/issues/350)) ([8c58c01](https://github.com/bayang/jelu/commit/8c58c0114865e120fc9875c0d5a13ff21e200d12))
+
 ### [0.84.6](https://github.com/bayang/jelu/compare/v0.84.5...v0.84.6) (2026-08-24)
 
 
