@@ -67,8 +67,12 @@
   --oruga-checkbox-active-background-color: var(--color-primary);
   --oruga-checkbox-background-color: var(--color-base-100);
 
-  --oruga-pagination-button-color: var(--color-neutral);
+  --oruga-pagination-button-color: var(--color-primary);
   --oruga-pagination-button-border-color: var(--color-transparent);
+
+  --oruga-pagination-link-current-background-color: var(--color-primary);
+  --oruga-pagination-link-current-color: var(--color-primary-content);
+  --oruga-pagination-link-color: var(--color-base-content);
 
   --oruga-variant-primary: var(--color-primary);
   --oruga-variant-success: var(--color-success);
@@ -127,6 +131,10 @@
 }
 
 li.o-pagination__item button.o-pagination__button.o-pagination__button--current {
+  @apply btn-active btn-accent;
+}
+
+li.o-pagination__item button.o-pagination__button {
   @apply btn-active btn-accent;
 }
 
