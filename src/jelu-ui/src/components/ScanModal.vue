@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from 'vue-i18n';
 import { DetectedBarcode, EmittedError, QrcodeStream } from 'vue-qrcode-reader';
 import useTypography from "../composables/typography";
@@ -21,21 +21,110 @@ const loading = ref(true)
 
 const selected = ref(null as MediaDeviceInfo | null)
 const devices = ref([] as MediaDeviceInfo[])
+const devicesReady = ref(false)
 
 const torchActive = ref(false)
 const torchNotSupported = ref(false)
+
+// remembers the user's camera choice across modal openings
+const STORAGE_KEY = 'jelu.scanner.deviceId'
+
+// upstream default (facingMode: environment) unless the user picked a device
+const constraints = computed(() => {
+  if (selected.value?.deviceId) {
+    return {
+      deviceId: { exact: selected.value.deviceId },
+      width: { ideal: 1920 },
+      height: { ideal: 1080 }
+    }
+  }
+  return {
+    facingMode: 'environment',
+    width: { ideal: 1920 },
+    height: { ideal: 1080 }
+  }
+})
+
+// draws a frame around detected codes
+const paintOutline = (detectedCodes: Array<DetectedBarcode>, ctx: CanvasRenderingContext2D) => {
+  for (const detectedCode of detectedCodes) {
+    const [firstPoint, ...otherPoints] = detectedCode.cornerPoints
+    if (!firstPoint) continue
+
+    ctx.strokeStyle = "#22cc55"
+    ctx.lineWidth = 4
+
+    ctx.beginPath()
+    ctx.moveTo(firstPoint.x, firstPoint.y)
+    for (const { x, y } of otherPoints) {
+      ctx.lineTo(x, y)
+    }
+    ctx.lineTo(firstPoint.x, firstPoint.y)
+    ctx.closePath()
+    ctx.stroke()
+  }
+}
 
 const acceptBarcode = () => {
     emit('decoded', decodedText.value)
     emit('close')
 }
 
+const loadDevices = async () => {
+  devices.value = (await navigator.mediaDevices.enumerateDevices()).filter(
+    ({ kind }) => kind === 'videoinput'
+  )
+}
+
+// apply the saved camera once labels are available; drop a stale saved id
+const applyStoredDevice = () => {
+  if (devices.value.length === 0 || devices.value.some((d) => !d.label)) return
+  let storedId = null as string | null
+  try {
+    storedId = localStorage.getItem(STORAGE_KEY)
+  } catch (e) {
+    console.log(e)
+  }
+  if (!storedId) return
+  const match = devices.value.find((d) => d.deviceId === storedId)
+  if (match) {
+    selected.value = match
+  } else {
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
+// save the user's camera pick; never write from script
+const onDeviceChange = () => {
+  if (!selected.value?.deviceId) return
+  try {
+    localStorage.setItem(STORAGE_KEY, selected.value.deviceId)
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 // eslint-disable-next-line no-undef
-const onLoaded = (capabilities: Partial<MediaTrackCapabilities>) => {
+const onLoaded = async (capabilities: Partial<MediaTrackCapabilities>) => {
   console.log("barcode modal loaded");
   console.log(capabilities)
   torchNotSupported.value = !(capabilities as any).torch
   loading.value = false
+  if (devices.value.length === 0 || devices.value.some((d) => !d.label)) {
+    try {
+      // labels are empty before permission is granted; refresh now that it is
+      await loadDevices()
+    } catch (error) {
+      console.log(error)
+    }
+    if (selected.value && !devices.value.find((d) => d.deviceId === selected.value?.deviceId)) {
+      selected.value = null
+    }
+  }
   emit('barcodeLoaded', barcodeReader.value)
 };
 
@@ -49,16 +138,21 @@ const onDecode = (detectedBarcodes: Array<DetectedBarcode>) => {
 const onError = (error: EmittedError) => {
   console.log("barcode reader error")
   console.log(error)
+  // avoid a permanent lock on a bad saved id
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 onMounted(async () => {
-  devices.value = (await navigator.mediaDevices.enumerateDevices()).filter(
-    ({ kind }) => kind === 'videoinput'
-  )
-
-  if (devices.value.length > 0) {
-    selected.value = devices.value[0]
+  try {
+    await loadDevices()
+  } finally {
+    devicesReady.value = true
   }
+  applyStoredDevice()
 })
 
 const { typographyClasses } = useTypography()
@@ -79,10 +173,13 @@ const { typographyClasses } = useTypography()
         <div class="field mb-2">
           <p>
             {{ t('labels.pick_camera') }}:
-            <select v-model="selected">
+            <select
+              v-model="selected"
+              @change="onDeviceChange"
+            >
               <option
-                v-for="device in devices"
-                :key="device.label"
+                v-for="(device, index) in devices"
+                :key="device.deviceId || index"
                 :value="device"
               >
                 {{ device.label }}
@@ -90,8 +187,11 @@ const { typographyClasses } = useTypography()
             </select>
           </p>
           <qrcode-stream
+            v-if="devicesReady"
             ref="barcodeReader"
-            v-memo="[torchActive, selected?.deviceId]"
+            :constraints="constraints"
+            :torch="torchActive"
+            :track="paintOutline"
             :formats="['qr_code', 'ean_13']"
             @detect="onDecode"
             @camera-on="onLoaded"
@@ -140,6 +240,12 @@ const { typographyClasses } = useTypography()
               </svg>
             </button>
           </qrcode-stream>
+          <div
+            v-else
+            class="loading-indicator"
+          >
+            {{ t('labels.loading') }}...
+          </div>
           <p>{{ decodedText }}</p>
         </div>
       </div>
