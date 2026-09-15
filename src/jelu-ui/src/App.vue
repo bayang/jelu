@@ -221,6 +221,7 @@ function scanModalClosed() {
           </label>
           <div class="px-4 flex items-center gap-3 navbar-start">
             <router-link
+              class="flex items-center gap-2"
               :to="{ name: 'home' }"
             >
               <img
@@ -228,8 +229,8 @@ function scanModalClosed() {
                 alt="home"
                 class="w-14"
               >
+              <span>Jelu</span>
             </router-link>
-            <span>Jelu</span>
           </div>
 
           <div
