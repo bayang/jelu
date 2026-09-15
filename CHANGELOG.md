@@ -1,3 +1,10 @@
+### [0.87.1](https://github.com/bayang/jelu/compare/v0.87.0...v0.87.1) (2026-09-15)
+
+
+### Bug Fixes
+
+* bind selected camera to qrcode-stream [#352](https://github.com/bayang/jelu/issues/352) ([#354](https://github.com/bayang/jelu/issues/354)) ([9935f6e](https://github.com/bayang/jelu/commit/9935f6ea9990aecd3a344db6ec28fdd5e30de88f))
+
 ## [0.87.0](https://github.com/bayang/jelu/compare/v0.86.0...v0.87.0) (2026-09-15)
 
 
