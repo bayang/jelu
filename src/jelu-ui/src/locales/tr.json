@@ -385,7 +385,8 @@
         "reorder_plugins": "eklentileri yeniden sırala",
         "description": "Eklentiler yukarıdan aşağı çağırılacak, devre dışı bırakılanlar kullanılmayacak.",
         "default_priority": "varsayılan öncelik",
-        "note": "Bu değişiklik sadece geçicidir, eklentileri kalıcı olarak yeniden sıralamak istiyorsanız konfigürasyonu düzenlemeniz gerekir."
+        "note": "Bu değişiklik sadece geçicidir, eklentileri kalıcı olarak yeniden sıralamak istiyorsanız konfigürasyonu düzenlemeniz gerekir.",
+        "source_plugin": "Source plugin"
     },
     "book_quotes": {
         "edit_quote": "Kitap alıntısını düzenle",
