@@ -386,7 +386,7 @@
         "description": "Les plugins seront utilisés de haut en bas, les plugins désactivés ne seront pas utilisés.",
         "default_priority": "Priorité par défaut",
         "note": "Ce changement est temporaire, si vous voulez réorganiser de façon permanente les plug-ins, vous devez modifier la configuration.",
-        "source_plugin": "Source plugin"
+        "source_plugin": "Plugin source"
     },
     "book_quotes": {
         "edit_quote": "Modifier la citation",
