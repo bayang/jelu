@@ -385,7 +385,8 @@
         "reorder_plugins": "reorder plugins",
         "description": "A pluginok sorrendben vannak alkalmazva. Az inaktívak nincsenek alkalmazva.",
         "default_priority": "alapértelmezett prioritás",
-        "note": "Ez a módosítás csak ideiglenes, végleges újrarendezéshez szerkeszd a konfigurációt."
+        "note": "Ez a módosítás csak ideiglenes, végleges újrarendezéshez szerkeszd a konfigurációt.",
+        "source_plugin": "Source plugin"
     },
     "book_quotes": {
         "edit_quote": "Könyv idézet szerkesztése",
