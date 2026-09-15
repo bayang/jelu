@@ -1,3 +1,15 @@
+## [0.87.0](https://github.com/bayang/jelu/compare/v0.86.0...v0.87.0) (2026-09-15)
+
+
+### Features
+
+* call all metadata providers until one yields a result [#342](https://github.com/bayang/jelu/issues/342) ([e47cb4b](https://github.com/bayang/jelu/commit/e47cb4b26b615727018f5bd94da25872b0ab28ec))
+
+
+### Bug Fixes
+
+* prevent nav from disappearing ([dd3a894](https://github.com/bayang/jelu/commit/dd3a8940523ffb0c457fe6aef85aac757b7f56e8))
+
 ## [0.86.0](https://github.com/bayang/jelu/compare/v0.85.0...v0.86.0) (2026-09-07)
 
 
