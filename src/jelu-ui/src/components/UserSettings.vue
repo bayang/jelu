@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useLocalStorage, useTitle } from '@vueuse/core'
 import { themeChange } from 'theme-change'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import StyledTitle from './StyledTitle.vue'
 
 useTitle('Jelu | User settings')
 
@@ -119,7 +118,7 @@ watch(() => font.value, (newVal, oldVal) => {
     </label>
     <select
       class="select select-bordered select-primary"
-      data-choose-theme
+      data-set-theme
     >
       <option value="">
         Default

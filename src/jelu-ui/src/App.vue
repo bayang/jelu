@@ -79,7 +79,12 @@ const isLogged = computed(() => {
 
 onMounted(() => {
   console.log('Component is mounted!')
-  themeChange(false);
+  // FIXME this stopped working
+  // themeChange(false)
+  const theme = localStorage.getItem("theme");
+    if (theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
 })
 
 const logout = () => {
