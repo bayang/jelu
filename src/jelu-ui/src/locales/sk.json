@@ -385,7 +385,8 @@
         "reorder_plugins": "zmeniť poradie doplnkov",
         "description": "Doplnky budú zavádzané zhora nadol, vypnuté doplnky sa nepoužijú.",
         "default_priority": "predvolená priorita",
-        "note": "Táto zmena je len dočasná, ak chcete trvalo zmeniť poradie doplnkov, musíte upraviť konfiguračný súbor."
+        "note": "Táto zmena je len dočasná, ak chcete trvalo zmeniť poradie doplnkov, musíte upraviť konfiguračný súbor.",
+        "source_plugin": "Zdrojový doplnok"
     },
     "book_quotes": {
         "edit_quote": "Upraviť citát z knihy",

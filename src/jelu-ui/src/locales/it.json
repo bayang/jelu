@@ -385,7 +385,8 @@
         "reorder_plugins": "riordina i plugin",
         "description": "I plugin saranno utilizzati dall'alto in basso, i plugin disabilitati non saranno utilizzati.",
         "default_priority": "priorità predefinita",
-        "note": "Questa modica è solo temporanea, se vuoi riordinare permanentemente i plugin devi modificare la configurazione."
+        "note": "Questa modica è solo temporanea, se vuoi riordinare permanentemente i plugin devi modificare la configurazione.",
+        "source_plugin": "Source plugin"
     },
     "book_quotes": {
         "edit_quote": "Modifica la citazione",

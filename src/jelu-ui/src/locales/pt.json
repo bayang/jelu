@@ -385,7 +385,8 @@
         "reorder_plugins": "reordenar extensões",
         "description": "As extensões serão utilizadas de cima para baixo, as extensões desativadas não serão usadas.",
         "default_priority": "prioridade padrão",
-        "note": "Esta alteração é apenas temporária, se quiser reordenar permanentemente as extensões, tem que editar a configuração."
+        "note": "Esta alteração é apenas temporária, se quiser reordenar permanentemente as extensões, tem que editar a configuração.",
+        "source_plugin": "Source plugin"
     },
     "book_quotes": {
         "edit_quote": "Editar citação do livro",

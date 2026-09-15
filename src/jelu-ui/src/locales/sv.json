@@ -385,7 +385,8 @@
         "reorder_plugins": "Ändra insticksmodulernas ordning",
         "description": "Insticksmodulerna anropas uppifrån och ned. Inaktiverade insticksmoduler används inte.",
         "default_priority": "standardprioritet",
-        "note": "Ändringen är bara tillfällig. Om du vill ändra insticksmodulernas ordning permanent måste du redigera konfigurationen."
+        "note": "Ändringen är bara tillfällig. Om du vill ändra insticksmodulernas ordning permanent måste du redigera konfigurationen.",
+        "source_plugin": "Source plugin"
     },
     "book_quotes": {
         "edit_quote": "Redigera bokcitat",

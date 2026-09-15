@@ -385,7 +385,8 @@
         "reorder_plugins": "atur ulang plugin",
         "description": "Plugins will be called from top to bottom, disabled plugins will not be used.",
         "default_priority": "prioritas bawaan",
-        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config."
+        "note": "This change is only temporary, if you want to permanently reorder the plugins you have to edit the config.",
+        "source_plugin": "Source plugin"
     },
     "book_quotes": {
         "edit_quote": "Ubah kutipan buku",
