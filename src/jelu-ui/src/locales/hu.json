@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Nyelv kiválasztása",
         "pick_theme": "Téma kiválasztása",
-        "theme_warning": "Béta. Alapértelmezett téma 'dark'",
+        "theme_warning": "Default theme is 'dark/light'",
         "profile": "Profil",
         "my_profile": "Saját profil",
         "settings": "Beállítások",

@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Choisissez votre langue",
         "pick_theme": "Choisissez un thème",
-        "theme_warning": "Beta. Le thème par défaut est 'dark'",
+        "theme_warning": "Le thème par défaut est 'dark/light'",
         "profile": "Profil",
         "my_profile": "Mon profil",
         "settings": "Paramètres",

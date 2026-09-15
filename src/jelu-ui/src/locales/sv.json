@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Välj språk",
         "pick_theme": "Välj ett tema",
-        "theme_warning": "Beta. Standardtemat är ”dark”",
+        "theme_warning": "Default theme is 'dark/light'",
         "profile": "Profil",
         "my_profile": "Min profil",
         "settings": "Inställningar",

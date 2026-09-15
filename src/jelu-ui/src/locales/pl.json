@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Wybierz język",
         "pick_theme": "Wybierz motyw",
-        "theme_warning": "Testowy. Domyślny motyw to 'ciemny'",
+        "theme_warning": "Default theme is 'dark/light'",
         "profile": "Profil",
         "my_profile": "Mój profil",
         "settings": "Ustawienia",

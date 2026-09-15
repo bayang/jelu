@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Pilih bahasa",
         "pick_theme": "Pilih tema",
-        "theme_warning": "Beta. Tema bawaan adalah 'gelap'",
+        "theme_warning": "Default theme is 'dark/light'",
         "profile": "Profil",
         "my_profile": "Profil saya",
         "settings": "Pengaturan",

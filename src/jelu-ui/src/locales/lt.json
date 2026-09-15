@@ -134,7 +134,7 @@
     "settings": {
         "pick_language": "Pasirinkite kalbą",
         "pick_theme": "Pasirinkite temą",
-        "theme_warning": "Beta. Numatytoji tema yra 'tamsi'",
+        "theme_warning": "Default theme is 'dark/light'",
         "profile": "Profilis",
         "my_profile": "Mano profilis",
         "settings": "Nustatymai",
