@@ -1,3 +1,10 @@
+### [0.87.2](https://github.com/bayang/jelu/compare/v0.87.1...v0.87.2) (2026-09-15)
+
+
+### Bug Fixes
+
+* theme not applied on home page load ([d5b4c66](https://github.com/bayang/jelu/commit/d5b4c66a26f0223d8c7c6f4aa0d3ecee5d753810))
+
 ### [0.87.1](https://github.com/bayang/jelu/compare/v0.87.0...v0.87.1) (2026-09-15)
 
 
