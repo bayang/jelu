@@ -386,7 +386,7 @@
         "description": "Plugins werden von oben nach unten ausgeführt, deaktivierte Plugins werden nicht verwendet.",
         "default_priority": "Standardpriorität",
         "note": "Diese Änderung ist nur vorübergehend, wenn du die Plugins permanent neu ordnen möchtest, musst du die Konfiguration ändern.",
-        "source_plugin": "Source plugin"
+        "source_plugin": "Quell-Plugin"
     },
     "book_quotes": {
         "edit_quote": "Buchzitat bearbeiten",
