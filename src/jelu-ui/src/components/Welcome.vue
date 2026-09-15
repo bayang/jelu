@@ -16,6 +16,7 @@ import ReadingEventModalVue from './ReadingEventModal.vue'
 import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewBookCard from './ReviewBookCard.vue';
 import useTypography from "../composables/typography"
+import { SquarePercent, CircleCheck, BookOpenText } from '@lucide/vue';
 
 useTitle('Jelu | Home')
 
@@ -194,27 +195,14 @@ const { typographyClasses } = useTypography()
                 class="icon text-info"
                 @click.prevent="toggleReadingEventModal(defaultCreateEvent(book.book.id!!), false)"
               >
-                <i class="mdi mdi-check-circle mdi-18px" />
+                <CircleCheck :size="21" />
               </span>
               <span
                 v-tooltip="t('labels.set_progress')"
                 class="icon text-info"
                 @click.prevent="toggleReadProgressModal(book.id!!, book.book.pageCount ?? null, book.percentRead ?? null, book.currentPageNumber ?? null)"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                  />
-                </svg>
+                <SquarePercent :size="21" />
               </span>
             </template>
           </book-card>
@@ -237,16 +225,14 @@ const { typographyClasses } = useTypography()
       />
     </div>
     <!-- logged, no books -->
-    <div v-else>
+    <div v-else class="flex flex-col items-center justify-center gap-4">
       <h2
         class="text-3xl"
         :class="typographyClasses"
       >
         {{ t('home.not_reading') }}
       </h2>
-      <span class="icon">
-        <i class="mdi mdi-book-open-page-variant-outline mdi-48px" />
-      </span>
+      <BookOpenText :size="40" />
     </div>
     <h2
       v-if="events.length > 0"

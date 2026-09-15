@@ -9,6 +9,7 @@ import { Tag } from "../model/Tag";
 import { useOruga } from "@oruga-ui/oruga-next";
 import { useTitle } from "@vueuse/core";
 import useTypography from "../composables/typography";
+import { ArrowDownAZ, ArrowDownZA, CalendarArrowDown, CalendarArrowUp, Trash } from '@lucide/vue';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -150,58 +151,22 @@ const { typographyClasses } = useTypography()
       </div>
       <div class="flex flex-col mb-2">
         <div class="flex my-2 gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-arrow-down-az-icon lucide-arrow-down-a-z cursor-pointer"
+          <arrow-down-a-z
+            class="cursor-pointer"
             @click="sortQuery='name,asc'"
-          ><path d="m3 16 4 4 4-4" /><path d="M7 20V4" /><path d="M20 8h-5" /><path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10" /><path d="M15 14h5l-5 6h5" /></svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-arrow-down-za-icon lucide-arrow-down-z-a cursor-pointer"
+          />
+          <arrow-down-z-a
+            class="cursor-pointer"
             @click="sortQuery='name,desc'"
-          ><path d="m3 16 4 4 4-4" /><path d="M7 4v16" /><path d="M15 4h5l-5 6h5" /><path d="M15 20v-3.5a2.5 2.5 0 0 1 5 0V20" /><path d="M20 18h-5" /></svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-calendar-arrow-down-icon lucide-calendar-arrow-down cursor-pointer"
+          />
+          <calendar-arrow-down
+            class="cursor-pointer"
             @click="sortQuery='modificationDate,asc'"
-          ><path d="m14 18 4 4 4-4" /><path d="M16 2v4" /><path d="M18 14v8" /><path d="M21 11.354V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7.343" /><path d="M3 10h18" /><path d="M8 2v4" /></svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-calendar-arrow-up-icon lucide-calendar-arrow-up cursor-pointer"
+          />
+          <calendar-arrow-up
+            class="cursor-pointer"
             @click="sortQuery='modificationDate,desc'"
-          ><path d="m14 18 4-4 4 4" /><path d="M16 2v4" /><path d="M18 22v-8" /><path d="M21 11.343V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h9" /><path d="M3 10h18" /><path d="M8 2v4" /></svg>
+          />
         </div>
         <div
           v-for="shelf in shelves"
@@ -224,18 +189,7 @@ const { typographyClasses } = useTypography()
               class="btn btn-sm"
               @click="deleteShelf(shelf)"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              <trash :size="21" />
             </button>
           </div>
         </div>

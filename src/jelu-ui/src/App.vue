@@ -13,7 +13,7 @@ import { key } from './store';
 import { StringUtils } from './utils/StringUtils';
 import useTypography from "./composables/typography";
 import MenuBarItem from "./components/MenuBarItem.vue";
-import { BookUser, BookCopy, Dices, BookPlus, ClipboardClock, Users, Search, LibraryBig, Command, LogOut, LogIn,SquareActivity } from '@lucide/vue';
+import { BookUser, BookCopy, Dices, BookPlus, ClipboardClock, Users, Search, LibraryBig, Command, LogOut, LogIn,SquareActivity, PanelLeftOpen, SearchIcon, QrCode } from '@lucide/vue';
 
 const {
   offlineReady,
@@ -213,16 +213,7 @@ function scanModalClosed() {
             aria-label="open sidebar"
             class="btn btn-square btn-ghost drawer-button"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              stroke-linejoin="round"
-              stroke-linecap="round"
-              stroke-width="2"
-              fill="none"
-              stroke="currentColor"
-              class="my-1.5 inline-block size-7"
-            ><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M9 4v16" /><path d="M14 10l2 2l-2 2" /></svg>
+            <PanelLeftOpen />
           </label>
           <div class="px-4 flex items-center gap-3 navbar-start">
             <router-link
@@ -256,43 +247,14 @@ function scanModalClosed() {
                 class="btn btn-square btn-outline join-item"
                 @click="search"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                ><path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                /></svg>
+                <SearchIcon :size="20" />
               </button>
               <button
                 class="btn btn-warning p-2 mx-1"
                 :class="{'btn-disabled' : progress}"
                 @click="toggleScanModal"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z"
-                  />
-                </svg>
+                <QrCode :size="20" />
               </button>
             </div>
 
