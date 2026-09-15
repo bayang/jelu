@@ -76,9 +76,9 @@ const isValid = computed(() => StringUtils.isNotBlank(form.title)
 || StringUtils.isNotBlank(form.isbn)
 || StringUtils.isNotBlank(form.authors))
 
-const formattedErrorMessage = computed(() => {
-  return metadata.value?.pluginErrorMessage?.replace(/\n/g, '<br>') || ''
-})
+const formatErrorMessage = (message: string) => {
+  return message.replace(/\n/g, '<br>') || ''
+}
 
 let barcodeReader: any = null
 
@@ -263,25 +263,30 @@ const { typographyClasses } = useTypography()
       class="flex flex-col items-center"
     >
       <div
-        v-if="metadata != null && metadata.errorType != undefined"
+        v-if="metadata != null && metadata.errors !=null && metadata.errors.length > 0"
       >
-        <p class="text-error">
-          {{ t('errors.metadata.' + metadata.errorType) }}
-        </p>
-        <div class="collapse">
-          <input type="checkbox">
-          <div class="collapse-title text-xl font-medium capitalize">
-            {{ t('errors.details') }}
+        <div
+          v-for="error in metadata.errors"
+          :key="error.sourcePlugin"
+        >
+          <p class="text-error">
+            {{ t('errors.metadata.' + error.errorType) }}
+          </p>
+          <div class="collapse">
+            <input type="checkbox">
+            <div class="collapse-title text-xl font-medium capitalize">
+              {{ t('errors.details') }}
+            </div>
+            <blockquote
+              v-if="error.pluginErrorMessage"
+              class="collapse-content"
+            >
+              <p
+                class="whitespace-pre-line text-error"
+                v-html="formatErrorMessage(error.pluginErrorMessage)"
+              />
+            </blockquote>
           </div>
-          <blockquote
-            v-if="formattedErrorMessage"
-            class="collapse-content"
-          >
-            <p
-              class="whitespace-pre-line text-error"
-              v-html="formattedErrorMessage"
-            />
-          </blockquote>
         </div>
       </div>
       <MetadataDetail
@@ -290,7 +295,7 @@ const { typographyClasses } = useTypography()
       />
       <div
         v-if="!displayForm"
-        class="col-span-5 space-x-5 mt-3"
+        class="mt-3 flex gap-3"
       >
         <button
           class="btn btn-primary uppercase"

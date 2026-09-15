@@ -22,6 +22,7 @@ export interface Metadata {
     openlibraryId?: string,
     noosfereId?: string,
     inventaireId?: string,
-    errorType?: MetadataError,
-    pluginErrorMessage?: string,
+    filled: boolean,
+    errors?: Array<MetadataError>,
+    sourcePlugin?: string,
 }

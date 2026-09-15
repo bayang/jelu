@@ -76,17 +76,18 @@ class OpenLibraryMetadataProvider(
     private fun parseBook(
         node: JsonNode,
         requestedIsbn: String?,
-    ): MetadataDto =
-        MetadataDto(
-            title = node.get("title")?.asText(),
-            isbn10 = extractIdentifier(node, "isbn_10") ?: requestedIsbn,
-            isbn13 = extractIdentifier(node, "isbn_13"),
-            authors = extractAuthors(node),
-            image = extractImage(node),
-            publisher = extractPublisher(node),
-            publishedDate = node.get("publish_date")?.asText(),
-            openlibraryId = node.get("key")?.asText()?.removePrefix("/books/"),
-        )
+    ): MetadataDto {
+        val dto = MetadataDto()
+        dto.title = node.get("title")?.asString()
+        dto.isbn10 = extractIdentifier(node, "isbn_10") ?: requestedIsbn
+        dto.isbn13 = extractIdentifier(node, "isbn_13")
+        dto.authors = extractAuthors(node)
+        dto.image = extractImage(node)
+        dto.publisher = extractPublisher(node)
+        dto.publishedDate = node.get("publish_date")?.asString()
+        dto.openlibraryId = node.get("key")?.asString()?.removePrefix("/books/")
+        return dto
+    }
 
     private fun extractIdentifier(
         node: JsonNode,
@@ -94,7 +95,7 @@ class OpenLibraryMetadataProvider(
     ): String? {
         val identifiers = node.get("identifiers") ?: return null
         val arr = identifiers.get(key) ?: return null
-        return if (arr.isArray && arr.size() > 0) arr.get(0).asText() else null
+        return if (arr.isArray && arr.size() > 0) arr.get(0).asString() else null
     }
 
     private fun extractAuthors(node: JsonNode): MutableSet<String> =
@@ -102,7 +103,7 @@ class OpenLibraryMetadataProvider(
             node
                 .get("authors")
                 .asIterable()
-                .mapNotNull { it.get("name")?.asText() }
+                .mapNotNull { it.get("name")?.asString() }
                 .toMutableSet()
         } else {
             mutableSetOf()
@@ -110,12 +111,12 @@ class OpenLibraryMetadataProvider(
 
     private fun extractImage(node: JsonNode): String? {
         val cover = node.get("cover") ?: return null
-        return cover.get("large")?.asText() ?: cover.get("medium")?.asText()
+        return cover.get("large")?.asString() ?: cover.get("medium")?.asString()
     }
 
     private fun extractPublisher(node: JsonNode): String? {
         val publishers = node.get("publishers") ?: return null
-        return if (publishers.isArray && publishers.size() > 0) publishers.get(0).get("name")?.asText() else null
+        return if (publishers.isArray && publishers.size() > 0) publishers.get(0).get("name")?.asString() else null
     }
 
     private fun getProviderConfig(): String? =

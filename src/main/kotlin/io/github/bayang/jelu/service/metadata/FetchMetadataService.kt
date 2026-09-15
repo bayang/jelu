@@ -25,18 +25,26 @@ class FetchMetadataService(
         // might not be sorted
         pluginsToUse.sortWith(PluginInfoComparator)
         logger.trace { "plugins to use : $pluginsToUse" }
-        for (plugin in pluginsToUse) {
-            logger.trace { "fetching provider for plugin ${plugin.name} with order ${plugin.order} " }
-            val provider = providers.find { plugin.name.equals(it.name(), true) }
+        val metadata = MetadataDto()
+        for ((idx, value) in pluginsToUse.withIndex()) {
+            logger.trace { "fetching provider for plugin ${value.name} with order ${value.order} " }
+            val provider = providers.find { value.name.equals(it.name(), true) }
             if (provider != null) {
                 val res: Optional<MetadataDto>? = provider.fetchMetadata(metadataRequestDto, config)
-                if (res != null && res.isPresent) {
+                if (res != null && res.isPresent && res.get().filled) {
+                    res.get().sourcePlugin = provider.name()
                     return res.get()
+                } else if (res != null && res.isPresent && res.get().errors.isNotEmpty()) {
+                    logger.error { "errors from plugin ${value.name} : ${res.get().errors}" }
+                    metadata.errors.addAll(res.get().errors)
+                } else {
+                    logger.trace { "current plugin ${value.name} returned no result, trying next one. " }
+                    continue
                 }
             } else {
-                logger.warn { "could not find provider for plugin info ${plugin.name}" }
+                logger.warn { "could not find provider for plugin info ${value.name}" }
             }
         }
-        return MetadataDto()
+        return metadata
     }
 }

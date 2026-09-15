@@ -112,7 +112,7 @@ const { typographyClasses } = useTypography()
             </div>
           </template>
         </draggable>
-        <div class="m-3">
+        <div class="m-3 flex gap-3">
           <button
             class="btn btn-primary mr-2 uppercase"
             :disabled="progress"

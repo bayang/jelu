@@ -53,7 +53,8 @@ class GoogleBooksIMetaDataProvider(
                         if (b.isNullOrBlank()) {
                             Optional.empty()
                         } else {
-                            Optional.of(parseBook(objectMapper.readTree(b)["items"].get(0)))
+                            val value = parseBook(objectMapper.readTree(b)["items"].get(0))
+                            Optional.of(value)
                         }
                     } else {
                         null
@@ -89,19 +90,20 @@ class GoogleBooksIMetaDataProvider(
             ?.apiKey
 
     private fun parseBook(node: JsonNode): MetadataDto {
+        val dto = MetadataDto()
         val volumeInfo = node.get("volumeInfo")
         val identifiers = volumeInfo.get("industryIdentifiers").asIterable()
-        return MetadataDto(
-            title = volumeInfo.get("title").asString(),
-            googleId = node.get("id").asString(),
-            isbn10 = identifiers.find { it.get("type").asString() == "ISBN_10" }?.get("identifier")?.asString(),
-            isbn13 = identifiers.find { it.get("type").asString() == "ISBN_13" }?.get("identifier")?.asString(),
-            authors = extractAuthors(volumeInfo),
-            image = extractImage(volumeInfo),
-            language = volumeInfo.get("language").asString(),
-            publishedDate = volumeInfo.get("publishedDate").asString(),
-            summary = summary(node),
-        )
+        dto.title = volumeInfo.get("title").asString()
+        dto.googleId = node.get("id").asString()
+        dto.isbn10 = identifiers.find { it.get("type").asString() == "ISBN_10" }?.get("identifier")?.asString()
+        dto.isbn13 = identifiers.find { it.get("type").asString() == "ISBN_13" }?.get("identifier")?.asString()
+        dto.authors = extractAuthors(volumeInfo)
+        dto.image = extractImage(volumeInfo)
+        dto.language = volumeInfo.get("language").asString()
+        dto.publishedDate = volumeInfo.get("publishedDate").asString()
+        dto.summary = summary(node)
+
+        return dto
     }
 
     private fun extractAuthors(node: JsonNode): MutableSet<String> =

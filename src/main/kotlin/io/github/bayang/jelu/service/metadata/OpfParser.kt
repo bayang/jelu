@@ -41,6 +41,7 @@ class OpfParser {
             enrichMetadata(dto, tempData)
         } catch (e: Exception) {
             logger.error(e) { "failure while parsing opf metadata from calibre" }
+            throw e
         } finally {
             root.streamReader.closeCompletely()
         }

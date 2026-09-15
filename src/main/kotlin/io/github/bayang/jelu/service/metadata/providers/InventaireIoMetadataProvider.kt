@@ -116,7 +116,11 @@ class InventaireIoMetadataProvider(
                 if (clientResponse.statusCode == HttpStatus.OK) {
                     val bodyString = clientResponse.bodyTo(String::class.java)
                     val node = objectMapper.readTree(bodyString).get("results")
-                    parseSearchResults(node)
+                    if (node == null || node.asIterable().none()) {
+                        ParsingDto(MetadataDto(), "")
+                    } else {
+                        parseSearchResults(node)
+                    }
                 } else {
                     logger.error { "error fetching metadata from inventaire.io : ${clientResponse.statusCode} " }
                     ParsingDto(MetadataDto(), "")

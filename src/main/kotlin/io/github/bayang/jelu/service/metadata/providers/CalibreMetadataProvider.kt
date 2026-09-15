@@ -4,6 +4,7 @@ import com.ctc.wstx.stax.WstxInputFactory
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataError
+import io.github.bayang.jelu.dto.MetadataErrorType
 import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.service.metadata.OpfParser
 import io.github.bayang.jelu.service.metadata.PluginInfoHolder
@@ -163,16 +164,14 @@ class CalibreMetadataProvider(
                 val dto = MetadataDto()
                 var output: String = process.inputStream.bufferedReader().use(BufferedReader::readText)
                 output += process.errorStream.bufferedReader().use(BufferedReader::readText)
-                dto.errorType = MetadataError.EXIT_CODE_NOT_ZERO
-                dto.pluginErrorMessage = output
+                dto.errors.add(MetadataError(name(), MetadataErrorType.EXIT_CODE_NOT_ZERO, output))
                 logger.error { "output from fetch-ebook-metadata process : $output" }
                 return Optional.of(dto)
             }
         } catch (e: Exception) {
             logger.error(e) { "failure while calling fetch-ebook-metadata process" }
             val dto = MetadataDto()
-            dto.errorType = MetadataError.EXCEPTION_CAUGHT
-            dto.pluginErrorMessage = e.message
+            dto.errors.add(MetadataError(name(), MetadataErrorType.EXCEPTION_CAUGHT, e.message))
             logger.error { "output from fetch-ebook-metadata process : ${e.message}" }
             return Optional.of(dto)
         }

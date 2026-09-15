@@ -3,6 +3,7 @@ package io.github.bayang.jelu.service.metadata.providers
 import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.dto.MetadataError
+import io.github.bayang.jelu.dto.MetadataErrorType
 import io.github.bayang.jelu.dto.MetadataRequestDto
 import io.github.bayang.jelu.service.metadata.OpfParser
 import io.mockk.every
@@ -114,8 +115,8 @@ class CalibreMetadataProviderTest(
 
         Assertions.assertTrue(result.isPresent)
         val metadataDto = result.get()
-        Assertions.assertEquals(MetadataError.EXIT_CODE_NOT_ZERO, metadataDto.errorType)
-        Assertions.assertEquals(errorOutput, metadataDto.pluginErrorMessage)
+        Assertions.assertEquals(MetadataErrorType.EXIT_CODE_NOT_ZERO, metadataDto.errors.first().errorType)
+        Assertions.assertEquals(errorOutput, metadataDto.errors.first().pluginErrorMessage)
         Assertions.assertNull(metadataDto.title)
         Assertions.assertTrue(metadataDto.authors.isEmpty())
     }
@@ -141,8 +142,8 @@ class CalibreMetadataProviderTest(
 
         Assertions.assertTrue(result.isPresent)
         val metadataDto = result.get()
-        Assertions.assertEquals(MetadataError.EXCEPTION_CAUGHT, metadataDto.errorType)
-        Assertions.assertEquals(exceptionMessage, metadataDto.pluginErrorMessage)
+        Assertions.assertEquals(MetadataErrorType.EXCEPTION_CAUGHT, metadataDto.errors.first().errorType)
+        Assertions.assertEquals(exceptionMessage, metadataDto.errors.first().pluginErrorMessage)
         Assertions.assertNull(metadataDto.title)
         Assertions.assertTrue(metadataDto.authors.isEmpty())
     }
@@ -178,8 +179,7 @@ class CalibreMetadataProviderTest(
 
         Assertions.assertTrue(result.isPresent)
         val metadataDto = result.get()
-        Assertions.assertNull(metadataDto.errorType)
-        Assertions.assertNull(metadataDto.pluginErrorMessage)
+        Assertions.assertTrue(metadataDto.errors.isEmpty())
         Assertions.assertEquals("The Fellowship of the Ring", metadataDto.title)
         Assertions.assertEquals("9780547928210", metadataDto.isbn13)
         Assertions.assertEquals(1, metadataDto.authors.size)
@@ -225,8 +225,7 @@ class CalibreMetadataProviderTest(
         // Verify the result is present and contains expected metadata
         Assertions.assertTrue(result.isPresent)
         val metadataDto = result.get()
-        Assertions.assertNull(metadataDto.errorType)
-        Assertions.assertNull(metadataDto.pluginErrorMessage)
+        Assertions.assertTrue(metadataDto.errors.isEmpty())
         Assertions.assertEquals("The Fellowship of the Ring", metadataDto.title)
         Assertions.assertEquals("B007978NPG", metadataDto.amazonId)
         Assertions.assertEquals(1, metadataDto.authors.size)
@@ -267,8 +266,7 @@ class CalibreMetadataProviderTest(
         // Verify the result is present and contains expected metadata
         Assertions.assertTrue(result.isPresent)
         val metadataDto = result.get()
-        Assertions.assertNull(metadataDto.errorType)
-        Assertions.assertNull(metadataDto.pluginErrorMessage)
+        Assertions.assertTrue(metadataDto.errors.isEmpty())
         Assertions.assertEquals("The Fellowship of the Ring", metadataDto.title)
         Assertions.assertEquals("9780547928210", metadataDto.isbn13)
         Assertions.assertEquals(1, metadataDto.authors.size)
@@ -309,8 +307,7 @@ class CalibreMetadataProviderTest(
         // Verify the result is present and contains expected metadata
         Assertions.assertTrue(result.isPresent)
         val metadataDto = result.get()
-        Assertions.assertNull(metadataDto.errorType)
-        Assertions.assertNull(metadataDto.pluginErrorMessage)
+        Assertions.assertTrue(metadataDto.errors.isEmpty())
         Assertions.assertEquals("The Fellowship of the Ring", metadataDto.title)
         Assertions.assertEquals("9780547928210", metadataDto.isbn13)
         Assertions.assertEquals(1, metadataDto.authors.size)
@@ -507,17 +504,29 @@ class CalibreMetadataProviderTest(
     @Test
     fun testMetadataErrorEnumValues() {
         // Test that MetadataError enum contains the expected values
-        Assertions.assertEquals("EXIT_CODE_NOT_ZERO", MetadataError.EXIT_CODE_NOT_ZERO.name)
-        Assertions.assertEquals("EXCEPTION_CAUGHT", MetadataError.EXCEPTION_CAUGHT.name)
+        Assertions.assertEquals("EXIT_CODE_NOT_ZERO", MetadataErrorType.EXIT_CODE_NOT_ZERO.name)
+        Assertions.assertEquals("EXCEPTION_CAUGHT", MetadataErrorType.EXCEPTION_CAUGHT.name)
 
         // Test that we can create MetadataDto with these error types
         val exitCodeDto = MetadataDto()
-        exitCodeDto.errorType = MetadataError.EXIT_CODE_NOT_ZERO
-        Assertions.assertEquals(MetadataError.EXIT_CODE_NOT_ZERO, exitCodeDto.errorType)
+        val metadataError =
+            MetadataError(
+                sourcePlugin = "test",
+                errorType = MetadataErrorType.EXIT_CODE_NOT_ZERO,
+                pluginErrorMessage = null,
+            )
+        exitCodeDto.errors.add(metadataError)
+        Assertions.assertEquals(MetadataErrorType.EXIT_CODE_NOT_ZERO, exitCodeDto.errors.first().errorType)
 
         val exceptionDto = MetadataDto()
-        exceptionDto.errorType = MetadataError.EXCEPTION_CAUGHT
-        Assertions.assertEquals(MetadataError.EXCEPTION_CAUGHT, exceptionDto.errorType)
+        val exceptionError =
+            MetadataError(
+                sourcePlugin = "test",
+                errorType = MetadataErrorType.EXCEPTION_CAUGHT,
+                pluginErrorMessage = null,
+            )
+        exceptionDto.errors.add(exceptionError)
+        Assertions.assertEquals(MetadataErrorType.EXCEPTION_CAUGHT, exceptionDto.errors.first().errorType)
     }
 
     @Test
@@ -526,12 +535,18 @@ class CalibreMetadataProviderTest(
         val dto = MetadataDto()
 
         // Test setting and getting error type
-        dto.errorType = MetadataError.EXIT_CODE_NOT_ZERO
-        Assertions.assertEquals(MetadataError.EXIT_CODE_NOT_ZERO, dto.errorType)
+        val metadataError =
+            MetadataError(
+                sourcePlugin = "test",
+                errorType = MetadataErrorType.EXIT_CODE_NOT_ZERO,
+                pluginErrorMessage = null,
+            )
+        dto.errors.add(metadataError)
+        Assertions.assertEquals(MetadataErrorType.EXIT_CODE_NOT_ZERO, dto.errors.first().errorType)
 
         // Test setting and getting plugin error message
-        dto.pluginErrorMessage = "Test error message"
-        Assertions.assertEquals("Test error message", dto.pluginErrorMessage)
+        metadataError.pluginErrorMessage = "Test error message"
+        Assertions.assertEquals("Test error message", dto.errors.first().pluginErrorMessage)
 
         // Test that other fields remain null when error is set
         Assertions.assertNull(dto.title)
@@ -550,15 +565,20 @@ class CalibreMetadataProviderTest(
         dto.authors.add("Test Author")
 
         // Set error information
-        dto.errorType = MetadataError.EXCEPTION_CAUGHT
-        dto.pluginErrorMessage = "Partial data retrieved before error occurred"
+        val metadataError =
+            MetadataError(
+                sourcePlugin = "test",
+                errorType = MetadataErrorType.EXCEPTION_CAUGHT,
+                pluginErrorMessage = "Partial data retrieved before error occurred",
+            )
+        dto.errors.add(metadataError)
 
         // Verify both data and error information are preserved
         Assertions.assertEquals("Test Book", dto.title)
         Assertions.assertEquals("9780547928210", dto.isbn13)
         Assertions.assertEquals(1, dto.authors.size)
         Assertions.assertEquals("Test Author", dto.authors.first())
-        Assertions.assertEquals(MetadataError.EXCEPTION_CAUGHT, dto.errorType)
-        Assertions.assertEquals("Partial data retrieved before error occurred", dto.pluginErrorMessage)
+        Assertions.assertEquals(MetadataErrorType.EXCEPTION_CAUGHT, dto.errors.first().errorType)
+        Assertions.assertEquals("Partial data retrieved before error occurred", dto.errors.first().pluginErrorMessage)
     }
 }

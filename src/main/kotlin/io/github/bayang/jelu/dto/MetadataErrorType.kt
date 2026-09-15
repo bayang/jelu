@@ -1,6 +1,6 @@
 package io.github.bayang.jelu.dto
 
-enum class MetadataError {
+enum class MetadataErrorType {
     EXIT_CODE_NOT_ZERO,
     EXCEPTION_CAUGHT,
 }

@@ -160,6 +160,7 @@ defineProps<{
         >
           <span class="font-semibold capitalize">{{ t('book.summary') }} : </span>{{ metadata.summary }}
         </p>
+        <p><span class="font-semibold capitalize">{{ t("metadata.source_plugin") }}&nbsp;:&nbsp;</span>{{ metadata.sourcePlugin }}</p>
       </div>
     </div>
   </section>
