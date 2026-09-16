@@ -985,9 +985,7 @@ class BookRepository(
             updated.summary = sanitizeHtml(book.summary)
         }
         // image must be set when saving file succeeds
-        book.publishedDate?.let {
-            updated.publishedDate = book.publishedDate.trim()
-        }
+        updated.publishedDate = book.publishedDate?.trim()
         book.amazonId?.let {
             updated.amazonId = book.amazonId.trim()
         }

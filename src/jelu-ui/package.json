@@ -33,7 +33,6 @@
     "vue-i18n": "11.2.2",
     "vue-qrcode-reader": "5.7.3",
     "vue-router": "5.2.0",
-    "vue3-datepicker": "0.4.0",
     "vuedraggable": "4.1.0",
     "vuex": "4.0.2"
   },

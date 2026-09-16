@@ -114,6 +114,8 @@
   --oruga-autocomplete-item-color: var(--color-primary-content);
   --oruga-autocomplete-item-hover-background-color: var(--color-primary-content);
 
+  --oruga-datepicker-item-selected-background-color: var(--color-secondary);
+  --oruga-datepicker-item-selected-color: var(--color-secondary-content);
 
   --vdp-bg-color: var(--color-base-100);
   --vdp-text-color: var(--color-base-content);
@@ -179,8 +181,12 @@ li.o-pagination__item button.o-pagination__button {
   @apply w-full border-0 focus:border-0;
 }
 
-.o-datepicker__table__cell {
+.o-datepicker__table__cell--selectable {
   @apply hover:bg-accent;
+}
+
+.o-datepicker__table__head-cell {
+  @apply text-accent-content;
 }
 
 .o-taginput .o-taginput__container {
@@ -405,13 +411,6 @@ li.o-pagination__item button.o-pagination__button {
   }
 }
 /* end loader from https://loading.io/css/ */
-
-/* clear button positioning from https://github.com/icehaunter/vue3-datepicker  */
-.v3dp__clearable {
-  left: -25px!;
-  top: 5px!;
-}
-/* end clear button */
 
 /* vue markdown editor textarea color */
 .v-md-textarea-editor pre, .v-md-textarea-editor textarea {

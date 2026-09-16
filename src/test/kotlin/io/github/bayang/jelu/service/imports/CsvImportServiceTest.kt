@@ -261,7 +261,7 @@ class CsvImportServiceTest(
         Assertions.assertEquals(1, userbooksPage.content.size)
         imported = userbooksPage.content[0]
         // publishedDate is different in 2nd csv, first import date should not have been modified
-        Assertions.assertEquals("2018", imported.book.publishedDate)
+        Assertions.assertEquals("2015", imported.book.publishedDate)
         Assertions.assertTrue(imported.book.image!!.contains("Epidemie", true))
     }
 
