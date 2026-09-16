@@ -5,6 +5,7 @@ import { computed, Ref, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import useDates from '../composables/dates'
+import useCacheBusting from '../composables/cacheBusting'
 import { Book, UserBook } from '../model/Book'
 import dataService from "../services/DataService"
 import { ObjectUtils } from '../utils/ObjectUtils'
@@ -31,6 +32,7 @@ const oruga = useOruga();
 console.log(oruga)
 
 const { stringToDate } = useDates()
+const { currentTimestamp, refreshTimestamp } = useCacheBusting()
 
 const getBookIsLoading: Ref<boolean> = ref(false)
 
@@ -77,6 +79,12 @@ watch(() => props.book.id, (newVal, oldVal) => {
   bookCanBeAdded.value = false
   if (props.addBook && newVal !== oldVal && props.book.id != null) {
     getUserbookId()
+  }
+})
+
+watch(() => props.book.image, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    refreshTimestamp()
   }
 })
 
