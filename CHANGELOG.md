@@ -1,3 +1,10 @@
+### [0.87.3](https://github.com/bayang/jelu/compare/v0.87.2...v0.87.3) (2026-09-16)
+
+
+### Bug Fixes
+
+* date pickers harmonization [#278](https://github.com/bayang/jelu/issues/278) ([d508f41](https://github.com/bayang/jelu/commit/d508f4179af317ecfa9e7b800abef5536ffeaa06))
+
 ### [0.87.2](https://github.com/bayang/jelu/compare/v0.87.1...v0.87.2) (2026-09-15)
 
 
