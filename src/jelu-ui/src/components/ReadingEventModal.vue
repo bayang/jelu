@@ -105,7 +105,7 @@ const { typographyClasses } = useTypography()
           <label class="label">
             <span class="label-text font-semibold">{{ t('reading_events.last_event_type') }} : </span>
           </label>
-          <div class="field">
+          <div class="field mt-2">
             <input
               v-model="currentCreateEvent.eventType"
               type="radio"
@@ -117,7 +117,7 @@ const { typographyClasses } = useTypography()
               {{ t('reading_events.finished') }}
             </span>
           </div>
-          <div class="field">
+          <div class="field mt-2">
             <input
               v-model="currentCreateEvent.eventType"
               type="radio"
@@ -129,7 +129,7 @@ const { typographyClasses } = useTypography()
               {{ t('reading_events.currently_reading') }}
             </span>
           </div>
-          <div class="field">
+          <div class="field mt-2">
             <input
               v-model="currentCreateEvent.eventType"
               type="radio"
@@ -142,7 +142,7 @@ const { typographyClasses } = useTypography()
             </span>
           </div>
         </div>
-        <div class="field">
+        <div class="field mt-2">
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.start_date') }} : </span>
           </label>
@@ -159,7 +159,7 @@ const { typographyClasses } = useTypography()
         </div>
         <div
           v-if="currentEvent.eventType !== ReadingEventType.CURRENTLY_READING"
-          class="field"
+          class="field mt-2"
         >
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_date') }} : </span>
@@ -175,9 +175,9 @@ const { typographyClasses } = useTypography()
             expanded
           />
         </div>
-        <div class="mt-3">
+        <div class="mt-3 flex gap-4 justify-center">
           <button
-            class="btn btn-secondary mr-2 uppercase"
+            class="btn btn-secondary uppercase"
             @click="update"
           >
             <span class="icon">
@@ -201,21 +201,19 @@ const { typographyClasses } = useTypography()
       v-else
     >
       <div>
-        <div>
-          <h1
-            class="text-2xl capitalize"
-            :class="typographyClasses"
-          >
-            {{ t('reading_events.choose_event') }}
-          </h1>
-        </div>
+        <h1
+          class="text-2xl capitalize"
+          :class="typographyClasses"
+        >
+          {{ t('reading_events.choose_event') }}
+        </h1>
       </div>
       <div>
         <div class="field">
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_type') }} : </span>
           </label>
-          <div class="field">
+          <div class="field mt-2">
             <input
               v-model="currentCreateEvent.eventType"
               type="radio"
@@ -227,7 +225,7 @@ const { typographyClasses } = useTypography()
               {{ t('reading_events.finished') }}
             </span>
           </div>
-          <div class="field">
+          <div class="field mt-2">
             <input
               v-model="currentCreateEvent.eventType"
               type="radio"
@@ -239,7 +237,7 @@ const { typographyClasses } = useTypography()
               {{ t('reading_events.currently_reading') }}
             </span>
           </div>
-          <div class="field">
+          <div class="field mt-2">
             <input
               v-model="currentCreateEvent.eventType"
               type="radio"
@@ -254,7 +252,7 @@ const { typographyClasses } = useTypography()
         </div>
         <div
           v-if="currentEvent.eventType === ReadingEventType.CURRENTLY_READING"
-          class="field"
+          class="field mt-2"
         >
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.start_date') }} :</span>
@@ -272,7 +270,7 @@ const { typographyClasses } = useTypography()
         </div>
         <div
           v-if="currentCreateEvent.eventType != ReadingEventType.CURRENTLY_READING"
-          class="field"
+          class="field mt-2"
         >
           <label class="label">
             <span class="label-text font-semibold first-letter:capitalize">{{ t('reading_events.event_date') }} :</span>
@@ -288,7 +286,7 @@ const { typographyClasses } = useTypography()
             expanded
           />
         </div>
-        <div>
+        <div class="flex justify-center mt-4">
           <button
             class="btn btn-secondary btn-outline mt-3 uppercase"
             @click="create"

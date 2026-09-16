@@ -27,6 +27,8 @@ import ReadProgressModal from './ReadProgressModal.vue'
 import ReviewCard from "./ReviewCard.vue"
 import ReviewModalVue from './ReviewModal.vue'
 import useTypography from "../composables/typography"
+import { Pencil, Trash2, Plus, Share2, EllipsisVertical, BookSearch, SquarePercent, Bookmark, ClipboardCopy  } from '@lucide/vue';
+
 
 const { t, d } = useI18n({
       inheritLocale: true,
@@ -567,7 +569,7 @@ getBook()
 
 <template>
   <div class="grid grid-cols-1 justify-center justify-items-center">
-    <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12">
+    <div class="grid sm:grid-cols-3 mb-4">
       <div />
       <div class="grow">
         <h3
@@ -585,14 +587,14 @@ getBook()
       </div>
       <div
         v-if="book != null"
-        class="flex items-center flex-wrap"
+        class="flex items-center flex-wrap gap-1"
       >
         <button
           class="btn btn-primary btn-outline mr-2 p-2 uppercase"
           @click="toggleEdit"
         >
           <span class="icon">
-            <i class="mdi mdi-pencil mdi-18px" />
+            <pencil :size="18" />
           </span>
           <span>{{ t('labels.edit') }}</span>
         </button>
@@ -601,7 +603,7 @@ getBook()
           @click="deleteBook"
         >
           <span class="icon">
-            <i class="mdi mdi-delete mdi-18px" />
+            <trash2 :size="18" />
           </span>
           <span>{{ t('labels.delete') }}</span>
         </button>
@@ -610,7 +612,7 @@ getBook()
           @click="toggleReadingEventModal(defaultCreateEvent(), false)"
         >
           <span class="icon">
-            <i class="mdi mdi-plus mdi-18px" />
+            <plus :size="18" />
           </span>
           <span>{{ t('labels.event') }}</span>
         </button>
@@ -618,33 +620,15 @@ getBook()
           v-tooltip="t('labels.get_embed_code')"
           for="my-modal-4"
           class="btn btn-circle btn-outline ml-0 border-none modal-button"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
         >
-          <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-        </svg></label>
+          <share2 :size="18" />
+        </label>
         <div class="dropdown dropdown-hover bg-transparent">
           <label
             tabindex="0"
             class="btn m-1 btn-circle btn-outline border-none"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
-              />
-            </svg>
+            <ellipsis-vertical :size="20" />
           </label>
           <ul
             tabindex="0"
@@ -672,20 +656,7 @@ getBook()
                 class="btn btn-circle btn-outline border-none"
                 @click="toggleFetchMetadataModal(book?.book)"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
-                  />
-                </svg>
+                <book-search :size="18" />
               </button>
             </li>
             <li>
@@ -694,20 +665,7 @@ getBook()
                 class="btn btn-circle btn-outline border-none"
                 @click="toggleReadProgressModal(book?.id!!, book?.book.pageCount ?? null, book?.percentRead ?? null, book?.currentPageNumber ?? null)"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                  />
-                </svg>
+                <square-percent :size="18" />
               </button>
             </li>
             <li>
@@ -716,20 +674,7 @@ getBook()
                 class="btn btn-circle btn-outline border-none"
                 @click="toggleBookQuoteModal(book?.book, false, null)"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
-                  />
-                </svg>
+                <bookmark :size="18" />
               </button>
             </li>
           </ul>
@@ -1144,7 +1089,7 @@ getBook()
               class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
               @click="toggleReadingEventModal(event, true)"
             >
-              <i class="mdi mdi-pencil mdi-18px" />
+              <pencil :size="18" />
             </button>
           </div>
           <div
@@ -1218,7 +1163,7 @@ getBook()
               class="sm:hidden btn btn-xs btn-circle btn-outline mb-0 border-0"
               @click="toggleReadingEventModal(event, true)"
             >
-              <i class="mdi mdi-pencil mdi-18px" />
+              <pencil :size="18" />
             </button>
           </div>
         </div>
@@ -1228,18 +1173,18 @@ getBook()
       </div>
     </div>
     <div v-if="users != null && users.filter(u => u.id !== user.id).length > 0" class="mt-2">
-        <div class="text-xl " :class="typographyClasses" >{{ t("labels.other_owners")}}&nbsp;:</div>
-        <p
-          v-for="ppl in users.filter(u => u.id !== user.id)"
-          :key="ppl.id"
+      <div class="text-xl " :class="typographyClasses" >{{ t("labels.other_owners")}}&nbsp;:</div>
+      <p
+        v-for="ppl in users.filter(u => u.id !== user.id)"
+        :key="ppl.id"
+      >
+        <router-link
+          class="link hover:underline hover:decoration-4 hover:decoration-secondary"
+          :to="{ name: 'user-detail', params: { userId: ppl.id } }"
         >
-              <router-link
-                class="link hover:underline hover:decoration-4 hover:decoration-secondary"
-                :to="{ name: 'user-detail', params: { userId: ppl.id } }"
-              >
-                <strong>{{ ppl.login }}</strong>&nbsp;
-              </router-link>
-        </p>
+          <strong>{{ ppl.login }}</strong>&nbsp;
+        </router-link>
+      </p>
     </div>
   </div>
   <o-loading
@@ -1266,20 +1211,9 @@ getBook()
           v-if="isSupported"
           class="btn btn-outline btn-sm btn-circle border-none ml-1"
           @click="copyToClipboard(embedCode)"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-          />
-        </svg></button>
+          <clipboard-copy :size="18" />
+        </button>
       </div>
       <div class="py-4 prose"><pre><code>{{ embedCode }}</code></pre></div>
       <div class="mt-2 capitalize">{{ t('labels.preview') }} : </div>

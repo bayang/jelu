@@ -9,7 +9,7 @@ import { Tag } from "../model/Tag";
 import { useOruga } from "@oruga-ui/oruga-next";
 import { useTitle } from "@vueuse/core";
 import useTypography from "../composables/typography";
-import { ArrowDownAZ, ArrowDownZA, CalendarArrowDown, CalendarArrowUp, Trash } from '@lucide/vue';
+import { ArrowDownAZ, ArrowDownZA, CalendarArrowDown, CalendarArrowUp, Trash2 } from '@lucide/vue';
 
 const { t } = useI18n({
       inheritLocale: true,
@@ -189,7 +189,7 @@ const { typographyClasses } = useTypography()
               class="btn btn-sm"
               @click="deleteShelf(shelf)"
             >
-              <trash :size="21" />
+              <trash2 :size="21" />
             </button>
           </div>
         </div>
