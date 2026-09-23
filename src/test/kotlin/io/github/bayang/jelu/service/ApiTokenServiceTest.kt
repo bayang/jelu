@@ -139,6 +139,29 @@ class ApiTokenServiceTest(
     }
 
     @Test
+    fun testUpdateLastUsed() {
+        apiTokenService.findByUserId(testUser.id!!).forEach {
+            apiTokenService.revokeToken(it.id, testUser.id!!, isAdmin = true)
+        }
+        val created =
+            apiTokenService.createToken(
+                CreateApiTokenDto(name = "Usage Test Token", scopes = listOf(TokenScope.BOOKS_READ.scopeName)),
+                testUser.id!!,
+            )
+
+        apiTokenService.updateLastUsed(created.token.id)
+        apiTokenService.updateLastUsed(created.token.id)
+
+        val used = apiTokenService.findById(created.token.id)!!
+        Assertions.assertEquals(2, used.usageCount)
+        Assertions.assertNotNull(used.lastUsedAt)
+
+        // A token revoked mid-request just updates nothing rather than throwing
+        apiTokenService.revokeToken(created.token.id, testUser.id!!, isAdmin = true)
+        apiTokenService.updateLastUsed(created.token.id)
+    }
+
+    @Test
     fun testUpdateToken() {
         // Clean up any existing tokens
         apiTokenService.findByUserId(testUser.id!!).forEach {
