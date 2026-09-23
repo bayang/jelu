@@ -5,6 +5,11 @@ jelu:
     # is in flight, but only use it on a local disk, it isn't safe on network shares like NFS or SMB.
     # While running in wal, back up jelu.db-wal and jelu.db-shm along with jelu.db (or stop Jelu first).
     journalMode: delete
+    # Size of the JDBC connection pool. Left unset it follows journalMode, 1 under delete, where a
+    # writer locks out readers anyway and a single connection keeps Jelu from tripping over itself
+    # with SQLITE_BUSY, and Hikari's usual 10 under wal so that reads can run alongside a write.
+    # Setting spring.datasource.hikari.maximum-pool-size directly takes precedence over this.
+    # poolSize: 1
   files:
     images: '${user.home}/.jelu/files/images/'
     imports: '${user.home}/.jelu/files/imports/'

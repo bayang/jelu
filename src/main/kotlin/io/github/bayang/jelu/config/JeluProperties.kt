@@ -32,7 +32,13 @@ data class JeluProperties(
     data class Database(
         @get:NotBlank var path: String,
         var journalMode: JournalMode = JournalMode.DELETE,
-    )
+        // Left null so that the default can follow journalMode, see poolSizeOrDefault()
+        @get:Positive var poolSize: Int? = null,
+    ) {
+        // Under delete a writer locks out every reader anyway, so extra connections mostly buy
+        // SQLITE_BUSY. WAL lets reads run alongside a write, so it keeps Hikari's usual 10.
+        fun poolSizeOrDefault(): Int = poolSize ?: if (journalMode == JournalMode.WAL) 10 else 1
+    }
 
     // The datasource url in application.yml is what hands this to sqlite, we bind it here so that
     // a typo fails at startup, because sqlite silently ignores a journal_mode it doesn't recognise
