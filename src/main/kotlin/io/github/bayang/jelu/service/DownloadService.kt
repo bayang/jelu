@@ -8,10 +8,13 @@ import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 import java.nio.channels.Channels
-import java.nio.channels.FileChannel
-import java.nio.channels.ReadableByteChannel
 
 private val logger = KotlinLogging.logger {}
+
+// A cover host that accepts the connection and then stalls would otherwise block the
+// calling thread forever, so we bound both the connect and the read phase
+private const val CONNECT_TIMEOUT_MS = 10_000
+private const val READ_TIMEOUT_MS = 30_000
 
 @Service
 class DownloadService {
@@ -26,13 +29,17 @@ class DownloadService {
             logger.debug { "path ${url.path} file ${url.file}" }
             val conn = url.openConnection()
             conn.setRequestProperty("User-Agent", "jelu-app")
-            val stream = conn.getInputStream()
-            var readableByteChannel: ReadableByteChannel = Channels.newChannel(stream)
+            conn.connectTimeout = CONNECT_TIMEOUT_MS
+            conn.readTimeout = READ_TIMEOUT_MS
             val filename: String = imageName(title, bookId, FilenameUtils.getExtension(url.path))
             val targetFile: File = File(targetFolder, filename)
-            val fileOutputStream: FileOutputStream = FileOutputStream(targetFile)
-            val channel: FileChannel = fileOutputStream.channel
-            channel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE)
+            conn.getInputStream().use { stream ->
+                Channels.newChannel(stream).use { readableByteChannel ->
+                    FileOutputStream(targetFile).use { fileOutputStream ->
+                        fileOutputStream.channel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE)
+                    }
+                }
+            }
             return filename
         } catch (e: Exception) {
             logger.error("failed to download file from $sourceUrl", e)
