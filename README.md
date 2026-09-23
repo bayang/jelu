@@ -67,6 +67,8 @@ jelu:
     path: .
 ```
 
+By default Jelu keeps its SQLite database in the classic `delete` journal mode, which works just about anywhere. If your database lives on a local disk, you can set `jelu.database.journalMode` to `wal` (or `JELU_DATABASE_JOURNALMODE=wal` with Docker) so that reads don't have to wait on writes, which helps when several people or API scripts use Jelu at once. Be sure to leave it on `delete` if the database folder is on a network share (NFS, SMB/CIFS and the like), since WAL isn't safe there. In `wal` mode, recent changes can sit in a `jelu.db-wal` file next to `jelu.db` while Jelu is running, so back up all the `jelu.db*` files together or stop Jelu first.
+
 The automatic metadata online search is provided for the moment through a calibre tool called fetch-ebook-metadata (whether you like it or not).
 
 So if you want to use it with the java install, provide the path to the executable in the config, like so :

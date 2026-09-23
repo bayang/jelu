@@ -1,6 +1,10 @@
 jelu:
   database:
     path: ${user.home}/.jelu/database/
+    # Either delete (sqlite's classic rollback journal) or wal. WAL lets reads carry on while a write
+    # is in flight, but only use it on a local disk, it isn't safe on network shares like NFS or SMB.
+    # While running in wal, back up jelu.db-wal and jelu.db-shm along with jelu.db (or stop Jelu first).
+    journalMode: delete
   files:
     images: '${user.home}/.jelu/files/images/'
     imports: '${user.home}/.jelu/files/imports/'
@@ -19,7 +23,11 @@ spring:
     drop-first: false
     change-log: classpath:liquibase.xml
   datasource:
-    url: jdbc:sqlite:${jelu.database.path}/jelu.db?foreign_keys=on;
+    # busy_timeout makes a writer wait its turn instead of failing with SQLITE_BUSY the moment it's
+    # blocked. We always set journal_mode, even to delete, because WAL is persisted in the db file
+    # and would otherwise stick. The placeholder is kebab-case so that relaxed binding picks up
+    # journalMode, journal-mode and JELU_DATABASE_JOURNALMODE alike.
+    url: jdbc:sqlite:${jelu.database.path}/jelu.db?journal_mode=${jelu.database.journal-mode:delete}&busy_timeout=10000&foreign_keys=on;
     username: jelu_user
     password: mypass1234
     driver-class-name: org.sqlite.JDBC

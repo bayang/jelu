@@ -31,7 +31,12 @@ data class JeluProperties(
 
     data class Database(
         @get:NotBlank var path: String,
+        var journalMode: JournalMode = JournalMode.DELETE,
     )
+
+    // The datasource url in application.yml is what hands this to sqlite, we bind it here so that
+    // a typo fails at startup, because sqlite silently ignores a journal_mode it doesn't recognise
+    enum class JournalMode { DELETE, WAL }
 
     data class Files(
         @get:NotBlank var images: String,
