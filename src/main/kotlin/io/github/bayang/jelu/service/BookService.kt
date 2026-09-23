@@ -1,18 +1,13 @@
 package io.github.bayang.jelu.service
 
-import io.github.bayang.jelu.config.JeluProperties
-import io.github.bayang.jelu.dao.Author
 import io.github.bayang.jelu.dao.Book
 import io.github.bayang.jelu.dao.BookRepository
-import io.github.bayang.jelu.dao.ReadingEventRepository
 import io.github.bayang.jelu.dao.ReadingEventType
-import io.github.bayang.jelu.dao.UserBook
 import io.github.bayang.jelu.dto.AuthorDto
 import io.github.bayang.jelu.dto.AuthorUpdateDto
 import io.github.bayang.jelu.dto.BookCreateDto
 import io.github.bayang.jelu.dto.BookDto
 import io.github.bayang.jelu.dto.BookUpdateDto
-import io.github.bayang.jelu.dto.CreateReadingEventDto
 import io.github.bayang.jelu.dto.CreateSeriesRatingDto
 import io.github.bayang.jelu.dto.CreateUserBookDto
 import io.github.bayang.jelu.dto.LibraryFilter
@@ -29,15 +24,10 @@ import io.github.bayang.jelu.dto.UserBookLightDto
 import io.github.bayang.jelu.dto.UserBookUpdateDto
 import io.github.bayang.jelu.dto.UserBookWithoutEventsAndUserDto
 import io.github.bayang.jelu.dto.UserDto
-import io.github.bayang.jelu.dto.fromBookCreateDto
 import io.github.bayang.jelu.search.LuceneEntity
 import io.github.bayang.jelu.search.LuceneHelper
-import io.github.bayang.jelu.service.metadata.providers.CalibreMetadataProvider
-import io.github.bayang.jelu.utils.imageName
-import io.github.bayang.jelu.utils.resizeImage
-import io.github.bayang.jelu.utils.slugify
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.apache.commons.io.FilenameUtils
+import org.apache.commons.io.FileUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -47,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 import java.util.UUID
 
 private val logger = KotlinLogging.logger {}
@@ -55,13 +44,11 @@ private val logger = KotlinLogging.logger {}
 @Component
 class BookService(
     private val bookRepository: BookRepository,
-    private val eventRepository: ReadingEventRepository,
-    private val properties: JeluProperties,
     private val downloadService: DownloadService,
-    private val fileManager: FileManager,
     private val shelfService: ShelfService,
     private val searchIndexService: SearchIndexService,
     private val luceneHelper: LuceneHelper,
+    private val bookPersistenceService: BookPersistenceService,
 ) {
     @Transactional
     fun findAll(
@@ -152,53 +139,13 @@ class BookService(
     /**
      * Image not updated, to add or update an image call the variant which accepts a MultiPartFile
      */
-    @Transactional
     fun update(
         bookId: UUID,
         book: BookUpdateDto,
-    ): BookDto {
-        val res = bookRepository.update(bookId, book)
-        val previousImage: String? = res.image
-        var backup: File? = null
-        var skipSave = false
-        // image field is empty in udate dto and previous book had an image
-        // it means image has been explicitely set to null in update dto -> remove existing image
-        // otherwise it is impossible to remove an image from the UI without replacing it by a new one
-        if (book.image.isNullOrBlank()) {
-            skipSave = true
-            // remove previous image
-            if (book.image.isNullOrBlank() && !previousImage.isNullOrBlank()) {
-                res.image = null
-                fileManager.deleteImage(previousImage)
-            }
-        } else if (
-            book.image.isNotBlank() &&
-            !previousImage.isNullOrBlank() &&
-            previousImage.equals(book.image, false)
-        ) {
-            // image field in update dto is the same as in BDD -> no change
-            skipSave = true
+    ): BookDto =
+        withStagedCover(book.image) { stagedCover ->
+            bookPersistenceService.update(bookId, book, stagedCover)
         }
-        if (!skipSave) {
-            // if we need to update image and there is already one, backup it
-            if (!book.image.isNullOrBlank() && !previousImage.isNullOrBlank()) {
-                val currentImage = File(properties.files.images, previousImage)
-                if (currentImage.exists()) {
-                    backup = File(properties.files.images, "$previousImage.bak")
-                    Files.move(currentImage.toPath(), backup.toPath())
-                }
-            }
-            val savedImage: String? =
-                saveImages(null, res.title, res.id.toString(), book.image, properties.files.images)
-            res.image = savedImage
-            // we had a previous image and we saved a new one : delete the old one
-            if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
-                Files.deleteIfExists(backup.toPath())
-            }
-        }
-        searchIndexService.bookUpdated(res)
-        return res.toBookDto()
-    }
 
     // call saveImages in case image url is set ?
 
@@ -215,204 +162,69 @@ class BookService(
         return res.toUserBookLightDto()
     }
 
-    @Transactional
     fun update(
         userBookId: UUID,
         book: UserBookUpdateDto,
         file: MultipartFile?,
-    ): UserBookLightDto {
-        val updated: UserBook = bookRepository.update(userBookId, book)
-        val previousImage: String? = updated.book.image
-        var backup: File? = null
-        var skipSave = false
-        // no multipart image and url image field is empty in udate dto
-        // it means no new file upload and image has been explicitely set to null in update dto -> remove existing image
-        // otherwise it is impossible to remove an image from the UI without replacing it by a new one
-        if (file == null && book.book?.image.isNullOrBlank()) {
-            skipSave = true
-            // if only userbook is provided (eg if only userbook fields have to be updated)
-            // then don't touch the image
-            if (book.book != null && book.book.image.isNullOrBlank()) {
-                updated.book.image = null
-                if (previousImage != null) {
-                    fileManager.deleteImage(previousImage)
-                }
-            }
-        } else if (file == null &&
-            !book.book?.image.isNullOrBlank() &&
-            !previousImage.isNullOrBlank() &&
-            previousImage.equals(book.book.image, false)
-        ) {
-            // no multipart file and image field in update dto is the same as in BDD -> no change
-            skipSave = true
+    ): UserBookLightDto =
+        withStagedCover(book.book?.image, file) { stagedCover ->
+            bookPersistenceService.update(userBookId, book, file, stagedCover)
         }
-        if (!skipSave) {
-            // if we need to update image and there is already one, backup it
-            if ((file != null || !book.book?.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
-                val currentImage = File(properties.files.images, previousImage)
-                if (currentImage.exists()) {
-                    backup = File(properties.files.images, "$previousImage.bak")
-                    Files.move(currentImage.toPath(), backup.toPath())
-                }
-            }
-            val savedImage: String? =
-                saveImages(file, updated.book.title, updated.book.id.toString(), book.book?.image, properties.files.images)
-            updated.book.image = savedImage
-            // we had a previous image and we saved a new one : delete the old one
-            if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
-                Files.deleteIfExists(backup.toPath())
-            }
-        }
-        searchIndexService.bookUpdated(updated.book)
-        return updated.toUserBookLightDto()
-    }
 
-    @Transactional
     fun save(
         userBook: CreateUserBookDto,
         user: UserDto,
         file: MultipartFile?,
-    ): UserBookLightDto {
-        var newBook = false
-        val book: Book =
-            if (userBook.book.id != null) {
-                bookRepository.update(userBook.book.id, fromBookCreateDto(userBook.book))
-            } else {
-                bookRepository.save(userBook.book).also { newBook = true }
-            }
-        val created: UserBook = bookRepository.save(book, user, userBook)
-        if (userBook.lastReadingEvent != null) {
-            eventRepository.save(
-                created,
-                CreateReadingEventDto(
-                    eventType = userBook.lastReadingEvent,
-                    bookId = null,
-                    eventDate = userBook.lastReadingEventDate,
-                    startDate = null,
-                ),
-            )
+    ): UserBookLightDto =
+        withStagedCover(userBook.book.image, file) { stagedCover ->
+            bookPersistenceService.save(userBook, user, file, stagedCover)
         }
-        var backup: File? = null
-        var currentImage: File? = null
-        if (file != null || userBook.book.image != null) {
-            // existing book used on UserBook already had an image, backup it
-            if (!book.image.isNullOrBlank()) {
-                currentImage = File(properties.files.images, book.image)
-                if (currentImage.exists()) {
-                    backup = File(properties.files.images, "${book.image}.bak")
-                    Files.move(currentImage.toPath(), backup.toPath())
-                }
-            }
-            book.image = saveImages(file, book.title, book.id.toString(), userBook.book.image, properties.files.images)
-            // we had a previous image and we saved a new one : delete the old one
-            if (backup != null && backup.exists()) {
-                // successfully saved new image, delete backup
-                if (book.image != null && book.image!!.isNotBlank()) {
-                    Files.deleteIfExists(backup.toPath())
-                } else {
-                    // saving new file failed ? Restore backup
-                    if (currentImage != null) {
-                        Files.move(backup.toPath(), currentImage.toPath())
-                        book.image = currentImage.name
-                    }
-                }
-            }
-        }
-        if (newBook) {
-            searchIndexService.bookAdded(book)
-        } else {
-            searchIndexService.bookUpdated(book)
-        }
-        return created.toUserBookLightDto()
-    }
 
-    @Transactional
     fun save(
         book: BookCreateDto,
         file: MultipartFile?,
-    ): BookDto {
-        val saved: Book = bookRepository.save(book)
-        saved.image = saveImages(file, saved.title, saved.id.toString(), book.image, properties.files.images)
-        searchIndexService.bookAdded(saved)
-        return saved.toBookDto()
-    }
-
-    fun saveImages(
-        file: MultipartFile?,
-        title: String,
-        id: String,
-        dtoImage: String?,
-        targetDir: String,
-    ): String? {
-        var importedFile = false
-        var savedImage: String? = null
-        if (file != null) {
-            try {
-                val destFileName: String = imageName(slugify(title), id, FilenameUtils.getExtension(file.originalFilename))
-                val destFile = File(targetDir, destFileName)
-                logger.debug { "target import file at ${destFile.absolutePath}" }
-                file.transferTo(destFile)
-                importedFile = true
-                savedImage = destFile.name
-            } catch (e: Exception) {
-                logger.error { "failed to save uploaded file ${file.originalFilename}" }
-            }
+    ): BookDto =
+        withStagedCover(book.image, file) { stagedCover ->
+            bookPersistenceService.save(book, file, stagedCover)
         }
 
-        if (!importedFile && !dtoImage.isNullOrBlank()) {
-            try {
-                // file already exists in the right folder, just rename it
-                if (dtoImage.startsWith(CalibreMetadataProvider.FILE_PREFIX)) {
-                    val targetFilename: String =
-                        imageName(
-                            slugify(title),
-                            id,
-                            FilenameUtils.getExtension(dtoImage),
-                        )
-                    var currentFile = File(targetDir, "$dtoImage.bak")
-                    if (!currentFile.exists()) {
-                        currentFile = File(targetDir, dtoImage)
-                    }
-                    val targetFile = File(currentFile.parent, targetFilename)
-                    val succeeded = currentFile.renameTo(targetFile)
-                    logger.debug { "renaming of metadata imported file $dtoImage was successful: $succeeded" }
-                    savedImage = targetFilename
-                } else if (dtoImage.startsWith("http://", true) || dtoImage.startsWith("https://", true)) {
-                    // file is from the internet
-                    val destFileName: String =
-                        downloadService.download(
-                            dtoImage,
-                            slugify(title),
-                            id,
-                            targetDir,
-                        )
-                    savedImage = destFileName
-                } else {
-                    // file was picked on the server
-                    val file = File(dtoImage)
-                    if (!file.exists() || !file.isAbsolute || file.isDirectory) {
-                        logger.debug { "invalid file $dtoImage" }
-                        return null
-                    }
-                    val targetFilename: String =
-                        imageName(
-                            slugify(title),
-                            id,
-                            FilenameUtils.getExtension(dtoImage),
-                        )
-                    val targetFile = File(targetDir, targetFilename)
-                    file.copyTo(targetFile)
-                    savedImage = targetFilename
-                }
-            } catch (e: Exception) {
-                logger.error { "failed to save remote file ${file?.originalFilename}" }
-            }
+    /**
+     * Downloads a remote cover into a throwaway directory and hands the local path to
+     * [block], so that a slow or hanging host can't stall us while the sqlite write lock
+     * is held. Nothing is fetched when a [file] was uploaded, since it always wins over the
+     * url, and anything that isn't an http url is passed through untouched for
+     * [BookPersistenceService] to handle as before.
+     */
+    private fun <T> withStagedCover(
+        image: String?,
+        file: MultipartFile? = null,
+        block: (String?) -> T,
+    ): T {
+        val url = image?.takeIf { file == null && isRemoteUrl(it) } ?: return block(null)
+        // We own the whole directory rather than just the file, so that a download that
+        // fails partway through doesn't leave anything behind either
+        val stagingDir = Files.createTempDirectory("jelu-cover").toFile()
+        try {
+            return block(stageRemoteCover(url, stagingDir)?.absolutePath)
+        } finally {
+            FileUtils.deleteQuietly(stagingDir)
         }
-        if (!savedImage.isNullOrBlank() && properties.files.resizeImages) {
-            resizeImage(File(properties.files.images, savedImage))
-        }
-        return savedImage
     }
+
+    private fun isRemoteUrl(image: String): Boolean = image.startsWith("http://", true) || image.startsWith("https://", true)
+
+    private fun stageRemoteCover(
+        url: String,
+        stagingDir: File,
+    ): File? =
+        try {
+            File(stagingDir, downloadService.download(url, "cover", UUID.randomUUID().toString(), stagingDir.absolutePath))
+        } catch (e: Exception) {
+            // a book that saves without its cover beats a save that fails outright, which is
+            // what the image handling has always done with a broken download
+            logger.error(e) { "failed to stage remote cover $url" }
+            null
+        }
 
     @Transactional
     fun save(author: AuthorDto): AuthorDto = bookRepository.save(author).toAuthorDto()
@@ -428,47 +240,14 @@ class BookService(
         return res.toAuthorDto()
     }
 
-    @Transactional
     fun updateAuthor(
         authorId: UUID,
         author: AuthorUpdateDto,
         file: MultipartFile?,
-    ): AuthorDto {
-        var updated: Author = bookRepository.updateAuthor(authorId, author)
-        val previousImage: String? = updated.image
-        var skipSave = false
-        // no multipart image and url image field is empty in udate dto
-        if (file == null && author.image.isNullOrBlank()) {
-            skipSave = true
-        } else if (file == null &&
-            !author.image.isNullOrBlank() &&
-            !previousImage.isNullOrBlank() &&
-            previousImage.equals(author.image, false)
-        ) {
-            // no multipart file and image field in update dto is the same as in BDD -> no change
-            skipSave = true
+    ): AuthorDto =
+        withStagedCover(author.image, file) { stagedCover ->
+            bookPersistenceService.updateAuthor(authorId, author, file, stagedCover)
         }
-        // no new multipartFile and image field in update dto is the same as in bdd -> image has not changed, skip image saving
-        if (!skipSave) {
-            var backup: File? = null
-            // if we need to update image and there is already one, backup it
-            if ((file != null || !author.image.isNullOrBlank()) && !previousImage.isNullOrBlank()) {
-                val currentImage = File(properties.files.images, previousImage)
-                if (currentImage.exists()) {
-                    backup = File(properties.files.images, "$previousImage.bak")
-                    Files.move(currentImage.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING)
-                }
-            }
-            val savedImage: String? = saveImages(file, updated.name, updated.id.toString(), author.image, properties.files.images)
-            updated.image = savedImage
-            // we had a previous image and we saved a new one : delete the old one
-            if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
-                Files.deleteIfExists(backup.toPath())
-            }
-        }
-        searchIndexService.authorUpdated(authorId)
-        return updated.toAuthorDto()
-    }
 
     @Transactional
     fun updateSeries(

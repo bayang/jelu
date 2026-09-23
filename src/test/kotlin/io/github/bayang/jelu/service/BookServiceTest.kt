@@ -31,6 +31,8 @@ import io.github.bayang.jelu.tagDto
 import io.github.bayang.jelu.tags
 import io.github.bayang.jelu.utils.nowDateTime
 import io.github.bayang.jelu.utils.slugify
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import org.apache.lucene.index.Term
 import org.jetbrains.exposed.v1.dao.exceptions.EntityNotFoundException
 import org.junit.jupiter.api.AfterAll
@@ -1852,6 +1854,42 @@ class BookServiceTest(
         Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
         entitiesIds = luceneHelper.searchEntitiesIds("title1", LuceneEntity.Book)
         Assertions.assertEquals(1, entitiesIds?.size)
+    }
+
+    @Test
+    fun testUploadedCoverSkipsRemoteCoverDownload() {
+        MockWebServer().use { server ->
+            // Only queued so that a regression fails fast rather than waiting out the read timeout
+            server.enqueue(MockResponse().setResponseCode(404))
+            val createBook = bookDto().apply { image = server.url("/cover.jpg").toString() }
+            val uploadFile =
+                MockMultipartFile("test-cover.jpg", "test-cover.jpg", "image/jpeg", this::class.java.getResourceAsStream("test-cover.jpg"))
+            val saved: UserBookLightDto = bookService.save(createUserBookDto(createBook), user(), uploadFile)
+            Assertions.assertEquals(0, server.requestCount)
+            Assertions.assertTrue(saved.book.image!!.contains(slugify(saved.book.title), true))
+            Assertions.assertEquals(1, File(jeluProperties.files.images).listFiles().size)
+        }
+    }
+
+    @Test
+    fun testFailedRemoteCoverDownloadLeavesNoStagingDir() {
+        val systemTmp = File(System.getProperty("java.io.tmpdir"))
+        val stagingDirs = {
+            systemTmp
+                .listFiles()
+                .orEmpty()
+                .filter { it.name.startsWith("jelu-cover") }
+                .toSet()
+        }
+        val before = stagingDirs()
+        MockWebServer().use { server ->
+            server.enqueue(MockResponse().setResponseCode(404))
+            val createBook = bookDto().apply { image = server.url("/cover.jpg").toString() }
+            val saved: UserBookLightDto = bookService.save(createUserBookDto(createBook), user(), null)
+            Assertions.assertEquals(1, server.requestCount)
+            Assertions.assertNull(saved.book.image)
+        }
+        Assertions.assertEquals(before, stagingDirs())
     }
 
     @Test
