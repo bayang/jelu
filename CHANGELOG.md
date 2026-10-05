@@ -1,3 +1,10 @@
+### [0.87.4](https://github.com/bayang/jelu/compare/v0.87.3...v0.87.4) (2026-10-05)
+
+
+### Bug Fixes
+
+* update api token usage stats in a single statement ([#361](https://github.com/bayang/jelu/issues/361)) ([b1c1f20](https://github.com/bayang/jelu/commit/b1c1f20485e727db1e97addd3147d8658d99a74e))
+
 ### [0.87.3](https://github.com/bayang/jelu/compare/v0.87.2...v0.87.3) (2026-09-16)
 
 
