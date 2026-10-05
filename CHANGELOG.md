@@ -1,3 +1,10 @@
+## [0.88.0](https://github.com/bayang/jelu/compare/v0.87.5...v0.88.0) (2026-10-05)
+
+
+### Features
+
+* add journal mode to Sqlite, tune Busy Timeout and Pool Size ([#360](https://github.com/bayang/jelu/issues/360)) ([611d8b8](https://github.com/bayang/jelu/commit/611d8b8d69e9e6fa77a13f11d2b2b05cc28213f9))
+
 ### [0.87.5](https://github.com/bayang/jelu/compare/v0.87.4...v0.87.5) (2026-10-05)
 
 
