@@ -58,7 +58,7 @@ spring:
     drop-first: false
     change-log: classpath:liquibase.xml
   datasource:
-    url: jdbc:sqlite:${jelu.database.path}/jelu.db?foreign_keys=on;
+    url: jdbc:sqlite:${jelu.database.path}/jelu.db?journal_mode=${jelu.database.journal-mode:delete}&busy_timeout=10000&foreign_keys=on;
     username: jelu_user
     password: mypass1234
     driver-class-name: org.sqlite.JDBC
