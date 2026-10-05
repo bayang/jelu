@@ -1,3 +1,10 @@
+### [0.88.1](https://github.com/bayang/jelu/compare/v0.88.0...v0.88.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* Fetch Covers Outside Write Transaction ([#359](https://github.com/bayang/jelu/issues/359)) ([97cee2a](https://github.com/bayang/jelu/commit/97cee2a07d3cd1c99dcda6fb01be5638f7aa49ee))
+
 ## [0.88.0](https://github.com/bayang/jelu/compare/v0.87.5...v0.88.0) (2026-10-05)
 
 
