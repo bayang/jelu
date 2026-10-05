@@ -201,13 +201,11 @@ class ApiTokenService(
         )
     }
 
+    // Callers have to guard this themselves, because the commit happens in the transaction
+    // interceptor after we return, so a try/catch in here would never see a commit-time failure
     @Transactional
     fun updateLastUsed(tokenId: UUID) {
-        try {
-            apiTokenRepository.updateLastUsed(tokenId)
-        } catch (e: Exception) {
-            logger.warn { "Failed to update last used timestamp for token $tokenId: ${e.message}" }
-        }
+        apiTokenRepository.updateLastUsed(tokenId)
     }
 
     private fun ApiToken.toAdminApiTokenDto(): AdminApiTokenDto =

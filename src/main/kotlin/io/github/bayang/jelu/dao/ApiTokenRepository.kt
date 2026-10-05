@@ -5,8 +5,10 @@ import io.github.bayang.jelu.dto.UpdateApiTokenDto
 import io.github.bayang.jelu.utils.nowInstant
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.plus
 import org.jetbrains.exposed.v1.jdbc.andWhere
 import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.update
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.UUID
@@ -64,13 +66,15 @@ class ApiTokenRepository {
         return token
     }
 
-    fun updateLastUsed(id: UUID) {
-        val token = ApiToken.findById(id)
-        token?.let {
-            it.lastUsedAt = nowInstant()
-            it.usageCount = it.usageCount + 1
+    // We deliberately avoid the DAO here. Loading the entity first takes a read lock and only
+    // writes at commit, a lock upgrade SQLite refuses outright with SQLITE_BUSY if anyone else
+    // started writing meanwhile. A bare UPDATE asks for the write lock in one step, and
+    // incrementing in SQL means concurrent hits can't lose a count.
+    fun updateLastUsed(id: UUID): Int =
+        ApiTokenTable.update({ ApiTokenTable.id eq id }) {
+            it[lastUsedAt] = nowInstant()
+            it[usageCount] = usageCount + 1L
         }
-    }
 
     fun delete(id: UUID): Boolean {
         val token = ApiToken.findById(id)

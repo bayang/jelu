@@ -111,8 +111,14 @@ class BearerTokenAuthenticationFilter(
 
         logger.debug { "Authenticated via API token '${validatedToken.name}' for user '${jeluUser.username}'" }
 
-        // Update last used
-        apiTokenService.updateLastUsed(validatedToken.id)
+        // Usage tracking is best effort, so we swallow failures out here rather than inside the
+        // service, because the transaction only commits once the @Transactional proxy returns.
+        // Letting it escape would turn a bookkeeping write into a 500 on a perfectly good request.
+        try {
+            apiTokenService.updateLastUsed(validatedToken.id)
+        } catch (e: Exception) {
+            logger.warn { "Failed to update last used timestamp for token '${validatedToken.name}': ${e.message}" }
+        }
 
         // Check scope access for this request
         val path = request.requestURI
