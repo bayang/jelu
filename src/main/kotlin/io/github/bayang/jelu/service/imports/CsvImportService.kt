@@ -688,12 +688,17 @@ class CsvImportService(
         user: UUID,
         importConfig: ImportConfigurationDto,
     ) {
-        val parser = CSVFormat.DEFAULT
+        val parser =
+            CSVFormat.DEFAULT
+                .builder()
+                .setHeader()
+                .setSkipHeaderRecord(true)
+                .get()
         val reader = file.bufferedReader(Charsets.UTF_8)
 
         // skip header line ourselves
         // CSVFormat.withSkipHeaderRecord() doesn't work
-        reader.readLine()
+        // reader.readLine()
 
         val parsed: CSVParser = parser.parse(reader)
         val iterator: Iterator<CSVRecord> = parsed.iterator()
@@ -742,13 +747,13 @@ class CsvImportService(
 
     private fun parseGoodreadsLine(record: CSVRecord): ImportDto? {
         val dto = ImportDto()
-        val rawIsbn10 = record.get(5)
+        val rawIsbn10 = record.get("ISBN")
         val parsedIsbn10 = parseIsbn(rawIsbn10)
-        val rawIsbn13 = record.get(6)
+        val rawIsbn13 = record.get("ISBN13")
         val parsedIsbn13 = parseIsbn(rawIsbn13)
-        val author = cleanString(record.get(2))
-        val title = cleanString(record.get(1))
-        val goodreadsId = cleanString(record.get(0))
+        val author = cleanString(record.get("Author"))
+        val title = cleanString(record.get("Title"))
+        val goodreadsId = cleanString(record.get("Book Id"))
         // we want at least an isbn
         if (parsedIsbn10.isBlank() && parsedIsbn13.isBlank()) {
             logger.debug {
@@ -756,7 +761,7 @@ class CsvImportService(
             }
             return null
         } else {
-            val additionalAuthors = cleanString(record.get(4))
+            val additionalAuthors = cleanString(record.get("Additional Authors"))
             val authors = mutableSetOf<String>()
             authors.add(author)
             if (additionalAuthors.isNotBlank()) {
@@ -772,33 +777,29 @@ class CsvImportService(
             if (parsedIsbn13.isNotBlank()) {
                 dto.isbn13 = parsedIsbn13
             }
-            val bookshelves = cleanString(record.get(16))
+            val bookshelves = cleanString(record.get("Bookshelves"))
             if (bookshelves.isNotBlank()) {
                 bookshelves.split(",").forEach { dto.tags.add(it.trim()) }
             }
-            val exclusiveShelf = cleanString(record.get(18))
+            val exclusiveShelf = cleanString(record.get("Exclusive Shelf"))
             if (exclusiveShelf.isNotBlank()) {
                 dto.tags.add(exclusiveShelf.trim())
             }
-            dto.numberOfPages = parseNumber(record.get(11))
-            dto.personalNotes = cleanString(record.get(21))
-            dto.publishedDate = cleanString(record.get(12))
-            dto.publisher = cleanString(record.get(9))
-            dto.readCount = parseNumber(record.get(22))
-            dto.readDates = cleanString(record.get(14))
+            dto.numberOfPages = parseNumber(record.get("Number of Pages"))
+            dto.personalNotes = cleanString(record.get("Private Notes"))
+            dto.publishedDate = cleanString(record.get("Year Published"))
+            dto.publisher = cleanString(record.get("Publisher"))
+            dto.readCount = parseNumber(record.get("Read Count"))
+            dto.readDates = cleanString(record.get("Date Read"))
             // goodreads csv export changed columns in 2022 apparently
             // new exports have only 24 columns, older ones have 31
-            val ownedCopies =
-                if (record.size() > 24 && record.isSet(25)) {
-                    parseNumber(record.get(25))
-                } else {
-                    parseNumber(record.get(23))
-                }
+            // 2026-10-05 : 23 columns now, Average rating dropped
+            val ownedCopies = parseNumber(record.get("Owned Copies"))
             if (ownedCopies != null && ownedCopies > 0) {
                 dto.owned = true
             }
-            dto.review = cleanString(record.get(19))
-            dto.rating = parseNumber(record.get(7))
+            dto.review = cleanString(record.get("My Review"))
+            dto.rating = parseNumber(record.get("My Rating"))
             dto.importSource = ImportSource.GOODREADS
             return dto
         }
