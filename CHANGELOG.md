@@ -1,3 +1,10 @@
+### [0.87.5](https://github.com/bayang/jelu/compare/v0.87.4...v0.87.5) (2026-10-05)
+
+
+### Bug Fixes
+
+* goodreads parsing [#351](https://github.com/bayang/jelu/issues/351) [#355](https://github.com/bayang/jelu/issues/355) ([564d0c6](https://github.com/bayang/jelu/commit/564d0c61b72e21e2a1d515e383888bcf336061ed))
+
 ### [0.87.4](https://github.com/bayang/jelu/compare/v0.87.3...v0.87.4) (2026-10-05)
 
 
