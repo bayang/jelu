@@ -495,54 +495,52 @@ const displayDatepicker = computed(() => {
 </script>
 
 <template>
-  <section>
-    <div class="grid">
-      <div class="grid sm:grid-cols-3 mb-4 sm:w-10/12 justify-center justify-items-center justify-self-center">
-        <div />
-        <h1
-          class="text-2xl capitalize"
-          :class="typographyClasses">
-          {{ t('nav.add_book') }}
-        </h1>
-        <div class="flex gap-2">
-          <button
-            v-tooltip="t('labels.auto_fill_doc')"
-            class="btn btn-success button uppercase"
-            :disabled="store != null && !store.getters.getMetadataFetchEnabled"
-            @click="toggleModal(false)"
-          >
-            <span class="icon">
-              <i class="mdi mdi-auto-fix mdi-18px" />
-            </span>
-            <span>{{ t('labels.auto_fill') }}</span>
-          </button>
-          <button
-            v-tooltip="t('labels.auto_fill_book')"
-            class="btn btn-primary button uppercase"
-            @click="toggleModal(true)"
-          >
-            <span class="icon">
-              <i class="mdi mdi-file-question mdi-18px" />
-            </span>
-            <span>{{ t('labels.auto_fill') }}</span>
-          </button>
-          <svg
-            v-if="store != null && !store.getters.getMetadataFetchEnabled"
-            v-tooltip="t('labels.auto_import_disabled')"
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-warning"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </div>
+  <section class="">
+    <div class="flex flex-col items-center">
+      <h1
+        class="text-2xl capitalize"
+        :class="typographyClasses"
+      >
+        {{ t('nav.add_book') }}
+      </h1>
+      <div class="flex gap-2 flex-col sm:flex-row">
+        <button
+          v-tooltip="t('labels.auto_fill_doc')"
+          class="btn btn-success button uppercase"
+          :disabled="store != null && !store.getters.getMetadataFetchEnabled"
+          @click="toggleModal(false)"
+        >
+          <span class="icon">
+            <i class="mdi mdi-auto-fix mdi-18px" />
+          </span>
+          <span>{{ t('labels.auto_fill') }}</span>
+        </button>
+        <button
+          v-tooltip="t('labels.auto_fill_book')"
+          class="btn btn-primary button uppercase"
+          @click="toggleModal(true)"
+        >
+          <span class="icon">
+            <i class="mdi mdi-file-question mdi-18px" />
+          </span>
+          <span>{{ t('labels.auto_fill') }}</span>
+        </button>
+        <svg
+          v-if="store != null && !store.getters.getMetadataFetchEnabled"
+          v-tooltip="t('labels.auto_import_disabled')"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 text-warning"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"
+          />
+        </svg>
       </div>
-      <div class="sm:w-8/12 justify-self-center">
+      <div class="sm:w-8/12 justify-self-center px-2 sm:px-0">
         <FormField
           v-model="form.title"
           :legend="t('book.title')"
@@ -881,8 +879,8 @@ const displayDatepicker = computed(() => {
             {{ t('book.status') }}
           </legend>
           <div class="">
-            <label class="label cursor-pointer justify-center gap-2 flex flex-wrap">
-              <div>
+            <label class="label cursor-pointer justify-center gap-4 flex flex-wrap">
+              <div class="flex gap-2">
                 <input
                   v-model="eventType"
                   type="radio"
@@ -892,7 +890,7 @@ const displayDatepicker = computed(() => {
                 >
                 <span class="label-text">{{ t('reading_events.finished') }}</span>
               </div>
-              <div>
+              <div class="flex gap-2">
                 <input
                   v-model="eventType"
                   type="radio"
@@ -902,7 +900,7 @@ const displayDatepicker = computed(() => {
                 >
                 <span class="label-text">{{ t('reading_events.currently_reading') }}</span>
               </div>
-              <div>
+              <div class="flex gap-2">
                 <input
                   v-model="eventType"
                   type="radio"
@@ -912,7 +910,7 @@ const displayDatepicker = computed(() => {
                 >
                 <span class="label-text">{{ t('reading_events.dropped') }}</span>
               </div>
-              <div>
+              <div class="flex gap-2">
                 <input
                   v-model="eventType"
                   type="radio"
@@ -1134,17 +1132,17 @@ const displayDatepicker = computed(() => {
             </legend>
             <div class="">
               <label class="label cursor-pointer justify-center gap-2 flex flex-wrap">
-                <div>
+                <div class="flex gap-2">
                   <input
                     v-model="uploadType"
                     type="radio"
                     name="radio-11"
-                    class="radio radio-primary mx-3"
+                    class="radio radio-primary"
                     value="web"
                   >
                   <span class="label-text">{{ t('labels.upload_from_web') }}</span>
                 </div>
-                <div>
+                <div class="flex gap-2">
                   <input
                     v-model="uploadType"
                     type="radio"
@@ -1154,7 +1152,7 @@ const displayDatepicker = computed(() => {
                   >
                   <span class="label-text">{{ t('labels.upload_from_computer') }}</span>
                 </div>
-                <div>
+                <div class="flex gap-2">
                   <input
                     v-model="uploadType"
                     type="radio"
