@@ -313,6 +313,10 @@ class ReadingEventRepository {
     fun deleteReadingEventById(eventId: UUID) {
         val entity: ReadingEvent = ReadingEvent[eventId]
         val userbook = entity.userBook
+        if (entity.eventType == ReadingEventType.CURRENTLY_READING) {
+            userbook.percentRead = 0
+            userbook.currentPageNumber = null
+        }
         entity.delete()
         val lastEvent =
             userbook.readingEvents

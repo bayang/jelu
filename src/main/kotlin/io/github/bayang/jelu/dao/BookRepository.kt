@@ -1153,6 +1153,20 @@ class BookRepository(
         if (book.percentRead != null && book.percentRead >= 100) {
             bookFinished = true
         }
+        // someone is updating the reading progress of a book that is not currently reading
+        // set the book as currently reading #356
+        // careful, the readingEventRepository.save calls synchronizeProgress
+        if (book.percentRead != null && found.lastReadingEvent != ReadingEventType.CURRENTLY_READING) {
+            readingEventRepository.save(
+                found,
+                CreateReadingEventDto(
+                    eventType = ReadingEventType.CURRENTLY_READING,
+                    bookId = null,
+                    eventDate = null,
+                    startDate = null,
+                ),
+            )
+        }
         found.percentRead = book.percentRead
         val current = book.currentPageNumber
         found.currentPageNumber = current

@@ -1614,7 +1614,12 @@ class BookServiceTest(
         Assertions.assertEquals(update.percentRead, updated.percentRead)
         Assertions.assertEquals(update.currentPageNumber, updated.currentPageNumber)
         Assertions.assertNull(updated.book.pageCount)
-        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        // update progress on a book not currently reading adds the currently reading event
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(
+            ReadingEventType.CURRENTLY_READING,
+            readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content[0].eventType,
+        )
 
         update =
             UserBookUpdateDto(
@@ -1632,7 +1637,11 @@ class BookServiceTest(
         Assertions.assertNull(updated.percentRead)
         Assertions.assertEquals(update.currentPageNumber, updated.currentPageNumber)
         Assertions.assertNull(updated.book.pageCount)
-        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(
+            ReadingEventType.CURRENTLY_READING,
+            readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content[0].eventType,
+        )
 
         update =
             UserBookUpdateDto(
@@ -1650,7 +1659,11 @@ class BookServiceTest(
         Assertions.assertEquals(0, updated.percentRead)
         Assertions.assertNull(updated.currentPageNumber)
         Assertions.assertEquals(update.book?.pageCount, updated.book.pageCount)
-        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(
+            ReadingEventType.CURRENTLY_READING,
+            readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content[0].eventType,
+        )
 
         update =
             UserBookUpdateDto(
@@ -1668,7 +1681,11 @@ class BookServiceTest(
         Assertions.assertEquals(40, updated.percentRead)
         Assertions.assertEquals(40, updated.currentPageNumber)
         Assertions.assertEquals(100, updated.book.pageCount)
-        Assertions.assertEquals(0, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(
+            ReadingEventType.CURRENTLY_READING,
+            readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content[0].eventType,
+        )
 
         update =
             UserBookUpdateDto(
@@ -1687,6 +1704,10 @@ class BookServiceTest(
         Assertions.assertEquals(100, updated.currentPageNumber)
         Assertions.assertEquals(100, updated.book.pageCount)
         Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(
+            ReadingEventType.FINISHED,
+            readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content[0].eventType,
+        )
 
         update =
             UserBookUpdateDto(
@@ -1705,6 +1726,10 @@ class BookServiceTest(
         Assertions.assertEquals(0, updated.currentPageNumber)
         Assertions.assertEquals(100, updated.book.pageCount)
         Assertions.assertEquals(1, readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).totalElements)
+        Assertions.assertEquals(
+            ReadingEventType.FINISHED,
+            readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content[0].eventType,
+        )
     }
 
     @Test
