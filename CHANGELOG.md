@@ -1,3 +1,12 @@
+### [0.88.2](https://github.com/bayang/jelu/compare/v0.88.1...v0.88.2) (2026-10-07)
+
+
+### Bug Fixes
+
+* broken css on add book page ([5174a54](https://github.com/bayang/jelu/commit/5174a54514520b2bcbb0a1eaf105d79f0e512dd5))
+* try to manage goodreads isbn format inconsistencies [#355](https://github.com/bayang/jelu/issues/355) ([2671934](https://github.com/bayang/jelu/commit/2671934d2d3283efd748cc617928440d9c240e42))
+* update events if progress is set [#356](https://github.com/bayang/jelu/issues/356) ([0ca238e](https://github.com/bayang/jelu/commit/0ca238e6a130ef014fcddb25326ee4bf0ba782c7))
+
 ### [0.88.1](https://github.com/bayang/jelu/compare/v0.88.0...v0.88.1) (2026-10-05)
 
 
