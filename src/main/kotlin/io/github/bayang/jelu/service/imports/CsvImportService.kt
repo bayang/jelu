@@ -822,12 +822,18 @@ class CsvImportService(
             var isbn = ""
             if (input.startsWith(ISBN_PREFIX)) {
                 isbn = input.substring(ISBN_PREFIX.length)
+                if (isbn.length < 10) {
+                    return ""
+                }
+                return isbn.substring(0, isbn.length - 1)
+            } else {
+                isbn = input
+                if (isbn.length == 10 || isbn.length == 13) {
+                    return isbn
+                }
             }
-            if (isbn.length < 10) {
-                return ""
-            }
-            return isbn.substring(0, isbn.length - 1)
         }
+        return ""
     }
 
     private fun parseNumber(input: String): Int? =
