@@ -135,6 +135,10 @@ An unofficial Helm-Chart to deploy Jelu to Kubernetes is available here:
 
 https://artifacthub.io/packages/helm/tibuntu/jelu
 
+### One-Click Deploy
+
+[![Deploy on RepoCloud](https://d16t0pc4846x52.cloudfront.net/deploylobe.svg)](https://repocloud.io/details/Jelu/)
+
 ## Screenshots
 
 Home page :
