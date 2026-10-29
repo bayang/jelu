@@ -41,7 +41,7 @@ const emit = defineEmits<{
 
 const { typographyClasses } = useTypography()
 
-directories('/')
+directories('')
 
 </script>
 

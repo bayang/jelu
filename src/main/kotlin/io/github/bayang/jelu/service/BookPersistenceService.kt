@@ -46,6 +46,7 @@ class BookPersistenceService(
     private val properties: JeluProperties,
     private val fileManager: FileManager,
     private val searchIndexService: SearchIndexService,
+    private val serverFileAccess: ServerFileAccess,
 ) {
     @Transactional
     fun update(
@@ -85,7 +86,7 @@ class BookPersistenceService(
                 }
             }
             val savedImage: String? =
-                saveImages(null, res.title, res.id.toString(), stagedCover ?: book.image, properties.files.images)
+                saveImages(null, res.title, res.id.toString(), book.image, properties.files.images, stagedCover)
             res.image = savedImage
             // we had a previous image and we saved a new one : delete the old one
             if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
@@ -142,8 +143,9 @@ class BookPersistenceService(
                     file,
                     updated.book.title,
                     updated.book.id.toString(),
-                    stagedCover ?: book.book?.image,
+                    book.book?.image,
                     properties.files.images,
+                    stagedCover,
                 )
             updated.book.image = savedImage
             // we had a previous image and we saved a new one : delete the old one
@@ -197,8 +199,9 @@ class BookPersistenceService(
                     file,
                     book.title,
                     book.id.toString(),
-                    stagedCover ?: userBook.book.image,
+                    userBook.book.image,
                     properties.files.images,
+                    stagedCover,
                 )
             // we had a previous image and we saved a new one : delete the old one
             if (backup != null && backup.exists()) {
@@ -230,7 +233,7 @@ class BookPersistenceService(
     ): BookDto {
         val saved: Book = bookRepository.save(book)
         saved.image =
-            saveImages(file, saved.title, saved.id.toString(), stagedCover ?: book.image, properties.files.images)
+            saveImages(file, saved.title, saved.id.toString(), book.image, properties.files.images, stagedCover)
         searchIndexService.bookAdded(saved)
         return saved.toBookDto()
     }
@@ -268,7 +271,7 @@ class BookPersistenceService(
                 }
             }
             val savedImage: String? =
-                saveImages(file, updated.name, updated.id.toString(), stagedCover ?: author.image, properties.files.images)
+                saveImages(file, updated.name, updated.id.toString(), author.image, properties.files.images, stagedCover)
             updated.image = savedImage
             // we had a previous image and we saved a new one : delete the old one
             if (backup != null && backup.exists() && !savedImage.isNullOrBlank()) {
@@ -285,6 +288,7 @@ class BookPersistenceService(
         id: String,
         dtoImage: String?,
         targetDir: String,
+        stagedCover: String? = null,
     ): String? {
         var importedFile = false
         var savedImage: String? = null
@@ -301,10 +305,10 @@ class BookPersistenceService(
             }
         }
 
-        if (!importedFile && !dtoImage.isNullOrBlank()) {
+        if (!importedFile && (stagedCover != null || !dtoImage.isNullOrBlank())) {
             try {
                 // file already exists in the right folder, just rename it
-                if (dtoImage.startsWith(CalibreMetadataProvider.FILE_PREFIX)) {
+                if (stagedCover == null && dtoImage!!.startsWith(CalibreMetadataProvider.FILE_PREFIX)) {
                     val targetFilename: String =
                         imageName(
                             slugify(title),
@@ -320,17 +324,19 @@ class BookPersistenceService(
                     logger.debug { "renaming of metadata imported file $dtoImage was successful: $succeeded" }
                     savedImage = targetFilename
                 } else {
-                    // file was picked on the server, or staged from a remote url by BookService
-                    val file = File(dtoImage)
-                    if (!file.exists() || !file.isAbsolute || file.isDirectory) {
-                        logger.debug { "invalid file $dtoImage" }
+                    // staged from a remote url by BookService, or picked on the server by the user,
+                    // in which case it has to sit inside one of the allowed dirs: anything else the
+                    // server can read would otherwise be copied into the publicly served images dir
+                    val file = if (stagedCover != null) File(stagedCover) else serverFileAccess.resolve(dtoImage)?.toFile()
+                    if (file == null || !file.exists() || file.isDirectory) {
+                        logger.debug { "invalid or disallowed file $dtoImage" }
                         return null
                     }
                     val targetFilename: String =
                         imageName(
                             slugify(title),
                             id,
-                            FilenameUtils.getExtension(dtoImage),
+                            FilenameUtils.getExtension(file.name),
                         )
                     val targetFile = File(targetDir, targetFilename)
                     // remote covers used to be streamed straight onto the target, which truncated

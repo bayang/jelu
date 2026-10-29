@@ -13,6 +13,9 @@ jelu:
   files:
     images: '${user.home}/.jelu/files/images/'
     imports: '${user.home}/.jelu/files/imports/'
+    # directories users can browse and pick files from on the server (covers, metadata imports).
+    # When empty, only the imports directory above is allowed.
+    allowed-dirs: []
   session:
     duration: 604800 #7 days
 server:

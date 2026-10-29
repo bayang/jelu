@@ -48,6 +48,8 @@ data class JeluProperties(
         @get:NotBlank var images: String,
         @get:NotBlank var imports: String,
         var resizeImages: Boolean = true,
+        // Server dirs users may browse and read files from. Empty means only the imports dir.
+        var allowedDirs: List<String> = emptyList(),
     )
 
     data class Session(

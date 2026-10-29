@@ -1,7 +1,10 @@
 package io.github.bayang.jelu.service.metadata
 
+import io.github.bayang.jelu.config.JeluProperties
 import io.github.bayang.jelu.errors.JeluValidationException
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +14,19 @@ import java.io.File
 @SpringBootTest
 class FileMetadataServiceTest(
     @Autowired private val fileMetadataService: FileMetadataService,
+    @Autowired private val jeluProperties: JeluProperties,
 ) {
+    // server files are only read from the allowed dirs, so let the fixtures dir stand in for one
+    @BeforeEach
+    fun allowFixtures() {
+        jeluProperties.files.allowedDirs = listOf(File(this::class.java.getResource("/metadata").file).absolutePath)
+    }
+
+    @AfterEach
+    fun resetAllowedDirs() {
+        jeluProperties.files.allowedDirs = emptyList()
+    }
+
     @Test
     fun testParseEpub() {
         val metadata =
