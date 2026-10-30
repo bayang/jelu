@@ -1,3 +1,10 @@
+### [0.88.4](https://github.com/bayang/jelu/compare/v0.88.3...v0.88.4) (2026-10-30)
+
+
+### Bug Fixes
+
+* limit server file access to configured allowed dirs [#365](https://github.com/bayang/jelu/issues/365) ([#366](https://github.com/bayang/jelu/issues/366)) ([e86c36d](https://github.com/bayang/jelu/commit/e86c36df23615320ad658e563836c3d1e904604f))
+
 ### [0.88.3](https://github.com/bayang/jelu/compare/v0.88.2...v0.88.3) (2026-10-30)
 
 
