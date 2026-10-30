@@ -3,12 +3,12 @@ package io.github.bayang.jelu.service.metadata
 import io.github.bayang.jelu.dto.MetadataDto
 import io.github.bayang.jelu.errors.JeluException
 import io.github.bayang.jelu.errors.JeluValidationException
+import io.github.bayang.jelu.service.ServerFileAccess
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jsoup.Jsoup
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.BufferedReader
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.zip.ZipFile
@@ -19,12 +19,12 @@ private val logger = KotlinLogging.logger {}
 @Service
 class FileMetadataService(
     private val opfParser: OpfParser,
+    private val serverFileAccess: ServerFileAccess,
 ) {
     fun extractMetadata(filePath: String): MetadataDto? {
-        val file = File(filePath)
-        if (!file.exists()) {
-            throw JeluValidationException("file does not exist")
-        }
+        val file =
+            serverFileAccess.resolve(filePath)?.toFile()
+                ?: throw JeluValidationException("file does not exist or is not inside an allowed directory")
         if (filePath.endsWith("epub", true)) {
             ZipFile(file).use { zip ->
                 try {

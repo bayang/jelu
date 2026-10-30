@@ -76,7 +76,7 @@ const selectPath = (elem: Path) => {
 
 const { typographyClasses } = useTypography()
 
-directories('/')
+directories('')
 
 </script>
 

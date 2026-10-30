@@ -1,6 +1,7 @@
 package io.github.bayang.jelu.controllers
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import io.github.bayang.jelu.service.ServerFileAccess
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -24,7 +25,9 @@ private val logger = KotlinLogging.logger {}
 // see https://github.com/gotson/komga/blob/master/komga/src/main/kotlin/org/gotson/komga/interfaces/api/rest/FileSystemController.kt
 @RestController
 @RequestMapping("api/v1/filesystem", produces = [MediaType.APPLICATION_JSON_VALUE])
-class FileSystemController {
+class FileSystemController(
+    private val serverFileAccess: ServerFileAccess,
+) {
     private val fs = FileSystems.getDefault()
 
     @PostMapping
@@ -37,15 +40,19 @@ class FileSystemController {
                 directories = listOf(),
             )
         } else if (request.path.isEmpty()) {
+            // the allowed dirs are the starting points, not the roots of the host filesystem
             DirectoryListingDto(
-                directories = fs.rootDirectories.map { it.toDto() },
+                directories = serverFileAccess.roots().map { PathDto(type = "directory", name = it.toString(), path = it.toString()) },
             )
         } else {
-            val p = fs.getPath(request.path)
-            if (!p.isAbsolute) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Path must be absolute")
+            if (!fs.getPath(request.path).isAbsolute) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Path must be absolute")
+            val p =
+                serverFileAccess.resolve(request.path)
+                    ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "Path is not inside an allowed directory")
             try {
                 DirectoryListingDto(
-                    parent = (p.parent ?: "").toString(),
+                    // going up from an allowed dir leads back to the list of allowed dirs
+                    parent = if (serverFileAccess.isRoot(p)) "" else (p.parent ?: "").toString(),
                     directories =
                         Files.list(p).use { dirStream ->
                             dirStream
