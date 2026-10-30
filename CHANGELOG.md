@@ -1,3 +1,10 @@
+### [0.88.3](https://github.com/bayang/jelu/compare/v0.88.2...v0.88.3) (2026-10-30)
+
+
+### Bug Fixes
+
+* prevent unauthorized download of exports files ([a4c7281](https://github.com/bayang/jelu/commit/a4c72815bce084865874ef2d720c01c60b6d0c6c))
+
 ### [0.88.2](https://github.com/bayang/jelu/compare/v0.88.1...v0.88.2) (2026-10-07)
 
 
