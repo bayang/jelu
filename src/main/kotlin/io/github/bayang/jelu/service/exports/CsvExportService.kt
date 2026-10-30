@@ -21,6 +21,7 @@ import org.apache.commons.csv.QuoteMode
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.io.BufferedWriter
 import java.io.File
@@ -42,6 +43,7 @@ class CsvExportService(
     private val properties: JeluProperties,
     private val readingEventService: ReadingEventService,
     private val userMessageService: UserMessageService,
+    private val userExportService: UserExportService,
 ) {
     /**
      * Columns from Title to Bookshelves are used for Goodreads reimport.
@@ -132,6 +134,7 @@ class CsvExportService(
                 ),
                 user,
             )
+            userExportService.save(destFileName, user)
         } catch (e: Exception) {
             logger.error(e) { "failed to save message for $destFileName export" }
         }
@@ -242,5 +245,26 @@ class CsvExportService(
         } else {
             return ""
         }
+    }
+
+    @Scheduled(fixedRate = 12 * 60 * 60 * 1000, initialDelay = 30000)
+    fun cleanImports() {
+        val found = userExportService.findOlderReports()
+        var count = 0
+        found.forEach {
+            userExportService.delete(it.id.value)
+            val destFile = File(properties.files.imports, it.name)
+            val d =
+                try {
+                    destFile.delete()
+                } catch (e: Exception) {
+                    false
+                }
+            if (!d) {
+                logger.debug { "failed to delete ${it.name}" }
+            }
+            count++
+        }
+        logger.debug { "deleted $count older exports" }
     }
 }

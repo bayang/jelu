@@ -61,7 +61,7 @@ class CsvExportServiceTest(
 
     @AfterEach
     fun cleanTest() {
-        tempDir.listFiles().forEach {
+        tempDir.listFiles()?.forEach {
             it.deleteRecursively()
         }
         readingEventService.findAll(null, null, null, null, null, null, null, Pageable.ofSize(30)).content.forEach {

@@ -56,6 +56,7 @@ class SecurityConfig(
                     "/api/**",
                     "/oauth2/authorization/**",
                     "/login/oauth2/code/**",
+                    "/exports/**",
                 )
             }.authorizeHttpRequests {
                 it
@@ -98,6 +99,7 @@ class SecurityConfig(
                     .requestMatchers(
                         "/api/**",
                     ).hasRole("USER")
+                it.requestMatchers(HttpMethod.GET, "/exports/**").hasAnyRole("USER")
             }.httpBasic {
                 it.authenticationDetailsSource(userAgentWebAuthenticationDetailsSource)
             }.sessionManagement {

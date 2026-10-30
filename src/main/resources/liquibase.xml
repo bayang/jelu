@@ -707,4 +707,25 @@
             <column name="user_id" />
         </createIndex>
     </changeSet>
+    <changeSet id="user_export" author="byng">
+        <createTable tableName="user_export">
+            <column name="id" type="binary(16)" remarks="Technical ID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="creation_date" type="timestamp"
+                    remarks="date of creation">
+                <constraints nullable="false" />
+            </column>
+            <column name="modification_date" type="timestamp"
+                    remarks="date of modification">
+                <constraints nullable="false" />
+            </column>
+            <column name="user" type="binary(16)" remarks="Technical ID">
+                <constraints foreignKeyName="fk_user_export_user_id" references="user(id)" nullable="false" deleteCascade="true" />
+            </column>
+            <column name="name" type="varchar(500)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
